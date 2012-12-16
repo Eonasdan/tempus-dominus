@@ -22,30 +22,13 @@
 	// Picker object
 	
 	var Datepicker = function(element, options){
+		this.id = DPGlobal.dpgId++;
 		this.element = $(element);
 		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
-		this.picker = $(DPGlobal.template)
-							.appendTo('body')
-							.on({
-								click: $.proxy(this.click, this),
-								mousedown: $.proxy(this.mousedown, this)
-							});
+		this.picker = $(DPGlobal.template).appendTo('body');
 		this.isInput = this.element.is('input');
 		this.component = this.element.is('.date') ? this.element.find('.add-on') : false;
 		
-		if (this.isInput) {
-			this.element.on({
-				focus: $.proxy(this.show, this),
-				blur: $.proxy(this.hide, this),
-				keyup: $.proxy(this.update, this)
-			});
-		} else {
-			if (this.component){
-				this.component.on('click', $.proxy(this.show, this));
-			} else {
-				this.element.on('click', $.proxy(this.show, this));
-			}
-		}
 		this.minViewMode = options.minViewMode||this.element.data('date-minviewmode')||0;
 		if (typeof this.minViewMode === 'string') {
 			switch (this.minViewMode) {
@@ -81,42 +64,37 @@
 		this.fillMonths();
 		this.update();
 		this.showMode();
+		this._attachEvents();
 	};
 	
 	Datepicker.prototype = {
 		constructor: Datepicker,
-		
+
 		show: function(e) {
 			this.picker.show();
 			this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
 			this.place();
-			$(window).on('resize', $.proxy(this.place, this));
-			if (e ) {
-				e.stopPropagation();
-				e.preventDefault();
-			}
-			if (!this.isInput) {
-				$(document).on('mousedown', $.proxy(this.hide, this));
-			}
 			this.element.trigger({
 				type: 'show',
 				date: this.date
 			});
+			this._attachWidgetEvents();
+			if (e) {
+				e.stopPropagation();
+				e.preventDefault();
+			}
 		},
 		
 		hide: function(){
 			this.picker.hide();
-			$(window).off('resize', this.place);
 			this.viewMode = this.startViewMode;
 			this.showMode();
-			if (!this.isInput) {
-				$(document).off('mousedown', this.hide);
-			}
 			this.set();
 			this.element.trigger({
 				type: 'hide',
 				date: this.date
 			});
+			this._detachWidgetEvents();
 		},
 		
 		set: function() {
@@ -318,6 +296,68 @@
 				this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
 			}
 			this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
+		},
+
+		destroy: function() {
+			this._detachEvents();
+			this._detachWidgetEvents();
+			this.picker.remove();
+			this.element.removeData('datepicker');
+			this.component.removeData('datepicker');
+		},
+
+		_attachEvents: function() {
+			this.picker.on({
+				click: $.proxy(this.click, this),
+				mousedown: $.proxy(this.mousedown, this)
+			});
+			if (this.isInput) {
+				this.element.on({
+					focus: $.proxy(this.show, this),
+					blur: $.proxy(this.hide, this),
+					keyup: $.proxy(this.update, this)
+				});
+			} else {
+				if (this.component){
+					this.component.on('click', $.proxy(this.show, this));
+				} else {
+					this.element.on('click', $.proxy(this.show, this));
+				}
+			}
+		},
+
+		_attachWidgetEvents: function() {
+			$(window).on('resize.datepicker' + this.id, $.proxy(this.place, this));
+			if (!this.isInput) {
+				$(document).on('mousedown.datepicker' + this.id, $.proxy(this.hide, this));
+			}
+		},
+
+		_detachEvents: function() {
+			this.picker.off({
+				click: this.click,
+				mousedown: this.mousedown
+			});
+			if (this.isInput) {
+				this.element.off({
+					focus: this.show,
+					blur: this.hide,
+					keyup: this.update
+				});
+			} else {
+				if (this.component){
+					this.component.off('click', this.show);
+				} else {
+					this.element.off('click', this.show);
+				}
+			}
+		},
+
+		_detachWidgetEvents: function () {
+			$(window).off('resize.datepicker' + this.id);
+			if (!this.isInput) {
+				$(document).off('mousedown.datepicker' + this.id);
+			}
 		}
 	};
 	
@@ -450,5 +490,6 @@
 								'</table>'+
 							'</div>'+
 						'</div>';
+	DPGlobal.dpgId = 0;
 
 }( window.jQuery )
