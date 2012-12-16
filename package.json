@@ -1,0 +1,8 @@
+{
+  "name": "bootstrap-datepicker",
+  "version": "0.0.1",
+  "devDependencies": {
+    "uglify-js": "*",
+    "less": "*"
+  }
+}
