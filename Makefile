@@ -9,7 +9,7 @@ build:
 	@./node_modules/.bin/uglifyjs -o build/js/bootstrap-datepicker.min.js\
 	       	src/js/bootstrap-datepicker.js
 	@./node_modules/.bin/lessc --yui-compress --include-path=bootstrap/less\
-	       	src/less/datepicker.less build/css/datepicker.css
+	       	src/less/datepicker.less build/css/bootstrap-datepicker.min.css
 
 clean:
 	rm -rf build

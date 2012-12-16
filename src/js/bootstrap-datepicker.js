@@ -151,10 +151,10 @@
 		},
 		
 		update: function(newDate){
-			this.date = DPGlobal.parseDate(
-				typeof newDate === 'string' ? newDate : (this.isInput ? this.element.prop('value') : this.element.data('date')),
-				this.format
-			);
+			var formattedDate = (typeof newDate === 'string' ?
+	    				     newDate : (this.isInput ?
+	    						this.element.prop('value') : this.element.data('date') || DPGlobal.formatDate(new Date(), this.format)));
+			this.date = DPGlobal.parseDate(formattedDate, this.format);
 			this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
 			this.fill();
 		},
