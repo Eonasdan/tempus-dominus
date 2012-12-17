@@ -165,9 +165,17 @@
 		},
 		
 		update: function(newDate){
-			var dateStr = (typeof newDate === 'string' ?
-	    				     newDate : (this.isInput ?
-	    						this.$element.prop('value') : this.$element.data('date') || this.formatDate(new Date())));
+			var dateStr = newDate;
+			if (!dateStr) {
+				if (this.isInput) {
+					dateStr = this.$element.val();
+				} else {
+					dateStr = this.$element.find('input').val();
+				}
+				if (!dateStr) {
+					dateStr = this.$element.data('date') || this.formatDate(new Date());
+				}
+			}
 			this.date = this.parseDate(dateStr);
 			this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
 			this.fill();
@@ -286,7 +294,9 @@
 							this.viewDate.setFullYear(year);
 						}
 						if (this.viewMode !== 0) {
-							this.date = new Date(this.viewDate);
+							this.date.setFullYear(this.viewDate.getFullYear());
+							this.date.setMonth(this.viewDate.getMonth());
+							this.date.setDate(this.viewDate.getDate());
 							this.$element.trigger({
 								type: 'changeDate',
 								date: this.date,
@@ -307,7 +317,9 @@
 								month += 1;
 							}
 							var year = this.viewDate.getFullYear();
-							this.date = new Date(year, month, day,0,0,0,0);
+							this.date.setFullYear(year);
+							this.date.setMonth(month);
+							this.date.setDate(day);
 							this.viewDate = new Date(year, month, Math.min(28, day),0,0,0,0);
 							this.fill();
 							this.set();
@@ -321,7 +333,23 @@
 				}
 			}
 		},
-		
+
+		keypress: function(e) {
+		},
+
+		change: function(e) {
+			if (this._formatPattern.test($(e.target).val())) {
+				this.update();
+				this.$element.trigger({
+					type: 'changeDate',
+					date: this.date,
+					viewMode: DPGlobal.modes[this.viewMode].clsName
+				});
+			} else {
+				this.set();
+			}
+		},
+
 		mousedown: function(e) {
 			e.stopPropagation();
 			e.preventDefault();
@@ -348,7 +376,7 @@
 				property = dateFormatComponents[match].property
 				methodName = 'get' + property;
 				rv = (dateMethods[methodName] || Date.prototype[methodName]).call(d);
-				return rv;	
+				return padLeft(rv.toString(), match.length, '0');
 			});
 		},
 
@@ -362,7 +390,7 @@
 					continue;
 				methodName = 'set' + property;
 				value = match[i];
-				if (/^d+$/.test(value))
+				if (/^\d+$/.test(value))
 					value = parseInt(value, 10);
 				(dateMethods[methodName] || Date.prototype[methodName]).call(rv, value);
 			}
@@ -372,10 +400,10 @@
 		_compileFormat: function () {
 			var match, component, components = [], str = this.format, propertiesByIndex = {}, i = 0;
 			while (match = formatComponent.exec(str)) {
-				i++;
 				component = match[0];
 				if (component in dateFormatComponents) {
-					propertiesByIndex[i] = dateFormatComponents[component].parserMethod;
+					i++;
+					propertiesByIndex[i] = dateFormatComponents[component].property;
 					components.push('\\s*' + dateFormatComponents[component].getPattern(this) + '\\s*');
 				}
 				else {
@@ -413,11 +441,15 @@
 			}
 			if (this.isInput) {
 				this.$element.on({
-					focus: $.proxy(this.show, this),
-					blur: $.proxy(this.hide, this),
-					keyup: $.proxy(this.update, this)
+					'focus': $.proxy(this.show, this),
+					'change': $.proxy(this.change, this),
+					'keypress': $.proxy(this.keypress, this)
 				});
 			} else {
+				this.$element.on({
+					'change': $.proxy(this.change, this),
+					'keypress': $.proxy(this.keypress, this)
+				}, 'input');
 				if (this.component){
 					this.component.on('click', $.proxy(this.show, this));
 				} else {
@@ -443,11 +475,15 @@
 			}
 			if (this.isInput) {
 				this.$element.off({
-					focus: this.show,
-					blur: this.hide,
-					keyup: this.update
+					'focus': this.show,
+					'change': this.change,
+					'keypress': this.keypress
 				});
 			} else {
+				this.$element.off({
+					'change': this.change,
+					'keypress': this.keypress
+				}, 'input');
 				if (this.component){
 					this.component.off('click', this.show);
 				} else {
@@ -509,14 +545,17 @@
 		}},
 		yyyy: {property: 'FullYear', getPattern: function() {return '(\\d{2}|\\d{4})\\b';}},
 		hh: {property: 'Hours', getPattern: function() {return '(0?[0-9]|1[0-9]|2[0-3])\\b';}},
-		mm: {property: 'Minutes', getPattern: function() {return '(0?[1-9]|[1-5][0-9])\\b';}},
-		ss: {property: 'Seconds', getPattern: function() {return '(0?[1-9]|[1-5][0-9])\\b';}},
+		mm: {property: 'Minutes', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
+		ss: {property: 'Seconds', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
 		ms: {property: 'Milliseconds', getPattern: function() {return '([0-9]{1,3})\\b';}},
 	};
 
 	var dateMethods = {
 		getMonth: function() {
 			return this.getMonth() + 1;
+		},
+		setMonth: function(m) {
+			return this.setMonth(m - 1);
 		}
 	};
 
@@ -531,6 +570,10 @@
 	function escapeRegExp(str) {
 		// http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
 		return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+	}
+
+	function padLeft(s, l, c) {
+		return Array(l - s.length + 1).join(c || ' ') + s;
 	}
 
 	function getTemplate(timeIcon, pickDate, pickTime) {
