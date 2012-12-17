@@ -30,18 +30,37 @@
 	
 	var DateTimePicker = function(element, options) {
 		this.id = dpgId++;
-		this.initDatePicker(element, options);
+		this.init(element, options);
 	};
 	
 	DateTimePicker.prototype = {
 		constructor: DateTimePicker,
 
-		initDatePicker: function(element, options) {
+		init: function(element, options) {
+			if (!(options.pickTime || options.pickDate))
+				throw new Error('Must choose at least one picker');
 			this.$element = $(element);
 			this.format = options.format || this.$element.data('date-format') || 'mm/dd/yyyy';
 			this._compileFormat();
 			this.language = options.language in dates ? options.language : 'en'
-			this.picker = $(DPGlobal.template).appendTo('body');
+			this.picker = $(getTemplate(this.id, options.pickDate, options.pickTime)).appendTo('body');
+			if (options.pickDate && options.pickTime) {
+				this.picker.on('click', '.accordion-toggle', function(e) {
+					e.stopPropagation();
+					var $this = $(this);
+					var $parent = $this.closest('ul');
+					var expanded = $parent.find('.collapse.in');
+					var closed = $parent.find('.collapse:not(.in)');
+
+					if (expanded && expanded.length) {
+						var hasData = expanded.data('collapse');
+						if (hasData && hasData.transitioning) return;
+						expanded.collapse('hide');
+						closed.collapse('show')
+						$this.find('i').toggleClass('icon-chevron-down icon-chevron-up');
+					}
+				});
+			}
 			this.isInput = this.$element.is('input');
 			this.component = this.$element.is('.date') ? this.$element.find('.add-on') : false;
 
@@ -81,10 +100,6 @@
 			this.update();
 			this.showMode();
 			this._attachDatePickerEvents();
-		},
-
-		initTimePicker: function() {
-		
 		},
 
 		show: function(e) {
@@ -312,7 +327,7 @@
 			if (dir) {
 				this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
 			}
-			this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
+			this.picker.find('.datepicker > div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
 		},
 
 		destroy: function() {
@@ -436,6 +451,8 @@
 	};
 
 	$.fn.datetimepicker.defaults = {
+		pickDate: true,
+		pickTime: true
 	};
 	$.fn.datetimepicker.Constructor = DateTimePicker;
 	var dpgId = 0;
@@ -490,6 +507,42 @@
 		return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 	}
 
+	function getTemplate(id, pickDate, pickTime) {
+		if (pickDate && pickTime) {
+			return (
+				'<ul class="datetimepicker dropdown-menu">' +
+					'<li class="collapse in">' +
+						'<div class="datepicker">' +
+						DPGlobal.template +
+						'</div>' +
+					'</li>' +
+					'<li class="picker-switch"><a class="accordion-toggle"><i class="icon-chevron-down"></i></a></li>' +
+					'<li class="collapse">' +
+						'<div class="timepicker">' +
+						TPGlobal.template +
+						'</div>' +
+					'</li>' +
+				'</ul>'
+			);
+		} else if (pickTime) {
+			return (
+				'<div class="datetimepicker dropdown-menu">' +
+					'<div class="timepicker">' +
+					TPGlobal.template +
+					'</div>' +
+				'</div>'
+			);
+		} else {
+			return (
+				'<div class="datetimepicker dropdown-menu">' +
+					'<div class="datepicker">' +
+					DPGlobal.template +
+					'</div>' +
+				'</div>'
+			);
+		}
+	}
+
 	var DPGlobal = {
 		modes: [
 			{
@@ -513,34 +566,63 @@
 		getDaysInMonth: function (year, month) {
 			return [31, (DPGlobal.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 		},
-		headTemplate: '<thead>'+
-							'<tr>'+
-								'<th class="prev">&lsaquo;</th>'+
-								'<th colspan="5" class="switch"></th>'+
-								'<th class="next">&rsaquo;</th>'+
-							'</tr>'+
-						'</thead>',
+		headTemplate: 
+			'<thead>' +
+				'<tr>' +
+					'<th class="prev">&lsaquo;</th>' +
+					'<th colspan="5" class="switch"></th>' +
+					'<th class="next">&rsaquo;</th>' +
+				'</tr>' +
+			'</thead>',
 		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>'
 	};
-	DPGlobal.template = '<div class="datepicker dropdown-menu">'+
-							'<div class="datepicker-days">'+
-								'<table class=" table-condensed">'+
-									DPGlobal.headTemplate+
-									'<tbody></tbody>'+
-								'</table>'+
-							'</div>'+
-							'<div class="datepicker-months">'+
-								'<table class="table-condensed">'+
-									DPGlobal.headTemplate+
-									DPGlobal.contTemplate+
-								'</table>'+
-							'</div>'+
-							'<div class="datepicker-years">'+
-								'<table class="table-condensed">'+
-									DPGlobal.headTemplate+
-									DPGlobal.contTemplate+
-								'</table>'+
-							'</div>'+
-						'</div>';
+	DPGlobal.template =
+				'<div class="datepicker-days">' +
+					'<table class="table-condensed">' +
+						DPGlobal.headTemplate +
+						'<tbody></tbody>' +
+					'</table>' +
+				'</div>' +
+				'<div class="datepicker-months">' +
+					'<table class="table-condensed">' +
+						DPGlobal.headTemplate +
+						DPGlobal.contTemplate+
+					'</table>'+
+				'</div>'+
+				'<div class="datepicker-years">'+
+					'<table class="table-condensed">'+
+						DPGlobal.headTemplate+
+						DPGlobal.contTemplate+
+					'</table>'+
+				'</div>';
+	var TPGlobal = {
+	        hourTemplate: '<span class="timepicker-hour"></span>',
+                minuteTemplate: '<span class="timepicker-minute"></span>',
+                secondTemplate: '<span class="timepicker-second"></span>',
+	};
+	TPGlobal.template = 
+		'<table class="table-condensed">' +
+			'<tr>' +
+				'<td><a href="#" data-action="incrementHour"><i class="icon-chevron-up"></i></a></td>' +
+				'<td class="separator">&nbsp;</td>' +
+				'<td><a href="#" data-action="incrementMinute"><i class="icon-chevron-up"></i></a></td>' +
+                                '<td class="separator">&nbsp;</td>' +
+				'<td><a href="#" data-action="incrementSecond"><i class="icon-chevron-up"></i></a></td>' +
+			'</tr>' +
+			'<tr>' +
+				'<td>' + TPGlobal.hourTemplate + '</td> ' +
+				'<td class="separator">:</td>' +
+				'<td>' + TPGlobal.minuteTemplate + '</td> ' +
+				'<td class="separator">:</td>' +
+				'<td>' + TPGlobal.secondTemplate + '</td>' +
+			'</tr>' +
+			'<tr>' +
+				'<td><a href="#" data-action="decrementHour"><i class="icon-chevron-down"></i></a></td>' +
+				'<td class="separator"></td>' +
+				'<td><a href="#" data-action="decrementMinute"><i class="icon-chevron-down"></i></a></td>' +
+				'<td class="separator">&nbsp;</td>' +
+				'<td><a href="#" data-action="decrementSecond"><i class="icon-chevron-down"></i></a></td>' +
+			'</tr>' +
+		'</table>'
 
 })(window.jQuery)
