@@ -39,8 +39,8 @@
 		initDatePicker: function(element, options) {
 			this.$element = $(element);
 			this.format = options.format || this.$element.data('date-format') || 'mm/dd/yyyy';
+			this._compileFormat();
 			this.language = options.language in dates ? options.language : 'en'
-			this.parser = buildDateParser(this.format, this);
 			this.picker = $(DPGlobal.template).appendTo('body');
 			this.isInput = this.$element.is('input');
 			this.component = this.$element.is('.date') ? this.$element.find('.add-on') : false;
@@ -324,31 +324,48 @@
 		},
 
 		formatDate: function(d) {
-			return this.format.replace(/dd/g, function(){
-				var str = d.getDate().toString();
-				if (str.length == 1) return '0' + str;
-				return str;
-			}).replace(/MM/g, function() {
-				var str = (d.getMonth() + 1).toString();
-				if (str.length == 1) return '0' + str;
-				return str;
-			}).replace(/yyyy/g, function() {
-				return d.getFullYear().toString();
-			}).replace(/hh/g, function(){
-				var str = d.getHours().toString();
-				if (str.length == 1) return '0' + str;
-				return str;
-			}).replace(/mm/g, function() {
-				var str = (d.getMinutes()).toString();
-				if (str.length == 1) return '0' + str;
-				return str;
-			}).replace(/ss/g, function() {
-				return d.getSeconds().toString();
+			return this.format.replace(formatReplacer, function(match) {
+				var methodName, property, rv;
+				property = dateFormatComponents[match].property
+				methodName = 'get' + property;
+				rv = (dateMethods[methodName] || Date.prototype[methodName]).call(d);
+				return rv;	
 			});
 		},
 
 		parseDate: function(str) {
-			return this.parser.parse(str);
+			var match, i, property, methodName, value, rv = new Date(0);
+			if (!(match = this._formatPattern.exec(str)))
+				return null;
+			for (i = 1; i < match.length; i++) {
+				property = this._propertiesByIndex[i];
+				if (!property)
+					continue;
+				methodName = 'set' + property;
+				value = match[i];
+				if (/^d+$/.test(value))
+					value = parseInt(value, 10);
+				(dateMethods[methodName] || Date.prototype[methodName]).call(rv, value);
+			}
+			return rv;
+		},
+
+		_compileFormat: function () {
+			var match, component, components = [], str = this.format, propertiesByIndex = {}, i = 0;
+			while (match = formatComponent.exec(str)) {
+				i++;
+				component = match[0];
+				if (component in dateFormatComponents) {
+					propertiesByIndex[i] = dateFormatComponents[component].parserMethod;
+					components.push('\\s*' + dateFormatComponents[component].getPattern(this) + '\\s*');
+				}
+				else {
+					components.push(escapeRegExp(component));
+				}
+				str = str.slice(component.length);
+			}
+			this._formatPattern = new RegExp('^\\s*' + components.join('') + '\\s*$')
+			this._propertiesByIndex = propertiesByIndex;
 		},
 
 		_attachDatePickerEvents: function() {
@@ -433,77 +450,45 @@
 	};
 
 	var dateFormatComponents = {
-		dd: {parserMethod: 'setDate', getPattern: function() { return '(0?[1-9]|[1-2][0-9]|3[0-1])\\b';}},
-		MM: {parserMethod: 'setMonth', getPattern: function() {return '(0?[1-9]|1[0-2])\\b';}},
-		month: {parserMethod: 'setMonthByName', getPattern: function(picker) {
+		dd: {property: 'Date', getPattern: function() { return '(0?[1-9]|[1-2][0-9]|3[0-1])\\b';}},
+		MM: {property: 'Month', getPattern: function() {return '(0?[1-9]|1[0-2])\\b';}},
+		month: {property: 'MonthByName', getPattern: function(picker) {
 			var rv = [], values = dates[picker.language].months;
 			for (var i = 0; i < values.length; i++)
 				rv.push(escapeRegExp(values[i]));
 			return '(' + rv.join('|') + ')';
 		}},
-		monthShort: {parserMethod: 'setMonthByShortName', getPattern: function(picker) {
+		monthShort: {property: 'MonthByShortName', getPattern: function(picker) {
 			var rv = [], values = dates[picker.language].monthsShort;
 			for (var i = 0; i < values.length; i++)
 				rv.push(escapeRegExp(values[i]));
 			return '(' + rv.join('|') + ')';
 		}},
-		yyyy: {parserMethod: 'setYear', getPattern: function() {return '(\\d{2}|\\d{4})\\b';}},
-		hh: {parserMethod: 'setHour', getPattern: function() {return '(0?[0-9]|1[0-9]|2[0-3])\\b';}},
-		mm: {parserMethod: 'setMinutes', getPattern: function() {return '(0?[1-9]|[1-5][0-9])\\b';}},
-		ss: {parserMethod: 'setSeconds', getPattern: function() {return '(0?[1-9]|[1-5][0-9])\\b';}},
-		ms: {parserMethod: 'setMilliseconds', getPattern: function() {return '([0-9]{1,3})\\b';}},
+		yyyy: {property: 'FullYear', getPattern: function() {return '(\\d{2}|\\d{4})\\b';}},
+		hh: {property: 'Hours', getPattern: function() {return '(0?[0-9]|1[0-9]|2[0-3])\\b';}},
+		mm: {property: 'Minutes', getPattern: function() {return '(0?[1-9]|[1-5][0-9])\\b';}},
+		ss: {property: 'Seconds', getPattern: function() {return '(0?[1-9]|[1-5][0-9])\\b';}},
+		ms: {property: 'Milliseconds', getPattern: function() {return '([0-9]{1,3})\\b';}},
 	};
+
+	var dateMethods = {
+		getMonth: function() {
+			return this.getMonth() + 1;
+		}
+	};
+
 	var tmp = [];
 	for (var k in dateFormatComponents) tmp.push(k);
 	tmp.push('.');
 
 	var formatComponent = new RegExp(tmp.join('|'));
+	tmp.pop();
+	var formatReplacer = new RegExp(tmp.join('|'), 'g');
 
 	function escapeRegExp(str) {
 		// http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
 		return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 	}
-
-	function buildDateParser (format, picker) {
-		var match, component, components = [], str = format, indexHash = {}, i = 0;
-		while (match = formatComponent.exec(str)) {
-			i++;
-			component = match[0];
-			if (component in dateFormatComponents) {
-				indexHash[i] = dateFormatComponents[component].parserMethod;
-				components.push('\\s*' + dateFormatComponents[component].getPattern(picker) + '\\s*');
-			}
-			else {
-				components.push(escapeRegExp(component));
-			}
-			str = str.slice(component.length);
-		}
-		return new DateParser(new RegExp('^\\s*' + components.join('') + '\\s*$'), indexHash);
-	}
-
-	var DateParser = function(regExp, indexHash) {
-		this.regExp = regExp;
-		this.indexHash = indexHash;
-	};
-	DateParser.prototype = {
-		constructor: DateParser,
-
-		parse: function (str) {
-			var match, i, methodName, value, rv = new Date(0);
-			if (!(match = this.regExp.exec(str)))
-				return null;
-			for (i = 1; i < match.length; i++) {
-				methodName = this.indexHash[i];
-				if (!methodName)
-					continue;
-				value = match[i];
-				if (/^d+$/.test(value))
-					value = parseInt(value, 10);
-				(DateParser.prototype[methodName] || Date.prototype[methodName]).call(rv, value);
-			}
-			return rv;
-		}
-	};
 
 	var DPGlobal = {
 		modes: [
