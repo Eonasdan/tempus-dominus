@@ -37,33 +37,30 @@
 		constructor: DateTimePicker,
 
 		init: function(element, options) {
+			var icon;
 			if (!(options.pickTime || options.pickDate))
 				throw new Error('Must choose at least one picker');
 			this.$element = $(element);
-			this.format = options.format || this.$element.data('date-format') || 'mm/dd/yyyy';
+			this.format = options.format || this.$element.data('date-format') || 'MM/dd/yyyy';
 			this._compileFormat();
 			this.language = options.language in dates ? options.language : 'en'
-			this.picker = $(getTemplate(this.id, options.pickDate, options.pickTime)).appendTo('body');
-			if (options.pickDate && options.pickTime) {
-				this.picker.on('click', '.accordion-toggle', function(e) {
-					e.stopPropagation();
-					var $this = $(this);
-					var $parent = $this.closest('ul');
-					var expanded = $parent.find('.collapse.in');
-					var closed = $parent.find('.collapse:not(.in)');
-
-					if (expanded && expanded.length) {
-						var hasData = expanded.data('collapse');
-						if (hasData && hasData.transitioning) return;
-						expanded.collapse('hide');
-						closed.collapse('show')
-						$this.find('i').toggleClass('icon-chevron-down icon-chevron-up');
-					}
-				});
-			}
+			this.pickDate = options.pickDate;
+			this.pickTime = options.pickTime;
 			this.isInput = this.$element.is('input');
 			this.component = this.$element.is('.date') ? this.$element.find('.add-on') : false;
-
+			if (this.component) {
+				icon = this.component.find('i');
+			}
+			if (this.pickTime) {
+				this.timeIcon = icon.data('time-icon') || 'icon-time';
+				icon.addClass(this.timeIcon);
+			}
+			if (this.pickDate) {
+				this.dateIcon = icon.data('date-icon') || 'icon-calendar';
+				icon.removeClass(this.timeIcon);
+				icon.addClass(this.dateIcon);
+			}
+			this.picker = $(getTemplate(this.timeIcon, options.pickDate, options.pickTime)).appendTo('body');
 			this.minViewMode = options.minViewMode||this.$element.data('date-minviewmode')||0;
 			if (typeof this.minViewMode === 'string') {
 				switch (this.minViewMode) {
@@ -110,7 +107,7 @@
 				type: 'show',
 				date: this.date
 			});
-			this._attachDatePickerWidgetEvents();
+			this._attachDatePickerGlobalEvents();
 			if (e) {
 				e.stopPropagation();
 				e.preventDefault();
@@ -118,6 +115,13 @@
 		},
 		
 		hide: function() {
+			// Ignore event if in the middle of a picker transition
+			var collapse = this.picker.find('.collapse')
+			for (var i = 0; i < collapse.length; i++) {
+				var collapseData = collapse.eq(i).data('collapse');
+				if (collapseData && collapseData.transitioning)
+					return;
+			}
 			this.picker.hide();
 			this.viewMode = this.startViewMode;
 			this.showMode();
@@ -126,7 +130,7 @@
 				type: 'hide',
 				date: this.date
 			});
-			this._detachDatePickerWidgetEvents();
+			this._detachDatePickerGlobalEvents();
 		},
 		
 		set: function() {
@@ -332,7 +336,7 @@
 
 		destroy: function() {
 			this._detachDatePickerEvents();
-			this._detachDatePickerWidgetEvents();
+			this._detachDatePickerGlobalEvents();
 			this.picker.remove();
 			this.$element.removeData('datetimepicker');
 			this.component.removeData('datetimepicker');
@@ -384,10 +388,29 @@
 		},
 
 		_attachDatePickerEvents: function() {
+			var self = this;
 			this.picker.on({
 				click: $.proxy(this.click, this),
 				mousedown: $.proxy(this.mousedown, this)
 			});
+			if (this.pickDate && this.pickTime) {
+				this.picker.on('click.togglePicker', '.accordion-toggle', function(e) {
+					e.stopPropagation();
+					var $this = $(this);
+					var $parent = $this.closest('ul');
+					var expanded = $parent.find('.collapse.in');
+					var closed = $parent.find('.collapse:not(.in)');
+
+					if (expanded && expanded.length) {
+						var collapseData = expanded.data('collapse');
+						if (collapseData && collapseData.transitioning) return;
+						expanded.collapse('hide');
+						closed.collapse('show')
+						$this.find('i').toggleClass(self.timeIcon + ' ' + self.dateIcon);
+						self.$element.find('.add-on i').toggleClass(self.timeIcon + ' ' + self.dateIcon);
+					}
+				});
+			}
 			if (this.isInput) {
 				this.$element.on({
 					focus: $.proxy(this.show, this),
@@ -403,7 +426,7 @@
 			}
 		},
 
-		_attachDatePickerWidgetEvents: function() {
+		_attachDatePickerGlobalEvents: function() {
 			$(window).on('resize.datetimepicker' + this.id, $.proxy(this.place, this));
 			if (!this.isInput) {
 				$(document).on('mousedown.datetimepicker' + this.id, $.proxy(this.hide, this));
@@ -415,6 +438,9 @@
 				click: this.click,
 				mousedown: this.mousedown
 			});
+			if (this.pickDate && this.pickTime) {
+				this.picker.off('click.togglePicker');
+			}
 			if (this.isInput) {
 				this.$element.off({
 					focus: this.show,
@@ -430,7 +456,7 @@
 			}
 		},
 
-		_detachDatePickerWidgetEvents: function () {
+		_detachDatePickerGlobalEvents: function () {
 			$(window).off('resize.datetimepicker' + this.id);
 			if (!this.isInput) {
 				$(document).off('mousedown.datetimepicker' + this.id);
@@ -507,7 +533,7 @@
 		return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 	}
 
-	function getTemplate(id, pickDate, pickTime) {
+	function getTemplate(timeIcon, pickDate, pickTime) {
 		if (pickDate && pickTime) {
 			return (
 				'<ul class="datetimepicker dropdown-menu">' +
@@ -516,7 +542,7 @@
 						DPGlobal.template +
 						'</div>' +
 					'</li>' +
-					'<li class="picker-switch"><a class="accordion-toggle"><i class="icon-chevron-down"></i></a></li>' +
+					'<li class="picker-switch"><a class="accordion-toggle"><i class="' + timeIcon + '"></i></a></li>' +
 					'<li class="collapse">' +
 						'<div class="timepicker">' +
 						TPGlobal.template +
