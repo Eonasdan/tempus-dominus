@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Date/Time widget for Twitter Bootstrap"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="{{ page.author }}" />
+    <title>{{ page.title }}</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"
+    <![endif]-->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet">
+    <!--[if lt IE 8]>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome-ie7.css" rel="stylesheet">
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/default.css">
+  </head>
+  <body>
+
+    <!-- header -->
+    <div id="header_wrap" class="outer">
+      <header class="inner">
+        <a id="forkme_banner" href="{{ page.githubUrl }}">View on GitHub</a>
+        <h1 id="project_title">{{ page.projectName }}</h1>
+        <h2 id="project_tagline">{{ page.projectDescription }}</h2>
+          <section id="downloads">
+            <a class="zip_download_link" href="{{ page.downloadUrl }}">Download this project as a .zip file</a>
+          </section>
+      </header>
+    </div>
+    <!-- content -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        {{ content }}
+      </section>
+    </div>
+    <!-- footer  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">{{ page.projectName }} maintained by <a href="{{ page.authorUrl }}">{{ page.author }}</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+  </body>
+</html>
+
