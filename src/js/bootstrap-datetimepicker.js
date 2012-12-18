@@ -27,7 +27,7 @@
 (function($) {
 	
 	// Picker object
-	
+	var smartPhone = (window.orientation != undefined);
 	var DateTimePicker = function(element, options) {
 		this.id = dpgId++;
 		this.init(element, options);
@@ -138,11 +138,14 @@
 			var formated = this.formatDate(this.date);
 			if (!this.isInput) {
 				if (this.component){
-					this.$element.find('input').prop('value', formated);
+					var input = this.$element.find('input');
+					input.val(formated);
+					this._resetMaskPos(input);
 				}
 				this.$element.data('date', formated);
 			} else {
-				this.$element.prop('value', formated);
+				this.$element.val(formated);
+				this._resetMaskPos(this.$element);
 			}
 		},
 		
@@ -271,9 +274,9 @@
 			if (!this.date)
 				return;
 			var timeComponents = this.picker.find('.timepicker span[data-time-component]');
-			timeComponents.filter('[data-time-component=hours]').text(this.date.getHours());
-			timeComponents.filter('[data-time-component=minutes]').text(this.date.getMinutes());
-			timeComponents.filter('[data-time-component=seconds]').text(this.date.getSeconds());
+			timeComponents.filter('[data-time-component=hours]').text(padLeft(this.date.getHours().toString(), 2, '0'));
+			timeComponents.filter('[data-time-component=minutes]').text(padLeft(this.date.getMinutes().toString(), 2, '0'));
+			timeComponents.filter('[data-time-component=seconds]').text(padLeft(this.date.getSeconds().toString(), 2, '0'));
 		},
 		
 		click: function(e) {
@@ -391,13 +394,63 @@
 			return rv;
 		},
 
+		// part of the following code was taken from
+		// http://cloud.github.com/downloads/digitalBush/jquery.maskedinput/jquery.maskedinput-1.3.js
+		keydown: function(e) {
+			var self = this, k = e.which, input = $(e.target);
+			if (k == 8 || k == 46) {
+				// backspace and delete cause the maskPosition
+				// to be recalculated
+				setTimeout(function() {
+					self._resetMaskPos(input);
+				});
+			}
+		},
+
 		keypress: function(e) {
-			// TODO: Mask the input so the user can only type
-			// according to the specified format
+			var k = e.which;
+			var input = $(e.target);
+			var c = String.fromCharCode(k);
+			var val = input.val() || '';
+			val += c;
+			var mask = this._mask[this._maskPos];
+			if (!mask) {
+				return false;
+			}
+			if (mask.end != val.length) {
+				return;
+			}
+			if (!mask.pattern.test(val.slice(mask.start))) {
+				val = val.slice(0, val.length - 1);
+				while ((mask = this._mask[this._maskPos]) && mask.character) {
+					val += mask.character;
+					// advance mask position past static
+					// part
+					this._maskPos++;
+				}
+				val += c;
+				if (mask.end != val.length) {
+					input.val(val);
+					return false;
+				} else {
+					if (!mask.pattern.test(val.slice(mask.start))) {
+						input.val(val.slice(0, mask.start));
+						return false;
+					} else {
+						input.val(val);
+						this._maskPos++;
+						return false;
+					}
+				}
+			} else {
+				this._maskPos++;
+			}
 		},
 
 		change: function(e) {
-			if (this._formatPattern.test($(e.target).val())) {
+			var input = $(e.target);
+			var val = input.val();
+			if (this._formatPattern.test(val)) {
 				this.update();
 				this.$element.trigger({
 					type: 'changeDate',
@@ -405,7 +458,11 @@
 					viewMode: DPGlobal.modes[this.viewMode].clsName
 				});
 				this.set();
+			} else if (val && val.trim()) {
+				if (this.date) this.set();
+				else input.val('');
 			}
+			this._resetMaskPos(input);
 		},
 
 		mousedown: function(e) {
@@ -456,6 +513,21 @@
 			return this._finishParsingDate(parsed);
 		},
 
+		_resetMaskPos: function(input) {
+			var val = input.val();
+			for (var i = 0; i < this._mask.length; i++) {
+				if (this._mask[i].end > val.length) {
+					// If the mask has ended then jump to
+					// the next
+					this._maskPos = i;
+					break;
+				} else if (this._mask[i].end === val.length) {
+					this._maskPos = i + 1;
+					break;
+				}
+			}
+		},
+
 		_finishParsingDate: function(parsed) {
 			var year, month, date, hours, minutes, seconds;
 			year = parsed.FullYear;
@@ -471,20 +543,34 @@
 		},
 
 		_compileFormat: function () {
-			var match, component, components = [], str = this.format, propertiesByIndex = {}, i = 0;
+			var match, component, components = [], mask = [], str = this.format, propertiesByIndex = {}, i = pos = 0;
 			while (match = formatComponent.exec(str)) {
 				component = match[0];
 				if (component in dateFormatComponents) {
 					i++;
 					propertiesByIndex[i] = dateFormatComponents[component].property;
 					components.push('\\s*' + dateFormatComponents[component].getPattern(this) + '\\s*');
+					mask.push({
+						pattern: new RegExp(dateFormatComponents[component].getPattern(this)),
+						property: dateFormatComponents[component].property,
+						start: pos,
+						end: pos += component.length
+					});
 				}
 				else {
 					components.push(escapeRegExp(component));
+					mask.push({
+						pattern: new RegExp(escapeRegExp(component)),
+						character: component,
+						start: pos,
+						end: ++pos
+					});
 				}
 				str = str.slice(component.length);
 			}
-			this._formatPattern = new RegExp('^\\s*' + components.join('') + '\\s*$')
+			this._mask = mask;
+			this._maskPos = 0;
+			this._formatPattern = new RegExp('^\\s*' + components.join('') + '\\s*$');
 			this._propertiesByIndex = propertiesByIndex;
 		},
 
@@ -517,13 +603,23 @@
 				this.$element.on({
 					'focus': $.proxy(this.show, this),
 					'change': $.proxy(this.change, this),
-					'keypress': $.proxy(this.keypress, this)
 				});
+				if (this.options.maskInput) {
+					this.$element.on({
+						'keydown': $.proxy(this.keydown, this),
+						'keypress': $.proxy(this.keypress, this)
+					});
+				}
 			} else {
 				this.$element.on({
 					'change': $.proxy(this.change, this),
-					'keypress': $.proxy(this.keypress, this)
 				}, 'input');
+				if (this.options.maskInput) {
+					this.$element.on({
+						'keydown': $.proxy(this.keydown, this),
+						'keypress': $.proxy(this.keypress, this)
+					}, 'input');
+				}
 				if (this.component){
 					this.component.on('click', $.proxy(this.show, this));
 				} else {
@@ -552,13 +648,23 @@
 				this.$element.off({
 					'focus': this.show,
 					'change': this.change,
-					'keypress': this.keypress
 				});
+				if (this.options.maskInput) {
+					this.$element.off({
+						'keydown': this.keydown,
+						'keypress': this.keypress
+					});
+				}
 			} else {
 				this.$element.off({
 					'change': this.change,
-					'keypress': this.keypress
 				}, 'input');
+				if (this.options.maskInput) {
+					this.$element.off({
+						'keydown': this.keydown,
+						'keypress': this.keypress
+					}, 'input');
+				}
 				if (this.component){
 					this.component.off('click', this.show);
 				} else {
@@ -588,6 +694,7 @@
 	};
 
 	$.fn.datetimepicker.defaults = {
+		maskInput: true,
 		pickDate: true,
 		pickTime: true,
 		hourStep: 1,
@@ -752,5 +859,6 @@
 				'<td><a href="#" class="btn" data-action="decrementSeconds"><i class="icon-chevron-down"></i></a></td>' +
 			'</tr>' +
 		'</table>'
+
 
 })(window.jQuery)
