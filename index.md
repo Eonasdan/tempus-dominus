@@ -5,7 +5,17 @@ author: Thiago de Arruda
 authorUrl: https://github.com/tarruda
 projectName: bootstrap-datetimepicker
 projectDescription: Date/Time Picker for Twitter Boostrap 
-downloadUrl: dist/bootstrap-datetimepicker-v0.0.1.zip
+downloadUrl: assets/dist/bootstrap-datetimepicker-0.0.1.zip
+css:
+  - //netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css
+  - //netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css
+  - assets/css/bootstrap-datetimepicker.min.css
+  - assets/css/default.css
+js:
+  - //cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js
+  - //netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js
+  - assets/js/bootstrap-datetimepicker.min.js
+  - assets/js/index.js
 ---
 ### Introduction
 Simple date/time picker component based on the work of [Stefan Petre](http://www.eyecon.ro/bootstrap-datepicker/),
