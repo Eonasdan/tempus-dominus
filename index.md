@@ -8,8 +8,8 @@ projectDescription: Date/Time Picker for Twitter Boostrap
 downloadUrl: assets/dist/bootstrap-datetimepicker-0.0.1.zip
 githubUrl: https://github.com/tarruda/bootstrap-datetimepicker
 css:
-  - //netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css
   - //netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css
+  - //netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css
   - assets/css/bootstrap-datetimepicker.min.css
   - assets/css/default.css
 js:

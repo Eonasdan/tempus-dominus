@@ -6,13 +6,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="author" content="{{ page.author }}" />
     <title>{{ page.title }}</title>
-    {% include css.html %}
     <!--[if lt IE 9]>
-      <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome-ie7.css" rel="stylesheet">
       <script type="text/javascript"
         src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
       <script type="text/javascript"
-        src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js"></script>
+        src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    {% include css.html %}
+    <!--[if IE 7]>
+      <link rel="stylesheet" href="css/font-awesome-ie7.css">
     <![endif]-->
   </head>
   <body>
@@ -23,23 +25,23 @@
         <a id="forkme_banner" href="{{ page.githubUrl }}">View on GitHub</a>
         <h1 id="project_title">{{ page.projectName }}</h1>
         <h2 id="project_tagline">{{ page.projectDescription }}</h2>
-        <section id="downloads">
+        <div id="downloads">
           <a class="zip_download_link" href="{{ page.downloadUrl }}">Download this project as a .zip file</a>
-        </section>
+        </div>
       </header>
     </div>
     <!-- content -->
     <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+      <div id="main_content" class="inner">
         {{ content }}
-      </section>
+      </div>
     </div>
     <!-- footer  -->
     <div id="footer_wrap" class="outer">
-      <footer class="inner">
+      <div class="inner">
         <p class="copyright">{{ page.projectName }} maintained by <a href="{{ page.authorUrl }}">{{ page.author }}</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
+      </div>
     </div>
     {% include js.html %}
   </body>
