@@ -1,0 +1,5 @@
+/bootstrap
+/node_modules
+/build
+/tmp
+*.log
