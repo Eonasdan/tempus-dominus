@@ -7,37 +7,45 @@
     <meta name="author" content="{{ page.author }}" />
     <title>{{ page.title }}</title>
     <!--[if lt IE 9]>
-      <script type="text/javascript"
-        src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link href="assets/css/layout.css" rel="stylesheet">
     {% include css.html %}
   </head>
   <body>
-
-    <!-- header -->
-    <div id="header_wrap" class="outer">
-      <header class="inner">
-        <a id="forkme_banner" href="{{ page.githubUrl }}">View on GitHub</a>
-        <h1 id="project_title">{{ page.projectName }}</h1>
-        <h2 id="project_tagline">{{ page.projectDescription }}</h2>
-        <section id="downloads">
-          <a class="zip_download_link" href="{{ page.downloadUrl }}">Download this project as a .zip file</a>
+    <div class="outer">
+      <!-- header -->
+      <div id="header-wrap" class="row-fluid">
+        <a href="https://github.com/you"><img
+          style="position: absolute; top: 0; right: 0; border: 0;"
+          src="assets/img/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
+        <header class="span6 offset3">
+          <h1>{{ page.projectName }}</h1>
+          <h2>{{ page.projectDescription }}</h2>
+          <section id="downloads" class="pull-right">
+            <div class="img"></div>
+            <a class="zip-download-link"
+              href="{{ page.zipDownloadUrl }}">
+              <span class="download-descr">
+                Download this project as a .zip file
+              </span>
+            </a>
+          </section>
+        </header>
+      </div>
+      <!-- content -->
+      <div id="main-content-wrap" class="row-fluid">
+        <section id="main-content" class="span6 offset3">
+          {{ content }}
         </section>
-      </header>
-    </div>
-    <!-- content -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        {{ content }}
-      </section>
-    </div>
-    <!-- footer  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">{{ page.projectName }} maintained by <a href="{{ page.authorUrl }}">{{ page.author }}</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
+      </div>
+      <!-- footer  -->
+      <div id="footer-wrap" class="row-fluid">
+        <footer class="span6 offset3">
+          <p class="copyright">{{ page.projectName }} maintained by <a href="{{ page.authorUrl }}">{{ page.author }}</a></p>
+          <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        </footer>
+      </div>
     </div>
     {% include js.html %}
   </body>

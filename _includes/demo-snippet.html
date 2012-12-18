@@ -1,29 +1,3 @@
----
-title: Bootstrap Date/Time Picker
-layout: default
-author: Thiago de Arruda
-authorUrl: https://github.com/tarruda
-projectName: bootstrap-datetimepicker
-projectDescription: Date/Time Picker for Twitter Boostrap 
-zipDownloadUrl: assets/dist/bootstrap-datetimepicker-0.0.1.zip
-githubUrl: https://github.com/tarruda/bootstrap-datetimepicker
-css:
-  - assets/css/bootstrap-datetimepicker.min.css
-js:
-  - assets/js/bootstrap-datetimepicker.min.js
-  - assets/js/index.js
----
-### Introduction
-Simple date/time picker component based on the work of [Stefan Petre](http://www.eyecon.ro/bootstrap-datepicker/),
-with contributions taken from [Andrew Rowls](https://github.com/eternicode) and
-[jdewit](https://github.com/jdewit).
-
-### Demo
-{% include demo.html %}
-
-### Usage
-The following html will produce a widget similar to the demo above:
-
 {% highlight html %}
 <html>
   <head>
@@ -59,17 +33,5 @@ The following html will produce a widget similar to the demo above:
       });
     </script>
   </body>
-<html>
-{% endhighlight %}
-
-The element also has the bootstrap-datepicker 'changeDate' event and 'setValue' method.
-
-### Compilation
-To compile/minify you need to have make, node.js and npm on your $PATH
-
-{% highlight sh %}
-$ git clone git://github.com/tarruda/bootstrap-datetimepicker.git
-$ cd bootstrap-datetimepicker
-$ make deps
-$ make build
+</html>
 {% endhighlight %}
