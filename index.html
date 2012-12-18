@@ -5,17 +5,8 @@
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="description" content="Bootstrap-datetimepicker : Date/time picker widget based on twitter bootstrap" />
+
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet">
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome-ie7.css" rel="stylesheet">
-    <![endif]-->
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/bootstrap-datetimepicker.min.css">
 
     <title>Bootstrap-datetimepicker</title>
   </head>
@@ -48,12 +39,21 @@
 
 <p>Usage is similar to the bootstrap-datepicker component or most jquery plugins, first setup html:</p>
 
-<div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"datetimepicker"</span> <span class="na">class=</span><span class="s">"input-append date"</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">&gt;&lt;/input&gt;</span>
-  <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"add-on"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;i</span> <span class="na">data-time-icon=</span><span class="s">"icon-time"</span> <span class="na">data-date-icon=</span><span class="s">"icon-calendar"</span><span class="nt">&gt;&lt;/i&gt;</span>
-  <span class="nt">&lt;/span&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"screen"</span> <span class="na">href=</span><span class="s">"http://tarruda.github.com/bootstrap-datetimepicker/stylesheets/bootstrap-datetimepicker.min.css"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span> 
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"http://tarruda.github.com/bootstrap-datetimepicker/javascripts/bootstrap-datetimepicker.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"datetimepicker"</span> <span class="na">class=</span><span class="s">"input-append date"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">&gt;&lt;/input&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"add-on"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;i</span> <span class="na">data-time-icon=</span><span class="s">"icon-time"</span> <span class="na">data-date-icon=</span><span class="s">"icon-calendar"</span><span class="nt">&gt;&lt;/i&gt;</span>
+      <span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
 </pre></div>
 
 <p>Then initialize the plugin:</p>
@@ -71,16 +71,6 @@
 
 <p>The element also has the bootstrap-datepicker 'changeDate' event and 'setValue' method.</p>
 
-<h3>Demo</h3>
-<p>Example above.</p> 
-<div class="well">
-  <div id="datetimepicker" class="input-append date">
-    <input type="text"></input>
-    <span class="add-on">
-      <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-    </span>
-  </div>
-</div>
 <h3>Compilation</h3>
 
 <p>To compile/minify you need to have make, node.js and npm on your $PATH</p>
@@ -101,22 +91,7 @@ $ make build
       </footer>
     </div>
 
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> 
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="javascripts/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript">
-      $(function() {
-        $('#datetimepicker').datetimepicker({
-          format: 'dd/MM/yy hh:mm',
-          language: 'pt-BR',
-          pickDate: true,
-          pickTime: true,
-          hourStep: 1,
-          minuteStep: 15,
-          secondStep: 30
-        });
-      });
-    </script>
+    
 
   </body>
 </html>
