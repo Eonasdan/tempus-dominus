@@ -201,14 +201,16 @@
 		},
 		
 		fill: function() {
-			var d = new Date(this.viewDate),
-				year = d.getFullYear(),
-				month = d.getMonth(),
-				currentDate = this.date.valueOf();
+			var year = this.viewDate.getFullYear();
+			var month = this.viewDate.getMonth();
+			var currentDate = new Date(
+				this.date.getFullYear(), this.date.getMonth(), this.date.getDate(),
+				0, 0, 0, 0
+			);
 			this.picker.find('.datepicker-days th:eq(1)')
 						.text(dates[this.language].months[month] + ' ' + year);
-			var prevMonth = new Date(year, month-1, 28,0,0,0,0),
-				day = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
+			var prevMonth = new Date(year, month-1, 28,0,0,0,0);
+			var day = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
 			prevMonth.setDate(day);
 			prevMonth.setDate(day - (prevMonth.getDay() - this.weekStart + 7)%7);
 			var nextMonth = new Date(prevMonth);
@@ -226,7 +228,7 @@
 				} else if (prevMonth.getMonth() > month) {
 					clsName += ' new';
 				}
-				if (prevMonth.valueOf() === currentDate) {
+				if (prevMonth.valueOf() === currentDate.valueOf()) {
 					clsName += ' active';
 				}
 				html.push('<td class="day'+clsName+'">'+prevMonth.getDate() + '</td>');
@@ -294,9 +296,11 @@
 							this.viewDate.setFullYear(year);
 						}
 						if (this.viewMode !== 0) {
-							this.date.setFullYear(this.viewDate.getFullYear());
-							this.date.setMonth(this.viewDate.getMonth());
-							this.date.setDate(this.viewDate.getDate());
+							this.date = new Date(
+								this.viewDate.getFullYear(), this.viewDate.getMonth(), this.viewDate.getDate(),
+								this.date.getHours(), this.date.getMinutes(), this.date.getSeconds(),
+								this.date.getMilliseconds()
+							);
 							this.$element.trigger({
 								type: 'changeDate',
 								date: this.date,
@@ -317,9 +321,11 @@
 								month += 1;
 							}
 							var year = this.viewDate.getFullYear();
-							this.date.setFullYear(year);
-							this.date.setMonth(month);
-							this.date.setDate(day);
+							this.date = new Date(
+								year, month, day,
+								this.date.getHours(), this.date.getMinutes(), this.date.getSeconds(),
+								this.date.getMilliseconds()
+							);
 							this.viewDate = new Date(year, month, Math.min(28, day),0,0,0,0);
 							this.fill();
 							this.set();
@@ -335,6 +341,8 @@
 		},
 
 		keypress: function(e) {
+			// TODO: Mask the input so the user can only type
+			// according to the specified format
 		},
 
 		change: function(e) {
@@ -345,7 +353,6 @@
 					date: this.date,
 					viewMode: DPGlobal.modes[this.viewMode].clsName
 				});
-			} else {
 				this.set();
 			}
 		},
@@ -375,26 +382,41 @@
 				var methodName, property, rv;
 				property = dateFormatComponents[match].property
 				methodName = 'get' + property;
-				rv = (dateMethods[methodName] || Date.prototype[methodName]).call(d);
+				rv = d[methodName]();
+				if (methodName === 'getMonth') rv = rv + 1;
+				if (methodName === 'getYear') rv = rv + 1900 - 2000;
 				return padLeft(rv.toString(), match.length, '0');
 			});
 		},
 
 		parseDate: function(str) {
-			var match, i, property, methodName, value, rv = new Date(0);
+			var match, i, property, methodName, value, parsed = {};
 			if (!(match = this._formatPattern.exec(str)))
 				return null;
 			for (i = 1; i < match.length; i++) {
 				property = this._propertiesByIndex[i];
 				if (!property)
 					continue;
-				methodName = 'set' + property;
 				value = match[i];
 				if (/^\d+$/.test(value))
 					value = parseInt(value, 10);
-				(dateMethods[methodName] || Date.prototype[methodName]).call(rv, value);
+				parsed[property] = value;
 			}
-			return rv;
+			return this._finishParsingDate(parsed);
+		},
+
+		_finishParsingDate: function(parsed) {
+			var year, month, date, hours, minutes, seconds;
+			year = parsed.FullYear;
+			if (parsed.Year) year = 2000 + parsed.Year;
+			if (!year) year = 1970;
+			if (parsed.Month) month = parsed.Month - 1;
+			else month = 0;
+			date = parsed.Date || 1;
+			hours = parsed.Hours || 0;
+			minutes = parsed.Minutes || 0;
+			seconds = parsed.Seconds || 0;
+			return new Date(year, month, date, hours, minutes, seconds, 0);
 		},
 
 		_compileFormat: function () {
@@ -531,41 +553,22 @@
 	var dateFormatComponents = {
 		dd: {property: 'Date', getPattern: function() { return '(0?[1-9]|[1-2][0-9]|3[0-1])\\b';}},
 		MM: {property: 'Month', getPattern: function() {return '(0?[1-9]|1[0-2])\\b';}},
-		month: {property: 'MonthByName', getPattern: function(picker) {
-			var rv = [], values = dates[picker.language].months;
-			for (var i = 0; i < values.length; i++)
-				rv.push(escapeRegExp(values[i]));
-			return '(' + rv.join('|') + ')';
-		}},
-		monthShort: {property: 'MonthByShortName', getPattern: function(picker) {
-			var rv = [], values = dates[picker.language].monthsShort;
-			for (var i = 0; i < values.length; i++)
-				rv.push(escapeRegExp(values[i]));
-			return '(' + rv.join('|') + ')';
-		}},
-		yyyy: {property: 'FullYear', getPattern: function() {return '(\\d{2}|\\d{4})\\b';}},
+		yy: {property: 'Year', getPattern: function() {return '(\\d{2})\\b'}},
+		yyyy: {property: 'FullYear', getPattern: function() {return '(\\d{4})\\b';}},
 		hh: {property: 'Hours', getPattern: function() {return '(0?[0-9]|1[0-9]|2[0-3])\\b';}},
 		mm: {property: 'Minutes', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
 		ss: {property: 'Seconds', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
 		ms: {property: 'Milliseconds', getPattern: function() {return '([0-9]{1,3})\\b';}},
 	};
 
-	var dateMethods = {
-		getMonth: function() {
-			return this.getMonth() + 1;
-		},
-		setMonth: function(m) {
-			return this.setMonth(m - 1);
-		}
-	};
+	var keys = [];
+	for (var k in dateFormatComponents) keys.push(k);
+	keys[keys.length - 1] += '\\b';
+	keys.push('.');
 
-	var tmp = [];
-	for (var k in dateFormatComponents) tmp.push(k);
-	tmp.push('.');
-
-	var formatComponent = new RegExp(tmp.join('|'));
-	tmp.pop();
-	var formatReplacer = new RegExp(tmp.join('|'), 'g');
+	var formatComponent = new RegExp(keys.join('\\b|'));
+	keys.pop();
+	var formatReplacer = new RegExp(keys.join('\\b|'), 'g');
 
 	function escapeRegExp(str) {
 		// http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
