@@ -409,6 +409,11 @@
 
 		keypress: function(e) {
 			var k = e.which;
+			if (k == 8 || k == 46) {
+				// For those browsers which will trigger
+				// keypress on backspace/delete
+				return;
+			}
 			var input = $(e.target);
 			var c = String.fromCharCode(k);
 			var val = input.val() || '';
