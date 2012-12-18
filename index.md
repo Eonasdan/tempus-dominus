@@ -9,7 +9,11 @@ downloadUrl: dist/bootstrap-datetimepicker-v0.0.1.zip
 ---
 ### Introduction
 Simple date/time picker component based on the work of [Stefan Petre](http://www.eyecon.ro/bootstrap-datepicker/),
-with contributions taken from [Andrew Rowls](https://github.com/eternicode) and (https://github.com/jdewit).
+with contributions taken from [Andrew Rowls](https://github.com/eternicode) and
+[jdewit](https://github.com/jdewit).
+
+### Demo
+{% include demo.html %}
 
 ### Usage
 The following html will produce a widget similar to the demo above:
