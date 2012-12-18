@@ -750,19 +750,21 @@
 	function getTemplate(timeIcon, pickDate, pickTime) {
 		if (pickDate && pickTime) {
 			return (
-				'<ul class="datetimepicker dropdown-menu">' +
-					'<li class="collapse in">' +
-						'<div class="datepicker">' +
-						DPGlobal.template +
-						'</div>' +
-					'</li>' +
-					'<li class="picker-switch"><a class="accordion-toggle"><i class="' + timeIcon + '"></i></a></li>' +
-					'<li class="collapse">' +
-						'<div class="timepicker">' +
-						TPGlobal.template +
-						'</div>' +
-					'</li>' +
-				'</ul>'
+				'<div class="datetimepicker dropdown-menu">' +
+					'<ul>' +
+						'<li class="collapse in">' +
+							'<div class="datepicker">' +
+							DPGlobal.template +
+							'</div>' +
+						'</li>' +
+						'<li class="picker-switch"><a class="accordion-toggle"><i class="' + timeIcon + '"></i></a></li>' +
+						'<li class="collapse">' +
+							'<div class="timepicker">' +
+							TPGlobal.template +
+							'</div>' +
+						'</li>' +
+					'</ul>' +
+				'</div>'
 			);
 		} else if (pickTime) {
 			return (
