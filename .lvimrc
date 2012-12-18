@@ -5,4 +5,4 @@ let g:ctrlp_custom_ignore = {
 
 let &tags=getcwd().'/tags'
 let g:autotagTagsFile = &tags
-au BufEnter *.js setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
+au BufEnter *.js,*.less setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab

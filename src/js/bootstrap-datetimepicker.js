@@ -40,6 +40,7 @@
 			var icon;
 			if (!(options.pickTime || options.pickDate))
 				throw new Error('Must choose at least one picker');
+			this.options = options;
 			this.$element = $(element);
 			this.format = options.format || this.$element.data('date-format') || 'MM/dd/yyyy';
 			this._compileFormat();
@@ -153,7 +154,8 @@
 			}
 			this.set();
 			this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
-			this.fill();
+			this.fillDate();
+			this.fillTime();
 		},
 		
 		place: function(){
@@ -178,7 +180,8 @@
 			}
 			this.date = this.parseDate(dateStr);
 			this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
-			this.fill();
+			this.fillDate();
+			this.fillTime();
 		},
 		
 		fillDow: function() {
@@ -200,7 +203,7 @@
 			this.picker.find('.datepicker-months td').append(html);
 		},
 		
-		fill: function() {
+		fillDate: function() {
 			var year = this.viewDate.getFullYear();
 			var month = this.viewDate.getMonth();
 			var currentDate = new Date(
@@ -263,6 +266,15 @@
 			}
 			yearCont.html(html);
 		},
+
+		fillTime: function() {
+			if (!this.date)
+				return;
+			var timeComponents = this.picker.find('.timepicker span[data-time-component]');
+			timeComponents.filter('[data-time-component=hours]').text(this.date.getHours());
+			timeComponents.filter('[data-time-component=minutes]').text(this.date.getMinutes());
+			timeComponents.filter('[data-time-component=seconds]').text(this.date.getSeconds());
+		},
 		
 		click: function(e) {
 			e.stopPropagation();
@@ -282,7 +294,7 @@
 									this.viewDate['get'+DPGlobal.modes[this.viewMode].navFnc].call(this.viewDate) + 
 									DPGlobal.modes[this.viewMode].navStep * (target[0].className === 'prev' ? -1 : 1)
 								);
-								this.fill();
+								this.fillDate();
 								this.set();
 								break;
 						}
@@ -308,7 +320,7 @@
 							});
 						}
 						this.showMode(-1);
-						this.fill();
+						this.fillDate();
 						this.set();
 						break;
 					case 'td':
@@ -327,7 +339,7 @@
 								this.date.getMilliseconds()
 							);
 							this.viewDate = new Date(year, month, Math.min(28, day),0,0,0,0);
-							this.fill();
+							this.fillDate();
 							this.set();
 							this.$element.trigger({
 								type: 'changeDate',
@@ -338,6 +350,45 @@
 						break;
 				}
 			}
+		},
+
+		actions: {
+			incrementHours: function(e) {
+				this.date.setHours(this.date.getHours() + this.options.hourStep);
+			},
+
+			incrementMinutes: function(e) {
+				this.date.setMinutes(this.date.getMinutes() + this.options.minuteStep);
+			},
+
+			incrementSeconds: function(e) {
+				this.date.setSeconds(this.date.getSeconds() + this.options.secondStep);
+			},
+
+			decrementHours: function(e) {
+				this.date.setHours(this.date.getHours() - this.options.hourStep);
+			},
+
+			decrementMinutes: function(e) {
+				this.date.setMinutes(this.date.getMinutes() - this.options.minuteStep);
+			},
+
+			decrementSeconds: function(e) {
+				this.date.setSeconds(this.date.getSeconds() - this.options.secondStep);
+			}
+		},
+
+		doAction: function(e) {
+			if (!this.date) this.date = new Date(1970, 0, 0, 0, 0, 0, 0);
+			var action = $(e.currentTarget).data('action');
+			var rv = this.actions[action].apply(this, arguments);
+			this.set();
+			this.fillTime();
+			this.$element.trigger({
+				type: 'changeDate',
+				date: this.date,
+			});
+			return rv;
 		},
 
 		keypress: function(e) {
@@ -441,8 +492,9 @@
 			var self = this;
 			this.picker.on({
 				click: $.proxy(this.click, this),
-				mousedown: $.proxy(this.mousedown, this)
+				mousedown: $.proxy(this.mousedown, this),
 			});
+			this.picker.on('click', '[data-action]', $.proxy(this.doAction, this));
 			if (this.pickDate && this.pickTime) {
 				this.picker.on('click.togglePicker', '.accordion-toggle', function(e) {
 					e.stopPropagation();
@@ -492,6 +544,7 @@
 				click: this.click,
 				mousedown: this.mousedown
 			});
+			this.picker.off('click', '[data-action]');
 			if (this.pickDate && this.pickTime) {
 				this.picker.off('click.togglePicker');
 			}
@@ -536,7 +589,10 @@
 
 	$.fn.datetimepicker.defaults = {
 		pickDate: true,
-		pickTime: true
+		pickTime: true,
+		hourStep: 1,
+		minuteStep: 15,
+		secondStep: 30
 	};
 	$.fn.datetimepicker.Constructor = DateTimePicker;
 	var dpgId = 0;
@@ -668,18 +724,18 @@
 					'</table>'+
 				'</div>';
 	var TPGlobal = {
-	        hourTemplate: '<span class="timepicker-hour"></span>',
-                minuteTemplate: '<span class="timepicker-minute"></span>',
-                secondTemplate: '<span class="timepicker-second"></span>',
+	        hourTemplate: '<span data-time-component="hours" class="timepicker-hour"></span>',
+                minuteTemplate: '<span data-time-component="minutes" class="timepicker-minute"></span>',
+                secondTemplate: '<span data-time-component="seconds" class="timepicker-second"></span>',
 	};
 	TPGlobal.template = 
 		'<table class="table-condensed">' +
 			'<tr>' +
-				'<td><a href="#" data-action="incrementHour"><i class="icon-chevron-up"></i></a></td>' +
+				'<td><a href="#" class="btn" data-action="incrementHours"><i class="icon-chevron-up"></i></a></td>' +
 				'<td class="separator">&nbsp;</td>' +
-				'<td><a href="#" data-action="incrementMinute"><i class="icon-chevron-up"></i></a></td>' +
+				'<td><a href="#" class="btn" data-action="incrementMinutes"><i class="icon-chevron-up"></i></a></td>' +
                                 '<td class="separator">&nbsp;</td>' +
-				'<td><a href="#" data-action="incrementSecond"><i class="icon-chevron-up"></i></a></td>' +
+				'<td><a href="#" class="btn" data-action="incrementSeconds"><i class="icon-chevron-up"></i></a></td>' +
 			'</tr>' +
 			'<tr>' +
 				'<td>' + TPGlobal.hourTemplate + '</td> ' +
@@ -689,11 +745,11 @@
 				'<td>' + TPGlobal.secondTemplate + '</td>' +
 			'</tr>' +
 			'<tr>' +
-				'<td><a href="#" data-action="decrementHour"><i class="icon-chevron-down"></i></a></td>' +
+				'<td><a href="#" class="btn" data-action="decrementHours"><i class="icon-chevron-down"></i></a></td>' +
 				'<td class="separator"></td>' +
-				'<td><a href="#" data-action="decrementMinute"><i class="icon-chevron-down"></i></a></td>' +
+				'<td><a href="#" class="btn" data-action="decrementMinutes"><i class="icon-chevron-down"></i></a></td>' +
 				'<td class="separator">&nbsp;</td>' +
-				'<td><a href="#" data-action="decrementSecond"><i class="icon-chevron-down"></i></a></td>' +
+				'<td><a href="#" class="btn" data-action="decrementSeconds"><i class="icon-chevron-down"></i></a></td>' +
 			'</tr>' +
 		'</table>'
 
