@@ -488,6 +488,16 @@
 			} else if (val && val.trim()) {
 				if (this.date) this.set();
 				else input.val('');
+			} else {
+				if (this.date) {
+					// unset the date when the input is
+					// erased
+					this.$element.trigger({
+						type: 'changeDate',
+						date: null,
+						viewMode: DPGlobal.modes[this.viewMode].clsName
+					});
+				}
 			}
 			this._resetMaskPos(input);
 		},
