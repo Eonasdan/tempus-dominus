@@ -156,7 +156,7 @@
 				this.date = new Date(newDate);
 			}
 			this.set();
-			this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
+			this.viewDate = UTCDate(this.date.getUTCFullYear(), this.date.getUTCMonth(), 1, 0, 0, 0, 0);
 			this.fillDate();
 			this.fillTime();
 		},
@@ -178,11 +178,14 @@
 					dateStr = this.$element.find('input').val();
 				}
 				if (!dateStr) {
-					dateStr = this.$element.data('date') || this.formatDate(new Date());
+					var tmp = new Date()
+					this.date = UTCDate(tmp.getFullYear(), tmp.getMonth(), tmp.getDate(),
+							    tmp.getHours(), tmp.getMinutes(), tmp.getSeconds(), tmp.getMilliseconds())
+				} else {
+					this.date = this.parseDate(dateStr);
 				}
 			}
-			this.date = this.parseDate(dateStr);
-			this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
+			this.viewDate = UTCDate(this.date.getUTCFullYear(), this.date.getUTCMonth(), 1, 0, 0, 0, 0);
 			this.fillDate();
 			this.fillTime();
 		},
@@ -207,44 +210,44 @@
 		},
 		
 		fillDate: function() {
-			var year = this.viewDate.getFullYear();
-			var month = this.viewDate.getMonth();
-			var currentDate = new Date(
-				this.date.getFullYear(), this.date.getMonth(), this.date.getDate(),
+			var year = this.viewDate.getUTCFullYear();
+			var month = this.viewDate.getUTCMonth();
+			var currentDate = UTCDate(
+				this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate(),
 				0, 0, 0, 0
 			);
 			this.picker.find('.datepicker-days th:eq(1)')
 						.text(dates[this.language].months[month] + ' ' + year);
-			var prevMonth = new Date(year, month-1, 28,0,0,0,0);
-			var day = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
-			prevMonth.setDate(day);
-			prevMonth.setDate(day - (prevMonth.getDay() - this.weekStart + 7)%7);
-			var nextMonth = new Date(prevMonth);
-			nextMonth.setDate(nextMonth.getDate() + 42);
+			var prevMonth = UTCDate(year, month-1, 28, 0, 0, 0, 0);
+			var day = DPGlobal.getDaysInMonth(prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
+			prevMonth.setUTCDate(day);
+			prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - this.weekStart + 7) % 7);
+			var nextMonth = new Date(prevMonth.valueOf());
+			nextMonth.setUTCDate(nextMonth.getUTCDate() + 42);
 			nextMonth = nextMonth.valueOf();
 			html = [];
 			var clsName;
 			while (prevMonth.valueOf() < nextMonth) {
-				if (prevMonth.getDay() === this.weekStart) {
+				if (prevMonth.getUTCDay() === this.weekStart) {
 					html.push('<tr>');
 				}
 				clsName = '';
-				if (prevMonth.getMonth() < month) {
+				if (prevMonth.getUTCMonth() < month) {
 					clsName += ' old';
-				} else if (prevMonth.getMonth() > month) {
+				} else if (prevMonth.getUTCMonth() > month) {
 					clsName += ' new';
 				}
 				if (prevMonth.valueOf() === currentDate.valueOf()) {
 					clsName += ' active';
 				}
-				html.push('<td class="day'+clsName+'">'+prevMonth.getDate() + '</td>');
-				if (prevMonth.getDay() === this.weekEnd) {
+				html.push('<td class="day' + clsName + '">' + prevMonth.getUTCDate() + '</td>');
+				if (prevMonth.getUTCDay() === this.weekEnd) {
 					html.push('</tr>');
 				}
-				prevMonth.setDate(prevMonth.getDate()+1);
+				prevMonth.setUTCDate(prevMonth.getUTCDate() + 1);
 			}
 			this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
-			var currentYear = this.date.getFullYear();
+			var currentYear = this.date.getUTCFullYear();
 			
 			var months = this.picker.find('.datepicker-months')
 						.find('th:eq(1)')
@@ -252,7 +255,7 @@
 							.end()
 						.find('span').removeClass('active');
 			if (currentYear === year) {
-				months.eq(this.date.getMonth()).addClass('active');
+				months.eq(this.date.getUTCMonth()).addClass('active');
 			}
 			
 			html = '';
@@ -264,7 +267,7 @@
 								.find('td');
 			year -= 1;
 			for (var i = -1; i < 11; i++) {
-				html += '<span class="year'+(i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' active' : '')+'">'+year+'</span>';
+				html += '<span class="year' + (i === -1 || i === 10 ? ' old' : '') + (currentYear === year ? ' active' : '') + '">' + year + '</span>';
 				year += 1;
 			}
 			yearCont.html(html);
@@ -274,9 +277,9 @@
 			if (!this.date)
 				return;
 			var timeComponents = this.picker.find('.timepicker span[data-time-component]');
-			timeComponents.filter('[data-time-component=hours]').text(padLeft(this.date.getHours().toString(), 2, '0'));
-			timeComponents.filter('[data-time-component=minutes]').text(padLeft(this.date.getMinutes().toString(), 2, '0'));
-			timeComponents.filter('[data-time-component=seconds]').text(padLeft(this.date.getSeconds().toString(), 2, '0'));
+			timeComponents.filter('[data-time-component=hours]').text(padLeft(this.date.getUTCHours().toString(), 2, '0'));
+			timeComponents.filter('[data-time-component=minutes]').text(padLeft(this.date.getUTCMinutes().toString(), 2, '0'));
+			timeComponents.filter('[data-time-component=seconds]').text(padLeft(this.date.getUTCSeconds().toString(), 2, '0'));
 		},
 		
 		click: function(e) {
@@ -305,16 +308,16 @@
 					case 'span':
 						if (target.is('.month')) {
 							var month = target.parent().find('span').index(target);
-							this.viewDate.setMonth(month);
+							this.viewDate.setUTCMonth(month);
 						} else {
 							var year = parseInt(target.text(), 10)||0;
-							this.viewDate.setFullYear(year);
+							this.viewDate.setUTCFullYear(year);
 						}
 						if (this.viewMode !== 0) {
-							this.date = new Date(
-								this.viewDate.getFullYear(), this.viewDate.getMonth(), this.viewDate.getDate(),
-								this.date.getHours(), this.date.getMinutes(), this.date.getSeconds(),
-								this.date.getMilliseconds()
+							this.date = UTCDate(
+								this.viewDate.getUTCFullYear(), this.viewDate.getUTCMonth(), this.viewDate.getUTCDate(),
+								this.date.getUTCHours(), this.date.getUTCMinutes(), this.date.getUTCSeconds(),
+								this.date.getUTCMilliseconds()
 							);
 							this.$element.trigger({
 								type: 'changeDate',
@@ -329,19 +332,19 @@
 					case 'td':
 						if (target.is('.day')){
 							var day = parseInt(target.text(), 10)||1;
-							var month = this.viewDate.getMonth();
+							var month = this.viewDate.getUTCMonth();
 							if (target.is('.old')) {
 								month -= 1;
 							} else if (target.is('.new')) {
 								month += 1;
 							}
-							var year = this.viewDate.getFullYear();
-							this.date = new Date(
+							var year = this.viewDate.getUTCFullYear();
+							this.date = UTCDate(
 								year, month, day,
-								this.date.getHours(), this.date.getMinutes(), this.date.getSeconds(),
-								this.date.getMilliseconds()
+								this.date.getUTCHours(), this.date.getUTCMinutes(), this.date.getUTCSeconds(),
+								this.date.getUTCMilliseconds()
 							);
-							this.viewDate = new Date(year, month, Math.min(28, day),0,0,0,0);
+							this.viewDate = UTCDate(year, month, Math.min(28, day),0,0,0,0);
 							this.fillDate();
 							this.set();
 							this.$element.trigger({
@@ -357,32 +360,32 @@
 
 		actions: {
 			incrementHours: function(e) {
-				this.date.setHours(this.date.getHours() + this.options.hourStep);
+				this.date.setUTCHours(this.date.getUTCHours() + this.options.hourStep);
 			},
 
 			incrementMinutes: function(e) {
-				this.date.setMinutes(this.date.getMinutes() + this.options.minuteStep);
+				this.date.setUTCMinutes(this.date.getUTCMinutes() + this.options.minuteStep);
 			},
 
 			incrementSeconds: function(e) {
-				this.date.setSeconds(this.date.getSeconds() + this.options.secondStep);
+				this.date.setUTCSeconds(this.date.getUTCSeconds() + this.options.secondStep);
 			},
 
 			decrementHours: function(e) {
-				this.date.setHours(this.date.getHours() - this.options.hourStep);
+				this.date.setUTCHours(this.date.getUTCHours() - this.options.hourStep);
 			},
 
 			decrementMinutes: function(e) {
-				this.date.setMinutes(this.date.getMinutes() - this.options.minuteStep);
+				this.date.setUTCMinutes(this.date.getUTCMinutes() - this.options.minuteStep);
 			},
 
 			decrementSeconds: function(e) {
-				this.date.setSeconds(this.date.getSeconds() - this.options.secondStep);
+				this.date.setUTCSeconds(this.date.getUTCSeconds() - this.options.secondStep);
 			}
 		},
 
 		doAction: function(e) {
-			if (!this.date) this.date = new Date(1970, 0, 0, 0, 0, 0, 0);
+			if (!this.date) this.date = UTCDate(1970, 0, 0, 0, 0, 0, 0);
 			var action = $(e.currentTarget).data('action');
 			var rv = this.actions[action].apply(this, arguments);
 			this.set();
@@ -496,8 +499,8 @@
 				property = dateFormatComponents[match].property
 				methodName = 'get' + property;
 				rv = d[methodName]();
-				if (methodName === 'getMonth') rv = rv + 1;
-				if (methodName === 'getYear') rv = rv + 1900 - 2000;
+				if (methodName === 'getUTCMonth') rv = rv + 1;
+				if (methodName === 'getUTCYear') rv = rv + 1900 - 2000;
 				return padLeft(rv.toString(), match.length, '0');
 			});
 		},
@@ -535,16 +538,16 @@
 
 		_finishParsingDate: function(parsed) {
 			var year, month, date, hours, minutes, seconds;
-			year = parsed.FullYear;
-			if (parsed.Year) year = 2000 + parsed.Year;
+			year = parsed.UTCFullYear;
+			if (parsed.UTCYear) year = 2000 + parsed.UTCYear;
 			if (!year) year = 1970;
-			if (parsed.Month) month = parsed.Month - 1;
+			if (parsed.UTCMonth) month = parsed.UTCMonth - 1;
 			else month = 0;
-			date = parsed.Date || 1;
-			hours = parsed.Hours || 0;
-			minutes = parsed.Minutes || 0;
-			seconds = parsed.Seconds || 0;
-			return new Date(year, month, date, hours, minutes, seconds, 0);
+			date = parsed.UTCDate || 1;
+			hours = parsed.UTCHours || 0;
+			minutes = parsed.UTCMinutes || 0;
+			seconds = parsed.UTCSeconds || 0;
+			return UTCDate(year, month, date, hours, minutes, seconds, 0);
 		},
 
 		_compileFormat: function () {
@@ -719,14 +722,14 @@
 	};
 
 	var dateFormatComponents = {
-		dd: {property: 'Date', getPattern: function() { return '(0?[1-9]|[1-2][0-9]|3[0-1])\\b';}},
-		MM: {property: 'Month', getPattern: function() {return '(0?[1-9]|1[0-2])\\b';}},
-		yy: {property: 'Year', getPattern: function() {return '(\\d{2})\\b'}},
-		yyyy: {property: 'FullYear', getPattern: function() {return '(\\d{4})\\b';}},
-		hh: {property: 'Hours', getPattern: function() {return '(0?[0-9]|1[0-9]|2[0-3])\\b';}},
-		mm: {property: 'Minutes', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
-		ss: {property: 'Seconds', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
-		ms: {property: 'Milliseconds', getPattern: function() {return '([0-9]{1,3})\\b';}},
+		dd: {property: 'UTCDate', getPattern: function() { return '(0?[1-9]|[1-2][0-9]|3[0-1])\\b';}},
+		MM: {property: 'UTCMonth', getPattern: function() {return '(0?[1-9]|1[0-2])\\b';}},
+		yy: {property: 'UTCYear', getPattern: function() {return '(\\d{2})\\b'}},
+		yyyy: {property: 'UTCFullYear', getPattern: function() {return '(\\d{4})\\b';}},
+		hh: {property: 'UTCHours', getPattern: function() {return '(0?[0-9]|1[0-9]|2[0-3])\\b';}},
+		mm: {property: 'UTCMinutes', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
+		ss: {property: 'UTCSeconds', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
+		ms: {property: 'UTCMilliseconds', getPattern: function() {return '([0-9]{1,3})\\b';}},
 	};
 
 	var keys = [];
@@ -783,6 +786,10 @@
 				'</div>'
 			);
 		}
+	}
+
+	function UTCDate() {
+		return new Date(Date.UTC.apply(Date, arguments));
 	}
 
 	var DPGlobal = {
