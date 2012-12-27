@@ -160,6 +160,25 @@
 			this.fillDate();
 			this.fillTime();
 		},
+
+		getDate: function() {
+			return new Date(this.date.valueOf());
+		},
+
+		setDate: function(date) {
+			this.setValue(date.valueOf());
+		},
+
+		getLocalDate: function() {
+			var d = this.date;
+			return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),
+				       d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds());
+		},
+
+		setLocalDate: function(localDate) {
+			this.setValue(Date.UTC(localDate.getFullYear(), localDate.getMonth(), localDate.getDate(),
+					      localDate.getHours(), localDate.getMinutes(), localDate.getSeconds(), localDate.getMilliseconds()));
+		},
 		
 		place: function(){
 			var offset = this.component ? this.component.offset() : this.$element.offset();
