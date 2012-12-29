@@ -1,7 +1,4 @@
-/bin
 /node_modules
 /build
-/tmp
 *.log
-/_site
-*~
+/test/specs.js
