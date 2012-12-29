@@ -8,6 +8,9 @@
   },
   "devDependencies": {
     "uglify-js": "*",
-    "less": "*"
+    "less": "*",
+    "mocha-phantomjs": "*",
+    "mocha": "*",
+    "chai": "*"
   }
 }
