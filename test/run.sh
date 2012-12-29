@@ -8,4 +8,18 @@ if [ ! -x ./node_modules/.bin/phantomjs ]; then
         rm -rf "$d"
         rm "$f"
 fi
+jq=./test/jquery.js
+if [ ! -r $jq ]; then
+        wget http://code.jquery.com/jquery-1.8.3.min.js -O $jq
+fi
+bsjs=./test/bootstrap.js
+if [ ! -r $bsjs ]; then
+        wget http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js  -O $bsjs
+fi
+bscss=./test/bootstrap.css
+if [ ! -r $bscss ]; then
+        wget http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css -O $bscss
+fi
+
+./node_modules/.bin/coffee -c ./test/specs.coffee
 ./node_modules/.bin/mocha-phantomjs -R dot ./test/specs.html

@@ -2,6 +2,8 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <link rel="stylesheet" href="bootstrap.css" />
+    <link rel="stylesheet" href="../build/css/bootstrap-datetimepicker.min.css" />
   </head>
   <body>
     <div id="mocha"></div>
@@ -12,6 +14,9 @@
       mocha.reporter('html');
       expect = chai.expect;
     </script>
+    <script src="jquery.js"></script>
+    <script src="bootstrap.js"></script>
+    <script src="../build/js/bootstrap-datetimepicker.min.js"></script>
     <script src="specs.js"></script>
     <script>
       if (window.mochaPhantomJS) { mochaPhantomJS.run(); }

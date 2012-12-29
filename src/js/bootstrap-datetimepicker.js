@@ -244,7 +244,7 @@
 			var nextMonth = new Date(prevMonth.valueOf());
 			nextMonth.setUTCDate(nextMonth.getUTCDate() + 42);
 			nextMonth = nextMonth.valueOf();
-			html = [];
+			var html = [];
 			var clsName;
 			while (prevMonth.valueOf() < nextMonth) {
 				if (prevMonth.getUTCDay() === this.weekStart) {
@@ -580,7 +580,7 @@
 		},
 
 		_compileFormat: function () {
-			var match, component, components = [], mask = [], str = this.format, propertiesByIndex = {}, i = pos = 0;
+			var match, component, components = [], mask = [], str = this.format, propertiesByIndex = {}, i = 0, pos = 0;
 			while (match = formatComponent.exec(str)) {
 				component = match[0];
 				if (component in dateFormatComponents) {
