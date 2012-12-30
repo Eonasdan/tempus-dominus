@@ -1,27 +1,35 @@
-newComponent = -> $(
-  """
-  <div id="datetimepicker" class="input-append date">
-    <input type="text" value="05/01/1905 21:52:14">
-    <span class="add-on">
-      <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-    </span>
-  </div>
-  """
-)
-
-describe 'datetimepicker with default options', ->
-
-  beforeEach ->
-    @component = newComponent().appendTo($ '#mocha')
-    @component.data('date-format', 'MM/dd/yyyy hh:mm:ss')
-    @component.datetimepicker()
+setupDateTimePicker = (opts) ->
+  ->
+    @component = $(
+      """
+      <div id="datetimepicker" class="input-append date">
+        <input type="text" value="05/01/1905 21:52:14">
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+      </div>
+      """
+    ).appendTo($ '#container')
+    @component.data('format', 'MM/dd/yyyy hh:mm:ss')
+    @component.datetimepicker(opts)
     @input = @component.find 'input'
     @addon = @component.find '.add-on'
     @picker = @component.data 'datetimepicker'
     @widget = $ 'body > .datetimepicker'
 
-  afterEach ->
+teardown = ->
+  ->
     @picker.destroy()
+    $('#container').empty()
+
+describe 'datetimepicker', ->
+
+  beforeEach setupDateTimePicker()
+
+  afterEach teardown()
+
+  # Helper to debug in browser
+  # after setupDateTimePicker()
 
   it 'starts with date value parsed from input value', ->
     expect(@picker.date.getTime()).to.equal Date.UTC(1905, 4, 1, 21, 52, 14)
@@ -36,8 +44,18 @@ describe 'datetimepicker with default options', ->
     expect(@widget.length).to.equal 1
     expect(@widget.is ':hidden').to.be.true
 
-  it 'should popup widget when icon is clicked', ->
+  it 'pops up the widget when icon is clicked', ->
     @addon.click()
     expect(@widget.is ':visible').to.be.true
 
+  it 'hides the widget when clicking outside it', ->
+    @addon.click()
+    $('#mocha').trigger('mousedown')
+    expect(@widget.is ':hidden').to.be.true
 
+  it 'does not hide widget when clicking inside it', ->
+    @addon.click()
+    @widget.find('.datepicker .day:contains(18)').click()
+    expect(@widget.find('.datepicker .day:contains(18)').is '.active')
+      .to.be.true
+    expect(@widget.is ':visible').to.be.true

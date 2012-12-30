@@ -42,7 +42,7 @@
 				throw new Error('Must choose at least one picker');
 			this.options = options;
 			this.$element = $(element);
-			this.format = options.format || this.$element.data('date-format') || 'MM/dd/yyyy';
+			this.format = options.format || this.$element.data('format') || 'MM/dd/yyyy';
 			this._compileFormat();
 			this.language = options.language in dates ? options.language : 'en'
 			this.pickDate = options.pickDate;
@@ -404,6 +404,8 @@
 		},
 
 		doAction: function(e) {
+			e.stopPropagation();
+			e.preventDefault();
 			if (!this.date) this.date = UTCDate(1970, 0, 0, 0, 0, 0, 0);
 			var action = $(e.currentTarget).data('action');
 			var rv = this.actions[action].apply(this, arguments);
@@ -414,6 +416,11 @@
 				date: this.date,
 			});
 			return rv;
+		},
+
+		stopEvent: function(e) {
+			e.stopPropagation();
+			e.preventDefault();
 		},
 
 		// part of the following code was taken from
@@ -502,11 +509,6 @@
 			this._resetMaskPos(input);
 		},
 
-		mousedown: function(e) {
-			e.stopPropagation();
-			e.preventDefault();
-		},
-		
 		showMode: function(dir) {
 			if (dir) {
 				this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
@@ -615,7 +617,7 @@
 			var self = this;
 			this.picker.on({
 				click: $.proxy(this.click, this),
-				mousedown: $.proxy(this.mousedown, this),
+				mousedown: $.proxy(this.stopEvent, this)
 			});
 			this.picker.on('click', '[data-action]', $.proxy(this.doAction, this));
 			if (this.pickDate && this.pickTime) {
@@ -675,7 +677,7 @@
 		_detachDatePickerEvents: function() {
 			this.picker.off({
 				click: this.click,
-				mousedown: this.mousedown
+				mousedown: this.stopEvent
 			});
 			this.picker.off('click', '[data-action]');
 			if (this.pickDate && this.pickTime) {
