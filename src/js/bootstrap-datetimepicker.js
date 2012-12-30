@@ -42,13 +42,18 @@
 				throw new Error('Must choose at least one picker');
 			this.options = options;
 			this.$element = $(element);
-			this.format = options.format || this.$element.data('format') || 'MM/dd/yyyy';
-			this._compileFormat();
 			this.language = options.language in dates ? options.language : 'en'
 			this.pickDate = options.pickDate;
 			this.pickTime = options.pickTime;
 			this.isInput = this.$element.is('input');
 			this.component = this.$element.is('.date') ? this.$element.find('.add-on') : false;
+			this.format = options.format;
+			if (!this.format) {
+				if (this.isInput) this.format = this.$element.data('format');
+				else this.format = this.$element.find('input').data('format');
+				if (!this.format) this.format = 'MM/dd/yyyy';
+			}
+			this._compileFormat();
 			if (this.component) {
 				icon = this.component.find('i');
 			}
