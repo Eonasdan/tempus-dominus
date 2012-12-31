@@ -237,13 +237,16 @@
       var year = this.viewDate.getUTCFullYear();
       var month = this.viewDate.getUTCMonth();
       var currentDate = UTCDate(
-        this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate(),
+        this.date.getUTCFullYear(),
+        this.date.getUTCMonth(),
+        this.date.getUTCDate(),
         0, 0, 0, 0
       );
       this.widget.find('.datepicker-days th:eq(1)').text(
         dates[this.language].months[month] + ' ' + year);
       var prevMonth = UTCDate(year, month-1, 28, 0, 0, 0, 0);
-      var day = DPGlobal.getDaysInMonth(prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
+      var day = DPGlobal.getDaysInMonth(
+        prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
       prevMonth.setUTCDate(day);
       prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - this.weekStart + 7) % 7);
       var nextMonth = new Date(prevMonth.valueOf());
@@ -273,11 +276,8 @@
       this.widget.find('.datepicker-days tbody').empty().append(html.join(''));
       var currentYear = this.date.getUTCFullYear();
 
-      var months = this.widget.find('.datepicker-months')
-      .find('th:eq(1)')
-      .text(year)
-      .end()
-      .find('span').removeClass('active');
+      var months = this.widget.find('.datepicker-months').find(
+        'th:eq(1)').text(year).end().find('span').removeClass('active');
       if (currentYear === year) {
         months.eq(this.date.getUTCMonth()).addClass('active');
       }
@@ -854,17 +854,17 @@
     modes: [
       {
       clsName: 'days',
-      navFnc: 'Month',
+      navFnc: 'UTCMonth',
       navStep: 1
     },
     {
       clsName: 'months',
-      navFnc: 'FullYear',
+      navFnc: 'UTCFullYear',
       navStep: 1
     },
     {
       clsName: 'years',
-      navFnc: 'FullYear',
+      navFnc: 'UTCFullYear',
       navStep: 10
     }],
     isLeapYear: function (year) {
