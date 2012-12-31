@@ -14,6 +14,13 @@ setupDateTimePicker = (opts) ->
     @addon = @component.find '.add-on'
     @picker = @component.data 'datetimepicker'
     @widget = $ 'body > .datetimepicker'
+    @dateWidget = @widget.find('.datepicker')
+    @timeWidget = @widget.find('.timepicker')
+    @date = @picker.date
+    @component.on 'changeDate', (e) =>
+      @date = e.date
+    @dateShouldEqual = =>
+      expect(@date.getTime()).to.equal Date.UTC.apply(Date, arguments)
 
 teardownDateTimePicker = ->
   ->
