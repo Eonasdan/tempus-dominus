@@ -1,7 +1,7 @@
 /node_modules
 /build
 *.log
-/test/specs.js
+/test/test.js
 /test/jquery.js
 /test/bootstrap.js
 /test/bootstrap.css

@@ -1,30 +1,8 @@
-setupDateTimePicker = (opts) ->
-  ->
-    @component = $(
-      """
-      <div id="datetimepicker" class="input-append date">
-        <input type="text" value="05/01/1905 21:52:14" data-format="MM/dd/yyyy hh:mm:ss">
-        <span class="add-on">
-          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-        </span>
-      </div>
-      """
-    ).appendTo($ '#container').datetimepicker(opts)
-    @input = @component.find 'input'
-    @addon = @component.find '.add-on'
-    @picker = @component.data 'datetimepicker'
-    @widget = $ 'body > .datetimepicker'
-
-teardown = ->
-  ->
-    @picker.destroy()
-    $('#container').empty()
-
 describe 'datetimepicker', ->
 
   beforeEach setupDateTimePicker()
 
-  afterEach teardown()
+  afterEach teardownDateTimePicker()
 
   # Helper to debug in browser
   # after setupDateTimePicker()
@@ -48,7 +26,7 @@ describe 'datetimepicker', ->
 
   it 'hides the widget when clicking outside it', ->
     @addon.click()
-    $('#mocha').trigger('mousedown')
+    $('#mocha').mousedown()
     expect(@widget.is ':hidden').to.be.true
 
   it 'does not hide widget when clicking inside it', ->
@@ -57,3 +35,4 @@ describe 'datetimepicker', ->
     expect(@widget.find('.datepicker .day:contains(18)').is '.active')
       .to.be.true
     expect(@widget.is ':visible').to.be.true
+

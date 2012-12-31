@@ -20,6 +20,7 @@ bscss=./test/bootstrap.css
 if [ ! -r $bscss ]; then
         wget http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css -O $bscss
 fi
-
-./node_modules/.bin/coffee -c ./test/specs.coffee
-./node_modules/.bin/mocha-phantomjs -R dot ./test/specs.html
+cd ./test
+cat utils.coffee specs.coffee issues.coffee | \
+  ../node_modules/.bin/coffee -c -s > test.js
+../node_modules/.bin/mocha-phantomjs -R dot test.html
