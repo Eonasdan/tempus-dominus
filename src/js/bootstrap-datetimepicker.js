@@ -66,7 +66,7 @@
 				icon.removeClass(this.timeIcon);
 				icon.addClass(this.dateIcon);
 			}
-			this.picker = $(getTemplate(this.timeIcon, options.pickDate, options.pickTime)).appendTo('body');
+			this.widget = $(getTemplate(this.timeIcon, options.pickDate, options.pickTime)).appendTo('body');
 			this.minViewMode = options.minViewMode||this.$element.data('date-minviewmode')||0;
 			if (typeof this.minViewMode === 'string') {
 				switch (this.minViewMode) {
@@ -106,7 +106,7 @@
 		},
 
 		show: function(e) {
-			this.picker.show();
+			this.widget.show();
 			this.height = this.component ? this.component.outerHeight() : this.$element.outerHeight();
 			this.place();
 			this.$element.trigger({
@@ -122,13 +122,13 @@
 		
 		hide: function() {
 			// Ignore event if in the middle of a picker transition
-			var collapse = this.picker.find('.collapse')
+			var collapse = this.widget.find('.collapse')
 			for (var i = 0; i < collapse.length; i++) {
 				var collapseData = collapse.eq(i).data('collapse');
 				if (collapseData && collapseData.transitioning)
 					return;
 			}
-			this.picker.hide();
+			this.widget.hide();
 			this.viewMode = this.startViewMode;
 			this.showMode();
 			this.set();
@@ -187,7 +187,7 @@
 		
 		place: function(){
 			var offset = this.component ? this.component.offset() : this.$element.offset();
-			this.picker.css({
+			this.widget.css({
 				top: offset.top + this.height,
 				left: offset.left
 			});
@@ -221,7 +221,7 @@
 				html += '<th class="dow">' + dates[this.language].daysMin[(dowCnt++) % 7] + '</th>';
 			}
 			html += '</tr>';
-			this.picker.find('.datepicker-days thead').append(html);
+			this.widget.find('.datepicker-days thead').append(html);
 		},
 		
 		fillMonths: function() {
@@ -230,7 +230,7 @@
 			while (i < 12) {
 				html += '<span class="month">' + dates[this.language].monthsShort[i++] + '</span>';
 			}
-			this.picker.find('.datepicker-months td').append(html);
+			this.widget.find('.datepicker-months td').append(html);
 		},
 		
 		fillDate: function() {
@@ -240,7 +240,7 @@
 				this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate(),
 				0, 0, 0, 0
 			);
-			this.picker.find('.datepicker-days th:eq(1)')
+			this.widget.find('.datepicker-days th:eq(1)')
 						.text(dates[this.language].months[month] + ' ' + year);
 			var prevMonth = UTCDate(year, month-1, 28, 0, 0, 0, 0);
 			var day = DPGlobal.getDaysInMonth(prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
@@ -270,10 +270,10 @@
 				}
 				prevMonth.setUTCDate(prevMonth.getUTCDate() + 1);
 			}
-			this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
+			this.widget.find('.datepicker-days tbody').empty().append(html.join(''));
 			var currentYear = this.date.getUTCFullYear();
 			
-			var months = this.picker.find('.datepicker-months')
+			var months = this.widget.find('.datepicker-months')
 						.find('th:eq(1)')
 							.text(year)
 							.end()
@@ -284,7 +284,7 @@
 			
 			html = '';
 			year = parseInt(year/10, 10) * 10;
-			var yearCont = this.picker.find('.datepicker-years')
+			var yearCont = this.widget.find('.datepicker-years')
 								.find('th:eq(1)')
 									.text(year + '-' + (year + 9))
 									.end()
@@ -300,7 +300,7 @@
 		fillTime: function() {
 			if (!this.date)
 				return;
-			var timeComponents = this.picker.find('.timepicker span[data-time-component]');
+			var timeComponents = this.widget.find('.timepicker span[data-time-component]');
 			timeComponents.filter('[data-time-component=hours]').text(padLeft(this.date.getUTCHours().toString(), 2, '0'));
 			timeComponents.filter('[data-time-component=minutes]').text(padLeft(this.date.getUTCMinutes().toString(), 2, '0'));
 			timeComponents.filter('[data-time-component=seconds]').text(padLeft(this.date.getUTCSeconds().toString(), 2, '0'));
@@ -518,13 +518,13 @@
 			if (dir) {
 				this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
 			}
-			this.picker.find('.datepicker > div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
+			this.widget.find('.datepicker > div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
 		},
 
 		destroy: function() {
 			this._detachDatePickerEvents();
 			this._detachDatePickerGlobalEvents();
-			this.picker.remove();
+			this.widget.remove();
 			this.$element.removeData('datetimepicker');
 			this.component.removeData('datetimepicker');
 		},
@@ -620,13 +620,13 @@
 
 		_attachDatePickerEvents: function() {
 			var self = this;
-			this.picker.on({
-				click: $.proxy(this.click, this),
-				mousedown: $.proxy(this.stopEvent, this)
-			});
-			this.picker.on('click', '[data-action]', $.proxy(this.doAction, this));
+			// this handles date picker clicks
+			this.widget.on('click', '.datepicker *', $.proxy(this.click, this));
+			// this handles time picker clicks
+			this.widget.on('click', '[data-action]', $.proxy(this.doAction, this));
+			this.widget.on('mousedown', $.proxy(this.stopEvent, this));
 			if (this.pickDate && this.pickTime) {
-				this.picker.on('click.togglePicker', '.accordion-toggle', function(e) {
+				this.widget.on('click.togglePicker', '.accordion-toggle', function(e) {
 					e.stopPropagation();
 					var $this = $(this);
 					var $parent = $this.closest('ul');
@@ -680,13 +680,11 @@
 		},
 
 		_detachDatePickerEvents: function() {
-			this.picker.off({
-				click: this.click,
-				mousedown: this.stopEvent
-			});
-			this.picker.off('click', '[data-action]');
+			this.widget.off('click', '.datepicker *', this.click);
+			this.widget.off('click', '[data-action]');
+			this.widget.off('mousedown', this.stopEvent);
 			if (this.pickDate && this.pickTime) {
-				this.picker.off('click.togglePicker');
+				this.widget.off('click.togglePicker');
 			}
 			if (this.isInput) {
 				this.$element.off({

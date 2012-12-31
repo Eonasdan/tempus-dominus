@@ -4,6 +4,8 @@ suite 'issue', ->
 
   afterEach teardownDateTimePicker()
 
+  after setupDateTimePicker()
+
   test '5', ->
     # open datetimepicker
     @addon.click()
