@@ -86,13 +86,24 @@ describe 'datetimepicker', ->
     expect(@dateWidget.find('.datepicker-years .switch').text())
       .to.equal '1900-1909'
 
-  it 'switches to time picker', ->
+  it 'switches to and from time picker', (done) ->
+    # Clicks between a collapsible transition will be ignored by the
+    # date time picker, so we need to temporarily minimize the
+    # css3 transition effects to avoid waiting much
+    @widget.find('.collapse').addClass('no-transition')
     @addon.click()
     expect(@widget.find('.collapse.in .datepicker').length).to.equal 1
     expect(@widget.find('.collapse:not(.in) .timepicker').length).to.equal 1
     @widget.find('.picker-switch a').click()
     expect(@widget.find('.collapse:not(.in) .datepicker').length).to.equal 1
     expect(@widget.find('.collapse.in .timepicker').length).to.equal 1
+    setTimeout (=>
+      @widget.find('.picker-switch a').click()
+      expect(@widget.find('.collapse.in .datepicker').length).to.equal 1
+      expect(@widget.find('.collapse:not(.in) .timepicker').length)
+        .to.equal 1
+        done()
+    ), 10
 
   it 'increments/decrements hour', ->
     @addon.click()

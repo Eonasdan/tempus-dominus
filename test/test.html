@@ -5,6 +5,16 @@
     <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
     <link rel="stylesheet" href="bootstrap.css" />
     <link rel="stylesheet" href="../build/css/bootstrap-datetimepicker.min.css" />
+    <style type="text/css">
+      /* Helper class to minimize css3 transition effects for tests */
+      .no-transition {
+        -webkit-transition: height 0.001s;
+        -moz-transition: height 0.001s;
+        -ms-transition: height 0.001s;
+        -o-transition: height 0.001s;
+        transition: height 0.001s;
+      }
+    </style>
   </head>
   <body>
     <div id="mocha"></div>

@@ -4,8 +4,6 @@ suite 'issue', ->
 
   afterEach teardownDateTimePicker()
 
-  after setupDateTimePicker()
-
   test '5', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/5
     # open datetimepicker
