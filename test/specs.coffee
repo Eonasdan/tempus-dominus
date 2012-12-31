@@ -130,3 +130,10 @@ describe 'datetimepicker', ->
     @dateShouldEqual(1905, 4, 1, 21, 52, 44)
     @timeWidget.find('[data-action=decrementSeconds]').click()
     @dateShouldEqual(1905, 4, 1, 21, 52, 14)
+
+  it 'updates date when correctly formatted date is set on input', ->
+    @input.val('09/14/1982 01:02:03')
+    @input.change()
+    @dateShouldEqual(1982, 8, 14, 1, 2, 3)
+
+
