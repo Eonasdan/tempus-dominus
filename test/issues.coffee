@@ -7,6 +7,7 @@ suite 'issue', ->
   after setupDateTimePicker()
 
   test '5', ->
+    # https://github.com/tarruda/bootstrap-datetimepicker/issues/5
     # open datetimepicker
     @addon.click()
     # select a date
@@ -18,6 +19,13 @@ suite 'issue', ->
     # the viewDate year value should not be modified
     expect(@picker.viewDate.getUTCFullYear()).to.equal(1905)
 
-
     
-
+  test '6', ->
+    # https://github.com/tarruda/bootstrap-datetimepicker/issues/6
+    @input.val('05/01/1905 00:00:00')
+    @input.change()
+    expect(@widget.find('.datepicker-days .switch').text())
+      .to.equal 'May 1905'
+    @widget.find('.datepicker-days .next').click()
+    expect(@widget.find('.datepicker-days .switch').text())
+      .to.equal 'June 1905'

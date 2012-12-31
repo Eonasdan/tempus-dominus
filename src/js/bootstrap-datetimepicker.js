@@ -240,8 +240,8 @@
         this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate(),
         0, 0, 0, 0
       );
-      this.widget.find('.datepicker-days th:eq(1)')
-      .text(dates[this.language].months[month] + ' ' + year);
+      this.widget.find('.datepicker-days th:eq(1)').text(
+        dates[this.language].months[month] + ' ' + year);
       var prevMonth = UTCDate(year, month-1, 28, 0, 0, 0, 0);
       var day = DPGlobal.getDaysInMonth(prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
       prevMonth.setUTCDate(day);
@@ -314,97 +314,109 @@
         switch(target[0].nodeName.toLowerCase()) {
           case 'th':
             switch(target[0].className) {
-            case 'switch':
-              this.showMode(1);
-            break;
-            case 'prev':
+              case 'switch':
+                this.showMode(1);
+                break;
+              case 'prev':
               case 'next':
-              this.viewDate['set'+DPGlobal.modes[this.viewMode].navFnc].call(
-                this.viewDate,
-            this.viewDate['get'+DPGlobal.modes[this.viewMode].navFnc].call(this.viewDate) + 
-              DPGlobal.modes[this.viewMode].navStep * (target[0].className === 'prev' ? -1 : 1)
-            );
-            this.fillDate();
-            this.set();
+                var vd = this.viewDate;
+                var navFnc = DPGlobal.modes[this.viewMode].navFnc;
+                var step = DPGlobal.modes[this.viewMode].navStep;
+                if (target[0].className === 'prev') step = step * -1;
+                vd['set' + navFnc](vd['get' + navFnc]() + step);
+                this.fillDate();
+                this.set();
+                break;
+            }
             break;
-          }
-          break;
           case 'span':
             if (target.is('.month')) {
-            var month = target.parent().find('span').index(target);
-            this.viewDate.setUTCMonth(month);
-          } else {
-            var year = parseInt(target.text(), 10)||0;
-            this.viewDate.setUTCFullYear(year);
-          }
-          if (this.viewMode !== 0) {
-            this.date = UTCDate(
-              this.viewDate.getUTCFullYear(), this.viewDate.getUTCMonth(), this.viewDate.getUTCDate(),
-              this.date.getUTCHours(), this.date.getUTCMinutes(), this.date.getUTCSeconds(),
-              this.date.getUTCMilliseconds()
-            );
-            this.$element.trigger({
-              type: 'changeDate',
-              date: this.date,
-              viewMode: DPGlobal.modes[this.viewMode].clsName
-            });
-          }
-          this.showMode(-1);
-          this.fillDate();
-          this.set();
-          break;
-          case 'td':
-            if (target.is('.day')){
-            var day = parseInt(target.text(), 10)||1;
-            var month = this.viewDate.getUTCMonth();
-            if (target.is('.old')) {
-              month -= 1;
-            } else if (target.is('.new')) {
-              month += 1;
+              var month = target.parent().find('span').index(target);
+              this.viewDate.setUTCMonth(month);
+            } else {
+              var year = parseInt(target.text(), 10) || 0;
+              this.viewDate.setUTCFullYear(year);
             }
-            var year = this.viewDate.getUTCFullYear();
-            this.date = UTCDate(
-              year, month, day,
-              this.date.getUTCHours(), this.date.getUTCMinutes(), this.date.getUTCSeconds(),
-              this.date.getUTCMilliseconds()
-            );
-            this.viewDate = UTCDate(year, month, Math.min(28, day),0,0,0,0);
+            if (this.viewMode !== 0) {
+              this.date = UTCDate(
+                this.viewDate.getUTCFullYear(),
+                this.viewDate.getUTCMonth(),
+                this.viewDate.getUTCDate(),
+                this.date.getUTCHours(),
+                this.date.getUTCMinutes(),
+                this.date.getUTCSeconds(),
+                this.date.getUTCMilliseconds()
+              );
+              this.$element.trigger({
+                type: 'changeDate',
+                date: this.date,
+                viewMode: DPGlobal.modes[this.viewMode].clsName
+              });
+            }
+            this.showMode(-1);
             this.fillDate();
             this.set();
-            this.$element.trigger({
-              type: 'changeDate',
-              date: this.date,
-              viewMode: DPGlobal.modes[this.viewMode].clsName
-            });
-          }
-          break;
+            break;
+          case 'td':
+            if (target.is('.day')) {
+              var day = parseInt(target.text(), 10) || 1;
+              var month = this.viewDate.getUTCMonth();
+              if (target.is('.old')) {
+                month -= 1;
+              } else if (target.is('.new')) {
+                month += 1;
+              }
+              var year = this.viewDate.getUTCFullYear();
+              this.date = UTCDate(
+                year, month, day,
+                this.date.getUTCHours(),
+                this.date.getUTCMinutes(),
+                this.date.getUTCSeconds(),
+                this.date.getUTCMilliseconds()
+              );
+              this.viewDate = UTCDate(year, month, Math.min(28, day),0,0,0,0);
+              this.fillDate();
+              this.set();
+              this.$element.trigger({
+                type: 'changeDate',
+                date: this.date,
+                viewMode: DPGlobal.modes[this.viewMode].clsName
+              });
+            }
+            break;
         }
       }
     },
 
     actions: {
       incrementHours: function(e) {
-        this.date.setUTCHours(this.date.getUTCHours() + this.options.hourStep);
+        this.date.setUTCHours(this.date.getUTCHours() +
+                              this.options.hourStep);
       },
 
       incrementMinutes: function(e) {
-        this.date.setUTCMinutes(this.date.getUTCMinutes() + this.options.minuteStep);
+        this.date.setUTCMinutes(this.date.getUTCMinutes() +
+                                this.options.minuteStep);
       },
 
       incrementSeconds: function(e) {
-        this.date.setUTCSeconds(this.date.getUTCSeconds() + this.options.secondStep);
+        this.date.setUTCSeconds(this.date.getUTCSeconds() +
+                                this.options.secondStep);
       },
 
       decrementHours: function(e) {
-        this.date.setUTCHours(this.date.getUTCHours() - this.options.hourStep);
+        this.date.setUTCHours(this.date.getUTCHours() -
+                              this.options.hourStep);
       },
 
       decrementMinutes: function(e) {
-        this.date.setUTCMinutes(this.date.getUTCMinutes() - this.options.minuteStep);
+        this.date.setUTCMinutes(this.date.getUTCMinutes() -
+                                this.options.minuteStep);
       },
 
       decrementSeconds: function(e) {
-        this.date.setUTCSeconds(this.date.getUTCSeconds() - this.options.secondStep);
+        this.date.setUTCSeconds(this.date.getUTCSeconds() -
+                                this.options.secondStep);
       }
     },
 
@@ -516,9 +528,11 @@
 
     showMode: function(dir) {
       if (dir) {
-        this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
+        this.viewMode = Math.max(this.minViewMode, Math.min(
+          2, this.viewMode + dir));
       }
-      this.widget.find('.datepicker > div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
+      this.widget.find('.datepicker > div').hide().filter(
+        '.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
     },
 
     destroy: function() {
@@ -587,15 +601,18 @@
     },
 
     _compileFormat: function () {
-      var match, component, components = [], mask = [], str = this.format, propertiesByIndex = {}, i = 0, pos = 0;
+      var match, component, components = [], mask = [],
+      str = this.format, propertiesByIndex = {}, i = 0, pos = 0;
       while (match = formatComponent.exec(str)) {
         component = match[0];
         if (component in dateFormatComponents) {
           i++;
           propertiesByIndex[i] = dateFormatComponents[component].property;
-          components.push('\\s*' + dateFormatComponents[component].getPattern(this) + '\\s*');
+          components.push('\\s*' + dateFormatComponents[component].getPattern(
+            this) + '\\s*');
           mask.push({
-            pattern: new RegExp(dateFormatComponents[component].getPattern(this)),
+            pattern: new RegExp(dateFormatComponents[component].getPattern(
+              this)),
             property: dateFormatComponents[component].property,
             start: pos,
             end: pos += component.length
@@ -614,7 +631,8 @@
       }
       this._mask = mask;
       this._maskPos = 0;
-      this._formatPattern = new RegExp('^\\s*' + components.join('') + '\\s*$');
+      this._formatPattern = new RegExp(
+        '^\\s*' + components.join('') + '\\s*$');
       this._propertiesByIndex = propertiesByIndex;
     },
 
@@ -673,9 +691,11 @@
     },
 
     _attachDatePickerGlobalEvents: function() {
-      $(window).on('resize.datetimepicker' + this.id, $.proxy(this.place, this));
+      $(window).on(
+        'resize.datetimepicker' + this.id, $.proxy(this.place, this));
       if (!this.isInput) {
-        $(document).on('mousedown.datetimepicker' + this.id, $.proxy(this.hide, this));
+        $(document).on(
+          'mousedown.datetimepicker' + this.id, $.proxy(this.hide, this));
       }
     },
 
@@ -729,7 +749,8 @@
       data = $this.data('datetimepicker'),
       options = typeof option === 'object' && option;
       if (!data) {
-        $this.data('datetimepicker', (data = new DateTimePicker(this, $.extend({}, $.fn.datetimepicker.defaults,options))));
+        $this.data('datetimepicker', (data = new DateTimePicker(
+          this, $.extend({}, $.fn.datetimepicker.defaults,options))));
       }
       if (typeof option === 'string') data[option](val);
     });
@@ -747,11 +768,14 @@
   var dpgId = 0;
   var dates = $.fn.datetimepicker.dates = {
     en: {
-      days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+        "Friday", "Saturday", "Sunday"],
       daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
-      months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      months: ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"],
+      monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+        "Aug", "Sep", "Oct", "Nov", "Dec"]
     }
   };
 
