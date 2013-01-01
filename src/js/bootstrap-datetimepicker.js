@@ -203,8 +203,13 @@
         }
         if (!dateStr) {
           var tmp = new Date()
-          this.date = UTCDate(tmp.getFullYear(), tmp.getMonth(), tmp.getDate(),
-                              tmp.getHours(), tmp.getMinutes(), tmp.getSeconds(), tmp.getMilliseconds())
+          this.date = UTCDate(tmp.getFullYear(),
+                              tmp.getMonth(),
+                              tmp.getDate(),
+                              tmp.getHours(),
+                              tmp.getMinutes(),
+                              tmp.getSeconds(),
+                              tmp.getMilliseconds())
         } else {
           this.date = this.parseDate(dateStr);
         }
@@ -561,8 +566,15 @@
         if (match === 'ms')
           len = 1;
         property = dateFormatComponents[match].property
-        methodName = 'get' + property;
-        rv = d[methodName]();
+        if (property === 'Hours12') {
+          rv = d.getUTCHours() % 12;
+        } else if (property === 'Period12') {
+          if (d.getUTCHours() >= 12) return 'PM';
+          else return 'AM';
+        } else {
+          methodName = 'get' + property;
+          rv = d[methodName]();
+        }
         if (methodName === 'getUTCMonth') rv = rv + 1;
         if (methodName === 'getUTCYear') rv = rv + 1900 - 2000;
         return padLeft(rv.toString(), len, '0');
@@ -612,6 +624,14 @@
       minutes = parsed.UTCMinutes || 0;
       seconds = parsed.UTCSeconds || 0;
       milliseconds = parsed.UTCMilliseconds || 0;
+      if (parsed.Hours12) {
+        hours = parsed.Hours12;
+      }
+      if (parsed.Period12) {
+        if (/pm/i.test(parsed.Period12)) {
+          hours = (hours + 12) % 24;
+        }
+      }
       return UTCDate(year, month, date, hours, minutes, seconds, milliseconds);
     },
 
@@ -803,6 +823,8 @@
     mm: {property: 'UTCMinutes', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
     ss: {property: 'UTCSeconds', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
     ms: {property: 'UTCMilliseconds', getPattern: function() {return '([0-9]{1,3})\\b';}},
+    HH: {property: 'Hours12', getPattern: function() {return '(0?[0-9]|1[0-2])\\b';}},
+    PP: {property: 'Period12', getPattern: function() {return '(AM|PM|am|pm|Am|aM|Pm|pM)\\b';}}
   };
 
   var keys = [];

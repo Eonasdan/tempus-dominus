@@ -1,9 +1,12 @@
 setupDateTimePicker = (opts) ->
   ->
+    value = '05/01/1905 21:52:14 0'
+    if opts?.value
+      value = opts.value
     @component = $(
       """
       <div id="datetimepicker" class="input-append date">
-        <input type="text" value="05/01/1905 21:52:14 0" data-format="MM/dd/yyyy hh:mm:ss ms">
+        <input type="text" value="#{value}" data-format="MM/dd/yyyy hh:mm:ss ms">
         <span class="add-on">
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
         </span>

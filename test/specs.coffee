@@ -145,4 +145,14 @@ describe 'datetimepicker', ->
     @dateShouldEqual(1905, 4, 1, 21, 52, 14)
 
 
+describe 'datetimepicker with 12-hour clock format', ->
 
+  beforeEach setupDateTimePicker({
+    format: 'MM/dd/yyyy HH:mm PP'
+    value: '05/01/1905 09:52 PM'
+  })
+
+  afterEach teardownDateTimePicker()
+
+  it 'correctly parsed date', ->
+    @dateShouldEqual(1905, 4, 1, 21, 52)
