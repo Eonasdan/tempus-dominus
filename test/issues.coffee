@@ -5,9 +5,9 @@ suite 'issue', ->
   afterEach teardownDateTimePicker()
 
   # Helper to debug in browser
-  after setupDateTimePicker()
+  # after setupDateTimePicker()
   
-  test '5', ->
+  test '5 - Date value problem when click on time', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/5
     # open datetimepicker
     @addon.click()
@@ -20,7 +20,7 @@ suite 'issue', ->
     # the viewDate year value should not be modified
     expect(@picker.viewDate.getUTCFullYear()).to.equal(1905)
 
-  test '6', ->
+  test "6 - Doesn't always change month view", ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/6
     @input.val('05/01/1905 00:00:00')
     @input.change()
@@ -30,7 +30,7 @@ suite 'issue', ->
     expect(@widget.find('.datepicker-days .switch').text())
       .to.equal 'June 1905'
 
-  test '7', ->
+  test '7 - Picking a date from January while viewing December yields a November date', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/7
     # first set it to a december date
     @input.val('12/25/2012 01:01:01')
