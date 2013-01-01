@@ -26,3 +26,15 @@ suite 'issue', ->
     @widget.find('.datepicker-days .next').click()
     expect(@widget.find('.datepicker-days .switch').text())
       .to.equal 'June 1905'
+
+  test '7', ->
+    # https://github.com/tarruda/bootstrap-datetimepicker/issues/7
+    # first set it to a december date
+    @input.val('12/25/2012 00:00:00')
+    @input.change()
+    # Click on 2 january
+    @dateWidget.find('.day.old:contains(2)').click()
+    @dateShouldEqual(2013, 1, 2)
+
+
+
