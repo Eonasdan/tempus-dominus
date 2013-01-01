@@ -22,7 +22,7 @@ suite 'issue', ->
 
   test "6 - Doesn't always change month view", ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/6
-    @input.val('05/01/1905 00:00:00')
+    @input.val '05/01/1905 00:00:00 000'
     @input.change()
     expect(@widget.find('.datepicker-days .switch').text())
       .to.equal 'May 1905'
@@ -33,11 +33,10 @@ suite 'issue', ->
   test '7 - Picking a date from January while viewing December yields a November date', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/7
     # first set it to a december date
-    @input.val('12/25/2012 01:01:01')
+    @input.val '12/25/2012 01:01:01 000'
     @input.change()
     # Click on 2 january
     @dateWidget.find('.datepicker-days .day.new:contains(2)').click()
     @dateShouldEqual(2013, 0, 2, 1, 1, 1)
-
 
 

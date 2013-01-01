@@ -288,11 +288,8 @@
 
       html = '';
       year = parseInt(year/10, 10) * 10;
-      var yearCont = this.widget.find('.datepicker-years')
-      .find('th:eq(1)')
-      .text(year + '-' + (year + 9))
-      .end()
-      .find('td');
+      var yearCont = this.widget.find('.datepicker-years').find(
+        'th:eq(1)').text(year + '-' + (year + 9)).end().find('td');
       year -= 1;
       for (var i = -1; i < 11; i++) {
         html += '<span class="year' + (i === -1 || i === 10 ? ' old' : '') + (currentYear === year ? ' active' : '') + '">' + year + '</span>';
@@ -560,13 +557,15 @@
 
     formatDate: function(d) {
       return this.format.replace(formatReplacer, function(match) {
-        var methodName, property, rv;
+        var methodName, property, rv, len = match.length;
+        if (match === 'ms')
+          len = 1;
         property = dateFormatComponents[match].property
         methodName = 'get' + property;
         rv = d[methodName]();
         if (methodName === 'getUTCMonth') rv = rv + 1;
         if (methodName === 'getUTCYear') rv = rv + 1900 - 2000;
-        return padLeft(rv.toString(), match.length, '0');
+        return padLeft(rv.toString(), len, '0');
       });
     },
 
@@ -602,7 +601,7 @@
     },
 
     _finishParsingDate: function(parsed) {
-      var year, month, date, hours, minutes, seconds;
+      var year, month, date, hours, minutes, seconds, milliseconds;
       year = parsed.UTCFullYear;
       if (parsed.UTCYear) year = 2000 + parsed.UTCYear;
       if (!year) year = 1970;
@@ -612,7 +611,8 @@
       hours = parsed.UTCHours || 0;
       minutes = parsed.UTCMinutes || 0;
       seconds = parsed.UTCSeconds || 0;
-      return UTCDate(year, month, date, hours, minutes, seconds, 0);
+      milliseconds = parsed.UTCMilliseconds || 0;
+      return UTCDate(year, month, date, hours, minutes, seconds, milliseconds);
     },
 
     _compileFormat: function () {

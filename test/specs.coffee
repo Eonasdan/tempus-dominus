@@ -134,14 +134,14 @@ describe 'datetimepicker', ->
     @dateShouldEqual(1905, 4, 1, 21, 52, 14)
 
   it 'updates date when correctly formatted date is set on input', ->
-    @input.val('09/14/1982 01:02:03')
+    @input.val '09/14/1982 01:02:03 037'
     @input.change()
-    @dateShouldEqual(1982, 8, 14, 1, 2, 3)
+    @dateShouldEqual(1982, 8, 14, 1, 2, 3, 37)
 
   it 'ignores incorrectly formatted dates set on input', ->
-    @input.val('09/14/198 01:02:03')
+    @input.val '09/14/198 01:02:03 00'
     @input.change()
-    expect(@input.val()).to.equal '05/01/1905 21:52:14'
+    expect(@input.val()).to.equal '05/01/1905 21:52:14 0'
     @dateShouldEqual(1905, 4, 1, 21, 52, 14)
 
 
