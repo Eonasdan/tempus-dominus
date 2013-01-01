@@ -4,9 +4,6 @@ describe 'datetimepicker', ->
 
   afterEach teardownDateTimePicker()
 
-  # Helper to debug in browser
-  # after setupDateTimePicker()
-
   it 'starts with date value parsed from input value', ->
     @dateShouldEqual(1905, 4, 1, 21, 52, 14)
     expect(@dateWidget.find('.day.active').html()).to.equal '1'

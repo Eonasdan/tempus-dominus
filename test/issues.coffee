@@ -4,6 +4,9 @@ suite 'issue', ->
 
   afterEach teardownDateTimePicker()
 
+  # Helper to debug in browser
+  after setupDateTimePicker()
+  
   test '5', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/5
     # open datetimepicker
@@ -30,11 +33,11 @@ suite 'issue', ->
   test '7', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/7
     # first set it to a december date
-    @input.val('12/25/2012 00:00:00')
+    @input.val('12/25/2012 01:01:01')
     @input.change()
     # Click on 2 january
-    @dateWidget.find('.day.old:contains(2)').click()
-    @dateShouldEqual(2013, 1, 2)
+    @dateWidget.find('.datepicker-days .day.new:contains(2)').click()
+    @dateShouldEqual(2013, 0, 2, 1, 1, 1)
 
 
 

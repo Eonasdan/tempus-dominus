@@ -259,9 +259,13 @@
           html.push('<tr>');
         }
         clsName = '';
-        if (prevMonth.getUTCMonth() < month) {
+        if (prevMonth.getUTCFullYear() < year ||
+            (prevMonth.getUTCFullYear() == year &&
+             prevMonth.getUTCMonth() < month)) {
           clsName += ' old';
-        } else if (prevMonth.getUTCMonth() > month) {
+        } else if (prevMonth.getUTCFullYear() > year ||
+                   (prevMonth.getUTCFullYear() == year &&
+                    prevMonth.getUTCMonth() > month)) {
           clsName += ' new';
         }
         if (prevMonth.valueOf() === currentDate.valueOf()) {
@@ -361,12 +365,22 @@
             if (target.is('.day')) {
               var day = parseInt(target.text(), 10) || 1;
               var month = this.viewDate.getUTCMonth();
-              if (target.is('.old')) {
-                month -= 1;
-              } else if (target.is('.new')) {
-                month += 1;
-              }
               var year = this.viewDate.getUTCFullYear();
+              if (target.is('.old')) {
+                if (month === 0) {
+                  month = 11;
+                  year -= 1;
+                } else {
+                  month -= 1;
+                }
+              } else if (target.is('.new')) {
+                if (month == 11) {
+                  month = 0;
+                  year += 1;
+                } else {
+                  month += 1;
+                }
+              }
               this.date = UTCDate(
                 year, month, day,
                 this.date.getUTCHours(),
@@ -374,7 +388,8 @@
                 this.date.getUTCSeconds(),
                 this.date.getUTCMilliseconds()
               );
-              this.viewDate = UTCDate(year, month, Math.min(28, day),0,0,0,0);
+              this.viewDate = UTCDate(
+                year, month, Math.min(28, day) , 0, 0, 0, 0);
               this.fillDate();
               this.set();
               this.$element.trigger({
