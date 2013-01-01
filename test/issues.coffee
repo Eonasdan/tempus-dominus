@@ -7,6 +7,30 @@ suite 'issue', ->
   # Helper to debug in browser
   # after setupDateTimePicker()
   
+  test "4 - TypeError: Cannot call method 'data' of undefined", ->
+    teardownDateTimePicker().call @
+    setupDateTimePicker({
+      markup:
+        """
+        <div class="input-append datetimepicker"
+            style="display:inline-block">
+          <input type="text" class="" name="start_time" id="start_time"
+                     value="2012-12-30 08:00:00" original-value="2012-12-30
+                     08:00:00" size="30">
+          <span class="add-on"><i class="glyph-icon-calendar"></i></span>
+        </div>
+        """
+      format: 'yyyy-MM-dd hh:mm:ss'
+      language: 'en'
+      pickDate: true
+      pickTime: true
+      hourStep: 1
+      minuteStep: 15
+      secondStep: 30
+      inputMask: true
+    }).call @
+    # This setup should not throw any errors
+
   test '5 - Date value problem when click on time', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/5
     # open datetimepicker
