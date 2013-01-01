@@ -46,7 +46,7 @@
       this.pickDate = options.pickDate;
       this.pickTime = options.pickTime;
       this.isInput = this.$element.is('input');
-      this.component = this.$element.is('.date') ? this.$element.find('.add-on') : false;
+      this.component = this.$element.is('.input-append') ? this.$element.find('.add-on') : false;
       this.format = options.format;
       if (!this.format) {
         if (this.isInput) this.format = this.$element.data('format');
@@ -58,11 +58,13 @@
         icon = this.component.find('i');
       }
       if (this.pickTime) {
-        this.timeIcon = icon.data('time-icon') || 'icon-time';
+        if (icon && icon.length) this.timeIcon = icon.data('time-icon');
+        if (!this.timeIcon) this.timeIcon = 'icon-time';
         icon.addClass(this.timeIcon);
       }
       if (this.pickDate) {
-        this.dateIcon = icon.data('date-icon') || 'icon-calendar';
+        if (icon && icon.length) this.dateIcon = icon.data('date-icon');
+        if (!this.dateIcon) this.dateIcon = 'icon-calendar';
         icon.removeClass(this.timeIcon);
         icon.addClass(this.dateIcon);
       }
