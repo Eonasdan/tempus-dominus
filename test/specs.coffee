@@ -89,21 +89,26 @@ describe 'datetimepicker', ->
   it 'switches to and from time picker', (done) ->
     # Clicks between a collapsible transition will be ignored by the
     # date time picker, so we need to temporarily minimize the
-    # css3 transition effects to avoid waiting much
+    # css3 transition effects to avoid waiting too much
     @widget.find('.collapse').addClass('no-transition')
     @addon.click()
-    expect(@widget.find('.collapse.in .datepicker').length).to.equal 1
-    expect(@widget.find('.collapse:not(.in) .timepicker').length).to.equal 1
+    expect(@widget.find('.datepicker').closest('.collapse').height())
+      .to.not.equal 0
+    expect(@widget.find('.timepicker').closest('.collapse').height())
+      .to.equal 0
     @widget.find('.picker-switch a').click()
-    expect(@widget.find('.collapse:not(.in) .datepicker').length).to.equal 1
-    expect(@widget.find('.collapse.in .timepicker').length).to.equal 1
-    setTimeout (=>
+    @widget.one 'shown', =>
+      expect(@widget.find('.datepicker').closest('.collapse').height())
+        .to.equal 0
+      expect(@widget.find('.timepicker').closest('.collapse').height())
+        .to.not.equal 0
       @widget.find('.picker-switch a').click()
-      expect(@widget.find('.collapse.in .datepicker').length).to.equal 1
-      expect(@widget.find('.collapse:not(.in) .timepicker').length)
-        .to.equal 1
+      @widget.one 'shown', =>
+        expect(@widget.find('.datepicker').closest('.collapse').height())
+          .to.not.equal 0
+        expect(@widget.find('.timepicker').closest('.collapse').height())
+          .to.equal 0
         done()
-    ), 10
 
   it 'increments/decrements hour', ->
     @addon.click()
@@ -135,5 +140,12 @@ describe 'datetimepicker', ->
     @input.val('09/14/1982 01:02:03')
     @input.change()
     @dateShouldEqual(1982, 8, 14, 1, 2, 3)
+
+  it 'ignores incorrectly formatted dates set on input', ->
+    @input.val('09/14/198 01:02:03')
+    @input.change()
+    expect(@input.val()).to.equal '05/01/1905 21:52:14'
+    @dateShouldEqual(1905, 4, 1, 21, 52, 14)
+
 
 
