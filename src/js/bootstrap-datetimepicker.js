@@ -567,7 +567,9 @@
           len = 1;
         property = dateFormatComponents[match].property
         if (property === 'Hours12') {
-          rv = d.getUTCHours() % 12;
+          rv = d.getUTCHours();
+          if (rv === 0) rv = 12;
+          else rv = rv % 12;
         } else if (property === 'Period12') {
           if (d.getUTCHours() >= 12) return 'PM';
           else return 'AM';
@@ -630,6 +632,8 @@
       if (parsed.Period12) {
         if (/pm/i.test(parsed.Period12)) {
           hours = (hours + 12) % 24;
+        } else {
+          hours = hours % 12;
         }
       }
       return UTCDate(year, month, date, hours, minutes, seconds, milliseconds);

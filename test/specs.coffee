@@ -5,7 +5,7 @@ describe 'datetimepicker', ->
   afterEach teardownDateTimePicker()
 
   it 'starts with date value parsed from input value', ->
-    @dateShouldEqual(1905, 4, 1, 21, 52, 14)
+    @dateShouldEqual 1905, 4, 1, 21, 52, 14
     expect(@dateWidget.find('.day.active').html()).to.equal '1'
     expect(@dateWidget.find('.month.active').html()).to.equal 'May'
     expect(@dateWidget.find('.year.active').html()).to.equal '1905'
@@ -35,20 +35,20 @@ describe 'datetimepicker', ->
 
   it 'changes day of month', ->
     @dateWidget.find('.datepicker-days .day:contains(25)').click()
-    @dateShouldEqual(1905, 4, 25, 21, 52, 14)
+    @dateShouldEqual 1905, 4, 25, 21, 52, 14
 
   it 'changes month', ->
     # switch to month view
     @dateWidget.find('.datepicker-days .switch').click()
     @dateWidget.find('.datepicker-months .month:contains(Aug)').click()
-    @dateShouldEqual(1905, 7, 1, 21, 52, 14)
+    @dateShouldEqual 1905, 7, 1, 21, 52, 14
 
   it 'changes year', ->
     # switch to year view
     @dateWidget.find('.datepicker-days .switch').click()
     @dateWidget.find('.datepicker-months .switch').click()
     @dateWidget.find('.datepicker-years .year:contains(1907)').click()
-    @dateShouldEqual(1907, 4, 1, 21, 52, 14)
+    @dateShouldEqual 1907, 4, 1, 21, 52, 14
 
   it 'changes displayed month using arrows', ->
     expect(@dateWidget.find('.datepicker-days .switch').text())
@@ -111,38 +111,38 @@ describe 'datetimepicker', ->
     @addon.click()
     @widget.find('.picker-switch a').click()
     @timeWidget.find('[data-action=incrementHours]').click()
-    @dateShouldEqual(1905, 4, 1, 22, 52, 14)
+    @dateShouldEqual 1905, 4, 1, 22, 52, 14
     @timeWidget.find('[data-action=decrementHours]').click()
-    @dateShouldEqual(1905, 4, 1, 21, 52, 14)
+    @dateShouldEqual 1905, 4, 1, 21, 52, 14
 
   it 'increments/decrements minutes', ->
     @addon.click()
     @widget.find('.picker-switch a').click()
     @timeWidget.find('[data-action=incrementMinutes]').click()
     # 15 minutes step is the default
-    @dateShouldEqual(1905, 4, 1, 22, 7, 14)
+    @dateShouldEqual 1905, 4, 1, 22, 7, 14
     @timeWidget.find('[data-action=decrementMinutes]').click()
-    @dateShouldEqual(1905, 4, 1, 21, 52, 14)
+    @dateShouldEqual 1905, 4, 1, 21, 52, 14
 
   it 'increments/decrements minutes', ->
     @addon.click()
     @widget.find('.picker-switch a').click()
     @timeWidget.find('[data-action=incrementSeconds]').click()
     # 30 seconds step is the default
-    @dateShouldEqual(1905, 4, 1, 21, 52, 44)
+    @dateShouldEqual 1905, 4, 1, 21, 52, 44
     @timeWidget.find('[data-action=decrementSeconds]').click()
-    @dateShouldEqual(1905, 4, 1, 21, 52, 14)
+    @dateShouldEqual 1905, 4, 1, 21, 52, 14
 
   it 'updates date when correctly formatted date is set on input', ->
     @input.val '09/14/1982 01:02:03 037'
     @input.change()
-    @dateShouldEqual(1982, 8, 14, 1, 2, 3, 37)
+    @dateShouldEqual 1982, 8, 14, 1, 2, 3, 37
 
   it 'ignores incorrectly formatted dates set on input', ->
     @input.val '09/14/198 01:02:03 00'
     @input.change()
     expect(@input.val()).to.equal '05/01/1905 21:52:14 0'
-    @dateShouldEqual(1905, 4, 1, 21, 52, 14)
+    @dateShouldEqual 1905, 4, 1, 21, 52, 14
 
 
 describe 'datetimepicker with 12-hour clock format', ->
@@ -154,5 +154,18 @@ describe 'datetimepicker with 12-hour clock format', ->
 
   afterEach teardownDateTimePicker()
 
-  it 'correctly parsed date', ->
-    @dateShouldEqual(1905, 4, 1, 21, 52)
+  it 'parses correctly', ->
+    @dateShouldEqual 1905, 4, 1, 21, 52
+    @input.val '05/01/1905 12:52 AM'
+    @input.change()
+    @dateShouldEqual 1905, 4, 1, 0, 52
+    # Incorrectly formatted date
+    @input.val '05/01/1905 13:52 AM'
+    @input.change()
+    @dateShouldEqual 1905, 4, 1, 0, 52
+
+  it 'formats correctly', ->
+    @picker.setValue Date.UTC(1905, 4, 1, 10)
+    expect(@input.val()).to.equal('05/01/1905 10:00 AM')
+    @picker.setValue Date.UTC(1905, 4, 1, 0, 1)
+    expect(@input.val()).to.equal('05/01/1905 12:01 AM')
