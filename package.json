@@ -1,10 +1,9 @@
 {
   "name": "bootstrap-datetimepicker",
   "version": "0.0.5",
-  "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/tarruda/bootstrap-datetimepicker"
+    "url": "git://github.com/tarruda/bootstrap-datetimepicker.git"
   },
   "devDependencies": {
     "uglify-js": "*",
