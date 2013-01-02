@@ -5,6 +5,13 @@
     "type": "git",
     "url": "git://github.com/tarruda/bootstrap-datetimepicker.git"
   },
+  "keywords": [
+    "twitter-bootstrap",
+    "bootstrap",
+    "datepicker",
+    "datetimepicker",
+    "timepicker"
+  ],
   "devDependencies": {
     "uglify-js": "*",
     "less": "*",
