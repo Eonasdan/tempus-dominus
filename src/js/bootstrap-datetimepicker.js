@@ -102,6 +102,9 @@
       this.weekEnd = this.weekStart === 0 ? 6 : this.weekStart - 1;
       this.fillDow();
       this.fillMonths();
+      this.fillHours();
+      this.fillMinutes();
+      this.fillSeconds();
       this.update();
       this.showMode();
       this._attachDatePickerEvents();
@@ -305,6 +308,69 @@
       yearCont.html(html);
     },
 
+    fillHours: function() {
+      var table = this.widget.find(
+        '.timepicker .timepicker-hours table');
+      table.parent().hide();
+      var html = '';
+      if (this.pick12HourFormat) {
+        var current = 1;
+        for (var i = 0; i < 3; i += 1) {
+          html += '<tr>';
+          for (var j = 0; j < 4; j += 1) {
+             html += '<td class="hour">' + current + '</td>';
+             current++;
+          }
+          html += '</tr>'
+        }
+      } else {
+        var current = 0;
+        for (var i = 0; i < 6; i += 1) {
+          html += '<tr>';
+          for (var j = 0; j < 4; j += 1) {
+             html += '<td class="hour">' + current + '</td>';
+             current++;
+          }
+          html += '</tr>'
+        }
+      }
+      table.html(html);
+    },
+
+    fillMinutes: function() {
+      var table = this.widget.find(
+        '.timepicker .timepicker-minutes table');
+      table.parent().hide();
+      var html = '';
+      var current = 0;
+      for (var i = 0; i < 5; i++) {
+        html += '<tr>';
+        for (var j = 0; j < 4; j += 1) {
+          html += '<td class="minute">' + current + '</td>';
+          current += 3;
+        }
+        html += '</tr>';
+      }
+      table.html(html);
+    },
+
+    fillSeconds: function() {
+      var table = this.widget.find(
+        '.timepicker .timepicker-seconds table');
+      table.parent().hide();
+      var html = '';
+      var current = 0;
+      for (var i = 0; i < 5; i++) {
+        html += '<tr>';
+        for (var j = 0; j < 4; j += 1) {
+          html += '<td class="second">' + current + '</td>';
+          current += 3;
+        }
+        html += '</tr>';
+      }
+      table.html(html);
+    },
+
     fillTime: function() {
       if (!this.date)
         return;
@@ -423,33 +489,27 @@
 
     actions: {
       incrementHours: function(e) {
-        this.date.setUTCHours(this.date.getUTCHours() +
-                              this.options.hourStep);
+        this.date.setUTCHours(this.date.getUTCHours() + 1);
       },
 
       incrementMinutes: function(e) {
-        this.date.setUTCMinutes(this.date.getUTCMinutes() +
-                                this.options.minuteStep);
+        this.date.setUTCMinutes(this.date.getUTCMinutes() + 1);
       },
 
       incrementSeconds: function(e) {
-        this.date.setUTCSeconds(this.date.getUTCSeconds() +
-                                this.options.secondStep);
+        this.date.setUTCSeconds(this.date.getUTCSeconds() + 1);
       },
 
       decrementHours: function(e) {
-        this.date.setUTCHours(this.date.getUTCHours() -
-                              this.options.hourStep);
+        this.date.setUTCHours(this.date.getUTCHours() - 1);
       },
 
       decrementMinutes: function(e) {
-        this.date.setUTCMinutes(this.date.getUTCMinutes() -
-                                this.options.minuteStep);
+        this.date.setUTCMinutes(this.date.getUTCMinutes() - 1);
       },
 
       decrementSeconds: function(e) {
-        this.date.setUTCSeconds(this.date.getUTCSeconds() -
-                                this.options.secondStep);
+        this.date.setUTCSeconds(this.date.getUTCSeconds() - 1);
       },
 
       togglePeriod: function(e) {
@@ -457,6 +517,56 @@
         if (hour >= 12) hour -= 12;
         else hour += 12;
         this.date.setUTCHours(hour);
+      },
+
+      showPicker: function() {
+        this.widget.find('.timepicker > div:not(.timepicker-picker)').hide();
+        this.widget.find('.timepicker .timepicker-picker').show();
+      },
+
+      showHours: function() {
+        this.widget.find('.timepicker .timepicker-picker').hide();
+        this.widget.find('.timepicker .timepicker-hours').show();
+      },
+
+      showMinutes: function() {
+        this.widget.find('.timepicker .timepicker-picker').hide();
+        this.widget.find('.timepicker .timepicker-minutes').show();
+      },
+
+      showSeconds: function() {
+        this.widget.find('.timepicker .timepicker-picker').hide();
+        this.widget.find('.timepicker .timepicker-seconds').show();
+      },
+
+      selectHour: function(e) {
+        var tgt = $(e.target);
+        var value = parseInt(tgt.text(), 10);
+        if (this.pick12HourFormat) {
+          var current = this.date.getUTCHours();
+          if (current >= 12) {
+            value = (value + 12) % 24;
+          } else {
+            if (value === 12) value = 0;
+            else value = value % 12;
+          }
+        } 
+        this.date.setUTCHours(value);
+        this.actions.showPicker.call(this);
+      },
+
+      selectMinute: function(e) {
+        var tgt = $(e.target);
+        var value = parseInt(tgt.text(), 10);
+        this.date.setUTCMinutes(value);
+        this.actions.showPicker.call(this);
+      },
+
+      selectSecond: function(e) {
+        var tgt = $(e.target);
+        var value = parseInt(tgt.text(), 10);
+        this.date.setUTCSeconds(value);
+        this.actions.showPicker.call(this);
       }
     },
 
@@ -968,44 +1078,58 @@
       '</table>'+
     '</div>';
   var TPGlobal = {
-    hourTemplate: '<span data-time-component="hours" class="timepicker-hour"></span>',
-    minuteTemplate: '<span data-time-component="minutes" class="timepicker-minute"></span>',
-    secondTemplate: '<span data-time-component="seconds" class="timepicker-second"></span>',
+    hourTemplate: '<span data-action="showHours" data-time-component="hours" class="timepicker-hour"></span>',
+    minuteTemplate: '<span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>',
+    secondTemplate: '<span data-action="showSeconds" data-time-component="seconds" class="timepicker-second"></span>',
   };
   TPGlobal.getTemplate = function(is12Hours) {
     return (
-    '<table class="table-condensed"' +
-      (is12Hours ? ' data-hour-format="12"' : '') +
-      '>' +
-      '<tr>' +
-        '<td><a href="#" class="btn" data-action="incrementHours"><i class="icon-chevron-up"></i></a></td>' +
-        '<td class="separator"></td>' +
-        '<td><a href="#" class="btn" data-action="incrementMinutes"><i class="icon-chevron-up"></i></a></td>' +
-        '<td class="separator"></td>' +
-        '<td><a href="#" class="btn" data-action="incrementSeconds"><i class="icon-chevron-up"></i></a></td>' +
-        (is12Hours ? '<td class="separator"></td>' : '') +
-      '</tr>' +
-      '<tr>' +
-        '<td>' + TPGlobal.hourTemplate + '</td> ' +
-        '<td class="separator">:</td>' +
-        '<td>' + TPGlobal.minuteTemplate + '</td> ' +
-        '<td class="separator">:</td>' +
-        '<td>' + TPGlobal.secondTemplate + '</td>' +
-        (is12Hours ?
-        '<td class="separator"></td>' +
-        '<td>' +
-        '<button type="button" class="btn btn-primary" data-action="togglePeriod"></button>' +
-        '</td>' : '') +
-      '</tr>' +
-      '<tr>' +
-        '<td><a href="#" class="btn" data-action="decrementHours"><i class="icon-chevron-down"></i></a></td>' +
-        '<td class="separator"></td>' +
-        '<td><a href="#" class="btn" data-action="decrementMinutes"><i class="icon-chevron-down"></i></a></td>' +
-        '<td class="separator"></td>' +
-        '<td><a href="#" class="btn" data-action="decrementSeconds"><i class="icon-chevron-down"></i></a></td>' +
-        (is12Hours ? '<td class="separator"></td>' : '') +
-      '</tr>' +
-    '</table>'
+    '<div class="timepicker-picker">' +
+      '<table class="table-condensed"' +
+        (is12Hours ? ' data-hour-format="12"' : '') +
+        '>' +
+        '<tr>' +
+          '<td><a href="#" class="btn" data-action="incrementHours"><i class="icon-chevron-up"></i></a></td>' +
+          '<td class="separator"></td>' +
+          '<td><a href="#" class="btn" data-action="incrementMinutes"><i class="icon-chevron-up"></i></a></td>' +
+          '<td class="separator"></td>' +
+          '<td><a href="#" class="btn" data-action="incrementSeconds"><i class="icon-chevron-up"></i></a></td>' +
+          (is12Hours ? '<td class="separator"></td>' : '') +
+        '</tr>' +
+        '<tr>' +
+          '<td>' + TPGlobal.hourTemplate + '</td> ' +
+          '<td class="separator">:</td>' +
+          '<td>' + TPGlobal.minuteTemplate + '</td> ' +
+          '<td class="separator">:</td>' +
+          '<td>' + TPGlobal.secondTemplate + '</td>' +
+          (is12Hours ?
+          '<td class="separator"></td>' +
+          '<td>' +
+          '<button type="button" class="btn btn-primary" data-action="togglePeriod"></button>' +
+          '</td>' : '') +
+        '</tr>' +
+        '<tr>' +
+          '<td><a href="#" class="btn" data-action="decrementHours"><i class="icon-chevron-down"></i></a></td>' +
+          '<td class="separator"></td>' +
+          '<td><a href="#" class="btn" data-action="decrementMinutes"><i class="icon-chevron-down"></i></a></td>' +
+          '<td class="separator"></td>' +
+          '<td><a href="#" class="btn" data-action="decrementSeconds"><i class="icon-chevron-down"></i></a></td>' +
+          (is12Hours ? '<td class="separator"></td>' : '') +
+        '</tr>' +
+      '</table>' +
+    '</div>' +
+    '<div class="timepicker-hours" data-action="selectHour">' +
+      '<table class="table-condensed">' +
+      '</table>'+
+    '</div>'+
+    '<div class="timepicker-minutes" data-action="selectMinute">' +
+      '<table class="table-condensed">' +
+      '</table>'+
+    '</div>'+
+    '<div class="timepicker-seconds" data-action="selectSecond">' +
+      '<table class="table-condensed">' +
+      '</table>'+
+    '</div>'
     );
   }
 

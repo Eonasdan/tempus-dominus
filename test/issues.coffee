@@ -5,7 +5,7 @@ suite 'issue', ->
   afterEach teardownDateTimePicker()
 
   # Helper to debug in browser
-  # after setupDateTimePicker()
+  after setupDateTimePicker()
   
   test "4 - TypeError: Cannot call method 'data' of undefined", ->
     teardownDateTimePicker().call @

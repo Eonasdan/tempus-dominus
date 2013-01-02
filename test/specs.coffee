@@ -6,12 +6,15 @@ describe 'datetimepicker', ->
 
   it 'starts with date value parsed from input value', ->
     @dateShouldEqual 1905, 4, 1, 21, 52, 14
-    expect(@dateWidget.find('.day.active').html()).to.equal '1'
-    expect(@dateWidget.find('.month.active').html()).to.equal 'May'
-    expect(@dateWidget.find('.year.active').html()).to.equal '1905'
-    expect(@timeWidget.find('.timepicker-hour').html()).to.equal '21'
-    expect(@timeWidget.find('.timepicker-minute').html()).to.equal '52'
-    expect(@timeWidget.find('.timepicker-second').html()).to.equal '14'
+    expect(@dateWidget.find('.day.active').text()).to.equal '1'
+    expect(@dateWidget.find('.month.active').text()).to.equal 'May'
+    expect(@dateWidget.find('.year.active').text()).to.equal '1905'
+    expect(@timeWidget.find('.timepicker-hour').html())
+      .to.equal '21'
+    expect(@timeWidget.find('.timepicker-minute').html())
+      .to.equal '52'
+    expect(@timeWidget.find('.timepicker-second').html())
+      .to.equal '14'
 
   it 'creates an invisible widget on body', ->
     expect(@widget.length).to.equal 1
@@ -120,7 +123,7 @@ describe 'datetimepicker', ->
     @widget.find('.picker-switch a').click()
     @timeWidget.find('[data-action=incrementMinutes]').click()
     # 15 minutes step is the default
-    @dateShouldEqual 1905, 4, 1, 22, 7, 14
+    @dateShouldEqual 1905, 4, 1, 21, 53, 14
     @timeWidget.find('[data-action=decrementMinutes]').click()
     @dateShouldEqual 1905, 4, 1, 21, 52, 14
 
@@ -129,7 +132,7 @@ describe 'datetimepicker', ->
     @widget.find('.picker-switch a').click()
     @timeWidget.find('[data-action=incrementSeconds]').click()
     # 30 seconds step is the default
-    @dateShouldEqual 1905, 4, 1, 21, 52, 44
+    @dateShouldEqual 1905, 4, 1, 21, 52, 15
     @timeWidget.find('[data-action=decrementSeconds]').click()
     @dateShouldEqual 1905, 4, 1, 21, 52, 14
 
