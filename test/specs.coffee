@@ -108,6 +108,14 @@ describe 'datetimepicker', ->
           .to.not.equal 0
         expect(@widget.find('.timepicker').closest('.collapse').height())
           .to.equal 0
+        expect(@timeWidget.find('.timepicker-picker').is ':visible')
+          .to.be.true
+        expect(@timeWidget.find('.timepicker-hours').is ':hidden')
+          .to.be.true
+        expect(@timeWidget.find('.timepicker-minutes').is ':hidden')
+          .to.be.true
+        expect(@timeWidget.find('.timepicker-seconds').is ':hidden')
+          .to.be.true
         done()
 
   it 'increments/decrements hour', ->
@@ -135,6 +143,39 @@ describe 'datetimepicker', ->
     @dateShouldEqual 1905, 4, 1, 21, 52, 15
     @timeWidget.find('[data-action=decrementSeconds]').click()
     @dateShouldEqual 1905, 4, 1, 21, 52, 14
+
+  it 'picks hour on hours view', ->
+    @addon.click()
+    @widget.find('.picker-switch a').click()
+    @timeWidget.find('[data-action=showHours]').click()
+    expect(@timeWidget.find('.timepicker-picker').is ':hidden').to.be.true
+    expect(@timeWidget.find('.timepicker-hours').is ':visible').to.be.true
+    @timeWidget.find('.timepicker-hours .hour:contains(09)').click()
+    expect(@timeWidget.find('.timepicker-picker').is ':visible').to.be.true
+    expect(@timeWidget.find('.timepicker-hours').is ':hidden').to.be.true
+    @dateShouldEqual 1905, 4, 1, 9, 52, 14
+
+  it 'picks minute on minutes view', ->
+    @addon.click()
+    @widget.find('.picker-switch a').click()
+    @timeWidget.find('[data-action=showMinutes]').click()
+    expect(@timeWidget.find('.timepicker-picker').is ':hidden').to.be.true
+    expect(@timeWidget.find('.timepicker-minutes').is ':visible').to.be.true
+    @timeWidget.find('.timepicker-minutes .minute:contains(15)').click()
+    expect(@timeWidget.find('.timepicker-picker').is ':visible').to.be.true
+    expect(@timeWidget.find('.timepicker-minutes').is ':hidden').to.be.true
+    @dateShouldEqual 1905, 4, 1, 21, 15, 14
+
+  it 'picks second on seconds view', ->
+    @addon.click()
+    @widget.find('.picker-switch a').click()
+    @timeWidget.find('[data-action=showSeconds]').click()
+    expect(@timeWidget.find('.timepicker-picker').is ':hidden').to.be.true
+    expect(@timeWidget.find('.timepicker-seconds').is ':visible').to.be.true
+    @timeWidget.find('.timepicker-seconds .second:contains(45)').click()
+    expect(@timeWidget.find('.timepicker-picker').is ':visible').to.be.true
+    expect(@timeWidget.find('.timepicker-seconds').is ':hidden').to.be.true
+    @dateShouldEqual 1905, 4, 1, 21, 52, 45
 
   it 'updates date when correctly formatted date is set on input', ->
     @input.val '09/14/1982 01:02:03 037'
@@ -183,3 +224,27 @@ describe 'datetimepicker with 12-hour clock format', ->
     expect(@input.val()).to.equal('05/01/1905 10:00 AM')
     @picker.setValue Date.UTC(1905, 4, 1, 0, 1)
     expect(@input.val()).to.equal('05/01/1905 12:01 AM')
+
+  it 'picks hour on hours view', ->
+    @addon.click()
+    @widget.find('.picker-switch a').click()
+    @timeWidget.find('[data-action=showHours]').click()
+    expect(@timeWidget.find('.timepicker-picker').is ':hidden').to.be.true
+    expect(@timeWidget.find('.timepicker-hours').is ':visible').to.be.true
+    @timeWidget.find('.timepicker-hours .hour:contains(08)').click()
+    expect(@timeWidget.find('.timepicker-picker').is ':visible').to.be.true
+    expect(@timeWidget.find('.timepicker-hours').is ':hidden').to.be.true
+    @dateShouldEqual 1905, 4, 1, 20, 52
+    @timeWidget.find('[data-action=togglePeriod]').click()
+    @dateShouldEqual 1905, 4, 1, 8, 52
+    @timeWidget.find('.timepicker-hours .hour:contains(07)').click()
+    @dateShouldEqual 1905, 4, 1, 7, 52
+    @timeWidget.find('[data-action=togglePeriod]').click()
+    @dateShouldEqual 1905, 4, 1, 19, 52
+    @timeWidget.find('.timepicker-hours .hour:contains(12)').click()
+    @dateShouldEqual 1905, 4, 1, 12, 52
+    @timeWidget.find('[data-action=togglePeriod]').click()
+    @timeWidget.find('.timepicker-hours .hour:contains(11)').click()
+    @dateShouldEqual 1905, 4, 1, 11, 52
+    @timeWidget.find('.timepicker-hours .hour:contains(12)').click()
+    @dateShouldEqual 1905, 4, 1, 0, 52

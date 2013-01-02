@@ -318,7 +318,8 @@
         for (var i = 0; i < 3; i += 1) {
           html += '<tr>';
           for (var j = 0; j < 4; j += 1) {
-             html += '<td class="hour">' + current + '</td>';
+             var c = current.toString();
+             html += '<td class="hour">' + padLeft(c, 2, '0') + '</td>';
              current++;
           }
           html += '</tr>'
@@ -328,7 +329,8 @@
         for (var i = 0; i < 6; i += 1) {
           html += '<tr>';
           for (var j = 0; j < 4; j += 1) {
-             html += '<td class="hour">' + current + '</td>';
+             var c = current.toString();
+             html += '<td class="hour">' + padLeft(c, 2, '0') + '</td>';
              current++;
           }
           html += '</tr>'
@@ -346,7 +348,8 @@
       for (var i = 0; i < 5; i++) {
         html += '<tr>';
         for (var j = 0; j < 4; j += 1) {
-          html += '<td class="minute">' + current + '</td>';
+          var c = current.toString();
+          html += '<td class="minute">' + padLeft(c, 2, '0') + '</td>';
           current += 3;
         }
         html += '</tr>';
@@ -363,7 +366,8 @@
       for (var i = 0; i < 5; i++) {
         html += '<tr>';
         for (var j = 0; j < 4; j += 1) {
-          html += '<td class="second">' + current + '</td>';
+          var c = current.toString();
+          html += '<td class="second">' + padLeft(c, 2, '0') + '</td>';
           current += 3;
         }
         html += '</tr>';
@@ -542,10 +546,10 @@
       selectHour: function(e) {
         var tgt = $(e.target);
         var value = parseInt(tgt.text(), 10);
-        if (this.pick12HourFormat) {
+        if (this.options.pick12HourFormat) {
           var current = this.date.getUTCHours();
           if (current >= 12) {
-            value = (value + 12) % 24;
+            if (value != 12) value = (value + 12) % 24;
           } else {
             if (value === 12) value = 0;
             else value = value % 12;
@@ -932,9 +936,6 @@
     maskInput: true,
     pickDate: true,
     pickTime: true,
-    hourStep: 1,
-    minuteStep: 15,
-    secondStep: 30,
     pick12HourFormat: false
   };
   $.fn.datetimepicker.Constructor = DateTimePicker;
