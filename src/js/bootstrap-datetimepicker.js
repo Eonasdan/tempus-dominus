@@ -818,7 +818,7 @@
       this.widget.on('click', '.datepicker *', $.proxy(this.click, this));
       // this handles time picker clicks
       this.widget.on('click', '[data-action]', $.proxy(this.doAction, this));
-      this.widget.on('mousedown touchstart', $.proxy(this.stopEvent, this));
+      this.widget.on('mousedown', $.proxy(this.stopEvent, this));
       if (this.pickDate && this.pickTime) {
         this.widget.on('click.togglePicker', '.accordion-toggle', function(e) {
           e.stopPropagation();
@@ -872,15 +872,13 @@
       if (!this.isInput) {
         $(document).on(
           'mousedown.datetimepicker' + this.id, $.proxy(this.hide, this));
-        $(document).on(
-          'touchstart.datetimepicker' + this.id, $.proxy(this.hide, this));
       }
     },
 
     _detachDatePickerEvents: function() {
       this.widget.off('click', '.datepicker *', this.click);
       this.widget.off('click', '[data-action]');
-      this.widget.off('mousedown touchstart', this.stopEvent);
+      this.widget.off('mousedown', this.stopEvent);
       if (this.pickDate && this.pickTime) {
         this.widget.off('click.togglePicker');
       }
@@ -917,7 +915,6 @@
       $(window).off('resize.datetimepicker' + this.id);
       if (!this.isInput) {
         $(document).off('mousedown.datetimepicker' + this.id);
-        $(document).off('touchstart.datetimepicker' + this.id);
       }
     }
   };
