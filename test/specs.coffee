@@ -150,15 +150,26 @@ describe 'datetimepicker with 12-hour clock format', ->
   beforeEach setupDateTimePicker({
     format: 'MM/dd/yyyy HH:mm PP'
     value: '05/01/1905 09:52 PM'
+    pick12HourFormat: true
   })
 
   afterEach teardownDateTimePicker()
 
   it 'parses correctly', ->
     @dateShouldEqual 1905, 4, 1, 21, 52
+    expect(@timeWidget.find('.timepicker-hour').text()).to.equal '09'
+    expect(@timeWidget.find('.timepicker-minute').text()).to.equal '52'
+    expect(@timeWidget.find('.timepicker-second').text()).to.equal '00'
+    expect(@timeWidget.find('[data-action=togglePeriod]').text())
+      .to.equal 'PM'
     @input.val '05/01/1905 12:52 AM'
     @input.change()
     @dateShouldEqual 1905, 4, 1, 0, 52
+    expect(@timeWidget.find('.timepicker-hour').text()).to.equal '12'
+    expect(@timeWidget.find('.timepicker-minute').text()).to.equal '52'
+    expect(@timeWidget.find('.timepicker-second').text()).to.equal '00'
+    expect(@timeWidget.find('[data-action=togglePeriod]').text())
+      .to.equal 'AM'
     # Incorrectly formatted date
     @input.val '05/01/1905 13:52 AM'
     @input.change()

@@ -68,7 +68,7 @@
         icon.removeClass(this.timeIcon);
         icon.addClass(this.dateIcon);
       }
-      this.widget = $(getTemplate(this.timeIcon, options.pickDate, options.pickTime)).appendTo('body');
+      this.widget = $(getTemplate(this.timeIcon, options.pickDate, options.pickTime, options.pick12HourFormat)).appendTo('body');
       this.minViewMode = options.minViewMode||this.$element.data('date-minviewmode')||0;
       if (typeof this.minViewMode === 'string') {
         switch (this.minViewMode) {
@@ -309,9 +309,23 @@
       if (!this.date)
         return;
       var timeComponents = this.widget.find('.timepicker span[data-time-component]');
-      timeComponents.filter('[data-time-component=hours]').text(padLeft(this.date.getUTCHours().toString(), 2, '0'));
-      timeComponents.filter('[data-time-component=minutes]').text(padLeft(this.date.getUTCMinutes().toString(), 2, '0'));
-      timeComponents.filter('[data-time-component=seconds]').text(padLeft(this.date.getUTCSeconds().toString(), 2, '0'));
+      var table = timeComponents.closest('table');
+      var is12HourFormat = this.options.pick12HourFormat;
+      var hour = this.date.getUTCHours();
+      var period = 'AM';
+      if (is12HourFormat) {
+        if (hour >= 12) period = 'PM';
+        if (hour === 0) hour = 12;
+        else hour = hour % 12;
+        this.widget.find(
+          '.timepicker [data-action=togglePeriod]').text(period);
+      }
+      hour = padLeft(hour.toString(), 2, '0');
+      var minute = padLeft(this.date.getUTCMinutes().toString(), 2, '0');
+      var second = padLeft(this.date.getUTCSeconds().toString(), 2, '0');
+      timeComponents.filter('[data-time-component=hours]').text(hour);
+      timeComponents.filter('[data-time-component=minutes]').text(minute);
+      timeComponents.filter('[data-time-component=seconds]').text(second);
     },
 
     click: function(e) {
@@ -436,6 +450,13 @@
       decrementSeconds: function(e) {
         this.date.setUTCSeconds(this.date.getUTCSeconds() -
                                 this.options.secondStep);
+      },
+
+      togglePeriod: function(e) {
+        var hour = this.date.getUTCHours();
+        if (hour >= 12) hour -= 12;
+        else hour += 12;
+        this.date.setUTCHours(hour);
       }
     },
 
@@ -803,7 +824,8 @@
     pickTime: true,
     hourStep: 1,
     minuteStep: 15,
-    secondStep: 30
+    secondStep: 30,
+    pick12HourFormat: false
   };
   $.fn.datetimepicker.Constructor = DateTimePicker;
   var dpgId = 0;
@@ -851,7 +873,7 @@
     return Array(l - s.length + 1).join(c || ' ') + s;
   }
 
-  function getTemplate(timeIcon, pickDate, pickTime) {
+  function getTemplate(timeIcon, pickDate, pickTime, is12Hours) {
     if (pickDate && pickTime) {
       return (
         '<div class="datetimepicker dropdown-menu">' +
@@ -864,7 +886,7 @@
             '<li class="picker-switch"><a class="accordion-toggle"><i class="' + timeIcon + '"></i></a></li>' +
             '<li class="collapse">' +
               '<div class="timepicker">' +
-                TPGlobal.template +
+                TPGlobal.getTemplate(is12Hours) +
               '</div>' +
             '</li>' +
           '</ul>' +
@@ -874,7 +896,7 @@
       return (
         '<div class="datetimepicker dropdown-menu">' +
           '<div class="timepicker">' +
-            TPGlobal.template +
+            TPGlobal.getTemplate(is12Hours) +
           '</div>' +
         '</div>'
       );
@@ -950,14 +972,18 @@
     minuteTemplate: '<span data-time-component="minutes" class="timepicker-minute"></span>',
     secondTemplate: '<span data-time-component="seconds" class="timepicker-second"></span>',
   };
-  TPGlobal.template = 
-    '<table class="table-condensed">' +
+  TPGlobal.getTemplate = function(is12Hours) {
+    return (
+    '<table class="table-condensed"' +
+      (is12Hours ? ' data-hour-format="12"' : '') +
+      '>' +
       '<tr>' +
         '<td><a href="#" class="btn" data-action="incrementHours"><i class="icon-chevron-up"></i></a></td>' +
-        '<td class="separator">&nbsp;</td>' +
+        '<td class="separator"></td>' +
         '<td><a href="#" class="btn" data-action="incrementMinutes"><i class="icon-chevron-up"></i></a></td>' +
-        '<td class="separator">&nbsp;</td>' +
+        '<td class="separator"></td>' +
         '<td><a href="#" class="btn" data-action="incrementSeconds"><i class="icon-chevron-up"></i></a></td>' +
+        (is12Hours ? '<td class="separator"></td>' : '') +
       '</tr>' +
       '<tr>' +
         '<td>' + TPGlobal.hourTemplate + '</td> ' +
@@ -965,15 +991,23 @@
         '<td>' + TPGlobal.minuteTemplate + '</td> ' +
         '<td class="separator">:</td>' +
         '<td>' + TPGlobal.secondTemplate + '</td>' +
+        (is12Hours ?
+        '<td class="separator"></td>' +
+        '<td>' +
+        '<button type="button" class="btn btn-primary" data-action="togglePeriod"></button>' +
+        '</td>' : '') +
       '</tr>' +
       '<tr>' +
         '<td><a href="#" class="btn" data-action="decrementHours"><i class="icon-chevron-down"></i></a></td>' +
         '<td class="separator"></td>' +
         '<td><a href="#" class="btn" data-action="decrementMinutes"><i class="icon-chevron-down"></i></a></td>' +
-        '<td class="separator">&nbsp;</td>' +
+        '<td class="separator"></td>' +
         '<td><a href="#" class="btn" data-action="decrementSeconds"><i class="icon-chevron-down"></i></a></td>' +
+        (is12Hours ? '<td class="separator"></td>' : '') +
       '</tr>' +
     '</table>'
+    );
+  }
 
 
 })(window.jQuery)

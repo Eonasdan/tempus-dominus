@@ -29,7 +29,7 @@ suite 'issue', ->
       secondStep: 30
       inputMask: true
     }).call @
-    # This setup should not throw any errors
+    @dateShouldEqual(2012, 11, 30, 8)
 
   test '5 - Date value problem when click on time', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/5
