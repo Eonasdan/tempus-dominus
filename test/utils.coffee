@@ -26,7 +26,8 @@ setupDateTimePicker = (opts) ->
     @dateShouldEqual = =>
       expect(@picker.getDate().getTime()).to.equal(
         Date.UTC.apply(Date, arguments))
-      offset = new Date().getTimezoneOffset()
+      ld = @picker.getLocalDate()
+      offset = ld.getTimezoneOffset()
       offset = offset * 60 * 1000 # in ms
       expect(@picker.getLocalDate().getTime()).to.equal(
         Date.UTC.apply(Date, arguments) + offset)
@@ -35,4 +36,3 @@ teardownDateTimePicker = ->
   ->
     @picker.destroy()
     $('#container').empty()
-
