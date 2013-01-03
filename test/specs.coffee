@@ -285,3 +285,7 @@ describe 'datetimepicker api', ->
     d = Date.UTC(2000, 1, 15, 8, 8, 8, 743)
     @picker.setDate(new Date(d))
     @dateShouldEqual(2000, 1, 15, 8, 8, 8, 743)
+
+  it 'unsets value by passing null', ->
+    @picker.setDate(null)
+    expect(@input.val()).to.equal ''
