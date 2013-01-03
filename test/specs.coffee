@@ -218,12 +218,22 @@ describe 'datetimepicker with 12-hour clock format', ->
     @input.val '05/01/1905 13:52 AM'
     @input.change()
     @dateShouldEqual 1905, 4, 1, 0, 52
+    @input.val '05/01/1905 12:52 PM'
+    @input.change()
+    @dateShouldEqual 1905, 4, 1, 12, 52
+    expect(@timeWidget.find('.timepicker-hour').text()).to.equal '12'
+    expect(@timeWidget.find('.timepicker-minute').text()).to.equal '52'
+    expect(@timeWidget.find('.timepicker-second').text()).to.equal '00'
+    expect(@timeWidget.find('[data-action=togglePeriod]').text())
+      .to.equal 'PM'
 
   it 'formats correctly', ->
     @picker.setValue Date.UTC(1905, 4, 1, 10)
-    expect(@input.val()).to.equal('05/01/1905 10:00 AM')
+    expect(@input.val()).to.equal '05/01/1905 10:00 AM'
     @picker.setValue Date.UTC(1905, 4, 1, 0, 1)
-    expect(@input.val()).to.equal('05/01/1905 12:01 AM')
+    expect(@input.val()).to.equal '05/01/1905 12:01 AM'
+    @picker.setValue Date.UTC(1905, 4, 1, 12, 1)
+    expect(@input.val()).to.equal '05/01/1905 12:01 PM'
 
   it 'picks hour on hours view', ->
     @addon.click()
@@ -237,6 +247,7 @@ describe 'datetimepicker with 12-hour clock format', ->
     @dateShouldEqual 1905, 4, 1, 20, 52
     @timeWidget.find('[data-action=togglePeriod]').click()
     @dateShouldEqual 1905, 4, 1, 8, 52
+    expect(@timeWidget.find('.timepicker-hours .hour').length).to.equal(12)
     @timeWidget.find('.timepicker-hours .hour:contains(07)').click()
     @dateShouldEqual 1905, 4, 1, 7, 52
     @timeWidget.find('[data-action=togglePeriod]').click()

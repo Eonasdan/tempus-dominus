@@ -313,7 +313,7 @@
         '.timepicker .timepicker-hours table');
       table.parent().hide();
       var html = '';
-      if (this.pick12HourFormat) {
+      if (this.options.pick12HourFormat) {
         var current = 1;
         for (var i = 0; i < 3; i += 1) {
           html += '<tr>';
@@ -386,7 +386,7 @@
       if (is12HourFormat) {
         if (hour >= 12) period = 'PM';
         if (hour === 0) hour = 12;
-        else hour = hour % 12;
+        else if (hour != 12) hour = hour % 12;
         this.widget.find(
           '.timepicker [data-action=togglePeriod]').text(period);
       }
@@ -706,7 +706,7 @@
         if (property === 'Hours12') {
           rv = d.getUTCHours();
           if (rv === 0) rv = 12;
-          else rv = rv % 12;
+          else if (rv !== 12) rv = rv % 12;
         } else if (property === 'Period12') {
           if (d.getUTCHours() >= 12) return 'PM';
           else return 'AM';
@@ -768,7 +768,7 @@
       }
       if (parsed.Period12) {
         if (/pm/i.test(parsed.Period12)) {
-          hours = (hours + 12) % 24;
+          if (hours != 12) hours = (hours + 12) % 24;
         } else {
           hours = hours % 12;
         }
@@ -962,7 +962,7 @@
     mm: {property: 'UTCMinutes', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
     ss: {property: 'UTCSeconds', getPattern: function() {return '(0?[0-9]|[1-5][0-9])\\b';}},
     ms: {property: 'UTCMilliseconds', getPattern: function() {return '([0-9]{1,3})\\b';}},
-    HH: {property: 'Hours12', getPattern: function() {return '(0?[0-9]|1[0-2])\\b';}},
+    HH: {property: 'Hours12', getPattern: function() {return '(0?[1-9]|1[0-2])\\b';}},
     PP: {property: 'Period12', getPattern: function() {return '(AM|PM|am|pm|Am|aM|Pm|pM)\\b';}}
   };
 

@@ -5,7 +5,11 @@ suite 'issue', ->
   afterEach teardownDateTimePicker()
 
   # Helper to debug in browser
-  after setupDateTimePicker()
+  # after setupDateTimePicker({
+  #   format: 'MM/dd/yyyy HH:mm:ss PP'
+  #   value: '05/01/1905 09:52:00 PM'
+  #   pick12HourFormat: true
+  # })
   
   test "4 - TypeError: Cannot call method 'data' of undefined", ->
     teardownDateTimePicker().call @
