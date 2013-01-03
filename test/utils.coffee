@@ -23,11 +23,13 @@ setupDateTimePicker = (opts) ->
     @widget = $ 'body > .bootstrap-datetimepicker-widget'
     @dateWidget = @widget.find('.datepicker')
     @timeWidget = @widget.find('.timepicker')
-    @date = @picker.date
-    @component.on 'changeDate', (e) =>
-      @date = e.date
     @dateShouldEqual = =>
-      expect(@date.getTime()).to.equal Date.UTC.apply(Date, arguments)
+      expect(@picker.getDate().getTime()).to.equal(
+        Date.UTC.apply(Date, arguments))
+      offset = new Date().getTimezoneOffset()
+      offset = offset * 60 * 1000 # in ms
+      expect(@picker.getLocalDate().getTime()).to.equal(
+        Date.UTC.apply(Date, arguments) + offset)
 
 teardownDateTimePicker = ->
   ->

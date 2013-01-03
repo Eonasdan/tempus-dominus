@@ -157,6 +157,7 @@
         this.$element.val(formated);
         this._resetMaskPos(this.$element);
       }
+      this._unset = false;
     },
 
     setValue: function(newDate) {
@@ -172,6 +173,7 @@
     },
 
     getDate: function() {
+      if (this._unset) return null;
       return new Date(this.date.valueOf());
     },
 
@@ -180,14 +182,22 @@
     },
 
     getLocalDate: function() {
+      if (this._unset) return null;
       var d = this.date;
       return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),
                       d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds());
     },
 
     setLocalDate: function(localDate) {
-      this.setValue(Date.UTC(localDate.getFullYear(), localDate.getMonth(), localDate.getDate(),
-                             localDate.getHours(), localDate.getMinutes(), localDate.getSeconds(), localDate.getMilliseconds()));
+      this.setValue(
+        Date.UTC(
+          localDate.getFullYear(),
+          localDate.getMonth(),
+          localDate.getDate(),
+          localDate.getHours(),
+          localDate.getMinutes(),
+          localDate.getSeconds(),
+          localDate.getMilliseconds()));
     },
 
     place: function(){
@@ -195,6 +205,14 @@
       this.widget.css({
         top: offset.top + this.height,
         left: offset.left
+      });
+    },
+
+    notifyChange: function(){
+      this.$element.trigger({
+        type: 'changeDate',
+        date: this.getDate(),
+        localDate: this.getLocalDate()
       });
     },
 
@@ -439,11 +457,7 @@
                 this.date.getUTCSeconds(),
                 this.date.getUTCMilliseconds()
               );
-              this.$element.trigger({
-                type: 'changeDate',
-                date: this.date,
-                viewMode: DPGlobal.modes[this.viewMode].clsName
-              });
+              this.notifyChange();
             }
             this.showMode(-1);
             this.fillDate();
@@ -480,11 +494,7 @@
                 year, month, Math.min(28, day) , 0, 0, 0, 0);
               this.fillDate();
               this.set();
-              this.$element.trigger({
-                type: 'changeDate',
-                date: this.date,
-                viewMode: DPGlobal.modes[this.viewMode].clsName
-              });
+              this.notifyChange();
             }
             break;
         }
@@ -582,10 +592,7 @@
       var rv = this.actions[action].apply(this, arguments);
       this.set();
       this.fillTime();
-      this.$element.trigger({
-        type: 'changeDate',
-        date: this.date,
-      });
+      this.notifyChange();
       return rv;
     },
 
@@ -657,11 +664,7 @@
       var val = input.val();
       if (this._formatPattern.test(val)) {
         this.update();
-        this.$element.trigger({
-          type: 'changeDate',
-          date: this.date,
-          viewMode: DPGlobal.modes[this.viewMode].clsName
-        });
+        this.notifyChange();
         this.set();
       } else if (val && val.trim()) {
         if (this.date) this.set();
@@ -670,11 +673,8 @@
         if (this.date) {
           // unset the date when the input is
           // erased
-          this.$element.trigger({
-            type: 'changeDate',
-            date: null,
-            viewMode: DPGlobal.modes[this.viewMode].clsName
-          });
+          this._unset = true;
+          this.notifyChange();
         }
       }
       this._resetMaskPos(input);
@@ -981,7 +981,8 @@
   }
 
   function padLeft(s, l, c) {
-    return Array(l - s.length + 1).join(c || ' ') + s;
+    if (l < s.length) return s;
+    else return Array(l - s.length + 1).join(c || ' ') + s;
   }
 
   function getTemplate(timeIcon, pickDate, pickTime, is12Hours) {

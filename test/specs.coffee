@@ -188,6 +188,15 @@ describe 'datetimepicker', ->
     expect(@input.val()).to.equal '05/01/1905 21:52:14 0'
     @dateShouldEqual 1905, 4, 1, 21, 52, 14
 
+  it 'unsets date when input value is erased', ->
+    @input.val ''
+    @input.change()
+    expect(@picker.getDate()).to.be.null
+    expect(@picker.getLocalDate()).to.be.null
+    @input.val '09/14/1982 01:02:03 037'
+    @input.change()
+    @dateShouldEqual 1982, 8, 14, 1, 2, 3, 37
+
 
 describe 'datetimepicker with 12-hour clock format', ->
 
@@ -259,3 +268,20 @@ describe 'datetimepicker with 12-hour clock format', ->
     @dateShouldEqual 1905, 4, 1, 11, 52
     @timeWidget.find('.timepicker-hours .hour:contains(12)').click()
     @dateShouldEqual 1905, 4, 1, 0, 52
+
+
+describe 'datetimepicker api', ->
+
+  beforeEach setupDateTimePicker()
+
+  afterEach teardownDateTimePicker()
+
+  it 'supports local dates', ->
+    d = new Date(2000, 1, 15, 8, 8, 8, 743)
+    @picker.setLocalDate(d)
+    @dateShouldEqual(2000, 1, 15, 8, 8, 8, 743)
+
+  it 'supports utc dates', ->
+    d = Date.UTC(2000, 1, 15, 8, 8, 8, 743)
+    @picker.setDate(new Date(d))
+    @dateShouldEqual(2000, 1, 15, 8, 8, 8, 743)
