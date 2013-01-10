@@ -18,7 +18,6 @@
     "mocha-phantomjs": "*",
     "mocha": "*",
     "chai": "*",
-    "coffee-script": "*",
-    "bootstrap": "2.2.2"
+    "coffee-script": "*"
   }
 }
