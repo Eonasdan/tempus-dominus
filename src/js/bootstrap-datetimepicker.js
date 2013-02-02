@@ -851,7 +851,7 @@
       if (this.isInput) {
         this.$element.on({
           'focus': $.proxy(this.show, this),
-          'change': $.proxy(this.change, this),
+          'change': $.proxy(this.change, this)
         });
         if (this.options.maskInput) {
           this.$element.on({
@@ -861,7 +861,7 @@
         }
       } else {
         this.$element.on({
-          'change': $.proxy(this.change, this),
+          'change': $.proxy(this.change, this)
         }, 'input');
         if (this.options.maskInput) {
           this.$element.on({
@@ -896,7 +896,7 @@
       if (this.isInput) {
         this.$element.off({
           'focus': this.show,
-          'change': this.change,
+          'change': this.change
         });
         if (this.options.maskInput) {
           this.$element.off({
@@ -906,7 +906,7 @@
         }
       } else {
         this.$element.off({
-          'change': this.change,
+          'change': this.change
         }, 'input');
         if (this.options.maskInput) {
           this.$element.off({
@@ -1093,7 +1093,7 @@
   var TPGlobal = {
     hourTemplate: '<span data-action="showHours" data-time-component="hours" class="timepicker-hour"></span>',
     minuteTemplate: '<span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>',
-    secondTemplate: '<span data-action="showSeconds" data-time-component="seconds" class="timepicker-second"></span>',
+    secondTemplate: '<span data-action="showSeconds" data-time-component="seconds" class="timepicker-second"></span>'
   };
   TPGlobal.getTemplate = function(is12Hours) {
     return (
