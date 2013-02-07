@@ -170,7 +170,7 @@
       }
       if (typeof newDate === 'string') {
         this._date = this.parseDate(newDate);
-      } else {
+      } else if(newDate) {
         this._date = new Date(newDate);
       }
       this.set();
@@ -686,6 +686,7 @@
           // unset the date when the input is
           // erased
           this.notifyChange();
+          this._unset = true;
         }
       }
       this._resetMaskPos(input);
