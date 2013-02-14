@@ -127,6 +127,15 @@
       }
     },
 
+    disable: function(){
+          this.$element.find('input').prop('disabled',true);
+          this._detachDatePickerEvents();
+    },
+    enable: function(){
+          this.$element.find('input').prop('disabled',false);
+          this._attachDatePickerEvents();
+    },
+
     hide: function() {
       // Ignore event if in the middle of a picker transition
       var collapse = this.widget.find('.collapse')
