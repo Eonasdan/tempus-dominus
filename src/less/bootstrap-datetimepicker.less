@@ -71,7 +71,7 @@
     &.day:hover,
     &.hour:hover,
     &.minute:hover,
-    &.second:hover, {
+    &.second:hover {
       background: @grayLighter;
       cursor: pointer;
     }
@@ -84,6 +84,12 @@
       .buttonBackground(@btnPrimaryBackground, spin(@btnPrimaryBackground, 20));
       color: #fff;
       text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    }
+    &.disabled,
+    &.disabled:hover {
+      background: none;
+      color: @grayLight;
+      cursor: not-allowed;
     }
     span {
       display: block;
@@ -105,6 +111,12 @@
       &.old {
         color: @grayLight;
       }
+      &.disabled,
+      &.disabled:hover {
+        background: none;
+        color: @grayLight;
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -115,6 +127,12 @@
     &.next,
     &.prev {
       font-size: @baseFontSize * 1.5;
+    }
+    &.disabled,
+    &.disabled:hover {
+      background: none;
+      color: @grayLight;
+      cursor: not-allowed;
     }
   }
 
