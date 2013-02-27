@@ -110,8 +110,8 @@
       this.startViewMode = this.viewMode;
       this.weekStart = options.weekStart||this.$element.data('date-weekstart')||0;
       this.weekEnd = this.weekStart === 0 ? 6 : this.weekStart - 1;
-      this.startDate = options.startDate || (this.$element.data('date-startdate') ? new Date(this.$element.data('date-startdate')) : -Infinity);
-      this.endDate = options.endDate || (this.$element.data('date-enddate') ? new Date(this.$element.data('date-enddate')) : Infinity);
+      this.setStartDate(options.startDate || this.$element.data('date-startdate'));
+      this.setEndDate(options.endDate || this.$element.data('date-enddate'));
       this.fillDow();
       this.fillMonths();
       this.fillHours();
@@ -206,6 +206,38 @@
     setDate: function(date) {
       if (!date) this.setValue(null);
       else this.setValue(date.valueOf());
+    },
+    
+    setStartDate: function(date) {
+      if (date instanceof Date) {
+        this.startDate = date;
+      } else if (typeof date === 'string') {
+        this.startDate = new UTCDate(date);
+        if (! this.startDate.getUTCFullYear()) {
+          this.startDate = -Infinity;
+        }
+      } else {
+        this.startDate = -Infinity;
+      }
+      if (this.viewDate) {
+        this.update();
+      }
+    },
+    
+    setEndDate: function(date) {
+      if (date instanceof Date) {
+        this.endDate = date;
+      } else if (typeof date === 'string') {
+        this.endDate = new UTCDate(date);
+        if (! this.endDate.getUTCFullYear()) {
+          this.endDate = Infinity;
+        }
+      } else {
+        this.endDate = Infinity;
+      }
+      if (this.viewDate) {
+        this.update();
+      }
     },
 
     getLocalDate: function() {
