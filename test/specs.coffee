@@ -289,3 +289,39 @@ describe 'datetimepicker api', ->
   it 'unsets value by passing null', ->
     @picker.setDate(null)
     expect(@input.val()).to.equal ''
+
+  it 'supports start date', ->
+    @picker.setDate(new Date(2002, 2, 15, 0, 0, 0, 0))
+    @picker.setStartDate(new Date(2002, 2, 14, 0, 0, 0, 0))
+    expect(@dateWidget.find('.datepicker-days .day:contains(13)').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-days .day:contains(14)').is '.disabled').to.be.false
+    expect(@dateWidget.find('.datepicker-days .prev').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-days .next').is '.disabled').to.be.false
+    @dateWidget.find('.datepicker-days .switch').click()
+    expect(@dateWidget.find('.datepicker-months .month:contains(Feb)').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-months .month:contains(Mar)').is '.disabled').to.be.false
+    expect(@dateWidget.find('.datepicker-months .prev').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-months .next').is '.disabled').to.be.false
+    @dateWidget.find('.datepicker-months .switch').click()
+    expect(@dateWidget.find('.datepicker-years .year:contains(2001)').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-years .year:contains(2002)').is '.disabled').to.be.false
+    expect(@dateWidget.find('.datepicker-years .prev').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-years .next').is '.disabled').to.be.false
+
+  it 'supports end date', ->
+    @picker.setDate(new Date(2002, 2, 15, 0, 0, 0, 0))
+    @picker.setEndDate(new Date(2002, 2, 16, 0, 0, 0, 0))
+    expect(@dateWidget.find('.datepicker-days .day:contains(17)').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-days .day:contains(16)').is '.disabled').to.be.false
+    expect(@dateWidget.find('.datepicker-days .next').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-days .prev').is '.disabled').to.be.false
+    @dateWidget.find('.datepicker-days .switch').click()
+    expect(@dateWidget.find('.datepicker-months .month:contains(Apr)').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-months .month:contains(Mar)').is '.disabled').to.be.false
+    expect(@dateWidget.find('.datepicker-months .next').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-months .prev').is '.disabled').to.be.false
+    @dateWidget.find('.datepicker-months .switch').click()
+    expect(@dateWidget.find('.datepicker-years .year:contains(2003)').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-years .year:contains(2002)').is '.disabled').to.be.false
+    expect(@dateWidget.find('.datepicker-years .next').is '.disabled').to.be.true
+    expect(@dateWidget.find('.datepicker-years .prev').is '.disabled').to.be.false
