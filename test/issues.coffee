@@ -9,6 +9,7 @@ suite 'issue', ->
   #   format: 'MM/dd/yyyy HH:mm:ss PP'
   #   value: '05/01/1905 09:52:00 PM'
   #   pick12HourFormat: true
+  #   pickSeconds: false
   # })
   
   test "4 - TypeError: Cannot call method 'data' of undefined", ->

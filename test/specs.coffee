@@ -325,3 +325,19 @@ describe 'datetimepicker api', ->
     expect(@dateWidget.find('.datepicker-years .year:contains(2002)').is '.disabled').to.be.false
     expect(@dateWidget.find('.datepicker-years .next').is '.disabled').to.be.true
     expect(@dateWidget.find('.datepicker-years .prev').is '.disabled').to.be.false
+
+
+describe 'datetimepicker with pickSeconds = false', ->
+
+  beforeEach setupDateTimePicker({
+    value: '09/14/1982 01:02:03 037'
+    pickSeconds: false
+  })
+
+  afterEach teardownDateTimePicker()
+
+  it 'hides seconds selector from time widget', ->
+    expect(@timeWidget.find('[data-action=incrementSeconds]').length).to.equal 0
+    expect(@timeWidget.find('[data-action=decrementSeconds]').length).to.equal 0
+    expect(@timeWidget.find('.timepicker-second').length) .to.equal 0
+

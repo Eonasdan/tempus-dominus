@@ -77,8 +77,7 @@
         icon.removeClass(this.timeIcon);
         icon.addClass(this.dateIcon);
       }
-      this.widget = $(getTemplate(this.timeIcon, options.pickDate, options.pickTime, options.pick12HourFormat)).appendTo('body');
-      7 / 0;
+      this.widget = $(getTemplate(this.timeIcon, options.pickDate, options.pickTime, options.pick12HourFormat, options.pickSeconds)).appendTo('body');
       this.minViewMode = options.minViewMode||this.$element.data('date-minviewmode')||0;
       if (typeof this.minViewMode === 'string') {
         switch (this.minViewMode) {
@@ -1045,6 +1044,7 @@
     pickDate: true,
     pickTime: true,
     pick12HourFormat: false,
+    pickSeconds: true,
     startDate: -Infinity,
     endDate: Infinity
   };
@@ -1095,7 +1095,7 @@
     else return Array(l - s.length + 1).join(c || ' ') + s;
   }
 
-  function getTemplate(timeIcon, pickDate, pickTime, is12Hours) {
+  function getTemplate(timeIcon, pickDate, pickTime, is12Hours, showSeconds) {
     if (pickDate && pickTime) {
       return (
         '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
@@ -1108,7 +1108,7 @@
             '<li class="picker-switch"><a class="accordion-toggle"><i class="' + timeIcon + '"></i></a></li>' +
             '<li class="collapse">' +
               '<div class="timepicker">' +
-                TPGlobal.getTemplate(is12Hours) +
+                TPGlobal.getTemplate(is12Hours, showSeconds) +
               '</div>' +
             '</li>' +
           '</ul>' +
@@ -1118,7 +1118,7 @@
       return (
         '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
           '<div class="timepicker">' +
-            TPGlobal.getTemplate(is12Hours) +
+            TPGlobal.getTemplate(is12Hours, showSeconds) +
           '</div>' +
         '</div>'
       );
@@ -1194,7 +1194,7 @@
     minuteTemplate: '<span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>',
     secondTemplate: '<span data-action="showSeconds" data-time-component="seconds" class="timepicker-second"></span>'
   };
-  TPGlobal.getTemplate = function(is12Hours) {
+  TPGlobal.getTemplate = function(is12Hours, showSeconds) {
     return (
     '<div class="timepicker-picker">' +
       '<table class="table-condensed"' +
@@ -1204,16 +1204,18 @@
           '<td><a href="#" class="btn" data-action="incrementHours"><i class="icon-chevron-up"></i></a></td>' +
           '<td class="separator"></td>' +
           '<td><a href="#" class="btn" data-action="incrementMinutes"><i class="icon-chevron-up"></i></a></td>' +
+          (showSeconds ?
           '<td class="separator"></td>' +
-          '<td><a href="#" class="btn" data-action="incrementSeconds"><i class="icon-chevron-up"></i></a></td>' +
+          '<td><a href="#" class="btn" data-action="incrementSeconds"><i class="icon-chevron-up"></i></a></td>': '')+
           (is12Hours ? '<td class="separator"></td>' : '') +
         '</tr>' +
         '<tr>' +
           '<td>' + TPGlobal.hourTemplate + '</td> ' +
           '<td class="separator">:</td>' +
           '<td>' + TPGlobal.minuteTemplate + '</td> ' +
+          (showSeconds ?
           '<td class="separator">:</td>' +
-          '<td>' + TPGlobal.secondTemplate + '</td>' +
+          '<td>' + TPGlobal.secondTemplate + '</td>' : '') +
           (is12Hours ?
           '<td class="separator"></td>' +
           '<td>' +
@@ -1224,8 +1226,9 @@
           '<td><a href="#" class="btn" data-action="decrementHours"><i class="icon-chevron-down"></i></a></td>' +
           '<td class="separator"></td>' +
           '<td><a href="#" class="btn" data-action="decrementMinutes"><i class="icon-chevron-down"></i></a></td>' +
+          (showSeconds ?
           '<td class="separator"></td>' +
-          '<td><a href="#" class="btn" data-action="decrementSeconds"><i class="icon-chevron-down"></i></a></td>' +
+          '<td><a href="#" class="btn" data-action="decrementSeconds"><i class="icon-chevron-down"></i></a></td>': '') +
           (is12Hours ? '<td class="separator"></td>' : '') +
         '</tr>' +
       '</table>' +
@@ -1238,10 +1241,11 @@
       '<table class="table-condensed">' +
       '</table>'+
     '</div>'+
+    (showSeconds ?
     '<div class="timepicker-seconds" data-action="selectSecond">' +
       '<table class="table-condensed">' +
       '</table>'+
-    '</div>'
+    '</div>': '')
     );
   }
 
