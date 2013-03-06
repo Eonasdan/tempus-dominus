@@ -6,3 +6,6 @@ Contributions guidelines:
 - If it is a new feature, try to add automated tests for it.
 - Never submit patches that break existing tests(make test should take care of
   downloading dependencies and running the tests)
+
+Before starting to develop, enter 'make deps' to download all dependencies
+needed for developing/testing. 'make test' will run all tests. 

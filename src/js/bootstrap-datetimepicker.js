@@ -521,6 +521,7 @@
     click: function(e) {
       e.stopPropagation();
       e.preventDefault();
+      this._unset = false;
       var target = $(e.target).closest('span, td, th');
       if (target.length === 1) {
         if (! target.is('.disabled')) {

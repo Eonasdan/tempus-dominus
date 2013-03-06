@@ -3,7 +3,7 @@ deps:
 	git submodule update
 	npm install -d
 
-build: deps
+build:
 	mkdir -p build/js
 	mkdir -p build/css
 	@./node_modules/.bin/uglifyjs --comments \
@@ -13,7 +13,7 @@ build: deps
 	       	src/less/bootstrap-datetimepicker.less \
 	       	build/css/bootstrap-datetimepicker.min.css
 
-test: build deps
+test: build
 	@./test/run.sh
 
 clean:
