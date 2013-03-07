@@ -1,5 +1,4 @@
 /node_modules
-/build
 *.log
 /test/test.js
 /test/jquery.js
