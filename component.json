@@ -1,0 +1,9 @@
+{
+  "name": "bootstrap-datetimepicker",
+  "version": "0.0.7",
+  "main": ["bootstrap-datetimepicker.min.css","bootstrap-datetimepicker.min.js"],
+  "dependencies": {
+    "jquery" : ">=1.7.1",
+    "bootstrap" : ">=2.0.4 <3.0"
+  }
+}
