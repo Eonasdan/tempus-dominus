@@ -1041,7 +1041,7 @@
   };
 
   $.fn.datetimepicker.defaults = {
-    maskInput: true,
+    maskInput: false,
     pickDate: true,
     pickTime: true,
     pick12HourFormat: false,
