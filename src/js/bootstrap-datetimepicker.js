@@ -260,9 +260,20 @@
     },
 
     place: function(){
+      var position = 'absolute';
       var offset = this.component ? this.component.offset() : this.$element.offset();
+      offset.top = offset.top + this.height;
+
+      if (this._isInFixed()) {
+        var $window = $(window);
+        position = 'fixed';
+        offset.top -= $window.scrollTop();
+        offset.left -= $window.scrollLeft();
+      }
+
       this.widget.css({
-        top: offset.top + this.height,
+        position: position,
+        top: offset.top,
         left: offset.left
       });
     },
@@ -1024,7 +1035,23 @@
       if (!this.isInput) {
         $(document).off('mousedown.datetimepicker' + this.id);
       }
-    }
+    },
+    
+    _isInFixed: function() {
+      if (this.$element) {
+        var parents = this.$element.parents();
+        var inFixed = false;
+        for (var i=0; i<parents.length; i++) { 
+            if ($(parents[i]).css('position') == 'fixed') { 
+                inFixed = true; 
+                break; 
+            }  
+        };
+        return inFixed;        
+      } else {
+        return false;
+      }
+    }    
   };
 
   $.fn.datetimepicker = function ( option, val ) {
