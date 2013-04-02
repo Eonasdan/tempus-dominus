@@ -291,8 +291,8 @@ describe 'datetimepicker api', ->
     expect(@input.val()).to.equal ''
 
   it 'supports start date', ->
-    @picker.setDate(new Date(2002, 2, 15, 0, 0, 0, 0))
-    @picker.setStartDate(new Date(2002, 2, 14, 0, 0, 0, 0))
+    @picker.setDate(new Date(Date.UTC(2002, 2, 15, 0, 0, 0, 0)))
+    @picker.setStartDate(new Date(Date.UTC(2002, 2, 14, 0, 0, 0, 0)))
     expect(@dateWidget.find('.datepicker-days .day:contains(13)').is '.disabled').to.be.true
     expect(@dateWidget.find('.datepicker-days .day:contains(14)').is '.disabled').to.be.false
     expect(@dateWidget.find('.datepicker-days .prev').is '.disabled').to.be.true
@@ -309,8 +309,8 @@ describe 'datetimepicker api', ->
     expect(@dateWidget.find('.datepicker-years .next').is '.disabled').to.be.false
 
   it 'supports end date', ->
-    @picker.setDate(new Date(2002, 2, 15, 0, 0, 0, 0))
-    @picker.setEndDate(new Date(2002, 2, 16, 0, 0, 0, 0))
+    @picker.setDate(new Date(Date.UTC(2002, 2, 15, 0, 0, 0, 0)))
+    @picker.setEndDate(new Date(Date.UTC(2002, 2, 16, 0, 0, 0, 0)))
     expect(@dateWidget.find('.datepicker-days .day:contains(17)').is '.disabled').to.be.true
     expect(@dateWidget.find('.datepicker-days .day:contains(16)').is '.disabled').to.be.false
     expect(@dateWidget.find('.datepicker-days .next').is '.disabled').to.be.true
