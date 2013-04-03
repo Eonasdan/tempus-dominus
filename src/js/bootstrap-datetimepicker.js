@@ -294,7 +294,10 @@
         } else {
           dateStr = this.$element.find('input').val();
         }
-        if (!dateStr) {
+        if (dateStr) {
+          this._date = this.parseDate(dateStr);
+        }
+        if (!this._date) {
           var tmp = new Date()
           this._date = UTCDate(tmp.getFullYear(),
                               tmp.getMonth(),
@@ -303,8 +306,6 @@
                               tmp.getMinutes(),
                               tmp.getSeconds(),
                               tmp.getMilliseconds())
-        } else {
-          this._date = this.parseDate(dateStr);
         }
       }
       this.viewDate = UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
