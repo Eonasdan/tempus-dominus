@@ -263,7 +263,16 @@
       var position = 'absolute';
       var offset = this.component ? this.component.offset() : this.$element.offset();
       offset.top = offset.top + this.height;
-
+      
+      if ( this.options.width != undefined ) {
+        this.widget.width( this.options.width );
+      }
+      
+      if ( this.options.orientation == 'left' ) {
+        this.widget.addClass( 'left-oriented' );
+        offset.left   = offset.left - this.widget.width() + 20;
+      }
+      
       if (this._isInFixed()) {
         var $window = $(window);
         position = 'fixed';
