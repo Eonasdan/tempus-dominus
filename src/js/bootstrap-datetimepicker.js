@@ -294,7 +294,10 @@
         } else {
           dateStr = this.$element.find('input').val();
         }
-        if (!dateStr) {
+        if (dateStr) {
+          this._date = this.parseDate(dateStr);
+        }
+        if (!this._date) {
           var tmp = new Date()
           this._date = UTCDate(tmp.getFullYear(),
                               tmp.getMonth(),
@@ -303,8 +306,6 @@
                               tmp.getMinutes(),
                               tmp.getSeconds(),
                               tmp.getMilliseconds())
-        } else {
-          this._date = this.parseDate(dateStr);
         }
       }
       this.viewDate = UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
@@ -314,11 +315,10 @@
 
     fillDow: function() {
       var dowCnt = this.weekStart;
-      var html = '<tr>';
+      var html = $('<tr>');
       while (dowCnt < this.weekStart + 7) {
-        html += '<th class="dow">' + dates[this.language].daysMin[(dowCnt++) % 7] + '</th>';
+        html.append('<th class="dow">' + dates[this.language].daysMin[(dowCnt++) % 7] + '</th>');
       }
-      html += '</tr>';
       this.widget.find('.datepicker-days thead').append(html);
     },
 
@@ -368,10 +368,12 @@
       nextMonth.setUTCDate(nextMonth.getUTCDate() + 42);
       nextMonth = nextMonth.valueOf();
       var html = [];
+      var row;
       var clsName;
       while (prevMonth.valueOf() < nextMonth) {
         if (prevMonth.getUTCDay() === this.weekStart) {
-          html.push('<tr>');
+          row = $('<tr>');
+          html.push(row);
         }
         clsName = '';
         if (prevMonth.getUTCFullYear() < year ||
@@ -392,13 +394,10 @@
         if (prevMonth.valueOf() > this.endDate) {
           clsName += ' disabled';
         }
-        html.push('<td class="day' + clsName + '">' + prevMonth.getUTCDate() + '</td>');
-        if (prevMonth.getUTCDay() === this.weekEnd) {
-          html.push('</tr>');
-        }
+        row.append('<td class="day' + clsName + '">' + prevMonth.getUTCDate() + '</td>');
         prevMonth.setUTCDate(prevMonth.getUTCDate() + 1);
       }
-      this.widget.find('.datepicker-days tbody').empty().append(html.join(''));
+      this.widget.find('.datepicker-days tbody').empty().append(html);
       var currentYear = this._date.getUTCFullYear();
 
       var months = this.widget.find('.datepicker-months').find(
