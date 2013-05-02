@@ -6,8 +6,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-@import "variables.less"; 
-@import "mixins.less"; 
+@import "variables.less";
+@import "mixins.less";
 .bootstrap-datetimepicker-widget {
   top: 0;
   left: 0;
@@ -36,6 +36,16 @@
     position: absolute;
     top: -6px;
     left: 7px;
+  }
+  &.pull-right {
+    &:before {
+      left: auto;
+      right: 6px;
+    }
+    &:after {
+      left: auto;
+      right: 7px;
+    }
   }
   >ul {
     list-style-type: none;
