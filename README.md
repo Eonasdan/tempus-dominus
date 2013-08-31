@@ -16,4 +16,4 @@ See documentation [here](http://tarruda.github.com/bootstrap-datetimepicker/).
 $('#datetimepicker1').datetimepicker();
 ```
 
-If `data-format='MM/dd/yyyy hh:mm:ss'` is not included on the `input` field or the `div` the plugin will use `MM/dd/yyyy hh:mm:ss` by default or `MM/dd/yyyy` if you have `pickTime` set to false or `hh:mm:ss` if you have `pickDate` set to false. The plugin will also leave the `:ss` off if you have 'pickSeconds' set to false
+If `data-format='MM/dd/yyyy hh:mm:ss'` is not included on the `input` field or the `div` the plugin will use `MM/dd/yyyy hh:mm:ss` by default or `MM/dd/yyyy` if you have `pickTime` set to false or `hh:mm:ss` if you have `pickDate` set to false. The plugin will also leave the `:ss` off if you have `pickSeconds` set to false
