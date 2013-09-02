@@ -157,7 +157,6 @@
             this.widget.hide();
             this.viewMode = this.startViewMode;
             this.showMode();
-            this.set();
             this.$element.trigger({
                 type: 'hide',
                 date: this._date
@@ -179,6 +178,7 @@
                 this.$element.val(formatted);
                 this._resetMaskPos(this.$element);
             }
+            if (!this.pickTime) this.hide();
         },
 
         setValue: function (newDate) {
