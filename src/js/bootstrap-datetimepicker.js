@@ -571,7 +571,6 @@
                                     if (target[0].className === 'prev') step = step * -1;
                                     vd['set' + navFnc](vd['get' + navFnc]() + step);
                                     this.fillDate();
-                                    this.set();
                                     break;
                             }
                             break;
@@ -597,7 +596,6 @@
                             }
                             this.showMode(-1);
                             this.fillDate();
-                            this.set();
                             break;
                         case 'td':
                             if (target.is('.day')) {
