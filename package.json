@@ -3,7 +3,7 @@
   "version": "0.0.10",
   "repository": {
     "type": "git",
-    "url": "git://github.com/tarruda/bootstrap-datetimepicker.git"
+    "url": "git://github.com/eonasdan/bootstrap-datetimepicker.git"
   },
   "keywords": [
     "twitter-bootstrap",
