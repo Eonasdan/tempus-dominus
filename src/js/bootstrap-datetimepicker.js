@@ -1256,12 +1256,12 @@
             (is12Hours ? ' data-hour-format="12"' : '') +
             '>' +
             '<tr>' +
-              '<td><a href="#" class="btn btn-default" data-action="incrementHours"><span class="' + upIcon + '"></span></a></td>' +
+              '<td><a href="#" class="btn" data-action="incrementHours"><span class="' + upIcon + '"></span></a></td>' +
               '<td class="separator"></td>' +
-              '<td><a href="#" class="btn btn-default" data-action="incrementMinutes"><span class="' + upIcon + '"></span></a></td>' +
+              '<td><a href="#" class="btn" data-action="incrementMinutes"><span class="' + upIcon + '"></span></a></td>' +
               (showSeconds ?
               '<td class="separator"></td>' +
-              '<td><a href="#" class="btn btn-default" data-action="incrementSeconds"><span class="' + upIcon + '"></span></a></td>' : '') +
+              '<td><a href="#" class="btn" data-action="incrementSeconds"><span class="' + upIcon + '"></span></a></td>' : '') +
               (is12Hours ? '<td class="separator"></td>' : '') +
             '</tr>' +
             '<tr>' +
@@ -1278,12 +1278,12 @@
               '</td>' : '') +
             '</tr>' +
             '<tr>' +
-              '<td><a href="#" class="btn btn-default" data-action="decrementHours"><span class="' + downIcon + '"></span></a></td>' +
+              '<td><a href="#" class="btn" data-action="decrementHours"><span class="' + downIcon + '"></span></a></td>' +
               '<td class="separator"></td>' +
-              '<td><a href="#" class="btn btn-default" data-action="decrementMinutes"><span class="' + downIcon + '"></span></a></td>' +
+              '<td><a href="#" class="btn" data-action="decrementMinutes"><span class="' + downIcon + '"></span></a></td>' +
               (showSeconds ?
               '<td class="separator"></td>' +
-              '<td><a href="#" class="btn btn-default" data-action="decrementSeconds"><span class="' + downIcon + '"></span></a></td>' : '') +
+              '<td><a href="#" class="btn" data-action="decrementSeconds"><span class="' + downIcon + '"></span></a></td>' : '') +
               (is12Hours ? '<td class="separator"></td>' : '') +
             '</tr>' +
           '</table>' +

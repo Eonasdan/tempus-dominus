@@ -1,12 +1,12 @@
 /*!
- * Datepicker for Bootstrap v3
+ * Datepicker for Bootstrap
  *
  * Copyright 2012 Stefan Petre
  * Licensed under the Apache License v2.0
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-@import "variables.less";
+@import "../bootstrap/variables.less";
 
 .bootstrap-datetimepicker-widget
 {
@@ -17,6 +17,10 @@
     margin-top: 1px;
     z-index: 3000;
     border-radius: 4px;
+
+    .btn {
+        padding:6px;
+    }
 
     &:before
     {
@@ -82,16 +86,6 @@
     {
         display: none;
     }
-	
-	.datepicker
-	{
-		span
-		{
-            width: 53px;
-            height: 54px;
-            line-height: 54px;
-		}
-	}
 
     .picker-switch
     {
@@ -149,6 +143,9 @@
         span
         {
             display: block;
+            width: 47px;
+            height: 54px;
+            line-height: 54px;
             float: left;
             margin: 2px;
             cursor: pointer;
