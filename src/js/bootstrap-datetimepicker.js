@@ -154,10 +154,7 @@
             this._attachDatePickerEvents();
         },
 
-        hide: function (event) {
-            if (this.isInput && this.$element.is(event.target)) {
-                return;
-            }
+        hide: function () {
             // Ignore event if in the middle of a picker transition
             var collapse = this.widget.find('.collapse');
             for (var i = 0; i < collapse.length; i++) {
@@ -1012,8 +1009,12 @@
         },
 
         _attachDatePickerGlobalEvents: function () {
+            var self = this;
             $(window).on('resize.datetimepicker' + this.id, $.proxy(this.place, this));
-            $(document).on('mousedown.datetimepicker' + this.id, $.proxy(this.hide, this));
+            $(document).on('mousedown.datetimepicker' + this.id, function(event){
+                if (this.isInput && this.$element.is(event.target)) { return; }
+                self.hide();
+            });
         },
 
         _detachDatePickerEvents: function () {
