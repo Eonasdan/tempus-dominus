@@ -64,22 +64,23 @@
                 if (!this.format) this.format = 'MM/dd/yyyy' + (this.pickTime ? ' hh:mm' : '') + (this.pickSeconds ? ':ss' : '');
             }
             this._compileFormat();
-            if (this.component) {
-                icon = this.component.find('span');
+            if (this.pickTime) {
+                this.timeIcon = 'glyphicon glyphicon-time';
+                this.upIcon = 'glyphicon glyphicon-chevron-up';
+                this.downIcon = 'glyphicon glyphicon-chevron-down';
+            }
+            if (this.pickDate) {
+                this.dateIcon = 'glyphicon glyphicon-calendar';
+            }
+            iif (this.component && (icon = this.component.find('span')) && $.hasData(icon)) {
                 if (this.pickTime) {
-                    if (icon && icon.length) {
-                      this.timeIcon = icon.data('time-icon');
-                      this.upIcon = icon.data('up-icon');
-                      this.downIcon = icon.data('down-icon');
-                    }
-                    if (!this.timeIcon) this.timeIcon = 'glyphicon glyphicon-time';
-                    if (!this.upIcon) this.upIcon = 'glyphicon glyphicon-chevron-up';
-                    if (!this.downIcon) this.downIcon = 'glyphicon glyphicon-chevron-down';
+                    if (icon.data('time-icon') != null) this.timeIcon = icon.data('time-icon');
+                    if (icon.data('up-icon') != null) this.upIcon = icon.data('up-icon');
+                    if (icon.data('down-icon') != null) this.downIcon = icon.data('down-icon');
                     icon.addClass(this.timeIcon);
                 }
                 if (this.pickDate) {
-                    if (icon && icon.length) this.dateIcon = icon.data('date-icon');
-                    if (!this.dateIcon) this.dateIcon = 'glyphicon glyphicon-calendar';
+                    if (icon.data('date-icon') != null) this.dateIcon = icon.data('date-icon');
                     icon.removeClass(this.timeIcon);
                     icon.addClass(this.dateIcon);
                 }
