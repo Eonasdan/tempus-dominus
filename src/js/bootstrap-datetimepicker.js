@@ -188,7 +188,8 @@
                 this.$element.val(formatted);
                 this._resetMaskPos(this.$element);
             }
-            if (!this.pickTime) this.hide();
+            this.hide()
+            //if (!this.pickTime) this.hide();
         },
 
         setValue: function (newDate) {
@@ -203,7 +204,7 @@
                 this._date = new Date(newDate);
             }
             this.set();
-            this.viewDate = UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
+            this.viewDate = new UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
             this.fillDate();
             this.fillTime();
         },
@@ -279,11 +280,11 @@
 
             var $window = $(window);
 
-            if (this.options.width != undefined) {
+            if (this.options.width !== undefined) {
                 this.widget.width(this.options.width);
             }
 
-            if (this.options.orientation == 'left') {
+            if (this.options.orientation === 'left') {
                 this.widget.addClass('left-oriented');
                 offset.left = offset.left - this.widget.width() + 20;
             }
@@ -332,7 +333,7 @@
                 }
                 if (!this._date) {
                     var tmp = new Date();
-                    this._date = UTCDate(tmp.getFullYear(),
+                    this._date = new UTCDate(tmp.getFullYear(),
                                         tmp.getMonth(),
                                         tmp.getDate(),
                                         tmp.getHours(),
@@ -341,7 +342,7 @@
                                         tmp.getMilliseconds());
                 }
             }
-            this.viewDate = UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
+            this.viewDate = new UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
             this.fillDate();
             this.fillTime();
         },
@@ -989,7 +990,8 @@
             if (this.isInput) {
                 this.$element.on({
                     'focus': $.proxy(this.show, this),
-                    'change': $.proxy(this.change, this)
+                    'change': $.proxy(this.change, this),
+                    'blur': $.proxy(this.hide, this)
                 });
                 if (this.options.maskInput) {
                     this.$element.on({
