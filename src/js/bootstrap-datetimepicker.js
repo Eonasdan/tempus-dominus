@@ -10,6 +10,7 @@
  *  - Andrew Rowls
  *  - Thiago de Arruda
  *  - updated for Bootstrap v3 by Jonathan Peterson @Eonasdan
+ *  - Nick Baugh
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,105 +29,107 @@
 (function ($) {
 
     // Picker object
-    var smartPhone = (window.orientation != undefined);
+    var smartPhone = (window.orientation !== undefined);
     var DateTimePicker = function (element, options) {
-        this.id = dpgId++;
-        this.init(element, options);
-    };
+      this.id = dpgId++;
+      this.init(element, options);
+    }
 
     var dateToDate = function (dt) {
-        if (typeof dt === 'string') {
-            return new Date(dt);
-        }
-        return dt;
-    };
+      if (typeof dt === 'string') {
+        return new Date(dt);
+      }
+      return dt;
+    }
 
     DateTimePicker.prototype = {
         constructor: DateTimePicker,
 
         init: function (element, options) {
-            var icon;
-            if (!(options.pickTime || options.pickDate))
-                throw new Error('Must choose at least one picker');
-            this.options = options;
-            this.$element = $(element);
-            this.language = options.language in dates ? options.language : 'en';
-            this.pickDate = options.pickDate;
-            this.pickTime = options.pickTime;
-            this.isInput = this.$element.is('input');
-            this.component = false;
-            if (this.$element.find('.input-group'))
-                this.component = this.$element.find('.input-group-addon');
-            this.format = options.format;
-            if (!this.format) {
-                if (this.isInput) this.format = this.$element.data('format');
-                else this.format = this.$element.find('input').data('format');
-                if (!this.format) this.format = 'MM/dd/yyyy' + (this.pickTime ? ' hh:mm' : '') + (this.pickSeconds ? ':ss' : '');
+          var icon = false
+          if (!(options.pickTime || options.pickDate))
+            throw new Error('Must choose at least one picker');
+          this.options = options;
+          this.$element = $(element);
+          this.language = options.language in dates ? options.language : 'en';
+          this.pickDate = options.pickDate;
+          this.pickTime = options.pickTime;
+          this.isInput = this.$element.is('input');
+          this.component = false;
+          if (this.$element.find('.input-group').length)
+            this.component = this.$element.find('.input-group-addon');
+          this.format = options.format;
+          if (!this.format) {
+            if (this.isInput) this.format = this.$element.data('format');
+            else this.format = this.$element.find('input').data('format');
+            if (!this.format) this.format = 'MM/dd/yyyy' + (this.pickTime ? ' hh:mm' : '') + (this.pickSeconds ? ':ss' : '');
+          }
+          this._compileFormat();
+          if (this.component)
+            icon = this.component.find('span');
+          if (this.pickTime) {
+            if (icon && icon.length) {
+              this.timeIcon = icon.data('time-icon');
+              this.upIcon = icon.data('up-icon');
+              this.downIcon = icon.data('down-icon');
             }
-            this._compileFormat();
-            if (this.component) {
-                icon = this.component.find('span');
+            if (!this.timeIcon) this.timeIcon = 'glyphicon glyphicon-time';
+            if (!this.upIcon) this.upIcon = 'glyphicon glyphicon-chevron-up';
+            if (!this.downIcon) this.downIcon = 'glyphicon glyphicon-chevron-down';
+            if (icon)
+              icon.addClass(this.timeIcon);
+          }
+          if (this.pickDate) {
+            if (icon && icon.length) this.dateIcon = icon.data('date-icon');
+            if (!this.dateIcon) this.dateIcon = 'glyphicon glyphicon-calendar';
+            if (icon) {
+              icon.removeClass(this.timeIcon);
+              icon.addClass(this.dateIcon);
             }
-            if (this.pickTime) {
-                if (icon && icon.length) {
-                  this.timeIcon = icon.data('time-icon');
-                  this.upIcon = icon.data('up-icon');
-                  this.downIcon = icon.data('down-icon');
-                }
-                if (!this.timeIcon) this.timeIcon = 'glyphicon glyphicon-time';
-                if (!this.upIcon) this.upIcon = 'glyphicon glyphicon-chevron-up';
-                if (!this.downIcon) this.downIcon = 'glyphicon glyphicon-chevron-down';
-                icon.addClass(this.timeIcon);
+          }
+          this.widget = $(getTemplate(this.timeIcon, this.upIcon, this.downIcon, options.pickDate, options.pickTime,
+                                      options.pick12HourFormat, options.pickSeconds, options.collapse)).appendTo('body');
+          this.minViewMode = options.minViewMode || this.$element.data('date-minviewmode') || 0;
+          if (typeof this.minViewMode === 'string') {
+            switch (this.minViewMode) {
+            case 'months':
+              this.minViewMode = 1;
+              break;
+            case 'years':
+              this.minViewMode = 2;
+              break;
+            default:
+              this.minViewMode = 0;
+              break;
             }
-            if (this.pickDate) {
-                if (icon && icon.length) this.dateIcon = icon.data('date-icon');
-                if (!this.dateIcon) this.dateIcon = 'glyphicon glyphicon-calendar';
-                icon.removeClass(this.timeIcon);
-                icon.addClass(this.dateIcon);
+          }
+          this.viewMode = options.viewMode || this.$element.data('date-viewmode') || 0;
+          if (typeof this.viewMode === 'string') {
+            switch (this.viewMode) {
+            case 'months':
+              this.viewMode = 1;
+              break;
+            case 'years':
+              this.viewMode = 2;
+              break;
+            default:
+              this.viewMode = 0;
+              break;
             }
-            this.widget = $(getTemplate(this.timeIcon, this.upIcon, this.downIcon, options.pickDate, options.pickTime,
-                                        options.pick12HourFormat, options.pickSeconds, options.collapse)).appendTo('body');
-            this.minViewMode = options.minViewMode || this.$element.data('date-minviewmode') || 0;
-            if (typeof this.minViewMode === 'string') {
-                switch (this.minViewMode) {
-                    case 'months':
-                        this.minViewMode = 1;
-                        break;
-                    case 'years':
-                        this.minViewMode = 2;
-                        break;
-                    default:
-                        this.minViewMode = 0;
-                        break;
-                }
-            }
-            this.viewMode = options.viewMode || this.$element.data('date-viewmode') || 0;
-            if (typeof this.viewMode === 'string') {
-                switch (this.viewMode) {
-                    case 'months':
-                        this.viewMode = 1;
-                        break;
-                    case 'years':
-                        this.viewMode = 2;
-                        break;
-                    default:
-                        this.viewMode = 0;
-                        break;
-                }
-            }
-            this.startViewMode = this.viewMode;
-            this.weekStart = options.weekStart || this.$element.data('date-weekstart') || 0;
-            this.weekEnd = this.weekStart === 0 ? 6 : this.weekStart - 1;
-            this.setStartDate(options.startDate || this.$element.data('date-startdate'));
-            this.setEndDate(options.endDate || this.$element.data('date-enddate'));
-            this.fillDow();
-            this.fillMonths();
-            this.fillHours();
-            this.fillMinutes();
-            this.fillSeconds();
-            this.update();
-            this.showMode();
-            this._attachDatePickerEvents();
+          }
+          this.startViewMode = this.viewMode;
+          this.weekStart = options.weekStart || this.$element.data('date-weekstart') || 0;
+          this.weekEnd = this.weekStart === 0 ? 6 : this.weekStart - 1;
+          this.setStartDate(options.startDate || this.$element.data('date-startdate'));
+          this.setEndDate(options.endDate || this.$element.data('date-enddate'));
+          this.fillDow();
+          this.fillMonths();
+          this.fillHours();
+          this.fillMinutes();
+          this.fillSeconds();
+          this.update();
+          this.showMode();
+          this._attachDatePickerEvents();
         },
 
         show: function (e) {
@@ -185,7 +188,8 @@
                 this.$element.val(formatted);
                 this._resetMaskPos(this.$element);
             }
-            if (!this.pickTime) this.hide();
+            this.hide()
+            //if (!this.pickTime) this.hide();
         },
 
         setValue: function (newDate) {
@@ -200,7 +204,7 @@
                 this._date = new Date(newDate);
             }
             this.set();
-            this.viewDate = UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
+            this.viewDate = new UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
             this.fillDate();
             this.fillTime();
         },
@@ -275,11 +279,11 @@
 
             var $window = $(window);
 
-            if (this.options.width != undefined) {
+            if (this.options.width !== undefined) {
                 this.widget.width(this.options.width);
             }
 
-            if (this.options.orientation == 'left') {
+            if (this.options.orientation === 'left') {
                 this.widget.addClass('left-oriented');
                 offset.left = offset.left - this.widget.width() + 20;
             }
@@ -328,7 +332,7 @@
                 }
                 if (!this._date) {
                     var tmp = new Date();
-                    this._date = UTCDate(tmp.getFullYear(),
+                    this._date = new UTCDate(tmp.getFullYear(),
                                         tmp.getMonth(),
                                         tmp.getDate(),
                                         tmp.getHours(),
@@ -337,7 +341,7 @@
                                         tmp.getMilliseconds());
                 }
             }
-            this.viewDate = UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
+            this.viewDate = new UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
             this.fillDate();
             this.fillTime();
         },
@@ -985,7 +989,8 @@
             if (this.isInput) {
                 this.$element.on({
                     'focus': $.proxy(this.show, this),
-                    'change': $.proxy(this.change, this)
+                    'change': $.proxy(this.change, this),
+                    'blur': $.proxy(this.hide, this)
                 });
                 if (this.options.maskInput) {
                     this.$element.on({
