@@ -72,7 +72,7 @@
             if (this.pickDate) {
                 this.dateIcon = 'glyphicon glyphicon-calendar';
             }
-            iif (this.component && (icon = this.component.find('span')) && $.hasData(icon)) {
+            if (this.component && (icon = this.component.find('span')) && $.hasData(icon)) {
                 if (this.pickTime) {
                     if (icon.data('time-icon') != null) this.timeIcon = icon.data('time-icon');
                     if (icon.data('up-icon') != null) this.upIcon = icon.data('up-icon');
