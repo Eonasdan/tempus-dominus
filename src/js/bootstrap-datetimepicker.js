@@ -54,9 +54,9 @@
             this.pickDate = options.pickDate;
             this.pickTime = options.pickTime;
             this.isInput = this.$element.is('input');
-            this.component = false;
-            if (this.$element.find('.input-group'))
-                this.component = this.$element.find('.input-group-addon');
+            this.component = this.$element.find('.input-group-addon');
+            if (this.component.length === 0)
+                this.component = false;
             this.format = options.format;
             if (!this.format) {
                 if (this.isInput) this.format = this.$element.data('format');
@@ -64,25 +64,26 @@
                 if (!this.format) this.format = 'MM/dd/yyyy' + (this.pickTime ? ' hh:mm' : '') + (this.pickSeconds ? ':ss' : '');
             }
             this._compileFormat();
-            if (this.component) {
-                icon = this.component.find('span');
-            }
             if (this.pickTime) {
-                if (icon && icon.length) {
-                  this.timeIcon = icon.data('time-icon');
-                  this.upIcon = icon.data('up-icon');
-                  this.downIcon = icon.data('down-icon');
-                }
-                if (!this.timeIcon) this.timeIcon = 'glyphicon glyphicon-time';
-                if (!this.upIcon) this.upIcon = 'glyphicon glyphicon-chevron-up';
-                if (!this.downIcon) this.downIcon = 'glyphicon glyphicon-chevron-down';
-                icon.addClass(this.timeIcon);
+                this.timeIcon = 'glyphicon glyphicon-time';
+                this.upIcon = 'glyphicon glyphicon-chevron-up';
+                this.downIcon = 'glyphicon glyphicon-chevron-down';
             }
             if (this.pickDate) {
-                if (icon && icon.length) this.dateIcon = icon.data('date-icon');
-                if (!this.dateIcon) this.dateIcon = 'glyphicon glyphicon-calendar';
-                icon.removeClass(this.timeIcon);
-                icon.addClass(this.dateIcon);
+                this.dateIcon = 'glyphicon glyphicon-calendar';
+            }
+            if (this.component && (icon = this.component.find('span')) && $.hasData(icon)) {
+                if (this.pickTime) {
+                    if (icon.data('time-icon') != null) this.timeIcon = icon.data('time-icon');
+                    if (icon.data('up-icon') != null) this.upIcon = icon.data('up-icon');
+                    if (icon.data('down-icon') != null) this.downIcon = icon.data('down-icon');
+                    icon.addClass(this.timeIcon);
+                }
+                if (this.pickDate) {
+                    if (icon.data('date-icon') != null) this.dateIcon = icon.data('date-icon');
+                    icon.removeClass(this.timeIcon);
+                    icon.addClass(this.dateIcon);
+                }
             }
             this.widget = $(getTemplate(this.timeIcon, this.upIcon, this.downIcon, options.pickDate, options.pickTime,
                                         options.pick12HourFormat, options.pickSeconds, options.collapse)).appendTo('body');
@@ -189,11 +190,7 @@
         },
 
         setValue: function (newDate) {
-            if (!newDate) {
-                this._unset = true;
-            } else {
-                this._unset = false;
-            }
+            this._unset = !newDate;
             if (typeof newDate === 'string') {
                 this._date = this.parseDate(newDate);
             } else if (newDate) {
@@ -1012,12 +1009,12 @@
         },
 
         _attachDatePickerGlobalEvents: function () {
-            $(window).on(
-              'resize.datetimepicker' + this.id, $.proxy(this.place, this));
-            if (!this.isInput) {
-                $(document).on(
-                  'mousedown.datetimepicker' + this.id, $.proxy(this.hide, this));
-            }
+            var self = this;
+            $(window).on('resize.datetimepicker' + this.id, $.proxy(this.place, this));
+            $(document).on('mousedown.datetimepicker' + this.id, function(event){
+                if (this.isInput && this.$element.is(event.target)) { return; }
+                self.hide();
+            });
         },
 
         _detachDatePickerEvents: function () {
