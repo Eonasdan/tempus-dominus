@@ -59,7 +59,8 @@
                 this.component = this.$element.find('.input-group-addon');
             this.format = options.format;
             if (!this.format) {
-                if (this.isInput) this.format = this.$element.data('format');
+				if (dates[this.language].format != null)  this.format = dates[this.language].format;
+                else if (this.isInput) this.format = this.$element.data('format');
                 else this.format = this.$element.find('input').data('format');
                 if (!this.format) this.format = 'MM/dd/yyyy' + (this.pickTime ? ' hh:mm' : '') + (this.pickSeconds ? ':ss' : '');
             }
