@@ -63,7 +63,8 @@
 				if (dates[this.language].format != null)  this.format = dates[this.language].format;
                 else if (this.isInput) this.format = this.$element.data('format');
                 else this.format = this.$element.find('input').data('format');
-                if (!this.format) this.format = (this.pickDate ? 'MM/dd/yyyy' : '') + (this.pickTime ? ' hh:mm' : '') + (this.pickSeconds ? ':ss' : '');
+                if (!this.format) this.format = (this.pickDate ? 'MM/dd/yyyy' : '')
+				this.format += (this.pickTime ? ' hh:mm' : '') + (this.pickSeconds ? ':ss' : '');
             }
             this._compileFormat();
             if (this.component) icon = this.component.find('span');
