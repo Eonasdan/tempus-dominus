@@ -81,12 +81,9 @@
 
             <hr />
 			<a name="example2"></a>
-            <div id="example2">
-                <h4>Example 2</h4>
-
-                <div class="callout-box callout-box-info">
-                    Note<p>
-                        Same as <a href="#example1">Example 1</a> but using the "de" language option
+            <div id="example2"><div class="callout-box callout-box-info">
+                    Example 2<p>
+                        Same as <a href="#example1">Example 1</a> but using the "ru" language option. Notice the ru locale file has a default date format set to "dd.MM.yyyy"
                     </p>
                 </div>
 
@@ -104,7 +101,7 @@
                         <script type="text/javascript">
                             $(function () {
                                 $('#datetimepicker2').datetimepicker({
-                                    language: 'de'
+                                    language: 'ru'
                                 });
                             });
                         </script>
@@ -127,7 +124,7 @@
         <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
             <span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
                 <span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker2'</span><span class="p">).</span><span class="nx">datetimepicker</span><span class="p">({</span>
-                    <span class="nx">language</span><span class="o">:</span> <span class="s1">'de'</span>
+                    <span class="nx">language</span><span class="o">:</span> <span class="s1">'ru'</span>
                 <span class="p">});</span>
             <span class="p">});</span>
         <span class="nt">&lt;/script&gt;</span>
@@ -139,11 +136,8 @@
 
             <hr />
 			<a name="example3"></a>
-            <div id="example3">
-                <h4>Example 3</h4>
-
-                <div class="callout-box callout-box-info">
-                    Note<p>
+            <div id="example3"><div class="callout-box callout-box-info">
+                    Example 3<p>
                         Using 12 hour format (AM/PM)
                     </p>
                 </div>
@@ -200,10 +194,8 @@
 			<a name="example4"></a>
             <div id="example4">
 
-                <h4>Example 4</h4>
-
                 <div class="callout-box callout-box-info">
-                    Note<p>
+                    Example 4<p>
                         Disable the date picker
                     </p>
                 </div>
@@ -259,11 +251,8 @@
             <hr />
 			<a name="example5"></a>
             <div id="example5">
-
-                <h4>Example 5</h4>
-
                 <div class="callout-box callout-box-info">
-                    Note<p>
+                    Example 5<p>
                        Disable the time picker and use a custom date format. (US default is MM/dd/yyyy hh:mm:ss)
                     </p>
                 </div>
@@ -317,6 +306,47 @@
             </div>
 
             <hr />
+			<a name="example6"></a>
+            <div id="example6">
+			
+                <div class="callout-box callout-box-info">
+                    Example 6<p>
+                       Usage without an icon.
+                    </p>
+                </div>
+
+                <div class="container">
+                    <div class="col-md-10">
+                        <div class='well'>
+                            <input type='text' class="form-control" id='datetimepicker6'/>
+						</div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker6').datetimepicker();
+                            });
+                        </script>
+                    </div>
+                </div>
+
+                <div class="highlight highlight-html">
+                    <pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-10"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'well'</span><span class="nt">&gt;</span>
+			<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">id=</span><span class="s">'datetimepicker6'</span><span class="nt">/&gt;</span>
+		<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+			<span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker6'</span><span class="p">).</span><span class="nx">datetimepicker</span><span class="p">();</span>
+			<span class="p">});</span>
+		<span class="nt">&lt;/script&gt;</span>
+	<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+                </div>
+
+            </div>
+
+            <hr />
 			<a name="option"></a>
             <div id="options">
                 <h4>Options</h4>
@@ -352,7 +382,8 @@
         <div class="col-md-2">&nbsp;</div>
     </div>
     <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="scripts/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="scripts/bootstrap-datetimepicker.de.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="scripts/locales/bootstrap-datetimepicker.ru.js"></script>
+	<script type="text/javascript" src="scripts/locales/bootstrap-datetimepicker.de.js"></script>
 </body>
 </html>
