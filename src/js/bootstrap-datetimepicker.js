@@ -273,9 +273,9 @@
 
         place: function () {
             var position = 'absolute';
-            var offset = this.component ? this.component.offset() : this.$element.offset();
+            var offset = (typeof this.component.offset() !== 'undefined') ? this.component.offset() : this.$element.offset();
             this.width = this.component ? this.component.outerWidth() : this.$element.outerWidth();
-            offset.top = offset.top + this.height;
+            offset.top = offset.top + this.$element.outerHeight();
 
             var $window = $(window);
 
