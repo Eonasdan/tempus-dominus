@@ -1,5 +1,5 @@
 /**
- * version 1.0.4
+ * version 1.0.5
  * @license
  * =========================================================
  * bootstrap-datetimepicker.js
@@ -47,6 +47,7 @@
 
         init: function (element, options) {
             var icon = false;
+			this.useMoment = (typeof moment != "undefined");
             if (!(options.pickTime || options.pickDate))
                 throw new Error('Must choose at least one picker');
             this.options = options;
@@ -118,6 +119,7 @@
                         break;
                 }
             }
+			if (options.defaultDate !== "") this.setValue(options.defaultDate);
 			this.startViewMode = this.viewMode;
             this.weekStart = options.weekStart || this.$element.data('date-weekstart') || 0;
             this.weekEnd = this.weekStart === 0 ? 6 : this.weekStart - 1;
@@ -177,7 +179,14 @@
 
         set: function () {
             var formatted = '';
-            if (!this._unset) formatted = this.formatDate(this._date);
+            if (!this._unset) {
+				if (this.useMoment) {
+					formatted = moment(this._date).format(this.format);
+				}
+				else {
+					formatted = this.formatDate(this._date);
+				}
+			}
             if (!this.isInput) {
                 if (this.component) {
                     var input = this.$element.find('input');
@@ -273,7 +282,7 @@
 
         place: function () {
             var position = 'absolute';
-            var offset = (typeof this.component.offset() !== 'undefined') ? this.component.offset() : this.$element.offset();
+            var offset = this.component ? this.component.offset() : this.$element.offset();
             this.width = this.component ? this.component.outerWidth() : this.$element.outerWidth();
             offset.top = offset.top + this.$element.outerHeight();
 
@@ -870,6 +879,10 @@
         },
 
         parseDate: function (str) {
+			if (this.useMoment) {
+                var f = moment(str);
+                return f;
+            }
             var match, i, property, methodName, value, parsed = {};
             if (!(match = this._formatPattern.exec(str)))
                 return null;
