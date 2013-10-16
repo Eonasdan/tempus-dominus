@@ -875,7 +875,7 @@
                 if (methodName === 'getUTCMonth') rv = rv + 1;
                 if (methodName === 'getUTCYear') rv = rv + 1900 - 2000;
                 return padLeft(rv.toString(), len, '0');
-            });
+            }).trim();
         },
 
         parseDate: function (str) {
