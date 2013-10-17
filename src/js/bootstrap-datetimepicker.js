@@ -181,7 +181,7 @@
             var formatted = '';
             if (!this._unset) {
 				if (this.useMoment) {
-					formatted = moment(this._date).format(this.format);
+					formatted = moment.utc(this._date).format(this.format);
 				}
 				else {
 					formatted = this.formatDate(this._date);
