@@ -1,5 +1,5 @@
 /**
- * version 1.0.5
+ * version 1.0.6
  * @license
  * =========================================================
  * bootstrap-datetimepicker.js
@@ -123,7 +123,7 @@
 			this.startViewMode = this.viewMode;
             this.weekStart = options.weekStart || this.$element.data('date-weekstart') || 0;
             this.weekEnd = this.weekStart === 0 ? 6 : this.weekStart - 1;
-            this.setStartDate(options.startDate || this.$element.data('date-startdate'));
+            setStartDate(options.startDate || this.$element.data('date-startdate'));
             this.setEndDate(options.endDate || this.$element.data('date-enddate'));
             this.fillDow();
             this.fillMonths();
@@ -228,21 +228,7 @@
             else this.setValue(date.valueOf());
         },
 
-        setStartDate: function (date) {
-            if (date instanceof Date) {
-                this.startDate = date;
-            } else if (typeof date === 'string') {
-                this.startDate = new UTCDate(date);
-                if (!this.startDate.getUTCFullYear()) {
-                    this.startDate = -Infinity;
-                }
-            } else {
-                this.startDate = -Infinity;
-            }
-            if (this.viewDate) {
-                this.update();
-            }
-        },
+        
 
         setEndDate: function (date) {
             if (date instanceof Date) {
@@ -287,6 +273,8 @@
             offset.top = offset.top + this.$element.outerHeight();
 
             var $window = $(window);
+			
+			if (offset.top + this.widget.height() > $window.height()) offset.top = offset.top - (this.widget.height() + this.height + 10);
 
             if (this.options.width !== undefined) {
                 this.widget.width(this.options.width);
@@ -1098,6 +1086,22 @@
         }
     };
 
+	this.setStartDate = function (date) {
+            if (date instanceof Date) {
+                this.startDate = date;
+            } else if (typeof date === 'string') {
+                this.startDate = new UTCDate(date);
+                if (!this.startDate.getUTCFullYear()) {
+                    this.startDate = -Infinity;
+                }
+            } else {
+                this.startDate = -Infinity;
+            }
+            if (this.viewDate) {
+                this.update();
+            }
+        }
+	
     $.fn.datetimepicker = function (option, val) {
         return this.each(function () {
             var $this = $(this),
