@@ -198,7 +198,7 @@
                 this.$element.val(formatted);
                 this._resetMaskPos(this.$element);
             }
-            if (!this.pickTime) this.hide();
+            if (!this.pickTime) this.widget.hide();
         },
 
         setValue: function (newDate) {
