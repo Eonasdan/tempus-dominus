@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -26,10 +26,9 @@
             <br />
 
             <div id="example1">
-                <div class="callout-box callout-box-info">
-                    Note<p>
-                        "container" and "col-md-10" are not
-                required, except to make the input field smaller
+                <div class="callout-box callout-box-error">
+                    Important!<p>
+                        This is documentation for version 2. You can still find the documentation for version 1 <a href="http://eonasdan.github.io/bootstrap-datetimepicker/version1/">here</a>
                     </p>
                 </div>
                 <a name="example1"></a>
@@ -83,7 +82,7 @@
 			<a name="example2"></a>
             <div id="example2"><div class="callout-box callout-box-info">
                     Example 2<p>
-                        Same as <a href="#example1">Example 1</a> but using the "ru" language option. Notice the ru locale file has a default date format set to "dd.MM.yyyy"
+                        Same as <a href="#example1">Example 1</a> but using the "ru" language option. Note that the language file must be included from the locales folder
                     </p>
                 </div>
 
@@ -137,8 +136,7 @@
             <hr />
 			<a name="example3"></a>
             <div id="example3"><div class="callout-box callout-box-info">
-                    Example 3<p>
-                        Using 12 hour format (AM/PM)
+                    Example 3<p>Available functions. Note that <code>hide</code> is also available.
                     </p>
                 </div>
 
@@ -152,11 +150,39 @@
                                     </span>
                                 </div>
                             </div>
+							<button id="setStartDate">setStartDate</button>
+							<button id="setEndDate">setEndDate</button>
+							<button id="show">show</button>
+							<button id="disable">disable</button>
+							<button id="enable">enable</button>
+							<button id="setDate">setDate</button>
+							<button id="getDate">getDate</button>
                         </div>
                         <script type="text/javascript">
                             $(function () {
                                 $('#datetimepicker3').datetimepicker({
-                                    pick12HourFormat: true
+                                    pick12HourFormat: false
+                                });
+								$("#setStartDate").click(function () {
+                                    $('#datetimepicker3').data("DateTimePicker").setStartDate(new Date("june 12, 2013"));
+                                });								
+								$("#setEndDate").click(function () {
+                                    $('#datetimepicker3').data("DateTimePicker").setEndDate(new Date("july 4, 2013"));
+                                });
+								$("#show").click(function () {
+                                    $('#datetimepicker3').data("DateTimePicker").show();
+                                });
+								$("#disable").click(function () {
+                                    $('#datetimepicker3').data("DateTimePicker").disable();
+                                });
+								$("#enable").click(function () {
+                                    $('#datetimepicker3').data("DateTimePicker").enable();
+                                });
+								$("#setDate").click(function () {
+                                    $('#datetimepicker3').data("DateTimePicker").setDate("10/23/2013");
+                                });
+								$("#getDate").click(function () {
+                                    alert($('#datetimepicker3').data("DateTimePicker").getDate());
                                 });
                             });
                         </script>
@@ -164,28 +190,56 @@
                 </div>
 
                 <div class="highlight highlight-html">
-                    <pre>
+<pre>
 <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-10"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'well'</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'input-group date'</span> <span class="na">id=</span><span class="s">'datetimepicker3'</span><span class="nt">&gt;</span>
-                    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
-                    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"input-group-addon"</span><span class="nt">&gt;&lt;span</span> <span class="na">class=</span><span class="s">"glyphicon glyphicon-calendar"</span><span class="nt">&gt;&lt;/span&gt;</span>
-                    <span class="nt">&lt;/span&gt;</span>
-                <span class="nt">&lt;/div&gt;</span>
-            <span class="nt">&lt;/div&gt;</span>
-        <span class="nt">&lt;/div&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
-            <span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-                <span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker3'</span><span class="p">).</span><span class="nx">datetimepicker</span><span class="p">({</span>
-                    <span class="nx">pick12HourFormat</span><span class="o">:</span> <span class="kc">true</span>
-                <span class="p">});</span>
-            <span class="p">});</span>
-        <span class="nt">&lt;/script&gt;</span>
-    <span class="nt">&lt;/div&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-10"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'well'</span><span class="nt">&gt;</span>
+			<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+				<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'input-group date'</span> <span class="na">id=</span><span class="s">'datetimepicker3'</span><span class="nt">&gt;</span>
+					<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+					<span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"input-group-addon"</span><span class="nt">&gt;&lt;span</span> <span class="na">class=</span><span class="s">"glyphicon glyphicon-calendar"</span><span class="nt">&gt;&lt;/span&gt;</span>
+					<span class="nt">&lt;/span&gt;</span>
+				<span class="nt">&lt;/div&gt;</span>
+			<span class="nt">&lt;/div&gt;</span>
+			<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"setStartDate"</span><span class="nt">&gt;</span>setStartDate<span class="nt">&lt;/button&gt;</span>
+			<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"setEndDate"</span><span class="nt">&gt;</span>setEndDate<span class="nt">&lt;/button&gt;</span>
+			<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"show"</span><span class="nt">&gt;</span>show<span class="nt">&lt;/button&gt;</span>
+			<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"disable"</span><span class="nt">&gt;</span>disable<span class="nt">&lt;/button&gt;</span>
+			<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"enable"</span><span class="nt">&gt;</span>enable<span class="nt">&lt;/button&gt;</span>
+			<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"setDate"</span><span class="nt">&gt;</span>setDate<span class="nt">&lt;/button&gt;</span>
+			<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"getDate"</span><span class="nt">&gt;</span>getDate<span class="nt">&lt;/button&gt;</span>
+		<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+			<span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker3'</span><span class="p">).</span><span class="nx">datetimepicker</span><span class="p">({</span>
+					<span class="nx">pick12HourFormat</span><span class="o">:</span> <span class="kc">false</span>
+				<span class="p">});</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s2">"#setStartDate"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+					<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker3'</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s2">"DateTimePicker"</span><span class="p">).</span><span class="nx">setStartDate</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="s2">"june 12, 2013"</span><span class="p">));</span>
+				<span class="p">});</span>								
+				<span class="nx">$</span><span class="p">(</span><span class="s2">"#setEndDate"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+					<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker3'</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s2">"DateTimePicker"</span><span class="p">).</span><span class="nx">setEndDate</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="s2">"july 4, 2013"</span><span class="p">));</span>
+				<span class="p">});</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s2">"#show"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+					<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker3'</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s2">"DateTimePicker"</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+				<span class="p">});</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s2">"#disable"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+					<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker3'</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s2">"DateTimePicker"</span><span class="p">).</span><span class="nx">disable</span><span class="p">();</span>
+				<span class="p">});</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s2">"#enable"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+					<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker3'</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s2">"DateTimePicker"</span><span class="p">).</span><span class="nx">enable</span><span class="p">();</span>
+				<span class="p">});</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s2">"#setDate"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+					<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker3'</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s2">"DateTimePicker"</span><span class="p">).</span><span class="nx">setDate</span><span class="p">(</span><span class="s2">"10/23/2013"</span><span class="p">);</span>
+				<span class="p">});</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s2">"#getDate"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+					<span class="nx">alert</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker3'</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s2">"DateTimePicker"</span><span class="p">).</span><span class="nx">getDate</span><span class="p">());</span>
+				<span class="p">});</span>
+			<span class="p">});</span>
+		<span class="nt">&lt;/script&gt;</span>
+	<span class="nt">&lt;/div&gt;</span>
 <span class="nt">&lt;/div&gt;</span>
-            </pre>
+</pre>
                 </div>
 
             </div>
@@ -253,7 +307,7 @@
             <div id="example5">
                 <div class="callout-box callout-box-info">
                     Example 5<p>
-                       Disable the time picker and use a custom date format. (US default is MM/dd/yyyy hh:mm:ss)
+                       Disable the time picker and use a custom date format <code>data-format="YYYY/MM/DD"</code>. (US default is <code>MM/DD/YYYY hh:mm A/PM</code>)
                     </p>
                 </div>
 
@@ -262,8 +316,8 @@
                         <div class='well'>
                             <div class="form-group">
                                 <div class='input-group date' id='datetimepicker5'>
-                                    <input type='text' class="form-control" data-format="yyyy/MM/dd" />
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
+                                    <input type='text' class="form-control" data-format="YYYY/MM/DD" />
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
                             </div>
@@ -285,7 +339,7 @@
         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'well'</span><span class="nt">&gt;</span>
             <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'input-group date'</span> <span class="na">id=</span><span class="s">'datetimepicker5'</span><span class="nt">&gt;</span>
-                    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">data-format=</span><span class="s">"yyyy/MM/dd"</span> <span class="nt">/&gt;</span>
+                    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">data-format=</span><span class="s">"YYYY/MM/DD"</span> <span class="nt">/&gt;</span>
                     <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"input-group-addon"</span><span class="nt">&gt;&lt;span</span> <span class="na">class=</span><span class="s">"glyphicon glyphicon-time"</span><span class="nt">&gt;&lt;/span&gt;</span>
                     <span class="nt">&lt;/span&gt;</span>
                 <span class="nt">&lt;/div&gt;</span>
@@ -345,6 +399,154 @@
                 </div>
 
             </div>
+			<hr />
+			<a name="example7"></a>
+            <div id="example7">
+			
+                <div class="callout-box callout-box-info">
+                    Example 7 <p>Disabled Dates</p>
+                </div>
+
+                <div class="container">
+                    <div class="col-md-10">
+                       <div class='well'>
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker7'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker7').datetimepicker({
+									defaultDate: "11/1/13",
+									disabledDates: [
+                                        moment("12/25/2013"),
+                                        new Date(2013, 11 - 1, 21),
+                                        "11/22/2013 00:53"
+                                    ]
+								});
+                            });
+                        </script>
+                    </div>
+                </div>
+
+                <div class="highlight highlight-html">
+                    <pre>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-10"</span><span class="nt">&gt;</span>
+	   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'well'</span><span class="nt">&gt;</span>
+			<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+				<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'input-group date'</span> <span class="na">id=</span><span class="s">'datetimepicker7'</span><span class="nt">&gt;</span>
+					<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+					<span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"input-group-addon"</span><span class="nt">&gt;&lt;span</span> <span class="na">class=</span><span class="s">"glyphicon glyphicon-calendar"</span><span class="nt">&gt;&lt;/span&gt;</span>
+					<span class="nt">&lt;/span&gt;</span>
+				<span class="nt">&lt;/div&gt;</span>
+			<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+			<span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker7'</span><span class="p">).</span><span class="nx">datetimepicker</span><span class="p">({</span>
+					<span class="nx">defaultDate</span><span class="o">:</span> <span class="s2">"11/1/13"</span><span class="p">,</span>
+					<span class="nx">disabledDates</span><span class="o">:</span> <span class="p">[</span>
+						<span class="nx">moment</span><span class="p">(</span><span class="s2">"12/25/2013"</span><span class="p">),</span>
+						<span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span> <span class="mi">11</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span>
+						<span class="s2">"11/22/2013 00:53"</span>
+					<span class="p">]</span>
+				<span class="p">});</span>
+			<span class="p">});</span>
+		<span class="nt">&lt;/script&gt;</span>
+	<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+                </div>
+
+            </div>
+			<hr />
+			<a name="example8"></a>
+            <div id="example8">
+			
+                <div class="callout-box callout-box-info">
+                    Example 8 <p>Events and linked pickers</p>
+                </div>
+
+                <div class="container">
+                    <div class="well" style="height:75px;">
+                       <div class='col-md-5'>
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker8'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+							</div>
+						</div>
+						<div class='col-md-5'>
+							<div class="form-group">
+                                <div class='input-group date' id='datetimepicker9'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+							</div>
+						</div>
+					</div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker8').datetimepicker();
+								$('#datetimepicker9').datetimepicker();
+								$("#datetimepicker8").on("change.dp",function (e) {
+                                   $('#datetimepicker9').data("DateTimePicker").setStartDate(e.date);
+                                });
+								$("#datetimepicker9").on("change.dp",function (e) {
+                                   $('#datetimepicker8').data("DateTimePicker").setEndDate(e.date);
+                                });
+                            });
+                        </script>
+				</div>
+
+                <div class="highlight highlight-html">
+                    <pre>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"well"</span> <span class="na">style=</span><span class="s">"height:75px;"</span><span class="nt">&gt;</span>
+	   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'col-md-5'</span><span class="nt">&gt;</span>
+			<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+				<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'input-group date'</span> <span class="na">id=</span><span class="s">'datetimepicker8'</span><span class="nt">&gt;</span>
+					<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+					<span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"input-group-addon"</span><span class="nt">&gt;&lt;span</span> <span class="na">class=</span><span class="s">"glyphicon glyphicon-calendar"</span><span class="nt">&gt;&lt;/span&gt;</span>
+					<span class="nt">&lt;/span&gt;</span>
+				<span class="nt">&lt;/div&gt;</span>
+			<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'col-md-5'</span><span class="nt">&gt;</span>
+			<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+				<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'input-group date'</span> <span class="na">id=</span><span class="s">'datetimepicker9'</span><span class="nt">&gt;</span>
+					<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+					<span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"input-group-addon"</span><span class="nt">&gt;&lt;span</span> <span class="na">class=</span><span class="s">"glyphicon glyphicon-calendar"</span><span class="nt">&gt;&lt;/span&gt;</span>
+					<span class="nt">&lt;/span&gt;</span>
+				<span class="nt">&lt;/div&gt;</span>
+			<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;/div&gt;</span>
+	<span class="nt">&lt;/div&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+		<span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker8'</span><span class="p">).</span><span class="nx">datetimepicker</span><span class="p">();</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker9'</span><span class="p">).</span><span class="nx">datetimepicker</span><span class="p">();</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s2">"#datetimepicker8"</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">"change.dp"</span><span class="p">,</span><span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+			   <span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker9'</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s2">"DateTimePicker"</span><span class="p">).</span><span class="nx">setStartDate</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">date</span><span class="p">);</span>
+			<span class="p">});</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s2">"#datetimepicker9"</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">"change.dp"</span><span class="p">,</span><span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+			   <span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker8'</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s2">"DateTimePicker"</span><span class="p">).</span><span class="nx">setEndDate</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">date</span><span class="p">);</span>
+			<span class="p">});</span>
+		<span class="p">});</span>
+	<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+                </div>
+
+            </div>
 
             <hr />
 			<a name="option"></a>
@@ -354,16 +556,44 @@
                 <div class="highlight highlight-javascript">
                     <pre>
 <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">datetimepicker</span><span class="p">.</span><span class="nx">defaults</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">maskInput</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>           <span class="c1">// disables the text input mask</span>
     <span class="nx">pickDate</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>            <span class="c1">// disables the date picker</span>
     <span class="nx">pickTime</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>            <span class="c1">// disables de time picker</span>
-    <span class="nx">pick12HourFormat</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>   <span class="c1">// enables the 12-hour format time picker</span>
-    <span class="nx">pickSeconds</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>         <span class="c1">// disables seconds in the time picker</span>
-    <span class="nx">startDate</span><span class="o">:</span> <span class="o">-</span><span class="kc">Infinity</span><span class="p">,</span>      <span class="c1">// set a minimum date</span>
-    <span class="nx">endDate</span><span class="o">:</span> <span class="kc">Infinity</span>          <span class="c1">// set a maximum date</span>
+    <span class="nx">startDate</span><span class="o">:</span><span class="kc">1/1/1970</span><span class="p">,</span>      <span class="c1">// set a minimum date</span>
+    <span class="nx">endDate</span><span class="o">:</span> <span class="kc">(today +50 years)</span>         <span class="c1">// set a maximum date</span>
 <span class="p">};</span>
 </pre>
                 </div>
+            </div>
+			
+			<hr />
+			<a name="events"></a>
+            <div id="events">
+                <h4>Events</h4>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">change.dp</h3>
+					</div>
+					<div class="panel-body">
+						Fires when the datepicker changes or updates the date
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">show.dp</h3>
+					</div>
+					<div class="panel-body">
+						Fires when the datepicker box is shown
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">hide.dp</h3>
+					</div>
+					<div class="panel-body">
+						Fires when the datepicker box is hiden
+					</div>
+				</div>
             </div>
 
         </div>
@@ -382,8 +612,8 @@
         <div class="col-md-2">&nbsp;</div>
     </div>
     <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="scripts/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="scripts/moment.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="scripts/locales/bootstrap-datetimepicker.ru.js"></script>
-	<script type="text/javascript" src="scripts/locales/bootstrap-datetimepicker.de.js"></script>
 </body>
 </html>
