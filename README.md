@@ -9,7 +9,7 @@ Version 2 now requires Momentjs. Version 1 can still be found [here](https://git
 * maskInput
 
 ####New feature (2.0.0)!
-* `defaultDate` is now an option to set the inital date. It accepts date objects like `new Date("November 12, 2013 00:00:00")` and `12/25/2013 00:00`
-* partial support for moment.js
+* `disabledDates` is now an option to set the disabled dates. It accepts date objects like `new Date("November 12, 2013 00:00:00")` and `12/25/2013' and `moment` date objects. See [Example#7](http://eonasdan.github.io/bootstrap-datetimepicker/#example7) for usage.
+* Events are easier to use; see [Example#8](http://eonasdan.github.io/bootstrap-datetimepicker/#example8)
 
 Documentation is [here](http://eonasdan.github.io/bootstrap-datetimepicker/) with examples and usage.
