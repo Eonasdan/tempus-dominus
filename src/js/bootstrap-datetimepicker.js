@@ -1,3 +1,30 @@
+/**
+ * version 2.0.1
+ * @license
+ * =========================================================
+ * bootstrap-datetimepicker.js
+ * http://www.eyecon.ro/bootstrap-datepicker
+ * =========================================================
+ * Copyright 2012 Stefan Petre
+ *
+ * Contributions:
+ *  - Andrew Rowls
+ *  - Thiago de Arruda
+ *  - updated for Bootstrap v3 by Jonathan Peterson @Eonasdan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================================================
+ */
 ;(function ($) {
 
     var dpgId = 0,
@@ -161,6 +188,13 @@
                 date: picker.getDate()
             });
         },
+		
+		notifyError = function(date){
+			picker.element.trigger({
+				type: 'error.dp',
+				date: date
+			});
+		},
 
         update = function (newDate) {
 			moment.lang(picker.options.language);
@@ -171,7 +205,7 @@
                 } else {
                     dateStr = picker.element.find('input').val();
                 }
-                if (dateStr) picker.date = moment(dateStr);
+                if (dateStr) picker.date = moment(dateStr, picker.format);
                 if (!picker.date) picker.date = moment();
             }
             picker.viewDate = moment(picker.date).startOf("month");
@@ -181,17 +215,18 @@
 
 		fillDow = function () {
 			moment.lang(picker.options.language);
-            var dowCnt = moment().weekday(0).weekday(), html = $('<tr>');
+			var dowCnt = moment().weekday(0).weekday(), html = $('<tr>'), weekdaysMin = moment.weekdaysMin();
             while (dowCnt < moment().weekday(0).weekday() + 7) {
-                html.append('<th class="dow">' + moment()._lang._weekdaysMin[(dowCnt++) % 7] + '</th>');
+                html.append('<th class="dow">' + weekdaysMin[(dowCnt++) % 7] + '</th>');
             }
             picker.widget.find('.datepicker-days thead').append(html);
         },
 
         fillMonths = function () {
-            var html = '', i = 0;
-            while (i < 12) {
-                html += '<span class="month">' + moment()._lang._monthsShort[i++] + '</span>';
+			moment.lang(picker.options.language);
+            var html = '', i = 0, monthsShort = moment.monthsShort();
+			while (i < 12) {
+                html += '<span class="month">' + monthsShort[i++] + '</span>';
             }
             picker.widget.find('.datepicker-months td').append(html);
         },
@@ -204,14 +239,14 @@
                 startMonth = picker.options.startDate.month(),
                 endYear = picker.options.endDate.year(),
                 endMonth = picker.options.endDate.month(),
-                prevMonth, nextMonth, html = [], row, clsName, i, days, yearCont, currentYear;
+                prevMonth, nextMonth, html = [], row, clsName, i, days, yearCont, currentYear, months = moment.months();
 
             picker.widget.find('.datepicker-days').find('.disabled').removeClass('disabled');
             picker.widget.find('.datepicker-months').find('.disabled').removeClass('disabled');
             picker.widget.find('.datepicker-years').find('.disabled').removeClass('disabled');
 
             picker.widget.find('.datepicker-days th:eq(1)').text(
-                moment()._lang._months[month] + ' ' + year);
+                months[month] + ' ' + year);
 
             prevMonth = moment(picker.viewDate).subtract("months", 1);
             days = prevMonth.daysInMonth();
@@ -424,7 +459,7 @@
             },
 
             decrementMinutes: function () {
-                checkDate("subtract","hours");
+                checkDate("subtract","minutes");
             },
 
             togglePeriod: function () {
@@ -486,8 +521,13 @@
                 set();
             } else if (val && val.trim()) {
                 picker.setValue(picker.date.getTime());
-                if (picker.date.isValid) set();
-                else input.val('');
+                if (picker.date.isValid) {
+					set();
+				}
+                else {
+					input.val('');
+					notifyError(val);
+				}
             } else {
                 if (picker.date.isValid) {
                     picker.setValue(null);
@@ -633,8 +673,10 @@
 			else {
 				newDate = moment(picker.date).subtract(1, unit);
 			}
-			if (newDate.isAfter(picker.options.endDate) || newDate.subtract(1, unit).isBefore(picker.options.startDate)) return;
-			if (isInDisableDates(newDate)) return;
+			if (newDate.isAfter(picker.options.endDate) || newDate.subtract(1, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate)) {
+				notifyError(newDate.format(picker.format))
+				return;
+			}
 			
 			if (direction == "add") {
 				picker.date.add(1, unit);
@@ -849,9 +891,10 @@
                 picker.unset = false;
             }
             var d = moment(newDate);
-            if (!d.isValid())
+            if (!d.isValid()) {
                 throw new Error("Couldn't parase date or is invalid");
-
+				notifyError(newDate.format(picker.format));
+			}
             picker.date = d;
             set();
             picker.viewDate = moment({ y: picker.date.year(), M: picker.date.month() });
