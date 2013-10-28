@@ -661,7 +661,7 @@
 						<h3 class="panel-title">show.dp</h3>
 					</div>
 					<div class="panel-body">
-						Fires when the datepicker box is shown
+						Fires when the widget is shown
 					</div>
 				</div>
 				<div class="panel panel-default">
@@ -669,10 +669,18 @@
 						<h3 class="panel-title">hide.dp</h3>
 					</div>
 					<div class="panel-body">
-						Fires when the datepicker box is hiden
+						Fires when the widget is hiden
 					</div>
 				</div>
-            </div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">error.dp</h3>
+					</div>
+					<div class="panel-body">
+						Fires when Moment cannot parse the date or when the timepicker cannot change because of a `disabledDates` setting. Returns a Moment date object. The specific error can be found be using <code>invalidAt()</code>. For more information see <a href="http://momentjs.com/docs/#/parsing/is-valid/">Moment's docs</a>
+					</div>
+				</div>
+			</div>
 
         </div>
     </div>

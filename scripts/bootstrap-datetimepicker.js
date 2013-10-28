@@ -1,5 +1,5 @@
 /**
- * version 2.1.4
+ * version 2.1.5
  * @license
  * =========================================================
  * bootstrap-datetimepicker.js
@@ -563,7 +563,7 @@
         },
 
         attachDatePickerEvents = function () {
-            var self = this, $this, $parent, expanded, closed, collapseData;
+            var $this, $parent, expanded, closed, collapseData;
             picker.widget.on('click', '.datepicker *', $.proxy(click, this)); // this handles date picker clicks
             picker.widget.on('click', '[data-action]', $.proxy(doAction, this)); // this handles time picker clicks
             picker.widget.on('mousedown', $.proxy(stopEvent, this));
