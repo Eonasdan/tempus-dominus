@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="styles/styles.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="styles/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="styles/pygments-manni.css" />
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
 
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
@@ -16,22 +17,38 @@
 </head>
 
 <body>
-
     <div class="container">
-        <div class="col-md-2">&nbsp;</div>
-        <div class="col-md-10">
+		<div class="col-md-3">
+			<div class="bs-sidebar hidden-print affix" role="complementary">
+            <ul class="nav bs-sidenav">
+				<li><a href="#example1">Example 1</a></li>
+                <li><a href="#example2">Example 2</a></li>
+                <li><a href="#example3">Example 3</a></li>
+                <li><a href="#example4">Example 4</a></li>
+                <li><a href="#example5">Example 5</a></li>
+                <li><a href="#example6">Example 6</a></li>
+                <li><a href="#example7">Example 7</a></li>
+                <li><a href="#example8">Example 8</a></li>
+                <li><a href="#example9">Example 9</a></li>
+                <li><a href="#options">Options</a></li>
+                <li><a href="#events">Events </a></li>
+            </ul>
+          </div>
+        </div>		
+		<div class="col-md-9">
             <h1>Bootstrap datetimepicker <small>Date/time picker widget for Twitter Bootstrap v3</small>
             </h1>
             <br />
             <br />
 
-            <div id="example1">
-                <div class="callout-box callout-box-error">
+			<div class="callout-box callout-box-error">
                     Important!<p>
                         This is documentation for version 2. You can still find the documentation for version 1 <a href="http://eonasdan.github.io/bootstrap-datetimepicker/version1/">here</a>
                     </p>
-                </div>
-                <a name="example1"></a>
+            </div>
+            
+			<div id="example1">
+				<a name="example1"></a>
                 <h4>Example 1</h4>
 
                 <div class="container">
@@ -76,11 +93,12 @@
 <span class="nt">&lt;/div&gt;</span>
 </pre>
                 </div>
-            </div>
-
-            <hr />
-			<a name="example2"></a>
-            <div id="example2"><div class="callout-box callout-box-info">
+				<hr />
+			</div>
+           
+			<div id="example2">
+				<a name="example2"></a>
+				<div class="callout-box callout-box-info">
                     Example 2<p>
                         Same as <a href="#example1">Example 1</a> but using the "ru" language option. Note that the language file must be included from the locales folder
                     </p>
@@ -131,11 +149,12 @@
 <span class="nt">&lt;/div&gt;</span>
             </pre>
                 </div>
+				<hr />
             </div>
 
-            <hr />
-			<a name="example3"></a>
-            <div id="example3"><div class="callout-box callout-box-info">
+            <div id="example3">
+				<a name="example3"></a>
+				<div class="callout-box callout-box-info">
                     Example 3<p>Available functions. Note that <code>hide</code> is also available.
                     </p>
                 </div>
@@ -241,14 +260,12 @@
 <span class="nt">&lt;/div&gt;</span>
 </pre>
                 </div>
-
+				<hr />
             </div>
 
-            <hr />
-			<a name="example4"></a>
-            <div id="example4">
-
-                <div class="callout-box callout-box-info">
+			<div id="example4">
+				<a name="example4"></a>
+				<div class="callout-box callout-box-info">
                     Example 4<p>
                         Disable the date picker
                     </p>
@@ -299,12 +316,11 @@
 <span class="nt">&lt;/div&gt;</span>
             </pre>
                 </div>
-
+				<hr />
             </div>
 
-            <hr />
-			<a name="example5"></a>
             <div id="example5">
+				<a name="example5"></a>
                 <div class="callout-box callout-box-info">
                     Example 5<p>
                        Disable the time picker and use a custom date format <code>data-format="YYYY/MM/DD"</code>. (US default is <code>MM/DD/YYYY hh:mm A/PM</code>)
@@ -356,14 +372,12 @@
 <span class="nt">&lt;/div&gt;</span>
 </pre>
                 </div>
-
+				<hr />
             </div>
 
-            <hr />
-			<a name="example6"></a>
-            <div id="example6">
-			
-                <div class="callout-box callout-box-info">
+			<div id="example6">
+				<a name="example6"></a>
+				<div class="callout-box callout-box-info">
                     Example 6<p>
                        Usage without an icon.
                     </p>
@@ -397,12 +411,11 @@
 <span class="nt">&lt;/div&gt;</span>
 </pre>
                 </div>
-
+				<hr />
             </div>
-			<hr />
-			<a name="example7"></a>
-            <div id="example7">
 			
+			<div id="example7">
+				<a name="example7"></a>
                 <div class="callout-box callout-box-info">
                     Example 7 <p>Disabled Dates</p>
                 </div>
@@ -462,12 +475,11 @@
 <span class="nt">&lt;/div&gt;</span>
 </pre>
                 </div>
-
-            </div>
 			<hr />
-			<a name="example8"></a>
-            <div id="example8">
+            </div>
 			
+			<div id="example8">
+				<a name="example8"></a>
                 <div class="callout-box callout-box-info">
                     Example 8 <p>Events and linked pickers</p>
                 </div>
@@ -545,29 +557,95 @@
 <span class="nt">&lt;/div&gt;</span>
 </pre>
                 </div>
-
+				<hr />
             </div>
 
-            <hr />
-			<a name="option"></a>
+			<div id="example9">
+				<a name="example9"></a>
+                <div class="callout-box callout-box-info">
+                    Example 9 <p>Custom Icons (e.g. Font Awesome)</p>
+                </div>
+
+                <div class="container">
+                    <div class="well">
+						<div class="form-group">
+							<div class='input-group date' id='datetimepicker10'>
+								<input type='text' class="form-control" />
+								<span class="input-group-addon"><span data-icon-element="" class="fa fa-calendar"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker10').datetimepicker({
+									icons: {
+										time: "fa fa-clock-o",
+										date: "fa fa-calendar",
+										up: "fa fa-arrow-up",
+										down: "fa fa-arrow-down"
+									}
+								});
+                            });
+                        </script>
+				</div>
+
+                <div class="highlight highlight-html">
+<pre>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"well"</span> <span class="na">style=</span><span class="s">"height:130px;"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+			<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'input-group date'</span> <span class="na">id=</span><span class="s">'datetimepicker10'</span><span class="nt">&gt;</span>
+				<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+				<span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"input-group-addon"</span><span class="nt">&gt;&lt;span</span> <span class="na">data-icon-element=</span><span class="s">""</span> <span class="na">class=</span><span class="s">"fa fa-calendar"</span><span class="nt">&gt;</span>
+				      <span class="nt">&lt;/span&gt;</span>
+				<span class="nt">&lt;/span&gt;</span>
+			<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;/div&gt;</span>
+	<span class="nt">&lt;/div&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+		<span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">'#datetimepicker10'</span><span class="p">).</span><span class="nx">datetimepicker</span><span class="p">({</span>
+				<span class="nx">icons</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">time</span><span class="o">:</span> <span class="s2">"fa fa-clock-o"</span><span class="p">,</span>
+					<span class="nx">date</span><span class="o">:</span> <span class="s2">"fa fa-calendar"</span><span class="p">,</span>
+					<span class="nx">up</span><span class="o">:</span> <span class="s2">"fa fa-arrow-up"</span><span class="p">,</span>
+					<span class="nx">down</span><span class="o">:</span> <span class="s2">"fa fa-arrow-down"</span>
+				<span class="p">}</span>
+			<span class="p">});</span>
+		<span class="p">});</span>
+	<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+                </div>
+				<hr />
+            </div>
+
             <div id="options">
+				<a name="options"></a>
                 <h4>Options</h4>
 
                 <div class="highlight highlight-javascript">
                     <pre>
 <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">datetimepicker</span><span class="p">.</span><span class="nx">defaults</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">pickDate</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>            <span class="c1">// disables the date picker</span>
-    <span class="nx">pickTime</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>            <span class="c1">// disables de time picker</span>
-    <span class="nx">startDate</span><span class="o">:</span><span class="kc">1/1/1970</span><span class="p">,</span>      <span class="c1">// set a minimum date</span>
-    <span class="nx">endDate</span><span class="o">:</span> <span class="kc">(today +50 years)</span>         <span class="c1">// set a maximum date</span>
+    <span class="nx">pickDate</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>			<span class="c1">// disables the date picker</span>
+    <span class="nx">pickTime</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>			<span class="c1">// disables de time picker</span>
+    <span class="nx">startDate</span><span class="o">:</span><span class="s1">1/1/1970</span><span class="p">,</span>			<span class="c1">// set a minimum date</span>
+    <span class="nx">endDate</span><span class="o">:</span> <span class="c1">(today +50 years),</span>		<span class="c1">// set a maximum date</span>
+    <span class="nx">icons</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">time</span><span class="o">:</span> <span class="s1">'glyphicon glyphicon-time'</span><span class="p">,</span>
+	<span class="nx">date</span><span class="o">:</span> <span class="s1">'glyphicon glyphicon-calendar'</span><span class="p">,</span>
+	<span class="nx">up</span><span class="o">:</span>   <span class="s1">'glyphicon glyphicon-chevron-up'</span><span class="p">,</span>
+	<span class="nx">down</span><span class="o">:</span> <span class="s1">'glyphicon glyphicon-chevron-down'</span>
+    <span class="p">}</span>
 <span class="p">};</span>
 </pre>
                 </div>
-            </div>
+				<hr />
+			</div>
 			
-			<hr />
-			<a name="events"></a>
-            <div id="events">
+			<div id="events">
+				<a name="events"></a>
                 <h4>Events</h4>
 
 				<div class="panel panel-default">
@@ -597,11 +675,10 @@
             </div>
 
         </div>
-        <div class="col-md-2">&nbsp;</div>
     </div>
     <div class="container">
-        <div class="col-md-2">&nbsp;</div>
-        <div class="col-md-10">
+        <div class="col-md-3">&nbsp;</div>
+        <div class="col-md-9">
             <footer class="inner">
                 <p class="copyright">
                     <a href="https://github.com/Eonasdan/bootstrap-datetimepicker">Bootstrap-datetimepicker</a>
@@ -609,11 +686,20 @@
                 </p>
             </footer>
         </div>
-        <div class="col-md-2">&nbsp;</div>
     </div>
     <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
 	<script type="text/javascript" src="scripts/moment.js"></script>
-    <script type="text/javascript" src="scripts/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap-datetimepicker.js"></script>
     <script type="text/javascript" src="scripts/locales/bootstrap-datetimepicker.ru.js"></script>
+	<script>
+		$(function(){
+			var $window = $(window), $body   = $(document.body);
+			$body.scrollspy({
+				target: '.bs-sidebar'
+			});
+
+			
+	});
+	</script>
 </body>
 </html>
