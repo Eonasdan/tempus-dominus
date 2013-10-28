@@ -1,7 +1,16 @@
 #Bootstrap v3 datetimepicker widget
 
 ##Using [Moment.js](https://github.com/moment/moment)
-Version 2 now requires Momentjs. Version 1 can still be found [here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). Version 2 has better support for date formats and mutilanguage. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples.
+Version 2 now **requires Momentjs**. Version 1 can still be found [here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). Version 2 has better support for date formats and mutilanguage. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. The **format strings have changed** due to using moment. Check [Momentjs' homepage](http://momentjs.com/) for documentation
+
+####New feature (2.1.5)!
+* Custom icons, such as Font Awesome, are now supported. (#49)  See [Example#9](http://eonasdan.github.io/bootstrap-datetimepicker/#example9)
+* If more then one `input-group-addon` is present use `datepickerbutton` to identify where the picker should popup from. (#48)
+* New Event: `error.dp`. Fires when Moment cannot parse the date or when the timepicker cannot change because of a `disabledDates` setting. Returns a Moment date object. The specific error can be found be using `invalidAt()`. For more information see [Moment's docs](http://momentjs.com/docs/#/parsing/is-valid/)
+* Fix for #42, plugin will now check for `A` or `a` in the format string to determine if the AM/PM selector should display.
+* Fix for #45, fixed null/empty and invalid dates
+* Fix for #46, fixed active date highlighting
+* Fix for #47, `change.dp` event to also include the previous date.
 
 ####New feature (2.0.1)!
 * New event `error.dp` fires when plugin cannot parse date or when increase/descreasing hours/minutes to a disabled date.  See [Example#7](http://eonasdan.github.io/bootstrap-datetimepicker/#example7)
