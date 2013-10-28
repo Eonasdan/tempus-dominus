@@ -65,8 +65,10 @@
             if (!picker.format) {
                 if (picker.isInput) picker.format = picker.element.data('format');
                 else picker.format = picker.element.find('input').data('format');
-                if (!picker.format) picker.format = (picker.options.pickDate ? 'L' : '');
-                picker.format += (picker.options.pickTime ? ' LT' : '');
+                if (!picker.format) {
+			picker.format = (picker.options.pickDate ? 'L' : '');
+			picker.format += (picker.options.pickTime ? ' LT' : '');
+		}
             }
 
             if (picker.component) icon = picker.component.find('span');
