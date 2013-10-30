@@ -133,11 +133,11 @@
                 }
             }
 
-            for (i in picker.options.disabledDates) {
+            for (i = 0; i < picker.options.disabledDates.length; i++) {
                 dDate = picker.options.disabledDates[i];
                 dDate = moment(dDate);
                 //if this is not a valid date then set it to the startdate -1 day so it's disabled.
-                if (!dDate.isValid()) dDate = moment(startDate).subtract(1, "day").format("L");
+                if (!dDate.isValid()) dDate = moment(picker.options.startDate).subtract(1, "day");
                 picker.options.disabledDates[i] = dDate.format("L");
             }
 
