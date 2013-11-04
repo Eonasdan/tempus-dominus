@@ -179,28 +179,26 @@
                         </div>
                         <script type="text/javascript">
                             $(function () {
-                                $('#datetimepicker3').datetimepicker({
-                                    pick12HourFormat: false
+                                $('#datetimepicker3').datetimepicker();
+                                $("#setStartDate").click(function () {
+                                    $('#datetimepicker3').data("DateTimePicker").setStartDate(moment().subtract(14, "d"));
                                 });
-								$("#setStartDate").click(function () {
-                                    $('#datetimepicker3').data("DateTimePicker").setStartDate(new Date("june 12, 2013"));
-                                });								
-								$("#setEndDate").click(function () {
-                                    $('#datetimepicker3').data("DateTimePicker").setEndDate(new Date("july 4, 2013"));
+                                $("#setEndDate").click(function () {
+                                    $('#datetimepicker3').data("DateTimePicker").setEndDate(moment().add(14, "d"));
                                 });
-								$("#show").click(function () {
+                                $("#show").click(function () {
                                     $('#datetimepicker3').data("DateTimePicker").show();
                                 });
-								$("#disable").click(function () {
+                                $("#disable").click(function () {
                                     $('#datetimepicker3').data("DateTimePicker").disable();
                                 });
-								$("#enable").click(function () {
+                                $("#enable").click(function () {
                                     $('#datetimepicker3').data("DateTimePicker").enable();
                                 });
-								$("#setDate").click(function () {
-                                    $('#datetimepicker3').data("DateTimePicker").setDate("10/23/2013");
+                                $("#setDate").click(function () {
+                                    $('#datetimepicker3').data("DateTimePicker").setDate(moment().startOf("month"));
                                 });
-								$("#getDate").click(function () {
+                                $("#getDate").click(function () {
                                     alert($('#datetimepicker3').data("DateTimePicker").getDate());
                                 });
                             });
@@ -632,6 +630,7 @@
     <span class="nx">pickTime</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>			<span class="c1">// disables de time picker</span>
     <span class="nx">startDate</span><span class="o">:</span><span class="s1">1/1/1970</span><span class="p">,</span>			<span class="c1">// set a minimum date</span>
     <span class="nx">endDate</span><span class="o">:</span> <span class="c1">(today +50 years),</span>		<span class="c1">// set a maximum date</span>
+    <span class="nx">useStrict</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>			<span class="c1">//use "strict" when validating dates</span>    
     <span class="nx">icons</span> <span class="o">=</span> <span class="p">{</span>
 	<span class="nx">time</span><span class="o">:</span> <span class="s1">'glyphicon glyphicon-time'</span><span class="p">,</span>
 	<span class="nx">date</span><span class="o">:</span> <span class="s1">'glyphicon glyphicon-calendar'</span><span class="p">,</span>
