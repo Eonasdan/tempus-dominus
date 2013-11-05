@@ -233,7 +233,7 @@
 
 		fillDow = function () {
 		    pMoment.lang(picker.options.language);
-		    var html = $('<tr>'), weekdaysMin = pMoment.weekdaysMin(), i;
+		    var html = $('<tr>'), weekdaysMin = pMoment.langData()._weekdaysMin, i;
 		    if (pMoment()._lang._week.dow == 0) { // starts on Sunday
 		        for(i = 0; i < 7; i++) {
 		            html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
@@ -252,7 +252,7 @@
 
         fillMonths = function () {
             pMoment.lang(picker.options.language);
-            var html = '', i = 0, monthsShort = pMoment.monthsShort();
+            var html = '', i = 0, monthsShort = pMoment.langData()._monthsShort;
             while (i < 12) {
                 html += '<span class="month">' + monthsShort[i++] + '</span>';
             }
@@ -267,7 +267,7 @@
                 startMonth = picker.options.startDate.month(),
                 endYear = picker.options.endDate.year(),
                 endMonth = picker.options.endDate.month(),
-                prevMonth, nextMonth, html = [], row, clsName, i, days, yearCont, currentYear, months = pMoment.months();
+                prevMonth, nextMonth, html = [], row, clsName, i, days, yearCont, currentYear, months = pMoment.langData()._months;
 
             picker.widget.find('.datepicker-days').find('.disabled').removeClass('disabled');
             picker.widget.find('.datepicker-months').find('.disabled').removeClass('disabled');
@@ -288,7 +288,7 @@
 
             nextMonth = pMoment(prevMonth).add(42, "d");
             while (prevMonth.isBefore(nextMonth)) {
-                if (prevMonth.weekday() === pMoment().startOf('week').weekday()) {
+                if (prevMonth.day() === pMoment().startOf('week').day()) {
                     row = $('<tr>');
                     html.push(row);
                 }
@@ -467,17 +467,8 @@
                                         month += 1;
                                     }
                                 }
-                                picker.date = pMoment({
-                                    y: year,
-                                    M: month,
-                                    d: day,
-                                    h: picker.date.hours(),
-                                    m: picker.date.minutes()
-                                }
-                                );
-                                picker.viewDate = pMoment({
-                                    y: year, M: month, d: Math.min(28, day)
-                                });
+                                picker.date = pMoment([year,month,day].join('-') + ' ' + [picker.date.hours(),picker.date.minutes()].join(':'))
+                                picker.viewDate = pMoment([year,month,Math.min(28,day)].join(' '))
                                 fillDate();
                                 set();
                                 notifyChange(oldDate);
