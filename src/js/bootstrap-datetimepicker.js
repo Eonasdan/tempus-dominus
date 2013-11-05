@@ -435,13 +435,7 @@
                                 picker.viewDate.year(year);
                             }
                             if (picker.viewMode !== 0) {
-                                picker.date = pMoment({
-                                    y: picker.viewDate.year(),
-                                    M: picker.viewDate.month(),
-                                    d: picker.viewDate.date(),
-                                    h: picker.date.hours(),
-                                    m: picker.date.minutes()
-                                });
+                                picker.date = pMoment([picker.viewDate.year(),picker.viewDate.month() + 1,picker.viewDate.day()].join('-') + ' ' + [picker.date.hours(),picker.date.minutes()].join(':'))
                                 notifyChange(oldDate);
                             }
                             showMode(-1);
@@ -467,8 +461,8 @@
                                         month += 1;
                                     }
                                 }
-                                picker.date = pMoment([year,month,day].join('-') + ' ' + [picker.date.hours(),picker.date.minutes()].join(':'))
-                                picker.viewDate = pMoment([year,month,Math.min(28,day)].join(' '))
+                                picker.date = pMoment([year,month + 1,day].join('-') + ' ' + [picker.date.hours(),picker.date.minutes()].join(':'))
+                                picker.viewDate = pMoment([year,month + 1,Math.min(28,day)].join(' '))
                                 fillDate();
                                 set();
                                 notifyChange(oldDate);
