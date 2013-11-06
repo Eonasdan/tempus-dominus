@@ -1,7 +1,7 @@
 #Bootstrap v3 datetimepicker widget
 
 ##Using [Moment.js](https://github.com/moment/moment)
-Version 2 now **requires Momentjs**. Version 1 can still be found [here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). Version 2 has better support for date formats and mutilanguage. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. The **format strings have changed** due to using moment. Check [Momentjs' homepage](http://momentjs.com/) for documentation
+Version 2 now **requires Momentjs**. Version 1 can still be found [here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). Version 2 has better support for date formats and mutilanguage. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. The **format strings have changed** due to using moment. Check [Momentjs' homepage](http://momentjs.com/) for documentation. You can also get the [nuget package from here](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/)
 
 ####New features (2.1.11)!
 * Fix for #51, #60
