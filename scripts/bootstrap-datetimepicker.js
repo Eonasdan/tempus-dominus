@@ -8,9 +8,9 @@
  * Copyright 2012 Stefan Petre
  *
  * Contributions:
- *  - Andrew Rowls
- *  - Thiago de Arruda
- *  - updated for Bootstrap v3 by Jonathan Peterson @Eonasdan
+ * - updated for Bootstrap v3 by Jonathan Peterson (@Eonasdan) and (almost)
+ *    completely rewritten to use Momentjs
+ * - based on tarruda's bootstrap-datepicker
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,11 @@
  */
 ; (function ($) {
 
+    if (typeof moment === 'undefined') { 
+        alert("momentjs is requried");
+        throw new Error('momentjs is requried');
+    };
+	
     var dpgId = 0,
         
     pMoment = moment,
