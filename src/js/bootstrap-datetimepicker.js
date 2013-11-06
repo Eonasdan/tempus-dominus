@@ -27,6 +27,11 @@
  */
 ; (function ($) {
 
+	if (typeof moment === 'undefined') { 
+		alert("momentjs is requried");
+		throw new Error('momentjs is requried');
+	};
+	
     var dpgId = 0,
         
     pMoment = moment,
