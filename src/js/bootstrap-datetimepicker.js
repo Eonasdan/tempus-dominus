@@ -26,45 +26,50 @@
  * =========================================================
  */
 ; (function ($) {
-
-    if (typeof moment === 'undefined') { 
-        alert("momentjs is requried");
-        throw new Error('momentjs is requried');
-    };
-	
-    var dpgId = 0,
+    
+    var pMoment = moment,
+        dpgId = 0;
         
-    pMoment = moment,
+    $.fn.datetimepicker = function (options) {
+        return this.each(function () {
+            var $this = $(this),
+                data = $this.data('DateTimePicker');
+                
+            if (!data) {
+                $this.data('DateTimePicker', new DateTimePicker(this, options));
+            }
+        });
+    };
 
-// ReSharper disable once InconsistentNaming
-    DateTimePicker = function (element, options) {
-        var defaults = {
-            pickDate: true,
-            pickTime: true,
-            startDate: new pMoment({ y: 1970 }),
-            endDate: new pMoment().add(50, "y"),
-            collapse: true,
-            language: "en",
-            defaultDate: "",
-            disabledDates: [],
-            icons: {},
-            useStrict: false
-        },
+    $.fn.datetimepicker.defaults = {
+        pickDate: true,
+        pickTime: true,
+        startDate: new pMoment({ y: 1970 }),
+        endDate: new pMoment().add(50, "y"),
+        collapse: true,
+        language: "en",
+        defaultDate: "",
+        disabledDates: [],
+        icons: {},
+        useStrict: false
+    };
+    
+    $.fn.datetimepicker.icons = {
+        time: 'glyphicon glyphicon-time',
+        date: 'glyphicon glyphicon-calendar',
+        up: 'glyphicon glyphicon-chevron-up',
+        down: 'glyphicon glyphicon-chevron-down'
+    };
 
-		icons = {
-		    time: 'glyphicon glyphicon-time',
-		    date: 'glyphicon glyphicon-calendar',
-		    up: 'glyphicon glyphicon-chevron-up',
-		    down: 'glyphicon glyphicon-chevron-down'
-		},
+    DateTimePicker = function (element, options) {       
 
         picker = this,
 
         init = function () {
 
             var icon = false, i, dDate, longDateFormat;
-            picker.options = $.extend({}, defaults, options);
-            picker.options.icons = $.extend({}, icons, picker.options.icons);
+            picker.options = $.extend({}, $.fn.datetimepicker.defaults, options);
+            picker.options.icons = $.extend({}, $.fn.datetimepicker.icons, picker.options.icons);
 
             if (!(picker.options.pickTime || picker.options.pickDate))
                 throw new Error('Must choose at least one picker');
@@ -944,11 +949,5 @@
 
         init();
     };
-
-    $.fn.datetimepicker = function (options) {
-        return this.each(function () {
-            var $this = $(this), data = $this.data('DateTimePicker');
-            if (!data) $this.data('DateTimePicker', new DateTimePicker(this, options));
-        });
-    };
+    
 })(jQuery);
