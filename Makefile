@@ -13,9 +13,6 @@ build:
 	       	src/less/bootstrap-datetimepicker.less \
 	       	build/css/bootstrap-datetimepicker.min.css
 
-test: build
-	@./test/run.sh
-
 clean:
 	rm -rf build
 

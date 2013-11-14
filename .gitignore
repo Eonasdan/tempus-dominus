@@ -1,6 +1,0 @@
-/node_modules
-*.log
-/test/test.js
-/test/jquery.js
-/test/bootstrap.js
-/test/bootstrap.css
