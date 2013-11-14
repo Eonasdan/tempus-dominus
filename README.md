@@ -27,14 +27,11 @@ $.fn.datetimepicker.defaults = {
 
 Events
 ======
-`change.dp`
+`changeDate`
 Fires when the datepicker changes or updates the date
 
-`show.dp`
+`show`
 Fires when the widget is shown
 
-`hide.dp`
+`hide`
 Fires when the widget is hiden
-
-`error.dp`
-Fires when Moment cannot parse the date or when the timepicker cannot change because of a `disabledDates` setting. Returns a Moment date object. The specific error can be found be using invalidAt(). For more information see Moment's docs
