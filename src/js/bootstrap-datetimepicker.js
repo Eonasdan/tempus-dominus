@@ -28,7 +28,7 @@
 (function ($) {
 
     // Picker object
-    var smartPhone = (window.orientation != undefined);
+    var smartPhone = (window.orientation !== undefined);
     var DateTimePicker = function (element, options) {
         this.id = dpgId++;
         this.init(element, options);
@@ -46,13 +46,14 @@
 
         init: function (element, options) {
             var icon;
-            if (!(options.pickTime || options.pickDate))
-                throw new Error('Must choose at least one picker');
             this.options = options;
             this.$element = $(element);
             this.language = options.language in dates ? options.language : 'en';
-            this.pickDate = options.pickDate;
-            this.pickTime = options.pickTime;
+            this.pickDate = options.pickDate || true;
+            this.pickTime = options.pickTime || true;
+            this.pick12HourFormat = options.pick12HourFormat || false;
+            this.pickSeconds = options.pickSeconds || false;
+            this.collapse = options.collapse || true;
             this.isInput = this.$element.is('input');
             this.component = false;
             if (this.$element.find('.input-group'))
@@ -68,24 +69,47 @@
                 icon = this.component.find('span');
             }
             if (this.pickTime) {
-                if (icon && icon.length) {
-                  this.timeIcon = icon.data('time-icon');
-                  this.upIcon = icon.data('up-icon');
-                  this.downIcon = icon.data('down-icon');
+                if (options.icons) {
+                    if (options.icons.time) {
+                        this.timeIcon = options.icons.time;
+                    }
+                    if (options.icons.up) {
+                        this.upIcon = options.icons.up;
+                    }
+                    if (options.icons.down) {
+                        this.downIcon = options.icons.down;
+                    }
+                } else {
+                    if (icon && icon.length) {
+                      this.timeIcon = icon.data('time-icon');
+                      this.upIcon = icon.data('up-icon');
+                      this.downIcon = icon.data('down-icon');
+                    }
                 }
+
                 if (!this.timeIcon) this.timeIcon = 'glyphicon glyphicon-time';
                 if (!this.upIcon) this.upIcon = 'glyphicon glyphicon-chevron-up';
                 if (!this.downIcon) this.downIcon = 'glyphicon glyphicon-chevron-down';
                 icon.addClass(this.timeIcon);
             }
+
             if (this.pickDate) {
-                if (icon && icon.length) this.dateIcon = icon.data('date-icon');
+                if (options.icons) {
+                    if (options.icons.date) {
+                        this.dateIcon = options.icons.date;
+                    }
+                } else {
+                    if (icon && icon.length) {
+                        this.dateIcon = icon.data('date-icon');
+                    }
+                }
+
                 if (!this.dateIcon) this.dateIcon = 'glyphicon glyphicon-calendar';
                 icon.removeClass(this.timeIcon);
                 icon.addClass(this.dateIcon);
             }
-            this.widget = $(getTemplate(this.timeIcon, this.upIcon, this.downIcon, options.pickDate, options.pickTime,
-                                        options.pick12HourFormat, options.pickSeconds, options.collapse)).appendTo('body');
+            this.widget = $(getTemplate(this.timeIcon, this.upIcon, this.downIcon, this.pickDate, this.pickTime,
+                                        this.pick12HourFormat, this.pickSeconds, this.collapse)).appendTo('body');
             this.minViewMode = options.minViewMode || this.$element.data('date-minviewmode') || 0;
             if (typeof this.minViewMode === 'string') {
                 switch (this.minViewMode) {
