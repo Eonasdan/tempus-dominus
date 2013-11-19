@@ -47,6 +47,7 @@
             language: "en",
             defaultDate: "",
             disabledDates: [],
+            enabledDates: false, // array
             icons: {},
             useStrict: false
         },
@@ -149,6 +150,14 @@
                 //if this is not a valid date then set it to the startdate -1 day so it's disabled.
                 if (!dDate.isValid()) dDate = pMoment(picker.options.startDate).subtract(1, "day");
                 picker.options.disabledDates[i] = dDate.format("L");
+            }
+
+            for (i = 0; i < picker.options.enabledDates.length; i++) {
+                dDate = picker.options.enabledDates[i];
+                dDate = pMoment(dDate);
+                //if this is not a valid date then set it to the startdate -1 day so it's disabled.
+                if (!dDate.isValid()) dDate = pMoment(picker.options.startDate).subtract(1, "day");
+                picker.options.enabledDates[i] = dDate.format("L");
             }
 
             picker.startViewMode = picker.viewMode;
@@ -306,7 +315,7 @@
                 if (prevMonth.isSame(pMoment({ y: picker.date.year(), M: picker.date.month(), d: picker.date.date() }))) {
                     clsName += ' active';
                 }
-                if ((pMoment(prevMonth).add(1, "d") <= picker.options.startDate) || (prevMonth > picker.options.endDate) || isInDisableDates(prevMonth)) {
+                if ((pMoment(prevMonth).add(1, "d") <= picker.options.startDate) || (prevMonth > picker.options.endDate) || isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
                     clsName += ' disabled';
                 }
                 row.append('<td class="day' + clsName + '">' + prevMonth.date() + '</td>');
@@ -709,7 +718,7 @@
 		    else {
 		        newDate = pMoment(picker.date).subtract(1, unit);
 		    }
-		    if (newDate.isAfter(picker.options.endDate) || newDate.subtract(1, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate)) {
+            if (newDate.isAfter(picker.options.endDate) || newDate.subtract(1, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate) || !isInEnableDates(prevMonth)) {
 		        notifyError(newDate.format(picker.format));
 		        return;
 		    }
@@ -732,6 +741,20 @@
 		    }
 		    return false;
 		},
+
+        isInEnableDates = function (date) {
+            pMoment.lang(picker.options.language);
+            var enabled = picker.options.enabledDates, i;
+            if (enabled.length || enabled == false) {
+                for (i in enabled) {
+                    if (enabled[i] == pMoment(date).format("L")) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
+        },
 
         padLeft = function (string) {
             string = string.toString();
