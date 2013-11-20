@@ -718,7 +718,7 @@
 		    else {
 		        newDate = pMoment(picker.date).subtract(1, unit);
 		    }
-            if (newDate.isAfter(picker.options.endDate) || newDate.subtract(1, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate) || !isInEnableDates(newDate)) {
+		    if (newDate.isAfter(picker.options.endDate) || newDate.subtract(1, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate) || !isInEnableDates(newDate)) {
 		        notifyError(newDate.format(picker.format));
 		        return;
 		    }
@@ -753,7 +753,7 @@
                 }
                 return false;
             }
-            return enabled == false ? true : false;
+            return enabled === false ? true : false;
         },
 
         padLeft = function (string) {
