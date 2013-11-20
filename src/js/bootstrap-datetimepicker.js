@@ -718,7 +718,7 @@
 		    else {
 		        newDate = pMoment(picker.date).subtract(1, unit);
 		    }
-            if (newDate.isAfter(picker.options.endDate) || newDate.subtract(1, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate) || !isInEnableDates(prevMonth)) {
+            if (newDate.isAfter(picker.options.endDate) || newDate.subtract(1, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate) || !isInEnableDates(newDate)) {
 		        notifyError(newDate.format(picker.format));
 		        return;
 		    }
@@ -745,7 +745,7 @@
         isInEnableDates = function (date) {
             pMoment.lang(picker.options.language);
             var enabled = picker.options.enabledDates, i;
-            if (enabled.length || enabled == false) {
+            if (enabled.length) {
                 for (i in enabled) {
                     if (enabled[i] == pMoment(date).format("L")) {
                         return true;
@@ -753,7 +753,7 @@
                 }
                 return false;
             }
-            return true;
+            return enabled == false ? true : false;
         },
 
         padLeft = function (string) {
