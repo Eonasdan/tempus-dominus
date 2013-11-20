@@ -949,6 +949,12 @@
             else picker.setValue(date);
         },
 
+        picker.setEnabledDates = function (dates) {
+            if (!dates) picker.options.enabledDates = false;
+            else picker.options.enabledDates = dates;
+            if (picker.viewDate) update();
+        },
+
         picker.setEndDate = function (date) {
             picker.options.endDate = pMoment(date);
             if (!picker.options.endDate.isValid()) {
