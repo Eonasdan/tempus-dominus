@@ -868,6 +868,10 @@
             }
         },
 
+        picker.place = function () {
+            place();
+        },
+
         picker.disable = function () {
             picker.element.find('input').prop('disabled', true);
             detachDatePickerEvents();
