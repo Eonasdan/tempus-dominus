@@ -851,7 +851,8 @@
             detachDatePickerGlobalEvents();
             picker.widget.remove();
             picker.element.removeData('DateTimePicker');
-            picker.component.removeData('DateTimePicker');
+            if (picker.component)
+                picker.component.removeData('DateTimePicker');
         };
 
         picker.show = function (e) {
