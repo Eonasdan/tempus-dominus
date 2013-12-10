@@ -1,16 +1,60 @@
 #Bootstrap v3 datetimepicker widget
 
-##Using [Moment.js](https://github.com/moment/moment)
+## Installation
+
+### [Moment.js](https://github.com/moment/moment)
 Version 2 now **requires Momentjs**. Version 1 can still be found [here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). Version 2 has better support for date formats and mutilanguage. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. The **format strings have changed** due to using moment. Check [Momentjs' homepage](http://momentjs.com/) for documentation. You can also get the [nuget package from here](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/)
 
-####New features (2.1.11)!
+````html
+<script type="text/javascript" href="/path/to/moment.js"></script>
+````
+
+### Bootstrap 3 collapse and transition plugins
+Make sure to include *.JS files for plugins [collapse](http://getbootstrap.com/javascript/#collapse) and [transitions](http://getbootstrap.com/javascript/#transitions). They are included with [bootstrap in js/ directory](https://github.com/twbs/bootstrap/tree/master/js)
+
+````html
+<script type="text/javascript" href="/path/to/bootstrap/js/transition.js"></script>
+<script type="text/javascript" href="/path/to/bootstrap/js/collapse.js"></script>
+````
+
+Alternatively you could include the whole bundle of bootstrap plugins from [bootstrap.js](https://github.com/twbs/bootstrap/tree/master/dist/js)
+
+````html
+<script type="text/javascript" href="/path/to/bootstrap/dist/bootstrap.min.js"></script>
+````
+
+
+### CSS styles
+
+#### Using LESS
+````css
+@import "/path/to/bootstrap/less/variables";
+@import "/path/to/bootstrap-datetimepicker/src/less/bootstrap-datetimepicker";
+
+// [...] your custom styles and variables
+````
+
+#### Using CSS (default color palette)
+````html
+<link rel="stylesheet" href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+````
+
+### Main JS file
+
+Finally include the main javascript file.
+````html
+<script type="text/javascript" href="/path/to/bootstrap-datetimepicker.min.js"></script>
+````
+
+
+## New features (2.1.11)!
 * Fix for #51, #60
 * Fix for #52: Picker has its own `moment` object since moment 2.4.0 has removed global reference
 * Fix for #57: New option for `useStrict`. When validating dates in `update` and `change`, the picker can use a stricter formatting validation
 * Fix for #61: Picker should now properly take formatted date. Should also have correct start of the week for locales.
 * Fix for #62: Default format will properly validate time picker only.
 
-####New features (2.1.5)!
+## New features (2.1.5)!
 * Custom icons, such as Font Awesome, are now supported. (#49)  See [Example#9](http://eonasdan.github.io/bootstrap-datetimepicker/#example9)
 * If more then one `input-group-addon` is present use `datepickerbutton` to identify where the picker should popup from. (#48)
 * New Event: `error.dp`. Fires when Moment cannot parse the date or when the timepicker cannot change because of a `disabledDates` setting. Returns a Moment date object. The specific error can be found be using `invalidAt()`. For more information see [Moment's docs](http://momentjs.com/docs/#/parsing/is-valid/)
