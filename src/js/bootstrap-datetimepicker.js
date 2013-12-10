@@ -25,8 +25,21 @@
  * limitations under the License.
  * =========================================================
  */
-; (function ($) {
-
+; (function (factory) {
+    if (typeof define === 'function' && define.amd) {
+    // AMD is used - Register as an anonymous module.
+        define(['jquery', 'moment'], factory);
+    } else {
+        // AMD is not used - Attempt to fetch dependencies from scope.
+        if(!jQuery){
+            throw 'bootstrap-datetimepicker requires jQuery to be loaded first';
+        }else if(!moment) {
+            throw 'bootstrap-datetimepicker requires moment.js to be loaded first';
+        }else{
+            factory(jQuery, moment);
+        }
+    }
+}(function ($, moment) {
     if (typeof moment === 'undefined') { 
         alert("momentjs is requried");
         throw new Error('momentjs is requried');
@@ -952,4 +965,4 @@
             if (!data) $this.data('DateTimePicker', new DateTimePicker(this, options));
         });
     };
-})(jQuery);
+}));
