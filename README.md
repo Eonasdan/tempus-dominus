@@ -16,10 +16,10 @@ Include necessary scripts and styles:
 ````html
 <head>
   <!-- ... -->
-  <script type="text/javascript" href="/bower_components/jquery/jquery.min.js"></script>
-  <script type="text/javascript" href="/bower_components/moment/min/moment.min.js"></script>
-  <script type="text/javascript" href="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script type="text/javascript" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="/bower_components/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
+  <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/bootstrap-datetimepicker.min.js"></script>
   <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/boostrap.min.css" />
   <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 </head>
@@ -35,21 +35,21 @@ Done! [Now take a look at the manual](http://eonasdan.github.io/bootstrap-dateti
 Datetimepicker requires moment.js in version 2.3.1 (we're working on supporting higher versions). This allows for better support for various date formats and locales. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. Check [Momentjs' homepage](http://momentjs.com/) for documentation on date formats. If you can't use moment.js there's still older version of datetimewidget [available here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). 
 
 ````html
-<script type="text/javascript" href="/path/to/moment.js"></script>
+<script type="text/javascript" src="/path/to/moment.js"></script>
 ````
 
 ### Bootstrap 3 collapse and transition plugins
 Make sure to include *.JS files for plugins [collapse](http://getbootstrap.com/javascript/#collapse) and [transitions](http://getbootstrap.com/javascript/#transitions). They are included with [bootstrap in js/ directory](https://github.com/twbs/bootstrap/tree/master/js)
 
 ````html
-<script type="text/javascript" href="/path/to/bootstrap/js/transition.js"></script>
-<script type="text/javascript" href="/path/to/bootstrap/js/collapse.js"></script>
+<script type="text/javascript" src="/path/to/bootstrap/js/transition.js"></script>
+<script type="text/javascript" src="/path/to/bootstrap/js/collapse.js"></script>
 ````
 
 Alternatively you could include the whole bundle of bootstrap plugins from [bootstrap.js](https://github.com/twbs/bootstrap/tree/master/dist/js)
 
 ````html
-<script type="text/javascript" href="/path/to/bootstrap/dist/bootstrap.min.js"></script>
+<script type="text/javascript" src="/path/to/bootstrap/dist/bootstrap.min.js"></script>
 ````
 
 
@@ -72,7 +72,7 @@ Alternatively you could include the whole bundle of bootstrap plugins from [boot
 
 Finally include the main javascript file.
 ````html
-<script type="text/javascript" href="/path/to/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/path/to/bootstrap-datetimepicker.min.js"></script>
 ````
 
 #### Installation using Nuget
