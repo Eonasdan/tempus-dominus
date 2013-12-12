@@ -747,8 +747,7 @@
 
 		isInDisableDates = function (date) {
 		    pMoment.lang(picker.options.language);
-		    var result = false;
-		    result = picker.options.disabledDatesCallback(new Date(a(M).format()));
+		    var result = picker.options.disabledDatesCallback(new Date(pMoment(date).format()));
 
 	            if (result == true) {
 	                return true
