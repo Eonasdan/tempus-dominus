@@ -1,5 +1,5 @@
 /**
- * version 2.1.11
+ * version 2.1.20
  * @license
  * =========================================================
  * bootstrap-datetimepicker.js
@@ -25,8 +25,23 @@
  * limitations under the License.
  * =========================================================
  */
-; (function ($) {
+; (function (factory) {
+    if (typeof define === 'function' && define.amd) {
+    // AMD is used - Register as an anonymous module.
+        define(['jquery', 'moment'], factory);
+    } else {
+        // AMD is not used - Attempt to fetch dependencies from scope.
+        if(!jQuery){
+            throw 'bootstrap-datetimepicker requires jQuery to be loaded first';
+        }else if(!moment) {
+            throw 'bootstrap-datetimepicker requires moment.js to be loaded first';
+        }else{
+            factory(jQuery, moment);
+        }
+    }
+}
 
+(function ($, moment) {
     if (typeof moment === 'undefined') { 
         alert("momentjs is requried");
         throw new Error('momentjs is requried');
@@ -41,12 +56,16 @@
         var defaults = {
             pickDate: true,
             pickTime: true,
+            useMinutes: true,
+            useSeconds: false,
+            minuteStepping: 1,
             startDate: new pMoment({ y: 1970 }),
             endDate: new pMoment().add(50, "y"),
             collapse: true,
             language: "en",
             defaultDate: "",
             disabledDates: [],
+            enabledDates: false,
             icons: {},
             useStrict: false
         },
@@ -65,21 +84,24 @@
             var icon = false, i, dDate, longDateFormat;
             picker.options = $.extend({}, defaults, options);
             picker.options.icons = $.extend({}, icons, picker.options.icons);
-
+            
+            picker.element = $(element);
+            
+            dataToOptions();
+                        
             if (!(picker.options.pickTime || picker.options.pickDate))
                 throw new Error('Must choose at least one picker');
 
             picker.id = dpgId++;
             pMoment.lang(picker.options.language);
             picker.date = pMoment();
-            picker.element = $(element);
             picker.unset = false;
             picker.isInput = picker.element.is('input');
             picker.component = false;
 
             if (picker.element.hasClass('input-group')) {
                 if (picker.element.find('.datepickerbutton').size() == 0) {//in case there is more then one 'input-group-addon` #48
-                    picker.component = picker.element.find('.input-group-addon');
+                    picker.component = picker.element.find("[class^='input-group-']");
                 }
                 else {
                     picker.component = picker.element.find('.datepickerbutton');
@@ -96,10 +118,18 @@
                     picker.format = (picker.options.pickDate ? longDateFormat.L : '');
                     if (picker.options.pickDate && picker.options.pickTime) picker.format += ' ';
                     picker.format += (picker.options.pickTime ? longDateFormat.LT : '');
+                    if (picker.options.useSeconds) {
+                        if (~longDateFormat.LT.indexOf(' A')) {
+                            picker.format = picker.format.split(" A")[0] + ":ss A";
+                        }
+                        else {
+                            picker.format += ':ss';
+                        }
+                    }
                 }
             }
 
-            picker.use24hours = picker.format.toLowerCase().indexOf("a") < 1;
+            picker.options.use24hours = picker.format.toLowerCase().indexOf("a") < 1;
 
             if (picker.component) icon = picker.component.find('span');
 
@@ -151,6 +181,13 @@
                 picker.options.disabledDates[i] = dDate.format("L");
             }
 
+            for (i = 0; i < picker.options.enabledDates.length; i++) {
+                dDate = picker.options.enabledDates[i];
+                dDate = pMoment(dDate);
+                //if this is not a valid date then set it to the startdate -1 day so it's disabled.
+                if (!dDate.isValid()) dDate = pMoment(picker.options.startDate).subtract(1, "day");
+                picker.options.enabledDates[i] = dDate.format("L");
+            }
             picker.startViewMode = picker.viewMode;
             picker.setStartDate(picker.options.startDate || picker.element.data('date-startdate'));
             picker.setEndDate(picker.options.endDate || picker.element.data('date-enddate'));
@@ -158,10 +195,29 @@
             fillMonths();
             fillHours();
             fillMinutes();
+			fillSeconds();
             update();
             showMode();
             attachDatePickerEvents();
             if (picker.options.defaultDate !== "") picker.setValue(picker.options.defaultDate);
+        },
+        
+        dataToOptions = function () {
+            var eData = picker.element.data();
+            if (eData.pickdate !== undefined) picker.options.pickDate = eData.pickdate;
+            if (eData.picktime !== undefined) picker.options.pickTime = eData.picktime;
+            if (eData.useminutes !== undefined) picker.options.useMinutes = eData.useminutes;
+            if (eData.useseconds !== undefined) picker.options.useSeconds = eData.useseconds;
+            if (eData.minutestepping !== undefined) picker.options.minuteStepping = eData.minutestepping;
+            if (eData.startdate !== undefined) picker.options.startDate = eData.startdate;
+            if (eData.enddate !== undefined) picker.options.endDate = eData.enddate;
+            if (eData.collapse !== undefined) picker.options.collapse = eData.collapse;
+            if (eData.language !== undefined) picker.options.language = eData.language;
+            if (eData.defaultdate !== undefined) picker.options.defaultDate = eData.defaultdate;
+            if (eData.disableddates !== undefined) picker.options.disabledDates = eData.disableddates;
+            if (eData.enableddates !== undefined) picker.options.enabledDates = eData.enableddates;
+            if (eData.icons !== undefined) picker.options.icons = eData.icons;
+            if (eData.usestrict !== undefined) picker.options.useStrict = eData.usestrict;
         },
 
         place = function () {
@@ -206,16 +262,16 @@
 
         notifyChange = function (oldDate) {
             picker.element.trigger({
-                type: 'change.dp',
-                date: picker.getDate(),
-                oldDate: oldDate
+                type: 'change',
+                date: pMoment(picker.getDate()),
+                oldDate: pMoment(oldDate)
             });
         },
 
 		notifyError = function (date) {
 		    picker.element.trigger({
 		        type: 'error.dp',
-		        date: date
+		        date: pMoment(date)
 		    });
 		},
 
@@ -306,7 +362,7 @@
                 if (prevMonth.isSame(pMoment({ y: picker.date.year(), M: picker.date.month(), d: picker.date.date() }))) {
                     clsName += ' active';
                 }
-                if ((pMoment(prevMonth).add(1, "d") <= picker.options.startDate) || (prevMonth > picker.options.endDate) || isInDisableDates(prevMonth)) {
+                if ((pMoment(prevMonth).add(1, "d") <= picker.options.startDate) || (prevMonth > picker.options.endDate) || isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
                     clsName += ' disabled';
                 }
                 row.append('<td class="day' + clsName + '">' + prevMonth.date() + '</td>');
@@ -355,7 +411,7 @@
             pMoment.lang(picker.options.language);
             var table = picker.widget.find('.timepicker .timepicker-hours table'), html = '', current, i, j;
             table.parent().hide();
-            if (picker.use24hours) {
+            if (picker.options.use24hours) {
                 current = 0;
                 for (i = 0; i < 6; i += 1) {
                     html += '<tr>';
@@ -393,13 +449,27 @@
             }
             table.html(html);
         },
+        
+        fillSeconds = function () {
+            var table = picker.widget.find('.timepicker .timepicker-seconds table'), html = '', current = 0, i, j;
+            table.parent().hide();
+            for (i = 0; i < 5; i++) {
+                html += '<tr>';
+                for (j = 0; j < 4; j += 1) {
+                  html += '<td class="second">' + padLeft(current.toString()) + '</td>';
+                  current += 3;
+                }
+                html += '</tr>';
+            }
+            table.html(html);
+        },
 
         fillTime = function () {
             if (!picker.date) return;
             var timeComponents = picker.widget.find('.timepicker span[data-time-component]'),
             hour = picker.date.hours(),
             period = 'AM';
-            if (!picker.use24hours) {
+            if (!picker.options.use24hours) {
                 if (hour >= 12) period = 'PM';
                 if (hour === 0) hour = 12;
                 else if (hour != 12) hour = hour % 12;
@@ -407,6 +477,7 @@
             }
             timeComponents.filter('[data-time-component=hours]').text(padLeft(hour));
             timeComponents.filter('[data-time-component=minutes]').text(padLeft(picker.date.minutes()));
+            timeComponents.filter('[data-time-component=seconds]').text(padLeft(picker.date.second()));
         },
 
         click = function (e) {
@@ -495,19 +566,27 @@
 
 		actions = {
 		    incrementHours: function () {
-		        checkDate("add", "hours");
+		        checkDate("add", "hours", 1);
 		    },
 
 		    incrementMinutes: function () {
-		        checkDate("add", "minutes");
+		        checkDate("add", "minutes", picker.options.minuteStepping);
+		    },
+
+		    incrementSeconds: function () {
+		        checkDate("add", "seconds", 1);
 		    },
 
 		    decrementHours: function () {
-		        checkDate("subtract", "hours");
+		        checkDate("subtract", "hours", 1);
 		    },
 
 		    decrementMinutes: function () {
-		        checkDate("subtract", "minutes");
+		        checkDate("subtract", "minutes", picker.options.minuteStepping);
+		    },
+
+		    decrementSeconds: function () {
+		        checkDate("subtract", "seconds", 1);
 		    },
 
 		    togglePeriod: function () {
@@ -532,6 +611,11 @@
 		        picker.widget.find('.timepicker .timepicker-minutes').show();
 		    },
 
+		    showSeconds: function () {
+		        picker.widget.find('.timepicker .timepicker-picker').hide();
+		        picker.widget.find('.timepicker .timepicker-seconds').show();
+		    },
+
 		    selectHour: function (e) {
 		        picker.date.hours(parseInt($(e.target).text(), 10));
 		        actions.showPicker.call(picker);
@@ -539,6 +623,11 @@
 
 		    selectMinute: function (e) {
 		        picker.date.minutes(parseInt($(e.target).text(), 10));
+		        actions.showPicker.call(picker);
+		    },
+
+		    selectSecond: function (e) {
+		        picker.date.seconds(parseInt($(e.target).text(), 10));
 		        actions.showPicker.call(picker);
 		    }
 		},
@@ -698,27 +787,27 @@
             if (!picker.options.pickTime) picker.hide();
         },
 
-		checkDate = function (direction, unit) {
+		checkDate = function (direction, unit, amount) {
 		    pMoment.lang(picker.options.language);
 		    var newDate;
 		    if (direction == "add") {
 		        newDate = pMoment(picker.date);
-		        if (newDate.hours() == 23) newDate.add(1, unit);
-		        newDate.add(1, unit);
+		        if (newDate.hours() == 23) newDate.add(amount, unit);
+		        newDate.add(amount, unit);
 		    }
 		    else {
-		        newDate = pMoment(picker.date).subtract(1, unit);
+		        newDate = pMoment(picker.date).subtract(amount, unit);
 		    }
-		    if (newDate.isAfter(picker.options.endDate) || newDate.subtract(1, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate)) {
+		    if (newDate.isAfter(picker.options.endDate) || newDate.subtract(amount, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate)) {
 		        notifyError(newDate.format(picker.format));
 		        return;
 		    }
 
 		    if (direction == "add") {
-		        picker.date.add(1, unit);
+		        picker.date.add(amount, unit);
 		    }
 		    else {
-		        picker.date.subtract(1, unit);
+		        picker.date.subtract(amount, unit);
 		    }
 		},
 
@@ -733,6 +822,19 @@
 		    return false;
 		},
 
+        isInEnableDates = function (date) {
+            pMoment.lang(picker.options.language);
+            var enabled = picker.options.enabledDates, i;
+            if (enabled.length) {
+                for (i in enabled) {
+                    if (enabled[i] == pMoment(date).format("L")) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return enabled === false ? true : false;
+        },
         padLeft = function (string) {
             string = string.toString();
             if (string.length >= 2) return string;
@@ -797,8 +899,9 @@
 		},
 
         tpGlobal = {
-            hourTemplate: '<span data-action="showHours" data-time-component="hours" class="timepicker-hour"></span>',
-            minuteTemplate: '<span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>'
+            hourTemplate:   '<span data-action="showHours"   data-time-component="hours"   class="timepicker-hour"></span>',
+            minuteTemplate: '<span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>',
+			secondTemplate: '<span data-action="showSeconds"  data-time-component="seconds" class="timepicker-second"></span>'
         };
 
         dpGlobal.template =
@@ -819,21 +922,27 @@
 						'<tr>' +
 							'<td><a href="#" class="btn" data-action="incrementHours"><span class="' + picker.options.icons.up + '"></span></a></td>' +
 							'<td class="separator"></td>' +
-							'<td><a href="#" class="btn" data-action="incrementMinutes"><span class="' + picker.options.icons.up + '"></span></a></td>' +
-							(!picker.use24hours ? '<td class="separator"></td>' : '') +
+							'<td>' + (picker.options.useMinutes ? '<a href="#" class="btn" data-action="incrementMinutes"><span class="' + picker.options.icons.up + '"></span></a>' : '') + '</td>' +
+                            (picker.options.useSeconds ?
+                                '<td class="separator"></td><td><a href="#" class="btn" data-action="incrementSeconds"><span class="' + picker.options.icons.up + '"></span></a></td>' : '') +
+							(picker.options.use24hours ? '' : '<td class="separator"></td>') +
 						'</tr>' +
 						'<tr>' +
 							'<td>' + tpGlobal.hourTemplate + '</td> ' +
 							'<td class="separator">:</td>' +
-							'<td>' + tpGlobal.minuteTemplate + '</td> ' +
-							(!picker.use24hours ? '<td class="separator"></td>' +
-							'<td><button type="button" class="btn btn-primary" data-action="togglePeriod"></button></td>' : '') +
+							'<td>' + (picker.options.useMinutes ? tpGlobal.minuteTemplate : '<span class="timepicker-minute">00</span>') + '</td> ' +
+                            (picker.options.useSeconds ?
+                                '<td class="separator">:</td><td>' + tpGlobal.secondTemplate + '</td>' : '') +
+							(picker.options.use24hours ? '' : '<td class="separator"></td>' +
+							'<td><button type="button" class="btn btn-primary" data-action="togglePeriod"></button></td>') +
 						'</tr>' +
 						'<tr>' +
 							'<td><a href="#" class="btn" data-action="decrementHours"><span class="' + picker.options.icons.down + '"></span></a></td>' +
 							'<td class="separator"></td>' +
-							'<td><a href="#" class="btn" data-action="decrementMinutes"><span class="' + picker.options.icons.down + '"></span></a></td>' +
-							(!picker.use24hours ? '<td class="separator"></td>' : '') +
+							'<td>' + (picker.options.useMinutes ? '<a href="#" class="btn" data-action="decrementMinutes"><span class="' + picker.options.icons.down + '"></span></a>' : '') + '</td>' +
+                            (picker.options.useSeconds ?
+                                '<td class="separator"></td><td><a href="#" class="btn" data-action="decrementSeconds"><span class="' + picker.options.icons.down + '"></span></a></td>' : '') +
+							(picker.options.use24hours ? '' : '<td class="separator"></td>') +
 						'</tr>' +
                     '</table>' +
                 '</div>' +
@@ -842,7 +951,9 @@
                 '</div>' +
                 '<div class="timepicker-minutes" data-action="selectMinute">' +
                     '<table class="table-condensed"></table>' +
-                '</div>'
+                '</div>' +
+                (picker.options.useSeconds ?
+                    '<div class="timepicker-seconds" data-action="selectSecond"><table class="table-condensed"></table></div>' : '')
             );
         };
 
@@ -851,7 +962,8 @@
             detachDatePickerGlobalEvents();
             picker.widget.remove();
             picker.element.removeData('DateTimePicker');
-            picker.component.removeData('DateTimePicker');
+            if (picker.component)
+                picker.component.removeData('DateTimePicker');
         };
 
         picker.show = function (e) {
@@ -860,7 +972,7 @@
             place();
             picker.element.trigger({
                 type: 'show.dp',
-                date: picker.date
+                date: pMoment(picker.date)
             });
             attachDatePickerGlobalEvents();
             if (e) {
@@ -879,6 +991,8 @@
         },
 
         picker.hide = function () {
+            if (event && $(event.target).is(picker.element.attr("id")))
+                return;
             // Ignore event if in the middle of a picker transition
             var collapse = picker.widget.find('.collapse'), i, collapseData;
             for (i = 0; i < collapse.length; i++) {
@@ -891,7 +1005,7 @@
             showMode();
             picker.element.trigger({
                 type: 'hide.dp',
-                date: picker.date
+                date: pMoment(picker.date)
             });
             detachDatePickerGlobalEvents();
         },
@@ -922,10 +1036,17 @@
         },
 
         picker.setDate = function (date) {
+            date = pMoment(date);
             if (!date) picker.setValue(null);
             else picker.setValue(date);
         },
 
+        picker.setEnabledDates = function (dates) {
+            if (!dates) picker.options.enabledDates = false;
+            else picker.options.enabledDates = dates;
+            if (picker.viewDate) update();
+        },
+        
         picker.setEndDate = function (date) {
             picker.options.endDate = pMoment(date);
             if (!picker.options.endDate.isValid()) {
@@ -951,4 +1072,4 @@
             if (!data) $this.data('DateTimePicker', new DateTimePicker(this, options));
         });
     };
-})(jQuery);
+}));
