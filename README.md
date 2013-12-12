@@ -1,9 +1,38 @@
-#Bootstrap v3 datetimepicker widget
+# Bootstrap v3 datetimepicker widget
 
-## Installation
+![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
+
+### [⇢ Manual and demo](http://eonasdan.github.io/bootstrap-datetimepicker/)
+
+
+## Quick installation using [bower](http://bower.io):
+
+Run the following command:
+````
+bower install eonasdan-bootstrap-datetimepicker#latest --save
+````
+
+Include necessary scripts and styles:
+````html
+<head>
+  <!-- ... -->
+  <script type="text/javascript" href="/bower_components/jquery/jquery.min.js"></script>
+  <script type="text/javascript" href="/bower_components/moment/min/moment.min.js"></script>
+  <script type="text/javascript" href="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/bootstrap-datetimepicker.min.js"></script>
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/boostrap.min.css" />
+  <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+</head>
+````
+
+Done! [Now take a look at the manual](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples and available options.
+
+
+
+## Manual installation
 
 ### [Moment.js](https://github.com/moment/moment)
-Version 2 now **requires Momentjs**. Version 1 can still be found [here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). Version 2 has better support for date formats and mutilanguage. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. The **format strings have changed** due to using moment. Check [Momentjs' homepage](http://momentjs.com/) for documentation. You can also get the [nuget package from here](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/)
+Datetimepicker requires moment.js in version 2.3.1 (we're working on supporting higher versions). This allows for better support for various date formats and locales. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. Check [Momentjs' homepage](http://momentjs.com/) for documentation on date formats. If you can't use moment.js there's still older version of datetimewidget [available here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). 
 
 ````html
 <script type="text/javascript" href="/path/to/moment.js"></script>
@@ -46,6 +75,13 @@ Finally include the main javascript file.
 <script type="text/javascript" href="/path/to/bootstrap-datetimepicker.min.js"></script>
 ````
 
+#### Installation using Nuget
+
+`````
+PM> Install-Package Bootstrap.v3.Datetimepicker
+`````
+More information: https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/
+
 
 ## New features (2.1.11)!
 * Fix for #51, #60
@@ -76,5 +112,3 @@ Finally include the main javascript file.
 * pick12HourFormat
 * maskInput
 
-
-Documentation is [here](http://eonasdan.github.io/bootstrap-datetimepicker/) with examples and usage.
