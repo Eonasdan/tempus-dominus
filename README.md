@@ -2,7 +2,7 @@
 
 ![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
 
-### [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
+### [⇢ View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
 
 
 ## Quick installation using
@@ -18,7 +18,7 @@ bower install eonasdan-bootstrap-datetimepicker#latest --save
 PM> Install-Package Bootstrap.v3.Datetimepicker
 ````
 
-See the [Change Log](#Change-Log) for important changes and updates
+## See the [Change Log](#change-log) for important changes and updates
 
 Include necessary scripts and styles:
 ````html
