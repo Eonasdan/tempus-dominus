@@ -262,8 +262,8 @@
 
         notifyChange = function (oldDate) {
             picker.element.trigger({
-                type: 'change',
-                date: pMoment(picker.getDate()),
+                type: 'change.dp',
+                date: pMoment(picker.date),
                 oldDate: pMoment(oldDate)
             });
         },
@@ -484,7 +484,7 @@
             e.stopPropagation();
             e.preventDefault();
             picker.unset = false;
-            var target = $(e.target).closest('span, td, th'), month, year, step, day, oldDate = picker.date;
+            var target = $(e.target).closest('span, td, th'), month, year, step, day, oldDate = pMoment(picker.date);
             if (target.length === 1) {
                 if (!target.is('.disabled')) {
                     switch (target[0].nodeName.toLowerCase()) {
@@ -633,7 +633,7 @@
 		},
 
 	    doAction = function (e) {
-	        var action = $(e.currentTarget).data('action'), rv = actions[action].apply(picker, arguments), oldDate = picker.date;
+	        var oldDate = pMoment(picker.date), action = $(e.currentTarget).data('action'), rv = actions[action].apply(picker, arguments);
 	        stopEvent(e);
 	        if (!picker.date) picker.date = pMoment({ y: 1970 });
 	        set();
@@ -649,7 +649,7 @@
 
         change = function (e) {
             pMoment.lang(picker.options.language);
-            var input = $(e.target), oldDate = picker.date, d = pMoment(input.val(), picker.format, picker.options.useStrict);
+            var input = $(e.target), oldDate = pMoment(picker.date), d = pMoment(input.val(), picker.format, picker.options.useStrict);
             if (d.isValid()) {
                 update();
                 picker.setValue(d);
@@ -798,7 +798,7 @@
 		    else {
 		        newDate = pMoment(picker.date).subtract(amount, unit);
 		    }
-		    if (newDate.isAfter(picker.options.endDate) || newDate.subtract(amount, unit).isBefore(picker.options.startDate) || isInDisableDates(newDate)) {
+		    if (newDate.isAfter(picker.options.endDate) || pMoment(newDate.subtract(amount, unit)).isBefore(picker.options.startDate) || isInDisableDates(newDate)) {
 		        notifyError(newDate.format(picker.format));
 		        return;
 		    }
