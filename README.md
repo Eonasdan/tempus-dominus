@@ -86,7 +86,7 @@ Finally include the main javascript file.
 # Change Log
 
 ## New features (2.1.20)!
-* Fix for #83: `change` event has been from `change.dp` to `change` so that no custom change events have to be listened to.
+* Fix for #83: ~~`change` event has been from `change.dp` to `change` so that no custom change events have to be listened to.~~ This change has been rolled back due to causing another more serious bug
 * Fix for #78: Script has been update for breaking changes in Moment 2.4.0
 * Fix for #73: IE8 should be working now
 
