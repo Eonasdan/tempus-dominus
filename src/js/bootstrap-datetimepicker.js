@@ -226,12 +226,15 @@
             });
         },
 
-        notifyChange = function (oldDate) {
+        notifyChange = function (oldDate, eventType) {
             picker.element.trigger({
                 type: 'change.dp',
                 date: picker.getDate(),
                 oldDate: oldDate
             });
+			
+			if (eventType !== 'change')
+				picker.element.change();
         },
 
 		notifyError = function (date) {
@@ -586,13 +589,13 @@
             if (d.isValid()) {
                 update();
                 picker.setValue(d);
-                notifyChange(oldDate);
+                notifyChange(oldDate, e.type);
                 set();
             }
             else {
                 picker.viewDate = oldDate;
                 //picker.setValue(""); // unset the date when the input is erased
-                notifyChange(oldDate);
+                notifyChange(oldDate, e.type);
                 notifyError(d);
                 picker.unset = true;
                 input.val('');
