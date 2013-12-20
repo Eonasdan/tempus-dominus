@@ -906,12 +906,22 @@
         },
 
         picker.disable = function () {
-            picker.element.find('input').prop('disabled', true);
+            var input = picker.element.find('input');
+            if(!input.prop('disabled')){
+            	return
+            }
+        
+            input.prop('disabled', true);
             detachDatePickerEvents();
         },
 
         picker.enable = function () {
-            picker.element.find('input').prop('disabled', false);
+            var input = picker.element.find('input');
+            if(!input.prop('disabled')){
+            	return
+            }	
+            
+            input.prop('disabled', false);
             attachDatePickerEvents();
         },
 
