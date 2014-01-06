@@ -260,12 +260,15 @@
             });
         },
 
-        notifyChange = function (oldDate) {
+        notifyChange = function (oldDate, eventType) {
             picker.element.trigger({
                 type: 'change.dp',
                 date: pMoment(picker.date),
                 oldDate: pMoment(oldDate)
             });
+            
+            if (eventType !== 'change')
+                picker.element.change();
         },
 
 		notifyError = function (date) {
@@ -518,7 +521,7 @@
                                     h: picker.date.hours(),
                                     m: picker.date.minutes()
                                 });
-                                notifyChange(oldDate);
+                                notifyChange(oldDate, e.type);
                             }
                             showMode(-1);
                             fillDate();
@@ -556,7 +559,7 @@
                                 });
                                 fillDate();
                                 set();
-                                notifyChange(oldDate);
+                                notifyChange(oldDate, e.type);
                             }
                             break;
                     }
@@ -981,16 +984,22 @@
         },
 
         picker.disable = function () {
-            picker.element.find('input').prop('disabled', true);
+            var input = picker.element.find('input');
+            if(!input.prop('disabled')) return;
+
+            input.prop('disabled', true);
             detachDatePickerEvents();
         },
 
         picker.enable = function () {
-            picker.element.find('input').prop('disabled', false);
+            var input = picker.element.find('input');
+            if(!input.prop('disabled')) return;
+
+            input.prop('disabled', true);
             attachDatePickerEvents();
         },
 
-        picker.hide = function () {
+        picker.hide = function (event) {
             if (event && $(event.target).is(picker.element.attr("id")))
                 return;
             // Ignore event if in the middle of a picker transition

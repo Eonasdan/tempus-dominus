@@ -40,7 +40,7 @@ Done! [Now take a look at the manual](http://eonasdan.github.io/bootstrap-dateti
 ## Manual installation
 
 ### [Moment.js](https://github.com/moment/moment)
-Datetimepicker requires moment.js in version 2.3.1 (we're working on supporting higher versions). This allows for better support for various date formats and locales. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. Check [Momentjs' homepage](http://momentjs.com/) for documentation on date formats. If you can't use moment.js there's still older version of datetimewidget [available here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). 
+Datetimepicker requires moment.js. This allows for better support for various date formats and locales. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. Check [Momentjs' homepage](http://momentjs.com/) for documentation on date formats. If you can't use moment.js there's still older version of datetimewidget [available here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). 
 
 ````html
 <script type="text/javascript" src="/path/to/moment.js"></script>
@@ -86,7 +86,7 @@ Finally include the main javascript file.
 # Change Log
 
 ## New features (2.1.20)!
-* Fix for #83: ~~`change` event has been from `change.dp` to `change` so that no custom change events have to be listened to.~~ This change has been rolled back due to causing another more serious bug
+* Fix for #83: Changes to the picker should fire native `change` event for knockout and the like as well as `change.dp` which contains the old date and the new date
 * Fix for #78: Script has been update for breaking changes in Moment 2.4.0
 * Fix for #73: IE8 should be working now
 
