@@ -60,6 +60,7 @@
             language: "en",
             defaultDate: "",
             disabledDates: [],
+            disabledDatesCallback: function(date) { return false; },
             enabledDates: false, // array
             icons: {},
             useStrict: false
@@ -746,6 +747,11 @@
 
 		isInDisableDates = function (date) {
 		    pMoment.lang(picker.options.language);
+		    var result = picker.options.disabledDatesCallback(new Date(pMoment(date).format()));
+
+	            if (result == true) {
+	                return true
+	            }
 		    var disabled = picker.options.disabledDates, i;
 		    for (i in disabled) {
 		        if (disabled[i] == pMoment(date).format("L")) {
@@ -982,6 +988,11 @@
             if (!picker.options.startDate.isValid()) {
                 picker.options.startDate = pMoment({ y: 1970 });
             }
+            if (picker.viewDate) update();
+        },
+
+        picker.setDisabledDatesCallback = function (callback) {
+            picker.options.disabledDatesCallback = callback;
             if (picker.viewDate) update();
         };
 
