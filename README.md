@@ -2,15 +2,23 @@
 
 ![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
 
-### [⇢ Manual and demo](http://eonasdan.github.io/bootstrap-datetimepicker/)
+### [⇢ View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
 
 
-## Quick installation using [bower](http://bower.io):
+## Quick installation using
+
+## [bower](http://bower.io):
 
 Run the following command:
 ````
 bower install eonasdan-bootstrap-datetimepicker#latest --save
 ````
+## [Nuget](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/):
+````
+PM> Install-Package Bootstrap.v3.Datetimepicker
+````
+
+## See the [Change Log](#change-log) for important changes and updates
 
 Include necessary scripts and styles:
 ````html
@@ -19,7 +27,7 @@ Include necessary scripts and styles:
   <script type="text/javascript" src="/bower_components/jquery/jquery.min.js"></script>
   <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
   <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/bootstrap-datetimepicker.min.js"></script>
   <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/boostrap.min.css" />
   <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 </head>
@@ -32,7 +40,7 @@ Done! [Now take a look at the manual](http://eonasdan.github.io/bootstrap-dateti
 ## Manual installation
 
 ### [Moment.js](https://github.com/moment/moment)
-Datetimepicker requires moment.js in version 2.3.1 (we're working on supporting higher versions). This allows for better support for various date formats and locales. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. Check [Momentjs' homepage](http://momentjs.com/) for documentation on date formats. If you can't use moment.js there's still older version of datetimewidget [available here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). 
+Datetimepicker requires moment.js. This allows for better support for various date formats and locales. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. Check [Momentjs' homepage](http://momentjs.com/) for documentation on date formats. If you can't use moment.js there's still older version of datetimewidget [available here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). 
 
 ````html
 <script type="text/javascript" src="/path/to/moment.js"></script>
@@ -75,13 +83,16 @@ Finally include the main javascript file.
 <script type="text/javascript" src="/path/to/bootstrap-datetimepicker.min.js"></script>
 ````
 
-#### Installation using Nuget
+# Change Log
 
-`````
-PM> Install-Package Bootstrap.v3.Datetimepicker
-`````
-More information: https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/
+## New features (2.1.20)!
+* Fix for #83: Changes to the picker should fire native `change` event for knockout and the like as well as `change.dp` which contains the old date and the new date
+* Fix for #78: Script has been update for breaking changes in Moment 2.4.0
+* Fix for #73: IE8 should be working now
 
+* Enhancement for #79: `minuteStepping` option takes a number (default is 1). Changing the minutes in the time picker will step by this number.
+* Enhancement for #74 and #65: `useMinutes` and `useSeconds` are now options. Disabling seconds will hide the seconds spinner. Disabling minutes will display `00` and hide the arrows
+* Enhancement for #67: Picker will now attempt to convert all `data-OPTION` into its appropriate option
 
 ## New features (2.1.11)!
 * Fix for #51, #60
