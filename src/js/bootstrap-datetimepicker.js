@@ -42,13 +42,13 @@
 }
 
 (function ($, moment) {
-    if (typeof moment === 'undefined') { 
+    if (typeof moment === 'undefined') {
         alert("momentjs is requried");
         throw new Error('momentjs is requried');
     };
-	
+
     var dpgId = 0,
-        
+
     pMoment = moment,
 
 // ReSharper disable once InconsistentNaming
@@ -84,11 +84,11 @@
             var icon = false, i, dDate, longDateFormat;
             picker.options = $.extend({}, defaults, options);
             picker.options.icons = $.extend({}, icons, picker.options.icons);
-            
+
             picker.element = $(element);
-            
+
             dataToOptions();
-                        
+
             if (!(picker.options.pickTime || picker.options.pickDate))
                 throw new Error('Must choose at least one picker');
 
@@ -201,7 +201,7 @@
             attachDatePickerEvents();
             if (picker.options.defaultDate !== "") picker.setValue(picker.options.defaultDate);
         },
-        
+
         dataToOptions = function () {
             var eData = picker.element.data();
             if (eData.pickdate !== undefined) picker.options.pickDate = eData.pickdate;
@@ -266,9 +266,9 @@
                 date: pMoment(picker.date),
                 oldDate: pMoment(oldDate)
             });
-            
-            //if (eventType !== 'change')
-                //picker.element.change();
+
+            if (eventType !== 'change')
+                picker.element.change();
         },
 
 		notifyError = function (date) {
@@ -452,7 +452,7 @@
             }
             table.html(html);
         },
-        
+
         fillSeconds = function () {
             var table = picker.widget.find('.timepicker .timepicker-seconds table'), html = '', current = 0, i, j;
             table.parent().hide();
@@ -641,7 +641,7 @@
 	        if (!picker.date) picker.date = pMoment({ y: 1970 });
 	        set();
 	        fillTime();
-	        notifyChange(oldDate);
+	        notifyChange(oldDate, e.type);
 	        return rv;
 	    },
 
@@ -656,13 +656,13 @@
             if (d.isValid()) {
                 update();
                 picker.setValue(d);
-                notifyChange(oldDate);
+                notifyChange(oldDate, e.type);
                 set();
             }
             else {
                 picker.viewDate = oldDate;
                 //picker.setValue(""); // unset the date when the input is erased
-                notifyChange(oldDate);
+                notifyChange(oldDate, e.type);
                 notifyError(d);
                 picker.unset = true;
                 input.val('');
@@ -1055,7 +1055,7 @@
             else picker.options.enabledDates = dates;
             if (picker.viewDate) update();
         },
-        
+
         picker.setEndDate = function (date) {
             picker.options.endDate = pMoment(date);
             if (!picker.options.endDate.isValid()) {
