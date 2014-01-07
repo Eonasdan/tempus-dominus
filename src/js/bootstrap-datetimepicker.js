@@ -267,8 +267,8 @@
                 oldDate: pMoment(oldDate)
             });
             
-            if (eventType !== 'change')
-                picker.element.change();
+            //if (eventType !== 'change')
+                //picker.element.change();
         },
 
 		notifyError = function (date) {
