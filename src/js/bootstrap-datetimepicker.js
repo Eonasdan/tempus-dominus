@@ -229,7 +229,7 @@
             if (picker.options.direction === 'up' || picker.options.direction === 'auto' && offset.top + picker.widget.height() > $window.height()) {
         		offset.top -= picker.widget.height() + picker.element.outerHeight();
             	picker.widget.addClass('up');
-            } else if (picker.options.dir === 'down' || picker.options.direction === 'auto' && offset.top + picker.widget.height() <= $window.height()) {
+            } else if (picker.options.direction === 'down' || picker.options.direction === 'auto' && offset.top + picker.widget.height() <= $window.height()) {
             	offset.top += picker.element.outerHeight();
             	picker.widget.addClass('down');
             }
