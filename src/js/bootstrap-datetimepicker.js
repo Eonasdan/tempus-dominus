@@ -44,7 +44,7 @@
 (function ($, moment) {
     if (typeof moment === 'undefined') {
         alert("momentjs is requried");
-        throw new Error('momentjs is requried');
+        throw new Error('momentjs is required');
     };
 
     var dpgId = 0,
@@ -62,7 +62,7 @@
             startDate: new pMoment({ y: 1970 }),
             endDate: new pMoment().add(50, "y"),
             collapse: true,
-            language: "en",
+            language: pMoment.lang(),
             defaultDate: "",
             disabledDates: [],
             enabledDates: false,
