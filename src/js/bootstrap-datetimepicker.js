@@ -67,7 +67,8 @@
             disabledDates: [],
             enabledDates: false,
             icons: {},
-            useStrict: false
+            useStrict: false,
+            direction: "auto"
         },
 
 		icons = {
@@ -224,9 +225,14 @@
             var position = 'absolute',
             offset = picker.component ? picker.component.offset() : picker.element.offset(), $window = $(window);
             picker.width = picker.component ? picker.component.outerWidth() : picker.element.outerWidth();
-            offset.top = offset.top + picker.element.outerHeight();
 
-            //if (offset.top + picker.widget.height() > $window.height()) offset.top = offset.top - (picker.widget.height() + picker.height + 10);
+            if (picker.options.direction === 'up' || picker.options.direction === 'auto' && offset.top + picker.widget.height() > $window.height()) {
+        		offset.top -= picker.widget.height() + picker.element.outerHeight();
+            	picker.widget.addClass('up');
+            } else if (picker.options.direction === 'down' || picker.options.direction === 'auto' && offset.top + picker.widget.height() <= $window.height()) {
+            	offset.top += picker.element.outerHeight();
+            	picker.widget.addClass('down');
+            }
 
             if (picker.options.width !== undefined) {
                 picker.widget.width(picker.options.width);
