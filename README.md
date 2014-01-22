@@ -12,13 +12,24 @@ I'd love to know if your public site is using this plugin and list your logo on 
 ## [bower](http://bower.io):
 
 Run the following command:
-````
+```
 bower install eonasdan-bootstrap-datetimepicker#latest --save
-````
+```
 ## [Nuget](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/):
-````
+```
 PM> Install-Package Bootstrap.v3.Datetimepicker
-````
+```
+
+## [Rails](http://rubyonrails.org/)
+
+Add the following to your `Gemfile`:
+```
+gem 'momentjs-rails', '~> 2.5.0'
+gem 'bootstrap3-datetimepicker-rails', '~> 2.1.20'
+```
+Read the rest of the install instructions @ 
+[TrevorS/bootstrap3-datetimepicker-rails](https://github.com/TrevorS/bootstrap3-datetimepicker-rails)
+
 
 ## See the [Change Log](#change-log) for important changes and updates
 
