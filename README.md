@@ -34,7 +34,7 @@ Read the rest of the install instructions @
 ## See the [Change Log](#change-log) for important changes and updates
 
 Include necessary scripts and styles:
-````html
+```html
 <head>
   <!-- ... -->
   <script type="text/javascript" src="/bower_components/jquery/jquery.min.js"></script>
@@ -44,7 +44,7 @@ Include necessary scripts and styles:
   <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/boostrap.min.css" />
   <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 </head>
-````
+```
 
 Done! [Now take a look at the manual](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples and available options.
 
@@ -55,46 +55,46 @@ Done! [Now take a look at the manual](http://eonasdan.github.io/bootstrap-dateti
 ### [Moment.js](https://github.com/moment/moment)
 Datetimepicker requires moment.js. This allows for better support for various date formats and locales. See [documentation](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples. Check [Momentjs' homepage](http://momentjs.com/) for documentation on date formats. If you can't use moment.js there's still older version of datetimewidget [available here](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/version1). 
 
-````html
+```html
 <script type="text/javascript" src="/path/to/moment.js"></script>
-````
+```
 
 ### Bootstrap 3 collapse and transition plugins
 Make sure to include *.JS files for plugins [collapse](http://getbootstrap.com/javascript/#collapse) and [transitions](http://getbootstrap.com/javascript/#transitions). They are included with [bootstrap in js/ directory](https://github.com/twbs/bootstrap/tree/master/js)
 
-````html
+```html
 <script type="text/javascript" src="/path/to/bootstrap/js/transition.js"></script>
 <script type="text/javascript" src="/path/to/bootstrap/js/collapse.js"></script>
-````
+```
 
 Alternatively you could include the whole bundle of bootstrap plugins from [bootstrap.js](https://github.com/twbs/bootstrap/tree/master/dist/js)
 
-````html
+```html
 <script type="text/javascript" src="/path/to/bootstrap/dist/bootstrap.min.js"></script>
-````
+```
 
 
 ### CSS styles
 
 #### Using LESS
-````css
+```css
 @import "/path/to/bootstrap/less/variables";
 @import "/path/to/bootstrap-datetimepicker/src/less/bootstrap-datetimepicker";
 
 // [...] your custom styles and variables
-````
+```
 
 #### Using CSS (default color palette)
-````html
+```html
 <link rel="stylesheet" href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
-````
+```
 
 ### Main JS file
 
 Finally include the main javascript file.
-````html
+```html
 <script type="text/javascript" src="/path/to/bootstrap-datetimepicker.min.js"></script>
-````
+```
 
 # Change Log
 
