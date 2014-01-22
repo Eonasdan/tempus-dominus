@@ -983,6 +983,10 @@
             }
         },
 
+        picker.place = function () {
+            place();
+        },
+
         picker.disable = function () {
             var input = picker.element.find('input');
             if(!input.prop('disabled')) return;
