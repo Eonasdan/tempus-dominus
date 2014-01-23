@@ -660,7 +660,7 @@
         change = function (e) {
             pMoment.lang(picker.options.language);
             var input = $(e.target), oldDate = pMoment(picker.date), newDate = pMoment(input.val(), picker.format, picker.options.useStrict);
-            if (newDate.isValid() && !isInDisableDates(newDate) && !isInEnableDates(newDate)) {
+            if (newDate.isValid() && !isInDisableDates(newDate) && isInEnableDates(newDate)) {
                 update();
                 picker.setValue(newDate);
                 notifyChange(oldDate, e.type);
