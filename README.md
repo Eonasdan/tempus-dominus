@@ -67,11 +67,14 @@ Alternatively you could include the whole bundle of bootstrap plugins from [boot
 
 #### Using LESS
 ````css
-@import "/path/to/bootstrap/less/variables";
+@import "/path/to/bootstrap/variables";
 @import "/path/to/bootstrap-datetimepicker/src/less/bootstrap-datetimepicker";
 
 // [...] your custom styles and variables
 ````
+
+##### LESS Build File
+You can also build `/path/to/bootstrap-datetimepicker/bootstrap-datetimepicker-build.less` to pull in Bootstraps `variables` file
 
 #### Using CSS (default color palette)
 ````html
@@ -87,7 +90,18 @@ Finally include the main javascript file.
 
 # Change Log
 
-## New features (2.1.20)!
+## 2.1.30
+#### Important! `build.less` file name has been been changed to `bootstrap-datetimepicker-build.less` to prevent collisions
+
+* Fix for #135: `setStartDate` and `setEndDate` should now properly set.
+* Fix for #133: Typed in date now respects en/disabled dates
+* Fix for #132: En/disable picker function works again
+* Fix for #117, #119, #128, #121: double event `change` event issues should be fixed
+* Fix for #112: `change` function no longer sets the input to a blank value if the passed in date is invalid
+
+* Enhancement for #103: Increated the `z-index` of the widget
+
+## 2.1.20
 * Fix for #83: Changes to the picker should fire native `change` event for knockout and the like as well as `change.dp` which contains the old date and the new date
 * Fix for #78: Script has been update for breaking changes in Moment 2.4.0
 * Fix for #73: IE8 should be working now
@@ -96,14 +110,14 @@ Finally include the main javascript file.
 * Enhancement for #74 and #65: `useMinutes` and `useSeconds` are now options. Disabling seconds will hide the seconds spinner. Disabling minutes will display `00` and hide the arrows
 * Enhancement for #67: Picker will now attempt to convert all `data-OPTION` into its appropriate option
 
-## New features (2.1.11)!
+## 2.1.11
 * Fix for #51, #60
 * Fix for #52: Picker has its own `moment` object since moment 2.4.0 has removed global reference
 * Fix for #57: New option for `useStrict`. When validating dates in `update` and `change`, the picker can use a stricter formatting validation
 * Fix for #61: Picker should now properly take formatted date. Should also have correct start of the week for locales.
 * Fix for #62: Default format will properly validate time picker only.
 
-## New features (2.1.5)!
+## 2.1.5
 * Custom icons, such as Font Awesome, are now supported. (#49)  See [Example#9](http://eonasdan.github.io/bootstrap-datetimepicker/#example9)
 * If more then one `input-group-addon` is present use `datepickerbutton` to identify where the picker should popup from. (#48)
 * New Event: `error.dp`. Fires when Moment cannot parse the date or when the timepicker cannot change because of a `disabledDates` setting. Returns a Moment date object. The specific error can be found be using `invalidAt()`. For more information see [Moment's docs](http://momentjs.com/docs/#/parsing/is-valid/)
@@ -112,11 +126,11 @@ Finally include the main javascript file.
 * Fix for #46, fixed active date highlighting
 * Fix for #47, `change.dp` event to also include the previous date.
 
-####New features (2.0.1)!
+####2.0.1
 * New event `error.dp` fires when plugin cannot parse date or when increase/descreasing hours/minutes to a disabled date.  See [Example#7](http://eonasdan.github.io/bootstrap-datetimepicker/#example7)
 * Minor fixes
 
-####New features (2.0.0)!
+####2.0.0
 * `disabledDates` is now an option to set the disabled dates. It accepts date objects like `new Date("November 12, 2013 00:00:00")` and `12/25/2013' and `moment` date objects. See [Example#7](http://eonasdan.github.io/bootstrap-datetimepicker/#example7) for usage.
 * Events are easier to use; see [Example#8](http://eonasdan.github.io/bootstrap-datetimepicker/#example8)
 
