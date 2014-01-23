@@ -874,6 +874,10 @@
             }
         },
 
+        getPickerInput = function(){
+            return picker.isInput ? picker.element : picker.element.find('input');
+        },
+
 		dpGlobal = {
 		    modes: [
                 {
@@ -970,6 +974,7 @@
         };
 
         picker.show = function (e) {
+            if (getPickerInput().prop('disabled')) return;
             picker.widget.show();
             picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
             place();
@@ -984,18 +989,18 @@
         },
 
         picker.disable = function () {
-            var input = picker.element.find('input');
-            if(!input.prop('disabled')) return;
+            var input = getPickerInput();
+            if(input.prop('disabled')) return;
 
             input.prop('disabled', true);
             detachDatePickerEvents();
         },
 
         picker.enable = function () {
-            var input = picker.element.find('input');
+            var input = getPickerInput();
             if(!input.prop('disabled')) return;
 
-            input.prop('disabled', true);
+            input.prop('disabled', false);
             attachDatePickerEvents();
         },
 
