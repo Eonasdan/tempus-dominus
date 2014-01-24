@@ -1,4 +1,4 @@
-# Bootstrap v3 datetimepicker widget
+# Bootstrap v3 datetimepicker widget [![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)](http://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker)
 
 ![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
 
@@ -9,18 +9,18 @@ I'd love to know if your public site is using this plugin and list your logo on 
 
 ## Quick installation using
 
-## [bower](http://bower.io):
+## [bower](http://bower.io): [![Bower version](https://badge.fury.io/bo/eonasdan-bootstrap-datetimepicker.png)](http://badge.fury.io/bo/eonasdan-bootstrap-datetimepicker)
 
 Run the following command:
 ```
 bower install eonasdan-bootstrap-datetimepicker#latest --save
 ```
-## [Nuget](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/):
+## [Nuget](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/): [![NuGet version](https://badge.fury.io/nu/Bootstrap.v3.Datetimepicker.png)](http://badge.fury.io/nu/Bootstrap.v3.Datetimepicker)
 ```
 PM> Install-Package Bootstrap.v3.Datetimepicker
 ```
 
-## [Rails](http://rubyonrails.org/)
+## [Rails](http://rubyonrails.org/) [![Gem Version](https://badge.fury.io/rb/bootstrap3-datetimepicker-rails.png)](http://badge.fury.io/rb/bootstrap3-datetimepicker-rails)
 
 Add the following to your `Gemfile`:
 ```
