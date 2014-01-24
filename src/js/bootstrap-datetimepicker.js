@@ -65,6 +65,7 @@
             language: pMoment.lang(),
             defaultDate: "",
             disabledDates: [],
+            daysOfWeekDisabled: [],
             enabledDates: false,
             icons: {},
             useStrict: false
@@ -816,9 +817,14 @@
 
 		isInDisableDates = function (date) {
 		    pMoment.lang(picker.options.language);
-		    var disabled = picker.options.disabledDates, i;
+		    var disabled = picker.options.disabledDates, i, days = picker.options.daysOfWeekDisabled;
 		    for (i in disabled) {
 		        if (disabled[i] == pMoment(date).format("L")) {
+		            return true;
+		        }
+		    }
+		    for (i in days) {
+		        if (days[i] == pMoment(date).format("e")) {
 		            return true;
 		        }
 		    }
