@@ -1,5 +1,5 @@
 /**
- * version 2.1.20
+ * version 2.1.30
  * @license
  * =========================================================
  * bootstrap-datetimepicker.js
@@ -67,7 +67,8 @@
             disabledDates: [],
             enabledDates: false,
             icons: {},
-            useStrict: false
+            useStrict: false,
+            direction: "auto"
         },
 
 		icons = {
@@ -225,8 +226,14 @@
             offset = picker.component ? picker.component.offset() : picker.element.offset(), $window = $(window);
             picker.width = picker.component ? picker.component.outerWidth() : picker.element.outerWidth();
             offset.top = offset.top + picker.element.outerHeight();
-
-            //if (offset.top + picker.widget.height() > $window.height()) offset.top = offset.top - (picker.widget.height() + picker.height + 10);
+            
+            // if (picker.options.direction === 'up' || picker.options.direction === 'auto' && offset.top + picker.widget.height() > $window.height()) {
+        		// offset.top -= picker.widget.height() + picker.element.outerHeight();
+            	// picker.widget.addClass('up');
+            // } else if (picker.options.direction === 'down' || picker.options.direction === 'auto' && offset.top + picker.widget.height() <= $window.height()) {
+            	// offset.top += picker.element.outerHeight();
+            	// picker.widget.addClass('down');
+            // }
 
             if (picker.options.width !== undefined) {
                 picker.widget.width(picker.options.width);
@@ -365,7 +372,7 @@
                 if (prevMonth.isSame(pMoment({ y: picker.date.year(), M: picker.date.month(), d: picker.date.date() }))) {
                     clsName += ' active';
                 }
-                if ((pMoment(prevMonth).add(1, "d") <= picker.options.startDate) || (prevMonth > picker.options.endDate) || isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
+                if (isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
                     clsName += ' disabled';
                 }
                 row.append('<td class="day' + clsName + '">' + prevMonth.date() + '</td>');
@@ -652,20 +659,20 @@
 
         change = function (e) {
             pMoment.lang(picker.options.language);
-            var input = $(e.target), oldDate = pMoment(picker.date), d = pMoment(input.val(), picker.format, picker.options.useStrict);
-            if (d.isValid()) {
+            var input = $(e.target), oldDate = pMoment(picker.date), newDate = pMoment(input.val(), picker.format, picker.options.useStrict);
+            if (newDate.isValid() && !isInDisableDates(newDate) && isInEnableDates(newDate)) {
                 update();
-                picker.setValue(d);
+                picker.setValue(newDate);
                 notifyChange(oldDate, e.type);
                 set();
             }
             else {
                 picker.viewDate = oldDate;
+                input.val(pMoment(oldDate).format(picker.format));
                 //picker.setValue(""); // unset the date when the input is erased
                 notifyChange(oldDate, e.type);
-                notifyError(d);
+                notifyError(newDate);
                 picker.unset = true;
-                input.val('');
             }
         },
 
@@ -801,7 +808,7 @@
 		    else {
 		        newDate = pMoment(picker.date).subtract(amount, unit);
 		    }
-		    if (newDate.isAfter(picker.options.endDate) || pMoment(newDate.subtract(amount, unit)).isBefore(picker.options.startDate) || isInDisableDates(newDate)) {
+		    if (isInDisableDates(pMoment(newDate.subtract(amount, unit))) || isInDisableDates(newDate)) {
 		        notifyError(newDate.format(picker.format));
 		        return;
 		    }
@@ -812,10 +819,12 @@
 		    else {
 		        picker.date.subtract(amount, unit);
 		    }
+            picker.unset = false;
 		},
 
 		isInDisableDates = function (date) {
 		    pMoment.lang(picker.options.language);
+            if (date.isAfter(picker.options.endDate) || date.isBefore(picker.options.startDate)) return true;
 		    var disabled = picker.options.disabledDates, i;
 		    for (i in disabled) {
 		        if (disabled[i] == pMoment(date).format("L")) {
@@ -985,7 +994,7 @@
 
         picker.disable = function () {
             var input = picker.element.find('input');
-            if(!input.prop('disabled')) return;
+            if(input.prop('disabled')) return;
 
             input.prop('disabled', true);
             detachDatePickerEvents();
@@ -995,7 +1004,7 @@
             var input = picker.element.find('input');
             if(!input.prop('disabled')) return;
 
-            input.prop('disabled', true);
+            input.prop('disabled', false);
             attachDatePickerEvents();
         },
 
@@ -1057,18 +1066,14 @@
         },
 
         picker.setEndDate = function (date) {
+            if (date == undefined) return;
             picker.options.endDate = pMoment(date);
-            if (!picker.options.endDate.isValid()) {
-                picker.options.endDate = pMoment().add(50, "y");
-            }
             if (picker.viewDate) update();
         },
 
         picker.setStartDate = function (date) {
+            if (date == undefined) return;
             picker.options.startDate = pMoment(date);
-            if (!picker.options.startDate.isValid()) {
-                picker.options.startDate = pMoment({ y: 1970 });
-            }
             if (picker.viewDate) update();
         };
 
