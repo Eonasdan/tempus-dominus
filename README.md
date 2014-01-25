@@ -15,9 +15,14 @@ Run the following command:
 ```
 bower install eonasdan-bootstrap-datetimepicker#latest --save
 ```
-## [Nuget](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/): ![NuGet version](https://badge.fury.io/nu/Bootstrap.v3.Datetimepicker.png)
+## [Nuget (LESS)](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker/): ![NuGet version](https://badge.fury.io/nu/Bootstrap.v3.Datetimepicker.png)
 ```
 PM> Install-Package Bootstrap.v3.Datetimepicker
+```
+
+## [Nuget (CSS)](https://www.nuget.org/packages/Bootstrap.v3.Datetimepicker.CSS/): ![NuGet version](https://badge.fury.io/nu/Bootstrap.v3.Datetimepicker.CSS.png)
+```
+PM> Install-Package Bootstrap.v3.Datetimepicker.CSS
 ```
 
 ## [Rails](http://rubyonrails.org/) ![Gem Version](https://badge.fury.io/rb/bootstrap3-datetimepicker-rails.png)
