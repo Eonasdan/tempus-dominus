@@ -7,6 +7,8 @@
 ##Where do you use this?
 I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `eonasdan at outlook dot com`
 
+## See the [Change Log](#change-log) for important changes and updates.
+
 ## Quick installation using
 
 ## [bower](http://bower.io): ![Bower version](https://badge.fury.io/bo/eonasdan-bootstrap-datetimepicker.png)
@@ -39,7 +41,22 @@ PM> Install-Package Bootstrap.v3.Datetimepicker
 PM> Install-Package Bootstrap.v3.Datetimepicker.CSS
 ```
 
-## [Rails](http://rubyonrails.org/) ![Gem Version](https://badge.fury.io/rb/bootstrap3-datetimepicker-rails.png)
+```html
+<head>
+  <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="/scripts/moment.min.js"></script>
+  <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/scripts/bootstrap-datetimepicker.min.js"></script>
+  <!-- include your less or built css files  -->
+  <!-- 
+  bootstrap-datetimepicker-build.less will pull in "../bootstrap/variables.less" and "bootstrap-datetimepicker.less";
+  or
+  <link rel="stylesheet" href="/Content/bootstrap-datetimepicker.css" />
+  -->
+</head>
+```
+
+## [Rails](http://rubygems.org/gems/bootstrap3-datetimepicker-rails) ![Gem Version](https://badge.fury.io/rb/bootstrap3-datetimepicker-rails.png)
 
 Add the following to your `Gemfile`:
 ```
@@ -49,11 +66,7 @@ gem 'bootstrap3-datetimepicker-rails', '~> 2.1.20'
 Read the rest of the install instructions @ 
 [TrevorS/bootstrap3-datetimepicker-rails](https://github.com/TrevorS/bootstrap3-datetimepicker-rails)
 
-
-## See the [Change Log](#change-log) for important changes and updates
-
 Done! [Now take a look at the manual](http://eonasdan.github.io/bootstrap-datetimepicker/) for examples and available options.
-
 
 
 ## Manual installation
