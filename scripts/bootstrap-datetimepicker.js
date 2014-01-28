@@ -62,7 +62,7 @@
             startDate: new pMoment({ y: 1970 }),
             endDate: new pMoment().add(50, "y"),
             collapse: true,
-            language: pMoment.lang(),
+            language: "en",
             defaultDate: "",
             disabledDates: [],
             enabledDates: false,
