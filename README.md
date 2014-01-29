@@ -117,6 +117,11 @@ Finally include the main javascript file.
 
 # Change Log
 
+## 2.1.32 (Hotfix)
+
+* Fix for #151: When a bad date value or the picker is cleared, the plugin will not longer attempt to reset it back to the previous date
+* Fix for #140: `setDate` can be given `null` to force clear the picker
+
 ## 2.1.30
 #### Important! `build.less` file name has been been changed to `bootstrap-datetimepicker-build.less` to prevent collisions
 

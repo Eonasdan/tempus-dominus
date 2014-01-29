@@ -1,5 +1,5 @@
 /**
- * version 2.1.30
+ * version 2.1.32
  * @license
  * =========================================================
  * bootstrap-datetimepicker.js
@@ -62,7 +62,7 @@
             startDate: new pMoment({ y: 1970 }),
             endDate: new pMoment().add(50, "y"),
             collapse: true,
-            language: pMoment.lang(),
+            language: "en",
             defaultDate: "",
             disabledDates: [],
             enabledDates: false,
@@ -668,8 +668,6 @@
             }
             else {
                 picker.viewDate = oldDate;
-                input.val(pMoment(oldDate).format(picker.format));
-                //picker.setValue(""); // unset the date when the input is erased
                 notifyChange(oldDate, e.type);
                 notifyError(newDate);
                 picker.unset = true;
@@ -1032,6 +1030,7 @@
             pMoment.lang(picker.options.language);
             if (!newDate) {
                 picker.unset = true;
+                 set();
             } else {
                 picker.unset = false;
             }
@@ -1054,9 +1053,11 @@
         },
 
         picker.setDate = function (date) {
-            date = pMoment(date);
-            if (!date) picker.setValue(null);
-            else picker.setValue(date);
+            if (!date) {
+                picker.setValue(null);
+            } else {
+                picker.setValue(pMoment(date));
+            }
         },
 
         picker.setEnabledDates = function (dates) {
