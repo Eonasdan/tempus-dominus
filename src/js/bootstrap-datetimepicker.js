@@ -204,7 +204,7 @@
         },
 
         dataToOptions = function () {
-            var eData = picker.element.data();
+            var eData = picker.element.find('input').data();
             if (eData.pickdate !== undefined) picker.options.pickDate = eData.pickdate;
             if (eData.picktime !== undefined) picker.options.pickTime = eData.picktime;
             if (eData.useminutes !== undefined) picker.options.useMinutes = eData.useminutes;
