@@ -945,7 +945,7 @@
         init();
     };
 
-    $.fn.datetimepicker = function (options) {
+    $.fn.bsdatetimepicker = function (options) {
         return this.each(function () {
             var $this = $(this), data = $this.data('DateTimePicker');
             if (!data) $this.data('DateTimePicker', new DateTimePicker(this, options));
