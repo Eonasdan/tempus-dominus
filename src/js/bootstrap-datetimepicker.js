@@ -254,6 +254,7 @@
             
             if($window.height() < offset.top + picker.widget.outerHeight()){
             	offset.bottom = 0;
+            	offset.left += 40; //avoid overlaying the datetime button
             	offset.top = 'auto';
             }
 
