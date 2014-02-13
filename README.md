@@ -5,7 +5,7 @@
 ### [⇢ View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
 
 ##Where do you use this?
-I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `eonasdan at outlook dot com`
+I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `eonasdan at outlook dot com`. Do not submit issue/feature request to this email, they will be ignored.
 
 ## See the [Change Log](#change-log) for important changes and updates.
 
