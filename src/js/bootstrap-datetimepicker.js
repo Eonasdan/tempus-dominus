@@ -68,7 +68,8 @@
             enabledDates: false,
             icons: {},
             useStrict: false,
-            direction: "auto"
+            direction: "auto",
+            minutePickerGrid: 3
         },
 
 		icons = {
@@ -225,6 +226,7 @@
             if (eData.enableddates !== undefined) picker.options.enabledDates = eData.enableddates;
             if (eData.icons !== undefined) picker.options.icons = eData.icons;
             if (eData.usestrict !== undefined) picker.options.useStrict = eData.usestrict;
+            if (eData.minutePickerGrid !== undefined) picker.options.minutePickerGrid = eData.minutePickerGrid;
         },
 
         place = function () {
@@ -455,11 +457,15 @@
         fillMinutes = function () {
             var table = picker.widget.find('.timepicker .timepicker-minutes table'), html = '', current = 0, i, j;
             table.parent().hide();
-            for (i = 0; i < 5; i++) {
+            for (i = 0; i < Math.ceil(60/picker.options.minutePickerGrid/4); i++) {
                 html += '<tr>';
                 for (j = 0; j < 4; j += 1) {
-                    html += '<td class="minute">' + padLeft(current.toString()) + '</td>';
-                    current += 3;
+                    if (current < 60) {
+                        html += '<td class="minute">' + padLeft(current.toString()) + '</td>';
+                        current += picker.options.minutePickerGrid;
+                    } else {
+                        html += '<td></td>';
+                    }
                 }
                 html += '</tr>';
             }
