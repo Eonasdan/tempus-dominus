@@ -45,7 +45,7 @@
     if (typeof moment === 'undefined') {
         alert("momentjs is requried");
         throw new Error('momentjs is required');
-    };
+    }
 
     var dpgId = 0,
 
@@ -68,7 +68,8 @@
             enabledDates: false,
             icons: {},
             useStrict: false,
-            direction: "auto"
+            direction: "auto",
+            sideBySide:false
         },
 
 		icons = {
@@ -144,7 +145,7 @@
                 }
             }
 
-            picker.widget = $(getTemplate(picker.options.pickDate, picker.options.pickTime, picker.options.collapse)).appendTo('body');
+            picker.widget = $(getTemplate(picker)).appendTo('body');
             picker.minViewMode = picker.options.minViewMode || picker.element.data('date-minviewmode') || 0;
             if (typeof picker.minViewMode === 'string') {
                 switch (picker.minViewMode) {
@@ -857,22 +858,29 @@
             else return '0' + string;
         },
 
-        getTemplate = function (pickDate, pickTime, collapse) {
-            if (pickDate && pickTime) {
-                return (
-                    '<div class="bootstrap-datetimepicker-widget dropdown-menu" style="z-index:9999 !important;">' +
-                        '<ul class="list-unstyled">' +
-							'<li' + (collapse ? ' class="collapse in"' : '') + '>' +
-								'<div class="datepicker">' + dpGlobal.template + '</div>' +
-							'</li>' +
-							'<li class="picker-switch accordion-toggle"><a class="btn" style="width:100%"><span class="' + picker.options.icons.time + '"></span></a></li>' +
-							'<li' + (collapse ? ' class="collapse"' : '') + '>' +
-								'<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
-							'</li>' +
-                        '</ul>' +
-                    '</div>'
-                );
-            } else if (pickTime) {
+        getTemplate = function (picker) {
+            if (picker.options.pickDate && picker.options.pickTime) {
+                var ret='';
+                    ret='<div class="bootstrap-datetimepicker-widget'+(picker.options.sideBySide ?' timepicker-sbs':'')+' dropdown-menu" style="z-index:9999 !important;">';
+                        if(picker.options.sideBySide){
+                            ret +='<div class="row">'+
+                                '<div class="col-sm-6 datepicker">' + dpGlobal.template + '</div>'+
+                                '<div class="col-sm-6 timepicker">' + tpGlobal.getTemplate() + '</div>'+
+                            '</div>';
+                        }else{
+                            ret +='<ul class="list-unstyled">' +
+                                '<li' + (picker.options.collapse ? ' class="collapse in"' : '') + '>' +
+                                    '<div class="datepicker">' + dpGlobal.template + '</div>' +
+                                '</li>' +
+                                '<li class="picker-switch accordion-toggle"><a class="btn" style="width:100%"><span class="' + picker.options.icons.time + '"></span></a></li>' +
+                                '<li' + (picker.options.collapse ? ' class="collapse"' : '') + '>' +
+                                    '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
+                                '</li>' +
+                            '</ul>';
+                        }
+                    ret +='</div>';
+                return ret;
+            } else if (picker.options.pickTime) {
                 return (
                     '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
                         '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
