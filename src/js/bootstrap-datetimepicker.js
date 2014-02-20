@@ -145,7 +145,7 @@
             }
 
             picker.widget = $(getTemplate(picker.options.pickDate, picker.options.pickTime, picker.options.collapse)).appendTo('body');
-            picker.minViewMode = picker.element.data('date-minviewmode') || picker.options.minViewMode || 0;
+            picker.minViewMode = picker.element.find('input').data('date-minviewmode') || picker.element.data('date-minviewmode') || picker.options.minViewMode || 0;
             if (typeof picker.minViewMode === 'string') {
                 switch (picker.minViewMode) {
                     case 'months':
@@ -159,7 +159,7 @@
                         break;
                 }
             }
-            picker.viewMode = picker.element.data('date-viewmode') || picker.options.viewMode || 0;
+            picker.viewMode = picker.element.find('input').data('date-viewmode') || picker.element.data('date-viewmode') || picker.options.viewMode || 0;
             if (typeof picker.viewMode === 'string') {
                 switch (picker.viewMode) {
                     case 'months':
@@ -190,8 +190,8 @@
                 picker.options.enabledDates[i] = dDate.format("L");
             }
             picker.startViewMode = picker.viewMode;
-            picker.setStartDate(picker.element.data('date-startdate') || picker.options.startDate);
-            picker.setEndDate(picker.element.data('date-enddate') || picker.options.endDate);
+            picker.setStartDate(picker.element.find('input').data('date-startdate') || picker.element.data('date-startdate') || picker.options.startDate);
+            picker.setEndDate(picker.element.find('input').data('date-enddate') || picker.element.data('date-enddate') || picker.options.endDate);
             fillDow();
             fillMonths();
             fillHours();
