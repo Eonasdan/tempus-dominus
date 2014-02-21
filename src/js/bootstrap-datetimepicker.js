@@ -664,6 +664,7 @@
         },
 
         change = function (e) {
+            if (picker.viewMode !== 0) return
             pMoment.lang(picker.options.language);
             var input = $(e.target), oldDate = pMoment(picker.date), newDate = pMoment(input.val(), picker.format, picker.options.useStrict);
             if (newDate.isValid() && !isInDisableDates(newDate) && isInEnableDates(newDate)) {
