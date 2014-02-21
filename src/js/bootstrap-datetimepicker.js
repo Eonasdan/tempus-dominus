@@ -526,7 +526,7 @@
                                 year = parseInt(target.text(), 10) || 0;
                                 picker.viewDate.year(year);
                             }
-                            if (picker.viewMode !== 0) {
+                            if (picker.viewMode === picker.minViewMode) {
                                 picker.date = pMoment({
                                     y: picker.viewDate.year(),
                                     M: picker.viewDate.month(),
