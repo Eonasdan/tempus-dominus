@@ -196,11 +196,17 @@
             fillMonths();
             fillHours();
             fillMinutes();
-			fillSeconds();
+            fillSeconds();
             update();
             showMode();
             attachDatePickerEvents();
             if (picker.options.defaultDate !== "") picker.setValue(picker.options.defaultDate);
+            if (picker.options.minuteStepping !== 1) {
+                var rMinutes = picker.date.minutes();
+                var rInterval = picker.options.minuteStepping;
+                picker.date.minutes((Math.round(rMinutes/rInterval) * rInterval) % 60)
+                           .seconds(0);
+            }
         },
 
         dataToOptions = function () {
@@ -526,7 +532,7 @@
                                 year = parseInt(target.text(), 10) || 0;
                                 picker.viewDate.year(year);
                             }
-                            if (picker.viewMode !== 0) {
+                            if (picker.viewMode === picker.minViewMode) {
                                 picker.date = pMoment({
                                     y: picker.viewDate.year(),
                                     M: picker.viewDate.month(),
