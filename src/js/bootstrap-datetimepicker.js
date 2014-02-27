@@ -145,7 +145,7 @@
             }
 
             picker.widget = $(getTemplate(picker.options.pickDate, picker.options.pickTime, picker.options.collapse)).appendTo('body');
-            picker.minViewMode = picker.options.minViewMode || picker.element.data('date-minviewmode') || 0;
+            picker.minViewMode = picker.element.find('input').data('date-minviewmode') || picker.element.data('date-minviewmode') || picker.options.minViewMode || 0;
             if (typeof picker.minViewMode === 'string') {
                 switch (picker.minViewMode) {
                     case 'months':
@@ -159,7 +159,7 @@
                         break;
                 }
             }
-            picker.viewMode = picker.options.viewMode || picker.element.data('date-viewmode') || 0;
+            picker.viewMode = picker.element.find('input').data('date-viewmode') || picker.element.data('date-viewmode') || picker.options.viewMode || 0;
             if (typeof picker.viewMode === 'string') {
                 switch (picker.viewMode) {
                     case 'months':
@@ -178,8 +178,8 @@
             picker.options.enabledDates = indexGivenDates(picker.options.enabledDates);
 
             picker.startViewMode = picker.viewMode;
-            picker.setStartDate(picker.options.startDate || picker.element.data('date-startdate'));
-            picker.setEndDate(picker.options.endDate || picker.element.data('date-enddate'));
+            picker.setStartDate(picker.element.find('input').data('date-startdate') || picker.element.data('date-startdate') || picker.options.startDate);
+            picker.setEndDate(picker.element.find('input').data('date-enddate') || picker.element.data('date-enddate') || picker.options.endDate);
             fillDow();
             fillMonths();
             fillHours();
@@ -204,7 +204,7 @@
             else {
                 var eData = picker.element.find('input').data();
             }
-            
+
             if (eData.pickdate !== undefined) picker.options.pickDate = eData.pickdate;
             if (eData.picktime !== undefined) picker.options.pickTime = eData.picktime;
             if (eData.useminutes !== undefined) picker.options.useMinutes = eData.useminutes;
@@ -226,7 +226,7 @@
             offset = picker.component ? picker.component.offset() : picker.element.offset(), $window = $(window);
             picker.width = picker.component ? picker.component.outerWidth() : picker.element.outerWidth();
             offset.top = offset.top + picker.element.outerHeight();
-            
+
             // if (picker.options.direction === 'up' || picker.options.direction === 'auto' && offset.top + picker.widget.height() > $window.height()) {
         		// offset.top -= picker.widget.height() + picker.element.outerHeight();
             	// picker.widget.addClass('up');
