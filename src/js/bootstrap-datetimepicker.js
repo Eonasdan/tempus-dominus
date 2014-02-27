@@ -64,7 +64,7 @@
             collapse: true,
             language: "en",
             defaultDate: "",
-            disabledDates: [],
+            disabledDates: false,
             enabledDates: false,
             icons: {},
             useStrict: false,
@@ -174,21 +174,9 @@
                 }
             }
 
-            for (i = 0; i < picker.options.disabledDates.length; i++) {
-                dDate = picker.options.disabledDates[i];
-                dDate = pMoment(dDate);
-                //if this is not a valid date then set it to the startdate -1 day so it's disabled.
-                if (!dDate.isValid()) dDate = pMoment(picker.options.startDate).subtract(1, "day");
-                picker.options.disabledDates[i] = dDate.format("L");
-            }
+            picker.options.disabledDates = indexGivenDates(picker.options.disabledDates);
+            picker.options.enabledDates = indexGivenDates(picker.options.enabledDates);
 
-            for (i = 0; i < picker.options.enabledDates.length; i++) {
-                dDate = picker.options.enabledDates[i];
-                dDate = pMoment(dDate);
-                //if this is not a valid date then set it to the startdate -1 day so it's disabled.
-                if (!dDate.isValid()) dDate = pMoment(picker.options.startDate).subtract(1, "day");
-                picker.options.enabledDates[i] = dDate.format("L");
-            }
             picker.startViewMode = picker.viewMode;
             picker.setStartDate(picker.options.startDate || picker.element.data('date-startdate'));
             picker.setEndDate(picker.options.endDate || picker.element.data('date-enddate'));
@@ -832,31 +820,44 @@
             picker.unset = false;
 		},
 
-		isInDisableDates = function (date) {
-		    pMoment.lang(picker.options.language);
-            if (date.isAfter(picker.options.endDate) || date.isBefore(picker.options.startDate)) return true;
-		    var disabled = picker.options.disabledDates, i;
-		    for (i in disabled) {
-		        if (disabled[i] == pMoment(date).format("L")) {
-		            return true;
-		        }
-		    }
-		    return false;
-		},
-
-        isInEnableDates = function (date) {
+        isInDisableDates = function (date) {
             pMoment.lang(picker.options.language);
-            var enabled = picker.options.enabledDates, i;
-            if (enabled.length) {
-                for (i in enabled) {
-                    if (enabled[i] == pMoment(date).format("L")) {
-                        return true;
-                    }
-                }
+            if (date.isAfter(picker.options.endDate) || date.isBefore(picker.options.startDate)) return true;
+            if (picker.options.disabledDates === false) {
                 return false;
             }
-            return enabled === false ? true : false;
+            var dateFormatted = pMoment(date).format("YYYY-MM-DD");
+            return picker.options.disabledDates[dateFormatted] === true;
         },
+        isInEnableDates = function (date) {
+            pMoment.lang(picker.options.language);
+            if (picker.options.enabledDates === false) {
+                return true;
+            }
+            var dateFormatted = pMoment(date).format("YYYY-MM-DD");
+            return picker.options.enabledDates[dateFormatted] === true;
+        },
+
+        indexGivenDates = function(givenDatesArray) {
+            // Store given enabledDates and disabledDates as keys.
+            // This way we can check their existence in O(1) time instead of looping through whole array.
+            // (for example: picker.options.enabledDates['2014-02-27'] === true)
+            var givenDatesIndexed = {};
+            var givenDatesCount = 0;
+            for (i = 0; i < givenDatesArray.length; i++) {
+                dDate = givenDatesArray[i];
+                dDate = pMoment(dDate);
+                if (dDate.isValid()) {
+                    givenDatesIndexed[dDate.format("YYYY-MM-DD")] = true;
+                    givenDatesCount++;
+                }
+            }
+            if (givenDatesCount > 0) {
+                return givenDatesIndexed;
+            }
+            return false;
+        },
+
         padLeft = function (string) {
             string = string.toString();
             if (string.length >= 2) return string;
@@ -1072,9 +1073,12 @@
             }
         },
 
+        picker.setDisabledDates = function (dates) {
+            picker.options.disabledDates = indexGivenDates(dates);
+            if (picker.viewDate) update();
+        },
         picker.setEnabledDates = function (dates) {
-            if (!dates) picker.options.enabledDates = false;
-            else picker.options.enabledDates = dates;
+            picker.options.enabledDates = indexGivenDates(dates);
             if (picker.viewDate) update();
         },
 
