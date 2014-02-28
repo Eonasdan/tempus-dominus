@@ -526,7 +526,8 @@
                                     M: picker.viewDate.month(),
                                     d: picker.viewDate.date(),
                                     h: picker.date.hours(),
-                                    m: picker.date.minutes()
+                                    m: picker.date.minutes(),
+                                    s: picker.date.seconds()
                                 });
                                 notifyChange(oldDate, e.type);
                             }
@@ -558,7 +559,8 @@
                                     M: month,
                                     d: day,
                                     h: picker.date.hours(),
-                                    m: picker.date.minutes()
+                                    m: picker.date.minutes(),
+                                    s: picker.date.seconds()
                                 }
                                 );
                                 picker.viewDate = pMoment({
