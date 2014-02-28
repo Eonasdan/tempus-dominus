@@ -258,12 +258,19 @@
                 offset.right = 'auto';
                 picker.widget.removeClass('pull-right');
             }
+            
+            if($window.height() < offset.top + picker.widget.outerHeight()){
+            	offset.bottom = 0;
+            	offset.left += 40; //avoid overlaying the datetime button
+            	offset.top = 'auto';
+            }
 
             picker.widget.css({
                 position: position,
                 top: offset.top,
                 left: offset.left,
-                right: offset.right
+                right: offset.right,
+                bottom: offset.bottom
             });
         },
 
