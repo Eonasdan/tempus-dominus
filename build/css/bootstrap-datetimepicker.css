@@ -21,6 +21,9 @@
   border-top: 1px solid #ddd !important;
   }*/
 }
+.bootstrap-datetimepicker-widget.timepicker-sbs{
+  width: 600px;
+}
 .bootstrap-datetimepicker-widget .btn {
   padding: 6px;
 }
