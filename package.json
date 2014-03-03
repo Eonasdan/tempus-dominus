@@ -1,6 +1,7 @@
 {
   "name": "bootstrap-datetimepicker",
-  "version": "2.1.30",
+  "filename": "js/bootstrap-datetimepicker.min.js",
+  "version": "2.1.32",
   "repository": {
     "type": "git",
     "url": "git://github.com/eonasdan/bootstrap-datetimepicker.git"
