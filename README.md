@@ -126,6 +126,7 @@ Finally include the main javascript file.
 * Fix for #155 Picker properly displays the active year and month
 * Fix for #154 CSS update to fix the collapse jump
 * Fix for #150 and #75 `minViewMode` and `viewMode` work properly
+* Fix for #147 AM/PM won't toggle when selecting a value from the hours grid
 * Fix for #44 Finally! It's here!! Thanks to @ruiwei and his code on #210 picker will adjust the positioning of the widget.
 
 #### **Manually merged PR**
