@@ -1136,13 +1136,13 @@ THE SOFTWARE.
             if (picker.viewDate) update();
         },
 
-        picker.setmaxDate = function (date) {
+        picker.setMaxDate = function (date) {
             if (date == undefined) return;
             picker.options.maxDate = pMoment(date);
             if (picker.viewDate) update();
         },
 
-        picker.setminDate = function (date) {
+        picker.setMinDate = function (date) {
             if (date == undefined) return;
             picker.options.minDate = pMoment(date);
             if (picker.viewDate) update();
