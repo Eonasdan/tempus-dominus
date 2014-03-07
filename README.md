@@ -133,6 +133,7 @@ Finally include the main javascript file.
 * #178 When using `minuteStepping` the minute select grid will only show available steppings
 * #195, #197 Using the `data-OPTION` has been changed to `data-date-OPTION`. These options are expected to be on the `input-group` if you're using the `form-group` **or** the input field
 * #184 The option `sideBySide` change be used to display both the d and the timepicker side by side
+* #143 Added option `daysOfWeekDisabled: []`. For example, use `daysOfWeekDisabled: [0,6]` to disable Sunday and Saturday
 
 #### **Other Changes**
 * Changed picker width to 300px if using seconds and am/pm
