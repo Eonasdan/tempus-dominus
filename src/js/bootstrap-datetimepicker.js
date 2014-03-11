@@ -184,8 +184,8 @@ THE SOFTWARE.
             picker.options.enabledDates = indexGivenDates(picker.options.enabledDates);
 
             picker.startViewMode = picker.viewMode;
-            picker.setminDate(picker.options.minDate);
-            picker.setmaxDate(picker.options.maxDate);
+            picker.setMinDate(picker.options.minDate);
+            picker.setMaxDate(picker.options.maxDate);
             fillDow();
             fillMonths();
             fillHours();
