@@ -204,7 +204,7 @@
             else {
                 var eData = picker.element.find('input').data();
             }
-            
+
             if (eData.pickdate !== undefined) picker.options.pickDate = eData.pickdate;
             if (eData.picktime !== undefined) picker.options.pickTime = eData.picktime;
             if (eData.useminutes !== undefined) picker.options.useMinutes = eData.useminutes;
@@ -226,7 +226,7 @@
             offset = picker.component ? picker.component.offset() : picker.element.offset(), $window = $(window);
             picker.width = picker.component ? picker.component.outerWidth() : picker.element.outerWidth();
             offset.top = offset.top + picker.element.outerHeight();
-            
+
             // if (picker.options.direction === 'up' || picker.options.direction === 'auto' && offset.top + picker.widget.height() > $window.height()) {
         		// offset.top -= picker.widget.height() + picker.element.outerHeight();
             	// picker.widget.addClass('up');
@@ -687,6 +687,13 @@
             picker.widget.on('click', '.datepicker *', $.proxy(click, this)); // this handles date picker clicks
             picker.widget.on('click', '[data-action]', $.proxy(doAction, this)); // this handles time picker clicks
             picker.widget.on('mousedown', $.proxy(stopEvent, this));
+            if (picker.isInput) {
+              picker.widget.on('mousedown', function () {
+                  picker.element.off('blur');
+              }).on('mouseup', function () {
+                picker.element.on('blur', $.proxy(picker.hide, this)).focus();
+              });
+            }
             if (picker.options.pickDate && picker.options.pickTime) {
                 picker.widget.on('click.togglePicker', '.accordion-toggle', function (e) {
                     e.stopPropagation();
