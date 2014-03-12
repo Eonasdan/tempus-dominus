@@ -118,7 +118,7 @@ Finally include the main javascript file.
 # Change Log
 ## 3.0.0
 ## **Breaking changes in this update! Pay attention!!**
-* Fix for #170, #179, #183: Changed event to `dp.-` options load as `data-date-OPTION` instead of `data-OPTION`. This should fix the double change event firing.
+* Fix for #170, #179, #183: Changed event to `dp.-`. This should fix the double change event firing.
 * Fix for #192: `setDate` now fires `dp.change`
 * Fix for #182: Picker will **not** set the default date if the input field has a value
 * Fix for #169: Seconds doesn't get reset when changing the date (Thanks to PR #174)
@@ -131,7 +131,7 @@ Finally include the main javascript file.
 
 #### **Manually merged PR**
 * #178 When using `minuteStepping` the minute select grid will only show available steppings
-* #195, #197 Using the `data-OPTION` has been changed to `data-date-OPTION`. These options are expected to be on the `input-group` if you're using the `form-group` **or** the input field
+* #195, #197 Using the `data-OPTION` has been changed to `data-date-OPTION`. These options are expected to be on the `input-group` if you're using the `input-group` **or** the a bare input field if you're not using the `input-group`
 * #184 The option `sideBySide` change be used to display both the d and the timepicker side by side
 * #143 Added option `daysOfWeekDisabled: []`. For example, use `daysOfWeekDisabled: [0,6]` to disable Sunday and Saturday
 
