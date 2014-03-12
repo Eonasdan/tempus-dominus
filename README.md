@@ -116,6 +116,30 @@ Finally include the main javascript file.
 ```
 
 # Change Log
+## 3.0.0
+## **Breaking changes in this update! Pay attention!!**
+* Fix for #170, #179, #183: Changed event to `dp.-` options load as `data-date-OPTION` instead of `data-OPTION`. This should fix the double change event firing.
+* Fix for #192: `setDate` now fires `dp.change`
+* Fix for #182: Picker will **not** set the default date if the input field has a value
+* Fix for #169: Seconds doesn't get reset when changing the date (Thanks to PR #174)
+* Fix for #168 z-index fix for BS modal
+* Fix for #155 Picker properly displays the active year and month
+* Fix for #154 CSS update to fix the collapse jump
+* Fix for #150 and #75 `minViewMode` and `viewMode` work properly
+* Fix for #147 AM/PM won't toggle when selecting a value from the hours grid
+* Fix for #44 Finally! It's here!! Thanks to @ruiwei and his code on #210 picker will adjust the positioning of the widget.
+
+#### **Manually merged PR**
+* #178 When using `minuteStepping` the minute select grid will only show available steppings
+* #195, #197 Using the `data-OPTION` has been changed to `data-date-OPTION`. These options are expected to be on the `input-group` if you're using the `form-group` **or** the input field
+* #184 The option `sideBySide` change be used to display both the d and the timepicker side by side
+* #143 Added option `daysOfWeekDisabled: []`. For example, use `daysOfWeekDisabled: [0,6]` to disable Sunday and Saturday
+
+#### **Other Changes**
+* Changed picker width to 300px if using seconds and am/pm
+* Added option `useCurrent`, thanks to @ruiwei. When true, picker will set the value to the current date/time (respects picker's format)
+* Added option `showToday`, thanks to @ruiwei. When true, picker will display a small arrow to indicate today's date.
+* Changed `startDate` to `minDate` and `endDate` to `maxDate` to make it more clear what these options do.
 
 ## 2.1.32 (Hotfix)
 
