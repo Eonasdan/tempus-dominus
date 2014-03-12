@@ -5852,23 +5852,23 @@ br {
   text-transform: uppercase;
 }
 .callout-box-default {
-  background: url("/images/bulb-default.png") no-repeat scroll 15px 22px #e6e7e9;
+  background: url("../images/bulb-default.png") no-repeat scroll 15px 22px #e6e7e9;
   border-left: 4px solid #999999;
 }
 .callout-box-success {
-  background: url("/images/bulb-success.png") no-repeat scroll 15px 22px #e6e7e9;
+  background: url("../images/bulb-success.png") no-repeat scroll 15px 22px #e6e7e9;
   border-left: 4px solid #97CA41;
 }
 .callout-box-info {
-  background: url("/images/bulb-info.png") no-repeat scroll 15px 22px #e6e7e9;
+  background: url("../images/bulb-info.png") no-repeat scroll 15px 22px #e6e7e9;
   border-left: 4px solid #419DCA;
 }
 .callout-box-error {
-  background: url("/images/bulb-error.png") no-repeat scroll 15px 22px #e6e7e9;
+  background: url("../images/bulb-error.png") no-repeat scroll 15px 22px #e6e7e9;
   border-left: 4px solid #CA4141;
 }
 .callout-box-warning {
-  background: url("/images/bulb-warning.png") no-repeat scroll 15px 22px #e6e7e9;
+  background: url("../images/bulb-warning.png") no-repeat scroll 15px 22px #e6e7e9;
   border-left: 4px solid #CAB541;
 }
 .callout-box p {
