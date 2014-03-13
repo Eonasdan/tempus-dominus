@@ -692,7 +692,7 @@
                   picker.element.off('blur');
               }).on('mouseup', function () {
                 picker.element.on('blur', $.proxy(picker.hide, this));
-                pciker.widget.hide();
+                picker.widget.hide();
               });
             }
             if (picker.options.pickDate && picker.options.pickTime) {
