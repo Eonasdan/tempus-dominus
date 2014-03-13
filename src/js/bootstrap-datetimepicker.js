@@ -691,7 +691,8 @@
               picker.widget.on('mousedown', function () {
                   picker.element.off('blur');
               }).on('mouseup', function () {
-                picker.element.on('blur', $.proxy(picker.hide, this)).focus();
+                picker.element.on('blur', $.proxy(picker.hide, this));
+                pciker.widget.hide();
               });
             }
             if (picker.options.pickDate && picker.options.pickTime) {
