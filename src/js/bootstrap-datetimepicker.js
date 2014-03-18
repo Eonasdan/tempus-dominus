@@ -195,10 +195,8 @@ THE SOFTWARE.
             attachDatePickerEvents();
             if (picker.options.defaultDate !== "" && getPickerInput().val() == "") picker.setValue(picker.options.defaultDate);
             if (picker.options.minuteStepping !== 1) {
-                var rMinutes = picker.date.minutes();
                 var rInterval = picker.options.minuteStepping;
-                picker.date.minutes((Math.round(rMinutes / rInterval) * rInterval) % 60)
-                           .seconds(0);
+                picker.date.minutes((Math.round(picker.date.minutes() / rInterval) * rInterval) % 60).seconds(0);
             }
         },
 
@@ -489,7 +487,7 @@ THE SOFTWARE.
         fillMinutes = function () {
             var table = picker.widget.find('.timepicker .timepicker-minutes table'), html = '', current = 0, i, j, step = picker.options.minuteStepping;
             table.parent().hide();
-            if (step = 1) step = 5;
+            if (step == 1) step = 5;
             for (i = 0; i < Math.ceil(60 / step / 4) ; i++) {
                 html += '<tr>';
                 for (j = 0; j < 4; j += 1) {
@@ -1037,9 +1035,17 @@ THE SOFTWARE.
         };
 
         picker.show = function (e) {
-            if (picker.options.useCurrent === true) {
+            if (picker.options.useCurrent) {
                 if (getPickerInput().val() == '') {
-                    picker.setValue(pMoment().format(picker.format))
+                    if (picker.options.minuteStepping !== 1) {
+                        var mDate = pMoment(),
+                        rInterval = picker.options.minuteStepping;
+                        mDate.minutes((Math.round(mDate.minutes() / rInterval) * rInterval) % 60)
+                            .seconds(0);
+                        picker.setValue(mDate.format(picker.format))
+                    } else {
+                        picker.setValue(pMoment().format(picker.format))
+                    }
                 };
             }
             picker.widget.show();
