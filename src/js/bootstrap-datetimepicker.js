@@ -878,7 +878,7 @@ THE SOFTWARE.
         isInHighlightedDates = function (date) {
           pMoment.lang(picker.options.language);
           if (picker.options.highlightedDates === false) {
-              return true;
+              return false;
           }
           return picker.options.highlightedDates[pMoment(date).format("YYYY-MM-DD")] === true;
         },
