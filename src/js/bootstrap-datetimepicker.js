@@ -328,7 +328,7 @@ THE SOFTWARE.
         },
 
 		fillDow = function () {
-		    var html = $('<tr>'), weekdaysMin = pMoment.weekdaysMin(), i;
+		    var html = $(document.createElement('tr')), weekdaysMin = pMoment.weekdaysMin(), i;
 		    if (pMoment()._lang._week.dow == 0) { // starts on Sunday
 		        for (i = 0; i < 7; i++) {
 		            html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
@@ -384,7 +384,7 @@ THE SOFTWARE.
             nextMonth = pMoment(prevMonth).add(42, "d");
             while (prevMonth.isBefore(nextMonth)) {
                 if (prevMonth.weekday() === pMoment().startOf('week').weekday()) {
-                    row = $('<tr>');
+                    row = $(document.createElement('tr'));
                     html.push(row);
                 }
                 clsName = '';
