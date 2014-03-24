@@ -393,7 +393,9 @@ THE SOFTWARE.
                 } else if (prevMonth.year() > year || (prevMonth.year() == year && prevMonth.month() > month)) {
                     clsName += ' new';
                 }
-                if (prevMonth.isSame(pMoment({ y: picker.date.year(), M: picker.date.month(), d: picker.date.date() }))) {
+                if (picker.date.year() == prevMonth.year() &&
+                    picker.date.month() == prevMonth.month() &&
+                    picker.date.date() == prevMonth.date()) {
                     clsName += ' active';
                 }
                 if (isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
