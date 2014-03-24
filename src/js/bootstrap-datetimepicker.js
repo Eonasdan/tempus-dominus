@@ -104,6 +104,7 @@ THE SOFTWARE.
             picker.unset = false;
             picker.isInput = picker.element.is('input');
             picker.component = false;
+            picker.visible = false;
 
             if (picker.element.hasClass('input-group')) {
                 if (picker.element.find('.datepickerbutton').size() == 0) {//in case there is more then one 'input-group-addon' Issue #48
@@ -315,7 +316,6 @@ THE SOFTWARE.
 		},
 
         update = function (newDate) {
-            pMoment.lang(picker.options.language);
             var dateStr = newDate;
             if (!dateStr) {
                 dateStr = getPickerInput().val()
@@ -328,8 +328,7 @@ THE SOFTWARE.
         },
 
 		fillDow = function () {
-		    pMoment.lang(picker.options.language);
-		    var html = $('<tr>'), weekdaysMin = pMoment.weekdaysMin(), i;
+		    var html = $(document.createElement('tr')), weekdaysMin = pMoment.weekdaysMin(), i;
 		    if (pMoment()._lang._week.dow == 0) { // starts on Sunday
 		        for (i = 0; i < 7; i++) {
 		            html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
@@ -347,7 +346,6 @@ THE SOFTWARE.
 		},
 
         fillMonths = function () {
-            pMoment.lang(picker.options.language);
             var html = '', i = 0, monthsShort = pMoment.monthsShort();
             while (i < 12) {
                 html += '<span class="month">' + monthsShort[i++] + '</span>';
@@ -355,8 +353,9 @@ THE SOFTWARE.
             picker.widget.find('.datepicker-months td').append(html);
         },
 
-        fillDate = function () {
-            pMoment.lang(picker.options.language);
+        fillDate = function (force) {
+            if (!picker.visible && !force) return;
+
             var year = picker.viewDate.year(),
                 month = picker.viewDate.month(),
                 startYear = picker.options.minDate.year(),
@@ -385,7 +384,7 @@ THE SOFTWARE.
             nextMonth = pMoment(prevMonth).add(42, "d");
             while (prevMonth.isBefore(nextMonth)) {
                 if (prevMonth.weekday() === pMoment().startOf('week').weekday()) {
-                    row = $('<tr>');
+                    row = $(document.createElement('tr'));
                     html.push(row);
                 }
                 clsName = '';
@@ -394,7 +393,9 @@ THE SOFTWARE.
                 } else if (prevMonth.year() > year || (prevMonth.year() == year && prevMonth.month() > month)) {
                     clsName += ' new';
                 }
-                if (prevMonth.isSame(pMoment({ y: picker.date.year(), M: picker.date.month(), d: picker.date.date() }))) {
+                if (picker.date.year() == prevMonth.year() &&
+                    picker.date.month() == prevMonth.month() &&
+                    picker.date.date() == prevMonth.date()) {
                     clsName += ' active';
                 }
                 if (isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
@@ -456,7 +457,6 @@ THE SOFTWARE.
         },
 
         fillHours = function () {
-            pMoment.lang(picker.options.language);
             var table = picker.widget.find('.timepicker .timepicker-hours table'), html = '', current, i, j;
             table.parent().hide();
             if (picker.use24hours) {
@@ -517,8 +517,9 @@ THE SOFTWARE.
             table.html(html);
         },
 
-        fillTime = function () {
-            if (!picker.date) return;
+        fillTime = function (force) {
+            if (!picker.date || (!picker.visible && !force)) return;
+
             var timeComponents = picker.widget.find('.timepicker span[data-time-component]'),
             hour = picker.date.hours(),
             period = 'AM';
@@ -706,7 +707,6 @@ THE SOFTWARE.
         },
 
         change = function (e) {
-            pMoment.lang(picker.options.language);
             var input = $(e.target), oldDate = pMoment(picker.date), newDate = pMoment(input.val(), picker.format, picker.options.useStrict);
             if (newDate.isValid() && !isInDisableDates(newDate) && isInEnableDates(newDate)) {
                 update();
@@ -828,7 +828,6 @@ THE SOFTWARE.
         },
 
         set = function () {
-            pMoment.lang(picker.options.language);
             var formatted = '', input;
             if (!picker.unset) formatted = pMoment(picker.date).format(picker.format);
             getPickerInput().val(formatted);
@@ -837,7 +836,6 @@ THE SOFTWARE.
         },
 
 		checkDate = function (direction, unit, amount) {
-		    pMoment.lang(picker.options.language);
 		    var newDate;
 		    if (direction == "add") {
 		        newDate = pMoment(picker.date);
@@ -862,7 +860,6 @@ THE SOFTWARE.
 		},
 
         isInDisableDates = function (date) {
-            pMoment.lang(picker.options.language);
             if (date.isAfter(picker.options.maxDate) || date.isBefore(picker.options.minDate)) return true;
             if (picker.options.disabledDates === false) {
                 return false;
@@ -870,7 +867,6 @@ THE SOFTWARE.
             return picker.options.disabledDates[pMoment(date).format("YYYY-MM-DD")] === true;
         },
         isInEnableDates = function (date) {
-            pMoment.lang(picker.options.language);
             if (picker.options.enabledDates === false) {
                 return true;
             }
@@ -1048,7 +1044,10 @@ THE SOFTWARE.
                     }
                 };
             }
+            fillDate(true);
+            fillTime(true);
             picker.widget.show();
+            picker.visible = true;
             picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
             place();
             picker.element.trigger({
@@ -1088,6 +1087,7 @@ THE SOFTWARE.
                     return;
             }
             picker.widget.hide();
+            picker.visible = false;
             picker.viewMode = picker.startViewMode;
             showMode();
             picker.element.trigger({
@@ -1098,7 +1098,6 @@ THE SOFTWARE.
         },
 
         picker.setValue = function (newDate) {
-            pMoment.lang(picker.options.language);
             if (!newDate) {
                 picker.unset = true;
                 set();
