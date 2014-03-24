@@ -104,6 +104,7 @@ THE SOFTWARE.
             picker.unset = false;
             picker.isInput = picker.element.is('input');
             picker.component = false;
+            picker.visible = false;
 
             if (picker.element.hasClass('input-group')) {
                 if (picker.element.find('.datepickerbutton').size() == 0) {//in case there is more then one 'input-group-addon' Issue #48
@@ -352,7 +353,9 @@ THE SOFTWARE.
             picker.widget.find('.datepicker-months td').append(html);
         },
 
-        fillDate = function () {
+        fillDate = function (force) {
+            if (!picker.visible && !force) return;
+
             var year = picker.viewDate.year(),
                 month = picker.viewDate.month(),
                 startYear = picker.options.minDate.year(),
@@ -512,8 +515,9 @@ THE SOFTWARE.
             table.html(html);
         },
 
-        fillTime = function () {
-            if (!picker.date) return;
+        fillTime = function (force) {
+            if (!picker.date || (!picker.visible && !force)) return;
+
             var timeComponents = picker.widget.find('.timepicker span[data-time-component]'),
             hour = picker.date.hours(),
             period = 'AM';
@@ -1038,7 +1042,10 @@ THE SOFTWARE.
                     }
                 };
             }
+            fillDate(true);
+            fillTime(true);
             picker.widget.show();
+            picker.visible = true;
             picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
             place();
             picker.element.trigger({
@@ -1078,6 +1085,7 @@ THE SOFTWARE.
                     return;
             }
             picker.widget.hide();
+            picker.visible = false;
             picker.viewMode = picker.startViewMode;
             showMode();
             picker.element.trigger({
