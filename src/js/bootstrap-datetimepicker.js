@@ -219,24 +219,27 @@ THE SOFTWARE.
             else {
                 eData = picker.element.data();
             }
-            if (eData.datePickdate !== undefined) picker.options.pickDate = eData.datePickdate;
-            if (eData.datePicktime !== undefined) picker.options.pickTime = eData.datePicktime;
-            if (eData.dateUseminutes !== undefined) picker.options.useMinutes = eData.dateUseminutes;
-            if (eData.dateUseseconds !== undefined) picker.options.useSeconds = eData.dateUseseconds;
-            if (eData.dateUsecurrent !== undefined) picker.options.useCurrent = eData.dateUsecurrent;
-            if (eData.dateMinutestepping !== undefined) picker.options.minuteStepping = eData.dateMinutestepping;
-            if (eData.dateMindate !== undefined) picker.options.minDate = eData.dateMindate;
-            if (eData.dateMaxdate !== undefined) picker.options.maxDate = eData.dateMaxdate;
-            if (eData.dateShowtoday !== undefined) picker.options.showToday = eData.dateShowtoday;
+            if (eData.dateFormat !== undefined) picker.options.format = eData.dateFormat;
+            if (eData.datePickDate !== undefined) picker.options.pickDate = eData.datePickDate;
+            if (eData.datePickTime !== undefined) picker.options.pickTime = eData.datePickTime;
+            if (eData.dateUseMinutes !== undefined) picker.options.useMinutes = eData.dateUseMinutes;
+            if (eData.dateUseSeconds !== undefined) picker.options.useSeconds = eData.dateUseSeconds;
+            if (eData.dateUseCurrent !== undefined) picker.options.useCurrent = eData.dateUseCurrent;
+            if (eData.dateMinuteStepping !== undefined) picker.options.minuteStepping = eData.dateMinuteStepping;
+            if (eData.dateMinDate !== undefined) picker.options.minDate = eData.dateMinDate;
+            if (eData.dateMaxDate !== undefined) picker.options.maxDate = eData.dateMaxDate;
+            if (eData.dateShowToday !== undefined) picker.options.showToday = eData.dateShowToday;
             if (eData.dateCollapse !== undefined) picker.options.collapse = eData.dateCollapse;
             if (eData.dateLanguage !== undefined) picker.options.language = eData.dateLanguage;
-            if (eData.dateDefaultdate !== undefined) picker.options.defaultDate = eData.dateDefaultdate;
-            if (eData.dateDisableddates !== undefined) picker.options.disabledDates = eData.dateDisableddates;
-            if (eData.dateEnableddates !== undefined) picker.options.enabledDates = eData.dateEnableddates;
+            if (eData.dateDefaultDate !== undefined) picker.options.defaultDate = eData.dateDefaultDate;
+            if (eData.datedisabledDates !== undefined) picker.options.disabledDates = eData.datedisabledDates;
+            if (eData.dateEnabledDates !== undefined) picker.options.enabledDates = eData.dateEnabledDates;
             if (eData.dateIcons !== undefined) picker.options.icons = eData.dateIcons;
-            if (eData.dateUsestrict !== undefined) picker.options.useStrict = eData.dateUsestrict;
+            if (eData.dateUseStrict !== undefined) picker.options.useStrict = eData.dateUseStrict;
             if (eData.dateDirection !== undefined) picker.options.direction = eData.dateDirection;
             if (eData.dateSidebyside !== undefined) picker.options.sideBySide = eData.dateSidebyside;
+            if (eData.dateDisabledDates !== undefined) picker.options.disabledDates = eData.dateDisabledDates;
+            if (eData.dateDaysOfWeekDisabled !== undefined) picker.options.daysOfWeekDisabled = eData.dateDaysOfWeekDisabled;
         },
 
         place = function () {
