@@ -1099,7 +1099,7 @@ THE SOFTWARE.
             } else {
                 picker.unset = false;
             }
-            if (!pMoment.isMoment(newDate)) newDate = pMoment(newDate);
+            if (!pMoment.isMoment(newDate)) newDate = pMoment(newDate, picker.options.format);
             if (newDate.isValid()) {
                 picker.date = newDate;
                 set();
