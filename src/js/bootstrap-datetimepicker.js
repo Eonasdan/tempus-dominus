@@ -363,6 +363,7 @@ THE SOFTWARE.
                 startMonth = picker.options.minDate.month(),
                 endYear = picker.options.maxDate.year(),
                 endMonth = picker.options.maxDate.month(),
+                currentDate,
                 prevMonth, nextMonth, html = [], row, clsName, i, days, yearCont, currentYear, months = pMoment.months();
 
             picker.widget.find('.datepicker-days').find('.disabled').removeClass('disabled');
@@ -414,7 +415,13 @@ THE SOFTWARE.
                     }
                 }
                 row.append('<td class="day' + clsName + '">' + prevMonth.date() + '</td>');
+
+                currentDate = prevMonth.date();
                 prevMonth.add(1, "d");
+
+                if (currentDate == prevMonth.date()) {
+                  prevMonth.add(1, "d");
+                }
             }
             picker.widget.find('.datepicker-days tbody').empty().append(html);
             currentYear = picker.date.year(), months = picker.widget.find('.datepicker-months')
