@@ -673,20 +673,26 @@ THE SOFTWARE.
 		    },
 
 		    selectHour: function (e) {
-		        var period = picker.widget.find('.timepicker [data-action=togglePeriod]').text(), hour = parseInt($(e.target).text(), 10);
-		        if (period == "PM") hour += 12
-		        picker.date.hours(hour);
-		        actions.showPicker.call(picker);
+		        if ($(e.target).is('.hour')) {
+		            var period = picker.widget.find('.timepicker [data-action=togglePeriod]').text(), hour = parseInt($(e.target).text(), 10);
+		            if (period == "PM") hour += 12
+		            picker.date.hours(hour);
+		            actions.showPicker.call(picker);
+		        }
 		    },
 
 		    selectMinute: function (e) {
-		        picker.date.minutes(parseInt($(e.target).text(), 10));
-		        actions.showPicker.call(picker);
+		        if ($(e.target).is('.minute')) {
+		            picker.date.minutes(parseInt($(e.target).text(), 10));
+		            actions.showPicker.call(picker);
+		        }
 		    },
 
 		    selectSecond: function (e) {
-		        picker.date.seconds(parseInt($(e.target).text(), 10));
-		        actions.showPicker.call(picker);
+		        if ($(e.target).is('.second')) {
+		            picker.date.seconds(parseInt($(e.target).text(), 10));
+		            actions.showPicker.call(picker);
+		        }
 		    }
 		},
 
