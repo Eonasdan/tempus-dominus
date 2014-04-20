@@ -1046,6 +1046,7 @@ THE SOFTWARE.
                     } else {
                         picker.setValue(pMoment().format(picker.format))
                     }
+                    notifyChange('', e.type);                    
                 };
             }
             picker.widget.show();
