@@ -852,11 +852,17 @@ THE SOFTWARE.
 		        return;
 		    }
 
+		    var daychange = picker.date.year() !== newdate.year() || picker.date.dayofyear() !== newdate.dayofyear();
+
 		    if (direction == "add") {
 		        picker.date.add(amount, unit);
 		    }
 		    else {
 		        picker.date.subtract(amount, unit);
+		    }
+
+		    if (dayChange) {
+		        fillDate();
 		    }
 		    picker.unset = false;
 		},
