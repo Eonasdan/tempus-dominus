@@ -1048,6 +1048,7 @@ THE SOFTWARE.
                     }
                 };
             }
+            actions.showPicker.call(picker);
             picker.widget.show();
             picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
             place();
