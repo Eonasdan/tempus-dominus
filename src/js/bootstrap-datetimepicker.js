@@ -1048,7 +1048,14 @@ THE SOFTWARE.
                     }
                 };
             }
-            picker.widget.show();
+            if (picker.widget.hasClass("picker-open")) {
+            	picker.widget.hide();
+            	picker.widget.removeClass("picker-open");
+            }
+            else {
+            	picker.widget.show();
+            	picker.widget.addClass("picker-open");
+            }
             picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
             place();
             picker.element.trigger({
