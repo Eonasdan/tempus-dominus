@@ -854,7 +854,8 @@ THE SOFTWARE.
 		    else {
 		        newDate = pMoment(picker.date).subtract(amount, unit);
 		    }
-		    if (isInDisableDates(pMoment(newDate.subtract(amount, unit))) || isInDisableDates(newDate)) {
+			
+		    if (isInDisableDates(newDate)) {
 		        notifyError(newDate.format(picker.format));
 		        return;
 		    }
