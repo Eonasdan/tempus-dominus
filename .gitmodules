@@ -1,7 +1,0 @@
-[submodule "bootstrap"]
-	path = bootstrap
-	url = git://github.com/twbs/bootstrap.git
-	
-[submodule "moment"]
-	path = moment
-	url = git://github.com/moment/moment.git
