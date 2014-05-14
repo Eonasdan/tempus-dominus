@@ -1044,15 +1044,13 @@ THE SOFTWARE.
         picker.show = function (e) {
             if (picker.options.useCurrent) {
                 if (getPickerInput().val() == '') {
+                    var mDate = pMoment();
                     if (picker.options.minuteStepping !== 1) {
-                        var mDate = pMoment(),
-                        rInterval = picker.options.minuteStepping;
+                        var rInterval = picker.options.minuteStepping;
                         mDate.minutes((Math.round(mDate.minutes() / rInterval) * rInterval) % 60)
                             .seconds(0);
-                        picker.setValue(mDate.format(picker.format))
-                    } else {
-                        picker.setValue(pMoment().format(picker.format))
                     }
+                    picker.setDate(mDate)
                 };
             }
             if (picker.widget.hasClass("picker-open")) {
