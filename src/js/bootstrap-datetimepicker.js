@@ -73,7 +73,9 @@ THE SOFTWARE.
             useStrict: false,
             direction: "auto",
             sideBySide: false,
-            daysOfWeekDisabled: false
+            daysOfWeekDisabled: false,
+            inline:false,
+            pickWeek:false
         },
 
 		icons = {
@@ -143,8 +145,12 @@ THE SOFTWARE.
                     icon.addClass(picker.options.icons.date);
                 }
             }
-
-            picker.widget = $(getTemplate()).appendTo('body');
+            if(!picker.options.inline){
+                picker.widget = $(getTemplate()).appendTo('body');
+            }else{
+                console.log(this);
+                picker.widget = $(getTemplate()).appendTo(picker.element);
+            }
 
             if (picker.options.useSeconds && !picker.use24hours) {
                 picker.widget.width(300);
@@ -297,11 +303,23 @@ THE SOFTWARE.
 
         notifyChange = function (oldDate, eventType) {
             if (pMoment(picker.date).isSame(pMoment(oldDate))) return;
-            picker.element.trigger({
-                type: 'dp.change',
-                date: pMoment(picker.date),
-                oldDate: pMoment(oldDate)
-            });
+            if(picker.options.pickWeek){ 
+                picker.element.trigger({
+                    type: 'dp.change',
+                    date: pMoment(picker.date),
+                    week: {
+                        start:pMoment(picker.date).startOf('week'),
+                        end:pMoment(picker.date).endOf('week')
+                    },
+                    oldDate: pMoment(oldDate)
+                });
+            }else{
+                picker.element.trigger({
+                    type: 'dp.change',
+                    date: pMoment(picker.date),
+                    oldDate: pMoment(oldDate)
+                });
+            }
 
             if (eventType !== 'change')
                 picker.element.change();
@@ -912,7 +930,7 @@ THE SOFTWARE.
         getTemplate = function () {
             if (picker.options.pickDate && picker.options.pickTime) {
                 var ret = '';
-                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
+                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.options.inline ? '' : ' dropdown-menu')+'" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
                        '<div class="col-sm-6 datepicker">' + dpGlobal.template + '</div>' +
@@ -933,13 +951,13 @@ THE SOFTWARE.
                 return ret;
             } else if (picker.options.pickTime) {
                 return (
-                    '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                    '<div class="bootstrap-datetimepicker-widget '+ (picker.options.inline ? '' : ' dropdown-menu')+'">' +
                         '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
                     '</div>'
                 );
             } else {
                 return (
-                    '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                    '<div class="bootstrap-datetimepicker-widget '+ (picker.options.inline ? '' : ' dropdown-menu')+'">' +
                         '<div class="datepicker">' + dpGlobal.template + '</div>' +
                     '</div>'
                 );
@@ -1042,6 +1060,8 @@ THE SOFTWARE.
         };
 
         picker.show = function (e) {
+             if (picker.options.inline)
+                return;
             if (picker.options.useCurrent) {
                 if (getPickerInput().val() == '') {
                     if (picker.options.minuteStepping !== 1) {
@@ -1093,6 +1113,8 @@ THE SOFTWARE.
 
         picker.hide = function (event) {
             if (event && $(event.target).is(picker.element.attr("id")))
+                return;
+            if (picker.options.inline)
                 return;
             // Ignore event if in the middle of a picker transition
             var collapse = picker.widget.find('.collapse'), i, collapseData;
