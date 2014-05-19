@@ -2,6 +2,9 @@
  * Datetimepicker for Bootstrap v3
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
+
+@import "variables.less";
+
 .bootstrap-datetimepicker-widget {
     top: 0;
     left: 0;
@@ -91,7 +94,6 @@
         font-weight: bold;
         font-size: 1.2em;
     }
-
     table[data-hour-format="12"] .separator {
         width: 4px;
         padding: 0;
@@ -222,6 +224,25 @@
 
         &:hover {
             background: @gray-lighter;
+        }
+    }
+    &.week-picker .datepicker-days{
+        .table-condensed tbody{
+            tr{
+                &:hover{
+                    background: @gray-lighter;
+                    cursor: pointer;
+                }
+                &.active,
+                &.active:hover {
+                    background-color: @btn-primary-bg;
+                    color: #fff;
+                    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+                    .today:before {
+                        border-bottom-color: #fff;
+                    }
+                }
+            }
         }
     }
 }

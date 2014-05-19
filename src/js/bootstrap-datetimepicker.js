@@ -404,8 +404,12 @@ THE SOFTWARE.
             nextMonth = pMoment(prevMonth).add(42, "d");
             while (prevMonth.isBefore(nextMonth)) {
                 if (prevMonth.weekday() === pMoment().startOf('week').weekday()) {
+                
                     row = $('<tr>');
                     html.push(row);
+                    if(pMoment(picker.date).startOf('week').isSame(prevMonth.startOf('week'))){
+                        row.addClass('active');
+                    }
                 }
                 clsName = '';
                 if (prevMonth.year() < year || (prevMonth.year() == year && prevMonth.month() < month)) {
@@ -415,6 +419,9 @@ THE SOFTWARE.
                 }
                 if (prevMonth.isSame(pMoment({ y: picker.date.year(), M: picker.date.month(), d: picker.date.date() }))) {
                     clsName += ' active';
+                    if(picker.options.pickWeek){
+                        // row.addClass('active');
+                    }
                 }
                 if (isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
                     clsName += ' disabled';
@@ -930,7 +937,10 @@ THE SOFTWARE.
         getTemplate = function () {
             if (picker.options.pickDate && picker.options.pickTime) {
                 var ret = '';
-                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.options.inline ? '' : ' dropdown-menu')+'" style="z-index:9999 !important;">';
+                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') +
+                (picker.options.inline ? '' : ' dropdown-menu')+
+                (picker.options.pickWeek ? ' week-picker' : '')+
+                '" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
                        '<div class="col-sm-6 datepicker">' + dpGlobal.template + '</div>' +
@@ -951,14 +961,17 @@ THE SOFTWARE.
                 return ret;
             } else if (picker.options.pickTime) {
                 return (
-                    '<div class="bootstrap-datetimepicker-widget '+ (picker.options.inline ? '' : ' dropdown-menu')+'">' +
-                        '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
+                    '<div class="bootstrap-datetimepicker-widget '+ 
+                    (picker.options.inline ? '' : ' dropdown-menu')+
+                    (picker.options.pickWeek ? ' week-picker' : '')+
+                        '"><div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
                     '</div>'
                 );
             } else {
                 return (
-                    '<div class="bootstrap-datetimepicker-widget '+ (picker.options.inline ? '' : ' dropdown-menu')+'">' +
-                        '<div class="datepicker">' + dpGlobal.template + '</div>' +
+                    '<div class="bootstrap-datetimepicker-widget '+ (picker.options.inline ? '' : ' dropdown-menu')+
+                    (picker.options.pickWeek ? ' week-picker' : '')+
+                        '"><div class="datepicker">' + dpGlobal.template + '</div>' +
                     '</div>'
                 );
             }
