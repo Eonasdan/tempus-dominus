@@ -30,6 +30,11 @@ THE SOFTWARE.
     if (typeof define === 'function' && define.amd) {
         // AMD is used - Register as an anonymous module.
         define(['jquery', 'moment'], factory);
+    } else if (typeof require === 'function' && typeof exports !== 'undefined') {
+    	// browserify, comomjs module.exports suppert
+    	var jQuery = require('jquery') || jQuery,
+    	    moment = require('moment') || moment;
+        factory(jQuery, moment);
     } else {
         // AMD is not used - Attempt to fetch dependencies from scope.
         if (!jQuery) {
