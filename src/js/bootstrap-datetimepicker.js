@@ -356,6 +356,7 @@ THE SOFTWARE.
         },
 
         fillDate = function () {
+            if(!picker.options.pickDate) return;
             pMoment.lang(picker.options.language);
             var year = picker.viewDate.year(),
                 month = picker.viewDate.month(),
