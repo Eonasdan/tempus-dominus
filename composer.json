@@ -1,0 +1,26 @@
+{
+  "name": "Eonasdan/bootstrap-datetimepicker",
+  "type": "component",
+  "description": "Date/time picker widget based on twitter bootstrap",
+  "keywords": [
+    "bootstrap",
+    "datetimepicker"
+  ],
+  "homepage": "http://eonasdan.github.io/bootstrap-datetimepicker/",
+  "license": "MIT",
+  require: {
+    "moment/moment: "dev-master",
+  }
+  "extra": {
+    "component": {
+      "scripts": {
+        "src/js/ootstrap-datetimepicker.js"
+      },
+      "files": [
+        "build/js/bootstrap-datetimepicker.min.js",
+        "build/css/bootstrap-datetimepicker.css",
+        "build/css/bootstrap-datetimepicker.min.css"
+      ]
+    }
+  }
+}
