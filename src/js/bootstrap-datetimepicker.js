@@ -318,7 +318,7 @@ THE SOFTWARE.
             pMoment.lang(picker.options.language);
             var dateStr = newDate;
             if (!dateStr) {
-                dateStr = getPickerInput().val()
+                dateStr = getPickerInput().val();
                 if (dateStr) picker.date = pMoment(dateStr, picker.format, picker.options.useStrict);
                 if (!picker.date) picker.date = pMoment();
             }
