@@ -73,7 +73,8 @@ THE SOFTWARE.
             useStrict: false,
             direction: "auto",
             sideBySide: false,
-            daysOfWeekDisabled: false
+            daysOfWeekDisabled: false,
+            embed: false
         },
 
 		icons = {
@@ -144,7 +145,12 @@ THE SOFTWARE.
                 }
             }
 
-            picker.widget = $(getTemplate()).appendTo('body');
+            picker.widget = $(getTemplate());
+            if (picker.options.embed) {
+                picker.widget.appendTo(picker.element);
+            } else {
+                picker.widget.appendTo('body');
+            }
 
             if (picker.options.useSeconds && !picker.use24hours) {
                 picker.widget.width(300);
@@ -198,6 +204,9 @@ THE SOFTWARE.
                 var rInterval = picker.options.minuteStepping;
                 picker.date.minutes((Math.round(picker.date.minutes() / rInterval) * rInterval) % 60).seconds(0);
             }
+            if (picker.options.embed) {
+                picker.widget.show();
+            }
         },
 
         getPickerInput = function () {
@@ -235,9 +244,13 @@ THE SOFTWARE.
             if (eData.dateUsestrict !== undefined) picker.options.useStrict = eData.dateUsestrict;
             if (eData.dateDirection !== undefined) picker.options.direction = eData.dateDirection;
             if (eData.dateSidebyside !== undefined) picker.options.sideBySide = eData.dateSidebyside;
+            if (eData.dateEmbed !== undefined) picker.options.embed = eData.dateEmbed;
         },
 
         place = function () {
+            if (picker.options.embed) {
+                return;
+            }
             var position = 'absolute',
             offset = picker.component ? picker.component.offset() : picker.element.offset(), $window = $(window);
             picker.width = picker.component ? picker.component.outerWidth() : picker.element.outerWidth();
@@ -761,20 +774,22 @@ THE SOFTWARE.
                     }
                 });
             }
-            if (picker.isInput) {
-                picker.element.on({
-                    'focus': $.proxy(picker.show, this),
-                    'change': $.proxy(change, this),
-                    'blur': $.proxy(picker.hide, this)
-                });
-            } else {
-                picker.element.on({
-                    'change': $.proxy(change, this)
-                }, 'input');
-                if (picker.component) {
-                    picker.component.on('click', $.proxy(picker.show, this));
+            if (!picker.options.embed) {
+                if (picker.isInput) {
+                    picker.element.on({
+                        'focus': $.proxy(picker.show, this),
+                        'change': $.proxy(change, this),
+                        'blur': $.proxy(picker.hide, this)
+                    });
                 } else {
-                    picker.element.on('click', $.proxy(picker.show, this));
+                    picker.element.on({
+                        'change': $.proxy(change, this)
+                    }, 'input');
+                    if (picker.component) {
+                        picker.component.on('click', $.proxy(picker.show, this));
+                    } else {
+                        picker.element.on('click', $.proxy(picker.show, this));
+                    }
                 }
             }
         },
@@ -795,19 +810,21 @@ THE SOFTWARE.
             if (picker.options.pickDate && picker.options.pickTime) {
                 picker.widget.off('click.togglePicker');
             }
-            if (picker.isInput) {
-                picker.element.off({
-                    'focus': picker.show,
-                    'change': picker.change
-                });
-            } else {
-                picker.element.off({
-                    'change': picker.change
-                }, 'input');
-                if (picker.component) {
-                    picker.component.off('click', picker.show);
+            if (!picker.options.embed) {
+                if (picker.isInput) {
+                    picker.element.off({
+                        'focus': picker.show,
+                        'change': picker.change
+                    });
                 } else {
-                    picker.element.off('click', picker.show);
+                    picker.element.off({
+                        'change': picker.change
+                    }, 'input');
+                    if (picker.component) {
+                        picker.component.off('click', picker.show);
+                    } else {
+                        picker.element.off('click', picker.show);
+                    }
                 }
             }
         },
@@ -913,7 +930,7 @@ THE SOFTWARE.
         getTemplate = function () {
             if (picker.options.pickDate && picker.options.pickTime) {
                 var ret = '';
-                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
+                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.options.embed ? '' : ' dropdown-menu') + '" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
                        '<div class="col-sm-6 datepicker">' + dpGlobal.template + '</div>' +
