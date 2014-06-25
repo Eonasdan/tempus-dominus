@@ -69,6 +69,7 @@ THE SOFTWARE.
             defaultDate: "",
             disabledDates: false,
             enabledDates: false,
+            highlightedDates: false,
             icons: {},
             useStrict: false,
             direction: "auto",
@@ -181,6 +182,7 @@ THE SOFTWARE.
 
             picker.options.disabledDates = indexGivenDates(picker.options.disabledDates);
             picker.options.enabledDates = indexGivenDates(picker.options.enabledDates);
+            picker.options.highlightedDates = indexGivenDates(picker.options.highlightedDates);
 
             picker.startViewMode = picker.viewMode;
             picker.setMinDate(picker.options.minDate);
@@ -231,6 +233,7 @@ THE SOFTWARE.
             if (eData.dateDefaultdate !== undefined) picker.options.defaultDate = eData.dateDefaultdate;
             if (eData.dateDisableddates !== undefined) picker.options.disabledDates = eData.dateDisableddates;
             if (eData.dateEnableddates !== undefined) picker.options.enabledDates = eData.dateEnableddates;
+            if (eData.dateHighlighteddates !== undefined) picker.options.highlightedDates = eData.dateHighlighteddates;
             if (eData.dateIcons !== undefined) picker.options.icons = eData.dateIcons;
             if (eData.dateUsestrict !== undefined) picker.options.useStrict = eData.dateUsestrict;
             if (eData.dateDirection !== undefined) picker.options.direction = eData.dateDirection;
@@ -401,6 +404,9 @@ THE SOFTWARE.
                 }
                 if (isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
                     clsName += ' disabled';
+                }
+                if (isInHighlightedDates(prevMonth)) {
+                  clsName += ' active';
                 }
                 if (picker.options.showToday === true) {
                     if (prevMonth.isSame(pMoment(), 'day')) {
@@ -877,6 +883,13 @@ THE SOFTWARE.
             }
             return picker.options.disabledDates[pMoment(date).format("YYYY-MM-DD")] === true;
         },
+        isInHighlightedDates = function (date) {
+          pMoment.lang(picker.options.language);
+          if (picker.options.highlightedDates === false) {
+              return false;
+          }
+          return picker.options.highlightedDates[pMoment(date).format("YYYY-MM-DD")] === true;
+        },
         isInEnableDates = function (date) {
             pMoment.lang(picker.options.language);
             if (picker.options.enabledDates === false) {
@@ -1154,10 +1167,13 @@ THE SOFTWARE.
             if (picker.viewDate) update();
         },
         picker.setEnabledDates = function (dates) {
-            picker.options.enabledDates = indexGivenDates(dates);
-            if (picker.viewDate) update();
+          picker.options.enabledDates = indexGivenDates(dates);
+          if (picker.viewDate) update();
         },
-
+        picker.setHighlightedDates = function (dates) {
+          picker.options.highlightedDates = indexGivenDates(dates);
+          if (picker.viewDate) update();
+        },
         picker.setMaxDate = function (date) {
             if (date == undefined) return;
             picker.options.maxDate = pMoment(date);
