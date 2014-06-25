@@ -73,7 +73,8 @@ THE SOFTWARE.
             useStrict: false,
             direction: "auto",
             sideBySide: false,
-            daysOfWeekDisabled: false
+            daysOfWeekDisabled: false,
+            appendTo: 'body'
         },
 
 		icons = {
@@ -144,7 +145,7 @@ THE SOFTWARE.
                 }
             }
 
-            picker.widget = $(getTemplate()).appendTo('body');
+            picker.widget = $(getTemplate()).appendTo(picker.options.appendTo);
 
             if (picker.options.useSeconds && !picker.use24hours) {
                 picker.widget.width(300);
@@ -238,6 +239,11 @@ THE SOFTWARE.
         },
 
         place = function () {
+
+            if (picker.options.appendTo != defaults.appendTo) {
+                return;
+            }
+
             var position = 'absolute',
             offset = picker.component ? picker.component.offset() : picker.element.offset(), $window = $(window);
             picker.width = picker.component ? picker.component.outerWidth() : picker.element.outerWidth();
