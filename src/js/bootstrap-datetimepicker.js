@@ -73,7 +73,8 @@ THE SOFTWARE.
             useStrict: false,
             direction: "auto",
             sideBySide: false,
-            daysOfWeekDisabled: false
+            daysOfWeekDisabled: false,
+            noAdvanceDate: false,
         },
 
 		icons = {
@@ -682,7 +683,10 @@ THE SOFTWARE.
 
 		    selectHour: function (e) {
 		        var period = picker.widget.find('.timepicker [data-action=togglePeriod]').text(), hour = parseInt($(e.target).text(), 10);
-		        if (period == "PM") hour += 12
+		        if (period == "PM") hour += 12;
+		        if (picker.options.noAdvanceDate && hour == 24) {
+		            picker.date.subtract(24, 'hours');
+		        }
 		        picker.date.hours(hour);
 		        actions.showPicker.call(picker);
 		    },
@@ -849,7 +853,9 @@ THE SOFTWARE.
 		    var newDate;
 		    if (direction == "add") {
 		        newDate = pMoment(picker.date);
-		        if (newDate.hours() == 23) newDate.add(amount, unit);
+		        if (newDate.hours() == 23) {
+		        	newDate.add(amount, unit);
+		        }
 		        newDate.add(amount, unit);
 		    }
 		    else {
@@ -861,9 +867,27 @@ THE SOFTWARE.
 		    }
 
 		    if (direction == "add") {
+		    	if (picker.options.noAdvanceDate) {
+			        if (unit == 'hours' && picker.date.hours() == 23) {
+				        picker.date.subtract(24, 'hours');
+			        } else if (unit == 'minutes' && picker.date.minutes() == 59) {
+				        picker.date.subtract(60, 'minutes');
+			        } else if (unit == 'seconds' && picker.date.seconds() == 59) {
+				        picker.date.subtract(60, 'seconds');
+			        }
+		    	}
 		        picker.date.add(amount, unit);
 		    }
 		    else {
+		    	if (picker.options.noAdvanceDate) {
+			        if (unit == 'hours' && picker.date.hours() == 0) {
+				        picker.date.add(24, 'hours');
+			        } else if (unit == 'minutes' && picker.date.minutes() == 0) {
+				        picker.date.add(60, 'minutes');
+			        } else if (unit == 'seconds' && picker.date.seconds() == 0) {
+				        picker.date.add(60, 'seconds');
+			        }
+		    	}
 		        picker.date.subtract(amount, unit);
 		    }
 		    picker.unset = false;
