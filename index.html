@@ -501,14 +501,14 @@
                     </div>
                         <script type="text/javascript">
                             $(function () {
-                                $('#datetimepicker8').datetimepicker();
-                                $('#datetimepicker9').datetimepicker();
-                                $("#datetimepicker8").on("dp.change",function (e) {
-                                   $('#datetimepicker9').data("DateTimePicker").setMinDate(e.date);
-                                });
-                                $("#datetimepicker9").on("dp.change",function (e) {
-                                   $('#datetimepicker8').data("DateTimePicker").setMaxDate(e.date);
-                                });
+                                $('#datetimepicker8').datetimepicker()
+                                    .on('dp.change',function (e) {
+                                        $('#datetimepicker9').data('DateTimePicker').setMinDate(e.date);
+                                    });
+                                $('#datetimepicker9').datetimepicker()
+                                    .on("'dp.change',function (e) {
+                                        $('#datetimepicker8').data('DateTimePicker').setMaxDate(e.date);
+                                    });
                             });
                         </script>
                 </div>
@@ -576,7 +576,7 @@
                                     icons: {
                                         time: "fa fa-clock-o",
                                         date: "fa fa-calendar",
-                                        up: "fa fa-arrow-up",
+                                        up:   "fa fa-arrow-up",
                                         down: "fa fa-arrow-down"
                                     }
                                 });
