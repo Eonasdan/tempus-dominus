@@ -54,34 +54,14 @@ THE SOFTWARE.
 
 // ReSharper disable once InconsistentNaming
     DateTimePicker = function (element, options) {
-        var defaults = {
-            pickDate: true,
-            pickTime: true,
-            useMinutes: true,
-            useSeconds: false,
-            useCurrent: true,
-            minuteStepping: 1,
-            minDate: new pMoment({ y: 1900 }),
-            maxDate: new pMoment().add(100, "y"),
-            showToday: true,
-            collapse: true,
-            language: "en",
-            defaultDate: "",
-            disabledDates: false,
-            enabledDates: false,
-            icons: {},
-            useStrict: false,
-            direction: "auto",
-            sideBySide: false,
-            daysOfWeekDisabled: false
-        },
+        var defaults = $.fn.datetimepicker.defaults,
 
-		icons = {
-		    time: 'glyphicon glyphicon-time',
-		    date: 'glyphicon glyphicon-calendar',
-		    up: 'glyphicon glyphicon-chevron-up',
-		    down: 'glyphicon glyphicon-chevron-down'
-		},
+	icons = {
+	    time: 'glyphicon glyphicon-time',
+	    date: 'glyphicon glyphicon-calendar',
+	    up: 'glyphicon glyphicon-chevron-up',
+	    down: 'glyphicon glyphicon-chevron-down'
+	},
 
         picker = this,
 
@@ -318,7 +298,7 @@ THE SOFTWARE.
             pMoment.lang(picker.options.language);
             var dateStr = newDate;
             if (!dateStr) {
-                dateStr = getPickerInput().val()
+                dateStr = getPickerInput().val();
                 if (dateStr) picker.date = pMoment(dateStr, picker.format, picker.options.useStrict);
                 if (!picker.date) picker.date = pMoment();
             }
@@ -356,6 +336,7 @@ THE SOFTWARE.
         },
 
         fillDate = function () {
+            if(!picker.options.pickDate) return;
             pMoment.lang(picker.options.language);
             var year = picker.viewDate.year(),
                 month = picker.viewDate.month(),
@@ -363,6 +344,7 @@ THE SOFTWARE.
                 startMonth = picker.options.minDate.month(),
                 endYear = picker.options.maxDate.year(),
                 endMonth = picker.options.maxDate.month(),
+                currentDate,
                 prevMonth, nextMonth, html = [], row, clsName, i, days, yearCont, currentYear, months = pMoment.months();
 
             picker.widget.find('.datepicker-days').find('.disabled').removeClass('disabled');
@@ -414,7 +396,13 @@ THE SOFTWARE.
                     }
                 }
                 row.append('<td class="day' + clsName + '">' + prevMonth.date() + '</td>');
+
+                currentDate = prevMonth.date();
                 prevMonth.add(1, "d");
+
+                if (currentDate == prevMonth.date()) {
+                  prevMonth.add(1, "d");
+                }
             }
             picker.widget.find('.datepicker-days tbody').empty().append(html);
             currentYear = picker.date.year(), months = picker.widget.find('.datepicker-months')
@@ -1048,7 +1036,14 @@ THE SOFTWARE.
                     }
                 };
             }
-            picker.widget.show();
+            if (picker.widget.hasClass("picker-open")) {
+            	picker.widget.hide();
+            	picker.widget.removeClass("picker-open");
+            }
+            else {
+            	picker.widget.show();
+            	picker.widget.addClass("picker-open");
+            }
             picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
             place();
             picker.element.trigger({
@@ -1088,6 +1083,7 @@ THE SOFTWARE.
                     return;
             }
             picker.widget.hide();
+            picker.widget.removeClass("picker-open");
             picker.viewMode = picker.startViewMode;
             showMode();
             picker.element.trigger({
@@ -1163,4 +1159,27 @@ THE SOFTWARE.
             if (!data) $this.data('DateTimePicker', new DateTimePicker(this, options));
         });
     };
+    
+    $.fn.datetimepicker.defaults = {
+        pickDate: true,
+        pickTime: true,
+        useMinutes: true,
+        useSeconds: false,
+        useCurrent: true,
+        minuteStepping: 1,
+        minDate: new pMoment({ y: 1900 }),
+        maxDate: new pMoment().add(100, "y"),
+        showToday: true,
+        collapse: true,
+        language: "en",
+        defaultDate: "",
+        disabledDates: false,
+        enabledDates: false,
+        icons: {},
+        useStrict: false,
+        direction: "auto",
+        sideBySide: false,
+        daysOfWeekDisabled: false
+    };
+
 }));
