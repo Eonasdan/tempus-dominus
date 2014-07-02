@@ -1101,7 +1101,7 @@ THE SOFTWARE.
             } else {
                 picker.unset = false;
             }
-            if (!pMoment.isMoment(newDate)) newDate = pMoment(newDate, picker.format);
+            if (!pMoment.isMoment(newDate)) newDate = (newDate instanceof Date) ? pMoment(newDate) : pMoment(newDate, picker.format);
             if (newDate.isValid()) {
                 picker.date = newDate;
                 set();
