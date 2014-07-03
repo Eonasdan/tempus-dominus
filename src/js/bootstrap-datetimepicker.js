@@ -742,7 +742,7 @@ THE SOFTWARE.
 
                     if (expanded && expanded.length) {
                         collapseData = expanded.data('collapse');
-                        if (collapseData && collapseData.date - transitioning) return;
+                        if (collapseData && collapseData.transitioning) return;
                         expanded.collapse('hide');
                         closed.collapse('show');
                         $this.find('span').toggleClass(picker.options.icons.time + ' ' + picker.options.icons.date);
@@ -1096,7 +1096,7 @@ THE SOFTWARE.
             var collapse = picker.widget.find('.collapse'), i, collapseData;
             for (i = 0; i < collapse.length; i++) {
                 collapseData = collapse.eq(i).data('collapse');
-                if (collapseData && collapseData.date - transitioning)
+                if (collapseData && collapseData.transitioning)
                     return;
             }
             picker.widget.hide();
