@@ -181,10 +181,19 @@ THE SOFTWARE.
         },
 
         getPickerInput = function () {
+            var input;
+
             if (picker.isInput) {
                 return picker.element;
             } else {
-                return dateStr = picker.element.find('input');
+                input = picker.element.find('.datepickerinput');
+                if (input.size() === 0) {
+                    input = picker.element.find('input');
+                }
+                else if (!input.is('input')) {
+                    throw new Error('CSS class "datepickerinput" cannot be applied to non input element');
+                }
+                return input;
             }
         },
 
