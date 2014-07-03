@@ -702,6 +702,11 @@ THE SOFTWARE.
             e.preventDefault();
         },
 
+		keydown = function (e) {
+            if (e.keyCode === 27) // allow escape to hide picker
+                picker.hide();
+        },
+
         change = function (e) {
             pMoment.lang(picker.options.language);
             var input = $(e.target), oldDate = pMoment(picker.date), newDate = pMoment(input.val(), picker.format, picker.options.useStrict);
@@ -732,6 +737,7 @@ THE SOFTWARE.
             picker.widget.on('click', '.datepicker *', $.proxy(click, this)); // this handles date picker clicks
             picker.widget.on('click', '[data-action]', $.proxy(doAction, this)); // this handles time picker clicks
             picker.widget.on('mousedown', $.proxy(stopEvent, this));
+            picker.element.on('keydown', $.proxy(keydown, this));
             if (picker.options.pickDate && picker.options.pickTime) {
                 picker.widget.on('click.togglePicker', '.accordion-toggle', function (e) {
                     e.stopPropagation();
