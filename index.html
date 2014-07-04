@@ -27,9 +27,10 @@
                 <li><a href="#example4">Disabling the Date Picker</a></li>
                 <li><a href="#example5">Using custom formats</a></li>
                 <li><a href="#example6">Using without an icon</a></li>
-                <li><a href="#example7">En/Disabled Dates</a></li>
-                <li><a href="#example8">Using Events</a></li>
-                <li><a href="#example9">Custom Icons</a></li>
+                <li><a href="#example7">Using with another input-group-addon element</a></li>
+                <li><a href="#example8">En/Disabled Dates</a></li>
+                <li><a href="#example9">Using Events</a></li>
+                <li><a href="#example10">Custom Icons</a></li>
                 <li><a href="#options">Options</a></li>
                 <li><a href="#events">Events </a></li>
             </ul>
@@ -411,7 +412,59 @@
             <div id="example7">
                 <a name="example7"></a>
                 <div class="callout-box callout-box-info">
-                    Example 7 <p>En/Disabled Dates. Both are mutually exclusive and expect an array. Disabled dates might be used for holidays. Enabled dates might be used for available dates for a reservation.</p>
+                    Example 7<p>
+                       Using with another input-group-addon element
+                    </p>
+                </div>
+
+                <div class="container">
+                    <div class="row">
+                        <div class='col-sm-6'>
+                            <input type='text' class="form-control" id='datetimepicker7'/>
+                            <span class="input-group-addon datepickerbutton">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </span>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker7').datetimepicker();
+                            });
+                        </script>
+                    </div>
+                </div>
+                <br/>
+                <div class="highlight highlight-html">
+                    <pre>
+                        &lt;div class=&quot;container&quot;&gt;
+                            &lt;div class=&quot;row&quot;&gt;
+                                &lt;div class='col-sm-6'&gt;
+                                    &lt;input type='text' class=&quot;form-control&quot; id='datetimepicker7'/&gt;
+                                    &lt;span class=&quot;input-group-addon datepickerbutton&quot;&gt;
+                                        &lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;&lt;/span&gt;
+                                    &lt;/span&gt;
+                                    &lt;span class=&quot;input-group-addon&quot;&gt;
+                                        &lt;span class=&quot;glyphicon glyphicon-remove&quot;&gt;&lt;/span&gt;
+                                    &lt;/span&gt;
+                                &lt;/div&gt;
+                                &lt;script type=&quot;text/javascript&quot;&gt;
+                                    $(function () {
+                                        $('#datetimepicker7').datetimepicker();
+                                    });
+                                &lt;/script&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    </pre>
+                </div>
+                <hr />
+            </div>
+            
+            <div id="example8">
+                <a name="example8"></a>
+                <div class="callout-box callout-box-info">
+                    Example 8 <p>En/Disabled Dates. Both are mutually exclusive and expect an array. Disabled dates might be used for holidays. Enabled dates might be used for available dates for a reservation.</p>
                 </div>
 
                 <div class="container">
@@ -472,10 +525,10 @@
             <hr />
             </div>
             
-            <div id="example8">
-                <a name="example8"></a>
+            <div id="example9">
+                <a name="example9"></a>
                 <div class="callout-box callout-box-info">
-                    Example 8 <p>Events and linked pickers</p>
+                    Example 9 <p>Events and linked pickers</p>
                 </div>
 
                 <div class="container">
@@ -554,10 +607,10 @@
                 <hr />
             </div>
 
-            <div id="example9">
-                <a name="example9"></a>
+            <div id="example10">
+                <a name="example10"></a>
                 <div class="callout-box callout-box-info">
-                    Example 9 <p>Custom Icons (e.g. Font Awesome)</p>
+                    Example 10 <p>Custom Icons (e.g. Font Awesome)</p>
                 </div>
 
                 <div class="container">
