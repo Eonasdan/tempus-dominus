@@ -44,7 +44,7 @@ THE SOFTWARE.
 
 (function ($, moment) {
     if (typeof moment === 'undefined') {
-        alert("momentjs is requried");
+        alert("momentjs is required");
         throw new Error('momentjs is required');
     };
 
