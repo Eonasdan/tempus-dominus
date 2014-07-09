@@ -10,10 +10,10 @@ build:
 		-o build/js/bootstrap-datetimepicker.min.js \
 	       	src/js/bootstrap-datetimepicker.js
 	./node_modules/.bin/lessc \
-	       	src/less/build.less \
+	       	src/less/bootstrap-datetimepicker-build.less \
 	       	build/css/bootstrap-datetimepicker.css
 	./node_modules/.bin/lessc -x \
-	       	src/less/build.less \
+	       	src/less/bootstrap-datetimepicker-build.less \
 	       	build/css/bootstrap-datetimepicker.min.css
 
 clean:
