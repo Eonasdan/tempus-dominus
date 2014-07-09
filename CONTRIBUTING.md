@@ -1,5 +1,7 @@
 Contributions guidelines:
 
+#### Please test and/or fork [this jsfiddle](http://jsfiddle.net/d3wCU/) with an example of your issue before you post an issue here.
+
 - Use 2 spaces indentation
 - If it is a bug, please read open issues to avoid duplicates
 - If it is a new feature, please provide a use case. E.g. Why this feature should be added and what you are using it for
