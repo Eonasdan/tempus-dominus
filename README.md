@@ -11,7 +11,7 @@ Please test and/or fork [this jsfiddle](http://jsfiddle.net/d3wCU/) with an exam
 I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `eonasdan at outlook dot com`. Do not submit issue/feature request to this email, they will be ignored.
 
 ## [Installation instructions](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Installation)
-have been moved to the wiki
+Installation instructions has been moved to the wiki
 
 ## [Change Log](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Change-Log)
 The change log has moved to the wiki
