@@ -892,8 +892,7 @@ THE SOFTWARE.
             // Store given enabledDates and disabledDates as keys.
             // This way we can check their existence in O(1) time instead of looping through whole array.
             // (for example: picker.options.enabledDates['2014-02-27'] === true)
-            var givenDatesIndexed = {};
-            var givenDatesCount = 0;
+            var givenDatesIndexed = {}, givenDatesCount = 0, i;
             for (i = 0; i < givenDatesArray.length; i++) {
                 dDate = pMoment(givenDatesArray[i]);
                 if (dDate.isValid()) {
