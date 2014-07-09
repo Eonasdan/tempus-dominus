@@ -1056,6 +1056,7 @@ THE SOFTWARE.
                     } else {
                         picker.setValue(pMoment().format(picker.format))
                     }
+                    notifyChange('', e.type);                    
                 };
             }
             if (picker.widget.hasClass("picker-open")) {
