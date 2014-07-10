@@ -360,7 +360,7 @@ THE SOFTWARE.
             picker.widget.find('.datepicker-months').find('.disabled').removeClass('disabled');
             picker.widget.find('.datepicker-years').find('.disabled').removeClass('disabled');
 
-            picker.widget.find('.datepicker-days th:eq(1)').text(
+            picker.widget.find('.datepicker-days th:eq(2)').text(
                 months[month] + ' ' + year);
 
             prevMonth = pMoment(picker.viewDate).subtract("months", 1);
@@ -548,6 +548,13 @@ THE SOFTWARE.
                                     step = dpGlobal.modes[picker.viewMode].navStep;
                                     if (target[0].className === 'prev') step = step * -1;
                                     picker.viewDate.add(step, dpGlobal.modes[picker.viewMode].navFnc);
+                                    fillDate();
+                                    break;
+                                case 'prev-year':
+                                case 'next-year':
+                                    step = 12;
+                                    if (target[0].className === 'prev-year') step = step * -1;
+                                    picker.viewDate.add(step, dpGlobal.modes[0].navFnc);
                                     fillDate();
                                     break;
                             }
@@ -966,12 +973,18 @@ THE SOFTWARE.
                     navFnc: 'year',
                     navStep: 10
                 }],
-		    headTemplate:
-                    '<thead>' +
-						'<tr>' +
-							'<th class="prev">&lsaquo;</th><th colspan="5" class="switch"></th><th class="next">&rsaquo;</th>' +
-						'</tr>' +
-                    '</thead>',
+		    headTemplate: {
+                other: '<thead>' +
+                            '<tr>' +
+					           	'<th class="prev">&lsaquo;</th><th colspan="5" class="switch"></th><th class="next">&rsaquo;</th>' +
+					       '</tr>' +
+                        '</thead>',
+                days: '<thead>' +
+                            '<tr>' +
+                                '<th class="prev">&lsaquo;</th><th class="prev-year">&lsaquo;&lsaquo;</th><th colspan="3" class="switch"></th><th class="next-year">&rsaquo;&rsaquo;</th><th class="next">&rsaquo;</th>' +
+                            '</tr>' +
+                        '</thead>'
+                }
 		    contTemplate:
         '<tbody><tr><td colspan="7"></td></tr></tbody>'
 		},
@@ -984,13 +997,13 @@ THE SOFTWARE.
 
         dpGlobal.template =
             '<div class="datepicker-days">' +
-                '<table class="table-condensed">' + dpGlobal.headTemplate + '<tbody></tbody></table>' +
+                '<table class="table-condensed">' + dpGlobal.headTemplate.days + '<tbody></tbody></table>' +
             '</div>' +
             '<div class="datepicker-months">' +
-                '<table class="table-condensed">' + dpGlobal.headTemplate + dpGlobal.contTemplate + '</table>' +
+                '<table class="table-condensed">' + dpGlobal.headTemplate.other + dpGlobal.contTemplate + '</table>' +
             '</div>' +
             '<div class="datepicker-years">' +
-				'<table class="table-condensed">' + dpGlobal.headTemplate + dpGlobal.contTemplate + '</table>' +
+				'<table class="table-condensed">' + dpGlobal.headTemplate.other + dpGlobal.contTemplate + '</table>' +
             '</div>';
 
         tpGlobal.getTemplate = function () {
