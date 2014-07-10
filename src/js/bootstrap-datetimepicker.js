@@ -984,7 +984,7 @@ THE SOFTWARE.
                                 '<th class="prev">&lsaquo;</th><th class="prev-year">&lsaquo;&lsaquo;</th><th colspan="3" class="switch"></th><th class="next-year">&rsaquo;&rsaquo;</th><th class="next">&rsaquo;</th>' +
                             '</tr>' +
                         '</thead>'
-                }
+                },
 		    contTemplate:
         '<tbody><tr><td colspan="7"></td></tr></tbody>'
 		},
