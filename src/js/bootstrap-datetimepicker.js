@@ -1139,7 +1139,7 @@ THE SOFTWARE.
 
         picker.getDate = function () {
             if (picker.unset) return null;
-            return picker.date;
+            return pMoment(picker.date);
         },
 
         picker.setDate = function (date) {
