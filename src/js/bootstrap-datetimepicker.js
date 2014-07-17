@@ -363,7 +363,7 @@ THE SOFTWARE.
             picker.widget.find('.datepicker-days th:eq(1)').text(
                 months[month] + ' ' + year);
 
-            prevMonth = pMoment(picker.viewDate).subtract("months", 1);
+            prevMonth = pMoment.utc(picker.viewDate).subtract("months", 1);
             days = prevMonth.daysInMonth();
             prevMonth.date(days).startOf('week');
             if ((year == startYear && month <= startMonth) || year < startYear) {
@@ -373,7 +373,7 @@ THE SOFTWARE.
                 picker.widget.find('.datepicker-days th:eq(2)').addClass('disabled');
             }
 
-            nextMonth = pMoment(prevMonth).add(42, "d");
+            nextMonth = pMoment.utc(prevMonth).add(42, "d");
             while (prevMonth.isBefore(nextMonth)) {
                 if (prevMonth.weekday() === pMoment().startOf('week').weekday()) {
                     row = $('<tr>');
