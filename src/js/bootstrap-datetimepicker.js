@@ -1096,7 +1096,7 @@ THE SOFTWARE.
         },
 
         picker.hide = function (event) {
-            if (event && $(event.target).is(picker.element.attr("id")))
+            if (event && $(event.target).is('#'+picker.element.attr("id")))
                 return;
             // Ignore event if in the middle of a picker transition
             var collapse = picker.widget.find('.collapse'), i, collapseData;
