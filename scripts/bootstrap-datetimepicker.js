@@ -44,7 +44,7 @@ THE SOFTWARE.
 
 (function ($, moment) {
     if (typeof moment === 'undefined') {
-        alert("momentjs is requried");
+        alert("momentjs is required");
         throw new Error('momentjs is required');
     };
 
@@ -181,10 +181,19 @@ THE SOFTWARE.
         },
 
         getPickerInput = function () {
+            var input;
+
             if (picker.isInput) {
                 return picker.element;
             } else {
-                return dateStr = picker.element.find('input');
+                input = picker.element.find('.datepickerinput');
+                if (input.size() === 0) {
+                    input = picker.element.find('input');
+                }
+                else if (!input.is('input')) {
+                    throw new Error('CSS class "datepickerinput" cannot be applied to non input element');
+                }
+                return input;
             }
         },
 
@@ -379,7 +388,7 @@ THE SOFTWARE.
                 if (prevMonth.isSame(pMoment({ y: picker.date.year(), M: picker.date.month(), d: picker.date.date() }))) {
                     clsName += ' active';
                 }
-                if (isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
+                if (isInDisableDates(prevMonth, 'day') || !isInEnableDates(prevMonth)) {
                     clsName += ' disabled';
                 }
                 if (picker.options.showToday === true) {
@@ -693,6 +702,11 @@ THE SOFTWARE.
             e.preventDefault();
         },
 
+		keydown = function (e) {
+            if (e.keyCode === 27) // allow escape to hide picker
+                picker.hide();
+        },
+
         change = function (e) {
             pMoment.lang(picker.options.language);
             var input = $(e.target), oldDate = pMoment(picker.date), newDate = pMoment(input.val(), picker.format, picker.options.useStrict);
@@ -723,6 +737,7 @@ THE SOFTWARE.
             picker.widget.on('click', '.datepicker *', $.proxy(click, this)); // this handles date picker clicks
             picker.widget.on('click', '[data-action]', $.proxy(doAction, this)); // this handles time picker clicks
             picker.widget.on('mousedown', $.proxy(stopEvent, this));
+            picker.element.on('keydown', $.proxy(keydown, this));
             if (picker.options.pickDate && picker.options.pickTime) {
                 picker.widget.on('click.togglePicker', '.accordion-toggle', function (e) {
                     e.stopPropagation();
@@ -733,7 +748,7 @@ THE SOFTWARE.
 
                     if (expanded && expanded.length) {
                         collapseData = expanded.data('collapse');
-                        if (collapseData && collapseData.date - transitioning) return;
+                        if (collapseData && collapseData.transitioning) return;
                         expanded.collapse('hide');
                         closed.collapse('show');
                         $this.find('span').toggleClass(picker.options.icons.time + ' ' + picker.options.icons.date);
@@ -849,9 +864,17 @@ THE SOFTWARE.
 		    picker.unset = false;
 		},
 
-        isInDisableDates = function (date) {
+        isInDisableDates = function (date, timeUnit) {
             pMoment.lang(picker.options.language);
-            if (date.isAfter(picker.options.maxDate) || date.isBefore(picker.options.minDate)) return true;
+            var maxDate = picker.options.maxDate;
+            var minDate = picker.options.minDate;
+            
+            if(timeUnit) {
+                maxDate = pMoment(maxDate).endOf(timeUnit);
+                minDate = pMoment(minDate).startOf(timeUnit);
+            }
+
+            if (date.isAfter(maxDate) || date.isBefore(minDate)) return true;
             if (picker.options.disabledDates === false) {
                 return false;
             }
@@ -869,8 +892,7 @@ THE SOFTWARE.
             // Store given enabledDates and disabledDates as keys.
             // This way we can check their existence in O(1) time instead of looping through whole array.
             // (for example: picker.options.enabledDates['2014-02-27'] === true)
-            var givenDatesIndexed = {};
-            var givenDatesCount = 0;
+            var givenDatesIndexed = {}, givenDatesCount = 0, i;
             for (i = 0; i < givenDatesArray.length; i++) {
                 dDate = pMoment(givenDatesArray[i]);
                 if (dDate.isValid()) {
@@ -1034,6 +1056,7 @@ THE SOFTWARE.
                     } else {
                         picker.setValue(pMoment().format(picker.format))
                     }
+                    notifyChange('', e.type);                    
                 };
             }
             if (picker.widget.hasClass("picker-open")) {
@@ -1073,13 +1096,13 @@ THE SOFTWARE.
         },
 
         picker.hide = function (event) {
-            if (event && $(event.target).is(picker.element.attr("id")))
+            if (event && $(event.target).is('#'+picker.element.attr("id")))
                 return;
             // Ignore event if in the middle of a picker transition
             var collapse = picker.widget.find('.collapse'), i, collapseData;
             for (i = 0; i < collapse.length; i++) {
                 collapseData = collapse.eq(i).data('collapse');
-                if (collapseData && collapseData.date - transitioning)
+                if (collapseData && collapseData.transitioning)
                     return;
             }
             picker.widget.hide();
@@ -1101,7 +1124,7 @@ THE SOFTWARE.
             } else {
                 picker.unset = false;
             }
-            if (!pMoment.isMoment(newDate)) newDate = pMoment(newDate, picker.format);
+            if (!pMoment.isMoment(newDate)) newDate = (newDate instanceof Date) ? pMoment(newDate) : pMoment(newDate, picker.format);
             if (newDate.isValid()) {
                 picker.date = newDate;
                 set();
@@ -1116,7 +1139,7 @@ THE SOFTWARE.
 
         picker.getDate = function () {
             if (picker.unset) return null;
-            return picker.date;
+            return pMoment(picker.date);
         },
 
         picker.setDate = function (date) {
