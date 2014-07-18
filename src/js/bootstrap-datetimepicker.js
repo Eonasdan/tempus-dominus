@@ -1145,14 +1145,14 @@ THE SOFTWARE.
         picker.setMaxDate = function (date) {
             if (date == undefined) return;
             // Discard time component
-            picker.options.maxDate = pMoment(date.format("YYYY-MM-DD"));
+            picker.options.maxDate = pMoment(pMoment(date).format("YYYY-MM-DD"));
             if (picker.viewDate) update();
         },
 
         picker.setMinDate = function (date) {
             if (date == undefined) return;
             // Discard time component
-            picker.options.minDate = pMoment(date.format("YYYY-MM-DD"));
+            picker.options.minDate = pMoment(pMoment(date).format("YYYY-MM-DD"));
             if (picker.viewDate) update();
         };
 
