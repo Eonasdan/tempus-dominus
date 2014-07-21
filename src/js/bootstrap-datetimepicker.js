@@ -363,7 +363,7 @@ THE SOFTWARE.
             picker.widget.find('.datepicker-days th:eq(1)').text(
                 months[month] + ' ' + year);
 
-            prevMonth = pMoment(picker.viewDate).subtract("months", 1);
+            prevMonth = pMoment.utc(picker.viewDate).subtract("months", 1);
             days = prevMonth.daysInMonth();
             prevMonth.date(days).startOf('week');
             if ((year == startYear && month <= startMonth) || year < startYear) {
@@ -373,9 +373,9 @@ THE SOFTWARE.
                 picker.widget.find('.datepicker-days th:eq(2)').addClass('disabled');
             }
 
-            nextMonth = pMoment(prevMonth).add(42, "d");
+            nextMonth = pMoment.utc(prevMonth).add(42, "d");
             while (prevMonth.isBefore(nextMonth)) {
-                if (prevMonth.weekday() === pMoment().startOf('week').weekday()) {
+                if (prevMonth.weekday() === pMoment.utc().startOf('week').weekday()) {
                     row = $('<tr>');
                     html.push(row);
                 }
@@ -385,14 +385,14 @@ THE SOFTWARE.
                 } else if (prevMonth.year() > year || (prevMonth.year() == year && prevMonth.month() > month)) {
                     clsName += ' new';
                 }
-                if (prevMonth.isSame(pMoment({ y: picker.date.year(), M: picker.date.month(), d: picker.date.date() }))) {
+                if (prevMonth.isSame(pMoment.utc({ y: picker.date.year(), M: picker.date.month(), d: picker.date.date() }))) {
                     clsName += ' active';
                 }
                 if (isInDisableDates(prevMonth, 'day') || !isInEnableDates(prevMonth)) {
                     clsName += ' disabled';
                 }
                 if (picker.options.showToday === true) {
-                    if (prevMonth.isSame(pMoment(), 'day')) {
+                    if (prevMonth.isSame(pMoment.utc(), 'day')) {
                         clsName += ' today';
                     }
                 }
