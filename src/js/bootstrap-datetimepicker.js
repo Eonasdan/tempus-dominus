@@ -718,9 +718,9 @@ THE SOFTWARE.
             }
             else {
                 picker.viewDate = oldDate;
+                picker.unset = true;
                 notifyChange(oldDate, e.type);
                 notifyError(newDate);
-                picker.unset = true;
             }
         },
 
