@@ -126,7 +126,7 @@ THE SOFTWARE.
 
             picker.options.widgetParent =
                 typeof picker.options.widgetParent == 'string' && picker.options.widgetParent ||
-                picker.element.parents().filter(function() { return 'scroll' == this.css( 'overflow-y' ) }).get(0) ||
+                picker.element.parents().filter(function() { return 'scroll' == $(this).css( 'overflow-y' ) }).get(0) ||
                 'body';
 
             picker.widget = $(getTemplate()).appendTo( picker.options.widgetParent );
