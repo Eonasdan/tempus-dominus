@@ -208,7 +208,7 @@ THE SOFTWARE.
                 eData = picker.element.data();
             }
             else {
-                eData = picker.element.data();
+                eData = picker.element.find('input').data();
             }
             if (eData.dateFormat !== undefined) picker.options.format = eData.dateFormat;
             if (eData.datePickdate !== undefined) picker.options.pickDate = eData.datePickdate;
@@ -757,7 +757,7 @@ THE SOFTWARE.
                         expanded.collapse('hide');
                         closed.collapse('show');
                         $this.find('span').toggleClass(picker.options.icons.time + ' ' + picker.options.icons.date);
-                        picker.element.find('.input-group-addon span').toggleClass(picker.options.icons.time + ' ' + picker.options.icons.date);
+                        picker.element.find("[class^='input-group-'] span").toggleClass(picker.options.icons.time + ' ' + picker.options.icons.date);
                     }
                 });
             }
