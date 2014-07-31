@@ -674,11 +674,7 @@ THE SOFTWARE.
             },
 
             selectHour: function (e) {
-<<<<<<< HEAD
                 var hour = parseInt($(e.target).text(), 10);
-=======
-                var period = picker.widget.find('.timepicker [data-action=togglePeriod]').text(), hour = parseInt($(e.target).text(), 10);
->>>>>>> b0c92ce9a863091df94471193488851165638ff9
                 if (picker.date.hours() > 12) { hour += 12; }
                 picker.date.hours(hour);
                 actions.showPicker.call(picker);
