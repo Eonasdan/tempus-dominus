@@ -523,9 +523,8 @@ THE SOFTWARE.
             if (!picker.date) return;
             var timeComponents = picker.widget.find('.timepicker span[data-time-component]'),
             hour = picker.date.hours(),
-            period = 'AM';
+            period = picker.date.format('A');
             if (!picker.use24hours) {
-                if (hour >= 12) period = 'PM';
                 if (hour === 0) hour = 12;
                 else if (hour != 12) hour = hour % 12;
                 picker.widget.find('.timepicker [data-action=togglePeriod]').text(period);
@@ -676,7 +675,7 @@ THE SOFTWARE.
 
             selectHour: function (e) {
                 var period = picker.widget.find('.timepicker [data-action=togglePeriod]').text(), hour = parseInt($(e.target).text(), 10);
-                if (period == "PM") hour += 12
+                if (picker.date.hours() > 12) { hour += 12; }
                 picker.date.hours(hour);
                 actions.showPicker.call(picker);
             },
