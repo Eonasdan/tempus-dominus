@@ -16,9 +16,9 @@
   },
   "extra": {
     "component": {
-      "scripts": {
+      "scripts": [
         "src/js/bootstrap-datetimepicker.js"
-      },
+      ],
       "files": [
         "build/js/bootstrap-datetimepicker.min.js",
         "build/css/bootstrap-datetimepicker.css",
