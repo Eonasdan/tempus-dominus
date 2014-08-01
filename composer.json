@@ -12,7 +12,7 @@
     "robloach/component-installer": "*",
     "components/jquery": ">=1.9.1",
     "components/bootstrap": "3.*",
-    "moment/moment": "2.*"
+    "moment/moment": ">=2.8"
   },
   "extra": {
     "component": {
