@@ -304,7 +304,7 @@ THE SOFTWARE.
         notifyError = function (date) {
             picker.element.trigger({
                 type: 'dp.error',
-                date: pMoment(date)
+                date: pMoment(date, picker.format, picker.options.useStrict)
             });
         },
 
@@ -368,7 +368,7 @@ THE SOFTWARE.
             picker.widget.find('.datepicker-days th:eq(1)').text(
                 months[month] + ' ' + year);
 
-            prevMonth = pMoment.utc(picker.viewDate).subtract(1, "months");
+            prevMonth = pMoment.utc(picker.viewDate, picker.format, picker.options.useStrict).subtract(1, "months");
             days = prevMonth.daysInMonth();
             prevMonth.date(days).startOf('week');
             if ((year == startYear && month <= startMonth) || year < startYear) {
@@ -871,26 +871,26 @@ THE SOFTWARE.
 
         isInDisableDates = function (date, timeUnit) {
             pMoment.locale(picker.options.language);
-            var maxDate = picker.options.maxDate;
-            var minDate = picker.options.minDate;
+            var maxDate = pMoment(picker.options.maxDate, picker.format, picker.options.useStrict);
+            var minDate = pMoment(picker.options.minDate, picker.format, picker.options.useStrict);
             
-            if(timeUnit) {
-                maxDate = pMoment(maxDate).endOf(timeUnit);
-                minDate = pMoment(minDate).startOf(timeUnit);
+            if (timeUnit) {
+                maxDate = maxDate.endOf(timeUnit);
+                minDate = minDate.startOf(timeUnit);
             }
 
             if (date.isAfter(maxDate) || date.isBefore(minDate)) return true;
             if (picker.options.disabledDates === false) {
                 return false;
             }
-            return picker.options.disabledDates[pMoment(date).format("YYYY-MM-DD")] === true;
+            return picker.options.disabledDates[date.format("YYYY-MM-DD")] === true;
         },
         isInEnableDates = function (date) {
             pMoment.locale(picker.options.language);
             if (picker.options.enabledDates === false) {
                 return true;
             }
-            return picker.options.enabledDates[pMoment(date).format("YYYY-MM-DD")] === true;
+            return picker.options.enabledDates[date.format("YYYY-MM-DD")] === true;
         },
 
         indexGivenDates = function (givenDatesArray) {
@@ -899,7 +899,11 @@ THE SOFTWARE.
             // (for example: picker.options.enabledDates['2014-02-27'] === true)
             var givenDatesIndexed = {}, givenDatesCount = 0, i;
             for (i = 0; i < givenDatesArray.length; i++) {
-                dDate = pMoment(givenDatesArray[i]);
+                if (pMoment.isMoment(givenDatesArray[i]) || givenDatesArray[i] instanceof Date) {
+                    dDate = pMoment(givenDatesArray[i]);
+                } else {
+                    dDate = pMoment(givenDatesArray[i], picker.format, picker.options.useStrict);
+                }
                 if (dDate.isValid()) {
                     givenDatesIndexed[dDate.format("YYYY-MM-DD")] = true;
                     givenDatesCount++;
@@ -1129,7 +1133,7 @@ THE SOFTWARE.
             } else {
                 picker.unset = false;
             }
-            if (!pMoment.isMoment(newDate)) newDate = (newDate instanceof Date) ? pMoment(newDate) : pMoment(newDate, picker.format);
+            if (!pMoment.isMoment(newDate)) newDate = (newDate instanceof Date) ? pMoment(newDate) : pMoment(newDate, picker.format, picker.options.useStrict);
             if (newDate.isValid()) {
                 picker.date = newDate;
                 set();
@@ -1168,13 +1172,21 @@ THE SOFTWARE.
 
         picker.setMaxDate = function (date) {
             if (date == undefined) return;
-            picker.options.maxDate = pMoment(date);
+            if (pMoment.isMoment(date) || date instanceof Date) {
+                picker.options.maxDate = pMoment(date);
+            } else {
+                picker.options.maxDate = pMoment(date, picker.format, picker.options.useStrict);
+            }
             if (picker.viewDate) update();
         },
 
         picker.setMinDate = function (date) {
             if (date == undefined) return;
-            picker.options.minDate = pMoment(date);
+            if (pMoment.isMoment(date) || date instanceof Date) {
+                picker.options.minDate = pMoment(date);
+            } else {
+                picker.options.minDate = pMoment(date, picker.format, picker.options.useStrict);
+            }
             if (picker.viewDate) update();
         };
 
@@ -1208,7 +1220,7 @@ THE SOFTWARE.
         direction: "auto",
         sideBySide: false,
         daysOfWeekDisabled: false,
-        widgetParent: false,
+        widgetParent: false
     };
 
 }));
