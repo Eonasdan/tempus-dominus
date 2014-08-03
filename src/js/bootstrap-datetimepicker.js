@@ -772,9 +772,9 @@ THE SOFTWARE.
                     'change': $.proxy(change, this)
                 }, 'input');
                 if (picker.component) {
-                    picker.component.on('click', $.proxy(picker.show, this));
+                    picker.component.on('click', $.proxy(picker.toggle, this));
                 } else {
-                    picker.element.on('click', $.proxy(picker.show, this));
+                    picker.element.on('click', $.proxy(picker.toggle, this));
                 }
             }
         },
@@ -785,6 +785,11 @@ THE SOFTWARE.
             if (!picker.isInput) {
                 $(document).on(
                     'mousedown.datetimepicker' + picker.id, $.proxy(picker.hide, this));
+                if (picker.component) {
+                    picker.component.on('mousedown.datetimepicker' + picker.id, stopEvent);
+                } else {
+                    picker.element.on('mousedown.datetimepicker' + picker.id, stopEvent);
+                }
             }
         },
 
@@ -805,9 +810,9 @@ THE SOFTWARE.
                     'change': picker.change
                 }, 'input');
                 if (picker.component) {
-                    picker.component.off('click', picker.show);
+                    picker.component.off('click', picker.toggle);
                 } else {
-                    picker.element.off('click', picker.show);
+                    picker.element.off('click', picker.toggle);
                 }
             }
         },
@@ -816,6 +821,11 @@ THE SOFTWARE.
             $(window).off('resize.datetimepicker' + picker.id);
             if (!picker.isInput) {
                 $(document).off('mousedown.datetimepicker' + picker.id);
+            }
+            if (picker.component) {
+                picker.component.off('mousedown.datetimepicker' + picker.id, stopEvent);
+            } else {
+                picker.element.off('mousedown.datetimepicker' + picker.id, stopEvent);
             }
         },
 
@@ -1068,21 +1078,17 @@ THE SOFTWARE.
                     notifyChange('', e.type);                    
                 };
             }
-            if (picker.widget.hasClass("picker-open")) {
-                picker.widget.hide();
-                picker.widget.removeClass("picker-open");
-            }
-            else {
+            if (!picker.widget.hasClass("picker-open")) {
+                attachDatePickerGlobalEvents();
+                picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
+                place();
+                picker.element.trigger({
+                    type: 'dp.show',
+                    date: pMoment(picker.date)
+                });
                 picker.widget.show();
                 picker.widget.addClass("picker-open");
             }
-            picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
-            place();
-            picker.element.trigger({
-                type: 'dp.show',
-                date: pMoment(picker.date)
-            });
-            attachDatePickerGlobalEvents();
             if (e) {
                 stopEvent(e);
             }
@@ -1104,6 +1110,13 @@ THE SOFTWARE.
             attachDatePickerEvents();
         },
 
+        picker.toggle = function (event) {
+            if (picker.widget.hasClass("picker-open"))
+                picker.hide(event);
+            else
+                picker.show(event);
+        },
+
         picker.hide = function (event) {
             if (event && $(event.target).is('#'+picker.element.attr("id")))
                 return;
@@ -1114,15 +1127,17 @@ THE SOFTWARE.
                 if (collapseData && collapseData.transitioning)
                     return;
             }
-            picker.widget.hide();
-            picker.widget.removeClass("picker-open");
-            picker.viewMode = picker.startViewMode;
-            showMode();
-            picker.element.trigger({
-                type: 'dp.hide',
-                date: pMoment(picker.date)
-            });
-            detachDatePickerGlobalEvents();
+            if (picker.widget.hasClass("picker-open")) {
+                detachDatePickerGlobalEvents();
+                picker.widget.hide();
+                picker.widget.removeClass("picker-open");
+                picker.viewMode = picker.startViewMode;
+                showMode();
+                picker.element.trigger({
+                    type: 'dp.hide',
+                    date: pMoment(picker.date)
+                });
+            }
         },
 
         picker.setValue = function (newDate) {
