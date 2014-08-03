@@ -1,8 +1,0 @@
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.(git|hg|svn)|node_modules|build)$',
-  \ 'file': '\v\.(css|jar)$',
-  \ }
-
-let &tags=getcwd().'/tags'
-let g:autotagTagsFile = &tags
-au BufEnter *.js,*.less,*.coffee setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab

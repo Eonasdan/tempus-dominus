@@ -1,5 +1,6 @@
 /*!
  * Datetimepicker for Bootstrap v3
+//! version : 3.0.0
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 .bootstrap-datetimepicker-widget {
@@ -124,7 +125,7 @@
 }
 .bootstrap-datetimepicker-widget td.old,
 .bootstrap-datetimepicker-widget td.new {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-datetimepicker-widget td.today {
   position: relative;
@@ -151,7 +152,7 @@
 .bootstrap-datetimepicker-widget td.disabled,
 .bootstrap-datetimepicker-widget td.disabled:hover {
   background: none;
-  color: #999999;
+  color: #777777;
   cursor: not-allowed;
 }
 .bootstrap-datetimepicker-widget td span {
@@ -173,12 +174,12 @@
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 .bootstrap-datetimepicker-widget td span.old {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-datetimepicker-widget td span.disabled,
 .bootstrap-datetimepicker-widget td span.disabled:hover {
   background: none;
-  color: #999999;
+  color: #777777;
   cursor: not-allowed;
 }
 .bootstrap-datetimepicker-widget th {
@@ -196,7 +197,7 @@
 .bootstrap-datetimepicker-widget th.disabled,
 .bootstrap-datetimepicker-widget th.disabled:hover {
   background: none;
-  color: #999999;
+  color: #777777;
   cursor: not-allowed;
 }
 .bootstrap-datetimepicker-widget thead tr:first-child th {
