@@ -34,6 +34,7 @@ module.exports = function (grunt) {
                 'debug'    : false,
                 'devel'    : false,
                 'eqeqeq'   : true,
+                'bitwise'  : true,
                 'eqnull'   : true,
                 'evil'     : false,
                 'forin'    : true,

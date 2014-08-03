@@ -587,8 +587,8 @@ THE SOFTWARE.
                 return;
             }
             var timeComponents = picker.widget.find('.timepicker span[data-time-component]'),
-            hour = picker.date.hours(),
-            period = 'AM';
+                hour = picker.date.hours(),
+                period = 'AM';
             if (!picker.use24hours) {
                 if (hour >= 12) {
                     period = 'PM';

@@ -8,6 +8,12 @@ Contributions guidelines:
 
 ## Pull Requests
 
-- Use 4 spaces indentation
+- All PR's should be made to master branch
+- All PR's should pass the jshint and jscs parsers successfuly otherwise will be rejected
+	After making your modifications execute the following (you need to have node, npm and grunt-cli installed on your machine):
+		- grunt (for checking that your changes conform to the jshint and jscs rules)
+	Once you are happy with the changes:
+		- grunt build 
+    then create the PR
+
 - If it is a new feature, please provide a use case. E.g. Why this feature should be added and what you are using it for
-- Please build less and javascript files in your PR to keep them in sync
