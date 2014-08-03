@@ -54,10 +54,11 @@ module.exports = function (grunt) {
                 'white'    : true,
                 'es3'      : true,
                 'camelcase' : true,
+                'quotmark' : 'single',
                 'globals': {
                     'define': false,
-                    'jQuery': true,
-                    'moment': true
+                    'jQuery': false,
+                    'moment': false
                 }
             }
         },
