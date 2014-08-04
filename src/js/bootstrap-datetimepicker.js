@@ -1,5 +1,5 @@
 /*
-//! version : 3.0.1
+//! version : 3.0.2
 =========================================================
 bootstrap-datetimepicker.js
 https://github.com/Eonasdan/bootstrap-datetimepicker
@@ -69,7 +69,7 @@ THE SOFTWARE.
         dDate,
 
         init = function () {
-            var icon = false, longDateFormat, rInterval;
+            var icon = false, localeData, rInterval;
             picker.options = $.extend({}, defaults, options);
             picker.options.icons = $.extend({}, icons, picker.options.icons);
 
@@ -98,16 +98,16 @@ THE SOFTWARE.
             }
             picker.format = picker.options.format;
 
-            longDateFormat = pMoment().localeData().longDateFormat;
+            localeData = pMoment().localeData();
 
             if (!picker.format) {
-                picker.format = (picker.options.pickDate ? longDateFormat('L') : '');
+                picker.format = (picker.options.pickDate ? localeData.longDateFormat('L') : '');
                 if (picker.options.pickDate && picker.options.pickTime) {
                     picker.format += ' ';
                 }
-                picker.format += (picker.options.pickTime ? longDateFormat('LT') : '');
+                picker.format += (picker.options.pickTime ? localeData.longDateFormat('LT') : '');
                 if (picker.options.useSeconds) {
-                    if (longDateFormat('LT').indexOf(' A') !== -1) {
+                    if (localeData.longDateFormat('LT').indexOf(' A') !== -1) {
                         picker.format = picker.format.split(' A')[0] + ':ss A';
                     }
                     else {
