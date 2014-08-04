@@ -1,5 +1,5 @@
 /*
-//! version : 3.0.1
+//! version : 3.0.2
 =========================================================
 bootstrap-datetimepicker.js
 https://github.com/Eonasdan/bootstrap-datetimepicker
