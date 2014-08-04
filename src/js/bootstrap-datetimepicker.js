@@ -1196,10 +1196,7 @@ THE SOFTWARE.
             attachDatePickerEvents();
         };
 
-        picker.hide = function (event) {
-            if (event && $(event.target).is('#' + picker.element.attr('id'))) {
-                return;
-            }
+        picker.hide = function () {
             // Ignore event if in the middle of a picker transition
             var collapse = picker.widget.find('.collapse'), i, collapseData;
             for (i = 0; i < collapse.length; i++) {
