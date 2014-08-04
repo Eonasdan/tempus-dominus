@@ -13,14 +13,14 @@ git clone https://github.com/moment/moment.git
 cd moment
 npm install -g grunt-cli
 npm install
-git checkout develop  # all patches against develop branch, please!
+git checkout development  # all patches against development branch, please!
 grunt                 # this runs tests and jshint
 ```
 
 Very important notes
 ====================
 
- * **Pull pull requests to the `master` branch will be closed.** Please submit all pull requests to the `develop` branch.
+ * **Pull pull requests to the `master` branch will be closed.** Please submit all pull requests to the `development` branch.
  * **Do not include the minified files in your pull request.** Don't worry, we'll build them when we cut a release.
 
 Grunt tasks
