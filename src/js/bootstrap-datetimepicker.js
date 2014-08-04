@@ -502,7 +502,7 @@ THE SOFTWARE.
             html = '';
             year = parseInt(year / 10, 10) * 10;
             yearCont = picker.widget.find('.datepicker-years').find(
-                'th:eq(1)').text(year + '-' + (year + 9)).end().find('td');
+                'th:eq(1)').text(year + '-' + (year + 9)).parents('table').find('td');
             picker.widget.find('.datepicker-years').find('th').removeClass('disabled');
             if (startYear > year) {
                 picker.widget.find('.datepicker-years').find('th:eq(0)').addClass('disabled');
