@@ -4,7 +4,10 @@
   "version": "3.0.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/eonasdan/bootstrap-datetimepicker.git"
+    "url": "https://github.com/eonasdan/bootstrap-datetimepicker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eonasdan/bootstrap-datetimepicker/issues"
   },
   "keywords": [
     "twitter-bootstrap",
@@ -12,14 +15,16 @@
     "datepicker",
     "datetimepicker",
     "timepicker",
-	"moment"
+	  "moment"
   ],
   "devDependencies": {
-    "uglify-js": "*",
-    "less": "*",
-    "mocha-phantomjs": "*",
-    "mocha": "*",
-    "chai": "*",
-    "coffee-script": "*"
+    "grunt": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-jscs": "latest",
+    "load-grunt-tasks": "latest",
+    "grunt-string-replace": "latest",
+    "grunt-contrib-less": "latest",
+    "bootstrap": "latest"
   }
 }

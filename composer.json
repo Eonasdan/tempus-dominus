@@ -1,6 +1,7 @@
 {
   "name": "eonasdan/bootstrap-datetimepicker",
   "type": "component",
+  "version": "3.0.0",
   "description": "Date/time picker widget based on twitter bootstrap",
   "keywords": [
     "bootstrap",
