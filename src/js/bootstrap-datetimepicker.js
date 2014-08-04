@@ -222,63 +222,21 @@ THE SOFTWARE.
             else {
                 eData = picker.element.find('input').data();
             }
-            if (eData.dateFormat !== undefined) {
-                picker.options.format = eData.dateFormat;
-            }
-            if (eData.datePickdate !== undefined) {
-                picker.options.pickDate = eData.datePickdate;
-            }
-            if (eData.datePicktime !== undefined) {
-                picker.options.pickTime = eData.datePicktime;
-            }
-            if (eData.dateUseminutes !== undefined) {
-                picker.options.useMinutes = eData.dateUseminutes;
-            }
-            if (eData.dateUseseconds !== undefined) {
-                picker.options.useSeconds = eData.dateUseseconds;
-            }
-            if (eData.dateUsecurrent !== undefined) {
-                picker.options.useCurrent = eData.dateUsecurrent;
-            }
-            if (eData.dateMinutestepping !== undefined) {
-                picker.options.minuteStepping = eData.dateMinutestepping;
-            }
-            if (eData.dateMindate !== undefined) {
-                picker.options.minDate = eData.dateMindate;
-            }
-            if (eData.dateMaxdate !== undefined) {
-                picker.options.maxDate = eData.dateMaxdate;
-            }
-            if (eData.dateShowtoday !== undefined) {
-                picker.options.showToday = eData.dateShowtoday;
-            }
-            if (eData.dateCollapse !== undefined) {
-                picker.options.collapse = eData.dateCollapse;
-            }
-            if (eData.dateLanguage !== undefined) {
-                picker.options.language = eData.dateLanguage;
-            }
-            if (eData.dateDefaultdate !== undefined) {
-                picker.options.defaultDate = eData.dateDefaultdate;
-            }
-            if (eData.dateDisableddates !== undefined) {
-                picker.options.disabledDates = eData.dateDisableddates;
-            }
-            if (eData.dateEnableddates !== undefined) {
-                picker.options.enabledDates = eData.dateEnableddates;
-            }
-            if (eData.dateIcons !== undefined) {
-                picker.options.icons = eData.dateIcons;
-            }
-            if (eData.dateUsestrict !== undefined) {
-                picker.options.useStrict = eData.dateUsestrict;
-            }
-            if (eData.dateDirection !== undefined) {
-                picker.options.direction = eData.dateDirection;
-            }
-            if (eData.dateSidebyside !== undefined) {
-                picker.options.sideBySide = eData.dateSidebyside;
-            }
+            $.each(defaults, function (key) {
+                var attributeName = 'date' + key.charAt(0).toUpperCase() + key.slice(1);
+                if (eData[attributeName] !== undefined) {
+                    if (picker.options[key] instanceof Array) {
+                        picker.options[key] =
+                            $.map(eData[attributeName].split(','),
+                                function (val) {
+                                    return Number.parseInt(val.trim(), 10);
+                                }
+                            );
+                    } else {
+                        picker.options[key] = eData[attributeName];
+                    }
+                }
+            });
         },
 
         place = function () {
@@ -1332,7 +1290,7 @@ THE SOFTWARE.
         useStrict: false,
         direction: 'auto',
         sideBySide: false,
-        daysOfWeekDisabled: false,
+        daysOfWeekDisabled: [],
         widgetParent: false
     };
 }));
