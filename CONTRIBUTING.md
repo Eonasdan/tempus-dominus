@@ -1,19 +1,31 @@
-Contributions guidelines:
+Submitting Issues
+=================
 
-#### Please test and/or fork [this jsfiddle](http://jsfiddle.net/d3wCU/) with an example of your issue before you post an issue here.
+If you are submitting a bug, please test and/or fork [this jsfiddle](http://jsfiddle.net/d3wCU/) demonstrating the issue. Code issues and fringe case bugs that do not include a jsfiddle (or similar) will be closed.
 
-## Bugs:
-- If it is a bug, please read open issues to avoid duplicates
-- If possible, please provide example code and/or a jdfiddle and a DETAILED example of what is not working
+Contributing code
+=================
 
-## Pull Requests
+To contribute, fork the library and install grunt and dependencies. You need [node](http://nodejs.org/); use [nvm](https://github.com/creationix/nvm) or [nenv](https://github.com/ryuone/nenv) to install it.
 
-- All PR's should be made to master branch
-- All PR's should pass the jshint and jscs parsers successfuly otherwise will be rejected
-	After making your modifications execute the following (you need to have node, npm and grunt-cli installed on your machine):
-		- grunt (for checking that your changes conform to the jshint and jscs rules)
-	Once you are happy with the changes:
-		- grunt build 
-    then create the PR
+```bash
+git clone https://github.com/moment/moment.git
+cd moment
+npm install -g grunt-cli
+npm install
+git checkout develop  # all patches against develop branch, please!
+grunt                 # this runs tests and jshint
+```
 
-- If it is a new feature, please provide a use case. E.g. Why this feature should be added and what you are using it for
+Very important notes
+====================
+
+ * **Pull pull requests to the `master` branch will be closed.** Please submit all pull requests to the `develop` branch.
+ * **Do not include the minified files in your pull request.** Don't worry, we'll build them when we cut a release.
+
+Grunt tasks
+===========
+
+We use Grunt for managing the build. Here are some useful Grunt tasks:
+
+  * `grunt` The default task lints the code and runs the tests. You should make sure you do this before submitting a PR.
