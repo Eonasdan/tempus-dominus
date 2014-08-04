@@ -9,8 +9,8 @@ Contributing code
 To contribute, fork the library and install grunt and dependencies. You need [node](http://nodejs.org/); use [nvm](https://github.com/creationix/nvm) or [nenv](https://github.com/ryuone/nenv) to install it.
 
 ```bash
-git clone https://github.com/moment/moment.git
-cd moment
+git clone https://github.com/Eonasdan/bootstrap-datetimepicker.git
+cd bootstrap-datetimepicker
 npm install -g grunt-cli
 npm install
 git checkout development  # all patches against development branch, please!
