@@ -29,3 +29,4 @@ Grunt tasks
 We use Grunt for managing the build. Here are some useful Grunt tasks:
 
   * `grunt` The default task lints the code and runs the tests. You should make sure you do this before submitting a PR.
+  * `grunt build` Compiles the less stylesheet and minifies the javascript source in build directory.
