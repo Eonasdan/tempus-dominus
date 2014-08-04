@@ -612,7 +612,7 @@ THE SOFTWARE.
                     switch (target[0].nodeName.toLowerCase()) {
                         case 'th':
                             switch (target[0].className) {
-                                case 'switch':
+                                case 'picker-switch':
                                     showMode(1);
                                     break;
                                 case 'prev':
@@ -1068,7 +1068,7 @@ THE SOFTWARE.
             headTemplate:
                     '<thead>' +
                         '<tr>' +
-                            '<th class="prev">&lsaquo;</th><th colspan="5" class="switch"></th><th class="next">&rsaquo;</th>' +
+                            '<th class="prev">&lsaquo;</th><th colspan="5" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
                         '</tr>' +
                     '</thead>',
             contTemplate:
