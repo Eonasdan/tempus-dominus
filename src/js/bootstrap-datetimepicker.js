@@ -1226,6 +1226,8 @@ THE SOFTWARE.
             }
             if (!pMoment.isMoment(newDate)) {
                 newDate = (newDate instanceof Date) ? pMoment(newDate) : pMoment(newDate, picker.format, picker.options.useStrict);
+            } else {
+                newDate = newDate.locale(picker.options.language);
             }
             if (newDate.isValid()) {
                 picker.date = newDate;
