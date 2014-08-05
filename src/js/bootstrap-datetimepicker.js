@@ -225,16 +225,7 @@ THE SOFTWARE.
             $.each(defaults, function (key) {
                 var attributeName = 'date' + key.charAt(0).toUpperCase() + key.slice(1);
                 if (eData[attributeName] !== undefined) {
-                    if (picker.options[key] instanceof Array) {
-                        picker.options[key] =
-                            $.map(eData[attributeName].split(','),
-                                function (val) {
-                                    return Number.parseInt(val.trim(), 10);
-                                }
-                            );
-                    } else {
-                        picker.options[key] = eData[attributeName];
-                    }
+                    picker.options[key] = eData[attributeName];
                 }
             });
         },
