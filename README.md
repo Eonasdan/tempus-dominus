@@ -1,4 +1,4 @@
-# Bootstrap v3 datetimepicker widget ![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)
+# Bootstrap v3 datetimepicker widget ![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)&nbsp;&nbsp;&nbsp;![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=development)
 
 ![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
 

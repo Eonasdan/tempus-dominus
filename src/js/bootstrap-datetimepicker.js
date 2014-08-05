@@ -460,7 +460,7 @@ THE SOFTWARE.
             html = '';
             year = parseInt(year / 10, 10) * 10;
             yearCont = picker.widget.find('.datepicker-years').find(
-                'th:eq(1)').text(year + '-' + (year + 9)).end().find('td');
+                'th:eq(1)').text(year + '-' + (year + 9)).parents('table').find('td');
             picker.widget.find('.datepicker-years').find('th').removeClass('disabled');
             if (startYear > year) {
                 picker.widget.find('.datepicker-years').find('th:eq(0)').addClass('disabled');
@@ -570,7 +570,7 @@ THE SOFTWARE.
                     switch (target[0].nodeName.toLowerCase()) {
                         case 'th':
                             switch (target[0].className) {
-                                case 'switch':
+                                case 'picker-switch':
                                     showMode(1);
                                     break;
                                 case 'prev':
@@ -1026,7 +1026,7 @@ THE SOFTWARE.
             headTemplate:
                     '<thead>' +
                         '<tr>' +
-                            '<th class="prev">&lsaquo;</th><th colspan="5" class="switch"></th><th class="next">&rsaquo;</th>' +
+                            '<th class="prev">&lsaquo;</th><th colspan="5" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
                         '</tr>' +
                     '</thead>',
             contTemplate:
@@ -1154,10 +1154,7 @@ THE SOFTWARE.
             attachDatePickerEvents();
         };
 
-        picker.hide = function (event) {
-            if (event && $(event.target).is('#' + picker.element.attr('id'))) {
-                return;
-            }
+        picker.hide = function () {
             // Ignore event if in the middle of a picker transition
             var collapse = picker.widget.find('.collapse'), i, collapseData;
             for (i = 0; i < collapse.length; i++) {
@@ -1187,6 +1184,8 @@ THE SOFTWARE.
             }
             if (!pMoment.isMoment(newDate)) {
                 newDate = (newDate instanceof Date) ? pMoment(newDate) : pMoment(newDate, picker.format, picker.options.useStrict);
+            } else {
+                newDate = newDate.locale(picker.options.language);
             }
             if (newDate.isValid()) {
                 picker.date = newDate;
