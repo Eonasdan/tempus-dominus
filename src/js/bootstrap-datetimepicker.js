@@ -698,14 +698,14 @@ THE SOFTWARE.
             selectHour: function (e) {
                 var hour = parseInt($(e.target).text(), 10);
                 if (!picker.use24hours) {
-                    if (hour === 12) {
-                        if (picker.date.hours() >= 12) {
-                            hour = 12;
-                        } else {
-                            hour = 0;
+                    if (picker.date.hours() >= 12) {
+                        if (hour !== 12) {
+                            hour += 12;
                         }
                     } else {
-                        hour += 12;
+                        if (hour === 12) {
+                            hour = 0;
+                        }
                     }
                 }
                 picker.date.hours(hour);
