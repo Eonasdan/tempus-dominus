@@ -697,9 +697,19 @@ THE SOFTWARE.
 
             selectHour: function (e) {
                 var hour = parseInt($(e.target).text(), 10);
-                if (picker.date.hours() > 12) {
-                    hour += 12;
+                console.log('parsed hour: %d, current hour: %d', hour, picker.date.hours());
+                if (!picker.use24hours) {
+                    if (hour === 12) {
+                        if (picker.date.hours() >= 12) {
+                            hour = 12;
+                        } else {
+                            hour = 0;
+                        }
+                    } else {
+                        hour += 12;
+                    }
                 }
+                console.log('going to set hour to : ' + hour);
                 picker.date.hours(hour);
                 actions.showPicker.call(picker);
             },
