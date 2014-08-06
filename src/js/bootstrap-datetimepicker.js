@@ -1094,6 +1094,9 @@ THE SOFTWARE.
         };
 
         picker.show = function (e) {
+            if (picker.getPickerInput().prop('readonly')) {
+                return;
+            }
             if (picker.options.useCurrent) {
                 if (getPickerInput().val() === '') {
                     if (picker.options.minuteStepping !== 1) {
