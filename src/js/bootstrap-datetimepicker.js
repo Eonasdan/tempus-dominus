@@ -434,10 +434,10 @@ THE SOFTWARE.
             if (currentYear === year) {
                 months.eq(picker.date.month()).addClass('active');
             }
-            if (currentYear - 1 < startYear) {
+            if (year - 1 < startYear) {
                 picker.widget.find('.datepicker-months th:eq(0)').addClass('disabled');
             }
-            if (currentYear + 1 > endYear) {
+            if (year + 1 > endYear) {
                 picker.widget.find('.datepicker-months th:eq(2)').addClass('disabled');
             }
             for (i = 0; i < 12; i++) {
