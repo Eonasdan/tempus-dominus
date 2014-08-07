@@ -810,6 +810,7 @@ THE SOFTWARE.
                 }, 'input');
                 if (picker.component) {
                     picker.component.on('click', $.proxy(picker.show, this));
+                    picker.component.on('mousedown', $.proxy(stopEvent, this));
                 } else {
                     picker.element.on('click', $.proxy(picker.show, this));
                 }
@@ -843,6 +844,7 @@ THE SOFTWARE.
                 }, 'input');
                 if (picker.component) {
                     picker.component.off('click', picker.show);
+                    picker.component.off('mousedown', picker.stopEvent);
                 } else {
                     picker.element.off('click', picker.show);
                 }
