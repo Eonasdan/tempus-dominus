@@ -796,7 +796,9 @@ THE SOFTWARE.
                         expanded.collapse('hide');
                         closed.collapse('show');
                         $this.find('span').toggleClass(picker.options.icons.time + ' ' + picker.options.icons.date);
-                        picker.element.find('[class^="input-group-"] span').toggleClass(picker.options.icons.time + ' ' + picker.options.icons.date);
+                        if (picker.component) {
+                            picker.component.find('span').toggleClass(picker.options.icons.time + ' ' + picker.options.icons.date);
+                        }
                     }
                 });
             }
