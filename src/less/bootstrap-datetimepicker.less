@@ -1,6 +1,6 @@
 /*!
  * Datetimepicker for Bootstrap v3
-//! version : 3.0.3
+//! version : 3.0.2
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 .bootstrap-datetimepicker-widget {
@@ -114,6 +114,9 @@
 
     .picker-switch {
         text-align: center;
+        a {
+            width: 100%;
+        }
     }
 
     table {
@@ -224,11 +227,6 @@
 
         &.picker-switch {
             width: 145px;
-        }
-
-        &.next,
-        &.prev {
-            font-size: @font-size-base * 1.5;
         }
 
         &.disabled,
