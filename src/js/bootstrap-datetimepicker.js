@@ -142,10 +142,6 @@ THE SOFTWARE.
 
             picker.widget = $(getTemplate()).appendTo(picker.options.widgetParent);
 
-            if (picker.options.useSeconds && !picker.use24hours) {
-                picker.widget.width(300);
-            }
-
             picker.minViewMode = picker.options.minViewMode || 0;
             if (typeof picker.minViewMode === 'string') {
                 switch (picker.minViewMode) {
@@ -979,7 +975,7 @@ THE SOFTWARE.
         getTemplate = function () {
             if (picker.options.pickDate && picker.options.pickTime) {
                 var ret = '';
-                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
+                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
                        '<div class="col-sm-6 datepicker">' + dpGlobal.template + '</div>' +
