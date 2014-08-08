@@ -1287,7 +1287,7 @@ THE SOFTWARE.
         maxDate: pMoment().add(100, 'y'),
         showToday: true,
         collapse: true,
-        language: 'en',
+        language: pMoment.locale(),
         defaultDate: '',
         disabledDates: false,
         enabledDates: false,
