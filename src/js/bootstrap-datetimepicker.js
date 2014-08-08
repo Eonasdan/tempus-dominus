@@ -26,7 +26,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-; (function (factory) {
+;(function (root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // AMD is used - Register as an anonymous module.
@@ -34,43 +34,39 @@ THE SOFTWARE.
     } else {
         // AMD is not used - Attempt to fetch dependencies from scope.
         if (!jQuery) {
-            throw 'bootstrap-datetimepicker requires jQuery to be loaded first';
-        } else if (!moment) {
-            throw 'bootstrap-datetimepicker requires moment.js to be loaded first';
-        } else {
-            factory(jQuery, moment);
+            throw new Error('bootstrap-datetimepicker requires jQuery to be loaded first');
         }
+        if (!moment) {
+            throw new Error('bootstrap-datetimepicker requires moment.js to be loaded first');
+        }
+        factory(root.jQuery, moment);
     }
-}
-
-(function ($, moment) {
+}(this, function ($, moment) {
     'use strict';
     if (typeof moment === 'undefined') {
         throw new Error('momentjs is required');
     }
 
     var dpgId = 0,
+        pMoment = moment,
 
-    pMoment = moment,
-
-// ReSharper disable once InconsistentNaming
     DateTimePicker = function (element, options) {
         var defaults = $.fn.datetimepicker.defaults,
 
-        icons = {
-            time: 'glyphicon glyphicon-time',
-            date: 'glyphicon glyphicon-calendar',
-            up: 'glyphicon glyphicon-chevron-up',
-            down: 'glyphicon glyphicon-chevron-down'
-        },
+            icons = {
+                time: 'glyphicon glyphicon-time',
+                date: 'glyphicon glyphicon-calendar',
+                up: 'glyphicon glyphicon-chevron-up',
+                down: 'glyphicon glyphicon-chevron-down'
+            },
 
-        picker = this,
+            picker = this,
 
-        dDate,
+            dDate,
 
         init = function () {
             var icon = false, localeData, rInterval;
-            picker.options = $.extend({}, defaults, options);
+            picker.options = $.extend({minDate: pMoment({y: 1900}), maxDate: pMoment().add(100, 'y')}, defaults, options);
             picker.options.icons = $.extend({}, icons, picker.options.icons);
 
             picker.element = $(element);
@@ -1271,7 +1267,8 @@ THE SOFTWARE.
 
     $.fn.datetimepicker = function (options) {
         return this.each(function () {
-            var $this = $(this), data = $this.data('DateTimePicker');
+            var $this = $(this),
+                data = $this.data('DateTimePicker');
             if (!data) {
                 $this.data('DateTimePicker', new DateTimePicker(this, options));
             }
