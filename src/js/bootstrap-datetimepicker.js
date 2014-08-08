@@ -66,7 +66,7 @@ THE SOFTWARE.
 
         init = function () {
             var icon = false, localeData, rInterval;
-            picker.options = $.extend({minDate: pMoment({y: 1900}), maxDate: pMoment().add(100, 'y')}, defaults, options);
+            picker.options = $.extend({}, defaults, options);
             picker.options.icons = $.extend({}, icons, picker.options.icons);
 
             picker.element = $(element);
