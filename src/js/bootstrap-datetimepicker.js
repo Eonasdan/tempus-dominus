@@ -802,6 +802,7 @@ THE SOFTWARE.
             }
             if (picker.isInput) {
                 picker.element.on({
+                    'click': $.proxy(picker.show, this),
                     'focus': $.proxy(picker.show, this),
                     'change': $.proxy(change, this),
                     'blur': $.proxy(picker.hide, this)
@@ -838,7 +839,9 @@ THE SOFTWARE.
             if (picker.isInput) {
                 picker.element.off({
                     'focus': picker.show,
-                    'change': picker.change
+                    'change': picker.change,
+                    'click': picker.show,
+                    'blur' : picker.hide
                 });
             } else {
                 picker.element.off({
@@ -1118,6 +1121,10 @@ THE SOFTWARE.
                     }
                     notifyChange('', e.type);
                 }
+            }
+            // if this is a click event on the input field and picker is already open don't hide it
+            if (e && e.type === 'click' && picker.isInput && picker.widget.hasClass('picker-open')) {
+                return;
             }
             if (picker.widget.hasClass('picker-open')) {
                 picker.widget.hide();
