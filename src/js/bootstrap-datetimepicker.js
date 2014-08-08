@@ -175,6 +175,8 @@ THE SOFTWARE.
                 }
             }
 
+            picker.viewMode = Math.max(picker.viewMode, picker.minViewMode);
+
             picker.options.disabledDates = indexGivenDates(picker.options.disabledDates);
             picker.options.enabledDates = indexGivenDates(picker.options.enabledDates);
 
@@ -592,8 +594,8 @@ THE SOFTWARE.
                                     m: picker.date.minutes(),
                                     s: picker.date.seconds()
                                 });
-                                notifyChange(oldDate, e.type);
                                 set();
+                                notifyChange(oldDate, e.type);
                             }
                             showMode(-1);
                             fillDate();
