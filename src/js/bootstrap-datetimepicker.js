@@ -670,9 +670,7 @@
                 picker.setDate($(e.target).val());
             }
 
-            function attachDatePickerEvents() {
-                widget.on('click', '[data-action]', $.proxy(doAction, picker)); // this handles clicks on the widget
-                widget.on('mousedown', $.proxy(stopEvent, picker));
+            function attachDatePickerElementEvents() {
                 element.on('keydown', $.proxy(keydown, picker));
                 if (element.is('input')) {
                     element.on({
@@ -694,18 +692,8 @@
                 }
             }
 
-            function attachDatePickerGlobalEvents() {
-                $(window).on(
-                        'resize.datetimepicker' + id, $.proxy(place, picker));
-                if (!element.is('input')) {
-                    //$(document).on('mousedown.datetimepicker' + id, $.proxy(picker.hide, picker));
-                    $(document).on('mousedown', $.proxy(picker.hide, picker));
-                }
-            }
-
-            function detachDatePickerEvents() {
-                widget.off('click', '[data-action]');
-                widget.off('mousedown', stopEvent);
+            function detachDatePickerElementEvents() {
+                element.off('keydown', keydown);
                 if (element.is('input')) {
                     element.off({
                         'focus': picker.show,
@@ -726,7 +714,20 @@
                 }
             }
 
-            function detachDatePickerGlobalEvents() {
+            function attachDatePickerWidgetEvents() {
+                widget.on('click', '[data-action]', $.proxy(doAction, picker)); // this handles clicks on the widget
+                widget.on('mousedown', $.proxy(stopEvent, picker));
+                $(window).on(
+                        'resize.datetimepicker' + id, $.proxy(place, picker));
+                if (!element.is('input')) {
+                    //$(document).on('mousedown.datetimepicker' + id, $.proxy(picker.hide, picker));
+                    $(document).on('mousedown', $.proxy(picker.hide, picker));
+                }
+            }
+
+            function detachDatePickerWidgetEvents() {
+                widget.off('click', '[data-action]');
+                widget.off('mousedown', stopEvent);
                 $(window).off('resize.datetimepicker' + id);
                 if (!element.is('input')) {
                     $(document).off('mousedown.datetimepicker' + id);
@@ -756,6 +757,9 @@
             }
 
             function createWidget() {
+                if (widget) {
+                    return;
+                }
                 options.widgetParent =
                     (typeof options.widgetParent === 'string' && options.widgetParent) ||
                     element.parents().filter(function () {
@@ -773,6 +777,16 @@
 
                 update();
                 showMode();
+                attachDatePickerWidgetEvents();
+            }
+
+            function destroyWidget() {
+                if (!widget) {
+                    return;
+                }
+                detachDatePickerWidgetEvents();
+                widget.remove();
+                widget = false;
             }
 
             function init() {
@@ -803,6 +817,8 @@
 
                 element.data('DateTimePickerId', id);
 
+                attachDatePickerElementEvents();
+
                 options = $.extend(true, {}, options, dataToOptions());
                 if (!(options.pickTime || options.pickDate)) {
                     throw new Error('Must choose at least one picker');
@@ -820,7 +836,6 @@
                 }
 
                 localeData = moment.localeData(options.language);
-
                 date = moment();
                 date.locale(options.language);
                 viewDate = date.clone();
@@ -839,10 +854,6 @@
                 if (options.defaultDate !== '' && input.val() === '') {
                     picker.setDate(options.defaultDate);
                 }
-
-                createWidget();
-
-                attachDatePickerEvents();
             }
 
             /********************************************************************************
@@ -1052,14 +1063,13 @@
              *
              ********************************************************************************/
             picker.destroy = function () {
-                detachDatePickerEvents();
-                detachDatePickerGlobalEvents();
-                widget.remove();
+                picker.hide();
+                detachDatePickerElementEvents();
                 element.removeData('DateTimePicker');
             };
 
             picker.toggle = function () {
-                if (widget.hasClass('picker-open')) {
+                if (widget) {
                     picker.hide();
                 }
                 else {
@@ -1069,7 +1079,7 @@
 
             picker.show = function () {
                 var currentMoment;
-                if (widget.hasClass('picker-open') || input.prop('readonly')) {
+                if (input.prop('readonly') || widget) {
                     return;
                 }
                 if (options.useCurrent && unset) {
@@ -1095,18 +1105,17 @@
                     }
                     setValue(currentMoment);
                 }
+                createWidget();
                 widget.show();
-                widget.addClass('picker-open');
                 place();
                 notifyEvent({
                     type: 'dp.show',
                     date: picker.getDate()
                 });
-                attachDatePickerGlobalEvents();
             };
 
             picker.hide = function () {
-                if (!widget.hasClass('picker-open')) {
+                if (!widget) {
                     return;
                 }
                 // Ignore event if in the middle of a picker transition
@@ -1118,12 +1127,11 @@
                     }
                 }
                 widget.hide();
-                widget.removeClass('picker-open');
+                destroyWidget();
                 notifyEvent({
                     type: 'dp.hide',
                     date: picker.getDate()
                 });
-                detachDatePickerGlobalEvents();
             };
 
             picker.disable = function () {
