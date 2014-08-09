@@ -1073,7 +1073,26 @@
                     return;
                 }
                 if (options.useCurrent && unset) {
-                    currentMoment = moment().locale(options.language);
+                    currentMoment = moment();
+                    if (typeof options.useCurrent === 'string') {
+                        switch (options.useCurrent) {
+                            case 'year':
+                                currentMoment.month(0).date(1).hours(0).seconds(0).minutes(0);
+                                break;
+                            case 'month':
+                                currentMoment.date(1).hours(0).seconds(0).minutes(0);
+                                break;
+                            case 'day':
+                                currentMoment.hours(0).seconds(0).minutes(0);
+                                break;
+                            case 'hour':
+                                currentMoment.seconds(0).minutes(0);
+                                break;
+                            case 'minute':
+                                currentMoment.seconds(0);
+                                break;
+                        }
+                    }
                     setValue(currentMoment);
                 }
                 widget.show();
@@ -1290,7 +1309,7 @@
             };
 
             picker.setUseCurrent = function (useCurrent) {
-                if (typeof useCurrent !== 'boolean') {
+                if ((typeof useCurrent !== 'boolean') && (typeof useCurrent !== 'string')) {
                     throw new TypeError('setUseCurrent expects a boolean parameter');
                 }
                 options.useCurrent = useCurrent;
