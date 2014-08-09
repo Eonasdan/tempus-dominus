@@ -52,11 +52,10 @@
 
     var dpgId = 0,
 
-        DateTimePicker = function (element, setupOptions) {
+        DateTimePicker = function (element, options) {
             var picker = this,
                 date,
                 viewDate,
-                options = {},
                 icon = false,
                 localeData,
                 unset = true,
@@ -84,40 +83,7 @@
                         navFnc: 'year',
                         navStep: 10
                     }
-                ],
-
-                defaults = {
-                    format: false,
-                    pickDate: true,
-                    pickTime: true,
-                    useMinutes: true,
-                    useSeconds: false,
-                    useCurrent: true,
-                    minuteStepping: 1,
-                    minDate: moment({y: 1900}),
-                    maxDate: moment().add(100, 'y'),
-                    showToday: true,
-                    collapse: true,
-                    language: moment.locale(),
-                    defaultDate: '',
-                    disabledDates: false,
-                    enabledDates: false,
-                    icons: {
-                        time : 'glyphicon glyphicon-time',
-                        date : 'glyphicon glyphicon-calendar',
-                        up   : 'glyphicon glyphicon-chevron-up',
-                        down : 'glyphicon glyphicon-chevron-down',
-                        previous: 'glyphicon glyphicon-chevron-left',
-                        next : 'glyphicon glyphicon-chevron-right'
-                    },
-                    useStrict: false,
-                    direction: 'auto',
-                    sideBySide: false,
-                    daysOfWeekDisabled: [],
-                    widgetParent: false,
-                    minViewMode: '',
-                    viewMode: ''
-                };
+                ];
 
             function getDatePickerTemplate() {
                 var headTemplate =
@@ -223,7 +189,7 @@
             function dataToOptions() {
                 var eData = input.data(), dataOptions = {};
 
-                $.each(defaults, function (key) {
+                $.each(options, function (key) {
                     var attributeName = 'date' + key.charAt(0).toUpperCase() + key.slice(1);
                     if (eData[attributeName] !== undefined) {
                         dataOptions[key] = eData[attributeName];
@@ -818,8 +784,8 @@
 
                 element.data('DateTimePickerId', id);
 
-                options = $.extend({}, defaults, setupOptions, dataToOptions());
-                options.icons = $.extend({}, defaults.icons, setupOptions.icons);
+                options = $.extend(options, dataToOptions());
+                //options.icons = $.extend({}, defaults.icons, setupOptions.icons);
                 if (!(options.pickTime || options.pickDate)) {
                     throw new Error('Must choose at least one picker');
                 }
@@ -1481,8 +1447,42 @@
             var $this = $(this),
                 data = $this.data('DateTimePicker');
             if (!data) {
+                options = $.extend(true, $.fn.datetimepicker.defaults, options);
                 $this.data('DateTimePicker', new DateTimePicker(this, options));
             }
         });
+    };
+
+    $.fn.datetimepicker.defaults = {
+        format: false,
+        pickDate: true,
+        pickTime: true,
+        useMinutes: true,
+        useSeconds: false,
+        useCurrent: true,
+        minuteStepping: 1,
+        minDate: moment({y: 1900}),
+        maxDate: moment().add(100, 'y'),
+        showToday: true,
+        collapse: true,
+        language: moment.locale(),
+        defaultDate: '',
+        disabledDates: false,
+        enabledDates: false,
+        icons: {
+            time : 'glyphicon glyphicon-time',
+            date : 'glyphicon glyphicon-calendar',
+            up   : 'glyphicon glyphicon-chevron-up',
+            down : 'glyphicon glyphicon-chevron-down',
+            previous: 'glyphicon glyphicon-chevron-left',
+            next : 'glyphicon glyphicon-chevron-right'
+        },
+        useStrict: false,
+        direction: 'auto',
+        sideBySide: false,
+        daysOfWeekDisabled: [],
+        widgetParent: false,
+        minViewMode: '',
+        viewMode: ''
     };
 }));
