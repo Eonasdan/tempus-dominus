@@ -1,5 +1,5 @@
 /*
- //! version : 3.0.2
+ //! version : 4.0.0-beta
  =========================================================
  bootstrap-datetimejs
  https://github.com/Eonasdan/bootstrap-datetimepicker
@@ -52,8 +52,6 @@
 
     var dpgId = 0,
 
-        pMoment = moment,
-
         DateTimePicker = function (element, setupOptions) {
             var picker = this,
                 date,
@@ -96,11 +94,11 @@
                     useSeconds: false,
                     useCurrent: true,
                     minuteStepping: 1,
-                    minDate: pMoment({y: 1900}),
-                    maxDate: pMoment().add(100, 'y'),
+                    minDate: moment({y: 1900}),
+                    maxDate: moment().add(100, 'y'),
                     showToday: true,
                     collapse: true,
-                    language: pMoment.locale(),
+                    language: moment.locale(),
                     defaultDate: '',
                     disabledDates: false,
                     enabledDates: false,
@@ -332,7 +330,7 @@
 
             function fillDow() {
                 var html = $('<tr>'),
-                    weekdaysMin = pMoment.weekdaysMin(),
+                    weekdaysMin = moment.weekdaysMin(),
                     i;
                 if (localeData._week.dow === 0) { // starts on Sunday
                     for (i = 0; i < 7; i++) {
@@ -359,8 +357,8 @@
             }
 
             function isInDisableDates(date) {
-                var maxDate = pMoment(options.maxDate, options.format, options.useStrict),
-                    minDate = pMoment(options.minDate, options.format, options.useStrict);
+                var maxDate = moment(options.maxDate, options.format, options.useStrict),
+                    minDate = moment(options.minDate, options.format, options.useStrict);
                 if (date.isAfter(maxDate, 'day') || date.isBefore(minDate, 'day')) {
                     return true;
                 }
@@ -471,7 +469,7 @@
 
                 nextMonth = prevMonth.clone().add(42, 'd');
                 while (prevMonth.isBefore(nextMonth)) {
-                    if (prevMonth.weekday() === pMoment().startOf('week').weekday()) {
+                    if (prevMonth.weekday() === moment().startOf('week').weekday()) {
                         row = $('<tr>');
                         html.push(row);
                     }
@@ -488,7 +486,7 @@
                         clsName += ' disabled';
                     }
                     if (options.showToday === true) {
-                        if (prevMonth.isSame(pMoment(), 'day')) {
+                        if (prevMonth.isSame(moment(), 'day')) {
                             clsName += ' today';
                         }
                     }
@@ -612,7 +610,7 @@
             }
 
             function update() {
-                viewDate = pMoment(date).startOf('month');
+                viewDate = moment(date).startOf('month');
                 if (!widget) {
                     return;
                 }
@@ -621,7 +619,7 @@
             }
 
             function setValue(targetMoment, dontNotify) {
-                var oldDate = pMoment(date);
+                var oldDate = moment(date);
 
                 if (!targetMoment) {
                     unset = true;
@@ -756,10 +754,10 @@
                 // (for example: options.enabledDates['2014-02-27'] === true)
                 var givenDatesIndexed = {}, givenDatesCount = 0, i, dDate;
                 for (i = 0; i < givenDatesArray.length; i++) {
-                    if (pMoment.isMoment(givenDatesArray[i]) || givenDatesArray[i] instanceof Date) {
-                        dDate = pMoment(givenDatesArray[i]);
+                    if (moment.isMoment(givenDatesArray[i]) || givenDatesArray[i] instanceof Date) {
+                        dDate = moment(givenDatesArray[i]);
                     } else {
-                        dDate = pMoment(givenDatesArray[i], options.format, options.useStrict);
+                        dDate = moment(givenDatesArray[i], options.format, options.useStrict);
                     }
                     if (dDate.isValid()) {
                         givenDatesIndexed[dDate.format('YYYY-MM-DD')] = true;
@@ -820,7 +818,7 @@
 
                 element.data('DateTimePickerId', id);
 
-                options = $.extend({}, defaults, dataToOptions(), setupOptions);
+                options = $.extend({}, defaults, setupOptions, dataToOptions());
                 options.icons = $.extend({}, defaults.icons, setupOptions.icons);
                 if (!(options.pickTime || options.pickDate)) {
                     throw new Error('Must choose at least one picker');
@@ -837,9 +835,9 @@
                     }
                 }
 
-                localeData = pMoment.localeData(options.language);
+                localeData = moment.localeData(options.language);
 
-                date = pMoment();
+                date = moment();
                 date.locale(options.language);
                 viewDate = date.clone();
 
@@ -884,7 +882,7 @@
                     var month = $(e.target).closest('tbody').find('span').index($(e.target));
                     viewDate.month(month);
                     if (viewMode === minViewMode) {
-                        setValue(pMoment({
+                        setValue(moment({
                             y: viewDate.year(),
                             M: viewDate.month(),
                             d: viewDate.date(),
@@ -902,7 +900,7 @@
                     var year = parseInt($(e.target).text(), 10) || 0;
                     viewDate.year(year);
                     if (viewMode === minViewMode) {
-                        setValue(pMoment({
+                        setValue(moment({
                             y: viewDate.year(),
                             M: viewDate.month(),
                             d: viewDate.date(),
@@ -936,7 +934,7 @@
                             month += 1;
                         }
                     }
-                    setValue(pMoment({
+                    setValue(moment({
                         y: year,
                         M: month,
                         d: day,
@@ -1075,7 +1073,7 @@
                     return;
                 }
                 if (options.useCurrent && unset) {
-                    currentMoment = pMoment().locale(options.language);
+                    currentMoment = moment().locale(options.language);
                     setValue(currentMoment);
                 }
                 widget.show();
@@ -1134,8 +1132,8 @@
 
             picker.setDate = function (newDate) {
                 var oldDate = picker.getDate();
-                if (!pMoment.isMoment(newDate)) {
-                    newDate = (newDate instanceof Date) ? pMoment(newDate) : pMoment(newDate, options.format, options.useStrict);
+                if (!moment.isMoment(newDate)) {
+                    newDate = (newDate instanceof Date) ? moment(newDate) : moment(newDate, options.format, options.useStrict);
                 }
                 newDate.locale(options.language);
                 if (newDate.isSame(oldDate)) {
@@ -1190,10 +1188,10 @@
                 if (date === undefined) {
                     return;
                 }
-                if (pMoment.isMoment(date) || date instanceof Date) {
-                    options.maxDate = pMoment(date);
+                if (moment.isMoment(date) || date instanceof Date) {
+                    options.maxDate = moment(date);
                 } else {
-                    options.maxDate = pMoment(date, options.format, options.useStrict);
+                    options.maxDate = moment(date, options.format, options.useStrict);
                 }
                 update();
             };
@@ -1202,10 +1200,10 @@
                 if (date === undefined) {
                     return;
                 }
-                if (pMoment.isMoment(date) || date instanceof Date) {
-                    options.minDate = pMoment(date);
+                if (moment.isMoment(date) || date instanceof Date) {
+                    options.minDate = moment(date);
                 } else {
-                    options.minDate = pMoment(date, options.format, options.useStrict);
+                    options.minDate = moment(date, options.format, options.useStrict);
                 }
                 update();
             };
@@ -1228,7 +1226,7 @@
 
             picker.setLanguage = function (language) {
                 options.language = language || 'en';
-                localeData = pMoment.localeData(options.language);
+                localeData = moment.localeData(options.language);
                 date.locale(options.language);
                 viewDate.locale(options.language);
 
@@ -1300,11 +1298,11 @@
             };
 
             picker.getMinDate = function () {
-                return pMoment(options.minDate);
+                return moment(options.minDate);
             };
 
             picker.getMaxDate = function () {
-                return pMoment(options.maxDate);
+                return moment(options.maxDate);
             };
 
             picker.getShowToday = function () {
@@ -1330,7 +1328,7 @@
             };
 
             picker.getDefaultDate = function () {
-                return pMoment(options.defaultDate);
+                return moment(options.defaultDate);
             };
 
             picker.setDefaultDate = function (defaultDate) {

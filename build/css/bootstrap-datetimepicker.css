@@ -1,6 +1,6 @@
 /*!
  * Datetimepicker for Bootstrap v3
-//! version : 3.0.3
+//! version : 4.0.0-beta
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 .bootstrap-datetimepicker-widget {
@@ -97,6 +97,9 @@
 .bootstrap-datetimepicker-widget .picker-switch {
   text-align: center;
 }
+.bootstrap-datetimepicker-widget .picker-switch a {
+  width: 100%;
+}
 .bootstrap-datetimepicker-widget table {
   width: 100%;
   margin: 0;
@@ -188,10 +191,6 @@
 }
 .bootstrap-datetimepicker-widget th.picker-switch {
   width: 145px;
-}
-.bootstrap-datetimepicker-widget th.next,
-.bootstrap-datetimepicker-widget th.prev {
-  font-size: 21px;
 }
 .bootstrap-datetimepicker-widget th.disabled,
 .bootstrap-datetimepicker-widget th.disabled:hover {
