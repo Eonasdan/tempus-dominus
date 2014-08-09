@@ -85,6 +85,12 @@
                     }
                 ];
 
+            /********************************************************************************
+             *
+             * Private functions
+             *
+             ********************************************************************************/
+
             function getDatePickerTemplate() {
                 var headTemplate =
                         '<thead>' +
@@ -633,6 +639,19 @@
                 e.preventDefault();
             }
 
+            function parseInputDate(date) {
+                if (date === undefined) {
+                    return false;
+                }
+                if (moment.isMoment(date) || date instanceof Date) {
+                    date = moment(date);
+                } else {
+                    date = moment(date, options.format, options.useStrict);
+                }
+                date.locale(options.language);
+                return (date.isValid() ? date : false);
+            }
+
             function doAction(e) {
                 stopEvent(e);
                 if ($(e.currentTarget).is('.disabled')) {
@@ -784,8 +803,7 @@
 
                 element.data('DateTimePickerId', id);
 
-                options = $.extend(options, dataToOptions());
-                //options.icons = $.extend({}, defaults.icons, setupOptions.icons);
+                options = $.extend(true, {}, options, dataToOptions());
                 if (!(options.pickTime || options.pickDate)) {
                     throw new Error('Must choose at least one picker');
                 }
@@ -826,6 +844,12 @@
 
                 attachDatePickerEvents();
             }
+
+            /********************************************************************************
+             *
+             * Widget UI interaction functions
+             *
+             ********************************************************************************/
 
             actions = {
                 next: function () {
@@ -1017,6 +1041,16 @@
                 }
             };
 
+            /********************************************************************************
+             *
+             * Public API functions
+             * =====================
+             *
+             * Important: Do not expose direct references of private objects or the options
+             * object to the outer world. Always return a clone when returning values or make
+             * a clone when setting a private variable.
+             *
+             ********************************************************************************/
             picker.destroy = function () {
                 detachDatePickerEvents();
                 detachDatePickerGlobalEvents();
@@ -1078,7 +1112,7 @@
                     return;
                 }
                 input.prop('disabled', true);
-                detachDatePickerEvents();
+                picker.hide();
             };
 
             picker.enable = function () {
@@ -1086,7 +1120,20 @@
                     return;
                 }
                 input.prop('disabled', false);
-                attachDatePickerEvents();
+            };
+
+            picker.setDate = function (newDate) {
+                if (newDate === null) {
+                    setValue(false);
+                    return;
+                }
+                var parsedDate = parseInputDate(newDate);
+
+                if (!parsedDate) {
+                    throw new TypeError('setDate: could not parse given date: ' + newDate);
+                }
+
+                setValue(parsedDate);
             };
 
             picker.getDate = function () {
@@ -1094,26 +1141,6 @@
                     return null;
                 }
                 return date.clone();
-            };
-
-            picker.setDate = function (newDate) {
-                var oldDate = picker.getDate();
-                if (!moment.isMoment(newDate)) {
-                    newDate = (newDate instanceof Date) ? moment(newDate) : moment(newDate, options.format, options.useStrict);
-                }
-                newDate.locale(options.language);
-                if (newDate.isSame(oldDate)) {
-                    return;
-                }
-                if (newDate.isValid()) {
-                    setValue(date, true);
-                } else {
-                    setValue(false, true);
-                    notifyEvent({
-                        type: 'dp.error',
-                        date: newDate
-                    });
-                }
             };
 
             picker.setFormat = function (format) {
@@ -1145,49 +1172,85 @@
                 update();
             };
 
+            picker.getDisabledDates = function () {
+                return options.disabledDates;
+            };
+
             picker.setEnabledDates = function (dates) {
                 options.enabledDates = indexGivenDates(dates);
                 update();
             };
 
-            picker.setMaxDate = function (date) {
-                if (date === undefined) {
-                    return;
-                }
-                if (moment.isMoment(date) || date instanceof Date) {
-                    options.maxDate = moment(date);
-                } else {
-                    options.maxDate = moment(date, options.format, options.useStrict);
-                }
-                update();
+            picker.getEnabledDates = function () {
+                return options.enabledDates;
             };
 
-            picker.setMinDate = function (date) {
-                if (date === undefined) {
-                    return;
+            picker.setDaysOfWeekDisabled = function (daysOfWeekDisabled) {
+                if (!(daysOfWeekDisabled instanceof Array)) {
+                    throw new TypeError('setDaysOfWeekDisabled expects an array parameter');
                 }
-                if (moment.isMoment(date) || date instanceof Date) {
-                    options.minDate = moment(date);
-                } else {
-                    options.minDate = moment(date, options.format, options.useStrict);
-                }
-                update();
-            };
-
-            picker.setDaysOfWeekDisabled = function (daysOfWeek) {
-                if (daysOfWeek === undefined || !(daysOfWeek instanceof Array)) {
-                    return;
-                }
-                options.daysOfWeekDisabled = daysOfWeek.slice(0);
-                update();
+                options.daysOfWeekDisabled = daysOfWeekDisabled.split(0);
+                //*TODO: update the disabled spans on the days widget
             };
 
             picker.getDaysOfWeekDisabled = function () {
-                return options.daysOfWeekDisabled.slice(0);
+                return options.daysOfWeekDisabled.split(0);
             };
 
-            picker.getLanguage = function () {
-                return options.language;
+            picker.setMaxDate = function (date) {
+                var parsedDate = parseInputDate(date);
+                if ((typeof date === 'boolean') && date === false) {
+                    options.maxDate = false;
+                    update();
+                    return;
+                }
+                if (!parsedDate) {
+                    throw new TypeError('setMaxDate: Could not parse date variable: ' + date);
+                }
+                if (parsedDate.isBefore(options.minDate)) {
+                    throw new TypeError('setMaxDate: Date variable is before options.minDate: ' + parsedDate.format(options.format));
+                }
+                options.maxDate = parsedDate;
+                if (options.maxDate.isBefore(date)) {
+                    setValue(options.maxDate);
+                }
+                update();
+            };
+
+            picker.getMaxDate = function () {
+                return moment(options.maxDate);
+            };
+
+            picker.setMinDate = function (date) {
+                var parsedDate = parseInputDate(date);
+                if ((typeof date === 'boolean') && date === false) {
+                    options.minDate = false;
+                    update();
+                    return;
+                }
+                if (!parsedDate) {
+                    throw new TypeError('setMinDate: Could not parse date variable: ' + date);
+                }
+                if (parsedDate.isAfter(options.maxDate)) {
+                    throw new TypeError('setMinDate: Date variable is after options.maxDate: ' + parsedDate.format(options.format));
+                }
+                options.minDate = parsedDate;
+                if (options.minDate.isAfter(date)) {
+                    setValue(options.minDate);
+                }
+                update();
+            };
+
+            picker.getMinDate = function () {
+                return moment(options.minDate);
+            };
+
+            picker.setDefaultDate = function (defaultDate) {
+                options.defaultDate = defaultDate;
+            };
+
+            picker.getDefaultDate = function () {
+                return moment(options.defaultDate);
             };
 
             picker.setLanguage = function (language) {
@@ -1200,30 +1263,8 @@
                 init();
             };
 
-            picker.getPickDate = function () {
-                return options.pickDate;
-            };
-
-            picker.setPickDate = function (pickDate) {
-                if (typeof pickDate !== 'boolean') {
-                    throw new TypeError('setPickDate expects a boolean parameter');
-                }
-                options.pickDate = pickDate;
-            };
-
-            picker.getPickTime = function () {
-                return options.pickTime;
-            };
-
-            picker.setPickTime = function (pickTime) {
-                if (typeof pickTime !== 'boolean') {
-                    throw new TypeError('setPickTime expects a boolean parameter');
-                }
-                options.pickTime = pickTime;
-            };
-
-            picker.getUseMinutes = function () {
-                return options.useMinutes;
+            picker.getLanguage = function () {
+                return options.language;
             };
 
             picker.setUseMinutes = function (useMinutes) {
@@ -1233,8 +1274,8 @@
                 options.useMinutes = useMinutes || false;
             };
 
-            picker.getUseSeconds = function () {
-                return options.useSeconds;
+            picker.getUseMinutes = function () {
+                return options.useMinutes;
             };
 
             picker.setUseSeconds = function (useSeconds) {
@@ -1244,8 +1285,8 @@
                 options.useSeconds = useSeconds;
             };
 
-            picker.getUseCurrent = function () {
-                return options.useCurrent;
+            picker.getUseSeconds = function () {
+                return options.useSeconds;
             };
 
             picker.setUseCurrent = function (useCurrent) {
@@ -1255,24 +1296,38 @@
                 options.useCurrent = useCurrent;
             };
 
-            picker.getMinuteStepping = function () {
-                return options.minuteStepping;
+            picker.getUseCurrent = function () {
+                return options.useCurrent;
             };
 
             picker.setMinuteStepping = function (minuteStepping) {
                 options.minuteStepping = minuteStepping;
             };
 
-            picker.getMinDate = function () {
-                return moment(options.minDate);
+            picker.getMinuteStepping = function () {
+                return options.minuteStepping;
             };
 
-            picker.getMaxDate = function () {
-                return moment(options.maxDate);
+            picker.setPickDate = function (pickDate) {
+                if (typeof pickDate !== 'boolean') {
+                    throw new TypeError('setPickDate expects a boolean parameter');
+                }
+                options.pickDate = pickDate;
             };
 
-            picker.getShowToday = function () {
-                return options.showToday;
+            picker.getPickDate = function () {
+                return options.pickDate;
+            };
+
+            picker.setPickTime = function (pickTime) {
+                if (typeof pickTime !== 'boolean') {
+                    throw new TypeError('setPickTime expects a boolean parameter');
+                }
+                options.pickTime = pickTime;
+            };
+
+            picker.getPickTime = function () {
+                return options.pickTime;
             };
 
             picker.setShowToday = function (showToday) {
@@ -1280,6 +1335,10 @@
                     throw new TypeError('setShowToday expects a boolean parameter');
                 }
                 options.showToday = showToday;
+            };
+
+            picker.getShowToday = function () {
+                return options.showToday;
             };
 
             picker.getCollapse = function () {
@@ -1293,40 +1352,12 @@
                 options.collapse = collapse;
             };
 
-            picker.getDefaultDate = function () {
-                return moment(options.defaultDate);
-            };
-
-            picker.setDefaultDate = function (defaultDate) {
-                options.defaultDate = defaultDate;
-            };
-
-            picker.getDisabledDates = function () {
-                return options.disabledDates;
-            };
-
-            picker.setDisabledDates = function (disabledDates) {
-                options.disabledDates = disabledDates;
-            };
-
-            picker.getEnabledDates = function () {
-                return options.enabledDates;
-            };
-
-            picker.setEnabledDates = function (enabledDates) {
-                options.enabledDates = enabledDates;
-            };
-
-            picker.getIcons = function () {
-                return options.icons;
-            };
-
             picker.setIcons = function (icons) {
                 options.icons = icons;
             };
 
-            picker.getUseStrict = function () {
-                return options.useStrict;
+            picker.getIcons = function () {
+                return options.icons;
             };
 
             picker.setUseStrict = function (useStrict) {
@@ -1336,8 +1367,8 @@
                 options.useStrict = useStrict;
             };
 
-            picker.getDirection = function () {
-                return options.direction;
+            picker.getUseStrict = function () {
+                return options.useStrict;
             };
 
             picker.setDirection = function (direction) {
@@ -1347,8 +1378,8 @@
                 options.direction = direction;
             };
 
-            picker.getSideBySide = function () {
-                return options.sideBySide;
+            picker.getDirection = function () {
+                return options.direction;
             };
 
             picker.setSideBySide = function (sideBySide) {
@@ -1356,30 +1387,20 @@
                     throw new TypeError('setSideBySide expects a boolean parameter');
                 }
                 options.sideBySide = sideBySide;
-                //*TODO: rebuild the widget
+                //*TODO: check if widget is visible and if so rebuild the widget
             };
 
-            picker.getDaysOfWeekDisabled = function () {
-                return options.daysOfWeekDisabled.split(0);
-            };
-
-            picker.setDaysOfWeekDisabled = function (daysOfWeekDisabled) {
-                if (!(daysOfWeekDisabled instanceof Array)) {
-                    throw new TypeError('setDaysOfWeekDisabled expects an array parameter');
-                }
-                options.daysOfWeekDisabled = daysOfWeekDisabled.split(0);
-            };
-
-            picker.getWidgetParent = function () {
-                return options.widgetParent;
+            picker.getSideBySide = function () {
+                return options.sideBySide;
             };
 
             picker.setWidgetParent = function (widgetParent) {
                 options.widgetParent = widgetParent;
+                //*TODO: is this really required?
             };
 
-            picker.getMinViewMode = function () {
-                return options.minViewMode;
+            picker.getWidgetParent = function () {
+                return options.widgetParent;
             };
 
             picker.setMinViewMode = function (newMinViewMode) {
@@ -1409,8 +1430,8 @@
                 }
             };
 
-            picker.getViewMode = function () {
-                return options.viewMode;
+            picker.getMinViewMode = function () {
+                return options.minViewMode;
             };
 
             picker.setViewMode = function (newViewMode) {
@@ -1439,15 +1460,26 @@
                 }
             };
 
+            picker.getViewMode = function () {
+                return options.viewMode;
+            };
+
             init();
         };
+
+    /********************************************************************************
+     *
+     * jQuery plugin constructor and defaults object
+     *
+     ********************************************************************************/
 
     $.fn.datetimepicker = function (options) {
         return this.each(function () {
             var $this = $(this),
                 data = $this.data('DateTimePicker');
             if (!data) {
-                options = $.extend(true, $.fn.datetimepicker.defaults, options);
+                // create a private copy of the options object
+                options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
                 $this.data('DateTimePicker', new DateTimePicker(this, options));
             }
         });
