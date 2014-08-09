@@ -1187,21 +1187,29 @@
             };
 
             picker.setDisabledDates = function (dates) {
+                if (!(dates instanceof Array)) {
+                    throw new TypeError('setDisabledDates expects an array parameter');
+                }
                 options.disabledDates = indexGivenDates(dates);
+                options.enabledDates = [];
                 update();
             };
 
             picker.getDisabledDates = function () {
-                return options.disabledDates;
+                return options.disabledDates.splice(0);
             };
 
             picker.setEnabledDates = function (dates) {
+                if (!(dates instanceof Array)) {
+                    throw new TypeError('setEnabledDates expects an array parameter');
+                }
                 options.enabledDates = indexGivenDates(dates);
+                options.disabledDates = [];
                 update();
             };
 
             picker.getEnabledDates = function () {
-                return options.enabledDates;
+                return options.enabledDates.splice(0);
             };
 
             picker.setDaysOfWeekDisabled = function (daysOfWeekDisabled) {
@@ -1214,7 +1222,7 @@
                         return previousValue;
                     }
                     if (previousValue.indexOf(currentValue) === -1) {
-                        previousValue.push(currentValue); 
+                        previousValue.push(currentValue);
                     }
                     return previousValue;
                 }, []).sort();
