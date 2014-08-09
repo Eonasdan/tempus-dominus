@@ -1357,6 +1357,10 @@
                     throw new TypeError('setPickDate expects a boolean parameter');
                 }
                 options.pickDate = pickDate;
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
             };
 
             picker.getPickDate = function () {
@@ -1368,6 +1372,10 @@
                     throw new TypeError('setPickTime expects a boolean parameter');
                 }
                 options.pickTime = pickTime;
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
             };
 
             picker.getPickTime = function () {
@@ -1379,6 +1387,10 @@
                     throw new TypeError('setShowToday expects a boolean parameter');
                 }
                 options.showToday = showToday;
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
             };
 
             picker.getShowToday = function () {
@@ -1393,11 +1405,22 @@
                 if (typeof collapse !== 'boolean') {
                     throw new TypeError('setCollapse expects a boolean parameter');
                 }
+                if (options.collapse === collapse) {
+                    return;
+                }
                 options.collapse = collapse;
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
             };
 
             picker.setIcons = function (icons) {
                 options.icons = icons;
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
             };
 
             picker.getIcons = function () {
