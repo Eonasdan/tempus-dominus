@@ -1208,12 +1208,21 @@
                 if (!(daysOfWeekDisabled instanceof Array)) {
                     throw new TypeError('setDaysOfWeekDisabled expects an array parameter');
                 }
-                options.daysOfWeekDisabled = daysOfWeekDisabled.split(0);
-                //*TODO: update the disabled spans on the days widget
+                options.daysOfWeekDisabled = daysOfWeekDisabled.reduce(function (previousValue, currentValue) {
+                    currentValue = parseInt(currentValue, 10);
+                    if (currentValue > 6 || currentValue < 0 || isNaN(currentValue)) {
+                        return previousValue;
+                    }
+                    if (previousValue.indexOf(currentValue) === -1) {
+                        previousValue.push(currentValue); 
+                    }
+                    return previousValue;
+                }, []).sort();
+                update();
             };
 
             picker.getDaysOfWeekDisabled = function () {
-                return options.daysOfWeekDisabled.split(0);
+                return options.daysOfWeekDisabled.splice(0);
             };
 
             picker.setMaxDate = function (date) {
