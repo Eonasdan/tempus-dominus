@@ -1066,6 +1066,8 @@
                 picker.hide();
                 detachDatePickerElementEvents();
                 element.removeData('DateTimePicker');
+                element.removeData('DateTimePickerId');
+                element.removeData('date');
             };
 
             picker.toggle = function () {
@@ -1188,6 +1190,8 @@
                 }
                 options.format = format;
                 use24hours = options.format.toLowerCase().indexOf('a') < 1;
+
+                //*TODO: Update the input element to the new format as well
             };
 
             picker.getFormat = function () {
@@ -1291,6 +1295,7 @@
 
             picker.setDefaultDate = function (defaultDate) {
                 options.defaultDate = defaultDate;
+                //*TODO: Fix this to parseDateInput and complain if things don't go well
             };
 
             picker.getDefaultDate = function () {
@@ -1298,13 +1303,14 @@
             };
 
             picker.setLanguage = function (language) {
-                options.language = language || 'en';
+                options.language = language || moment.locale();
                 localeData = moment.localeData(options.language);
                 date.locale(options.language);
                 viewDate.locale(options.language);
-
-                picker.destroy();
-                init();
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
             };
 
             picker.getLanguage = function () {
@@ -1443,6 +1449,10 @@
                     throw new TypeError('setDirection expects a boolean parameter');
                 }
                 options.direction = direction;
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
             };
 
             picker.getDirection = function () {
@@ -1454,7 +1464,10 @@
                     throw new TypeError('setSideBySide expects a boolean parameter');
                 }
                 options.sideBySide = sideBySide;
-                //*TODO: check if widget is visible and if so rebuild the widget
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
             };
 
             picker.getSideBySide = function () {
