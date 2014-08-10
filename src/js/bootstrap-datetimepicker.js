@@ -57,14 +57,13 @@
                 id = dpgId++,
                 date,
                 viewDate,
-                localeData,
                 unset = true,
                 input,
                 component = false,
+                widget = false,
                 use24hours,
                 minViewModeNumber,
                 currentViewMode,
-                widget,
                 actions,
                 datePickerModes = [
                     {
@@ -302,9 +301,9 @@
 
             function fillDow() {
                 var html = $('<tr>'),
-                    weekdaysMin = moment.weekdaysMin(),
+                    weekdaysMin = viewDate.localeData()._weekdaysMin,
                     i;
-                if (localeData._week.dow === 0) { // starts on Sunday
+                if (viewDate.localeData()._week.dow === 0) { // starts on Sunday
                     for (i = 0; i < 7; i++) {
                         html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
                     }
@@ -321,7 +320,7 @@
             }
 
             function fillMonths() {
-                var html = '', i, monthsShort = localeData._monthsShort;
+                var html = '', i, monthsShort = viewDate.localeData()._monthsShort;
                 for (i = 0; i < 12; i++) {
                     html += '<span class="month" data-action="selectMonth">' + monthsShort[i] + '</span>';
                 }
@@ -591,7 +590,7 @@
             }
 
             function setValue(targetMoment, dontNotify) {
-                var oldDate = moment(date);
+                var oldDate = date;
 
                 if (!targetMoment) {
                     unset = true;
@@ -605,7 +604,7 @@
                     return;
                 }
 
-                targetMoment = targetMoment.clone();
+                targetMoment = targetMoment.clone().locale(options.locale);
 
                 if (options.minuteStepping !== 1) {
                     date.minutes((Math.round(date.minutes() / options.minuteStepping) * options.minuteStepping) % 60).seconds(0);
@@ -830,13 +829,11 @@
                     component.find('span').addClass((options.pickDate ? options.icons.date : options.icons.time));
                 }
 
-                localeData = moment.localeData(options.locale);
                 date = moment();
-                date.locale(options.locale);
                 viewDate = date.clone();
 
+                picker.locale(options.locale);
                 picker.format(options.format);
-
                 picker.minViewMode(options.minViewMode);
                 picker.viewMode(options.viewMode);
 
@@ -1173,13 +1170,13 @@
                 }
 
                 if (!format) {
-                    format = (options.pickDate ? localeData.longDateFormat('L') : '');
+                    format = (options.pickDate ? date.localeData().longDateFormat('L') : '');
                     if (options.pickDate && options.pickTime) {
                         format += ' ';
                     }
-                    format += (options.pickTime ? localeData.longDateFormat('LT') : '');
+                    format += (options.pickTime ? date.localeData().longDateFormat('LT') : '');
                     if (options.useSeconds) {
-                        if (localeData.longDateFormat('LT').indexOf(' A') !== -1) {
+                        if (date.localeData().longDateFormat('LT').indexOf(' A') !== -1) {
                             format = format.split(' A')[0] + ':ss A';
                         }
                         else {
@@ -1302,7 +1299,6 @@
                 }
 
                 options.locale = locale || moment.locale();
-                localeData = moment.localeData(options.locale);
                 date.locale(options.locale);
                 viewDate.locale(options.locale);
                 if (widget) {
