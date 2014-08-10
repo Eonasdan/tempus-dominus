@@ -10,7 +10,7 @@ In this version all the component interaction is made through the [Public API](h
 
 That would be great!
 
-We are currently need beta testers to find issues that might have slipped.
+**We are currently in need for beta testers** to find issues that might have slipped.
 
 Also if you have the guts we could use a testing framework and tests.
 
