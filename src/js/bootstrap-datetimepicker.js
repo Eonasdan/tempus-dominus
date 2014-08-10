@@ -671,13 +671,13 @@
             }
 
             function attachDatePickerElementEvents() {
-                element.on('keydown', $.proxy(keydown, picker));
                 if (element.is('input')) {
                     element.on({
                         'click': $.proxy(picker.show, picker),
                         'focus': $.proxy(picker.show, picker),
                         'change': $.proxy(change, picker),
-                        'blur': $.proxy(picker.hide, picker)
+                        'blur': $.proxy(picker.hide, picker),
+                        'keydown': $.proxy(keydown, picker)
                     });
                 } else {
                     element.on({
@@ -693,13 +693,13 @@
             }
 
             function detachDatePickerElementEvents() {
-                element.off('keydown', keydown);
                 if (element.is('input')) {
                     element.off({
                         'focus': picker.show,
                         'change': change,
                         'blur': picker.hide,
-                        'click': picker.show
+                        'click': picker.show,
+                        'keydown': keydown
                     });
                 } else {
                     element.off({
@@ -1422,6 +1422,7 @@
             };
 
             picker.setIcons = function (icons) {
+                //*TODO: fix this to clone/typecheck the icons array before setting the options.icons object
                 options.icons = icons;
                 if (widget) {
                     picker.hide();
