@@ -648,7 +648,7 @@
                 } else {
                     date = moment(date, options.format, options.useStrict);
                 }
-                date.locale(options.language);
+                date.locale(options.locale);
                 return (date.isValid() ? date : false);
             }
 
@@ -830,9 +830,9 @@
                     component.find('span').addClass((options.pickDate ? options.icons.date : options.icons.time));
                 }
 
-                localeData = moment.localeData(options.language);
+                localeData = moment.localeData(options.locale);
                 date = moment();
-                date.locale(options.language);
+                date.locale(options.locale);
                 viewDate = date.clone();
 
                 picker.format(options.format);
@@ -1296,15 +1296,15 @@
                 //*TODO: Fix this to parseDateInput and complain if things don't go well
             };
 
-            picker.locale = function (language) {
+            picker.locale = function (locale) {
                 if (arguments.length === 0) {
-                    return options.language;
+                    return options.locale;
                 }
 
-                options.language = language || moment.locale();
-                localeData = moment.localeData(options.language);
-                date.locale(options.language);
-                viewDate.locale(options.language);
+                options.locale = locale || moment.locale();
+                localeData = moment.localeData(options.locale);
+                date.locale(options.locale);
+                viewDate.locale(options.locale);
                 if (widget) {
                     picker.hide();
                     picker.show();
@@ -1557,7 +1557,7 @@
         maxDate: moment().add(100, 'y'),
         showToday: true,
         collapse: true,
-        language: moment.locale(),
+        locale: moment.locale(),
         defaultDate: '',
         disabledDates: false,
         enabledDates: false,
