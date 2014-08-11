@@ -698,6 +698,7 @@
             }
 
             function attachDatePickerWidgetEvents() {
+                $(window).on('resize', $.proxy(place, this));
                 widget.on('click', '[data-action]', $.proxy(doAction, picker)); // this handles clicks on the widget
                 widget.on('mousedown', $.proxy(stopEvent, picker));
                 if (!element.is('input')) {
@@ -706,6 +707,7 @@
             }
 
             function detachDatePickerWidgetEvents() {
+                $(window).off('resize', place);
                 widget.off('click', '[data-action]');
                 widget.off('mousedown', stopEvent);
                 if (!element.is('input')) {
@@ -1121,7 +1123,8 @@
                 }
                 $.extend(true, options, newOptions);
                 $.each(options, function (key, value) {
-                    picker[key].apply(picker, [value]);
+                    //picker[key].apply(picker, [value]);
+                    picker[key](value);
                 });
             };
 
