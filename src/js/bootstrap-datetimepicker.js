@@ -27,7 +27,7 @@
  THE SOFTWARE.
  */
 /*globals define, jQuery, moment, window, document */
-; (function (factory) {
+;(function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // AMD is used - Register as an anonymous module.
@@ -66,17 +66,17 @@
                 datePickerModes = [
                     {
                         clsName: 'days',
-                        navFnc: 'month',
+                        navFnc: 'M',
                         navStep: 1
                     },
                     {
                         clsName: 'months',
-                        navFnc: 'year',
+                        navFnc: 'y',
                         navStep: 1
                     },
                     {
                         clsName: 'years',
-                        navFnc: 'year',
+                        navFnc: 'y',
                         navStep: 10
                     }
                 ],
@@ -286,10 +286,7 @@
 
             function padLeft(string) {
                 string = string.toString();
-                if (string.length >= 2) {
-                    return string;
-                }
-                return '0' + string;
+                return string.length >= 2 ? string : '0' + string;
             }
 
             function showMode(dir) {
@@ -301,50 +298,38 @@
                     currentViewMode = Math.max(minViewModeNumber, Math.min(2, currentViewMode + dir));
                 }
                 widget.find('.datepicker > div').hide().filter('.datepicker-' + datePickerModes[currentViewMode].clsName).show();
+                place();
             }
 
             function fillDow() {
                 var html = $('<tr>'),
-                    weekdaysMin = viewDate.localeData()._weekdaysMin,
-                    i;
-                if (viewDate.localeData()._week.dow === 0) { // starts on Sunday
-                    for (i = 0; i < 7; i++) {
-                        html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
-                    }
-                } else {
-                    for (i = 1; i < 8; i++) {
-                        if (i === 7) {
-                            html.append('<th class="dow">' + weekdaysMin[0] + '</th>');
-                        } else {
-                            html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
-                        }
-                    }
+                    currentDate = viewDate.clone().startOf('w');
+
+                while (currentDate.isBefore(viewDate.clone().endOf('w'))) {
+                    html.append('<th class="dow">' + currentDate.format('dd') + '</th>');
+                    currentDate.add(1, 'd');
                 }
                 widget.find('.datepicker-days thead').append(html);
             }
 
             function fillMonths() {
-                var html = '', i, monthsShort = viewDate.localeData()._monthsShort;
-                for (i = 0; i < 12; i++) {
-                    html += '<span class="month" data-action="selectMonth">' + monthsShort[i] + '</span>';
+                var html = '',
+                    monthsShort = viewDate.clone().startOf('y');
+                while (monthsShort.isSame(viewDate, 'y')) {
+                    html += '<span class="month" data-action="selectMonth">' + monthsShort.format('MMM') + '</span>';
+                    monthsShort.add(1, 'M');
                 }
                 widget.find('.datepicker-months td').empty().append(html);
             }
 
-            function isInDisableDates(date) {
-                var maxDate = moment(options.maxDate, options.format, options.useStrict),
-                    minDate = moment(options.minDate, options.format, options.useStrict);
-                if (date.isAfter(maxDate, 'day') || date.isBefore(minDate, 'day')) {
-                    return true;
-                }
-
+            function isInDisabledDates(date) {
                 if (!options.disabledDates) {
                     return false;
                 }
                 return options.disabledDates[date.format('YYYY-MM-DD')] === true;
             }
 
-            function isInEnableDates(date) {
+            function isInEnabledDates(date) {
                 if (options.enabledDates === false) {
                     return true;
                 }
@@ -352,138 +337,113 @@
             }
 
             function updateMonths() {
-                var year = viewDate.year(),
-                    startYear = options.minDate.year(),
-                    startMonth = options.minDate.month(),
-                    endYear = options.maxDate.year(),
-                    endMonth = options.maxDate.month(),
-                    i,
-                    currentYear = date.year(),
-                    months;
+                var i,
+                    monthsView = widget.find('.datepicker-months'),
+                    monthsViewHeader = monthsView.find('th'),
+                    months = monthsView.find('tbody').find('span');
 
-                widget.find('.datepicker-months').find('.disabled').removeClass('disabled');
-                widget.find('.datepicker-months').find('th:eq(1)').text(year);
-                months = widget.find('.datepicker-months').find('tbody').find('span').removeClass('active');
-                if (currentYear === year) {
+                monthsView.find('.disabled').removeClass('disabled');
+
+                if (!isValid(viewDate.clone().subtract(1, 'y'), 'y')) {
+                    monthsViewHeader.eq(0).addClass('disabled');
+                }
+
+                monthsViewHeader.eq(1).text(viewDate.year());
+
+                if (!isValid(viewDate.clone().add(1, 'y'), 'y')) {
+                    monthsViewHeader.eq(2).addClass('disabled');
+                }
+
+                months.removeClass('active');
+                if (date.isSame(viewDate, 'y')) {
                     months.eq(date.month()).addClass('active');
                 }
-                if (year - 1 < startYear) {
-                    widget.find('.datepicker-months th:eq(0)').addClass('disabled');
-                }
-                if (year + 1 > endYear) {
-                    widget.find('.datepicker-months th:eq(2)').addClass('disabled');
-                }
+
                 for (i = 0; i < 12; i++) {
-                    if ((year === startYear && startMonth > i) || (year < startYear)) {
-                        $(months[i]).addClass('disabled');
-                    } else if ((year === endYear && endMonth < i) || (year > endYear)) {
-                        $(months[i]).addClass('disabled');
+                    if (!isValid(viewDate.clone().month(i), 'M')) {
+                        months.eq(i).addClass('disabled');
                     }
                 }
             }
 
             function updateYears() {
-                var year = parseInt(viewDate.year() / 10, 10) * 10,
-                    startYear = options.minDate.year(),
-                    endYear = options.maxDate.year(),
-                    html = '',
-                    i,
-                    currentYear = date.year(),
-                    yearCont;
+                var yearsView = widget.find('.datepicker-years'),
+                    yearsViewHeader = yearsView.find('th'),
+                    startYear = viewDate.clone().subtract(5, 'y'),
+                    endYear = viewDate.clone().add(6, 'y'),
+                    html = '';
 
-                widget.find('.datepicker-years').find('.disabled').removeClass('disabled');
+                yearsView.find('.disabled').removeClass('disabled');
 
-                yearCont = widget.find('.datepicker-years').find('th:eq(1)').text((year - 1) + '-' + (year + 10)).parents('table').find('td');
-                widget.find('.datepicker-years').find('th').removeClass('disabled');
-                if (startYear > year) {
-                    widget.find('.datepicker-years').find('th:eq(0)').addClass('disabled');
+                if (options.minDate.isAfter(startYear, 'y')) {
+                    yearsViewHeader.eq(0).addClass('disabled');
                 }
-                if (endYear < year + 9) {
-                    widget.find('.datepicker-years').find('th:eq(2)').addClass('disabled');
+
+                yearsViewHeader.eq(1).text(startYear.year() + '-' + endYear.year());
+
+                if (options.maxDate.isBefore(endYear, 'y')) {
+                    yearsViewHeader.eq(2).addClass('disabled');
                 }
-                year -= 1;
-                for (i = -1; i < 11; i++) {
-                    html += '<span data-action="selectYear" class="year' + (currentYear === year ? ' active' : '') + ((year < startYear || year > endYear) ? ' disabled' : '') + '">' + year + '</span>';
-                    year += 1;
+
+                while (!startYear.isAfter(endYear, 'y')) {
+                    html += '<span data-action="selectYear" class="year' + (startYear.isSame(date, 'y') ? ' active' : '') + (!isValid(startYear, 'y') ? ' disabled' : '') + '">' + startYear.year() + '</span>';
+                    startYear.add(1, 'y');
                 }
-                yearCont.html(html);
+
+                yearsView.find('td').html(html);
             }
 
             function fillDate() {
+                var daysView = widget.find('.datepicker-days'),
+                    daysViewHeader = daysView.find('th'),
+                    currentDate,
+                    html = [],
+                    row,
+                    clsName;
+
                 if (!options.pickDate) {
                     return;
                 }
-                var year = viewDate.year(),
-                    month = viewDate.month(),
-                    startYear = options.minDate.year(),
-                    startMonth = options.minDate.month(),
-                    endYear = options.maxDate.year(),
-                    endMonth = options.maxDate.month(),
-                    currentDate,
-                    prevMonth,
-                    nextMonth,
-                    html = [],
-                    row,
-                    clsName,
-                    i,
-                    days;
 
-                widget.find('.datepicker-days').find('.disabled').removeClass('disabled');
+                daysView.find('.disabled').removeClass('disabled');
 
-                widget.find('.datepicker-days th:eq(1)').text(viewDate.format('MMMM YYYY'));
+                daysViewHeader.eq(1).text(viewDate.format('MMMM YYYY'));
 
-                prevMonth = viewDate.clone().subtract(1, 'months');
-                days = prevMonth.daysInMonth();
-                prevMonth.date(days).startOf('week');
-                if ((year === startYear && month <= startMonth) || year < startYear) {
-                    widget.find('.datepicker-days th:eq(0)').addClass('disabled');
+                if (!isValid(viewDate.clone().subtract(1, 'M'), 'M')) {
+                    daysViewHeader.eq(0).addClass('disabled');
                 }
-                if ((year === endYear && month >= endMonth) || year > endYear) {
-                    widget.find('.datepicker-days th:eq(2)').addClass('disabled');
+                if (!isValid(viewDate.clone().add(1, 'M'), 'M')) {
+                    daysViewHeader.eq(2).addClass('disabled');
                 }
 
-                nextMonth = prevMonth.clone().add(42, 'd');
-                while (prevMonth.isBefore(nextMonth)) {
-                    if (prevMonth.weekday() === moment().startOf('week').weekday()) {
+                currentDate = viewDate.clone().startOf('M').startOf('week');
+
+                while (!viewDate.clone().endOf('M').endOf('w').isBefore(currentDate, 'd')) {
+                    if (currentDate.weekday() === 0) {
                         row = $('<tr>');
                         html.push(row);
                     }
                     clsName = '';
-                    if (prevMonth.year() < year || (prevMonth.year() === year && prevMonth.month() < month)) {
+                    if (currentDate.isBefore(viewDate, 'M')) {
                         clsName += ' old';
-                    } else if (prevMonth.year() > year || (prevMonth.year() === year && prevMonth.month() > month)) {
+                    }
+                    if (currentDate.isAfter(viewDate, 'M')) {
                         clsName += ' new';
                     }
-                    if (prevMonth.isSame(date, 'day')) {
+                    if (currentDate.isSame(date, 'd')) {
                         clsName += ' active';
                     }
-                    if (isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
+                    if (!isValid(currentDate, 'd')) {
                         clsName += ' disabled';
                     }
-                    if (options.showToday === true) {
-                        if (prevMonth.isSame(moment(), 'day')) {
-                            clsName += ' today';
-                        }
+                    if (options.showToday && currentDate.isSame(moment(), 'd')) {
+                        clsName += ' today';
                     }
-                    if (options.daysOfWeekDisabled) {
-                        for (i = 0; i < options.daysOfWeekDisabled.length; i++) {
-                            if (prevMonth.day() === options.daysOfWeekDisabled[i]) {
-                                clsName += ' disabled';
-                                break;
-                            }
-                        }
-                    }
-                    row.append('<td data-action="selectDay" class="day' + clsName + '">' + prevMonth.date() + '</td>');
-
-                    currentDate = prevMonth.date();
-                    prevMonth.add(1, 'd');
-
-                    if (currentDate === prevMonth.date()) {
-                        console.log('check');
-                        prevMonth.add(1, 'd');
-                    }
+                    row.append('<td data-action="selectDay" class="day' + clsName + '">' + currentDate.date() + '</td>');
+                    currentDate.add(1, 'd');
                 }
-                widget.find('.datepicker-days tbody').empty().append(html);
+
+                daysView.find('tbody').empty().append(html);
 
                 updateMonths();
 
@@ -585,13 +545,32 @@
             }
 
             function update() {
-                viewDate = moment(date).startOf('month');
+                viewDate = moment(date).startOf('M');
                 if (!widget) {
                     return;
                 }
                 fillDate();
                 fillTime();
                 place();
+            }
+
+            function isValid(targetMoment, granularity) {
+                if (options.minDate && targetMoment.isBefore(options.minDate, granularity)) {
+                    return false;
+                }
+                if (options.maxDate && targetMoment.isAfter(options.maxDate, granularity)) {
+                    return false;
+                }
+                if (options.disabledDates && isInDisabledDates(targetMoment)) {
+                    return false;
+                }
+                if (options.enabledDates && !isInEnabledDates(targetMoment)) {
+                    return false;
+                }
+                if (options.daysOfWeekDisabled.indexOf(targetMoment.day()) !== -1) {
+                    return false;
+                }
+                return true;
             }
 
             function setValue(targetMoment, dontNotify) {
@@ -612,11 +591,10 @@
                 targetMoment = targetMoment.clone().locale(options.locale);
 
                 if (options.minuteStepping !== 1) {
-                    date.minutes((Math.round(date.minutes() / options.minuteStepping) * options.minuteStepping) % 60).seconds(0);
+                    targetMoment.minutes((Math.round(date.minutes() / options.minuteStepping) * options.minuteStepping) % 60).seconds(0);
                 }
 
-                if ((targetMoment.isAfter(options.minDate) && targetMoment.isBefore(options.maxDate)) &&
-                    (!isInDisableDates(targetMoment) && isInEnableDates(targetMoment))) {
+                if (isValid(targetMoment)) {
                     unset = false;
                     date = targetMoment;
                     viewDate = date.clone();
@@ -926,31 +904,31 @@
                 },
 
                 incrementHours: function () {
-                    setValue(picker.date().add(1, 'hours'));
+                    setValue(date.clone().add(1, 'h'));
                 },
 
                 incrementMinutes: function () {
-                    setValue(picker.date().add(options.minuteStepping, 'minutes'));
+                    setValue(date.clone().add(options.minuteStepping, 'm'));
                 },
 
                 incrementSeconds: function () {
-                    setValue(picker.date().add(1, 'seconds'));
+                    setValue(date.clone().add(1, 's'));
                 },
 
                 decrementHours: function () {
-                    setValue(picker.date().subtract(1, 'hours'));
+                    setValue(date.clone().subtract(1, 'h'));
                 },
 
                 decrementMinutes: function () {
-                    setValue(picker.date().subtract(options.minuteStepping, 'minutes'));
+                    setValue(date.clone().subtract(options.minuteStepping, 'm'));
                 },
 
                 decrementSeconds: function () {
-                    setValue(picker.date().subtract(1, 'seconds'));
+                    setValue(date.clone().subtract(1, 's'));
                 },
 
                 togglePeriod: function () {
-                    setValue(picker.date().add((picker.date().hours() >= 12) ? -12 : 12, 'hours'));
+                    setValue(date.clone().add((picker.date().hours() >= 12) ? -12 : 12, 'h'));
                 },
 
                 togglePicker: function (e) {
@@ -1216,7 +1194,7 @@
                     throw new TypeError('disabledDates() expects an array parameter');
                 }
                 options.disabledDates = indexGivenDates(dates);
-                options.enabledDates = [];
+                options.enabledDates = false;
                 update();
             };
 
@@ -1234,7 +1212,7 @@
                     throw new TypeError('enabledDates() expects an array parameter');
                 }
                 options.enabledDates = indexGivenDates(dates);
-                options.disabledDates = [];
+                options.disabledDates = false;
                 update();
             };
 
@@ -1600,7 +1578,7 @@
             var $this = $(this),
                 data = $this.data('DateTimePicker');
             if (!data) {
-                // create a private copy of the options object
+                // create a private copy of the defaults object
                 options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
                 $this.data('DateTimePicker', new DateTimePicker(this, options));
             }
