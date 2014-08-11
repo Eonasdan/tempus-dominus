@@ -1464,21 +1464,6 @@
                 options.useStrict = useStrict;
             };
 
-            picker.direction = function (direction) {
-                if (arguments.length === 0) {
-                    return options.direction;
-                }
-
-                if (typeof direction !== 'string') {
-                    throw new TypeError('direction() expects a string parameter');
-                }
-                options.direction = direction;
-                if (widget) {
-                    picker.hide();
-                    picker.show();
-                }
-            };
-
             picker.sideBySide = function (sideBySide) {
                 if (arguments.length === 0) {
                     return options.sideBySide;
