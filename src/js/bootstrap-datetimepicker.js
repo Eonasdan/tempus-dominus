@@ -251,10 +251,6 @@
                     widget.addClass('bottom').removeClass('top');
                 }
 
-                if (options.width !== undefined) {
-                    widget.width(options.width);
-                }
-
                 if (options.orientation === 'left') {
                     widget.addClass('left-oriented');
                     offset.left = offset.left - widget.width() + 20;
