@@ -38,7 +38,7 @@
             throw 'bootstrap-datetimepicker requires jQuery to be loaded first';
         }
         if (!moment) {
-            throw 'bootstrap-datetimepicker requires moment.js to be loaded first';
+            throw 'bootstrap-datetimepicker requires Moment.js to be loaded first';
         }
         factory(jQuery, moment);
     }
@@ -47,13 +47,13 @@
 (function ($, moment) {
     'use strict';
     if (moment === 'undefined') {
-        throw new Error('momentjs is required');
+        throw new Error('Moment.js is required');
     }
 
     var DateTimePicker = function (element, options) {
             var picker = this,
-                date,
-                viewDate,
+                date = moment(),
+                viewDate = date.clone(),
                 unset = true,
                 input,
                 component = false,
@@ -79,7 +79,9 @@
                         navStep: 10
                     }
                 ],
-                viewModes = ['days', 'months', 'years'];
+                viewModes = ['days', 'months', 'years'],
+                directionModes = ['top', 'bottom', 'auto'],
+                orientationModes = ['left', 'right'];
 
             /********************************************************************************
              *
@@ -223,10 +225,14 @@
                     placePosition,
                     width;
 
+                if (!widget) {
+                    return;
+                }
+
                 width = component ? component.outerWidth() : element.outerWidth();
                 offset.top = offset.top + element.outerHeight();
 
-                if (options.direction === 'up') {
+                if (options.direction === 'top') {
                     placePosition = 'top';
                 } else if (options.direction === 'bottom') {
                     placePosition = 'bottom';
@@ -591,6 +597,7 @@
                 }
                 fillDate();
                 fillTime();
+                place();
             }
 
             function setValue(targetMoment, dontNotify) {
@@ -598,7 +605,7 @@
 
                 if (!targetMoment) {
                     unset = true;
-                    input.val('');
+                    //input.val('');
                     element.data('date', '');
                     notifyEvent({
                         type: 'dp.change',
@@ -670,8 +677,8 @@
             }
 
             function change(e) {
-                //*TODO: this should try to parse input value and call setValue
-                picker.date($(e.target).val());
+                var newDate = parseInputDate($(e.target).val());
+                setValue(newDate, true);
             }
 
             function attachDatePickerElementEvents() {
@@ -790,10 +797,6 @@
             }
 
             function init() {
-                // initialization
-                date = moment();
-                viewDate = date.clone();
-
                 // initializing element and component attributes
                 element = $(element);
                 if (element.is('input')) {
@@ -1310,7 +1313,7 @@
                     throw new TypeError('defaultDate() Could not parse date variable: ' + defaultDate);
                 }
                 //*TODO: Put date validation logic in one place!!
-                if (parsedDate.isAfter(options.maxDate) || parsedDate.isBefore(options.minDate)) {
+                if ((options.maxDate && parsedDate.isAfter(options.maxDate)) || (options.minDate && parsedDate.isBefore(options.minDate))) {
                     throw new TypeError('defaultDate() date passed is invalid according to component setup validations');
                 }
 
@@ -1544,6 +1547,44 @@
                 showMode();
             };
 
+            picker.direction = function(direction) {
+                if (arguments.length === 0) {
+                    return options.direction;
+                }
+
+                if (typeof direction !== 'string') {
+                    throw new TypeError('direction() expects a string parameter');
+                }
+
+                direction = direction.toLowerCase();
+
+                if (directionModes.indexOf(direction) === -1) {
+                    throw new TypeError('direction() expects parameter to be one of (' + directionModes.join(', ') + ')');
+                }
+
+                options.direction = direction;
+                update();
+            };
+
+            picker.orientation = function(orientation) {
+                if (arguments.length === 0) {
+                    return options.orientation;
+                }
+
+                if (typeof orientation !== 'string') {
+                    throw new TypeError('orientation() expects a string parameter');
+                }
+
+                orientation = orientation.toLowerCase();
+
+                if (orientationModes.indexOf(orientation) === -1) {
+                    throw new TypeError('orientation() expects parameter to be one of (' + orientationModes.join(', ') + ')');
+                }
+
+                options.orientation = orientation;
+                update();
+            };
+
             init();
         };
 
@@ -1595,6 +1636,7 @@
         daysOfWeekDisabled: [],
         widgetParent: false,
         minViewMode: 'days',
-        viewMode: 'days'
+        viewMode: 'days',
+        orientation: 'right'
     };
 }));
