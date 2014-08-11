@@ -1543,7 +1543,7 @@
                 showMode();
             };
 
-            picker.direction = function(direction) {
+            picker.direction = function (direction) {
                 if (arguments.length === 0) {
                     return options.direction;
                 }
@@ -1562,7 +1562,7 @@
                 update();
             };
 
-            picker.orientation = function(orientation) {
+            picker.orientation = function (orientation) {
                 if (arguments.length === 0) {
                     return options.orientation;
                 }
