@@ -60,6 +60,7 @@
                 widget = false,
                 use24hours,
                 minViewModeNumber,
+                format,
                 currentViewMode,
                 actions,
                 datePickerModes = [
@@ -232,11 +233,8 @@
                 width = component ? component.outerWidth() : element.outerWidth();
                 offset.top = offset.top + element.outerHeight();
 
-                if (options.direction === 'top') {
-                    placePosition = 'top';
-                } else if (options.direction === 'bottom') {
-                    placePosition = 'bottom';
-                } else if (options.direction === 'auto') {
+                placePosition = options.direction;
+                if (placePosition === 'auto') {
                     if (offset.top + widget.height() > $window.height() + $window.scrollTop() && widget.height() + element.outerHeight() < offset.top) {
                         placePosition = 'top';
                     } else {
@@ -621,9 +619,9 @@
                     (!isInDisableDates(targetMoment) && isInEnableDates(targetMoment))) {
                     unset = false;
                     date = targetMoment;
-                    viewDate = date.clone().startOf('month');
-                    input.val(date.format(options.format));
-                    element.data('date', date.format(options.format));
+                    viewDate = date.clone();
+                    input.val(date.format(format));
+                    element.data('date', date.format(format));
                     update();
                     if (!dontNotify) {
                         notifyEvent({
@@ -1086,6 +1084,9 @@
                     setValue(currentMoment);
                 }
                 createWidget();
+                if (component && component.hasClass('btn')) {
+                    component.toggleClass('active');
+                }
                 widget.show();
                 place();
                 notifyEvent({
@@ -1105,6 +1106,9 @@
                     if (collapseData && collapseData.transitioning) {
                         return;
                     }
+                }
+                if (component && component.hasClass('btn')) {
+                    component.toggleClass('active');
                 }
                 widget.hide();
                 destroyWidget();
@@ -1164,28 +1168,35 @@
                 setValue(parsedDate);
             };
 
-            picker.format = function (format) {
+            picker.format = function (newFormat) {
                 if (arguments.length === 0) {
                     return options.format;
                 }
 
-                if (!format) {
-                    format = (options.pickDate ? date.localeData().longDateFormat('L') : '');
+                if ((typeof newFormat !== 'string') && ((typeof newFormat !== 'boolean') && (newFormat !== false))) {
+                    throw new TypeError('format() expects a sting or boolean:false variable ' + newFormat);
+                }
+
+                options.format = newFormat;
+
+                if (newFormat === false) {
+                    newFormat = (options.pickDate ? date.localeData().longDateFormat('L') : '');
                     if (options.pickDate && options.pickTime) {
-                        format += ' ';
+                        newFormat += ' ';
                     }
-                    format += (options.pickTime ? date.localeData().longDateFormat('LT') : '');
+                    newFormat += (options.pickTime ? date.localeData().longDateFormat('LT') : '');
                     if (options.useSeconds) {
                         if (date.localeData().longDateFormat('LT').indexOf(' A') !== -1) {
-                            format = format.split(' A')[0] + ':ss A';
+                            newFormat = newFormat.split(' A')[0] + ':ss A';
                         }
                         else {
-                            format += ':ss';
+                            newFormat += ':ss';
                         }
                     }
                 }
-                options.format = format;
-                use24hours = options.format.toLowerCase().indexOf('a') < 1;
+
+                format = newFormat;
+                use24hours = format.toLowerCase().indexOf('a') < 1;
                 if (!unset) {
                     setValue(date, date);
                 }
@@ -1321,9 +1332,14 @@
                     return options.locale;
                 }
 
-                options.locale = locale || moment.locale();
+                if (!moment.localeData(locale)) {
+                    throw new TypeError('locale() locale ' + locale + ' is not loaded from moment locales!');
+                }
+
+                options.locale = locale;
                 date.locale(options.locale);
                 viewDate.locale(options.locale);
+                picker.format(options.format); // re-evaluate format variable in case options.format is not set
                 if (widget) {
                     picker.hide();
                     picker.show();
@@ -1384,6 +1400,8 @@
                     throw new TypeError('pickDate() expects a boolean parameter');
                 }
                 options.pickDate = pickDate;
+                picker.format(options.format); // re-evaluate format variable in case options.format is not set
+
                 if (widget) {
                     picker.hide();
                     picker.show();
@@ -1399,6 +1417,8 @@
                     throw new TypeError('pickTime() expects a boolean parameter');
                 }
                 options.pickTime = pickTime;
+                picker.format(options.format); // re-evaluate format variable in case options.format is not set
+
                 if (widget) {
                     picker.hide();
                     picker.show();

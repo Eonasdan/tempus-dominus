@@ -244,28 +244,17 @@
             background: @gray-lighter;
         }
     }
-}
 
-.input-group {
-    &.date {
-        .input-group-addon span {
-            display: block;
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
+    &.left-oriented {
+        &:before {
+            left: auto;
+            right: 6px;
         }
-    }
-}
 
-.bootstrap-datetimepicker-widget.left-oriented {
-    &:before {
-        left: auto;
-        right: 6px;
-    }
-
-    &:after {
-        left: auto;
-        right: 7px;
+        &:after {
+            left: auto;
+            right: 7px;
+        }
     }
 }
 
