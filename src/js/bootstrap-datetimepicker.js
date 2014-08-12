@@ -135,7 +135,12 @@ THE SOFTWARE.
                 }).get(0) ||
                 'body';
 
-            picker.widget = $(getTemplate()).appendTo(picker.options.widgetParent);
+			picker.widget = $(getTemplate());			
+            if (picker.options.inline) {				
+                picker.widget.appendTo(picker.element);
+            } else {
+                picker.widget.appendTo(picker.options.widgetParent);
+            }
 
             picker.minViewMode = picker.options.minViewMode || 0;
             if (typeof picker.minViewMode === 'string') {
@@ -182,9 +187,11 @@ THE SOFTWARE.
             update();
             showMode();
             attachDatePickerEvents();
-            if (picker.options.defaultDate !== '' && getPickerInput().val() === '') {
+			if (picker.options.defaultDate !== '') {
+				if((!picker.options.inline && getPickerInput().val() == '') || (picker.options.inline)) {
                 picker.setValue(picker.options.defaultDate);
             }
+			}            
             if (picker.options.minuteStepping !== 1) {
                 rInterval = picker.options.minuteStepping;
                 picker.date.minutes((Math.round(picker.date.minutes() / rInterval) * rInterval) % 60).seconds(0);
@@ -213,7 +220,7 @@ THE SOFTWARE.
                 eData = picker.element.data();
             }
             else {
-                eData = picker.element.find('input').data();
+                eData = picker.element.data();
             }
             if (eData.dateFormat !== undefined) {
                 picker.options.format = eData.dateFormat;
@@ -271,6 +278,9 @@ THE SOFTWARE.
             }
             if (eData.dateSidebyside !== undefined) {
                 picker.options.sideBySide = eData.dateSidebyside;
+            }
+			if (eData.dateInline !== undefined) {
+                picker.options.inline = eData.dateInline;
             }
             if (eData.dateDaysofweekdisabled !== undefined) {
                 picker.options.daysOfWeekDisabled = eData.dateDaysofweekdisabled;
@@ -1030,7 +1040,7 @@ THE SOFTWARE.
         getTemplate = function () {
             if (picker.options.pickDate && picker.options.pickTime) {
                 var ret = '';
-                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
+                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + (picker.options.inline ? ' inline' : ' dropdown-menu') + '" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
                        '<div class="col-sm-6 datepicker">' + dpGlobal.template + '</div>' +
@@ -1052,13 +1062,13 @@ THE SOFTWARE.
             }
             if (picker.options.pickTime) {
                 return (
-                    '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                    '<div class="bootstrap-datetimepicker-widget' + (picker.options.inline ? ' inline' : ' dropdown-menu') + '">' +
                         '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
                     '</div>'
                 );
             }
             return (
-                '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                '<div class="bootstrap-datetimepicker-widget' + (picker.options.inline ? ' inline' : ' dropdown-menu') + '">' +
                     '<div class="datepicker">' + dpGlobal.template + '</div>' +
                 '</div>'
             );
@@ -1162,6 +1172,8 @@ THE SOFTWARE.
         };
 
         picker.show = function (e) {
+			if (picker.options.inline)
+                return;
             if (picker.options.useCurrent) {
                 if (getPickerInput().val() === '') {
                     if (picker.options.minuteStepping !== 1) {
@@ -1218,6 +1230,8 @@ THE SOFTWARE.
         };
 
         picker.hide = function () {
+			if (picker.options.inline)
+                return;
             // Ignore event if in the middle of a picker transition
             var collapse = picker.widget.find('.collapse'), i, collapseData;
             for (i = 0; i < collapse.length; i++) {
@@ -1355,6 +1369,7 @@ THE SOFTWARE.
         direction: 'auto',
         sideBySide: false,
         daysOfWeekDisabled: [],
-        widgetParent: false
+        widgetParent: false,
+		inline: false
     };
 }));
