@@ -194,6 +194,10 @@
             function dataToOptions() {
                 var eData = input.data(), dataOptions = {};
 
+                if (eData['dateOptions'] && eData['dateOptions'] instanceof Object) {
+                    dataOptions = $.extend(true, dataOptions, eData['dateOptions']);
+                }
+
                 $.each(options, function (key) {
                     var attributeName = 'date' + key.charAt(0).toUpperCase() + key.slice(1);
                     if (eData[attributeName] !== undefined) {
@@ -674,6 +678,7 @@
 
             function attachDatePickerWidgetEvents() {
                 $(window).on('resize', place);
+                widget.find('.collapse').on('hidden.bs.collapse', place);
                 widget.on('click', '[data-action]', $.proxy(doAction, picker)); // this handles clicks on the widget
                 widget.on('mousedown', $.proxy(stopEvent, picker));
                 if (!element.is('input')) {
@@ -683,6 +688,7 @@
 
             function detachDatePickerWidgetEvents() {
                 $(window).off('resize', place);
+                widget.find('.collapse').off('hidden.bs.collapse', place);
                 widget.off('click', '[data-action]');
                 widget.off('mousedown', stopEvent);
                 if (!element.is('input')) {
@@ -770,22 +776,11 @@
                     }
                 }
 
-                attachDatePickerElementEvents();
-
                 $.extend(true, options, dataToOptions());
-                if (!(options.pickTime || options.pickDate)) {
-                    throw new Error('Must choose at least one picker');
-                }
-
-                if (component) {
-                    component.find('span').addClass((options.pickDate ? options.icons.date : options.icons.time));
-                }
-
-                if (options.defaultDate && input.val() === '') {
-                    picker.date(options.defaultDate);
-                }
 
                 picker.options(options);
+
+                attachDatePickerElementEvents();
             }
 
             /********************************************************************************
@@ -796,14 +791,12 @@
 
             actions = {
                 next: function () {
-                    var step = datePickerModes[currentViewMode].navStep;
-                    viewDate.add(step, datePickerModes[currentViewMode].navFnc);
+                    viewDate.add(datePickerModes[currentViewMode].navStep, datePickerModes[currentViewMode].navFnc);
                     fillDate();
                 },
 
                 previous: function () {
-                    var step = datePickerModes[currentViewMode].navStep * -1;
-                    viewDate.add(step, datePickerModes[currentViewMode].navFnc);
+                    viewDate.subtract(datePickerModes[currentViewMode].navStep, datePickerModes[currentViewMode].navFnc);
                     fillDate();
                 },
 
@@ -1245,6 +1238,10 @@
                 }
 
                 options.defaultDate = parsedDate;
+
+                if (options.defaultDate && input.val() === '') {
+                    picker.date(options.defaultDate);
+                }
             };
 
             picker.locale = function (locale) {
@@ -1319,7 +1316,16 @@
                 if (typeof pickDate !== 'boolean') {
                     throw new TypeError('pickDate() expects a boolean parameter');
                 }
+                if (!(options.pickTime || pickDate)) {
+                    throw new Error('Must choose at least one picker');
+                }
+
                 options.pickDate = pickDate;
+
+                if (component) {
+                    component.find('span').addClass((options.pickDate ? options.icons.date : options.icons.time));
+                }
+
                 picker.format(options.format); // re-evaluate format variable in case options.format is not set
 
                 if (widget) {
@@ -1336,7 +1342,15 @@
                 if (typeof pickTime !== 'boolean') {
                     throw new TypeError('pickTime() expects a boolean parameter');
                 }
+                if (!(pickTime || options.pickDate)) {
+                    throw new Error('Must choose at least one picker');
+                }
                 options.pickTime = pickTime;
+
+                if (component) {
+                    component.find('span').addClass((options.pickDate ? options.icons.date : options.icons.time));
+                }
+
                 picker.format(options.format); // re-evaluate format variable in case options.format is not set
 
                 if (widget) {
