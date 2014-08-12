@@ -95,11 +95,11 @@
                         '<thead>' +
                         '<tr>' +
                             '<th class="prev" data-action="previous"><span class="' + options.icons.previous + '"></span></th>' +
-                            '<th colspan="5" class="picker-switch" data-action="pickerSwitch"></th>' +
+                            '<th colspan="' + (options.calendarWeeks ? '6' : '5') + '" class="picker-switch" data-action="pickerSwitch"></th>' +
                             '<th data-action="next" class="next"><span class="' + options.icons.next + '"></span></th>' +
                         '</tr>' +
                         '</thead>',
-                    contTemplate = '<tbody><tr><td colspan="7"></td></tr></tbody>';
+                    contTemplate = '<tbody><tr><td colspan="' + (options.calendarWeeks ? '9' : '7') + '"></td></tr></tbody>';
 
                 return '<div class="datepicker-days">' +
                     '<table class="table-condensed">' + headTemplate + '<tbody></tbody></table>' +
@@ -309,6 +309,10 @@
                 var html = $('<tr>'),
                     currentDate = viewDate.clone().startOf('w');
 
+                if (options.calendarWeeks === true) {
+                    html.append('<th class="cw">#</th>');
+                }
+
                 while (currentDate.isBefore(viewDate.clone().endOf('w'))) {
                     html.append('<th class="dow">' + currentDate.format('dd') + '</th>');
                     currentDate.add(1, 'd');
@@ -425,6 +429,9 @@
                 while (!viewDate.clone().endOf('M').endOf('w').isBefore(currentDate, 'd')) {
                     if (currentDate.weekday() === 0) {
                         row = $('<tr>');
+                        if (options.calendarWeeks) {
+                            row.append('<td class="cw">' + currentDate.week() + '</td>');
+                        }
                         html.push(row);
                     }
                     clsName = '';
@@ -1056,7 +1063,6 @@
                 }
                 $.extend(true, options, newOptions);
                 $.each(options, function (key, value) {
-                    //picker[key].apply(picker, [value]);
                     picker[key](value);
                 });
             };
@@ -1504,6 +1510,19 @@
                 update();
             };
 
+            picker.calendarWeeks = function (showCalendarWeeks) {
+                if (arguments.length === 0) {
+                    return options.calendarWeeks;
+                }
+
+                if (typeof showCalendarWeeks !== 'boolean') {
+                    throw new TypeError('calendarWeeks() expects parameter to be a boolean value');
+                }
+
+                options.calendarWeeks = showCalendarWeeks;
+                update();
+            };
+
             picker.orientation = function (orientation) {
                 if (arguments.length === 0) {
                     return options.orientation;
@@ -1573,6 +1592,7 @@
         sideBySide: false,
         daysOfWeekDisabled: [],
         widgetParent: false,
+        calendarWeeks: false,
         minViewMode: 'days',
         viewMode: 'days',
         orientation: 'right'
