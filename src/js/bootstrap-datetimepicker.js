@@ -246,7 +246,7 @@
                     }
                 }
                 if (placePosition === 'top') {
-                    offset.top -= widget.height() + element.outerHeight() + 15;
+                    offset.bottom = $window.height() - offset.top + element.outerHeight() + 3;
                     widget.addClass('top').removeClass('bottom');
                 } else {
                     offset.top += 1;
@@ -273,12 +273,22 @@
                     widget.removeClass('pull-right');
                 }
 
-                widget.css({
-                    position: position,
-                    top: offset.top,
-                    left: offset.left,
-                    right: offset.right
-                });
+                if (placePosition === 'top') {
+                    widget.css({
+                        position: position,
+                        bottom: offset.bottom,
+                        top: 'auto',
+                        left: offset.left,
+                        right: offset.right
+                    });
+                } else {
+                    widget.css({
+                        position: position,
+                        top: offset.top,
+                        left: offset.left,
+                        right: offset.right
+                    });
+                }
             }
 
             function notifyEvent(e) {
@@ -677,7 +687,6 @@
 
             function attachDatePickerWidgetEvents() {
                 $(window).on('resize', place);
-                widget.find('.collapse').on('hidden.bs.collapse', place);
                 widget.on('click', '[data-action]', $.proxy(doAction, picker)); // this handles clicks on the widget
                 widget.on('mousedown', $.proxy(stopEvent, picker));
                 if (!element.is('input')) {
@@ -687,7 +696,6 @@
 
             function detachDatePickerWidgetEvents() {
                 $(window).off('resize', place);
-                widget.find('.collapse').off('hidden.bs.collapse', place);
                 widget.off('click', '[data-action]');
                 widget.off('mousedown', stopEvent);
                 if (!element.is('input')) {
@@ -1235,7 +1243,7 @@
 
                 options.defaultDate = parsedDate;
 
-                if (options.defaultDate && input.val() === '') {
+                if (options.defaultDate && input.val().trim() === '') {
                     picker.date(options.defaultDate);
                 }
             };
