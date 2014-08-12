@@ -99,7 +99,7 @@
                             '<th data-action="next" class="next"><span class="' + options.icons.next + '"></span></th>' +
                         '</tr>' +
                         '</thead>',
-                    contTemplate = '<tbody><tr><td colspan="' + (options.calendarWeeks ? '9' : '7') + '"></td></tr></tbody>';
+                    contTemplate = '<tbody><tr><td colspan="' + (options.calendarWeeks ? '8' : '7') + '"></td></tr></tbody>';
 
                 return '<div class="datepicker-days">' +
                     '<table class="table-condensed">' + headTemplate + '<tbody></tbody></table>' +
