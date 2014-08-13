@@ -304,7 +304,7 @@ THE SOFTWARE.
                 }
             }
             if (placePosition === 'top') {
-                offset.top -= picker.widget.height() + picker.element.outerHeight() + 15;
+                offset.bottom = $window.height() - offset.top + picker.element.outerHeight() + 3;
                 picker.widget.addClass('top').removeClass('bottom');
             } else {
                 offset.top += 1;
@@ -335,12 +335,22 @@ THE SOFTWARE.
                 picker.widget.removeClass('pull-right');
             }
 
-            picker.widget.css({
-                position: position,
-                top: offset.top,
-                left: offset.left,
-                right: offset.right
-            });
+            if (placePosition === 'top') {
+                picker.widget.css({
+                    position: position,
+                    bottom: offset.bottom,
+                    top: 'auto',
+                    left: offset.left,
+                    right: offset.right
+                });
+            } else {
+                picker.widget.css({
+                    position: position,
+                    top: offset.top,
+                    left: offset.left,
+                    right: offset.right
+                });
+            }
         },
 
         notifyChange = function (oldDate, eventType) {
