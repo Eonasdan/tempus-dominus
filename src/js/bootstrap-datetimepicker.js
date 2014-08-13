@@ -1121,7 +1121,7 @@
                 }
 
                 format = newFormat;
-                use24hours = format.toLowerCase().indexOf('a') < 1;
+                use24hours = (picker.format.toLowerCase().indexOf('a') < 1 && picker.format.indexOf('h') < 1);
                 if (!unset) {
                     setValue(date);
                 }
