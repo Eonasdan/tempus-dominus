@@ -233,6 +233,9 @@ THE SOFTWARE.
             if (eData.dateUsecurrent !== undefined) {
                 picker.options.useCurrent = eData.dateUsecurrent;
             }
+            if (eData.calendarWeeks !== undefined) {
+                picker.options.calendarWeeks = eData.calendarWeeks;
+            }
             if (eData.dateMinutestepping !== undefined) {
                 picker.options.minuteStepping = eData.dateMinutestepping;
             }
@@ -386,7 +389,7 @@ THE SOFTWARE.
             moment.locale(picker.options.language);
             var html = $('<tr>'), weekdaysMin = moment.weekdaysMin(), i;
             if (picker.options.calendarWeeks === true) {
-                html.append('<th class="cw">&nbsp</th>');
+                html.append('<th class="cw">#</th>');
             }
             if (moment().localeData()._week.dow === 0) { // starts on Sunday
                 for (i = 0; i < 7; i++) {
@@ -1091,11 +1094,11 @@ THE SOFTWARE.
             headTemplate:
                     '<thead>' +
                         '<tr>' +
-                            '<th class="prev">&lsaquo;</th><th colspan="5" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
+                            '<th class="prev">&lsaquo;</th><th colspan="' + (options.calendarWeeks ? '6' : '5') + '" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
                         '</tr>' +
                     '</thead>',
             contTemplate:
-                    '<tbody><tr><td colspan="7"></td></tr></tbody>'
+                    '<tbody><tr><td colspan="' + (options.calendarWeeks ? '8' : '7') + '"></td></tr></tbody>'
         },
 
         tpGlobal = {
@@ -1347,7 +1350,7 @@ THE SOFTWARE.
         useMinutes: true,
         useSeconds: false,
         useCurrent: true,
-        calendarWeeks: true,
+        calendarWeeks: false,
         minuteStepping: 1,
         minDate: moment({y: 1900}),
         maxDate: moment().add(100, 'y'),
