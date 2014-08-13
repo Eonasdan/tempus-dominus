@@ -61,6 +61,7 @@
                 use24hours,
                 minViewModeNumber,
                 format,
+                errored = false,
                 currentViewMode,
                 actions,
                 datePickerModes = [
@@ -292,7 +293,7 @@
             }
 
             function notifyEvent(e) {
-                if (e.type === 'dp.change' && e.date && e.date.isSame(e.oldDate)) {
+                if (e.type === 'dp.change' && e.date && e.date.isSame(e.oldDate) && !errored) {
                     return;
                 }
                 element.trigger(e);
@@ -350,6 +351,9 @@
             }
 
             function isValid(targetMoment, granularity) {
+                if (!targetMoment.isValid()) {
+                    return false;
+                }
                 if (options.minDate && targetMoment.isBefore(options.minDate, granularity)) {
                     return false;
                 }
@@ -566,6 +570,7 @@
             function setValue(targetMoment) {
                 var oldDate = date;
 
+                // case of calling setValue(null or false)
                 if (!targetMoment) {
                     unset = true;
                     input.val('');
@@ -596,12 +601,14 @@
                         date: picker.date(),
                         oldDate: oldDate
                     });
+                    errored = false;
                 } else {
+                    //*TODO depending on behaviour we might want to bump the value and/or update the input.val or not
+                    errored = true;
                     notifyEvent({
                         type: 'dp.error',
                         date: targetMoment
                     });
-                    //*TODO depending on behaviour we might want to bump the value and/or update the input.val or not
                 }
             }
 
@@ -620,7 +627,7 @@
                     date = moment(date, options.format, options.useStrict);
                 }
                 date.locale(options.locale);
-                return (date.isValid() ? date : false);
+                return date;
             }
 
             function doAction(e) {
@@ -1188,7 +1195,7 @@
                     update();
                     return;
                 }
-                if (!parsedDate) {
+                if (!parsedDate.isValid()) {
                     throw new TypeError('maxDate() Could not parse date variable: ' + date);
                 }
                 if (options.minDate && parsedDate.isBefore(options.minDate)) {
@@ -1212,7 +1219,7 @@
                     update();
                     return;
                 }
-                if (!parsedDate) {
+                if (!parsedDate.isValid()) {
                     throw new TypeError('minDate() Could not parse date variable: ' + date);
                 }
                 if (options.maxDate && parsedDate.isAfter(options.maxDate)) {
@@ -1234,7 +1241,7 @@
                     return;
                 }
                 var parsedDate = parseInputDate(defaultDate);
-                if (!parsedDate) {
+                if (parsedDate.isValid()) {
                     throw new TypeError('defaultDate() Could not parse date variable: ' + defaultDate);
                 }
                 if (!isValid(parsedDate)) {
