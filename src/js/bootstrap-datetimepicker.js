@@ -110,7 +110,7 @@ THE SOFTWARE.
                     }
                 }
             }
-            picker.use24hours = picker.format.toLowerCase().indexOf('a') < 1;
+            picker.use24hours = (picker.format.toLowerCase().indexOf('a') < 0 && picker.format.indexOf('h') < 0);
 
             if (picker.component) {
                 icon = picker.component.find('span');
