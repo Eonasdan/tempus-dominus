@@ -1092,7 +1092,7 @@
                     return options.format;
                 }
 
-                if ((typeof newFormat !== 'string') && ((typeof newFormat !== 'boolean') && (newFormat !== false))) {
+                if ((typeof newFormat !== 'string') && ((typeof newFormat !== 'boolean') || (newFormat !== false))) {
                     throw new TypeError('format() expects a sting or boolean:false variable ' + newFormat);
                 }
 
