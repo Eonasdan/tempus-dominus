@@ -20,7 +20,7 @@ grunt                 # this runs tests and jshint
 Very important notes
 ====================
 
- * **Pull pull requests to the `master` branch will be closed.** Please submit all pull requests to the `development` branch.
+ * **Pull requests to the `master` branch will be closed.** Please submit all pull requests to the `development` branch.
  * **Do not include the minified files in your pull request.** Don't worry, we'll build them when we cut a release.
 
 Grunt tasks
