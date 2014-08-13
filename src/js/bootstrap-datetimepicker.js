@@ -60,7 +60,7 @@ THE SOFTWARE.
             },
 
             picker = this,
-
+            errored = false,
             dDate,
 
         init = function () {
@@ -354,9 +354,10 @@ THE SOFTWARE.
         },
 
         notifyChange = function (oldDate, eventType) {
-            if (moment(picker.date).isSame(moment(oldDate))) {
+            if (moment(picker.date).isSame(moment(oldDate)) && !errored) {
                 return;
             }
+            errored = false;
             picker.element.trigger({
                 type: 'dp.change',
                 date: moment(picker.date),
@@ -369,6 +370,7 @@ THE SOFTWARE.
         },
 
         notifyError = function (date) {
+            errored = true;
             picker.element.trigger({
                 type: 'dp.error',
                 date: moment(date, picker.format, picker.options.useStrict)
