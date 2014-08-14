@@ -1049,18 +1049,36 @@ THE SOFTWARE.
         },
 
         getTemplate = function () {
+            var
+                headTemplate =
+                        '<thead>' +
+                            '<tr>' +
+                                '<th class="prev">&lsaquo;</th><th colspan="' + (picker.options.calendarWeeks ? '6' : '5') + '" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
+                            '</tr>' +
+                        '</thead>',
+                contTemplate =
+                        '<tbody><tr><td colspan="' + (picker.options.calendarWeeks ? '8' : '7') + '"></td></tr></tbody>',
+                template = '<div class="datepicker-days">' +
+                    '<table class="table-condensed">' + headTemplate + '<tbody></tbody></table>' +
+                '</div>' +
+                '<div class="datepicker-months">' +
+                    '<table class="table-condensed">' + headTemplate + contTemplate + '</table>' +
+                '</div>' +
+                '<div class="datepicker-years">' +
+                    '<table class="table-condensed">' + headTemplate + contTemplate + '</table>' +
+                '</div>',
+                ret = '';
             if (picker.options.pickDate && picker.options.pickTime) {
-                var ret = '';
                 ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
-                       '<div class="col-sm-6 datepicker">' + dpGlobal.template + '</div>' +
+                       '<div class="col-sm-6 datepicker">' + template + '</div>' +
                        '<div class="col-sm-6 timepicker">' + tpGlobal.getTemplate() + '</div>' +
                      '</div>';
                 } else {
                     ret += '<ul class="list-unstyled">' +
                         '<li' + (picker.options.collapse ? ' class="collapse in"' : '') + '>' +
-                            '<div class="datepicker">' + dpGlobal.template + '</div>' +
+                            '<div class="datepicker">' + template + '</div>' +
                         '</li>' +
                         '<li class="picker-switch accordion-toggle"><a class="btn" style="width:100%"><span class="' + picker.options.icons.time + '"></span></a></li>' +
                         '<li' + (picker.options.collapse ? ' class="collapse"' : '') + '>' +
@@ -1102,15 +1120,7 @@ THE SOFTWARE.
                     navFnc: 'year',
                     navStep: 10
                 }
-            ],
-            headTemplate:
-                    '<thead>' +
-                        '<tr>' +
-                            '<th class="prev">&lsaquo;</th><th colspan="' + (picker.options.calendarWeeks ? '6' : '5') + '" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
-                        '</tr>' +
-                    '</thead>',
-            contTemplate:
-                    '<tbody><tr><td colspan="' + (picker.options.calendarWeeks ? '8' : '7') + '"></td></tr></tbody>'
+            ]
         },
 
         tpGlobal = {
@@ -1118,17 +1128,6 @@ THE SOFTWARE.
             minuteTemplate: '<span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>',
             secondTemplate: '<span data-action="showSeconds"  data-time-component="seconds" class="timepicker-second"></span>'
         };
-
-        dpGlobal.template =
-            '<div class="datepicker-days">' +
-                '<table class="table-condensed">' + dpGlobal.headTemplate + '<tbody></tbody></table>' +
-            '</div>' +
-            '<div class="datepicker-months">' +
-                '<table class="table-condensed">' + dpGlobal.headTemplate + dpGlobal.contTemplate + '</table>' +
-            '</div>' +
-            '<div class="datepicker-years">' +
-                '<table class="table-condensed">' + dpGlobal.headTemplate + dpGlobal.contTemplate + '</table>' +
-            '</div>';
 
         tpGlobal.getTemplate = function () {
             return (
