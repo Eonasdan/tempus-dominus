@@ -1187,12 +1187,14 @@
                     return moment(options.maxDate);
                 }
 
-                var parsedDate = parseInputDate(date);
                 if ((typeof date === 'boolean') && date === false) {
                     options.maxDate = false;
                     update();
                     return;
                 }
+
+                var parsedDate = parseInputDate(date);
+
                 if (!parsedDate.isValid()) {
                     throw new TypeError('maxDate() Could not parse date variable: ' + date);
                 }
@@ -1211,12 +1213,14 @@
                     return moment(options.minDate);
                 }
 
-                var parsedDate = parseInputDate(date);
                 if ((typeof date === 'boolean') && date === false) {
                     options.minDate = false;
                     update();
                     return;
                 }
+
+                var parsedDate = parseInputDate(date);
+
                 if (!parsedDate.isValid()) {
                     throw new TypeError('minDate() Could not parse date variable: ' + date);
                 }
