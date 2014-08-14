@@ -1085,13 +1085,11 @@
                     return date.clone();
                 }
 
-                if (newDate === null) {
-                    setValue(false);
-                    return;
+                if (newDate !== null && typeof newDate !== 'string' && !moment.isMoment(newDate) && !(newDate instanceof Date)) {
+                    throw new TypeError('date() parameter must be one of [null, string, moment or Date]');
                 }
-                var parsedDate = parseInputDate(newDate);
 
-                setValue(parsedDate);
+                setValue(newDate === null ? null : parseInputDate(newDate));
             };
 
             picker.format = function (newFormat) {
