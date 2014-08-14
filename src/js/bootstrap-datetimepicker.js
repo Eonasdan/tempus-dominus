@@ -1106,11 +1106,11 @@ THE SOFTWARE.
             headTemplate:
                     '<thead>' +
                         '<tr>' +
-                            '<th class="prev">&lsaquo;</th><th colspan="' + (options.calendarWeeks ? '6' : '5') + '" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
+                            '<th class="prev">&lsaquo;</th><th colspan="' + (picker.options.calendarWeeks ? '6' : '5') + '" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
                         '</tr>' +
                     '</thead>',
             contTemplate:
-                    '<tbody><tr><td colspan="' + (options.calendarWeeks ? '8' : '7') + '"></td></tr></tbody>'
+                    '<tbody><tr><td colspan="' + (picker.options.calendarWeeks ? '8' : '7') + '"></td></tr></tbody>'
         },
 
         tpGlobal = {
