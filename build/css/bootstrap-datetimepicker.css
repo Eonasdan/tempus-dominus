@@ -97,7 +97,16 @@
 .bootstrap-datetimepicker-widget .picker-switch {
   text-align: center;
 }
-.bootstrap-datetimepicker-widget .picker-switch a {
+.bootstrap-datetimepicker-widget .picker-switch td {
+  padding: 0;
+  margin: 0;
+  height: auto;
+  width: auto;
+  line-height: inherit;
+}
+.bootstrap-datetimepicker-widget .picker-switch td span {
+  line-height: 2.5;
+  height: 2.5em;
   width: 100%;
 }
 .bootstrap-datetimepicker-widget table {
@@ -113,6 +122,12 @@
   height: 54px;
   line-height: 54px;
   width: 54px;
+}
+.bootstrap-datetimepicker-widget td.cw {
+  font-size: .8em;
+  height: 20px;
+  line-height: 20px;
+  color: #777777;
 }
 .bootstrap-datetimepicker-widget td.day {
   height: 20px;
@@ -203,12 +218,6 @@
 }
 .bootstrap-datetimepicker-widget thead tr:first-child th:hover {
   background: #eeeeee;
-}
-.input-group.date .input-group-addon span {
-  display: block;
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
 }
 .bootstrap-datetimepicker-widget.left-oriented:before {
   left: auto;

@@ -92,31 +92,44 @@
              ********************************************************************************/
 
             function getDatePickerTemplate() {
-                var headTemplate =
-                        '<thead>' +
-                        '<tr>' +
-                            '<th class="prev" data-action="previous"><span class="' + options.icons.previous + '"></span></th>' +
-                            '<th colspan="' + (options.calendarWeeks ? '6' : '5') + '" class="picker-switch" data-action="pickerSwitch"></th>' +
-                            '<th data-action="next" class="next"><span class="' + options.icons.next + '"></span></th>' +
-                        '</tr>' +
-                        '</thead>',
-                    contTemplate = '<tbody><tr><td colspan="' + (options.calendarWeeks ? '8' : '7') + '"></td></tr></tbody>';
+                var headTemplate = $('<thead>')
+                        .append($('<tr>')
+                            .append($('<th>').addClass('prev').attr('data-action', 'previous')
+                                .append($('<span>').addClass(options.icons.previous))
+                            )
+                            .append($('<th>').addClass('picker-switch').attr('data-action', 'pickerSwitch').attr('colspan', (options.calendarWeeks ? '6' : '5')))
+                            .append($('<th>').addClass('next').attr('data-action', 'next')
+                                .append($('<span>').addClass(options.icons.next))
+                            )
+                        ),
+                    contTemplate = $('<tbody>')
+                        .append($('<tr>')
+                            .append($('<td>').attr('colspan', (options.calendarWeeks ? '8' : '7')))
+                        );
 
-                return '<div class="datepicker-days">' +
-                    '<table class="table-condensed">' + headTemplate + '<tbody></tbody></table>' +
-                    '</div>' +
-                    '<div class="datepicker-months">' +
-                    '<table class="table-condensed">' + headTemplate + contTemplate + '</table>' +
-                    '</div>' +
-                    '<div class="datepicker-years">' +
-                    '<table class="table-condensed">' + headTemplate + contTemplate + '</table>' +
-                    '</div>';
+                return [
+                    $('<div>').addClass('datepicker-days')
+                        .append($('<table>').addClass('table-condensed')
+                            .append(headTemplate)
+                            .append($('<tbody>'))
+                        ),
+                    $('<div>').addClass('datepicker-months')
+                        .append($('<table>').addClass('table-condensed')
+                            .append(headTemplate.clone())
+                            .append(contTemplate.clone())
+                        ),
+                    $('<div>').addClass('datepicker-years')
+                        .append($('<table>').addClass('table-condensed')
+                            .append(headTemplate.clone())
+                            .append(contTemplate.clone())
+                        )
+                ];
             }
 
             function getTimePickerTemplate() {
                 var hourTemplate = '<span data-action="showHours" data-time-component="hours" class="timepicker-hour"></span>',
                     minuteTemplate = '<span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>',
-                    secondTemplate = '<span data-action="showSeconds"  data-time-component="seconds" class="timepicker-second"></span>';
+                    secondTemplate = '<span data-action="showSeconds" data-time-component="seconds" class="timepicker-second"></span>';
 
                 return '<div class="timepicker-picker">' +
                     '<table class="table-condensed">' +
@@ -147,49 +160,56 @@
                     '</tr>' +
                     '</table>' +
                     '</div>' +
-                    '<div class="timepicker-hours" data-action="selectHour">' +
+                    '<div class="timepicker-hours">' +
                     '<table class="table-condensed"></table>' +
                     '</div>' +
-                    '<div class="timepicker-minutes" data-action="selectMinute">' +
+                    '<div class="timepicker-minutes">' +
                     '<table class="table-condensed"></table>' +
                     '</div>' +
-                    (options.useSeconds ? '<div class="timepicker-seconds" data-action="selectSecond"><table class="table-condensed"></table></div>' : '');
+                    (options.useSeconds ? '<div class="timepicker-seconds"><table class="table-condensed"></table></div>' : '');
+            }
+
+            function getToolbar() {
+                var row = [];
+                if (options.showTodayButton) {
+                    row.push($('<td>').append($('<a>').attr('data-action', 'today').append($('<span>').addClass(options.icons.today))));
+                }
+                if (options.pickDate && options.pickTime) {
+                    row.push($('<td>').append($('<a>').attr('data-action', 'togglePicker').append($('<span>').addClass(options.icons.time))));
+                }
+                if (options.showClear) {
+                    row.push($('<td>').append($('<a>').attr('data-action', 'clear').append($('<span>').addClass(options.icons.clear))));
+                }
+                return $('<table>').addClass('table-condensed').append($('<tbody>').append($('<tr>').append(row)));
             }
 
             function getTemplate() {
-                if (options.pickDate && options.pickTime) {
-                    var ret = '<div class="bootstrap-datetimepicker-widget' + (options.sideBySide ? ' timepicker-sbs' : '') + (use24hours ? ' usetwentyfour' : '') + ' dropdown-menu">';
-                    if (options.sideBySide) {
-                        ret +=  '<div class="row">' +
-                            '<div class="col-sm-6 datepicker">' + getDatePickerTemplate() + '</div>' +
-                            '<div class="col-sm-6 timepicker">' + getTimePickerTemplate() + '</div>' +
-                            '</div>';
-                    } else {
-                        ret +=  '<ul class="list-unstyled">' +
-                            '<li' + (options.collapse ? ' class="collapse in"' : '') + '>' +
-                                '<div class="datepicker">' + getDatePickerTemplate() + '</div>' +
-                            '</li>' +
-                            '<li class="picker-switch accordion-toggle"><a data-action="togglePicker" class="btn"><span class="' + options.icons.time + '"></span></a></li>' +
-                            '<li' + (options.collapse ? ' class="collapse"' : '') + '>' +
-                                '<div class="timepicker">' + getTimePickerTemplate() + '</div>' +
-                            '</li>' +
-                            '</ul>';
+                var template = $('<div>').addClass('bootstrap-datetimepicker-widget dropdown-menu'),
+                    dateView = $('<div>').addClass('datepicker').append(getDatePickerTemplate()),
+                    timeView = $('<div>').addClass('timepicker').html(getTimePickerTemplate()),
+                    content = $('<ul>').addClass('list-unstyled');
+
+                if (options.sideBySide && options.pickDate && options.pickTime) {
+                    template.addClass('timepicker-sbs');
+                    if (use24hours) {
+                        template.addClass('usetwentyfour');
                     }
-                    ret += '</div>';
-                    return ret;
-                }
-                if (options.pickTime) {
-                    return (
-                        '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
-                            '<div class="timepicker">' + getTimePickerTemplate() + '</div>' +
-                        '</div>'
-                        );
-                }
-                return (
-                    '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
-                        '<div class="datepicker">' + getDatePickerTemplate() + '</div>' +
-                    '</div>'
+                    template.append(
+                        $('<div>').addClass('row')
+                            .append(dateView.addClass('col-sm-6'))
+                            .append(timeView.addClass('col-sm-6'))
                     );
+                    return template;
+                }
+
+                if (options.pickDate) {
+                    content.append($('<li>').addClass((options.collapse && options.pickTime ? 'collapse in' : '')).append(dateView));
+                }
+                content.append($('<li>').addClass('picker-switch accordion-toggle').append(getToolbar()));
+                if (options.pickTime) {
+                    content.append($('<li>').addClass((options.collapse && options.pickDate ? 'collapse' : '')).append(timeView));
+                }
+                return template.append(content);
             }
 
             function dataToOptions() {
@@ -469,7 +489,7 @@
                     if (currentDate.isAfter(viewDate, 'M')) {
                         clsName += ' new';
                     }
-                    if (currentDate.isSame(date, 'd')) {
+                    if (currentDate.isSame(date, 'd') && !unset) {
                         clsName += ' active';
                     }
                     if (!isValid(currentDate, 'd')) {
@@ -502,7 +522,7 @@
                         row = $('<tr>');
                         html.push(row);
                     }
-                    row.append('<td class="hour' + (!isValid(currentHour, 'h') ? ' disabled' : '') + '">' + currentHour.format(use24hours ? 'HH' : 'hh') + '</td>');
+                    row.append('<td data-action="selectHour" class="hour' + (!isValid(currentHour, 'h') ? ' disabled' : '') + '">' + currentHour.format(use24hours ? 'HH' : 'hh') + '</td>');
                     currentHour.add(1, 'h');
                 }
                 table.empty().append(html);
@@ -522,7 +542,7 @@
                         row = $('<tr>');
                         html.push(row);
                     }
-                    row.append('<td class="minute">' + currentMinute.format('mm') + '</td>');
+                    row.append('<td data-action="selectMinute" class="minute' + (!isValid(currentMinute, 'm') ? ' disabled' : '') + '">' + currentMinute.format('mm') + '</td>');
                     currentMinute.add(step, 'm');
                 }
                 table.empty().append(html);
@@ -541,7 +561,7 @@
                         row = $('<tr>');
                         html.push(row);
                     }
-                    row.append('<td class="second">' + currentSecond.format('ss') + '</td>');
+                    row.append('<td data-action="selectSecond" class="second' + (!isValid(currentSecond, 's') ? ' disabled' : '') + '">' + currentSecond.format('ss') + '</td>');
                     currentSecond.add(5, 's');
                 }
 
@@ -580,6 +600,7 @@
                         date: null,
                         oldDate: oldDate
                     });
+                    update();
                     return;
                 }
 
@@ -618,13 +639,10 @@
             }
 
             function parseInputDate(date) {
-                if (date === undefined) {
-                    return false;
-                }
                 if (moment.isMoment(date) || date instanceof Date) {
                     date = moment(date);
                 } else {
-                    date = moment(date, options.format, options.useStrict);
+                    date = moment(date, format, options.useStrict);
                 }
                 date.locale(options.locale);
                 return date;
@@ -651,21 +669,21 @@
             function attachDatePickerElementEvents() {
                 if (element.is('input')) {
                     element.on({
-                        'click': $.proxy(picker.show, picker),
-                        'focus': $.proxy(picker.show, picker),
-                        'change': $.proxy(change, picker),
-                        'blur': $.proxy(picker.hide, picker),
-                        'keydown': $.proxy(keydown, picker)
+                        'click': picker.show,
+                        'focus': picker.show,
+                        'change': change,
+                        'blur': picker.hide,
+                        'keydown': keydown
                     });
                 } else {
                     element.on({
-                        'change': $.proxy(change, picker)
+                        'change': change
                     }, 'input');
                     if (component) {
-                        component.on('click', $.proxy(picker.toggle, picker));
-                        component.on('mousedown', $.proxy(stopEvent, picker));
+                        component.on('click', picker.toggle);
+                        component.on('mousedown', stopEvent);
                     } else {
-                        element.on('click', $.proxy(picker.show, picker));
+                        element.on('click', picker.show);
                     }
                 }
             }
@@ -694,10 +712,10 @@
 
             function attachDatePickerWidgetEvents() {
                 $(window).on('resize', place);
-                widget.on('click', '[data-action]', $.proxy(doAction, picker)); // this handles clicks on the widget
-                widget.on('mousedown', $.proxy(stopEvent, picker));
+                widget.on('click', '[data-action]', doAction); // this handles clicks on the widget
+                widget.on('mousedown', stopEvent);
                 if (!element.is('input')) {
-                    $(document).on('mousedown', $.proxy(picker.hide, picker));
+                    $(document).on('mousedown', picker.hide);
                 }
             }
 
@@ -950,13 +968,21 @@
                 },
 
                 selectMinute: function (e) {
-                    setValue(picker.date().minutes(parseInt($(e.target).text(), 10)));
+                    setValue(date.clone().minutes(parseInt($(e.target).text(), 10)));
                     actions.showPicker.call(picker);
                 },
 
                 selectSecond: function (e) {
-                    setValue(picker.date().seconds(parseInt($(e.target).text(), 10)));
+                    setValue(date.clone().seconds(parseInt($(e.target).text(), 10)));
                     actions.showPicker.call(picker);
+                },
+
+                clear: function () {
+                    picker.date(null);
+                },
+
+                today: function () {
+                    picker.date(moment());
                 }
             };
 
@@ -983,6 +1009,7 @@
                 } else {
                     picker.show();
                 }
+                return picker;
             };
 
             picker.show = function () {
@@ -1023,6 +1050,7 @@
                     type: 'dp.show',
                     date: picker.date()
                 });
+                return picker;
             };
 
             picker.hide = function () {
@@ -1046,6 +1074,7 @@
                     type: 'dp.hide',
                     date: picker.date()
                 });
+                return picker;
             };
 
             picker.disable = function () {
@@ -1054,6 +1083,7 @@
                 }
                 input.prop('disabled', true);
                 picker.hide();
+                return picker;
             };
 
             picker.enable = function () {
@@ -1061,6 +1091,7 @@
                     return;
                 }
                 input.prop('disabled', false);
+                return picker;
             };
 
             picker.options = function (newOptions) {
@@ -1075,6 +1106,7 @@
                 $.each(options, function (key, value) {
                     picker[key](value);
                 });
+                return picker;
             };
 
             picker.date = function (newDate) {
@@ -1090,6 +1122,7 @@
                 }
 
                 setValue(newDate === null ? null : parseInputDate(newDate));
+                return picker;
             };
 
             picker.format = function (newFormat) {
@@ -1123,6 +1156,7 @@
                 if (!unset) {
                     setValue(date);
                 }
+                return picker;
             };
 
             picker.disabledDates = function (dates) {
@@ -1133,7 +1167,7 @@
                 if (!dates) {
                     options.disabledDates = false;
                     update();
-                    return;
+                    return picker;
                 }
                 if (!(dates instanceof Array)) {
                     throw new TypeError('disabledDates() expects an array parameter');
@@ -1141,6 +1175,7 @@
                 options.disabledDates = indexGivenDates(dates);
                 options.enabledDates = false;
                 update();
+                return picker;
             };
 
             picker.enabledDates = function (dates) {
@@ -1151,7 +1186,7 @@
                 if (!dates) {
                     options.enabledDates = false;
                     update();
-                    return;
+                    return picker;
                 }
                 if (!(dates instanceof Array)) {
                     throw new TypeError('enabledDates() expects an array parameter');
@@ -1159,6 +1194,7 @@
                 options.enabledDates = indexGivenDates(dates);
                 options.disabledDates = false;
                 update();
+                return picker;
             };
 
             picker.daysOfWeekDisabled = function (daysOfWeekDisabled) {
@@ -1180,6 +1216,7 @@
                     return previousValue;
                 }, []).sort();
                 update();
+                return picker;
             };
 
             picker.maxDate = function (date) {
@@ -1190,7 +1227,7 @@
                 if ((typeof date === 'boolean') && date === false) {
                     options.maxDate = false;
                     update();
-                    return;
+                    return picker;
                 }
 
                 var parsedDate = parseInputDate(date);
@@ -1206,6 +1243,7 @@
                     setValue(options.maxDate);
                 }
                 update();
+                return picker;
             };
 
             picker.minDate = function (date) {
@@ -1216,7 +1254,7 @@
                 if ((typeof date === 'boolean') && date === false) {
                     options.minDate = false;
                     update();
-                    return;
+                    return picker;
                 }
 
                 var parsedDate = parseInputDate(date);
@@ -1232,6 +1270,7 @@
                     setValue(options.minDate);
                 }
                 update();
+                return picker;
             };
 
             picker.defaultDate = function (defaultDate) {
@@ -1240,7 +1279,7 @@
                 }
                 if (!defaultDate) {
                     options.defaultDate = false;
-                    return;
+                    return picker;
                 }
                 var parsedDate = parseInputDate(defaultDate);
                 if (parsedDate.isValid()) {
@@ -1255,6 +1294,7 @@
                 if (options.defaultDate && input.val().trim() === '') {
                     picker.date(options.defaultDate);
                 }
+                return picker;
             };
 
             picker.locale = function (locale) {
@@ -1274,6 +1314,7 @@
                     picker.hide();
                     picker.show();
                 }
+                return picker;
             };
 
             picker.useMinutes = function (useMinutes) {
@@ -1285,6 +1326,7 @@
                     throw new TypeError('useMinutes() expects a boolean parameter');
                 }
                 options.useMinutes = useMinutes || false;
+                return picker;
             };
 
             picker.useSeconds = function (useSeconds) {
@@ -1296,6 +1338,7 @@
                     throw new TypeError('useSeconds() expects a boolean parameter');
                 }
                 options.useSeconds = useSeconds;
+                return picker;
             };
 
             picker.useCurrent = function (useCurrent) {
@@ -1307,6 +1350,7 @@
                     throw new TypeError('useCurrent() expects a boolean parameter');
                 }
                 options.useCurrent = useCurrent;
+                return picker;
             };
 
             picker.minuteStepping = function (minuteStepping) {
@@ -1319,6 +1363,7 @@
                     minuteStepping = 1;
                 }
                 options.minuteStepping = minuteStepping;
+                return picker;
             };
 
             picker.pickDate = function (pickDate) {
@@ -1345,6 +1390,7 @@
                     picker.hide();
                     picker.show();
                 }
+                return picker;
             };
 
             picker.pickTime = function (pickTime) {
@@ -1370,6 +1416,7 @@
                     picker.hide();
                     picker.show();
                 }
+                return picker;
             };
 
             picker.showToday = function (showToday) {
@@ -1385,6 +1432,7 @@
                     picker.hide();
                     picker.show();
                 }
+                return picker;
             };
 
             picker.collapse = function (collapse) {
@@ -1396,13 +1444,14 @@
                     throw new TypeError('collapse() expects a boolean parameter');
                 }
                 if (options.collapse === collapse) {
-                    return;
+                    return picker;
                 }
                 options.collapse = collapse;
                 if (widget) {
                     picker.hide();
                     picker.show();
                 }
+                return picker;
             };
 
             picker.icons = function (icons) {
@@ -1418,6 +1467,7 @@
                     picker.hide();
                     picker.show();
                 }
+                return picker;
             };
 
             picker.useStrict = function (useStrict) {
@@ -1429,6 +1479,7 @@
                     throw new TypeError('useStrict() expects a boolean parameter');
                 }
                 options.useStrict = useStrict;
+                return picker;
             };
 
             picker.sideBySide = function (sideBySide) {
@@ -1444,6 +1495,7 @@
                     picker.hide();
                     picker.show();
                 }
+                return picker;
             };
 
             picker.widgetParent = function (widgetParent) {
@@ -1456,6 +1508,7 @@
                 }
 
                 options.widgetParent = widgetParent;
+                return picker;
             };
 
             picker.minViewMode = function (newMinViewMode) {
@@ -1477,6 +1530,7 @@
                 currentViewMode = Math.max(minViewModeNumber, currentViewMode);
 
                 showMode();
+                return picker;
             };
 
             picker.viewMode = function (newViewMode) {
@@ -1496,6 +1550,7 @@
                 currentViewMode = Math.max(viewModes.indexOf(newViewMode), minViewModeNumber);
 
                 showMode();
+                return picker;
             };
 
             picker.direction = function (direction) {
@@ -1515,6 +1570,7 @@
 
                 options.direction = direction;
                 update();
+                return picker;
             };
 
             picker.calendarWeeks = function (showCalendarWeeks) {
@@ -1528,6 +1584,7 @@
 
                 options.calendarWeeks = showCalendarWeeks;
                 update();
+                return picker;
             };
 
             picker.orientation = function (orientation) {
@@ -1547,6 +1604,41 @@
 
                 options.orientation = orientation;
                 update();
+                return picker;
+            };
+
+            picker.showTodayButton = function (showTodayButton) {
+                if (arguments.length === 0) {
+                    return options.showTodayButton;
+                }
+
+                if (typeof showTodayButton !== 'boolean') {
+                    throw new TypeError('showTodayButton() expects a boolean parameter');
+                }
+
+                options.showTodayButton = showTodayButton;
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
+                return picker;
+            };
+
+            picker.showClear = function (showClear) {
+                if (arguments.length === 0) {
+                    return options.showClear;
+                }
+
+                if (typeof showClear !== 'boolean') {
+                    throw new TypeError('showClear() expects a boolean parameter');
+                }
+
+                options.showClear = showClear;
+                if (widget) {
+                    picker.hide();
+                    picker.show();
+                }
+                return picker;
             };
 
             init();
@@ -1587,12 +1679,14 @@
         disabledDates: false,
         enabledDates: false,
         icons: {
-            time : 'glyphicon glyphicon-time',
-            date : 'glyphicon glyphicon-calendar',
-            up   : 'glyphicon glyphicon-chevron-up',
-            down : 'glyphicon glyphicon-chevron-down',
+            time :    'glyphicon glyphicon-time',
+            date :    'glyphicon glyphicon-calendar',
+            up   :    'glyphicon glyphicon-chevron-up',
+            down :    'glyphicon glyphicon-chevron-down',
             previous: 'glyphicon glyphicon-chevron-left',
-            next : 'glyphicon glyphicon-chevron-right'
+            next :    'glyphicon glyphicon-chevron-right',
+            today:    'glyphicon glyphicon-screenshot',
+            clear:    'glyphicon glyphicon-trash'
         },
         useStrict: false,
         direction: 'auto',
@@ -1602,6 +1696,8 @@
         calendarWeeks: false,
         minViewMode: 'days',
         viewMode: 'days',
-        orientation: 'right'
+        orientation: 'right',
+        showTodayButton: false,
+        showClear: false
     };
 }));
