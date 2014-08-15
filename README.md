@@ -12,7 +12,7 @@ That would be great!
 
 **We are currently in need for beta testers** to find issues that might have slipped.
 
-Also if you have the guts we could use a testing framework and tests.
+Also if you have the guts we could use a hand writing test specs.
 
 Have a look first [here](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Contributors-guide) as a supplement to the code
 
