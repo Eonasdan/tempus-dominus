@@ -1108,7 +1108,9 @@
                 }
                 $.extend(true, options, newOptions);
                 $.each(options, function (key, value) {
-                    picker[key](value);
+                    if (picker[key] !== undefined) {
+                        picker[key](value);
+                    }
                 });
                 return picker;
             };
@@ -1279,14 +1281,14 @@
 
             picker.defaultDate = function (defaultDate) {
                 if (arguments.length === 0) {
-                    return moment(options.defaultDate);
+                    return options.defaultDate ? moment(options.defaultDate) : options.defaultDate;
                 }
                 if (!defaultDate) {
                     options.defaultDate = false;
                     return picker;
                 }
                 var parsedDate = parseInputDate(defaultDate);
-                if (parsedDate.isValid()) {
+                if (!parsedDate.isValid()) {
                     throw new TypeError('defaultDate() Could not parse date variable: ' + defaultDate);
                 }
                 if (!isValid(parsedDate)) {
