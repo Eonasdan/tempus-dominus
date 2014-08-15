@@ -1,5 +1,5 @@
 /*
-//! version : 3.0.3
+//! version : 3.1.0
 =========================================================
 bootstrap-datetimepicker.js
 https://github.com/Eonasdan/bootstrap-datetimepicker
@@ -60,7 +60,7 @@ THE SOFTWARE.
             },
 
             picker = this,
-
+            errored = false,
             dDate,
 
         init = function () {
@@ -110,7 +110,7 @@ THE SOFTWARE.
                     }
                 }
             }
-            picker.use24hours = picker.format.toLowerCase().indexOf('a') < 1;
+            picker.use24hours = (picker.format.toLowerCase().indexOf('a') < 0 && picker.format.indexOf('h') < 0);
 
             if (picker.component) {
                 icon = picker.component.find('span');
@@ -233,6 +233,9 @@ THE SOFTWARE.
             if (eData.dateUsecurrent !== undefined) {
                 picker.options.useCurrent = eData.dateUsecurrent;
             }
+            if (eData.calendarWeeks !== undefined) {
+                picker.options.calendarWeeks = eData.calendarWeeks;
+            }
             if (eData.dateMinutestepping !== undefined) {
                 picker.options.minuteStepping = eData.dateMinutestepping;
             }
@@ -304,7 +307,7 @@ THE SOFTWARE.
                 }
             }
             if (placePosition === 'top') {
-                offset.top -= picker.widget.height() + picker.element.outerHeight() + 15;
+                offset.bottom = $window.height() - offset.top + picker.element.outerHeight() + 3;
                 picker.widget.addClass('top').removeClass('bottom');
             } else {
                 offset.top += 1;
@@ -335,18 +338,29 @@ THE SOFTWARE.
                 picker.widget.removeClass('pull-right');
             }
 
-            picker.widget.css({
-                position: position,
-                top: offset.top,
-                left: offset.left,
-                right: offset.right
-            });
+            if (placePosition === 'top') {
+                picker.widget.css({
+                    position: position,
+                    bottom: offset.bottom,
+                    top: 'auto',
+                    left: offset.left,
+                    right: offset.right
+                });
+            } else {
+                picker.widget.css({
+                    position: position,
+                    top: offset.top,
+                    left: offset.left,
+                    right: offset.right
+                });
+            }
         },
 
         notifyChange = function (oldDate, eventType) {
-            if (moment(picker.date).isSame(moment(oldDate))) {
+            if (moment(picker.date).isSame(moment(oldDate)) && !errored) {
                 return;
             }
+            errored = false;
             picker.element.trigger({
                 type: 'dp.change',
                 date: moment(picker.date),
@@ -359,6 +373,7 @@ THE SOFTWARE.
         },
 
         notifyError = function (date) {
+            errored = true;
             picker.element.trigger({
                 type: 'dp.error',
                 date: moment(date, picker.format, picker.options.useStrict)
@@ -385,6 +400,9 @@ THE SOFTWARE.
         fillDow = function () {
             moment.locale(picker.options.language);
             var html = $('<tr>'), weekdaysMin = moment.weekdaysMin(), i;
+            if (picker.options.calendarWeeks === true) {
+                html.append('<th class="cw">#</th>');
+            }
             if (moment().localeData()._week.dow === 0) { // starts on Sunday
                 for (i = 0; i < 7; i++) {
                     html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
@@ -446,6 +464,9 @@ THE SOFTWARE.
                 if (prevMonth.weekday() === moment().startOf('week').weekday()) {
                     row = $('<tr>');
                     html.push(row);
+                    if (picker.options.calendarWeeks === true) {
+                        row.append('<td class="cw">' + prevMonth.week() + '</td>');
+                    }
                 }
                 clsName = '';
                 if (prevMonth.year() < year || (prevMonth.year() === year && prevMonth.month() < month)) {
@@ -1028,18 +1049,36 @@ THE SOFTWARE.
         },
 
         getTemplate = function () {
+            var
+                headTemplate =
+                        '<thead>' +
+                            '<tr>' +
+                                '<th class="prev">&lsaquo;</th><th colspan="' + (picker.options.calendarWeeks ? '6' : '5') + '" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
+                            '</tr>' +
+                        '</thead>',
+                contTemplate =
+                        '<tbody><tr><td colspan="' + (picker.options.calendarWeeks ? '8' : '7') + '"></td></tr></tbody>',
+                template = '<div class="datepicker-days">' +
+                    '<table class="table-condensed">' + headTemplate + '<tbody></tbody></table>' +
+                '</div>' +
+                '<div class="datepicker-months">' +
+                    '<table class="table-condensed">' + headTemplate + contTemplate + '</table>' +
+                '</div>' +
+                '<div class="datepicker-years">' +
+                    '<table class="table-condensed">' + headTemplate + contTemplate + '</table>' +
+                '</div>',
+                ret = '';
             if (picker.options.pickDate && picker.options.pickTime) {
-                var ret = '';
                 ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
-                       '<div class="col-sm-6 datepicker">' + dpGlobal.template + '</div>' +
+                       '<div class="col-sm-6 datepicker">' + template + '</div>' +
                        '<div class="col-sm-6 timepicker">' + tpGlobal.getTemplate() + '</div>' +
                      '</div>';
                 } else {
                     ret += '<ul class="list-unstyled">' +
                         '<li' + (picker.options.collapse ? ' class="collapse in"' : '') + '>' +
-                            '<div class="datepicker">' + dpGlobal.template + '</div>' +
+                            '<div class="datepicker">' + template + '</div>' +
                         '</li>' +
                         '<li class="picker-switch accordion-toggle"><a class="btn" style="width:100%"><span class="' + picker.options.icons.time + '"></span></a></li>' +
                         '<li' + (picker.options.collapse ? ' class="collapse"' : '') + '>' +
@@ -1081,15 +1120,7 @@ THE SOFTWARE.
                     navFnc: 'year',
                     navStep: 10
                 }
-            ],
-            headTemplate:
-                    '<thead>' +
-                        '<tr>' +
-                            '<th class="prev">&lsaquo;</th><th colspan="5" class="picker-switch"></th><th class="next">&rsaquo;</th>' +
-                        '</tr>' +
-                    '</thead>',
-            contTemplate:
-                    '<tbody><tr><td colspan="7"></td></tr></tbody>'
+            ]
         },
 
         tpGlobal = {
@@ -1097,17 +1128,6 @@ THE SOFTWARE.
             minuteTemplate: '<span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>',
             secondTemplate: '<span data-action="showSeconds"  data-time-component="seconds" class="timepicker-second"></span>'
         };
-
-        dpGlobal.template =
-            '<div class="datepicker-days">' +
-                '<table class="table-condensed">' + dpGlobal.headTemplate + '<tbody></tbody></table>' +
-            '</div>' +
-            '<div class="datepicker-months">' +
-                '<table class="table-condensed">' + dpGlobal.headTemplate + dpGlobal.contTemplate + '</table>' +
-            '</div>' +
-            '<div class="datepicker-years">' +
-                '<table class="table-condensed">' + dpGlobal.headTemplate + dpGlobal.contTemplate + '</table>' +
-            '</div>';
 
         tpGlobal.getTemplate = function () {
             return (
@@ -1341,6 +1361,7 @@ THE SOFTWARE.
         useMinutes: true,
         useSeconds: false,
         useCurrent: true,
+        calendarWeeks: false,
         minuteStepping: 1,
         minDate: moment({y: 1900}),
         maxDate: moment().add(100, 'y'),
