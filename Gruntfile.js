@@ -108,12 +108,10 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'jshint', 'jscs', 'uglify', 'less'
     ]);
-    
+
     grunt.registerTask('nuget', 'Create a nuget package', function () {
-        var target = grunt.option('target') || 'less';
-        grunt.log.writeln(target)
-        var done = this.async();
-        if (target == 'less') { 
+        var target = grunt.option('target') || 'less', done = this.async();
+        if (target === 'less') {
             grunt.util.spawn({
                 cmd: 'src/nuget/nuget.exe',
                 args: [
@@ -154,6 +152,4 @@ module.exports = function (grunt) {
             });
         }
     });
-    
-    
 };
