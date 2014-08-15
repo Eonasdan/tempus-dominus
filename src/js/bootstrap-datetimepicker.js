@@ -806,6 +806,10 @@
                     }
                 }
 
+                if (!input.is('input')) {
+                    throw new Error('Could not initialize DateTimePicker without an input element');
+                }
+
                 $.extend(true, options, dataToOptions());
 
                 picker.options(options);

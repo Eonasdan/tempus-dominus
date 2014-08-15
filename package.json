@@ -15,16 +15,17 @@
     "datepicker",
     "datetimepicker",
     "timepicker",
-	  "moment"
+    "moment"
   ],
   "devDependencies": {
+    "bootstrap": "latest",
     "grunt": "latest",
+    "grunt-contrib-jasmine": "^0.7.0",
     "grunt-contrib-jshint": "latest",
+    "grunt-contrib-less": "latest",
     "grunt-contrib-uglify": "latest",
     "grunt-jscs": "latest",
-    "load-grunt-tasks": "latest",
     "grunt-string-replace": "latest",
-    "grunt-contrib-less": "latest",
-    "bootstrap": "latest"
+    "load-grunt-tasks": "latest"
   }
 }

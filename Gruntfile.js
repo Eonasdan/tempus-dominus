@@ -24,7 +24,7 @@ module.exports = function (grunt) {
 
         jshint: {
             all: [
-                'Gruntfile.js', 'src/js/*.js'
+                'Gruntfile.js', 'src/js/*.js', 'test/*.js'
             ],
             options: {
                 'browser'  : true,
@@ -58,14 +58,19 @@ module.exports = function (grunt) {
                 'globals': {
                     'define': false,
                     'jQuery': false,
-                    'moment': false
+                    'moment': false,
+                    'describe': false,
+                    '$': false,
+                    'expect': false,
+                    'it': false,
+                    'beforeEach': false
                 }
             }
         },
 
         jscs: {
             all: [
-                'Gruntfile.js', 'src/js/*.js'
+                'Gruntfile.js', 'src/js/*.js', 'test/*.js'
             ],
             options: {
                 config: '.jscs.json'
@@ -86,11 +91,32 @@ module.exports = function (grunt) {
                     'build/css/bootstrap-datetimepicker.css': 'src/less/bootstrap-datetimepicker-build.less'
                 }
             }
+        },
+
+        jasmine: {
+            customTemplate: {
+                src: 'src/js/*.js',
+                options: {
+                    specs: 'test/*Spec.js',
+                    helpers: 'test/*Helper.js',
+                    styles: [
+                        'build/css/bootstrap-datetimepicker.min.css',
+                        'https:////maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'
+                    ],
+                    vendor: [
+                        'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js',
+                        'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.1/moment-with-locales.min.js',
+                        'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'
+                    ]
+                }
+            }
         }
 
     });
 
     grunt.loadTasks('tasks');
+
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     // These plugins provide necessary tasks.
     require('load-grunt-tasks')(grunt);
@@ -101,11 +127,17 @@ module.exports = function (grunt) {
     // travis build task
     grunt.registerTask('build:travis', [
         // code style
-        'jshint', 'jscs'
+        'jshint', 'jscs',
+        // build
+        'uglify', 'less',
+        // tests
+        'jasmine'
     ]);
 
     // Task to be run when building
     grunt.registerTask('build', [
         'jshint', 'jscs', 'uglify', 'less'
     ]);
+
+    grunt.registerTask('test', ['jshint', 'jscs', 'uglify', 'less', 'jasmine']);
 };
