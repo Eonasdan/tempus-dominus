@@ -109,20 +109,20 @@ module.exports = function (grunt) {
         'jshint', 'jscs', 'uglify', 'less'
     ]);
     
-    grunt.registerTask("nuget", "Create a nuget package", function () {
+    grunt.registerTask('nuget', 'Create a nuget package', function () {
         var target = grunt.option('target') || 'less';
         grunt.log.writeln(target)
         var done = this.async();
-        if (target == "less") { 
+        if (target == 'less') { 
             grunt.util.spawn({
-                cmd: "src/nuget/nuget.exe",
+                cmd: 'src/nuget/nuget.exe',
                 args: [
-                    "pack",
-                    "src/nuget/Bootstrap.v3.Datetimepicker.nuspec",
-                    "-OutputDirectory",
-                    "build/nuget",
-                    "-Version",
-                    grunt.config.get("pkg").version
+                    'pack',
+                    'src/nuget/Bootstrap.v3.Datetimepicker.nuspec',
+                    '-OutputDirectory',
+                    'build/nuget',
+                    '-Version',
+                    grunt.config.get('pkg').version
                 ]
             }, function (error, result) {
                 if (error) {
@@ -135,14 +135,14 @@ module.exports = function (grunt) {
         }
         else {
             grunt.util.spawn({
-                cmd: "src/nuget/nuget.exe",
+                cmd: 'src/nuget/nuget.exe',
                 args: [
-                    "pack",
-                    "src/nuget/Bootstrap.v3.Datetimepicker.CSS.nuspec",
-                    "-OutputDirectory",
-                    "build/nuget",
-                    "-Version",
-                    grunt.config.get("pkg").version
+                    'pack',
+                    'src/nuget/Bootstrap.v3.Datetimepicker.CSS.nuspec',
+                    '-OutputDirectory',
+                    'build/nuget',
+                    '-Version',
+                    grunt.config.get('pkg').version
                 ]
             }, function (error, result) {
                 if (error) {
