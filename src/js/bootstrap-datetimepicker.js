@@ -313,7 +313,7 @@
             }
 
             function notifyEvent(e) {
-                if (e.type === 'dp.change' && e.date && e.date.isSame(e.oldDate) && !errored) {
+                if (e.type === 'dp.change' && e.date && e.date.isSame(e.oldDate) && !errored && !unset) {
                     return;
                 }
                 element.trigger(e);
@@ -611,7 +611,6 @@
                 }
 
                 if (isValid(targetMoment)) {
-                    unset = false;
                     date = targetMoment;
                     viewDate = date.clone();
                     input.val(date.format(format));
@@ -623,6 +622,7 @@
                         oldDate: oldDate
                     });
                     errored = false;
+                    unset = false;
                 } else {
                     //*TODO depending on behaviour we might want to bump the value and/or update the input.val or not
                     errored = true;

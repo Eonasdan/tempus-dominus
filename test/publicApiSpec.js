@@ -201,6 +201,10 @@ describe('Public API method tests', function () {
                 expect(dtp.toggle).toBeDefined();
             });
         });
+
+        // describe('functionality', function () {
+        //     it('')
+        // });
     });
 
     describe('show() function', function () {
@@ -208,7 +212,9 @@ describe('Public API method tests', function () {
             it('is defined', function () {
                 expect(dtp.show).toBeDefined();
             });
+        });
 
+        describe('functionality', function () {
             it('emits a show event when called while widget is hidden', function () {
                 dtp.show();
                 expect(dpShowSpy).toHaveBeenCalled();
@@ -233,6 +239,25 @@ describe('Public API method tests', function () {
         describe('existence', function () {
             it('is defined', function () {
                 expect(dtp.hide).toBeDefined();
+            });
+        });
+
+        describe('functionality', function () {
+            it('emits a hide event when called while widget is shown', function () {
+                dtp.show();
+                dtp.hide();
+                expect(dpHideSpy).toHaveBeenCalled();
+            });
+
+            it('does not emit a hide event when called while widget is hidden', function () {
+                dtp.hide();
+                expect(dpHideSpy).not.toHaveBeenCalled();
+            });
+
+            it('actually hides the widget', function () {
+                dtp.show();
+                dtp.hide();
+                expect($(document).find('body').find('.bootstrap-datetimepicker-widget').length).toEqual(0);
             });
         });
     });
