@@ -29,6 +29,7 @@ module.exports = function (grunt) {
             options: {
                 'browser'  : true,
                 'node'     : true,
+                'jquery'   : true,
                 'boss'     : false,
                 'curly'    : true,
                 'debug'    : false,
@@ -57,15 +58,17 @@ module.exports = function (grunt) {
                 'quotmark' : 'single',
                 'globals': {
                     'define': false,
-                    'jQuery': false,
                     'moment': false,
+                    // Jasmine
                     'jasmine': false,
                     'describe': false,
                     'xdescribe': false,
-                    '$': false,
                     'expect': false,
                     'it': false,
-                    'beforeEach': false
+                    'xit': false,
+                    'spyOn': false,
+                    'beforeEach': false,
+                    'afterEach': false
                 }
             }
         },
@@ -102,14 +105,16 @@ module.exports = function (grunt) {
                     specs: 'test/*Spec.js',
                     helpers: 'test/*Helper.js',
                     styles: [
-                        'build/css/bootstrap-datetimepicker.min.css',
-                        'https:////maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'
+                        'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css',
+                        'build/css/bootstrap-datetimepicker.min.css'
                     ],
                     vendor: [
                         'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js',
                         'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.1/moment-with-locales.min.js',
                         'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'
-                    ]
+                    ],
+                    display: 'none',
+                    summary: 'true'
                 }
             }
         }
@@ -124,7 +129,7 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'jscs']);
+    grunt.registerTask('default', ['jshint', 'jscs', 'less', 'jasmine']);
 
     // travis build task
     grunt.registerTask('build:travis', [

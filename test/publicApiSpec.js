@@ -1,14 +1,14 @@
 describe('Plugin initialization and component basic construction', function () {
     'use strict';
-    var dtp;
 
     it('loads jquery plugin properly', function () {
         expect($('<div>').datetimepicker).toBeDefined();
+        expect(typeof $('<div>').datetimepicker).toEqual('function');
         expect($('<div>').datetimepicker.defaults).toBeDefined();
     });
 
     it('throws an Error if constructing on a structure with no input element', function () {
-        dtp = $('<div>');
+        var dtp = $('<div>');
         $(document).find('body').append(dtp);
 
         expect(function () {
@@ -17,7 +17,7 @@ describe('Plugin initialization and component basic construction', function () {
     });
 
     it('creates the component with default options on an input element', function () {
-        dtp = $('<input>');
+        var dtp = $('<input>');
         $(document).find('body').append(dtp);
 
         expect(function () {
@@ -26,19 +26,48 @@ describe('Plugin initialization and component basic construction', function () {
 
         expect(dtp).not.toBe(null);
     });
+
+    xit('calls destroy when Element that the component is attached is removed', function () {
+        var dtpElement = $('<input>'),
+            dtp;
+        $(document).find('body').append(dtpElement);
+        dtpElement.datetimepicker();
+        dtp = dtpElement.data('DateTimePicker');
+        spyOn(dtp, 'destroy').and.callThrough();
+        dtpElement.remove();
+        expect(dtp.destroy).toHaveBeenCalled();
+    });
 });
 
 describe('Public API method tests', function () {
     'use strict';
     var dtp,
-        dpChangeSpy = jasmine.createSpy();
+        dtpElement,
+        dpChangeSpy,
+        dpShowSpy,
+        dpHideSpy,
+        dpErrorSpy;
 
     beforeEach(function () {
-        dtp = $('<div>').append($('<input>'));
+        dpChangeSpy = jasmine.createSpy('dp.change event Spy');
+        dpShowSpy = jasmine.createSpy('dp.show event Spy');
+        dpHideSpy = jasmine.createSpy('dp.hide event Spy');
+        dpErrorSpy = jasmine.createSpy('dp.error event Spy');
+        dtpElement = $('<input>').attr('id', 'dtp');
+        $(document).find('body').append(dtpElement);
+
         $(document).find('body').on('dp.change', dpChangeSpy);
-        $(document).find('body').append(dtp);
-        dtp.datetimepicker();
-        dtp = dtp.data('DateTimePicker');
+        $(document).find('body').on('dp.show', dpShowSpy);
+        $(document).find('body').on('dp.hide', dpHideSpy);
+        $(document).find('body').on('dp.error', dpErrorSpy);
+
+        dtpElement.datetimepicker();
+        dtp = dtpElement.data('DateTimePicker');
+    });
+
+    afterEach(function () {
+        dtp.destroy();
+        dtpElement.remove();
     });
 
     describe('configuration option name match to public api function', function () {
@@ -179,6 +208,24 @@ describe('Public API method tests', function () {
             it('is defined', function () {
                 expect(dtp.show).toBeDefined();
             });
+
+            it('emits a show event when called while widget is hidden', function () {
+                dtp.show();
+                expect(dpShowSpy).toHaveBeenCalled();
+            });
+
+            it('does not emit a show event when called and widget is already showing', function () {
+                dtp.hide();
+                dtp.show();
+                dpShowSpy.calls.reset();
+                dtp.show();
+                expect(dpShowSpy).not.toHaveBeenCalled();
+            });
+
+            it('actually shows the widget', function () {
+                dtp.show();
+                expect($(document).find('body').find('.bootstrap-datetimepicker-widget').length).toEqual(1);
+            });
         });
     });
 
@@ -266,16 +313,23 @@ describe('Public API method tests', function () {
             });
 
             it('sets the defaultDate correctly', function () {
-                dtp.format('YYYY-MM-DD');
-                expect(dtp.format()).toBe('YYYY-MM-DD');
-            });
-
-            it('triggers a change event when shown and input field is empty', function () {
                 var timestamp = moment();
                 dtp.defaultDate(timestamp);
-                dtp.show();
+                expect(dtp.defaultDate().isSame(timestamp)).toBe(true);
+                expect(dtp.date().isSame(timestamp)).toBe(true);
+            });
+
+            it('triggers a change event upon setting a default date and input field is empty', function () {
+                dtp.date(null);
+                dtp.defaultDate(moment());
                 expect(dpChangeSpy).toHaveBeenCalled();
-                expect(timestamp.isSame(dtp.date())).toBe(true);
+            });
+
+            it('does not override input value if it already has one', function () {
+                var timestamp = moment();
+                dtp.date(timestamp);
+                dtp.defaultDate(moment().year(2000));
+                expect(dtp.date().isSame(timestamp)).toBe(true);
             });
         });
     });
@@ -316,6 +370,13 @@ describe('Public API method tests', function () {
         describe('existence', function () {
             it('is defined', function () {
                 expect(dtp.useCurrent).toBeDefined();
+            });
+        });
+        describe('functionality', function () {
+            it('triggers a change event upon show() and input field is empty', function () {
+                dtp.useCurrent(true);
+                dtp.show();
+                expect(dpChangeSpy).toHaveBeenCalled();
             });
         });
     });

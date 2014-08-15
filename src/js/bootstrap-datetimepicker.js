@@ -817,7 +817,7 @@
                 attachDatePickerElementEvents();
 
                 if (input.val().trim().length !== 0) {
-                    picker.date(input.val().trim());
+                    picker.date(null);
                 } else if (options.defaultDate) {
                     picker.date(options.defaultDate);
                 }
