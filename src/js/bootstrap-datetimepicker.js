@@ -1098,7 +1098,7 @@ THE SOFTWARE.
             }
             return (
                 '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
-                    '<div class="datepicker">' + dpGlobal.template + '</div>' +
+                    '<div class="datepicker">' + template + '</div>' +
                 '</div>'
             );
         },
