@@ -126,47 +126,85 @@
                 ];
             }
 
-            function getTimePickerTemplate() {
-                var hourTemplate = '<span data-action="showHours" data-time-component="hours" class="timepicker-hour"></span>',
-                    minuteTemplate = '<span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>',
-                    secondTemplate = '<span data-action="showSeconds" data-time-component="seconds" class="timepicker-second"></span>';
+            function getTimePickerMainTemplate() {
+                var topRow = $('<tr>'),
+                    middleRow = $('<tr>'),
+                    bottomRow = $('<tr>');
 
-                return '<div class="timepicker-picker">' +
-                    '<table class="table-condensed">' +
-                    '<tr>' +
-                    '<td><a href="#" class="btn" data-action="incrementHours"><span class="' + options.icons.up + '"></span></a></td>' +
-                    '<td class="separator"></td>' +
-                    '<td>' + (options.useMinutes ? '<a href="#" class="btn" data-action="incrementMinutes"><span class="' + options.icons.up + '"></span></a>' : '') + '</td>' +
-                    (options.useSeconds ?
-                        '<td class="separator"></td><td><a href="#" class="btn" data-action="incrementSeconds"><span class="' + options.icons.up + '"></span></a></td>' : '') +
-                    (use24hours ? '' : '<td class="separator"></td>') +
-                    '</tr>' +
-                    '<tr>' +
-                    '<td>' + hourTemplate + '</td> ' +
-                    '<td class="separator">:</td>' +
-                    '<td>' + (options.useMinutes ? minuteTemplate : '<span class="timepicker-minute">00</span>') + '</td> ' +
-                    (options.useSeconds ?
-                        '<td class="separator">:</td><td>' + secondTemplate + '</td>' : '') +
-                    (use24hours ? '' : '<td class="separator"></td>' +
-                        '<td><button type="button" class="btn btn-primary" data-action="togglePeriod"></button></td>') +
-                    '</tr>' +
-                    '<tr>' +
-                    '<td><a href="#" class="btn" data-action="decrementHours"><span class="' + options.icons.down + '"></span></a></td>' +
-                    '<td class="separator"></td>' +
-                    '<td>' + (options.useMinutes ? '<a href="#" class="btn" data-action="decrementMinutes"><span class="' + options.icons.down + '"></span></a>' : '') + '</td>' +
-                    (options.useSeconds ?
-                        '<td class="separator"></td><td><a href="#" class="btn" data-action="decrementSeconds"><span class="' + options.icons.down + '"></span></a></td>' : '') +
-                    (use24hours ? '' : '<td class="separator"></td>') +
-                    '</tr>' +
-                    '</table>' +
-                    '</div>' +
-                    '<div class="timepicker-hours">' +
-                    '<table class="table-condensed"></table>' +
-                    '</div>' +
-                    '<div class="timepicker-minutes">' +
-                    '<table class="table-condensed"></table>' +
-                    '</div>' +
-                    (options.useSeconds ? '<div class="timepicker-seconds"><table class="table-condensed"></table></div>' : '');
+                if (true) { // should be (options.useHours)
+                    topRow.append($('<td>')
+                        .append($('<a>').attr('href', '#').addClass('btn').attr('data-action', 'incrementHours')
+                            .append($('<span>').addClass(options.icons.up))));
+                    middleRow.append($('<td>')
+                        .append($('<span>').addClass('timepicker-hour').attr('data-time-component', 'hours').attr('data-action', 'showHours')));
+                    bottomRow.append($('<td>')
+                        .append($('<a>').attr('href', '#').addClass('btn').attr('data-action', 'decrementHours')
+                            .append($('<span>').addClass(options.icons.down))));
+                }
+                if (options.useMinutes) {
+                    if (true) { // should be (options.useHours)
+                        topRow.append($('<td>').addClass('separator'));
+                        middleRow.append($('<td>').addClass('separator').html(':'));
+                        bottomRow.append($('<td>').addClass('separator'));
+                    }
+                    topRow.append($('<td>')
+                        .append($('<a>').attr('href', '#').addClass('btn').attr('data-action', 'incrementMinutes')
+                            .append($('<span>').addClass(options.icons.up))));
+                    middleRow.append($('<td>')
+                        .append($('<span>').addClass('timepicker-minute').attr('data-time-component', 'minutes').attr('data-action', 'showMinutes')));
+                    bottomRow.append($('<td>')
+                        .append($('<a>').attr('href', '#').addClass('btn').attr('data-action', 'decrementMinutes')
+                            .append($('<span>').addClass(options.icons.down))));
+                }
+                if (options.useSeconds) {
+                    if (options.useMinutes) {
+                        topRow.append($('<td>').addClass('separator'));
+                        middleRow.append($('<td>').addClass('separator').html(':'));
+                        bottomRow.append($('<td>').addClass('separator'));
+                    }
+                    topRow.append($('<td>')
+                        .append($('<a>').attr('href', '#').addClass('btn').attr('data-action', 'incrementSeconds')
+                            .append($('<span>').addClass(options.icons.up))));
+                    middleRow.append($('<td>')
+                        .append($('<span>').addClass('timepicker-second').attr('data-time-component', 'seconds').attr('data-action', 'showSeconds')));
+                    bottomRow.append($('<td>')
+                        .append($('<a>').attr('href', '#').addClass('btn').attr('data-action', 'decrementSeconds')
+                            .append($('<span>').addClass(options.icons.down))));
+                }
+
+                if (!use24hours) {
+                    topRow.append($('<td>').addClass('separator'));
+                    middleRow.append($('<td>')
+                        .append($('<button>').addClass('btn btn-primary').attr('data-action', 'togglePeriod')));
+                    bottomRow.append($('<td>').addClass('separator'));
+                }
+
+                return $('<div>').addClass('timepicker-picker')
+                    .append($('<table>').addClass('table-condensed')
+                        .append([topRow, middleRow, bottomRow]));
+            }
+
+            function getTimePickerTemplate() {
+                var hoursView = $('<div>').addClass('timepicker-hours')
+                        .append($('<table>').addClass('table-condensed')),
+                    minutesView = $('<div>').addClass('timepicker-minutes')
+                        .append($('<table>').addClass('table-condensed')),
+                    secondsView = $('<div>').addClass('timepicker-seconds')
+                        .append($('<table>').addClass('table-condensed')),
+                    ret = [getTimePickerMainTemplate()];
+
+
+                if (true) { // should be (options.useHours)
+                    ret.push(hoursView);
+                }
+                if (options.useMinutes) {
+                    ret.push(minutesView);
+                }
+                if (options.useSeconds) {
+                    ret.push(secondsView);
+                }
+
+                return ret;
             }
 
             function getToolbar() {
@@ -186,7 +224,7 @@
             function getTemplate() {
                 var template = $('<div>').addClass('bootstrap-datetimepicker-widget dropdown-menu'),
                     dateView = $('<div>').addClass('datepicker').append(getDatePickerTemplate()),
-                    timeView = $('<div>').addClass('timepicker').html(getTimePickerTemplate()),
+                    timeView = $('<div>').addClass('timepicker').append(getTimePickerTemplate()),
                     content = $('<ul>').addClass('list-unstyled');
 
                 if (options.sideBySide && options.pickDate && options.pickTime) {
@@ -515,8 +553,6 @@
                     html = [],
                     row;
 
-                table.parent().hide();
-
                 while (currentHour.isSame(viewDate, 'd') && (use24hours || currentHour.hour() < 12)) {
                     if (currentHour.hour() % 4 === 0) {
                         row = $('<tr>');
@@ -535,8 +571,6 @@
                     row,
                     step = options.minuteStepping === 1 ? 5 : options.minuteStepping;
 
-                table.parent().hide();
-
                 while (viewDate.isSame(currentMinute, 'h')) {
                     if (currentMinute.minute() % (step * 4) === 0) {
                         row = $('<tr>');
@@ -553,8 +587,6 @@
                     currentSecond = viewDate.clone().startOf('m'),
                     html = [],
                     row;
-
-                table.parent().hide();
 
                 while (viewDate.isSame(currentSecond, 'm')) {
                     if (currentSecond.second() % 20 === 0) {
@@ -576,6 +608,10 @@
                 timeComponents.filter('[data-time-component=hours]').text(date.format(use24hours ? 'HH' : 'hh'));
                 timeComponents.filter('[data-time-component=minutes]').text(date.format('mm'));
                 timeComponents.filter('[data-time-component=seconds]').text(date.format('ss'));
+
+                fillHours();
+                fillMinutes();
+                fillSeconds();
             }
 
             function update() {
@@ -765,9 +801,10 @@
 
                 fillDow();
                 fillMonths();
-                fillHours();
-                fillMinutes();
-                fillSeconds();
+
+                widget.find('.timepicker-hours').hide();
+                widget.find('.timepicker-minutes').hide();
+                widget.find('.timepicker-seconds').hide();
 
                 update();
                 showMode();
