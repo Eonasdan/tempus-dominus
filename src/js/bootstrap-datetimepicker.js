@@ -181,7 +181,9 @@ THE SOFTWARE.
             fillSeconds();
             update();
             showMode();
-            attachDatePickerEvents();
+            if (!getPickerInput().prop('disabled')) {
+                attachDatePickerEvents();
+            }
             if (picker.options.defaultDate !== '' && getPickerInput().val() === '') {
                 picker.setValue(picker.options.defaultDate);
             }
@@ -1182,6 +1184,9 @@ THE SOFTWARE.
         };
 
         picker.show = function (e) {
+            if (getPickerInput().prop('disabled')) {
+                return;
+            }
             if (picker.options.useCurrent) {
                 if (getPickerInput().val() === '') {
                     if (picker.options.minuteStepping !== 1) {
@@ -1220,7 +1225,7 @@ THE SOFTWARE.
         };
 
         picker.disable = function () {
-            var input = picker.element.find('input');
+            var input = getPickerInput();
             if (input.prop('disabled')) {
                 return;
             }
@@ -1229,7 +1234,7 @@ THE SOFTWARE.
         };
 
         picker.enable = function () {
-            var input = picker.element.find('input');
+            var input = getPickerInput();
             if (!input.prop('disabled')) {
                 return;
             }
