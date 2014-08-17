@@ -352,6 +352,7 @@ THE SOFTWARE.
                 picker.widget.css({
                     position: position,
                     top: offset.top,
+                    bottom: 'auto',
                     left: offset.left,
                     right: offset.right
                 });
