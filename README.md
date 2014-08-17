@@ -2,9 +2,9 @@
 
 Expect things to change as we are currently in the process of redesing API and behaviour for the component
 
-For changelog have a look on [here](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/v4-refactoring) and also on the commit history
+For changelog have a look on [here](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Version-4-changelog) and also on the commit history
 
-In this version all the component interaction is made through the [Public API](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Public-API)
+In this version all the component interaction is made through the [Public API](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Version-4-Public-API)
 
 ## Want to help us?
 
@@ -14,7 +14,7 @@ That would be great!
 
 Also if you have the guts we could use a hand writing test specs.
 
-Have a look first [here](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Contributors-guide) as a supplement to the code
+Have a look first [here](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Version-4-Contributors-guide) as a supplement to the code
 
 Also note that all PR's related to v4 should be made to ```v4beta``` branch and should pass the validations. Have a look at [here](https://github.com/Eonasdan/bootstrap-datetimepicker/blob/v4beta/CONTRIBUTING.md) to get started. Remember to ```checkout v4beta```.
 
