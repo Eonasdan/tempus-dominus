@@ -31,8 +31,11 @@ THE SOFTWARE.
     if (typeof define === 'function' && define.amd) {
         // AMD is used - Register as an anonymous module.
         define(['jquery', 'moment'], factory);
-    } else {
-        // AMD is not used - Attempt to fetch dependencies from scope.
+    } else if (typeof exports === 'object') {
+        factory(require('jquery'), require('moment'));
+    }
+    else {
+        // Neither AMD or CommonJS used. Use global variables.
         if (!jQuery) {
             throw new Error('bootstrap-datetimepicker requires jQuery to be loaded first');
         }
