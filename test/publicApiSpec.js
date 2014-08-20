@@ -375,22 +375,6 @@ describe('Public API method tests', function () {
         });
     });
 
-    describe('useMinutes() function', function () {
-        describe('existence', function () {
-            it('is defined', function () {
-                expect(dtp.useMinutes).toBeDefined();
-            });
-        });
-    });
-
-    describe('useSeconds() function', function () {
-        describe('existence', function () {
-            it('is defined', function () {
-                expect(dtp.useSeconds).toBeDefined();
-            });
-        });
-    });
-
     describe('useCurrent() function', function () {
         describe('existence', function () {
             it('is defined', function () {
@@ -406,34 +390,10 @@ describe('Public API method tests', function () {
         });
     });
 
-    describe('minuteStepping() function', function () {
+    describe('stepping() function', function () {
         describe('existence', function () {
             it('is defined', function () {
-                expect(dtp.minuteStepping).toBeDefined();
-            });
-        });
-    });
-
-    describe('pickDate() function', function () {
-        describe('existence', function () {
-            it('is defined', function () {
-                expect(dtp.pickDate).toBeDefined();
-            });
-        });
-    });
-
-    describe('pickTime() function', function () {
-        describe('existence', function () {
-            it('is defined', function () {
-                expect(dtp.pickTime).toBeDefined();
-            });
-        });
-    });
-
-    describe('showToday() function', function () {
-        describe('existence', function () {
-            it('is defined', function () {
-                expect(dtp.showToday).toBeDefined();
+                expect(dtp.stepping).toBeDefined();
             });
         });
     });
@@ -474,14 +434,6 @@ describe('Public API method tests', function () {
         describe('existence', function () {
             it('is defined', function () {
                 expect(dtp.widgetParent).toBeDefined();
-            });
-        });
-    });
-
-    describe('minViewMode() function', function () {
-        describe('existence', function () {
-            it('is defined', function () {
-                expect(dtp.minViewMode).toBeDefined();
             });
         });
     });
