@@ -213,12 +213,12 @@ THE SOFTWARE.
         },
 
         dataToOptions = function () {
-            var eData;
+            var eData, input;
             if (picker.element.is('input')) {
                 eData = picker.element.data();
             }
             else {
-                var input = picker.element.find('input');
+                input = picker.element.find('input');
                 if (input) {
                     eData = input.data();
                 } else {
