@@ -219,7 +219,7 @@ THE SOFTWARE.
             }
             else {
                 input = picker.element.find('input');
-                if (input) {
+                if (input.length) {
                     eData = input.data();
                 } else {
                     eData = picker.element.data();
