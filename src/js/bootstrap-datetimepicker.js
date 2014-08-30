@@ -218,7 +218,12 @@ THE SOFTWARE.
                 eData = picker.element.data();
             }
             else {
-                eData = picker.element.find('input').data();
+                var input = picker.element.find('input');
+                if (input) {
+                    eData = input.data();
+                } else {
+                    eData = picker.element.data();
+                }
             }
             if (eData.dateFormat !== undefined) {
                 picker.options.format = eData.dateFormat;
