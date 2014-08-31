@@ -105,13 +105,13 @@ module.exports = function (grunt) {
                     specs: 'test/*Spec.js',
                     helpers: 'test/*Helper.js',
                     styles: [
-                        'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css',
+                        'node_modules/bootstrap/dist/css/bootstrap.min.css',
                         'build/css/bootstrap-datetimepicker.min.css'
                     ],
                     vendor: [
-                        'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js',
-                        'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.1/moment-with-locales.min.js',
-                        'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'
+                        'node_modules/jquery/dist/jquery.min.js',
+                        'node_modules/moment/min/moment-with-locales.min.js',
+                        'node_modules/bootstrap/dist/js/bootstrap.min.js'
                     ],
                     display: 'none',
                     summary: 'true'

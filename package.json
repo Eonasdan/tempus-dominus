@@ -17,8 +17,12 @@
     "timepicker",
     "moment"
   ],
-  "devDependencies": {
+  "dependencies": {
+    "moment": "~2.8.2",
     "bootstrap": "latest",
+    "jquery": "^1.8.3"
+  },
+  "devDependencies": {
     "grunt": "latest",
     "grunt-contrib-jasmine": "^0.7.0",
     "grunt-contrib-jshint": "latest",
