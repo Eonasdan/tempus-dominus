@@ -694,11 +694,6 @@
                     }
                 },
 
-                stopEvent = function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                },
-
                 hide = function () {
                     var transitioning = false;
                     if (!widget) {
@@ -722,7 +717,7 @@
 
                     $(window).off('resize', place);
                     widget.off('click', '[data-action]');
-                    widget.off('mousedown', stopEvent);
+                    widget.off('mousedown', false);
                     if (!element.is('input')) {
                         $(document).off('mousedown', hide);
                     }
@@ -903,11 +898,11 @@
                 },
 
                 doAction = function (e) {
-                    stopEvent(e);
                     if ($(e.currentTarget).is('.disabled')) {
-                        return;
+                        return false;
                     }
-                    return actions[$(e.currentTarget).data('action')].apply(picker, arguments);
+                    actions[$(e.currentTarget).data('action')].apply(picker, arguments);
+                    return false;
                 },
 
                 show = function () {
@@ -959,7 +954,7 @@
                     showMode();
                     $(window).on('resize', place);
                     widget.on('click', '[data-action]', doAction); // this handles clicks on the widget
-                    widget.on('mousedown', stopEvent);
+                    widget.on('mousedown', false);
                     if (!element.is('input')) {
                         $(document).on('mousedown', hide);
                     }
@@ -997,6 +992,8 @@
 
                 change = function (e) {
                     setValue(parseInputDate($(e.target).val()));
+                    e.stopImmediatePropagation();
+                    return false;
                 },
 
                 attachDatePickerElementEvents = function () {
@@ -1014,7 +1011,7 @@
                         }, 'input');
                         if (component) {
                             component.on('click', toggle);
-                            component.on('mousedown', stopEvent);
+                            component.on('mousedown', false);
                         } else {
                             element.on('click', show);
                         }
@@ -1036,7 +1033,7 @@
                         }, 'input');
                         if (component) {
                             component.off('click', toggle);
-                            component.off('mousedown', stopEvent);
+                            component.off('mousedown', false);
                         } else {
                             element.off('click', show);
                         }
