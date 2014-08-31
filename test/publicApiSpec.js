@@ -49,17 +49,17 @@ describe('Public API method tests', function () {
         dpErrorSpy;
 
     beforeEach(function () {
-        dpChangeSpy = jasmine.createSpy('dp.change event Spy');
-        dpShowSpy = jasmine.createSpy('dp.show event Spy');
-        dpHideSpy = jasmine.createSpy('dp.hide event Spy');
-        dpErrorSpy = jasmine.createSpy('dp.error event Spy');
+        dpChangeSpy = jasmine.createSpy('change.dp event Spy');
+        dpShowSpy = jasmine.createSpy('show.dp event Spy');
+        dpHideSpy = jasmine.createSpy('hide.dp event Spy');
+        dpErrorSpy = jasmine.createSpy('error.dp event Spy');
         dtpElement = $('<input>').attr('id', 'dtp');
         $(document).find('body').append(dtpElement);
 
-        $(document).find('body').on('dp.change', dpChangeSpy);
-        $(document).find('body').on('dp.show', dpShowSpy);
-        $(document).find('body').on('dp.hide', dpHideSpy);
-        $(document).find('body').on('dp.error', dpErrorSpy);
+        $(document).find('body').on('change.dp', dpChangeSpy);
+        $(document).find('body').on('show.dp', dpShowSpy);
+        $(document).find('body').on('hide.dp', dpHideSpy);
+        $(document).find('body').on('error.dp', dpErrorSpy);
 
         dtpElement.datetimepicker();
         dtp = dtpElement.data('DateTimePicker');
