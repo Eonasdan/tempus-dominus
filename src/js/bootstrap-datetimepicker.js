@@ -85,6 +85,7 @@ THE SOFTWARE.
             picker.unset = false;
             picker.isInput = picker.element.is('input');
             picker.component = false;
+            picker.options.keepOpen = picker.options.pickTime || picker.options.keepOpen;
 
             if (picker.element.hasClass('input-group')) {
                 if (picker.element.find('.datepickerbutton').size() === 0) {//in case there is more then one 'input-group-addon' Issue #48
@@ -279,6 +280,9 @@ THE SOFTWARE.
             }
             if (eData.dateSidebyside !== undefined) {
                 picker.options.sideBySide = eData.dateSidebyside;
+            }
+            if (eData.dateKeepOpen !== undefined) {
+                picker.options.keepOpen = eData.dateKeepOpen;
             }
             if (eData.dateDaysofweekdisabled !== undefined) {
                 picker.options.daysOfWeekDisabled = eData.dateDaysofweekdisabled;
@@ -966,7 +970,7 @@ THE SOFTWARE.
             }
             getPickerInput().val(formatted);
             picker.element.data('date', formatted);
-            if (!picker.options.pickTime) {
+            if (!picker.options.keepOpen) {
                 picker.hide();
             }
         },
@@ -1384,6 +1388,7 @@ THE SOFTWARE.
         useStrict: false,
         direction: 'auto',
         sideBySide: false,
+        keepOpen: false,
         daysOfWeekDisabled: [],
         widgetParent: false
     };
