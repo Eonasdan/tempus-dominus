@@ -381,6 +381,31 @@ describe('Public API method tests', function () {
                 expect(dtp.useCurrent).toBeDefined();
             });
         });
+        describe('check type and parameter validity', function () {
+            it('accepts either a boolean value or string', function () {
+                var useCurrentOptions = ['year', 'month', 'day', 'hour', 'minute'];
+
+                expect(function () {
+                    dtp.useCurrent(false);
+                }).not.toThrow();
+                expect(function () {
+                    dtp.useCurrent(true);
+                }).not.toThrow();
+
+                useCurrentOptions.forEach(function (value) {
+                    expect(function () {
+                        dtp.useCurrent(value);
+                    }).not.toThrow();
+                });
+
+                expect(function () {
+                    dtp.useCurrent('test');
+                }).toThrow();
+                expect(function () {
+                    dtp.useCurrent({});
+                }).toThrow();
+            });
+        });
         describe('functionality', function () {
             it('triggers a change event upon show() and input field is empty', function () {
                 dtp.useCurrent(true);

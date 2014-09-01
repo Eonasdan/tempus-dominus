@@ -906,30 +906,32 @@
                 },
 
                 show = function () {
-                    var currentMoment;
+                    var currentMoment,
+                        useCurrentGranularity = {
+                            'year': function (m) {
+                                return m.month(0).date(1).hours(0).seconds(0).minutes(0);
+                            },
+                            'month': function (m) {
+                                return m.date(1).hours(0).seconds(0).minutes(0);
+                            },
+                            'day': function (m) {
+                                return m.hours(0).seconds(0).minutes(0);
+                            },
+                            'hour': function (m) {
+                                return m.seconds(0).minutes(0);
+                            },
+                            'minute': function (m) {
+                                return m.seconds(0);
+                            }
+                        };
+
                     if (input.prop('disabled') || input.prop('readonly') || widget) {
                         return picker;
                     }
                     if (options.useCurrent && unset) {
                         currentMoment = moment();
                         if (typeof options.useCurrent === 'string') {
-                            switch (options.useCurrent) {
-                            case 'year':
-                                currentMoment.month(0).date(1).hours(0).seconds(0).minutes(0);
-                                break;
-                            case 'month':
-                                currentMoment.date(1).hours(0).seconds(0).minutes(0);
-                                break;
-                            case 'day':
-                                currentMoment.hours(0).seconds(0).minutes(0);
-                                break;
-                            case 'hour':
-                                currentMoment.seconds(0).minutes(0);
-                                break;
-                            case 'minute':
-                                currentMoment.seconds(0);
-                                break;
-                            }
+                            currentMoment = useCurrentGranularity[options.useCurrent](currentMoment);
                         }
                         setValue(currentMoment);
                     }
@@ -1340,12 +1342,16 @@
             };
 
             picker.useCurrent = function (useCurrent) {
+                var useCurrentOptions = ['year', 'month', 'day', 'hour', 'minute'];
                 if (arguments.length === 0) {
                     return options.useCurrent;
                 }
 
                 if ((typeof useCurrent !== 'boolean') && (typeof useCurrent !== 'string')) {
                     throw new TypeError('useCurrent() expects a boolean or string parameter');
+                }
+                if (typeof useCurrent === 'string' && useCurrentOptions.indexOf(useCurrent.toLowerCase()) === -1) {
+                    throw new TypeError('useCurrent() expects a string parameter of ' + useCurrentOptions.join(', '));
                 }
                 options.useCurrent = useCurrent;
                 return picker;
