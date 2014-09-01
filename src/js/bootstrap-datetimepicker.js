@@ -919,13 +919,13 @@ THE SOFTWARE.
             if (picker.isInput) {
                 picker.element.off({
                     'focus': picker.show,
-                    'change': picker.change,
+                    'change': change,
                     'click': picker.show,
                     'blur' : picker.hide
                 });
             } else {
                 picker.element.off({
-                    'change': picker.change
+                    'change': change
                 }, 'input');
                 if (picker.component) {
                     picker.component.off('click', picker.show);
