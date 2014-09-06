@@ -609,9 +609,10 @@ THE SOFTWARE.
             if (!picker.date) {
                 return;
             }
-            var timeComponents = picker.widget.find('.timepicker span[data-time-component]'),
-                hour = picker.date.hours(),
-                period = picker.date.format('A');
+            var timeComponents, hour, period, newDate, tableHours, tableMinutes;
+            timeComponents = picker.widget.find('.timepicker span[data-time-component]');
+            hour = picker.date.hours();
+            period = picker.date.format('A');
             if (!picker.use24hours) {
                 if (hour === 0) {
                     hour = 12;
@@ -623,6 +624,32 @@ THE SOFTWARE.
             timeComponents.filter('[data-time-component=hours]').text(padLeft(hour));
             timeComponents.filter('[data-time-component=minutes]').text(padLeft(picker.date.minutes()));
             timeComponents.filter('[data-time-component=seconds]').text(padLeft(picker.date.second()));
+
+            newDate = moment(picker.date);
+
+            tableHours = picker.widget.find('.timepicker .timepicker-hours table');
+            tableHours.find('.disabled').removeClass('disabled');
+            tableHours.find('td').each(function () {
+                newDate.hours(parseInt($(this).text(), 10));
+                if (!picker.use24hours && picker.date.hour() > 12) {
+                    newDate.add(12, 'hour');
+                }
+
+                if (isInDisableDates(newDate) || !isInEnableDates(newDate)) {
+                    $(this).addClass('disabled');
+                }
+            });
+
+            newDate = moment(picker.date);
+
+            tableMinutes = picker.widget.find('.timepicker .timepicker-minutes table');
+            tableMinutes.find('.disabled').removeClass('disabled');
+            tableMinutes.find('td').each(function () {
+                newDate.minutes(parseInt($(this).text(), 10));
+                if (isInDisableDates(newDate) || !isInEnableDates(newDate)) {
+                    $(this).addClass('disabled');
+                }
+            });
         },
 
         click = function (e) {
@@ -740,13 +767,17 @@ THE SOFTWARE.
             },
 
             togglePeriod: function () {
-                var hour = picker.date.hours();
+                var newDate = moment(picker.date),
+                       hour = picker.date.hours();
                 if (hour >= 12) {
                     hour -= 12;
                 } else {
                     hour += 12;
                 }
-                picker.date.hours(hour);
+                newDate.hours(hour);
+                if (!isInDisableDates(newDate) && isInEnableDates(newDate)) {
+                    picker.date.hours(hour);
+                }
             },
 
             showPicker: function () {
@@ -770,7 +801,7 @@ THE SOFTWARE.
             },
 
             selectHour: function (e) {
-                var hour = parseInt($(e.target).text(), 10);
+                var hour = parseInt($(e.target).text(), 10), newDate = moment(picker.date);
                 if (!picker.use24hours) {
                     if (picker.date.hours() >= 12) {
                         if (hour !== 12) {
@@ -782,17 +813,28 @@ THE SOFTWARE.
                         }
                     }
                 }
-                picker.date.hours(hour);
+                newDate.hours(hour);
+                if (!isInDisableDates(newDate) && isInEnableDates(newDate)) {
+                    picker.date.hours(hour);
+                }
                 actions.showPicker.call(picker);
             },
 
             selectMinute: function (e) {
-                picker.date.minutes(parseInt($(e.target).text(), 10));
+                var newDate = moment(picker.date);
+                newDate.minutes(parseInt($(e.target).text(), 10));
+                if (!isInDisableDates(newDate) && isInEnableDates(newDate)) {
+                    picker.date.minutes(parseInt($(e.target).text(), 10));
+                }
                 actions.showPicker.call(picker);
             },
 
             selectSecond: function (e) {
-                picker.date.seconds(parseInt($(e.target).text(), 10));
+                var newDate = moment(picker.date);
+                newDate.seconds(parseInt($(e.target).text(), 10));
+                if (!isInDisableDates(newDate) && isInEnableDates(newDate)) {
+                    picker.date.seconds(parseInt($(e.target).text(), 10));
+                }
                 actions.showPicker.call(picker);
             }
         },
@@ -978,7 +1020,7 @@ THE SOFTWARE.
             else {
                 newDate = moment(picker.date).subtract(amount, unit);
             }
-            if (isInDisableDates(moment(newDate.subtract(amount, unit))) || isInDisableDates(newDate)) {
+            if (isInDisableDates(newDate) || !isInEnableDates(newDate)) {
                 notifyError(newDate.format(picker.format));
                 return;
             }

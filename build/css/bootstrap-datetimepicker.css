@@ -75,6 +75,9 @@
 .bootstrap-datetimepicker-widget a[data-action] {
   padding: 6px 0;
 }
+.bootstrap-datetimepicker-widget a[data-action]:active {
+  box-shadow: none;
+}
 .bootstrap-datetimepicker-widget .timepicker-hour,
 .bootstrap-datetimepicker-widget .timepicker-minute,
 .bootstrap-datetimepicker-widget .timepicker-second {
