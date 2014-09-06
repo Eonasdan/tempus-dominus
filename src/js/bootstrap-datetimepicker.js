@@ -959,6 +959,7 @@ THE SOFTWARE.
                 formatted = moment(picker.date).format(picker.format);
             }
             getPickerInput().val(formatted);
+            getPickerInput().trigger('input');
             picker.element.data('date', formatted);
             if (!picker.options.pickTime) {
                 picker.hide();
