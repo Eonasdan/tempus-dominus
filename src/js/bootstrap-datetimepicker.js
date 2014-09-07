@@ -1067,11 +1067,12 @@
 
                     options.format = newFormat;
 
-                    if (!newFormat) {
-                        newFormat = date.localeData().longDateFormat('L') + ' ' + date.localeData().longDateFormat('LT');
-                    }
+                    newFormat = newFormat || 'L LT';
 
-                    actualFormat = newFormat;
+                    actualFormat = newFormat.replace(/(\[[^\[]*\])|(\\)?(LT|LL?L?L?|l{1,4})/g, function (input) {
+                        return date.localeData().longDateFormat(input) || input;
+                    });
+
                     use24hours = (actualFormat.toLowerCase().indexOf('a') < 1 && actualFormat.indexOf('h') < 1);
 
                     if (isEnabled('y')) {
@@ -1084,7 +1085,6 @@
                         minViewModeNumber = 0;
                     }
 
-                    //minViewModeNumber = viewModes.indexOf(newMinViewMode);
                     currentViewMode = Math.max(minViewModeNumber, currentViewMode);
 
                     if (!unset) {
