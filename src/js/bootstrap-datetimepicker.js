@@ -81,7 +81,7 @@
                 ],
                 viewModes = ['days', 'months', 'years'],
                 directionModes = ['top', 'bottom', 'auto'],
-                orientationModes = ['left', 'right'],
+                orientationModes = ['left', 'right', 'auto'],
 
                 /********************************************************************************
                  *
@@ -318,10 +318,12 @@
                     }
 
                     // Left and right logic
-                    if (parent.width() < offset.left + widget.outerWidth()) {
-                        orientation = 'left';
-                    } else {
-                        orientation = 'right';
+                    if (orientation === 'auto') {
+                        if (parent.width() < offset.left + widget.outerWidth()) {
+                            orientation = 'left';
+                        } else {
+                            orientation = 'right';
+                        }
                     }
 
                     if (direction === 'top') {
@@ -336,8 +338,14 @@
                         widget.removeClass('pull-right left-oriented');
                     }
 
-                    while (parent.css('position') !== 'relative') {
-                        parent = parent.parent();
+                    if (parent.css('position') !== 'relative') {
+                        parent = parent.parents().filter(function () {
+                            return $(this).css('position') === 'relative';
+                        }).first();
+                    }
+
+                    if (parent.length === 0) {
+                        throw new Error('datetimepicker component should be placed within a relative positioned container');
                     }
 
                     widget.css({
@@ -1580,7 +1588,7 @@
         daysOfWeekDisabled: [],
         calendarWeeks: false,
         viewMode: 'days',
-        orientation: 'right',
+        orientation: 'auto',
         showTodayButton: false,
         showClear: false
     };
