@@ -878,8 +878,7 @@ THE SOFTWARE.
                 picker.element.on({
                     'click': $.proxy(picker.show, this),
                     'focus': $.proxy(picker.show, this),
-                    'change': $.proxy(change, this),
-                    'blur': $.proxy(picker.hide, this)
+                    'change': $.proxy(change, this)
                 });
             } else {
                 picker.element.on({
@@ -897,10 +896,8 @@ THE SOFTWARE.
         attachDatePickerGlobalEvents = function () {
             $(window).on(
                 'resize.datetimepicker' + picker.id, $.proxy(place, this));
-            if (!picker.isInput) {
-                $(document).on(
-                    'mousedown.datetimepicker' + picker.id, $.proxy(picker.hide, this));
-            }
+            
+            $(document).on('mousedown.datetimepicker' + picker.id, $.proxy(picker.hide, this));
         },
 
         detachDatePickerEvents = function () {
@@ -914,8 +911,7 @@ THE SOFTWARE.
                 picker.element.off({
                     'focus': picker.show,
                     'change': change,
-                    'click': picker.show,
-                    'blur' : picker.hide
+                    'click': picker.show
                 });
             } else {
                 picker.element.off({
@@ -932,9 +928,7 @@ THE SOFTWARE.
 
         detachDatePickerGlobalEvents = function () {
             $(window).off('resize.datetimepicker' + picker.id);
-            if (!picker.isInput) {
-                $(document).off('mousedown.datetimepicker' + picker.id);
-            }
+            $(document).off('mousedown.datetimepicker' + picker.id);
         },
 
         isInFixed = function () {
