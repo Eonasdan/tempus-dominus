@@ -28,7 +28,7 @@ describe('Plugin initialization and component basic construction', function () {
     });
 
     xit('calls destroy when Element that the component is attached is removed', function () {
-        var dtpElement = $('<input>'),
+        var dtpElement = $('<div>').attr('class', 'row').append($('<div>').attr('class', 'col-md-12').append($('<input>'))),
             dtp;
         $(document).find('body').append(dtpElement);
         dtpElement.datetimepicker();
@@ -54,8 +54,8 @@ describe('Public API method tests', function () {
         dpHideSpy = jasmine.createSpy('hide.dp event Spy');
         dpErrorSpy = jasmine.createSpy('error.dp event Spy');
         dtpElement = $('<input>').attr('id', 'dtp');
-        $(document).find('body').append(dtpElement);
 
+        $(document).find('body').append($('<div>').attr('class', 'row').append($('<div>').attr('class', 'col-md-12').append(dtpElement)));
         $(document).find('body').on('change.dp', dpChangeSpy);
         $(document).find('body').on('show.dp', dpShowSpy);
         $(document).find('body').on('hide.dp', dpHideSpy);
@@ -451,14 +451,6 @@ describe('Public API method tests', function () {
         describe('existence', function () {
             it('is defined', function () {
                 expect(dtp.sideBySide).toBeDefined();
-            });
-        });
-    });
-
-    describe('widgetParent() function', function () {
-        describe('existence', function () {
-            it('is defined', function () {
-                expect(dtp.widgetParent).toBeDefined();
             });
         });
     });
