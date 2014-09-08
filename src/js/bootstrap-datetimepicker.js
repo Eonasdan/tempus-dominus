@@ -279,7 +279,8 @@
                 },
 
                 dataToOptions = function () {
-                    var eData = input.data(), dataOptions = {};
+                    var eData = element.data(),
+                        dataOptions = {};
 
                     if (eData.dateOptions && eData.dateOptions instanceof Object) {
                         dataOptions = $.extend(true, dataOptions, eData.dateOptions);
@@ -294,85 +295,57 @@
                     return dataOptions;
                 },
 
-                isInFixed = function () {
-                    var inFixed = false;
-                    if (element) {
-                        $.each(element.parents(), function () {
-                            if ($(this).css('position') === 'fixed') {
-                                inFixed = true;
-                            }
-                        });
-                    }
-                    return inFixed;
-                },
-
                 place = function () {
-                    var position = 'absolute',
-                        offset = component ? component.offset() : element.offset(),
-                        $window = $(window),
-                        placePosition,
-                        width;
+                    var offset = (component || element).position(),
+                        parent = element.is('input') ? element.parent() : element,
+                        direction = options.direction,
+                        orientation = options.orientation;
 
-                    if (!widget) {
-                        return;
+                    if (element.is('input')) {
+                        parent.append(widget);
+                    } else {
+                        element.children().first().after(widget);
                     }
 
-                    width = component ? component.outerWidth() : element.outerWidth();
-                    offset.top = offset.top + element.outerHeight();
-
-                    placePosition = options.direction;
-                    if (placePosition === 'auto') {
-                        if (offset.top + widget.height() > $window.height() + $window.scrollTop() && widget.height() + element.outerHeight() < offset.top) {
-                            placePosition = 'top';
+                    // Top and bottom logic
+                    if (direction === 'auto') {
+                        if ((component || element).offset().top + widget.height() > $(window).height() + $(window).scrollTop() &&
+                                widget.height() + element.outerHeight() < (component || element).offset().top) {
+                            direction = 'top';
                         } else {
-                            placePosition = 'bottom';
+                            direction = 'bottom';
                         }
                     }
-                    if (placePosition === 'top') {
-                        offset.bottom = $window.height() - offset.top + element.outerHeight() + 3;
+
+                    // Left and right logic
+                    if (parent.width() < offset.left + widget.outerWidth()) {
+                        orientation = 'left';
+                    } else {
+                        orientation = 'right';
+                    }
+
+                    if (direction === 'top') {
                         widget.addClass('top').removeClass('bottom');
                     } else {
-                        offset.top += 1;
                         widget.addClass('bottom').removeClass('top');
                     }
 
-                    if (options.orientation === 'left') {
-                        widget.addClass('left-oriented');
-                        offset.left = offset.left - widget.width() + 20;
-                    }
-
-                    if (isInFixed()) {
-                        position = 'fixed';
-                        offset.top -= $window.scrollTop();
-                        offset.left -= $window.scrollLeft();
-                    }
-
-                    if ($window.width() < offset.left + widget.outerWidth()) {
-                        offset.right = $window.width() - offset.left - width;
-                        offset.left = 'auto';
-                        widget.addClass('pull-right');
+                    if (orientation === 'left') {
+                        widget.addClass('pull-right left-oriented');
                     } else {
-                        offset.right = 'auto';
-                        widget.removeClass('pull-right');
+                        widget.removeClass('pull-right left-oriented');
                     }
 
-                    if (placePosition === 'top') {
-                        widget.css({
-                            position: position,
-                            bottom: offset.bottom,
-                            top: 'auto',
-                            left: offset.left,
-                            right: offset.right
-                        });
-                    } else {
-                        widget.css({
-                            position: position,
-                            top: offset.top,
-                            bottom: 'auto',
-                            left: offset.left,
-                            right: offset.right
-                        });
+                    while (parent.css('position') !== 'relative') {
+                        parent = parent.parent();
                     }
+
+                    widget.css({
+                        top: direction === 'top' ? 'auto' : offset.top + element.outerHeight(),
+                        bottom: direction === 'top' ? offset.top + element.outerHeight() : 'auto',
+                        left: orientation === 'left' ? 'auto' : parent.css('padding-left'),
+                        right: orientation === 'left' ? parent.css('padding-right') : 'auto'
+                    });
                 },
 
                 notifyEvent = function (e) {
@@ -390,7 +363,6 @@
                         currentViewMode = Math.max(minViewModeNumber, Math.min(2, currentViewMode + dir));
                     }
                     widget.find('.datepicker > div').hide().filter('.datepicker-' + datePickerModes[currentViewMode].clsName).show();
-                    place();
                 },
 
                 fillDow = function () {
@@ -646,7 +618,6 @@
                     }
                     fillDate();
                     fillTime();
-                    place();
                 },
 
                 setValue = function (targetMoment) {
@@ -936,14 +907,7 @@
                         setValue(currentMoment);
                     }
 
-                    options.widgetParent =
-                        (typeof options.widgetParent === 'string' && options.widgetParent) ||
-                        element.parents().filter(function () {
-                            return 'scroll' === $(this).css('overflow-y');
-                        }).get(0) ||
-                        'body';
-
-                    widget = $(getTemplate()).appendTo(options.widgetParent);
+                    widget = getTemplate();
 
                     fillDow();
                     fillMonths();
@@ -1420,19 +1384,6 @@
                 return picker;
             };
 
-            picker.widgetParent = function (widgetParent) {
-                if (arguments.length === 0) {
-                    return options.widgetParent;
-                }
-
-                if ((typeof widgetParent !== 'string') && ((typeof widgetParent !== 'boolean') && (widgetParent !== false))) {
-                    throw new TypeError('widgetParent() expects a string or boolean:false parameter ' + widgetParent);
-                }
-
-                options.widgetParent = widgetParent;
-                return picker;
-            };
-
             picker.viewMode = function (newViewMode) {
                 if (arguments.length === 0) {
                     return options.viewMode;
@@ -1627,7 +1578,6 @@
         direction: 'auto',
         sideBySide: false,
         daysOfWeekDisabled: [],
-        widgetParent: false,
         calendarWeeks: false,
         viewMode: 'days',
         orientation: 'right',
