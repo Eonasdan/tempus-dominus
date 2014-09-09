@@ -221,7 +221,6 @@
                             .append($('<table>').addClass('table-condensed')),
                         ret = [getTimePickerMainTemplate()];
 
-
                     if (isEnabled('h')) {
                         ret.push(hoursView);
                     }

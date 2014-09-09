@@ -87,11 +87,6 @@
 .bootstrap-datetimepicker-widget button[data-action] {
   padding: 6px;
 }
-.bootstrap-datetimepicker-widget table[data-hour-format="12"] .separator {
-  width: 4px;
-  padding: 0;
-  margin: 0;
-}
 .bootstrap-datetimepicker-widget .picker-switch {
   text-align: center;
 }
