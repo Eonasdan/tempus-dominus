@@ -320,9 +320,9 @@
                     // Left and right logic
                     if (horizontal === 'auto') {
                         if (parent.width() < offset.left + widget.outerWidth()) {
-                            horizontal = 'left';
-                        } else {
                             horizontal = 'right';
+                        } else {
+                            horizontal = 'left';
                         }
                     }
 
@@ -332,10 +332,10 @@
                         widget.addClass('bottom').removeClass('top');
                     }
 
-                    if (horizontal === 'left') {
-                        widget.addClass('pull-right left-oriented');
+                    if (horizontal === 'right') {
+                        widget.addClass('pull-right');
                     } else {
-                        widget.removeClass('pull-right left-oriented');
+                        widget.removeClass('pull-right');
                     }
 
                     // find the first parent element that has a relative css positioning
@@ -352,8 +352,8 @@
                     widget.css({
                         top: vertical === 'top' ? 'auto' : offset.top + element.outerHeight(),
                         bottom: vertical === 'top' ? offset.top + element.outerHeight() : 'auto',
-                        left: horizontal === 'left' ? 'auto' : parent.css('padding-left'),
-                        right: horizontal === 'left' ? parent.css('padding-right') : 'auto'
+                        left: horizontal === 'left' ? parent.css('padding-left') : 'auto',
+                        right: horizontal === 'left' ? 'auto' : parent.css('padding-right')
                     });
                 },
 
