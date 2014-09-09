@@ -80,8 +80,8 @@
                     }
                 ],
                 viewModes = ['days', 'months', 'years'],
-                directionModes = ['top', 'bottom', 'auto'],
-                orientationModes = ['left', 'right', 'auto'],
+                verticalModes = ['top', 'bottom', 'auto'],
+                horizontalModes = ['left', 'right', 'auto'],
 
                 /********************************************************************************
                  *
@@ -298,8 +298,8 @@
                 place = function () {
                     var offset = (component || element).position(),
                         parent = element.is('input') ? element.parent() : element,
-                        direction = options.direction,
-                        orientation = options.orientation;
+                        vertical = options.widgetPositioning.vertical,
+                        horizontal = options.widgetPositioning.horizontal;
 
                     if (element.is('input')) {
                         parent.append(widget);
@@ -308,36 +308,37 @@
                     }
 
                     // Top and bottom logic
-                    if (direction === 'auto') {
+                    if (vertical === 'auto') {
                         if ((component || element).offset().top + widget.height() > $(window).height() + $(window).scrollTop() &&
                                 widget.height() + element.outerHeight() < (component || element).offset().top) {
-                            direction = 'top';
+                            vertical = 'top';
                         } else {
-                            direction = 'bottom';
+                            vertical = 'bottom';
                         }
                     }
 
                     // Left and right logic
-                    if (orientation === 'auto') {
+                    if (horizontal === 'auto') {
                         if (parent.width() < offset.left + widget.outerWidth()) {
-                            orientation = 'left';
+                            horizontal = 'left';
                         } else {
-                            orientation = 'right';
+                            horizontal = 'right';
                         }
                     }
 
-                    if (direction === 'top') {
+                    if (vertical === 'top') {
                         widget.addClass('top').removeClass('bottom');
                     } else {
                         widget.addClass('bottom').removeClass('top');
                     }
 
-                    if (orientation === 'left') {
+                    if (horizontal === 'left') {
                         widget.addClass('pull-right left-oriented');
                     } else {
                         widget.removeClass('pull-right left-oriented');
                     }
 
+                    // find the first parent element that has a relative css positioning
                     if (parent.css('position') !== 'relative') {
                         parent = parent.parents().filter(function () {
                             return $(this).css('position') === 'relative';
@@ -349,10 +350,10 @@
                     }
 
                     widget.css({
-                        top: direction === 'top' ? 'auto' : offset.top + element.outerHeight(),
-                        bottom: direction === 'top' ? offset.top + element.outerHeight() : 'auto',
-                        left: orientation === 'left' ? 'auto' : parent.css('padding-left'),
-                        right: orientation === 'left' ? parent.css('padding-right') : 'auto'
+                        top: vertical === 'top' ? 'auto' : offset.top + element.outerHeight(),
+                        bottom: vertical === 'top' ? offset.top + element.outerHeight() : 'auto',
+                        left: horizontal === 'left' ? 'auto' : parent.css('padding-left'),
+                        right: horizontal === 'left' ? parent.css('padding-right') : 'auto'
                     });
                 },
 
@@ -1350,7 +1351,7 @@
 
             picker.icons = function (icons) {
                 if (arguments.length === 0) {
-                    return options.icons;
+                    return $.extend({}, options.icons);
                 }
 
                 if (!(icons instanceof Object)) {
@@ -1412,22 +1413,34 @@
                 return picker;
             };
 
-            picker.direction = function (direction) {
+            picker.widgetPositioning = function (widgetPositioning) {
                 if (arguments.length === 0) {
-                    return options.direction;
+                    return $.extend({}, options.widgetPositioning);
                 }
 
-                if (typeof direction !== 'string') {
-                    throw new TypeError('direction() expects a string parameter');
+                if (({}).toString.call(widgetPositioning) !== '[object Object]') {
+                    throw new TypeError('widgetPositioning() expects an object variable');
                 }
-
-                direction = direction.toLowerCase();
-
-                if (directionModes.indexOf(direction) === -1) {
-                    throw new TypeError('direction() expects parameter to be one of (' + directionModes.join(', ') + ')');
+                if (widgetPositioning.horizontal) {
+                    if (typeof widgetPositioning.horizontal !== 'string') {
+                        throw new TypeError('widgetPositioning() horizontal variable must be a string');
+                    }
+                    widgetPositioning.horizontal = widgetPositioning.horizontal.toLowerCase();
+                    if (horizontalModes.indexOf(widgetPositioning.horizontal) === -1) {
+                        throw new TypeError('widgetPositioning() expects horizontal parameter to be one of (' + horizontalModes.join(', ') + ')');
+                    }
+                    options.widgetPositioning.horizontal = widgetPositioning.horizontal;
                 }
-
-                options.direction = direction;
+                if (widgetPositioning.vertical) {
+                    if (typeof widgetPositioning.vertical !== 'string') {
+                        throw new TypeError('widgetPositioning() vertical variable must be a string');
+                    }
+                    widgetPositioning.vertical = widgetPositioning.vertical.toLowerCase();
+                    if (verticalModes.indexOf(widgetPositioning.vertical) === -1) {
+                        throw new TypeError('widgetPositioning() expects vertical parameter to be one of (' + verticalModes.join(', ') + ')');
+                    }
+                    options.widgetPositioning.vertical = widgetPositioning.vertical;
+                }
                 update();
                 return picker;
             };
@@ -1442,26 +1455,6 @@
                 }
 
                 options.calendarWeeks = showCalendarWeeks;
-                update();
-                return picker;
-            };
-
-            picker.orientation = function (orientation) {
-                if (arguments.length === 0) {
-                    return options.orientation;
-                }
-
-                if (typeof orientation !== 'string') {
-                    throw new TypeError('orientation() expects a string parameter');
-                }
-
-                orientation = orientation.toLowerCase();
-
-                if (orientationModes.indexOf(orientation) === -1) {
-                    throw new TypeError('orientation() expects parameter to be one of (' + orientationModes.join(', ') + ')');
-                }
-
-                options.orientation = orientation;
                 update();
                 return picker;
             };
@@ -1583,13 +1576,15 @@
             clear:    'glyphicon glyphicon-trash'
         },
         useStrict: false,
-        direction: 'auto',
         sideBySide: false,
         daysOfWeekDisabled: [],
         calendarWeeks: false,
         viewMode: 'days',
-        orientation: 'auto',
         showTodayButton: false,
-        showClear: false
+        showClear: false,
+        widgetPositioning: {
+            horizontal: 'auto',
+            vertical: 'auto'
+        }
     };
 }));

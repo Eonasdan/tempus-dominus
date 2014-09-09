@@ -463,10 +463,10 @@ describe('Public API method tests', function () {
         });
     });
 
-    describe('direction() function', function () {
+    describe('widgetPositioning() function', function () {
         describe('existence', function () {
             it('is defined', function () {
-                expect(dtp.direction).toBeDefined();
+                expect(dtp.widgetPositioning).toBeDefined();
             });
         });
     });
@@ -475,14 +475,6 @@ describe('Public API method tests', function () {
         describe('existence', function () {
             it('is defined', function () {
                 expect(dtp.calendarWeeks).toBeDefined();
-            });
-        });
-    });
-
-    describe('orientation() function', function () {
-        describe('existence', function () {
-            it('is defined', function () {
-                expect(dtp.orientation).toBeDefined();
             });
         });
     });
