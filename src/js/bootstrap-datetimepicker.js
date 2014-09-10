@@ -666,6 +666,7 @@
                         unset = false;
                     } else {
                         errored = true;
+                        unset = true;
                         notifyEvent({
                             type: 'error.dp',
                             date: targetMoment
@@ -1126,7 +1127,7 @@
 
             picker.date = function (newDate) {
                 if (arguments.length === 0) {
-                    if (unset) {
+                    if (unset || errored) {
                         return null;
                     }
                     return date.clone();
