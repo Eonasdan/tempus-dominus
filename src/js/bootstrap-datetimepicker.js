@@ -1320,6 +1320,9 @@ THE SOFTWARE.
             if (date === undefined) {
                 return;
             }
+            if (date === 'now') {
+                date = moment();
+            }
             if (moment.isMoment(date) || date instanceof Date) {
                 picker.options.maxDate = moment(date);
             } else {
@@ -1333,6 +1336,9 @@ THE SOFTWARE.
         picker.setMinDate = function (date) {
             if (date === undefined) {
                 return;
+            }
+            if (date === 'now') {
+                date = moment();
             }
             if (moment.isMoment(date) || date instanceof Date) {
                 picker.options.minDate = moment(date);
