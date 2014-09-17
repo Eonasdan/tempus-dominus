@@ -138,7 +138,12 @@ THE SOFTWARE.
                 }).get(0) ||
                 'body';
 
-            picker.widget = $(getTemplate()).appendTo(picker.options.widgetParent);
+			picker.widget = $(getTemplate());			
+            if (picker.options.inline) {				
+                picker.widget.appendTo(picker.element);
+            } else {
+                picker.widget.appendTo(picker.options.widgetParent);
+            }
 
             picker.minViewMode = picker.options.minViewMode || 0;
             if (typeof picker.minViewMode === 'string') {
@@ -187,9 +192,11 @@ THE SOFTWARE.
             if (!getPickerInput().prop('disabled')) {
                 attachDatePickerEvents();
             }
-            if (picker.options.defaultDate !== '' && getPickerInput().val() === '') {
+			if (picker.options.defaultDate !== '') {
+				if((!picker.options.inline && getPickerInput().val() == '') || (picker.options.inline)) {
                 picker.setValue(picker.options.defaultDate);
             }
+			}            
             if (picker.options.minuteStepping !== 1) {
                 rInterval = picker.options.minuteStepping;
                 picker.date.minutes((Math.round(picker.date.minutes() / rInterval) * rInterval) % 60).seconds(0);
@@ -214,10 +221,9 @@ THE SOFTWARE.
 
         dataToOptions = function () {
             var eData;
-            if (picker.element.is('input')) {
+            if (picker.element.is('input') || picker.options.inline) {
                 eData = picker.element.data();
-            }
-            else {
+			} else {
                 eData = picker.element.find('input').data();
             }
             if (eData.dateFormat !== undefined) {
@@ -279,6 +285,9 @@ THE SOFTWARE.
             }
             if (eData.dateSidebyside !== undefined) {
                 picker.options.sideBySide = eData.dateSidebyside;
+            }
+			if (eData.dateInline !== undefined) {
+                picker.options.inline = eData.dateInline;
             }
             if (eData.dateDaysofweekdisabled !== undefined) {
                 picker.options.daysOfWeekDisabled = eData.dateDaysofweekdisabled;
@@ -371,7 +380,12 @@ THE SOFTWARE.
                 picker.element.change();
             }
         },
-
+		notifySelected = function (date) {            			
+            picker.element.trigger({
+                type: 'dp.selected',
+                date: moment(picker.date)
+            });            
+        },
         notifyError = function (date) {
             errored = true;
             picker.element.trigger({
@@ -707,6 +721,7 @@ THE SOFTWARE.
                                 fillDate();
                                 set();
                                 notifyChange(oldDate, e.type);
+								notifySelected(picker.date);
                             }
                             break;
                     }
@@ -1069,7 +1084,7 @@ THE SOFTWARE.
                 '</div>',
                 ret = '';
             if (picker.options.pickDate && picker.options.pickTime) {
-                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
+                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + (picker.options.inline ? ' inline' : ' dropdown-menu') + '" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
                        '<div class="col-sm-6 datepicker">' + template + '</div>' +
@@ -1091,13 +1106,13 @@ THE SOFTWARE.
             }
             if (picker.options.pickTime) {
                 return (
-                    '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                    '<div class="bootstrap-datetimepicker-widget' + (picker.options.inline ? ' inline' : ' dropdown-menu') + '">' +
                         '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
                     '</div>'
                 );
             }
             return (
-                '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                '<div class="bootstrap-datetimepicker-widget' + (picker.options.inline ? ' inline' : ' dropdown-menu') + '">' +
                     '<div class="datepicker">' + template + '</div>' +
                 '</div>'
             );
@@ -1185,6 +1200,9 @@ THE SOFTWARE.
             if (getPickerInput().prop('disabled')) {
                 return;
             }
+			if (picker.options.inline) {
+                return;
+			}
             if (picker.options.useCurrent) {
                 if (getPickerInput().val() === '') {
                     if (picker.options.minuteStepping !== 1) {
@@ -1241,6 +1259,9 @@ THE SOFTWARE.
         };
 
         picker.hide = function () {
+			if (picker.options.inline) {
+                return;
+			}
             // Ignore event if in the middle of a picker transition
             var collapse = picker.widget.find('.collapse'), i, collapseData;
             for (i = 0; i < collapse.length; i++) {
@@ -1385,6 +1406,7 @@ THE SOFTWARE.
         direction: 'auto',
         sideBySide: false,
         daysOfWeekDisabled: [],
-        widgetParent: false
+        widgetParent: false,
+		inline: false
     };
 }));
