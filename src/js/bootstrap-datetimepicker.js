@@ -1171,7 +1171,7 @@ THE SOFTWARE.
                 '</div>',
                 ret = '';
             if (picker.options.pickDate && picker.options.pickTime) {
-                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" tabindex="0" style="z-index:9999 !important;">';
+                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
                        '<div class="col-sm-6 datepicker">' + template + '</div>' +
@@ -1193,13 +1193,13 @@ THE SOFTWARE.
             }
             if (picker.options.pickTime) {
                 return (
-                    '<div class="bootstrap-datetimepicker-widget dropdown-menu" tabindex="0">' +
+                    '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
                         '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
                     '</div>'
                 );
             }
             return (
-                '<div class="bootstrap-datetimepicker-widget dropdown-menu" tabindex="0">' +
+                '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
                     '<div class="datepicker">' + template + '</div>' +
                 '</div>'
             );
