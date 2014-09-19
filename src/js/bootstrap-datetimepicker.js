@@ -78,10 +78,10 @@ THE SOFTWARE.
       27: 'escape',
       'enter': 13,
       13: 'enter',
-      'page_up': 33,
-      33: 'page_up',
-      'page_down': 34,
-      34: 'page_down',
+      'pageUp': 33,
+      33: 'pageUp',
+      'pageDown': 34,
+      34: 'pageDown',
       'shift': 16,
       16: 'shift',
       'control': 17,
@@ -878,15 +878,20 @@ THE SOFTWARE.
             for(index in keyState) {
                 if(keyState[index] === pressed) {
                     pressedKeys.push(index);
-                    if(index !== currentKey) pressedModifiers[index] = true;
+                    if(index !== currentKey) {
+                        pressedModifiers[index] = true;
+                    }
                 }
             }
 
             for (index in picker.options.keyBinds) {
-                //skip if not a function
-                if (typeof (picker.options.keyBinds[index]) !== 'function') continue;
+                //filtering out properties from prototype... not that it'd really matter
+                if (!picker.options.keyBinds.hasOwnProperty(index)) {continue;}
 
-                keyBindKeys = index.split(" ");
+                //skip if not a function
+                if (typeof (picker.options.keyBinds[index]) !== 'function') {continue;}
+
+                keyBindKeys = index.split(' ');
                 if(keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
                     //correct number of keys pressed, and the current key is last in the declaration. looks good so far
 
@@ -992,7 +997,9 @@ THE SOFTWARE.
             }
 
             getPickerInput().on('focus', function() {
-                if(picker.widget.is(':not(:visible)')) picker.show();
+                if(picker.widget.is(':not(:visible)')) {
+                    picker.show();
+                }
             });
         },
 
@@ -1524,12 +1531,12 @@ THE SOFTWARE.
                     this.setDate(this.getDate().add(1, days));
                 }
             },
-            page_up: function () {
+            pageUp: function () {
                 if(this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().subtract(1, months));
                 }
             },
-            page_down: function () {
+            pageDown: function () {
                 if(this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().add(1, months));
                 }
