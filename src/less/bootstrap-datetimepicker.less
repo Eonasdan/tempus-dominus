@@ -105,6 +105,35 @@
     button[data-action] {
       padding: 6px;
     }
+    .btn[data-action="incrementHours"]::after {
+      .sr-only();
+      content: "Increment Hours";
+    }
+    .btn[data-action="incrementMinutes"]::after {
+      .sr-only();
+      content: "Increment Minutes";
+    }
+    .btn[data-action="decrementHours"]::after {
+      .sr-only();
+      content: "Decrement Hours";
+    }
+    .btn[data-action="decrementMinutes"]::after {
+      .sr-only();
+      content: "Decrement Minutes";
+    }
+    .btn[data-action="showHours"]::after {
+      .sr-only();
+      content: "Show Hours";
+    }
+    .btn[data-action="showMinutes"]::after {
+      .sr-only();
+      content: "Show Minutes";
+    }
+    .btn[data-action="togglePeriod"]::after {
+      .sr-only();
+      content: "Toggle AM/PM";
+    }
+
 
     table[data-hour-format="12"] .separator {
         width: 4px;
@@ -118,6 +147,11 @@
 
     .picker-switch {
         text-align: center;
+
+        &::after {
+          .sr-only();
+          content: "Toggle Date and Time Screens";
+        }
     }
 
     table {
@@ -243,6 +277,15 @@
             font-size: @font-size-base * 1.5;
         }
 
+        &.prev::after {
+            .sr-only();
+            content: "Previous Month";
+        }
+        &.next::after {
+            .sr-only();
+            content: "Next Month";
+        }
+
         &.disabled,
         &.disabled:hover {
             background: none;
@@ -287,7 +330,7 @@
     padding: 0px !important;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: @screen-xs-max) {
     .bootstrap-datetimepicker-widget.timepicker-sbs {
         width: 283px;
     }
