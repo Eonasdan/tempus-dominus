@@ -63,30 +63,30 @@ THE SOFTWARE.
 
     //bi-directional mapping of key description to key code
     keyMap = {
-      'up': 38,
-      38: 'up',
-      'down': 40,
-      40: 'down',
-      'left': 37,
-      37: 'left',
-      'right': 39,
-      39: 'right',
-      'tab': 9,
-      9: 'tab',
-      'escape': 27,
-      27: 'escape',
-      'enter': 13,
-      13: 'enter',
-      'pageUp': 33,
-      33: 'pageUp',
-      'pageDown': 34,
-      34: 'pageDown',
-      'shift': 16,
-      16: 'shift',
-      'control': 17,
-      17: 'control',
-      'space': 32,
-      32: 'space'
+        'up': 38,
+        38: 'up',
+        'down': 40,
+        40: 'down',
+        'left': 37,
+        37: 'left',
+        'right': 39,
+        39: 'right',
+        'tab': 9,
+        9: 'tab',
+        'escape': 27,
+        27: 'escape',
+        'enter': 13,
+        13: 'enter',
+        'pageUp': 33,
+        33: 'pageUp',
+        'pageDown': 34,
+        34: 'pageDown',
+        'shift': 16,
+        16: 'shift',
+        'control': 17,
+        17: 'control',
+        'space': 32,
+        32: 'space'
     },
 
     //maps key code to pressed state
@@ -886,19 +886,18 @@ THE SOFTWARE.
             for (index in picker.options.keyBinds) {
                 //filtering out properties from prototype... not that it'd really matter
                 if (picker.options.keyBinds.hasOwnProperty(index)) {
-
                     //skip if not a function
                     if (typeof (picker.options.keyBinds[index]) !== 'function') {
-                      continue;
+                        continue;
                     }
 
                     keyBindKeys = index.split(' ');
-                    if(keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
+                    if (keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
                         //correct number of keys pressed, and the current key is last in the declaration. looks good so far
 
                         allModifiersPressed = true;
                         for (index2 = keyBindKeys.length - 2; index2 >= 0; index2--) {
-                            if(!(keyMap[keyBindKeys[index2]] in pressedModifiers)) {
+                            if (!(keyMap[keyBindKeys[index2]] in pressedModifiers)) {
                                 allModifiersPressed = false;
                                 break;
                             }
@@ -997,8 +996,8 @@ THE SOFTWARE.
                 }
             }
 
-            getPickerInput().on('focus', function() {
-                if(picker.widget.is(':not(:visible)')) {
+            getPickerInput().on('focus', function () {
+                if (picker.widget.is(':not(:visible)')) {
                     picker.show();
                 }
             });
