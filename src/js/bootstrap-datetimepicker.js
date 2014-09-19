@@ -52,6 +52,47 @@ THE SOFTWARE.
 
     var dpgId = 0,
 
+    //given that moment is here, these will be used fairly frequently, so let's give the minifier an easy target to shorten.
+    seconds = "seconds",
+    minutes = "minutes",
+    hours = "hours",
+    days = "days",
+    months = "months",
+    years = "years",
+    pressed = "p",
+    released = "r",
+
+    //bi-directional mapping of key description to key code
+    keyMap = {
+      "up": 38,
+      38: "up",
+      "down": 40,
+      40: "down",
+      "left": 37,
+      37: "left",
+      "right": 39,
+      39: "right",
+      "tab": 9,
+      9: "tab",
+      "escape": 27,
+      27: "escape",
+      "enter": 13,
+      13: "enter",
+      "page_up": 33,
+      33: "page_up",
+      "page_down": 34,
+      34: "page_down",
+      "shift": 16,
+      16: "shift",
+      "control": 17,
+      17: "control",
+      "space": 32,
+      32: "space"
+    },
+
+    //maps key code to pressed state
+    keyState = {},
+
     DateTimePicker = function (element, options) {
         var defaults = $.fn.datetimepicker.defaults,
 
@@ -282,6 +323,9 @@ THE SOFTWARE.
             }
             if (eData.dateDaysofweekdisabled !== undefined) {
                 picker.options.daysOfWeekDisabled = eData.dateDaysofweekdisabled;
+            }
+            if(eData.keyBinds !== undefined) {
+                $.merge(picker.options.keyBinds, eData.keyBinds);
             }
         },
 
@@ -817,9 +861,50 @@ THE SOFTWARE.
         },
 
         keydown = function (e) {
-            if (e.keyCode === 27) { // allow escape to hide picker
-                picker.hide();
+            //if (e.keyCode === 27) { // allow escape to hide picker
+            //    picker.hide();
+            //}
+            keyState[e.which] = pressed;
+
+            var handler = null, index, index2, pressedKeys = [], pressedModifiers = {}, currentKey = e.which, keyBindKeys, allModifiersPressed;
+
+            for(index in keyState) {
+              if(keyState[index] === pressed) {
+                pressedKeys.push(index);
+                if(index !== currentKey) pressedModifiers[index] = true;
+              }
             }
+
+            for(index in picker.options.keyBinds) {
+              keyBindKeys = index.split(" ");
+              if(keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
+                //correct number of keys pressed, and the current key is last in the declaration. looks good so far
+
+                allModifiersPressed = true;
+                for(index2 = keyBindKeys.length - 2; index2 >= 0; index2--) {
+                  if(!(keyMap[keyBindKeys[index2]] in pressedModifiers)) {
+                    allModifiersPressed = false;
+                    break;
+                  }
+                }
+                if(allModifiersPressed) {
+                  handler = picker.options.keyBinds[index];
+                  break;
+                }
+              }
+            }
+
+            if (handler) {
+              handler.call(picker);
+              e.stopPropagation();
+              e.preventDefault();
+            }
+            
+        },
+
+        keyup = function(e) {
+            keyState[e.which] = released;
+            e.preventDefault();
         },
 
         change = function (e) {
@@ -847,10 +932,12 @@ THE SOFTWARE.
         },
 
         attachDatePickerEvents = function () {
+            //"this" is undefined in this context, so all of the $.proxy calls are irrelevant. They could be removed without incident.
             var $this, $parent, expanded, closed, collapseData;
             picker.widget.on('click', '.datepicker *', $.proxy(click, this)); // this handles date picker clicks
             picker.widget.on('click', '[data-action]', $.proxy(doAction, this)); // this handles time picker clicks
             picker.widget.on('mousedown', $.proxy(stopEvent, this));
+            picker.element.on('keyup', $.proxy(keyup, this));
             picker.element.on('keydown', $.proxy(keydown, this));
             if (picker.options.pickDate && picker.options.pickTime) {
                 picker.widget.on('click.togglePicker', '.accordion-toggle', function (e) {
@@ -877,7 +964,7 @@ THE SOFTWARE.
             if (picker.isInput) {
                 picker.element.on({
                     'click': $.proxy(picker.show, this),
-                    'focus': $.proxy(picker.show, this),
+                    //'focus': $.proxy(picker.show, this),
                     'change': $.proxy(change, this),
                     'blur': $.proxy(picker.hide, this)
                 });
@@ -892,6 +979,10 @@ THE SOFTWARE.
                     picker.element.on('click', $.proxy(picker.show, this));
                 }
             }
+
+            getPickerInput().on('focus', function() {
+              if(picker.widget.is(":not(:visible)")) picker.show();
+            });
         },
 
         attachDatePickerGlobalEvents = function () {
@@ -1069,7 +1160,7 @@ THE SOFTWARE.
                 '</div>',
                 ret = '';
             if (picker.options.pickDate && picker.options.pickTime) {
-                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
+                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" tabindex="0" style="z-index:9999 !important;">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
                        '<div class="col-sm-6 datepicker">' + template + '</div>' +
@@ -1091,13 +1182,13 @@ THE SOFTWARE.
             }
             if (picker.options.pickTime) {
                 return (
-                    '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                    '<div class="bootstrap-datetimepicker-widget dropdown-menu" tabindex="0">' +
                         '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
                     '</div>'
                 );
             }
             return (
-                '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                '<div class="bootstrap-datetimepicker-widget dropdown-menu" tabindex="0">' +
                     '<div class="datepicker">' + template + '</div>' +
                 '</div>'
             );
@@ -1210,6 +1301,7 @@ THE SOFTWARE.
                 picker.widget.show();
                 picker.widget.addClass('picker-open');
             }
+            getPickerInput().focus(); //the input element must be focussed for key events to register
             picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
             place();
             picker.element.trigger({
@@ -1251,6 +1343,7 @@ THE SOFTWARE.
             }
             picker.widget.hide();
             picker.widget.removeClass('picker-open');
+            getPickerInput().blur();
             picker.viewMode = picker.startViewMode;
             showMode();
             picker.element.trigger({
@@ -1379,6 +1472,71 @@ THE SOFTWARE.
         direction: 'auto',
         sideBySide: false,
         daysOfWeekDisabled: [],
-        widgetParent: false
+        widgetParent: false,
+
+        keyBinds: {
+            up: function () {
+                if(this.widget.find(".datepicker").is(":visible")) {
+                    this.setDate(this.getDate().subtract(7, days));
+                } else {
+                    this.setDate(this.getDate().add(1, minutes));
+                }
+            },
+            down: function () {
+                if(this.widget.find(".datepicker").is(":visible")) {
+                    this.setDate(this.getDate().add(7, days));
+                } else {
+                    this.setDate(this.getDate().subtract(1, minutes));
+                }
+            },
+            "control up": function() {
+                if (this.widget.find(".datepicker").is(":visible")) {
+                    this.setDate(this.getDate().subtract(1, years));
+                } else {
+                    this.setDate(this.getDate().add(1, hours));
+                }
+            },
+            "control down": function() {
+                if (this.widget.find(".datepicker").is(":visible")) {
+                    this.setDate(this.getDate().add(1, years));
+                } else {
+                    this.setDate(this.getDate().subtract(1, hours));
+                }
+            },
+            left: function () {
+                if(this.widget.find(".datepicker").is(":visible")) {
+                    this.setDate(this.getDate().subtract(1, days));
+                }
+            },
+            right: function () {
+                if(this.widget.find(".datepicker").is(":visible")) {
+                    this.setDate(this.getDate().add(1, days));
+                }
+            },
+            page_up: function () {
+                if(this.widget.find(".datepicker").is(":visible")) {
+                    this.setDate(this.getDate().subtract(1, months));
+                }
+            },
+            page_down: function () {
+                if(this.widget.find(".datepicker").is(":visible")) {
+                    this.setDate(this.getDate().add(1, months));
+                }
+            },
+            enter: function() {
+                this.hide();
+            },
+            escape: function() {
+                this.hide();
+            },
+            tab: function () {
+                this.widget.find(".picker-switch .btn").click();
+            },
+            "control space": function() {
+                if (this.widget.find(".timepicker").is(":visible")) {
+                    this.widget.find(".btn[data-action='togglePeriod']").click();
+                }
+            }
+        }
     };
 }));
