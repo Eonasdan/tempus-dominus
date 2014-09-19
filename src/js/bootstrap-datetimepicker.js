@@ -323,7 +323,7 @@ THE SOFTWARE.
             if (eData.dateDaysofweekdisabled !== undefined) {
                 picker.options.daysOfWeekDisabled = eData.dateDaysofweekdisabled;
             }
-            if(eData.keyBinds !== undefined) {
+            if (eData.keyBinds !== undefined) {
                 $.merge(picker.options.keyBinds, eData.keyBinds);
             }
         },
@@ -874,10 +874,10 @@ THE SOFTWARE.
                 keyBindKeys,
                 allModifiersPressed;
 
-            for(index in keyState) {
-                if(keyState[index] === pressed) {
+            for (index in keyState) {
+                if (keyState[index] === pressed) {
                     pressedKeys.push(index);
-                    if(index !== currentKey) {
+                    if (index !== currentKey) {
                         pressedModifiers[index] = true;
                     }
                 }
@@ -885,10 +885,10 @@ THE SOFTWARE.
 
             for (index in picker.options.keyBinds) {
                 //filtering out properties from prototype... not that it'd really matter
-                if(picker.options.keyBinds.hasOwnProperty(index)) {
+                if (picker.options.keyBinds.hasOwnProperty(index)) {
 
                     //skip if not a function
-                    if(typeof (picker.options.keyBinds[index]) !== 'function') {
+                    if (typeof (picker.options.keyBinds[index]) !== 'function') {
                       continue;
                     }
 
@@ -897,13 +897,13 @@ THE SOFTWARE.
                         //correct number of keys pressed, and the current key is last in the declaration. looks good so far
 
                         allModifiersPressed = true;
-                        for(index2 = keyBindKeys.length - 2; index2 >= 0; index2--) {
+                        for (index2 = keyBindKeys.length - 2; index2 >= 0; index2--) {
                             if(!(keyMap[keyBindKeys[index2]] in pressedModifiers)) {
                                 allModifiersPressed = false;
                                 break;
                             }
                         }
-                        if(allModifiersPressed) {
+                        if (allModifiersPressed) {
                             handler = picker.options.keyBinds[index];
                             break;
                         }
@@ -916,10 +916,9 @@ THE SOFTWARE.
                 e.stopPropagation();
                 e.preventDefault();
             }
-            
         },
 
-        keyup = function(e) {
+        keyup = function (e) {
             keyState[e.which] = released;
             e.stopPropagation();
             e.preventDefault();
@@ -1496,27 +1495,27 @@ THE SOFTWARE.
 
         keyBinds: {
             up: function () {
-                if(this.widget.find('.datepicker').is(':visible')) {
+                if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().subtract(7, days));
                 } else {
                     this.setDate(this.getDate().add(1, minutes));
                 }
             },
             down: function () {
-                if(this.widget.find('.datepicker').is(':visible')) {
+                if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().add(7, days));
                 } else {
                     this.setDate(this.getDate().subtract(1, minutes));
                 }
             },
-            'control up': function() {
+            'control up': function () {
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().subtract(1, years));
                 } else {
                     this.setDate(this.getDate().add(1, hours));
                 }
             },
-            'control down': function() {
+            'control down': function () {
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().add(1, years));
                 } else {
@@ -1524,35 +1523,35 @@ THE SOFTWARE.
                 }
             },
             left: function () {
-                if(this.widget.find('.datepicker').is(':visible')) {
+                if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().subtract(1, days));
                 }
             },
             right: function () {
-                if(this.widget.find('.datepicker').is(':visible')) {
+                if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().add(1, days));
                 }
             },
             pageUp: function () {
-                if(this.widget.find('.datepicker').is(':visible')) {
+                if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().subtract(1, months));
                 }
             },
             pageDown: function () {
-                if(this.widget.find('.datepicker').is(':visible')) {
+                if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().add(1, months));
                 }
             },
-            enter: function() {
+            enter: function () {
                 this.hide();
             },
-            escape: function() {
+            escape: function () {
                 this.hide();
             },
             tab: function () {
                 this.widget.find('.picker-switch .btn').click();
             },
-            'control space': function() {
+            'control space': function () {
                 if (this.widget.find('.timepicker').is(':visible')) {
                     this.widget.find('.btn[data-action="togglePeriod"]').click();
                 }
