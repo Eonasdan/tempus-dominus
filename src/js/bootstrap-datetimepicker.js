@@ -53,41 +53,41 @@ THE SOFTWARE.
     var dpgId = 0,
 
     //given that moment is here, these will be used fairly frequently, so let's give the minifier an easy target to shorten.
-    seconds = "seconds",
-    minutes = "minutes",
-    hours = "hours",
-    days = "days",
-    months = "months",
-    years = "years",
-    pressed = "p",
-    released = "r",
+    seconds = 'seconds',
+    minutes = 'minutes',
+    hours = 'hours',
+    days = 'days',
+    months = 'months',
+    years = 'years',
+    pressed = 'p',
+    released = 'r',
 
     //bi-directional mapping of key description to key code
     keyMap = {
-      "up": 38,
-      38: "up",
-      "down": 40,
-      40: "down",
-      "left": 37,
-      37: "left",
-      "right": 39,
-      39: "right",
-      "tab": 9,
-      9: "tab",
-      "escape": 27,
-      27: "escape",
-      "enter": 13,
-      13: "enter",
-      "page_up": 33,
-      33: "page_up",
-      "page_down": 34,
-      34: "page_down",
-      "shift": 16,
-      16: "shift",
-      "control": 17,
-      17: "control",
-      "space": 32,
-      32: "space"
+      'up': 38,
+      38: 'up',
+      'down': 40,
+      40: 'down',
+      'left': 37,
+      37: 'left',
+      'right': 39,
+      39: 'right',
+      'tab': 9,
+      9: 'tab',
+      'escape': 27,
+      27: 'escape',
+      'enter': 13,
+      13: 'enter',
+      'page_up': 33,
+      33: 'page_up',
+      'page_down': 34,
+      34: 'page_down',
+      'shift': 16,
+      16: 'shift',
+      'control': 17,
+      17: 'control',
+      'space': 32,
+      32: 'space'
     },
 
     //maps key code to pressed state
@@ -884,7 +884,7 @@ THE SOFTWARE.
 
             for (index in picker.options.keyBinds) {
                 //skip if not a function
-                if (typeof (picker.options.keyBinds[index]) !== "function") continue;
+                if (typeof (picker.options.keyBinds[index]) !== 'function') continue;
 
                 keyBindKeys = index.split(" ");
                 if(keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
@@ -992,7 +992,7 @@ THE SOFTWARE.
             }
 
             getPickerInput().on('focus', function() {
-                if(picker.widget.is(":not(:visible)")) picker.show();
+                if(picker.widget.is(':not(:visible)')) picker.show();
             });
         },
 
@@ -1487,50 +1487,50 @@ THE SOFTWARE.
 
         keyBinds: {
             up: function () {
-                if(this.widget.find(".datepicker").is(":visible")) {
+                if(this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().subtract(7, days));
                 } else {
                     this.setDate(this.getDate().add(1, minutes));
                 }
             },
             down: function () {
-                if(this.widget.find(".datepicker").is(":visible")) {
+                if(this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().add(7, days));
                 } else {
                     this.setDate(this.getDate().subtract(1, minutes));
                 }
             },
-            "control up": function() {
-                if (this.widget.find(".datepicker").is(":visible")) {
+            'control up': function() {
+                if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().subtract(1, years));
                 } else {
                     this.setDate(this.getDate().add(1, hours));
                 }
             },
-            "control down": function() {
-                if (this.widget.find(".datepicker").is(":visible")) {
+            'control down': function() {
+                if (this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().add(1, years));
                 } else {
                     this.setDate(this.getDate().subtract(1, hours));
                 }
             },
             left: function () {
-                if(this.widget.find(".datepicker").is(":visible")) {
+                if(this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().subtract(1, days));
                 }
             },
             right: function () {
-                if(this.widget.find(".datepicker").is(":visible")) {
+                if(this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().add(1, days));
                 }
             },
             page_up: function () {
-                if(this.widget.find(".datepicker").is(":visible")) {
+                if(this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().subtract(1, months));
                 }
             },
             page_down: function () {
-                if(this.widget.find(".datepicker").is(":visible")) {
+                if(this.widget.find('.datepicker').is(':visible')) {
                     this.setDate(this.getDate().add(1, months));
                 }
             },
@@ -1541,11 +1541,11 @@ THE SOFTWARE.
                 this.hide();
             },
             tab: function () {
-                this.widget.find(".picker-switch .btn").click();
+                this.widget.find('.picker-switch .btn').click();
             },
-            "control space": function() {
-                if (this.widget.find(".timepicker").is(":visible")) {
-                    this.widget.find(".btn[data-action='togglePeriod']").click();
+            'control space': function() {
+                if (this.widget.find('.timepicker').is(':visible')) {
+                    this.widget.find('.btn[data-action="togglePeriod"]').click();
                 }
             }
         }
