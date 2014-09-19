@@ -866,44 +866,55 @@ THE SOFTWARE.
             //}
             keyState[e.which] = pressed;
 
-            var handler = null, index, index2, pressedKeys = [], pressedModifiers = {}, currentKey = e.which, keyBindKeys, allModifiersPressed;
+            var handler = null,
+                index,
+                index2,
+                pressedKeys = [],
+                pressedModifiers = {},
+                currentKey = e.which,
+                keyBindKeys,
+                allModifiersPressed;
 
             for(index in keyState) {
-              if(keyState[index] === pressed) {
-                pressedKeys.push(index);
-                if(index !== currentKey) pressedModifiers[index] = true;
-              }
+                if(keyState[index] === pressed) {
+                    pressedKeys.push(index);
+                    if(index !== currentKey) pressedModifiers[index] = true;
+                }
             }
 
-            for(index in picker.options.keyBinds) {
-              keyBindKeys = index.split(" ");
-              if(keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
-                //correct number of keys pressed, and the current key is last in the declaration. looks good so far
+            for (index in picker.options.keyBinds) {
+                //skip if not a function
+                if (typeof (picker.options.keyBinds[index]) !== "function") continue;
 
-                allModifiersPressed = true;
-                for(index2 = keyBindKeys.length - 2; index2 >= 0; index2--) {
-                  if(!(keyMap[keyBindKeys[index2]] in pressedModifiers)) {
-                    allModifiersPressed = false;
-                    break;
-                  }
+                keyBindKeys = index.split(" ");
+                if(keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
+                    //correct number of keys pressed, and the current key is last in the declaration. looks good so far
+
+                    allModifiersPressed = true;
+                    for(index2 = keyBindKeys.length - 2; index2 >= 0; index2--) {
+                        if(!(keyMap[keyBindKeys[index2]] in pressedModifiers)) {
+                            allModifiersPressed = false;
+                            break;
+                        }
+                    }
+                    if(allModifiersPressed) {
+                        handler = picker.options.keyBinds[index];
+                        break;
+                    }
                 }
-                if(allModifiersPressed) {
-                  handler = picker.options.keyBinds[index];
-                  break;
-                }
-              }
             }
 
             if (handler) {
-              handler.call(picker);
-              e.stopPropagation();
-              e.preventDefault();
+                handler.call(picker);
+                e.stopPropagation();
+                e.preventDefault();
             }
             
         },
 
         keyup = function(e) {
             keyState[e.which] = released;
+            e.stopPropagation();
             e.preventDefault();
         },
 
@@ -981,7 +992,7 @@ THE SOFTWARE.
             }
 
             getPickerInput().on('focus', function() {
-              if(picker.widget.is(":not(:visible)")) picker.show();
+                if(picker.widget.is(":not(:visible)")) picker.show();
             });
         },
 
