@@ -53,7 +53,6 @@ THE SOFTWARE.
     var dpgId = 0,
 
     //given that moment is here, these will be used fairly frequently, so let's give the minifier an easy target to shorten.
-    seconds = 'seconds',
     minutes = 'minutes',
     hours = 'hours',
     days = 'days',
@@ -886,25 +885,28 @@ THE SOFTWARE.
 
             for (index in picker.options.keyBinds) {
                 //filtering out properties from prototype... not that it'd really matter
-                if (!picker.options.keyBinds.hasOwnProperty(index)) {continue;}
+                if(picker.options.keyBinds.hasOwnProperty(index)) {
 
-                //skip if not a function
-                if (typeof (picker.options.keyBinds[index]) !== 'function') {continue;}
+                    //skip if not a function
+                    if(typeof (picker.options.keyBinds[index]) !== 'function') {
+                      continue;
+                    }
 
-                keyBindKeys = index.split(' ');
-                if(keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
-                    //correct number of keys pressed, and the current key is last in the declaration. looks good so far
+                    keyBindKeys = index.split(' ');
+                    if(keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
+                        //correct number of keys pressed, and the current key is last in the declaration. looks good so far
 
-                    allModifiersPressed = true;
-                    for(index2 = keyBindKeys.length - 2; index2 >= 0; index2--) {
-                        if(!(keyMap[keyBindKeys[index2]] in pressedModifiers)) {
-                            allModifiersPressed = false;
+                        allModifiersPressed = true;
+                        for(index2 = keyBindKeys.length - 2; index2 >= 0; index2--) {
+                            if(!(keyMap[keyBindKeys[index2]] in pressedModifiers)) {
+                                allModifiersPressed = false;
+                                break;
+                            }
+                        }
+                        if(allModifiersPressed) {
+                            handler = picker.options.keyBinds[index];
                             break;
                         }
-                    }
-                    if(allModifiersPressed) {
-                        handler = picker.options.keyBinds[index];
-                        break;
                     }
                 }
             }
