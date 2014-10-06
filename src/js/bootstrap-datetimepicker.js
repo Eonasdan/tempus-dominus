@@ -253,7 +253,9 @@ THE SOFTWARE.
         },
 
         dataToOptions = function () {
-            var eData;
+            var eData,
+              d = new Date();
+
             if (picker.element.is('input')) {
                 eData = picker.element.data();
             }
@@ -323,10 +325,9 @@ THE SOFTWARE.
             if (eData.dateDaysofweekdisabled !== undefined) {
                 picker.options.daysOfWeekDisabled = eData.dateDaysofweekdisabled;
             }
-          if (picker.options.showTimezone !== undefined) {
-            var d = new Date();
-            picker.options.timeZone = d.toString().split('GMT')[1].split(' ')[0];
-          }
+            if (picker.options.showTimezone !== undefined) {
+                picker.options.timeZone = d.toString().split('GMT')[1].split(' ')[0];
+            }
         },
 
         place = function () {
@@ -1069,8 +1070,8 @@ THE SOFTWARE.
                 formatted = moment(picker.date).format(picker.format);
             }
 
-            if(picker.options.showTimezone){
-              formatted += (' ' + picker.options.timeZone);
+            if (picker.options.showTimezone) {
+                formatted += (' ' + picker.options.timeZone);
             }
             getPickerInput().val(formatted);
             picker.element.data('date', formatted);
