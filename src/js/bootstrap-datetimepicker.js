@@ -1344,7 +1344,7 @@ THE SOFTWARE.
                 update();
             }
         };
-        
+
         picker.setCalendar = function (date) {
             if (date === undefined) {
                 return;
