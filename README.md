@@ -1,4 +1,5 @@
 ### Bootstrap v3 datetimepicker widget
+[Travis](https://travis-ci.org/spthorn/bootstrap-datetimepicker.svg?branch=master)
 
 ### [View the manual and demos](http://spthorn.github.io/bootstrap-datetimepicker/) - note: out of date!
 
