@@ -177,6 +177,7 @@ THE SOFTWARE.
             picker.startViewMode = picker.viewMode;
             picker.setMinDate(picker.options.minDate);
             picker.setMaxDate(picker.options.maxDate);
+            picker.setCalendar(picker.options.date);
             fillDow();
             fillMonths();
             fillHours();
@@ -1338,6 +1339,20 @@ THE SOFTWARE.
                 picker.options.minDate = moment(date);
             } else {
                 picker.options.minDate = moment(date, picker.format, picker.options.useStrict);
+            }
+            if (picker.viewDate) {
+                update();
+            }
+        };
+
+        picker.setCalendar = function (date) {
+            if (date === undefined) {
+                return;
+            }
+            if (moment.isMoment(date) || date instanceof Date) {
+                picker.date = moment(date);
+            } else {
+                picker.date = moment(date, picker.format, picker.options.useStrict);
             }
             if (picker.viewDate) {
                 update();
