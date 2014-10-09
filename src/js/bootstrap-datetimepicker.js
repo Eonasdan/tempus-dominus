@@ -390,7 +390,7 @@ THE SOFTWARE.
 
             nextMonth = pMoment(prevMonth).add(42, "d");
             while (prevMonth.isBefore(nextMonth)) {
-                if (prevMonth.weekday() === pMoment().startOf('week').weekday()) {
+                if (prevMonth.weekday() === pMoment().zone(0).startOf('week').weekday()) {
                     row = $('<tr>');
                     html.push(row);
                 }
