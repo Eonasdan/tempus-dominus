@@ -827,8 +827,11 @@ THE SOFTWARE.
             },
 
             selectMinute: function (e) {
-                picker.date.minutes(parseInt($(e.target).text(), 10));
-                actions.showPicker.call(picker);
+                var value = parseInt($(e.target).text(), 10);
+                if (!isNaN(value)) {
+                    picker.date.minutes(value);
+                    actions.showPicker.call(picker);
+                }
             },
 
             selectSecond: function (e) {
