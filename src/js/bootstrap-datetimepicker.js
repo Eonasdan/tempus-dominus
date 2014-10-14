@@ -153,7 +153,7 @@ THE SOFTWARE.
                     }
                 }
             }
-            picker.use24hours = (picker.format.toLowerCase().indexOf('a') < 0 && picker.format.indexOf('h') < 0);
+            picker.use24hours = picker.format.search(/(h|a)([^[\]]+)(?:$|\[)/) < 0;
 
             if (picker.component) {
                 icon = picker.component.find('span');
