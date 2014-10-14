@@ -704,7 +704,8 @@ THE SOFTWARE.
                                     d: picker.viewDate.date(),
                                     h: picker.date.hours(),
                                     m: picker.date.minutes(),
-                                    s: picker.date.seconds()
+                                    s: picker.date.seconds(),
+                                    ms: picker.date.milliseconds()
                                 });
                                 set();
                                 notifyChange(oldDate, e.type);
@@ -738,7 +739,8 @@ THE SOFTWARE.
                                     d: day,
                                     h: picker.date.hours(),
                                     m: picker.date.minutes(),
-                                    s: picker.date.seconds()
+                                    s: picker.date.seconds(),
+                                    ms: picker.date.milliseconds()
                                 }
                                 );
                                 picker.viewDate = moment({
