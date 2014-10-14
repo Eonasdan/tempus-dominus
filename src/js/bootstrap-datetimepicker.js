@@ -994,6 +994,7 @@ THE SOFTWARE.
                     picker.component.on('click', $.proxy(picker.show, this));
                     picker.component.on('mousedown', $.proxy(stopEvent, this));
                 } else {
+                    picker.element.find('.datepickerclear').on('click', $.proxy(picker.clear, this));
                     picker.element.on('click', $.proxy(picker.show, this));
                 }
             }
@@ -1280,6 +1281,13 @@ THE SOFTWARE.
                 (picker.options.useSeconds ?
                     '<div class="timepicker-seconds" data-action="selectSecond"><table class="table-condensed"></table></div>' : '')
             );
+        };
+
+        picker.clear = function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            picker.setValue(null);
         };
 
         picker.destroy = function () {
