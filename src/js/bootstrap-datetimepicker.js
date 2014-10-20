@@ -460,6 +460,7 @@ THE SOFTWARE.
             }
 
             nextMonth = moment(prevMonth).add(42, 'd');
+            row = $('<tr>');
             while (prevMonth.isBefore(nextMonth)) {
                 if (prevMonth.weekday() === moment().startOf('week').weekday()) {
                     row = $('<tr>');
