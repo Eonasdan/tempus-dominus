@@ -493,7 +493,7 @@ THE SOFTWARE.
                         }
                     }
                 }
-                row.append('<td class="day' + clsName + '">' + prevMonth.date() + '</td>');
+                if (row) row.append('<td class="day' + clsName + '">' + prevMonth.date() + '</td>');
 
                 currentDate = prevMonth.date();
                 prevMonth.add(1, 'd');
