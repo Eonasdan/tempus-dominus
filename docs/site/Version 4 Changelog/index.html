@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+        <title>Version 4 Changelog - My Docs</title>
+
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="../css/prettify-1.0.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">My Docs</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../Functions">Functions</a>
+                    </li>
+                
+                
+                
+                    <li class="active">
+                        <a href=".">Version 4 Changelog</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../Version 4 Contributors guide">Version 4 Contributors guide</a>
+                    </li>
+                
+                
+                </ul>
+            
+
+            
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                
+                
+                <li >
+                    <a rel="next" href="../Functions">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../Version 4 Contributors guide">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#v4-changelog">V4 Changelog</a></li>
+        
+            <li><a href="#changes-for-using-the-component">Changes for using the component</a></li>
+        
+            <li><a href="#added-functionality">Added functionality</a></li>
+        
+            <li><a href="#contributors-related-internal-code-changes">Contributors related internal code changes</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<h3 id="v4-changelog">V4 Changelog</h3>
+<h4 id="changes-for-using-the-component">Changes for using the component</h4>
+<ul>
+<li>
+<p>Defined a <a href="https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Version-4-Public-API">Public API</a> and hidden rest of functions, variables so that all configuration options can be changed dynamically.</p>
+</li>
+<li>
+<p><code>set/getDate()</code> is now replaced with an overloaded <code>date()</code> function. Use it without a parameter to get the currently set date or with a parameter to set the date.</p>
+</li>
+<li>
+<p><code>hide()</code>, <code>show()</code>, <code>toggle()</code>, <code>enable()</code>, <code>disable()</code> and the rest of setter functions now support chaining. ie <code>$('#id').data('DateTimePicker').format('DD-MM-YYYY').minDate(moment()).defaultDate(moment()).show()</code> works</p>
+</li>
+<li>
+<p>Replaced previous - next buttons in Date subviews with configurable icons</p>
+</li>
+<li>
+<p>Changed <code>language</code> option name to <code>locale</code> to be inline with moment naming</p>
+</li>
+<li>
+<p>Implemented #402 all data-date-* variables are more readable and also match with the ones in the configuration object</p>
+</li>
+<li>
+<p><code>options.direction</code> and <code>options.orientation</code> were merged into a single object <code>options.widgetPositioning</code> with <code>vertical</code> and <code>horizontal</code> keys that take a string value of <code>'auto', 'top', 'bottom'</code> and <code>'auto', 'left', 'right'</code> respectively. Note that the <code>'up'</code> option was renamed to <code>'top'</code></p>
+</li>
+</ul>
+<h4 id="added-functionality">Added functionality</h4>
+<ul>
+<li>
+<p>added a second way to define options as data attributes. Instead of adding distinct <code>data-date-*</code> config options you can now also pass a <code>data-date-options</code> attribute containing an object just the same as the options object that <code>element.datetimepicker</code> constructor call takes</p>
+</li>
+<li>
+<p>also added a <code>options()</code> public api function to get/set that takes an option object and applies it to the component in one call</p>
+</li>
+<li>
+<p>Implemented <a href="https://github.com/Eonasdan/bootstrap-datetimepicker/issues/130">#130</a> by introducing a boolean <code>options.calendarWeeks</code> and <code>calendarWeeks()</code> api function</p>
+</li>
+<li>
+<p>Implemented <a href="https://github.com/Eonasdan/bootstrap-datetimepicker/issues/328">#328</a>, <a href="https://github.com/Eonasdan/bootstrap-datetimepicker/issues/426">#426</a></p>
+</li>
+<li>
+<p>Implemented <a href="https://github.com/Eonasdan/bootstrap-datetimepicker/issues/432">#432</a>. Widget DOM element is now lazily added only when shown and removed from the document when hidden.</p>
+</li>
+<li>
+<p>Implemented <a href="https://github.com/Eonasdan/bootstrap-datetimepicker/issues/141">#141</a> and <a href="https://github.com/Eonasdan/bootstrap-datetimepicker/issues/283">#283</a></p>
+</li>
+</ul>
+<h4 id="contributors-related-internal-code-changes">Contributors related internal code changes</h4>
+<ul>
+<li>
+<p>Refactor all UI click functions and put them as functions in the actions array private variable</p>
+</li>
+<li>
+<p>Refactor template building process to seperate functions according to what they do</p>
+</li>
+<li>
+<p>Remove some styles that where hardcoded in the javascript code</p>
+</li>
+<li>
+<p>Refactor all code that changes the picker.date to change it through the setValue function to allow one place for validation logic (min/max/weekdaysenabled etc) and also one place for emmiting dp.change events</p>
+</li>
+<li>
+<p>The v4beta branch code includes all fixes up to v.3.1.2</p>
+</li>
+<li>
+<p>Added <code>toggle()</code> to the public API which toggles the visibility of the DateTimePicker</p>
+</li>
+<li>
+<p>Refactored set function to be included in the setValue function</p>
+</li>
+<li>
+<p>Added a testing framework using jasmine and phantom.js</p>
+</li>
+</ul>
+</div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+
+        
+
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/prettify-1.0.min.js"></script>
+        <script src="../js/base.js"></script>
+    </body>
+</html>

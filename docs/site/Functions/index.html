@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+        <title>Functions - My Docs</title>
+
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="../css/prettify-1.0.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">My Docs</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li class="active">
+                        <a href=".">Functions</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../Version 4 Changelog">Version 4 Changelog</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../Version 4 Contributors guide">Version 4 Contributors guide</a>
+                    </li>
+                
+                
+                </ul>
+            
+
+            
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                
+                
+                <li >
+                    <a rel="next" href="..">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../Version 4 Changelog">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#functions">Functions</a></li>
+        
+            <li><a href="#destroy">destroy()</a></li>
+        
+            <li><a href="#toggle">toggle()</a></li>
+        
+            <li><a href="#show">show()</a></li>
+        
+            <li><a href="#hide">hide()</a></li>
+        
+            <li><a href="#disable">disable()</a></li>
+        
+            <li><a href="#enable">enable()</a></li>
+        
+            <li><a href="#date">date()</a></li>
+        
+            <li><a href="#datenewdate">date(newDate)</a></li>
+        
+            <li><a href="#options">options()</a></li>
+        
+            <li><a href="#optionsoptions">options(options)</a></li>
+        
+            <li><a href="#format">format()</a></li>
+        
+            <li><a href="#formatformat">format(format)</a></li>
+        
+            <li><a href="#disableddates">disabledDates()</a></li>
+        
+            <li><a href="#disableddatesdates">disabledDates(dates)</a></li>
+        
+            <li><a href="#enableddates">enabledDates()</a></li>
+        
+            <li><a href="#enableddatesdates">enabledDates(dates)</a></li>
+        
+            <li><a href="#maxdate">maxDate()</a></li>
+        
+            <li><a href="#maxdatemaxdate">maxDate(maxDate)</a></li>
+        
+            <li><a href="#mindate">minDate()</a></li>
+        
+            <li><a href="#mindatemindate">minDate(minDate)</a></li>
+        
+            <li><a href="#daysofweekdisabled">daysOfWeekDisabled()</a></li>
+        
+            <li><a href="#daysofweekdisableddaysofweek">daysOfWeekDisabled(daysOfWeek)</a></li>
+        
+            <li><a href="#locale">locale()</a></li>
+        
+            <li><a href="#localenewlocale">locale(newLocale)</a></li>
+        
+            <li><a href="#usecurrent">useCurrent()</a></li>
+        
+            <li><a href="#usecurrentboolean-or-string">useCurrent(boolean or string)</a></li>
+        
+            <li><a href="#stepping">stepping()</a></li>
+        
+            <li><a href="#steppingnumber">stepping(number)</a></li>
+        
+            <li><a href="#collapse">collapse()</a></li>
+        
+            <li><a href="#collapsecollapse">collapse(collapse)</a></li>
+        
+            <li><a href="#defaultdate">defaultDate()</a></li>
+        
+            <li><a href="#defaultdatedefaultdate">defaultDate(defaultDate)</a></li>
+        
+            <li><a href="#icons">icons()</a></li>
+        
+            <li><a href="#iconsicons">icons(icons)</a></li>
+        
+            <li><a href="#usestrict">useStrict()</a></li>
+        
+            <li><a href="#usestrictusestrict">useStrict(useStrict)</a></li>
+        
+            <li><a href="#widgetpositioning">widgetPositioning()</a></li>
+        
+            <li><a href="#widgetpositioningpositioningobject">widgetPositioning(positioningObject)</a></li>
+        
+            <li><a href="#sidebyside">sideBySide()</a></li>
+        
+            <li><a href="#sidebysidesidebyside">sideBySide(sideBySide)</a></li>
+        
+            <li><a href="#viewmode">viewMode()</a></li>
+        
+            <li><a href="#viewmodenewviewmode">viewMode(newViewMode)</a></li>
+        
+            <li><a href="#calendarweeks">calendarWeeks()</a></li>
+        
+            <li><a href="#calendarweeksboolean">calendarWeeks(boolean)</a></li>
+        
+            <li><a href="#showclear">showClear()</a></li>
+        
+            <li><a href="#showclearboolean">showClear(boolean)</a></li>
+        
+            <li><a href="#showtodaybutton">showTodayButton()</a></li>
+        
+            <li><a href="#showtodaybuttonboolean">showTodayButton(boolean)</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<p><strong>Status of this document</strong>: DRAFT</p>
+<p><strong>NOTE:</strong> This guide refers to v4 of the component which is currently in beta stage</p>
+<h2 id="functions">Functions</h2>
+<h3 id="destroy">destroy()</h3>
+<p>Destroys the widget and removes all attached event listeners</p>
+<hr />
+<h3 id="toggle">toggle()</h3>
+<p>Shows or hides the widget</p>
+<h4 id="emits">Emits</h4>
+<ul>
+<li>
+<p><code>dp.hide</code> - if the widget is hidden after the toggle call</p>
+</li>
+<li>
+<p><code>dp.show</code> - if the widget is show after the toggle call</p>
+</li>
+<li>
+<p><code>dp.change</code> - if the widget is opened for the first time and the input element is empty and <code>options.useCurrent != false</code></p>
+</li>
+</ul>
+<hr />
+<h3 id="show">show()</h3>
+<p>Shows the widget</p>
+<h4 id="emits_1">Emits</h4>
+<ul>
+<li>
+<p><code>dp.show</code> - if the widget was hidden before that call</p>
+</li>
+<li>
+<p><code>dp.change</code> - if the widget is opened for the first time and the useCurrent is set to true or to a granularity value and the input element the component is attached to has an empty value</p>
+</li>
+</ul>
+<hr />
+<h3 id="hide">hide()</h3>
+<p>Hides the widget</p>
+<h4 id="emits_2">Emits</h4>
+<ul>
+<li><code>dp.hide</code> - if the widget was visible before that call</li>
+</ul>
+<hr />
+<h3 id="disable">disable()</h3>
+<p>Disables the input element, the component is attached to, by adding a <code>disabled="true"</code> attribute to it. If the widget was visible before that call it is hidden.</p>
+<h4 id="emits_3">Emits</h4>
+<ul>
+<li><code>dp.hide</code> - if the widget was visible before that call</li>
+</ul>
+<hr />
+<h3 id="enable">enable()</h3>
+<p>Enables the input element, the component is attached to, by removing <code>disabled</code> attribute from it.</p>
+<hr />
+<h3 id="date">date()</h3>
+<p>Returns the component's model current date, a <code>moment</code> object or <code>null</code> if not set.</p>
+<hr />
+<h3 id="datenewdate">date(newDate)</h3>
+<p>Takes a newDate <code>string, Date, moment, null</code> parameter and sets the components model current moment to it. Passing a <code>null</code> value unsets the components model current moment. Parsing of the newDate parameter is made using moment library with the <code>options.format</code> and <code>options.useStrict</code> components configuration.</p>
+<h4 id="throws">Throws</h4>
+<ul>
+<li><code>TypeError</code> - in case the <code>newDate</code> cannot be parsed</li>
+</ul>
+<h4 id="emits_4">Emits</h4>
+<ul>
+<li><code>dp.change</code> - In case <code>newDate</code> is different from current moment</li>
+</ul>
+<hr />
+<h3 id="options">options()</h3>
+<p>Returns the components current options object. Note that the changing the values of the returned object does not change the components actual configuration. Use <code>options(options)</code> to set the components options massively or the other methods for setting config options individually.</p>
+<hr />
+<h3 id="optionsoptions">options(options)</h3>
+<p>Takes an object variable with option key:value properties and configures the component. Use this to update multiple options on the component.</p>
+<hr />
+<h3 id="format">format()</h3>
+<p>Returns the component's <code>options.format</code> <code>string</code></p>
+<hr />
+<h3 id="formatformat">format(format)</h3>
+<p>Takes a <a href="http://momentjs.com/docs/#/displaying/format/">moment.js</a> format <code>string</code> and sets the components  <code>options.format</code>. This is used for displaying and also for parsing input strings either from the input element the component is attached to or the <code>date()</code> function.
+The parameter can also be a <code>boolean:false</code> in which case the format is set to the locale's <code>L LT</code>.</p>
+<p><strong>Note:</strong> this is also used to determine if the TimePicker sub component will display the hours in 12 or 24 format. (if 'a' or 'h' exists in the passed string then a 12 hour mode is set)</p>
+<hr />
+<h3 id="disableddates">disabledDates()</h3>
+<p>Returns an array with the currently set disabled dates on the component.</p>
+<hr />
+<h3 id="disableddatesdates">disabledDates(dates)</h3>
+<p>Takes an <code>[</code> <code>string</code> or <code>Date</code> or <code>moment</code> <code>]</code> of values and disallows the user to select those days. Setting this takes precedence over <code>options.minDate</code>, <code>options.maxDate</code> configuration. Also calling this function removes the configuration of options.enabledDates if such exist.</p>
+<p><strong>Note:</strong> These values are matched with <code>Day</code> granularity.</p>
+<hr />
+<h3 id="enableddates">enabledDates()</h3>
+<p>Returns an array with the currently set enabled dates on the component.</p>
+<hr />
+<h3 id="enableddatesdates">enabledDates(dates)</h3>
+<p>Takes an <code>[</code> <code>string</code> or <code>Date</code> or <code>moment</code> <code>]</code> of values and allows the user to select only from those days. Setting this takes precedence over <code>options.minDate</code>, <code>options.maxDate</code> configuration. Also calling this function removes the configuration of options.disabledDates if such exist.</p>
+<p><strong>Note:</strong> These values are matched with <code>Day</code> granularity.</p>
+<hr />
+<h3 id="maxdate">maxDate()</h3>
+<p>Returns the currently set moment of the <code>options.maxDate</code> or <code>false</code> if not set</p>
+<hr />
+<h3 id="maxdatemaxdate">maxDate(maxDate)</h3>
+<p>Takes a maxDate <code>string, Date, moment, boolean:false</code> parameter and disallows the user to select a moment that is after that moment. If a <code>boolean:false</code> value is passed <code>options.maxDate</code> is cleared and there is no restriction to the maximum moment the user can select.</p>
+<p><strong>Note:</strong> If maxDate is before the currently selected moment the currently selected moment changes to maxDate</p>
+<h4 id="throws_1">Throws</h4>
+<ul>
+<li>
+<p><code>TypeError</code> - if maxDate parameter cannot be parsed using the <code>options.format</code> and <code>options.useStrict</code> configuration settings</p>
+</li>
+<li>
+<p><code>TypeError</code> - if maxDate parameter is before <code>options.minDate</code></p>
+</li>
+</ul>
+<h4 id="emits_5">Emits</h4>
+<ul>
+<li>
+<p><code>dp.change</code> - if the new maxDate is after currently selected moment  (waiting for #472 to close in order to finalize this part)</p>
+</li>
+<li>
+<p><code>dp.error</code> - if the new maxDate is after currently selected moment  (waiting for #472 to close in order to finalize this part)</p>
+</li>
+</ul>
+<hr />
+<h3 id="mindate">minDate()</h3>
+<p>Returns the currently set moment of the <code>options.minDate</code> or <code>false</code> if not set</p>
+<hr />
+<h3 id="mindatemindate">minDate(minDate)</h3>
+<p>Takes a minDate <code>string, Date, moment, boolean:false</code> parameter and disallows the user to select a moment that is before that moment. If a <code>boolean:false</code> value is passed the <code>options.minDate</code> parameter is cleared and there is no restriction to the miminum moment the user can select. </p>
+<p><strong>Note:</strong> If the minDate parameter is after the currently selected moment the currently selected moment changes to minDate parameter</p>
+<h4 id="throws_2">Throws</h4>
+<ul>
+<li>
+<p><code>TypeError</code> - if minDate parameter cannot be parsed using the <code>options.format</code> and <code>options.useStrict</code> configuration settings</p>
+</li>
+<li>
+<p><code>TypeError</code> - if minDate parameter is after <code>options.maxDate</code></p>
+</li>
+</ul>
+<h4 id="emits_6">Emits</h4>
+<ul>
+<li>
+<p><code>dp.change</code> - if the new minDate is after currently selected moment (waiting for #472 to close in order to finalize this part)</p>
+</li>
+<li>
+<p><code>dp.error</code> - if the new minDate is after currently selected moment (waiting for #472 to close in order to finalize this part)</p>
+</li>
+</ul>
+<hr />
+<h3 id="daysofweekdisabled">daysOfWeekDisabled()</h3>
+<p>Returns an array with the <code>options.daysOfWeekDisabled</code> configuration setting of the component.</p>
+<hr />
+<h3 id="daysofweekdisableddaysofweek">daysOfWeekDisabled(daysOfWeek)</h3>
+<p>Takes an <code>[</code> <code>Number</code>:<code>0</code> to <code>6</code> <code>]</code> and disallow the user to select weekdays that exist in this array. This has lower priority over the <code>options.minDate</code>, <code>options.maxDate</code>, <code>options.disabledDates</code> and <code>options.enabledDates</code> configuration settings.</p>
+<h4 id="emits_7">Emits</h4>
+<ul>
+<li>
+<p><code>dp.change</code> - if the currently selected moment falls in the values passed on the daysOfWeek parameter. (waiting for #472 to close in order to finalize this part)</p>
+</li>
+<li>
+<p><code>dp.error</code> - if the currently selected moment falls in the values passed on the daysOfWeek parameter. (waiting for #472 to close in order to finalize this part)</p>
+</li>
+</ul>
+<hr />
+<h3 id="locale">locale()</h3>
+<hr />
+<h3 id="localenewlocale">locale(newLocale)</h3>
+<hr />
+<h3 id="usecurrent">useCurrent()</h3>
+<p>Returns a boolean or string with the <code>options.useCurrent</code> option configuration</p>
+<hr />
+<h3 id="usecurrentboolean-or-string">useCurrent(boolean or string)</h3>
+<p>Takes a <code>boolean</code> or <code>string</code>. If a boolean true is passed and the components model moment is not set (either through <code>setDate</code> or through a valid value on the input element the component is attached to) then the first time the user opens the datetimepicker widget the value is initialized to the current moment of the action. If a false boolean is passed then no initialization happens on the input element. You can select the granularity on the initialized moment by passing one of the following strings (<code>'year', 'month', 'day', 'hour', 'minute'</code>) in the variable.</p>
+<p>If for example you pass <code>'day'</code> to the <code>setUseCurrent</code> function and the input field is empty the first time the user opens the datetimepicker widget the input text will be initialized to the current datetime with day granularity (ie if currentTime = <code>2014-08-10 13:32:33</code> the input value will be initialized to <code>2014-08-10 00:00:00</code>)</p>
+<p><strong>Note:</strong> If the <code>options.defaultDate</code> is set or the input element the component is attached to has already a value that takes precedence and the functionality of <code>useCurrent</code> is not triggered!</p>
+<hr />
+<h3 id="stepping">stepping()</h3>
+<hr />
+<h3 id="steppingnumber">stepping(number)</h3>
+<hr />
+<h3 id="collapse">collapse()</h3>
+<hr />
+<h3 id="collapsecollapse">collapse(collapse)</h3>
+<hr />
+<h3 id="defaultdate">defaultDate()</h3>
+<hr />
+<h3 id="defaultdatedefaultdate">defaultDate(defaultDate)</h3>
+<hr />
+<h3 id="icons">icons()</h3>
+<hr />
+<h3 id="iconsicons">icons(icons)</h3>
+<hr />
+<h3 id="usestrict">useStrict()</h3>
+<hr />
+<h3 id="usestrictusestrict">useStrict(useStrict)</h3>
+<hr />
+<h3 id="widgetpositioning">widgetPositioning()</h3>
+<p>Returns the currently set <code>options.widgetPositioning</code> object containing two keys <code>horizontal</code> and <code>vertical</code></p>
+<hr />
+<h3 id="widgetpositioningpositioningobject">widgetPositioning(positioningObject)</h3>
+<p>Takes an object parameter that can contain two keys <code>vertical</code> and <code>horizontal</code> each having a value of <code>'auto', 'top', 'bottom'</code> for <code>vertical</code> and <code>'auto', 'left', 'right'</code> for <code>horizontal</code> which defines where the dropdown with the widget will appear relative to the input element the component is attached to.</p>
+<p><code>'auto'</code> is the default value for both <code>horizontal</code> and <code>vertical</code> keys and it tries to automatically place the dropdown in a position that is visible to the user. Usually you should not override those options unless you have a special need in your layout.</p>
+<hr />
+<h3 id="sidebyside">sideBySide()</h3>
+<hr />
+<h3 id="sidebysidesidebyside">sideBySide(sideBySide)</h3>
+<hr />
+<h3 id="viewmode">viewMode()</h3>
+<hr />
+<h3 id="viewmodenewviewmode">viewMode(newViewMode)</h3>
+<hr />
+<h3 id="calendarweeks">calendarWeeks()</h3>
+<p>Returns a boolean with the current <code>options.calendarWeeks</code> option configuration</p>
+<hr />
+<h3 id="calendarweeksboolean">calendarWeeks(boolean)</h3>
+<p>Takes a boolean variable to set if the week numbers will appear to the left on the days view</p>
+<hr />
+<h3 id="showclear">showClear()</h3>
+<p>Returns a boolean variable with the currently set <code>options.showClear</code> option.</p>
+<hr />
+<h3 id="showclearboolean">showClear(boolean)</h3>
+<p>Takes a boolean variable to set if the clear date button will appear on the widget</p>
+<hr />
+<h3 id="showtodaybutton">showTodayButton()</h3>
+<p>Returns a boolean variable with the currently set <code>options.showTodayButton</code> option.</p>
+<hr />
+<h3 id="showtodaybuttonboolean">showTodayButton(boolean)</h3>
+<p>Takes a boolean variable to set if the Today button will appear on the widget</p>
+</div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+
+        
+
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/prettify-1.0.min.js"></script>
+        <script src="../js/base.js"></script>
+    </body>
+</html>
