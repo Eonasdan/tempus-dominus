@@ -1185,7 +1185,7 @@ THE SOFTWARE.
                 '</div>',
                 ret = '';
             if (picker.options.pickDate && picker.options.pickTime) {
-                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
+                ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + (picker.use24hours ? ' usetwentyfour' : '') + ' dropdown-menu">';
                 if (picker.options.sideBySide) {
                     ret += '<div class="row">' +
                        '<div class="col-sm-6 datepicker">' + template + '</div>' +
@@ -1196,7 +1196,7 @@ THE SOFTWARE.
                         '<li' + (picker.options.collapse ? ' class="collapse in"' : '') + '>' +
                             '<div class="datepicker">' + template + '</div>' +
                         '</li>' +
-                        '<li class="picker-switch accordion-toggle"><a class="btn" style="width:100%"><span class="' + picker.options.icons.time + '"></span></a></li>' +
+                        '<li class="picker-switch accordion-toggle"><a class="btn"><span class="' + picker.options.icons.time + '"></span></a></li>' +
                         '<li' + (picker.options.collapse ? ' class="collapse"' : '') + '>' +
                             '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
                         '</li>' +
