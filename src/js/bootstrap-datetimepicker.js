@@ -1199,7 +1199,6 @@ THE SOFTWARE.
                 }
             } else if (picker.options.fillDate !== '' && getPickerInput().val() === '') {
                 var mDate = moment(picker.options.fillDate);
-                console.log(picker.options.fillDate);
                 picker.setValue(mDate.format(picker.format));
             }
 
