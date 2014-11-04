@@ -1198,14 +1198,8 @@ THE SOFTWARE.
                     notifyChange('', e.type);
                 }
             } else if (picker.options.fillDate !== '' && getPickerInput().val() === '') {
-                var mDate = moment(),
-                defaultTime = new Date(picker.options.fillDate);
-
-                console.log(defaultTime);
-                mDate.hours(defaultTime.getHours());
-                mDate.minutes(defaultTime.getMinutes());
-                mDate.seconds(defaultTime.getSeconds());
-                console.log(mDate);
+                var mDate = moment(picker.options.fillDate);
+                console.log(picker.options.fillDate);
                 picker.setValue(mDate.format(picker.format));
             }
 
