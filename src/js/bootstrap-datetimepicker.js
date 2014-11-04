@@ -1197,7 +1197,18 @@ THE SOFTWARE.
                     }
                     notifyChange('', e.type);
                 }
+            } else if (picker.options.fillDate !== '' && getPickerInput().val() === '') {
+                var mDate = moment(),
+                defaultTime = new Date(picker.options.fillDate);
+
+                console.log(defaultTime);
+                mDate.hours(defaultTime.getHours());
+                mDate.minutes(defaultTime.getMinutes());
+                mDate.seconds(defaultTime.getSeconds());
+                console.log(mDate);
+                picker.setValue(mDate.format(picker.format));
             }
+
             // if this is a click event on the input field and picker is already open don't hide it
             if (e && e.type === 'click' && picker.isInput && picker.widget.hasClass('picker-open')) {
                 return;
@@ -1371,6 +1382,7 @@ THE SOFTWARE.
         showToday: true,
         collapse: true,
         language: moment.locale(),
+        fillDate: '',
         defaultDate: '',
         disabledDates: false,
         enabledDates: false,
