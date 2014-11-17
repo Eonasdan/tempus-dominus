@@ -135,7 +135,14 @@ THE SOFTWARE.
                     picker.component = picker.element.find('.datepickerbutton');
                 }
             }
-            picker.format = picker.options.format;
+            if (Array.isArray(picker.options.format)) {
+                if (picker.options.format.length > 0) {
+                    picker.inputformat = picker.options.format;
+                    picker.format =  picker.inputformat[0];
+                }
+            } else {
+                picker.format = picker.inputformat = picker.options.format;
+            }
 
             localeData = moment().localeData();
 
@@ -153,6 +160,7 @@ THE SOFTWARE.
                         picker.format += ':ss';
                     }
                 }
+                picker.inputformat = picker.format;
             }
             picker.use24hours = picker.format.search(/(h|a)([^[\]]+)(?:$|\[)/) < 0;
 
@@ -420,7 +428,7 @@ THE SOFTWARE.
             errored = true;
             picker.element.trigger({
                 type: 'dp.error',
-                date: moment(date, picker.format, picker.options.useStrict)
+                date: moment(date, picker.inputformat, picker.options.useStrict)
             });
         },
 
@@ -430,7 +438,7 @@ THE SOFTWARE.
             if (!dateStr) {
                 dateStr = getPickerInput().val();
                 if (dateStr) {
-                    picker.date = moment(dateStr, picker.format, picker.options.useStrict);
+                    picker.date = moment(dateStr, picker.inputformat, picker.options.useStrict);
                 }
                 if (!picker.date) {
                     picker.date = moment();
@@ -493,7 +501,7 @@ THE SOFTWARE.
             picker.widget.find('.datepicker-days th:eq(1)').text(
                 months[month] + ' ' + year);
 
-            prevMonth = moment(picker.viewDate, picker.format, picker.options.useStrict).subtract(1, 'months');
+            prevMonth = moment(picker.viewDate, picker.inputformat, picker.options.useStrict).subtract(1, 'months');
             days = prevMonth.daysInMonth();
             prevMonth.date(days).startOf('week');
             if ((year === startYear && month <= startMonth) || year < startYear) {
@@ -931,7 +939,7 @@ THE SOFTWARE.
 
         change = function (e) {
             moment.locale(picker.options.language);
-            var input = $(e.target), oldDate = moment(picker.date), newDate = moment(input.val(), picker.format, picker.options.useStrict);
+            var input = $(e.target), oldDate = moment(picker.date), newDate = moment(input.val(), picker.inputformat, picker.options.useStrict);
             if (newDate.isValid() && !isInDisableDates(newDate) && isInEnableDates(newDate)) {
                 update();
                 picker.setValue(newDate);
@@ -1110,8 +1118,8 @@ THE SOFTWARE.
 
         isInDisableDates = function (date, timeUnit) {
             moment.locale(picker.options.language);
-            var maxDate = moment(picker.options.maxDate, picker.format, picker.options.useStrict),
-                minDate = moment(picker.options.minDate, picker.format, picker.options.useStrict);
+            var maxDate = moment(picker.options.maxDate, picker.inputformat, picker.options.useStrict),
+                minDate = moment(picker.options.minDate, picker.inputformat, picker.options.useStrict);
 
             if (timeUnit) {
                 maxDate = maxDate.endOf(timeUnit);
@@ -1143,7 +1151,7 @@ THE SOFTWARE.
                 if (moment.isMoment(givenDatesArray[i]) || givenDatesArray[i] instanceof Date) {
                     dDate = moment(givenDatesArray[i]);
                 } else {
-                    dDate = moment(givenDatesArray[i], picker.format, picker.options.useStrict);
+                    dDate = moment(givenDatesArray[i], picker.inputformat, picker.options.useStrict);
                 }
                 if (dDate.isValid()) {
                     givenDatesIndexed[dDate.format('YYYY-MM-DD')] = true;
@@ -1394,7 +1402,7 @@ THE SOFTWARE.
                 picker.unset = false;
             }
             if (!moment.isMoment(newDate)) {
-                newDate = (newDate instanceof Date) ? moment(newDate) : moment(newDate, picker.format, picker.options.useStrict);
+                newDate = (newDate instanceof Date) ? moment(newDate) : moment(newDate, picker.inputformat, picker.options.useStrict);
             } else {
                 newDate = newDate.locale(picker.options.language);
             }
@@ -1451,7 +1459,7 @@ THE SOFTWARE.
             if (moment.isMoment(date) || date instanceof Date) {
                 picker.options.maxDate = moment(date);
             } else {
-                picker.options.maxDate = moment(date, picker.format, picker.options.useStrict);
+                picker.options.maxDate = moment(date, picker.inputformat, picker.options.useStrict);
             }
             if (picker.viewDate) {
                 update();
@@ -1468,7 +1476,7 @@ THE SOFTWARE.
             if (moment.isMoment(date) || date instanceof Date) {
                 picker.options.minDate = moment(date);
             } else {
-                picker.options.minDate = moment(date, picker.format, picker.options.useStrict);
+                picker.options.minDate = moment(date, picker.inputformat, picker.options.useStrict);
             }
             if (picker.viewDate) {
                 update();
