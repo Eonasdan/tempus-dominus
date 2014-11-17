@@ -15,7 +15,7 @@
     "datepicker",
     "datetimepicker",
     "timepicker",
-	  "moment"
+    "moment"
   ],
   "dependencies": {
       "moment": "~2.8.1",
