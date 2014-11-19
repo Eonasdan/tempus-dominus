@@ -357,7 +357,7 @@
                 },
 
                 notifyEvent = function (e) {
-                    if (e.type === 'change.dp' && e.date && e.date.isSame(e.oldDate) && !errored && !unset) {
+                    if (e.type === 'change.dp' && !errored && ((e.date && e.date.isSame(e.oldDate)) || (!e.date && !e.oldDate))) {
                         return;
                     }
                     element.trigger(e);
@@ -629,7 +629,7 @@
                 },
 
                 setValue = function (targetMoment) {
-                    var oldDate = date;
+                    var oldDate = unset ? null : date;
 
                     // case of calling setValue(null or false)
                     if (!targetMoment) {
@@ -657,13 +657,13 @@
                         input.val(date.format(actualFormat));
                         element.data('date', date.format(actualFormat));
                         update();
+                        errored = false;
+                        unset = false;
                         notifyEvent({
                             type: 'change.dp',
                             date: date.clone(),
                             oldDate: oldDate
                         });
-                        errored = false;
-                        unset = false;
                     } else {
                         errored = true;
                         unset = true;
@@ -966,7 +966,9 @@
                 },
 
                 change = function (e) {
-                    setValue(parseInputDate($(e.target).val()));
+                    var val = $(e.target).val().trim(),
+                        parsedDate = val ? parseInputDate(val) : null;
+                    setValue(parsedDate);
                     e.stopImmediatePropagation();
                     return false;
                 },
