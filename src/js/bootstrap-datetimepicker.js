@@ -296,13 +296,16 @@
 
                 place = function () {
                     var offset = (component || element).position(),
-                        parent = element.is('input') ? element.parent() : element,
                         vertical = options.widgetPositioning.vertical,
-                        horizontal = options.widgetPositioning.horizontal;
+                        horizontal = options.widgetPositioning.horizontal,
+                        parent;
 
-                    if (element.is('input')) {
-                        parent.append(widget);
+                    if (options.widgetParent) {
+                        parent = $(options.widgetParent).append(widget);
+                    } else if (element.is('input')) {
+                        parent = element.parent().append(widget);
                     } else {
+                        parent = element;
                         element.children().first().after(widget);
                     }
 
@@ -1495,6 +1498,19 @@
                 return picker;
             };
 
+            picker.widgetParent = function (widgetParent) {
+                if (arguments.length === 0) {
+                    return options.widgetParent;
+                }
+
+                options.widgetParent = widgetParent;
+                if (widget) {
+                    hide();
+                    show();
+                }
+                return picker;
+            };
+
             // initializing element and component attributes
             if (element.is('input')) {
                 input = element;
@@ -1587,6 +1603,7 @@
         widgetPositioning: {
             horizontal: 'auto',
             vertical: 'auto'
-        }
+        },
+        widgetParent: null
     };
 }));
