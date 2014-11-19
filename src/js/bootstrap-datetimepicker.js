@@ -60,7 +60,6 @@
                 use24hours,
                 minViewModeNumber = 0,
                 actualFormat,
-                errored = false,
                 currentViewMode,
                 datePickerModes = [
                     {
@@ -357,7 +356,7 @@
                 },
 
                 notifyEvent = function (e) {
-                    if (e.type === 'change.dp' && !errored && ((e.date && e.date.isSame(e.oldDate)) || (!e.date && !e.oldDate))) {
+                    if (e.type === 'change.dp' && ((e.date && e.date.isSame(e.oldDate)) || (!e.date && !e.oldDate))) {
                         return;
                     }
                     element.trigger(e);
@@ -657,7 +656,6 @@
                         input.val(date.format(actualFormat));
                         element.data('date', date.format(actualFormat));
                         update();
-                        errored = false;
                         unset = false;
                         notifyEvent({
                             type: 'change.dp',
@@ -665,8 +663,7 @@
                             oldDate: oldDate
                         });
                     } else {
-                        errored = true;
-                        unset = true;
+                        input.val(unset ? '' : date.format(actualFormat));
                         notifyEvent({
                             type: 'error.dp',
                             date: targetMoment
@@ -1129,7 +1126,7 @@
 
             picker.date = function (newDate) {
                 if (arguments.length === 0) {
-                    if (unset || errored) {
+                    if (unset) {
                         return null;
                     }
                     return date.clone();
