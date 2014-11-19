@@ -970,7 +970,7 @@ THE SOFTWARE.
 
         getMoment = function (val) {
             if (picker.options.useUTC) {
-                if (typeof val === "string") {
+                if (typeof val === 'string') {
                     // NOTE momentjs issue https://github.com/moment/moment/issues/1983
                     return moment.utc(val, picker.options.format);
                 } else {
