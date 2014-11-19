@@ -81,7 +81,7 @@ THE SOFTWARE.
 
             picker.id = dpgId++;
             moment.locale(picker.options.language);
-            picker.date = moment();
+            picker.date = getMoment();
             picker.unset = false;
             picker.isInput = picker.element.is('input');
             picker.component = false;
@@ -283,6 +283,9 @@ THE SOFTWARE.
             if (eData.dateDaysofweekdisabled !== undefined) {
                 picker.options.daysOfWeekDisabled = eData.dateDaysofweekdisabled;
             }
+            if (eData.dateUseutc !== undefined) {
+                picker.options.useUTC = eData.dateUseutc;
+            }
         },
 
         place = function () {
@@ -363,7 +366,7 @@ THE SOFTWARE.
             errored = false;
             picker.element.trigger({
                 type: 'dp.change',
-                date: moment(picker.date),
+                date: getMoment(picker.date),
                 oldDate: moment(oldDate)
             });
 
@@ -386,10 +389,10 @@ THE SOFTWARE.
             if (!dateStr) {
                 dateStr = getPickerInput().val();
                 if (dateStr) {
-                    picker.date = moment(dateStr, picker.format, picker.options.useStrict);
+                    picker.date = getMoment(dateStr, picker.format, picker.options.useStrict);
                 }
                 if (!picker.date) {
-                    picker.date = moment();
+                    picker.date = getMoment();
                 }
             }
             picker.viewDate = moment(picker.date).startOf('month');
@@ -461,7 +464,7 @@ THE SOFTWARE.
 
             nextMonth = moment(prevMonth).add(42, 'd');
             while (prevMonth.isBefore(nextMonth)) {
-                if (prevMonth.weekday() === moment().startOf('week').weekday()) {
+                if (prevMonth.weekday() === getMoment().startOf('week').weekday()) {
                     row = $('<tr>');
                     html.push(row);
                     if (picker.options.calendarWeeks === true) {
@@ -474,14 +477,14 @@ THE SOFTWARE.
                 } else if (prevMonth.year() > year || (prevMonth.year() === year && prevMonth.month() > month)) {
                     clsName += ' new';
                 }
-                if (prevMonth.isSame(moment({y: picker.date.year(), M: picker.date.month(), d: picker.date.date()}))) {
+                if (prevMonth.isSame(getMoment({y: picker.date.year(), M: picker.date.month(), d: picker.date.date()}))) {
                     clsName += ' active';
                 }
                 if (isInDisableDates(prevMonth, 'day') || !isInEnableDates(prevMonth)) {
                     clsName += ' disabled';
                 }
                 if (picker.options.showToday === true) {
-                    if (prevMonth.isSame(moment(), 'day')) {
+                    if (prevMonth.isSame(getMoment(), 'day')) {
                         clsName += ' today';
                     }
                 }
@@ -824,7 +827,7 @@ THE SOFTWARE.
 
         change = function (e) {
             moment.locale(picker.options.language);
-            var input = $(e.target), oldDate = moment(picker.date), newDate = moment(input.val(), picker.format, picker.options.useStrict);
+            var input = $(e.target), oldDate = moment(picker.date), newDate = getMoment(input.val(), picker.format, picker.options.useStrict);
             if (newDate.isValid() && !isInDisableDates(newDate) && isInEnableDates(newDate)) {
                 update();
                 picker.setValue(newDate);
@@ -965,6 +968,19 @@ THE SOFTWARE.
             }
         },
 
+        getMoment = function (val) {
+            if (picker.options.useUTC) {
+                if (typeof val === "string") {
+                    // NOTE momentjs issue https://github.com/moment/moment/issues/1983
+                    return moment.utc(val, picker.options.format);
+                } else {
+                    return moment.utc(val);
+                }
+            } else {
+                return moment(val);
+            }
+        },
+
         checkDate = function (direction, unit, amount) {
             moment.locale(picker.options.language);
             var newDate;
@@ -994,8 +1010,8 @@ THE SOFTWARE.
 
         isInDisableDates = function (date, timeUnit) {
             moment.locale(picker.options.language);
-            var maxDate = moment(picker.options.maxDate, picker.format, picker.options.useStrict),
-                minDate = moment(picker.options.minDate, picker.format, picker.options.useStrict);
+            var maxDate = getMoment(picker.options.maxDate, picker.format, picker.options.useStrict),
+                minDate = getMoment(picker.options.minDate, picker.format, picker.options.useStrict);
 
             if (timeUnit) {
                 maxDate = maxDate.endOf(timeUnit);
@@ -1214,7 +1230,7 @@ THE SOFTWARE.
             place();
             picker.element.trigger({
                 type: 'dp.show',
-                date: moment(picker.date)
+                date: getMoment(picker.date)
             });
             attachDatePickerGlobalEvents();
             if (e) {
@@ -1269,14 +1285,14 @@ THE SOFTWARE.
                 picker.unset = false;
             }
             if (!moment.isMoment(newDate)) {
-                newDate = (newDate instanceof Date) ? moment(newDate) : moment(newDate, picker.format, picker.options.useStrict);
+                newDate = (newDate instanceof Date) ? getMoment(newDate) : getMoment(newDate, picker.format, picker.options.useStrict);
             } else {
                 newDate = newDate.locale(picker.options.language);
             }
             if (newDate.isValid()) {
                 picker.date = newDate;
                 set();
-                picker.viewDate = moment({y: picker.date.year(), M: picker.date.month()});
+                picker.viewDate = getMoment({y: picker.date.year(), M: picker.date.month()});
                 fillDate();
                 fillTime();
             }
@@ -1321,9 +1337,9 @@ THE SOFTWARE.
                 return;
             }
             if (moment.isMoment(date) || date instanceof Date) {
-                picker.options.maxDate = moment(date);
+                picker.options.maxDate = getMoment(date);
             } else {
-                picker.options.maxDate = moment(date, picker.format, picker.options.useStrict);
+                picker.options.maxDate = getMoment(date, picker.format, picker.options.useStrict);
             }
             if (picker.viewDate) {
                 update();
@@ -1335,9 +1351,9 @@ THE SOFTWARE.
                 return;
             }
             if (moment.isMoment(date) || date instanceof Date) {
-                picker.options.minDate = moment(date);
+                picker.options.minDate = getMoment(date);
             } else {
-                picker.options.minDate = moment(date, picker.format, picker.options.useStrict);
+                picker.options.minDate = getMoment(date, picker.format, picker.options.useStrict);
             }
             if (picker.viewDate) {
                 update();
@@ -1379,6 +1395,7 @@ THE SOFTWARE.
         direction: 'auto',
         sideBySide: false,
         daysOfWeekDisabled: [],
-        widgetParent: false
+        widgetParent: false,
+        useUTC: false
     };
 }));
