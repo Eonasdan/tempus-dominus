@@ -698,9 +698,6 @@
                     $(window).off('resize', place);
                     widget.off('click', '[data-action]');
                     widget.off('mousedown', false);
-                    if (!element.is('input')) {
-                        $(document).off('mousedown', hide);
-                    }
 
                     widget.remove();
                     widget = false;
@@ -929,18 +926,21 @@
 
                     update();
                     showMode();
+
                     $(window).on('resize', place);
                     widget.on('click', '[data-action]', doAction); // this handles clicks on the widget
                     widget.on('mousedown', false);
-                    if (!element.is('input')) {
-                        $(document).on('mousedown', hide);
-                    }
 
                     if (component && component.hasClass('btn')) {
                         component.toggleClass('active');
                     }
                     widget.show();
                     place();
+
+                    if (!input.is(':focus')) {
+                        input.focus();
+                    }
+
                     notifyEvent({
                         type: 'show.dp'
                     });
@@ -976,46 +976,36 @@
                 },
 
                 attachDatePickerElementEvents = function () {
+                    input.on({
+                        'change': change,
+                        'blur': hide,
+                        'keydown': keydown
+                    });
+
                     if (element.is('input')) {
-                        element.on({
-                            'click': show,
-                            'focus': show,
-                            'change': change,
-                            'blur': hide,
-                            'keydown': keydown
+                        input.on({
+                            'focus': show
                         });
-                    } else {
-                        element.on({
-                            'change': change
-                        }, 'input');
-                        if (component) {
-                            component.on('click', toggle);
-                            component.on('mousedown', false);
-                        } else {
-                            element.on('click', show);
-                        }
+                    } else if (component) {
+                        component.on('click', toggle);
+                        component.on('mousedown', false);
                     }
                 },
 
                 detachDatePickerElementEvents = function () {
+                    input.off({
+                        'change': change,
+                        'blur': hide,
+                        'keydown': keydown
+                    });
+
                     if (element.is('input')) {
-                        element.off({
-                            'focus': show,
-                            'change': change,
-                            'blur': hide,
-                            'click': show,
-                            'keydown': keydown
+                        input.off({
+                            'focus': show
                         });
-                    } else {
-                        element.off({
-                            'change': change
-                        }, 'input');
-                        if (component) {
-                            component.off('click', toggle);
-                            component.off('mousedown', false);
-                        } else {
-                            element.off('click', show);
-                        }
+                    } else if (component) {
+                        component.off('click', toggle);
+                        component.off('mousedown', false);
                     }
                 },
 
