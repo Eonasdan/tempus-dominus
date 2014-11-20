@@ -937,7 +937,7 @@
                     widget.show();
                     place();
 
-                    if (!input.is(":focus")) {
+                    if (!input.is(':focus')) {
                         input.focus();
                     }
 
