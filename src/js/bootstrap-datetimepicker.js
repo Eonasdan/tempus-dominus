@@ -814,9 +814,11 @@
                             } else {
                                 $this.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
                             }
-                            if (component) {
-                                component.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
-                            }
+
+                            // NOTE: uncomment if toggled state will be restored in show()
+                            //if (component) {
+                            //    component.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
+                            //}
                         }
                     },
 
