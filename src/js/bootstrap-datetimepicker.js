@@ -81,6 +81,7 @@
                 viewModes = ['days', 'months', 'years'],
                 verticalModes = ['top', 'bottom', 'auto'],
                 horizontalModes = ['left', 'right', 'auto'],
+                toolbarPlacements = ['default', 'top', 'bottom'],
 
                 /********************************************************************************
                  *
@@ -251,13 +252,15 @@
                     var template = $('<div>').addClass('bootstrap-datetimepicker-widget dropdown-menu'),
                         dateView = $('<div>').addClass('datepicker').append(getDatePickerTemplate()),
                         timeView = $('<div>').addClass('timepicker').append(getTimePickerTemplate()),
-                        content = $('<ul>').addClass('list-unstyled');
+                        content,
+                        toolbar;
+
+                    if (use24hours) {
+                        template.addClass('usetwentyfour');
+                    }
 
                     if (options.sideBySide && hasDate() && hasTime()) {
                         template.addClass('timepicker-sbs');
-                        if (use24hours) {
-                            template.addClass('usetwentyfour');
-                        }
                         template.append(
                             $('<div>').addClass('row')
                                 .append(dateView.addClass('col-sm-6'))
@@ -266,12 +269,22 @@
                         return template;
                     }
 
+                    content = $('<ul>').addClass('list-unstyled');
+                    toolbar = $('<li>').addClass('picker-switch' + (options.collapse ? ' accordion-toggle' : '')).append(getToolbar());
+                    if (options.toolbarPlacement === 'top') {
+                        content.append(toolbar);
+                    }
                     if (hasDate()) {
                         content.append($('<li>').addClass((options.collapse && hasTime() ? 'collapse in' : '')).append(dateView));
                     }
-                    content.append($('<li>').addClass('picker-switch' + (options.collapse ? ' accordion-toggle' : '')).append(getToolbar()));
+                    if (options.toolbarPlacement === 'default') {
+                        content.append(toolbar);
+                    }
                     if (hasTime()) {
                         content.append($('<li>').addClass((options.collapse && hasDate() ? 'collapse' : '')).append(timeView));
+                    }
+                    if (options.toolbarPlacement === 'bottom') {
+                        content.append(toolbar);
                     }
                     return template.append(content);
                 },
@@ -1407,6 +1420,26 @@
                 return picker;
             };
 
+            picker.toolbarPlacement = function (toolbarPlacement) {
+                if (arguments.length === 0) {
+                    return options.toolbarPlacement;
+                }
+
+                if (typeof toolbarPlacement !== 'string') {
+                    throw new TypeError('toolbarPlacement() expects a string parameter');
+                }
+                if (toolbarPlacements.indexOf(toolbarPlacement) === -1) {
+                    throw new TypeError('toolbarPlacement() parameter must be one of (' + toolbarPlacements.join(', ') + ') value');
+                }
+                options.toolbarPlacement = toolbarPlacement;
+
+                if (widget) {
+                    hide();
+                    show();
+                }
+                return picker;
+            };
+
             picker.widgetPositioning = function (widgetPositioning) {
                 if (arguments.length === 0) {
                     return $.extend({}, options.widgetPositioning);
@@ -1587,6 +1620,7 @@
         daysOfWeekDisabled: [],
         calendarWeeks: false,
         viewMode: 'days',
+        toolbarPlacement: 'default', // default|top|bottom
         showTodayButton: false,
         showClear: false,
         widgetPositioning: {
