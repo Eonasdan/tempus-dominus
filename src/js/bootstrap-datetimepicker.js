@@ -1049,6 +1049,10 @@
                     }
 
                     currentViewMode = Math.max(minViewModeNumber, currentViewMode);
+
+                    if (!unset) {
+                        setValue(date);
+                    }
                 };
 
             /********************************************************************************
@@ -1138,9 +1142,6 @@
                 options.format = newFormat;
                 if (actualFormat) {
                     initFormatting(); // reinit formatting
-                }
-                if (!unset) {
-                    setValue(date);
                 }
                 return picker;
             };
