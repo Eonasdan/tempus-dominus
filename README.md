@@ -5,7 +5,7 @@
 ## [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
 
 ## Submitting Issues
-Please test and/or fork [this jsfiddle](http://jsfiddle.net/kmbo576p/) with an example of your issue before you post an issue here. 
+Please test and/or fork [this jsfiddle](http://jsfiddle.net/Eonasdan/f3x2mvr1/) with an example of your issue before you post an issue here. 
 
 ## Where do you use this?
 I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `eonasdan at outlook dot com`. Do not submit issue/feature request to this email, they will be ignored.
