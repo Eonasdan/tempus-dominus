@@ -1,5 +1,7 @@
 # This is the v4beta development branch. ![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=v4beta)
 
+Please use [this jsfiddle](http://jsfiddle.net/Eonasdan/0Ltv25o8/) to test your configurations.
+
 Expect things to change as we are currently in the process of redesing API and behaviour for the component
 
 For changelog have a look on [here](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Version-4-changelog) and also on the commit history
