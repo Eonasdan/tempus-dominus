@@ -212,3 +212,10 @@
   color: #777777;
   cursor: not-allowed;
 }
+.bootstrap-datetimepicker-widget.usetwentyfour td.hour {
+  height: 27px;
+  line-height: 27px;
+}
+.input-group.date .input-group-addon {
+  cursor: pointer;
+}

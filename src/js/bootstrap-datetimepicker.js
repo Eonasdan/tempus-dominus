@@ -240,7 +240,7 @@
                     if (options.showTodayButton) {
                         row.push($('<td>').append($('<a>').attr('data-action', 'today').append($('<span>').addClass(options.icons.today))));
                     }
-                    if (hasDate() && hasTime()) {
+                    if (!options.sideBySide && hasDate() && hasTime()) {
                         row.push($('<td>').append($('<a>').attr('data-action', 'togglePicker').append($('<span>').addClass(options.icons.time))));
                     }
                     if (options.showClear) {
@@ -260,6 +260,8 @@
                         template.addClass('usetwentyfour');
                     }
 
+                    toolbar = $('<li>').addClass('picker-switch' + (options.collapse ? ' accordion-toggle' : '')).append(getToolbar());
+
                     if (options.sideBySide && hasDate() && hasTime()) {
                         template.addClass('timepicker-sbs');
                         template.append(
@@ -267,11 +269,11 @@
                                 .append(dateView.addClass('col-sm-6'))
                                 .append(timeView.addClass('col-sm-6'))
                         );
+                        template.append(toolbar);
                         return template;
                     }
 
                     content = $('<ul>').addClass('list-unstyled');
-                    toolbar = $('<li>').addClass('picker-switch' + (options.collapse ? ' accordion-toggle' : '')).append(getToolbar());
                     if (options.toolbarPlacement === 'top') {
                         content.append(toolbar);
                     }
@@ -519,8 +521,7 @@
                     }
 
                     daysView.find('.disabled').removeClass('disabled');
-
-                    daysViewHeader.eq(1).text(viewDate.format('MMMM YYYY'));
+                    daysViewHeader.eq(1).text(viewDate.format(options.dayViewHeaderFormat));
 
                     if (!isValid(viewDate.clone().subtract(1, 'M'), 'M')) {
                         daysViewHeader.eq(0).addClass('disabled');
@@ -554,6 +555,9 @@
                         }
                         if (currentDate.isSame(moment(), 'd')) {
                             clsName += ' today';
+                        }
+                        if (currentDate.day() === 0 || currentDate.day() === 6) {
+                            clsName += ' weekend';
                         }
                         row.append('<td data-action="selectDay" class="day' + clsName + '">' + currentDate.date() + '</td>');
                         currentDate.add(1, 'd');
@@ -1040,7 +1044,7 @@
                 initFormatting = function () {
                     var format = options.format || 'L LT';
 
-                    actualFormat = format.replace(/(\[[^\[]*\])|(\\)?(LT|LL?L?L?|l{1,4})/g, function (input) {
+                    actualFormat = format.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (input) {
                         return date.localeData().longDateFormat(input) || input;
                     });
 
@@ -1156,6 +1160,19 @@
                 if (actualFormat) {
                     initFormatting(); // reinit formatting
                 }
+                return picker;
+            };
+
+            picker.dayViewHeaderFormat = function (newFormat) {
+                if (arguments.length === 0) {
+                    return options.dayViewHeaderFormat;
+                }
+
+                if (typeof newFormat !== 'string') {
+                    throw new TypeError('dayViewHeaderFormat() expects a string parameter');
+                }
+
+                options.dayViewHeaderFormat = newFormat;
                 return picker;
             };
 
@@ -1626,6 +1643,7 @@
 
     $.fn.datetimepicker.defaults = {
         format: false,
+        dayViewHeaderFormat: 'MMMM YYYY',
         extraFormats: false,
         stepping: 1,
         minDate: false,
