@@ -1,8 +1,12 @@
-# Bootstrap v3 datetimepicker widget ![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)&nbsp;&nbsp;&nbsp;![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=development)
+# Bootstrap 3 datetimepicker widget 
+![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)&nbsp;&nbsp;&nbsp;![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=development)
 
 ![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
 
 ## [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
+
+#Feature Freeze
+Version 3 of our date picker is currently in a feature freeze. Version 4 is comming very soon. We are working on updating the docs and getting existing bugs and features rolled up into v4. We will continue to fix minor bugs in v3 in the meantime, but all new features should go into v4.
 
 ## Submitting Issues
 Please test and/or fork [this jsfiddle](http://jsfiddle.net/Eonasdan/f3x2mvr1/) with an example of your issue before you post an issue here. 
