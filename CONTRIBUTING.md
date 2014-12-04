@@ -1,7 +1,7 @@
 Submitting Issues
 =================
 
-If you are submitting a bug, please test and/or fork [this jsfiddle](http://jsfiddle.net/kmbo576p/) demonstrating the issue. Code issues and fringe case bugs that do not include a jsfiddle (or similar) will be closed.
+If you are submitting a bug, please test and/or fork [this jsfiddle (v3)](http://jsfiddle.net/kmbo576p/) or [this jsfiddle (v4)](http://jsfiddle.net/Eonasdan/0Ltv25o8/) demonstrating the issue. Code issues and fringe case bugs that do not include a jsfiddle (or similar) will be closed.
 
 Contributing code
 =================
