@@ -629,7 +629,7 @@ THE SOFTWARE.
             e.stopPropagation();
             e.preventDefault();
             picker.unset = false;
-            var target = $(e.target).closest('span, td, th'), month, year, step, day, oldDate = moment(picker.date);
+            var target = $(e.target), month, year, step, day, oldDate = moment(picker.date);
             if (target.length === 1) {
                 if (!target.is('.disabled')) {
                     switch (target[0].nodeName.toLowerCase()) {
