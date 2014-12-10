@@ -105,8 +105,9 @@ THE SOFTWARE.
                 }
                 picker.format += (picker.options.pickTime ? localeData.longDateFormat('LT') : '');
                 if (picker.options.useSeconds) {
-                    if (localeData.longDateFormat('LT').indexOf(' A') !== -1) {
-                        picker.format = picker.format.split(' A')[0] + ':ss A';
+                    if (localeData.longDateFormat('LT').indexOf('ss') === -1) {
+                        picker.format = [picker.format.slice(0, localeData.longDateFormat('LT').indexOf('mm') + 2), ':ss', picker.format.slice(localeData.longDateFormat('LT').indexOf('mm') + 2)].join('');
+                     }
                     }
                     else {
                         picker.format += ':ss';
