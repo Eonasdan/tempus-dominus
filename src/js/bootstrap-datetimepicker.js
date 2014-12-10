@@ -779,6 +779,8 @@
                         setValue(day.date(parseInt($(e.target).text(), 10)));
                         if (!hasTime()) {
                             hide();
+                        } else if (!options.sideBySide) {
+                            actions.togglePicker.call(picker);
                         }
                     },
 
@@ -810,11 +812,10 @@
                         setValue(date.clone().add((date.hours() >= 12) ? -12 : 12, 'h'));
                     },
 
-                    togglePicker: function (e) {
-                        var $this = $(e.target),
-                            $parent = $this.closest('ul'),
-                            expanded = $parent.find('.in'),
-                            closed = $parent.find('.collapse:not(.in)'),
+                    togglePicker: function () {
+                        var $parent = widget.find('ul'),
+                            expanded = $parent.find('> .collapse.in'),
+                            closed = $parent.find('> .collapse:not(.in)'),
                             collapseData;
 
                         if (expanded && expanded.length) {
@@ -824,11 +825,9 @@
                             }
                             expanded.collapse('hide');
                             closed.collapse('show');
-                            if ($this.is('span')) {
-                                $this.toggleClass(options.icons.time + ' ' + options.icons.date);
-                            } else {
-                                $this.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
-                            }
+
+                            widget.find('a[data-action=togglePicker] > span')
+                                .toggleClass(options.icons.time + ' ' + options.icons.date);
 
                             // NOTE: uncomment if toggled state will be restored in show()
                             //if (component) {
