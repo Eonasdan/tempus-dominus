@@ -403,19 +403,18 @@ THE SOFTWARE.
             if (picker.options.calendarWeeks === true) {
                 html.append('<th class="cw">#</th>');
             }
-            if (moment().localeData()._week.dow === 0) { // starts on Sunday
-                for (i = 0; i < 7; i++) {
-                    html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
+            var dow = moment().localeData()._week.dow;
+            var counter = 0;
+            while (counter < 7) {
+                html.append('<th class="dow">' + weekdaysMin[dow] + '</th>');
+                if (dow + 1 < 7) {
+                    dow++;
+                } else {
+                    dow = 0;
                 }
-            } else {
-                for (i = 1; i < 8; i++) {
-                    if (i === 7) {
-                        html.append('<th class="dow">' + weekdaysMin[0] + '</th>');
-                    } else {
-                        html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
-                    }
-                }
+                counter++;
             }
+            counter = dow = null;
             picker.widget.find('.datepicker-days thead').append(html);
         },
 
