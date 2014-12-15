@@ -1,0 +1,16 @@
+// Import boostrap variables including default color palette and fonts
+@import "../../../bootstrap-sass/assets/stylesheets/bootstrap/variables";
+
+// Import datepicker component
+@import "bootstrap-datetimepicker";
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
