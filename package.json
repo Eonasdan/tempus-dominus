@@ -17,9 +17,11 @@
     "timepicker",
     "moment"
   ],
+  "dependencies": {
+    "bootstrap": "^3.3.1"
+  },
   "peerDependencies": {
     "moment": "^2.8.2",
-    "bootstrap": "^3.3.1",
     "jquery": ">=1.8.3 <3.0.0"
   },
   "devDependencies": {
@@ -30,6 +32,8 @@
     "grunt-contrib-uglify": "latest",
     "grunt-jscs": "latest",
     "grunt-string-replace": "latest",
-    "load-grunt-tasks": "latest"
+    "load-grunt-tasks": "latest",
+    "moment": "^2.8.2",
+    "jquery": ">=1.8.3 <3.0.0"
   }
 }
