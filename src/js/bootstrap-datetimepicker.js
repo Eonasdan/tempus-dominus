@@ -1207,13 +1207,13 @@ THE SOFTWARE.
             }
             if (picker.options.pickTime) {
                 return (
-                    '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                    '<div class="bootstrap-datetimepicker-widget dropdown-menu" style="z-index:9999 !important;">' +
                         '<div class="timepicker">' + tpGlobal.getTemplate() + '</div>' +
                     '</div>'
                 );
             }
             return (
-                '<div class="bootstrap-datetimepicker-widget dropdown-menu">' +
+                '<div class="bootstrap-datetimepicker-widget dropdown-menu" style="z-index:9999 !important;">' +
                     '<div class="datepicker">' + template + '</div>' +
                 '</div>'
             );
