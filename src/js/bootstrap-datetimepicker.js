@@ -335,22 +335,22 @@ THE SOFTWARE.
                 $window = $(window),
                 placePosition;
 
-            picker.width = picker.component ? picker.component.outerWidth() : picker.element.outerWidth();
-            offset.top = offset.top + picker.element.outerHeight();
+            picker.width = picker.component ? picker.component.outerWidth(false) : picker.element.outerWidth(false);
+            offset.top = offset.top + picker.element.outerHeight(false);
 
             if (picker.options.direction === 'up') {
                 placePosition = 'top';
             } else if (picker.options.direction === 'bottom') {
                 placePosition = 'bottom';
             } else if (picker.options.direction === 'auto') {
-                if (offset.top + picker.widget.height() > $window.height() + $window.scrollTop() && picker.widget.height() + picker.element.outerHeight() < offset.top) {
+                if (offset.top + picker.widget.height() > $window.height() + $window.scrollTop() && picker.widget.height() + picker.element.outerHeight(false) < offset.top) {
                     placePosition = 'top';
                 } else {
                     placePosition = 'bottom';
                 }
             }
             if (placePosition === 'top') {
-                offset.bottom = $window.height() - offset.top + picker.element.outerHeight() + 3;
+                offset.bottom = $window.height() - offset.top + picker.element.outerHeight(false) + 3;
                 picker.widget.addClass('top').removeClass('bottom');
             } else {
                 offset.top += 1;
@@ -372,7 +372,7 @@ THE SOFTWARE.
                 offset.left -= $window.scrollLeft();
             }
 
-            if ($window.width() < offset.left + picker.widget.outerWidth()) {
+            if ($window.width() < offset.left + picker.widget.outerWidth(false)) {
                 offset.right = $window.width() - offset.left - picker.width;
                 offset.left = 'auto';
                 picker.widget.addClass('pull-right');
@@ -1334,7 +1334,7 @@ THE SOFTWARE.
                 picker.widget.addClass('picker-open');
             }
             getPickerInput().focus(); //the input element must be focussed for key events to register
-            picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
+            picker.height = picker.component ? picker.component.outerHeight(false) : picker.element.outerHeight(false);
             place();
             picker.element.trigger({
                 type: 'dp.show',
