@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Bootstrap.v3.Datetimepicker.CSS</id>
-        <version>3.1.2</version>
+        <version>4.0.0</version>
         <title>Bootstrap 3 Datetimepicker CSS</title>
         <authors>Eonasdan</authors>
         <owners>Eonasdan</owners>
@@ -12,12 +12,12 @@
 
 For usage, installation and demos see Project Site on GitHub
 
-For CSS version install Bootstrap.v3.Datetimepicker.CSS</description>
+For LESS version install Bootstrap.v3.Datetimepicker</description>
         <releaseNotes>Check the change log on Github at https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Change-Log</releaseNotes>
         <tags>bootstrap date time picker datetimepicker datepicker jquery</tags>
         <dependencies>
             <dependency id="Twitter.Bootstrap.Less" version="3.0.0" />
-            <dependency id="Moment.js" version="2.8.1" />
+            <dependency id="Moment.js" version="2.8.4" />
         </dependencies>
     </metadata>
 	<files>

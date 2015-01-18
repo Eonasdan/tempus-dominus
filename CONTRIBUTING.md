@@ -1,7 +1,7 @@
 Submitting Issues
 =================
 
-If you are submitting a bug, please test and/or fork [this jsfiddle (v3)](http://jsfiddle.net/kmbo576p/) or [this jsfiddle (v4)](http://jsfiddle.net/Eonasdan/0Ltv25o8/) demonstrating the issue. Code issues and fringe case bugs that do not include a jsfiddle (or similar) will be closed.
+If you are submitting a bug, please test and/or fork [this jsfiddle](http://jsfiddle.net/d3wCU/) demonstrating the issue. Code issues and fringe case bugs that do not include a jsfiddle (or similar) will be closed.
 
 Contributing code
 =================
@@ -20,7 +20,7 @@ grunt                 # this runs tests and jshint
 Very important notes
 ====================
 
- * **Pull requests to the `master` branch will be closed.** Please submit all pull requests to the `development` branch.
+ * **Pull pull requests to the `master` branch will be closed.** Please submit all pull requests to the `development` branch.
  * **Do not include the minified files in your pull request.** Don't worry, we'll build them when we cut a release.
 
 Grunt tasks
