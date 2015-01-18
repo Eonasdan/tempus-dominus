@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+        <title>Options - Bootstrap 3 Datepicker</title>
+
+        <link rel="stylesheet" type="text/css" media="screen" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="../css/prettify-1.0.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link href="../../../content/bootstrap-datetimepicker.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+			<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+			<script src="../../../scripts/bootstrap-datetimepicker.js"></script>
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">Bootstrap 3 Datepicker</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li >
+                    <a href="../Events">Events</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Functions">Functions</a>
+                </li>
+            
+            
+            
+                <li class="active">
+                    <a href=".">Options</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Version 4 Changelog">Version 4 Changelog</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Version 4 Contributors guide">Version 4 Contributors guide</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li >
+                    <a rel="next" href="../Functions">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../Version 4 Changelog">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+			<div class="row">
+				<div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#options">Options</a></li>
+        
+            <li><a href="#format">format</a></li>
+        
+            <li><a href="#dayviewheaderformat">dayViewHeaderFormat</a></li>
+        
+            <li><a href="#extraformats">extraFormats</a></li>
+        
+            <li><a href="#stepping">stepping</a></li>
+        
+            <li><a href="#mindate">minDate</a></li>
+        
+            <li><a href="#maxdate">maxDate</a></li>
+        
+            <li><a href="#usecurrent">useCurrent</a></li>
+        
+            <li><a href="#collapse">collapse</a></li>
+        
+            <li><a href="#locale">locale</a></li>
+        
+            <li><a href="#defaultdate">defaultDate</a></li>
+        
+            <li><a href="#disableddates">disabledDates</a></li>
+        
+            <li><a href="#enableddates">enabledDates</a></li>
+        
+            <li><a href="#icons">icons</a></li>
+        
+            <li><a href="#usestrict">useStrict</a></li>
+        
+            <li><a href="#sidebyside">sideBySide</a></li>
+        
+            <li><a href="#daysofweekdisabled">daysOfWeekDisabled</a></li>
+        
+            <li><a href="#calendarweeks">calendarWeeks</a></li>
+        
+            <li><a href="#viewmode">viewMode</a></li>
+        
+            <li><a href="#toolbarplacement">toolbarPlacement</a></li>
+        
+            <li><a href="#showtodaybutton">showTodayButton</a></li>
+        
+            <li><a href="#showclear">showClear</a></li>
+        
+            <li><a href="#widgetpositioning">widgetPositioning</a></li>
+        
+            <li><a href="#widgetparent">widgetParent</a></li>
+        
+            <li><a href="#keepopen">keepOpen</a></li>
+        
+    
+    </ul>
+</div></div>
+				<div class="col-md-9" role="main">
+
+<h2 id="options">Options</h2>
+<h3 id="format">format</h3>
+<pre><code>Default: false
+</code></pre>
+<p>See <a href="http://momentjs.com/docs/#/displaying/format/">momentjs' docs</a> for valid formats. Format also dictates what components are show, e.g. <code>MM/dd/YYYY</code> will not diplay the time picker.</p>
+<hr />
+<h3 id="dayviewheaderformat">dayViewHeaderFormat</h3>
+<pre><code>Default: 'MMMM YYYY'
+</code></pre>
+<p>Changes the heading of the datepicker when in "days" view.</p>
+<p><img alt="Datepicker Header" src="../../../images/dpheader.png" /></p>
+<hr />
+<h3 id="extraformats">extraFormats</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Allows for several input formats to be valid. See <a href="https://github.com/Eonasdan/bootstrap-datetimepicker/pull/666">this PR</a>.</p>
+<hr />
+<h3 id="stepping">stepping</h3>
+<pre><code>Default: 1
+</code></pre>
+<p>Number of minutes the up/down arrow's will move the minutes value in the time picker</p>
+<hr />
+<h3 id="mindate">minDate</h3>
+<pre><code>Default: false
+Accepts: date, moment, string
+</code></pre>
+<p>Prevents date/time selections before this date</p>
+<hr />
+<h3 id="maxdate">maxDate</h3>
+<pre><code>Default: false
+Accepts: date, moment, string
+</code></pre>
+<p>Prevents date/time selections after this date</p>
+<hr />
+<h3 id="usecurrent">useCurrent</h3>
+<pre><code>Default: true
+</code></pre>
+<p>On show, will set the picker to the current date/time</p>
+<hr />
+<h3 id="collapse">collapse</h3>
+<pre><code>Default: true
+</code></pre>
+<p>Using a Bootstraps collapse to switch between date/time pickers.</p>
+<hr />
+<h3 id="locale">locale</h3>
+<pre><code>Default: moment.locale()
+Accepts: string, moment.local('locale')
+</code></pre>
+<p>See <a href="https://github.com/moment/moment/tree/develop/locale">momentjs</a> for valid locales.</p>
+<p>You must include <code>moment-with-locales.js</code> or a local js file.</p>
+<hr />
+<h3 id="defaultdate">defaultDate</h3>
+<pre><code>Default: false
+Accepts: date, moment, string
+</code></pre>
+<p>Sets the picker default date/time. Overrides <code>useCurrent</code></p>
+<hr />
+<h3 id="disableddates">disabledDates</h3>
+<pre><code>Default: false
+Accepts: array of [date, moment, string]
+</code></pre>
+<p>Disables selection of dates in the array, e.g. holidays</p>
+<hr />
+<h3 id="enableddates">enabledDates</h3>
+<pre><code>Default: false
+Accepts: array of [date, moment, string]
+</code></pre>
+<p>Disables selection of dates <strong>NOT</strong> in the array, e.g. holidays</p>
+<hr />
+<h3 id="icons">icons</h3>
+<pre><code>Default: {
+            time: 'glyphicon glyphicon-time'
+            date: 'glyphicon glyphicon-calendar'
+            up: 'glyphicon glyphicon-chevron-up'
+            down: 'glyphicon glyphicon-chevron-down'
+            previous: 'glyphicon glyphicon-chevron-left'
+            next: 'glyphicon glyphicon-chevron-right'
+            today: 'glyphicon glyphicon-screenshot'
+            clear: 'glyphicon glyphicon-trash'
+        }
+Accepts: object with all or some of the parameters above
+</code></pre>
+<p>Change the default icons for the pickers functions.</p>
+<h3 id="usestrict">useStrict</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Defines if moment should use scrict date parsing when considering a date to be valid</p>
+<hr />
+<h3 id="sidebyside">sideBySide</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Shows the picker side by side when using the time and date together.</p>
+<p><img alt="SideBySide" src="../../../images/sidebyside.png" /></p>
+<hr />
+<h3 id="daysofweekdisabled">daysOfWeekDisabled</h3>
+<pre><code>Default: []
+Accepts: array of numbers from 0-6
+</code></pre>
+<p>Disables the section of days of the week, e.g. weekends.</p>
+<hr />
+<h3 id="calendarweeks">calendarWeeks</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Shows the week of the year to the left of first day of the week.</p>
+<p><img alt="calendarWeek" src="../../../images/calendarWeeks.png" /></p>
+<hr />
+<h3 id="viewmode">viewMode</h3>
+<pre><code>Default: 'days'
+Accepts: 'years','months','days'
+</code></pre>
+<p>The default view to display when the picker is shown.</p>
+<p><strong>Note</strong>: To limit the picker to selecting, for instance the year and month, use <code>format: MM/YYYY</code></p>
+<hr />
+<h3 id="toolbarplacement">toolbarPlacement</h3>
+<pre><code>Default: 'default'
+Accepts: 'default', 'top', 'bottom'
+</code></pre>
+<p>Changes the placement of the icon toolbar.</p>
+<p><img alt="toolbarPlacement" src="../../../images/toolbarPlacement.png" /></p>
+<hr />
+<h3 id="showtodaybutton">showTodayButton</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Show the "Today" button in the icon toolbar.</p>
+<p>Clicking the "Today" button will set the calendar view and set the date to <code>now</code>.</p>
+<hr />
+<h3 id="showclear">showClear</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Show the "Clear" button in the icon toolbar.</p>
+<p>Clicking the "Clear" button will set the calendar to null.</p>
+<hr />
+<h3 id="widgetpositioning">widgetPositioning</h3>
+<pre><code>Default: {
+            horizontal: 'auto'
+            vertical: 'auto'
+         }
+Accepts: object with the all or one of the parameters above
+         horizontal: 'auto', 'left', 'right'
+         vertical: 'auto', 'top', 'bottom'
+</code></pre>
+<h3 id="widgetparent">widgetParent</h3>
+<pre><code>Default: null
+Accepts: string or jQuery object
+</code></pre>
+<p>On picker show, places the widget at the identifier (string) or jQuery object <strong>if</strong> the element has css <code>position: 'relative'</code></p>
+<hr />
+<h3 id="keepopen">keepOpen</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Will cause the date picker to stay open after selecting a date if no time components are being used.</p>
+</div>
+			</div>
+        </div>
+
+        
+
+        <script src="../js/prettify-1.0.min.js"></script>
+        <script src="../js/base.js"></script>
+    </body>
+</html>

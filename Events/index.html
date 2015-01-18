@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+        <title>Events - Bootstrap 3 Datepicker</title>
+
+        <link rel="stylesheet" type="text/css" media="screen" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="../css/prettify-1.0.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link href="../../../content/bootstrap-datetimepicker.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+			<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+			<script src="../../../scripts/bootstrap-datetimepicker.js"></script>
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">Bootstrap 3 Datepicker</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li class="active">
+                    <a href=".">Events</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Functions">Functions</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Options">Options</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Version 4 Changelog">Version 4 Changelog</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Version 4 Contributors guide">Version 4 Contributors guide</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li >
+                    <a rel="next" href="..">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../Functions">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+			<div class="row">
+				<div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#events">Events</a></li>
+        
+            <li><a href="#dphide">dp.hide</a></li>
+        
+            <li><a href="#dpshow">dp.show</a></li>
+        
+            <li><a href="#dpchange">dp.change</a></li>
+        
+            <li><a href="#dperror">dp.error</a></li>
+        
+    
+    </ul>
+</div></div>
+				<div class="col-md-9" role="main">
+
+<h2 id="events">Events</h2>
+<h3 id="dphide">dp.hide</h3>
+<p>Fired when the widget is hidden.</p>
+<p>Emitted from:</p>
+<ul>
+<li>toggle()</li>
+<li>hide()</li>
+<li>disable()</li>
+</ul>
+<hr />
+<h3 id="dpshow">dp.show</h3>
+<p>Fired when the widget is shown</p>
+<p>Emitted from:</p>
+<ul>
+<li>toggle()</li>
+<li>show()</li>
+</ul>
+<hr />
+<h3 id="dpchange">dp.change</h3>
+<p>Fired when the date is changed</p>
+<p>Emitted from:</p>
+<ul>
+<li>toggle() <strong>Note</strong>: Only fired when using <code>useCurrent</code></li>
+<li>show() <strong>Note</strong>: Only fired when using <code>useCurrent</code> or when or the date is changed to comply with date rules (min/max etc)</li>
+<li>date(newDate)</li>
+<li>minDate(minDate)</li>
+<li>maxDate(maxDate)</li>
+<li>daysOfWeekDisabled()</li>
+</ul>
+<hr />
+<h3 id="dperror">dp.error</h3>
+<p>Fired when a selected date fails to pass validation</p>
+<p>Emmited from:</p>
+<ul>
+<li>minDate(minDate)</li>
+<li>maxDate(maxDate)</li>
+<li>daysOfWeekDisabled()</li>
+<li>setValue() <em>private function</em></li>
+</ul>
+</div>
+			</div>
+        </div>
+
+        
+
+        <script src="../js/prettify-1.0.min.js"></script>
+        <script src="../js/base.js"></script>
+    </body>
+</html>
