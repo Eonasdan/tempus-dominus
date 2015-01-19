@@ -15,7 +15,7 @@
         <link href="./css/font-awesome-4.0.3.css" rel="stylesheet">
         <link href="./css/prettify-1.0.css" rel="stylesheet">
         <link href="./css/base.css" rel="stylesheet">
-        <link href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -24,8 +24,8 @@
         <![endif]-->
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-			<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-			<script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js"></script>
+			<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+			<script src="//rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js"></script>
     </head>
 
     <body>
@@ -272,10 +272,10 @@
     $(function () {
         $('#datetimepicker6').datetimepicker();
         $('#datetimepicker7').datetimepicker();
-        $("#datetimepicker6").on("change.dp",function (e) {
+        $("#datetimepicker6").on("dp.change",function (e) {
             $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
         });
-        $("#datetimepicker7").on("change.dp",function (e) {
+        $("#datetimepicker7").on("dp.change",function (e) {
             $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
         });
     });
