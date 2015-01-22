@@ -749,9 +749,10 @@
                     if (currentViewMode === minViewModeNumber) {
                         setValue(date.clone().year(viewDate.year()).month(viewDate.month()));
                         hide();
+                    } else {
+                        showMode(-1);
+                        fillDate();
                     }
-                    showMode(-1);
-                    fillDate();
                 },
 
                 selectYear: function (e) {
@@ -760,9 +761,10 @@
                     if (currentViewMode === minViewModeNumber) {
                         setValue(date.clone().year(viewDate.year()));
                         hide();
+                    } else {
+                        showMode(-1);
+                        fillDate();
                     }
-                    showMode(-1);
-                    fillDate();
                 },
 
                 selectDay: function (e) {
