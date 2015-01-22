@@ -403,16 +403,10 @@
             },
 
             isInDisabledDates = function (date) {
-                if (!options.disabledDates) {
-                    return false;
-                }
                 return options.disabledDates[date.format('YYYY-MM-DD')] === true;
             },
 
             isInEnabledDates = function (date) {
-                if (!options.enabledDates) {
-                    return false;
-                }
                 return options.enabledDates[date.format('YYYY-MM-DD')] === true;
             },
 
@@ -423,8 +417,12 @@
                 if (options.disabledDates && isInDisabledDates(targetMoment)) {
                     return false;
                 }
-                if (options.enabledDates && isInEnabledDates(targetMoment)) {
-                    return true;
+                if (options.enabledDates) {
+                    if (isInEnabledDates(targetMoment)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
                 if (options.minDate && targetMoment.isBefore(options.minDate, granularity)) {
                     return false;
