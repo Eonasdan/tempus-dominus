@@ -1272,7 +1272,7 @@
             if (options.maxDate.isBefore(date)) {
                 setValue(options.maxDate);
             }
-            if (viewDate.isAfter(parsedDate)){
+            if (viewDate.isAfter(parsedDate)) {
                 viewDate = parsedDate;
             }
             update();
@@ -1302,7 +1302,7 @@
             if (options.minDate.isAfter(date)) {
                 setValue(options.minDate);
             }
-            if (viewDate.isBefore(parsedDate)){
+            if (viewDate.isBefore(parsedDate)) {
                 viewDate = parsedDate;
             }
             update();
