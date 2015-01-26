@@ -1273,7 +1273,7 @@
                 setValue(options.maxDate);
             }
             if (viewDate.isAfter(parsedDate)){
-            	viewDate = parsedDate;
+                viewDate = parsedDate;
             }
             update();
             return picker;
@@ -1303,7 +1303,7 @@
                 setValue(options.minDate);
             }
             if (viewDate.isBefore(parsedDate)){
-            	viewDate = parsedDate;
+                viewDate = parsedDate;
             }
             update();
             return picker;
