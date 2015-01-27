@@ -977,9 +977,17 @@
             },
 
             keydown = function (e) {
-                if (e.keyCode === 27) { // allow escape to hide picker
+                if (e.keyCode === 27 && widget) { // allow escape to hide picker
                     hide();
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
                 }
+                if (e.keyCode === 40 && !widget) { // allow down to show picker
+                    show();
+                    e.preventDefault();
+                    
+                }             
             },
 
             change = function (e) {
