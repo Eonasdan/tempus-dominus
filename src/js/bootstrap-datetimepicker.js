@@ -919,7 +919,7 @@
                         }
                     };
 
-                if (input.prop('disabled') || input.prop('readonly') || widget) {
+                if (input.prop('disabled') || widget) {
                     return picker;
                 }
                 if (options.useCurrent && unset) { // && input.val().trim().length !== 0) { this broke the jasmine test
