@@ -819,8 +819,13 @@
                         if (collapseData && collapseData.transitioning) {
                             return;
                         }
-                        expanded.collapse('hide');
-                        closed.collapse('show');
+                        if (expanded.collapse) { // if collapse plugin is available through bootstrap.js then use it
+                            expanded.collapse('hide');
+                            closed.collapse('show');
+                        } else { // otherwise just toggle in class on the two views
+                            expanded.removeClass('in');
+                            closed.addClass('in');
+                        }
                         if ($this.is('span')) {
                             $this.toggleClass(options.icons.time + ' ' + options.icons.date);
                         } else {
