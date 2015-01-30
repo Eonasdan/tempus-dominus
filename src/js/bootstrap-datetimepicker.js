@@ -289,8 +289,14 @@
             },
 
             dataToOptions = function () {
-                var eData = element.data(),
+                var eData,
                     dataOptions = {};
+
+                if (element.is('input')) {
+                    eData = element.data();
+                } else {
+                    eData = element.find('input').data();
+                }
 
                 if (eData.dateOptions && eData.dateOptions instanceof Object) {
                     dataOptions = $.extend(true, dataOptions, eData.dateOptions);
