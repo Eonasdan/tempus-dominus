@@ -54,31 +54,31 @@
             
             
                 <li >
-                    <a href="Events/">Events</a>
+                    <a href="installing/">Installing</a>
                 </li>
             
             
             
                 <li >
-                    <a href="Functions/">Functions</a>
+                    <a href="functions/">Functions</a>
                 </li>
             
             
             
                 <li >
-                    <a href="Options/">Options</a>
+                    <a href="options/">Options</a>
                 </li>
             
             
             
                 <li >
-                    <a href="Version 4 Changelog/">Version 4 Changelog</a>
+                    <a href="Version 4 Changelog/">Change Log</a>
                 </li>
             
             
             
                 <li >
-                    <a href="Version 4 Contributors guide/">Version 4 Contributors guide</a>
+                    <a href="Version 4 Contributors guide/">Dev Guide</a>
                 </li>
             
             
@@ -87,14 +87,14 @@
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 
-                <li class="disabled">
-                    <a rel="next" >
-                        <i class="fa fa-arrow-left"></i> Previous
-                    </a>
-                </li>
-                <li >
-                    <a rel="prev" href="Events/">
-                        Next <i class="fa fa-arrow-right"></i>
+				
+                
+                <li>
+                    <a href="https://github.com/Eonasdan/bootstrap-datetimepicker">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
                     </a>
                 </li>
                 
@@ -156,6 +156,27 @@
     </div>
 </div>
 
+<h4 id="code">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class='col-sm-6'&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;div class='input-group date' id='datetimepicker1'&gt;
+                    &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                    &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;&lt;/span&gt;
+                    &lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;script type=&quot;text/javascript&quot;&gt;
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+        &lt;/script&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
 <hr />
 <h3 id="using-locales">Using Locales</h3>
 <div class="container">
@@ -178,6 +199,29 @@
         </script>
     </div>
 </div>
+
+<h4 id="code_1">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class='col-sm-6'&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;div class='input-group date' id='datetimepicker2'&gt;
+                    &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                    &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;&lt;/span&gt;
+                    &lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;script type=&quot;text/javascript&quot;&gt;
+            $(function () {
+                $('#datetimepicker2').datetimepicker({
+                    locale: 'ru'
+                });
+            });
+        &lt;/script&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
 
 <hr />
 <h3 id="custom-formats">Custom Formats</h3>
@@ -202,6 +246,29 @@
     </div>
 </div>
 
+<h4 id="code_2">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class='col-sm-6'&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;div class='input-group date' id='datetimepicker3'&gt;
+                    &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                    &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-time&quot;&gt;&lt;/span&gt;
+                    &lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;script type=&quot;text/javascript&quot;&gt;
+            $(function () {
+                $('#datetimepicker3').datetimepicker({
+                    format: 'LT'
+                });
+            });
+        &lt;/script&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
 <hr />
 <h3 id="no-icon-input-field-only">No Icon (input field only):</h3>
 <div class="container">
@@ -216,6 +283,21 @@
         </script>
     </div>
 </div>
+
+<h4 id="code_3">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class='col-sm-6'&gt;
+            &lt;input type='text' class=&quot;form-control&quot; id='datetimepicker4'/&gt;
+        &lt;/div&gt;
+        &lt;script type=&quot;text/javascript&quot;&gt;
+            $(function () {
+                $('#datetimepicker4').datetimepicker();
+            });
+        &lt;/script&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
 
 <hr />
 <h3 id="enableddisabled-dates">Enabled/Disabled Dates</h3>
@@ -244,6 +326,34 @@
         </script>
     </div>
 </div>
+
+<h4 id="code_4">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+       &lt;div class='col-sm-6'&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;div class='input-group date' id='datetimepicker5'&gt;
+                    &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                    &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;&lt;/span&gt;
+                    &lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;script type=&quot;text/javascript&quot;&gt;
+            $(function () {
+                $('#datetimepicker5').datetimepicker({
+                    defaultDate: &quot;11/1/2013&quot;,
+                    disabledDates: [
+                        moment(&quot;12/25/2013&quot;),
+                        new Date(2013, 11 - 1, 21),
+                        &quot;11/22/2013 00:53&quot;
+                    ]
+                });
+            });
+        &lt;/script&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
 
 <hr />
 <h3 id="linked-pickers">Linked Pickers</h3>
@@ -281,6 +391,41 @@
     });
 </script>
 
+<h4 id="code_5">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class='col-md-5'&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;div class='input-group date' id='datetimepicker6'&gt;
+                &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;&lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class='col-md-5'&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;div class='input-group date' id='datetimepicker7'&gt;
+                &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;&lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    $(function () {
+        $('#datetimepicker6').datetimepicker();
+        $('#datetimepicker7').datetimepicker();
+        $(&quot;#datetimepicker6&quot;).on(&quot;dp.change&quot;,function (e) {
+            $('#datetimepicker7').data(&quot;DateTimePicker&quot;).minDate(e.date);
+        });
+        $(&quot;#datetimepicker7&quot;).on(&quot;dp.change&quot;,function (e) {
+            $('#datetimepicker6').data(&quot;DateTimePicker&quot;).maxDate(e.date);
+        });
+    });
+&lt;/script&gt;
+</code></pre>
+
 <hr />
 <h3 id="custom-icons">Custom Icons</h3>
 <div class="container">
@@ -308,6 +453,33 @@
     </script>
 </div>
 
+<h4 id="code_6">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;col-sm-6&quot; style=&quot;height:130px;&quot;&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;div class='input-group date' id='datetimepicker8'&gt;
+                &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;fa fa-calendar&quot;&gt;
+                      &lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        $(function () {
+            $('#datetimepicker8').datetimepicker({
+                icons: {
+                    time: &quot;fa fa-clock-o&quot;,
+                    date: &quot;fa fa-calendar&quot;,
+                    up: &quot;fa fa-arrow-up&quot;,
+                    down: &quot;fa fa-arrow-down&quot;
+                }
+            });
+        });
+    &lt;/script&gt;
+&lt;/div&gt;
+</code></pre>
+
 <hr />
 <h3 id="view-mode">View Mode</h3>
 <div class="container">
@@ -329,6 +501,28 @@
         });
     </script>
 </div>
+
+<h4 id="code_7">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;col-sm-6&quot; style=&quot;height:130px;&quot;&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;div class='input-group date' id='datetimepicker9'&gt;
+                &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;
+                      &lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        $(function () {
+            $('#datetimepicker9').datetimepicker({
+               viewMode: 'years'
+            });
+        });
+    &lt;/script&gt;
+&lt;/div&gt;
+</code></pre>
 
 <hr />
 <h3 id="min-view-mode">Min View Mode</h3>
@@ -353,6 +547,29 @@
     </script>
 </div>
 
+<h4 id="code_8">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;col-sm-6&quot; style=&quot;height:130px;&quot;&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;div class='input-group date' id='datetimepicker10'&gt;
+                &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;
+                      &lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        $(function () {
+            $('#datetimepicker10').datetimepicker({
+                viewMode: 'years',
+               format: 'MM/YYYY'
+            });
+        });
+    &lt;/script&gt;
+&lt;/div&gt;
+</code></pre>
+
 <hr />
 <h3 id="disabled-days-of-the-week">Disabled Days of the Week</h3>
 <div class="container">
@@ -374,6 +591,28 @@
         });
     </script>
 </div>
+
+<h4 id="code_9">Code</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;col-sm-6&quot; style=&quot;height:130px;&quot;&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;div class='input-group date' id='datetimepicker11'&gt;
+                &lt;input type='text' class=&quot;form-control&quot; /&gt;
+                &lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;
+                      &lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        $(function () {
+            $('#datetimepicker11').datetimepicker({
+                daysOfWeekDisabled: [0,6]
+            });
+        });
+    &lt;/script&gt;
+&lt;/div&gt;
+</code></pre>
 
 </div>
 			</div>
