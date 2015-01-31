@@ -1600,11 +1600,11 @@
         if (element.is('input')) {
             input = element;
         } else {
-            input = element.find('.datepickerinput');
+            input = element.find(options.inputSelector);
             if (input.size() === 0) {
                 input = element.find('input');
             } else if (!input.is('input')) {
-                throw new Error('CSS class "datepickerinput" cannot be applied to non input element');
+                throw new Error('CSS class "' + options.inputSelector +'" cannot be applied to non input element');
             }
         }
 
@@ -1695,6 +1695,7 @@
             vertical: 'auto'
         },
         widgetParent: null,
-        keepOpen: false
+        keepOpen: false,
+        inputSelector: '.datepickerinput'
     };
 }));
