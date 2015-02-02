@@ -1,6 +1,6 @@
 /*!
  * Datetimepicker for Bootstrap 3
-//! version : 4.0.0
+//! version : 4.0.0-beta
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 .bootstrap-datetimepicker-widget.dropdown-menu {
@@ -275,7 +275,7 @@
   content: '';
   display: inline-block;
   border-left: 7px solid transparent;
-  border-bottom: 7px solid #337ab7;
+  border-bottom: 7px solid #428bca;
   border-top-color: rgba(0, 0, 0, 0.2);
   position: absolute;
   bottom: 4px;
@@ -283,7 +283,7 @@
 }
 .bootstrap-datetimepicker-widget td.active,
 .bootstrap-datetimepicker-widget td.active:hover {
-  background-color: #337ab7;
+  background-color: #428bca;
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
@@ -309,7 +309,7 @@
   background: #eeeeee;
 }
 .bootstrap-datetimepicker-widget td span.active {
-  background-color: #337ab7;
+  background-color: #428bca;
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }

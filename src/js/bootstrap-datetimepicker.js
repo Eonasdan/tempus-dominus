@@ -371,7 +371,7 @@
             },
 
             notifyEvent = function (e) {
-                if (e.type === 'change.dp' && ((e.date && e.date.isSame(e.oldDate)) || (!e.date && !e.oldDate))) {
+                if (e.type === 'dp.change' && ((e.date && e.date.isSame(e.oldDate)) || (!e.date && !e.oldDate))) {
                     return;
                 }
                 element.trigger(e);
@@ -651,7 +651,7 @@
                     input.val('');
                     element.data('date', '');
                     notifyEvent({
-                        type: 'change.dp',
+                        type: 'dp.change',
                         date: null,
                         oldDate: oldDate
                     });
@@ -673,14 +673,14 @@
                     update();
                     unset = false;
                     notifyEvent({
-                        type: 'change.dp',
+                        type: 'dp.change',
                         date: date.clone(),
                         oldDate: oldDate
                     });
                 } else {
                     input.val(unset ? '' : date.format(actualFormat));
                     notifyEvent({
-                        type: 'error.dp',
+                        type: 'dp.error',
                         date: targetMoment
                     });
                 }
@@ -715,7 +715,7 @@
                 widget = false;
 
                 notifyEvent({
-                    type: 'hide.dp',
+                    type: 'dp.hide',
                     date: date.clone()
                 });
                 return picker;
@@ -962,7 +962,7 @@
                 }
 
                 notifyEvent({
-                    type: 'show.dp'
+                    type: 'dp.show'
                 });
                 return picker;
             },
