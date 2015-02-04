@@ -306,7 +306,8 @@
             },
 
             place = function () {
-                var offset = (component || element).position(),
+                var position = (component || element).position(),
+                    offset = (component || element).offset(),
                     vertical = options.widgetPositioning.vertical,
                     horizontal = options.widgetPositioning.horizontal,
                     parent;
@@ -322,8 +323,8 @@
 
                 // Top and bottom logic
                 if (vertical === 'auto') {
-                    if ((component || element).offset().top + widget.height() > $(window).height() + $(window).scrollTop() &&
-                            widget.height() + element.outerHeight() < (component || element).offset().top) {
+                    if (offset.top + widget.height() * 1.5 >= $(window).height() + $(window).scrollTop() &&
+                        widget.height() + element.outerHeight() < offset.top) {
                         vertical = 'top';
                     } else {
                         vertical = 'bottom';
@@ -332,7 +333,8 @@
 
                 // Left and right logic
                 if (horizontal === 'auto') {
-                    if (parent.width() < offset.left + widget.outerWidth()) {
+                    if (parent.width() < offset.left + widget.outerWidth() / 2 &&
+                        offset.left + widget.outerWidth() > $(window).width()) {
                         horizontal = 'right';
                     } else {
                         horizontal = 'left';
@@ -363,10 +365,10 @@
                 }
 
                 widget.css({
-                    top: vertical === 'top' ? 'auto' : offset.top + element.outerHeight(),
-                    bottom: vertical === 'top' ? offset.top + element.outerHeight() : 'auto',
+                    top: vertical === 'top' ? 'auto' : position.top + element.outerHeight(),
+                    bottom: vertical === 'top' ? position.top + element.outerHeight() : 'auto',
                     left: horizontal === 'left' ? parent.css('padding-left') : 'auto',
-                    right: horizontal === 'left' ? 'auto' : parent.css('padding-right')
+                    right: horizontal === 'left' ? 'auto' : parent.width() - element.outerWidth()
                 });
             },
 
@@ -1512,7 +1514,7 @@
             }
             update();
             return picker;
-        };
+        }
 
         picker.calendarWeeks = function (showCalendarWeeks) {
             if (arguments.length === 0) {
@@ -1695,6 +1697,6 @@
             vertical: 'auto'
         },
         widgetParent: null,
-        keepOpen: false
+        keepOpen: false,
     };
 }));
