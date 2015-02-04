@@ -1514,7 +1514,7 @@
             }
             update();
             return picker;
-        }
+        };
 
         picker.calendarWeeks = function (showCalendarWeeks) {
             if (arguments.length === 0) {
@@ -1697,6 +1697,6 @@
             vertical: 'auto'
         },
         widgetParent: null,
-        keepOpen: false,
+        keepOpen: false
     };
 }));
