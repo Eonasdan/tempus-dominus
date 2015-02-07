@@ -970,7 +970,7 @@
                         }
                     };
 
-                if (input.prop('disabled') || input.prop('readonly') || widget) {
+                if ((options.disallowReadOnly && (input.prop('disabled') || input.prop('readonly'))) || widget) {
                     return picker;
                 }
                 if (options.useCurrent && unset && (input.is('input') && input.val().trim().length === 0)) {
@@ -1221,6 +1221,17 @@
                 component.removeClass('disabled');
             }
             input.prop('disabled', false);
+            return picker;
+        };
+
+        picker.disallowReadOnly = function (disallowReadOnly) {
+            if (arguments.length === 0) {
+                return options.disallowReadOnly;
+            }
+            if (typeof disallowReadOnly !== 'boolean') {
+                throw new TypeError('disallowReadOnly() expects a boolean parameter');
+            }
+            options.disallowReadOnly = disallowReadOnly;
             return picker;
         };
 
@@ -1841,6 +1852,7 @@
             vertical: 'auto'
         },
         widgetParent: null,
+        disallowReadOnly: true,
         keepOpen: false,
         inline: false,
         keyBinds: {
