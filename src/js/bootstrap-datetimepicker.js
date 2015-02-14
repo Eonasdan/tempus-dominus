@@ -970,7 +970,7 @@
                         }
                     };
 
-                if (input.prop('disabled') || input.prop('readonly') || widget) {
+                if (input.prop('disabled') || widget) {
                     return picker;
                 }
                 if (options.useCurrent && unset && (input.is('input') && input.val().trim().length === 0)) {
