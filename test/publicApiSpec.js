@@ -406,6 +406,14 @@ describe('Public API method tests', function () {
         });
     });
 
+    describe('disallowReadOnly() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.disallowReadOnly).toBeDefined();
+            });
+        });
+    });
+
     describe('stepping() function', function () {
         describe('existence', function () {
             it('is defined', function () {
