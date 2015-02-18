@@ -1011,10 +1011,6 @@
                 widget.show();
                 place();
 
-                if (!input.is(':focus')) {
-                    input.focus();
-                }
-
                 notifyEvent({
                     type: 'dp.show'
                 });
