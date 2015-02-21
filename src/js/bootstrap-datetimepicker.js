@@ -1,5 +1,5 @@
 /*
- //! version : 4.5.10
+ //! version : 4.6.10
  =========================================================
  bootstrap-datetimejs
  https://github.com/Eonasdan/bootstrap-datetimepicker
@@ -732,7 +732,9 @@
                         oldDate: oldDate
                     });
                 } else {
-                    input.val(unset ? '' : date.format(actualFormat));
+                    if (!options.keepInvalid) {
+                        input.val(unset ? '' : date.format(actualFormat));
+                    }
                     notifyEvent({
                         type: 'dp.error',
                         date: targetMoment
@@ -983,7 +985,7 @@
                         }
                     };
 
-                if ((!options.ignoreReadonly  && (input.prop('disabled') || input.prop('readonly'))) || widget) {
+                if (input.prop('disabled') || (!options.ignoreReadonly && input.prop('readonly')) || widget) {
                     return picker;
                 }
                 if (options.useCurrent && unset && (input.is('input') && input.val().trim().length === 0)) {
@@ -1237,14 +1239,14 @@
             return picker;
         };
 
-        picker.ignoreReadonly  = function (ignoreReadonly) {
+        picker.ignoreReadonly = function (ignoreReadonly) {
             if (arguments.length === 0) {
-                return options.ignoreReadonly ;
+                return options.ignoreReadonly;
             }
-            if (typeof ignoreReadonly  !== 'boolean') {
+            if (typeof ignoreReadonly !== 'boolean') {
                 throw new TypeError('ignoreReadonly () expects a boolean parameter');
             }
-            options.ignoreReadonly  = ignoreReadonly ;
+            options.ignoreReadonly = ignoreReadonly;
             return picker;
         };
 
@@ -1468,6 +1470,13 @@
                 options.defaultDate = false;
                 return picker;
             }
+
+            if (typeof defaultDate === 'string') {
+                if (defaultDate === 'now' || defaultDate === 'moment') {
+                    defaultDate = moment();
+                }
+            }
+
             var parsedDate = parseInputDate(defaultDate);
             if (!parsedDate.isValid()) {
                 throw new TypeError('defaultDate() Could not parse date parameter: ' + defaultDate);
@@ -1798,6 +1807,18 @@
             return picker;
         };
 
+        picker.keepInvalid = function (keepInvalid) {
+            if (arguments.length === 0) {
+                return options.collapse;
+            }
+
+            if (typeof keepInvalid !== 'boolean') {
+                throw new TypeError('keepInvalid() expects a boolean parameter');
+            }
+            options.keepInvalid = keepInvalid;
+            return picker;
+        };
+
         // initializing element and component attributes
         if (element.is('input')) {
             input = element;
@@ -1901,9 +1922,10 @@
             vertical: 'auto'
         },
         widgetParent: null,
-        ignoreReadonly : false,
+        ignoreReadonly: false,
         keepOpen: false,
         inline: false,
+        keepInvalid: false,
         keyBinds: {
             up: function (widget) {
                 if (widget.find('.datepicker').is(':visible')) {
