@@ -952,7 +952,7 @@
                 widget.show();
                 place();
 
-                if (!input.is(':focus')) {
+                if (options.focusOnShow && !input.is(':focus')) {
                     input.focus();
                 }
 
@@ -1596,6 +1596,19 @@
             return picker;
         };
 
+        picker.focusOnShow = function (focusOnShow) {
+            if (arguments.length === 0) {
+                return options.format;
+            }
+
+            if (typeof focusOnShow !== 'boolean') {
+                throw new TypeError('focusOnShow() expects a boolean parameter');
+            }
+
+            options.focusOnShow = focusOnShow;
+            return picker;
+        };
+
         // initializing element and component attributes
         if (element.is('input')) {
             input = element;
@@ -1695,6 +1708,7 @@
             vertical: 'auto'
         },
         widgetParent: null,
-        keepOpen: false
+        keepOpen: false,
+        focusOnShow: true
     };
 }));
