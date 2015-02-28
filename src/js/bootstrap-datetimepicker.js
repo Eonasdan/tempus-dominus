@@ -1,9 +1,11 @@
-/*
- //! version : 4.6.10
+/*! version : 4.7.14
  =========================================================
  bootstrap-datetimejs
  https://github.com/Eonasdan/bootstrap-datetimepicker
+ Copyright (c) 2015 Jonathan Peterson
  =========================================================
+ */
+/*
  The MIT License (MIT)
 
  Copyright (c) 2015 Jonathan Peterson
@@ -468,7 +470,7 @@
                 if (!targetMoment.isValid()) {
                     return false;
                 }
-                if (options.disabledDates && isInDisabledDates(targetMoment)) {
+                if (options.disabledDates && isInDisabledDates(targetMoment) && granularity !== 'M') {
                     return false;
                 }
                 if (options.enabledDates) {
@@ -484,7 +486,7 @@
                 if (options.maxDate && targetMoment.isAfter(options.maxDate, granularity)) {
                     return false;
                 }
-                if (widget && widget.find('.datepicker-days').length > 0 && options.daysOfWeekDisabled.indexOf(targetMoment.day()) !== -1) {
+                if (granularity === 'd' && options.daysOfWeekDisabled.indexOf(targetMoment.day()) !== -1) { //widget && widget.find('.datepicker-days').length > 0
                     return false;
                 }
                 return true;
@@ -988,7 +990,7 @@
                 if (input.prop('disabled') || (!options.ignoreReadonly && input.prop('readonly')) || widget) {
                     return picker;
                 }
-                if (options.useCurrent && unset && (input.is('input') && input.val().trim().length === 0)) {
+                if (options.useCurrent && unset && ((input.is('input') && input.val().trim().length === 0) || options.inline)) {
                     currentMoment = moment();
                     if (typeof options.useCurrent === 'string') {
                         currentMoment = useCurrentGranularity[options.useCurrent](currentMoment);
@@ -1487,7 +1489,7 @@
 
             options.defaultDate = parsedDate;
 
-            if (options.defaultDate && input.val().trim() === '') {
+            if (options.defaultDate && input.val().trim() === '' && input.attr('placeholder') === undefined) {
                 setValue(options.defaultDate);
             }
             return picker;
@@ -1809,7 +1811,7 @@
 
         picker.keepInvalid = function (keepInvalid) {
             if (arguments.length === 0) {
-                return options.collapse;
+                return options.keepInvalid;
             }
 
             if (typeof keepInvalid !== 'boolean') {
@@ -1819,15 +1821,28 @@
             return picker;
         };
 
+        picker.datepickerInput = function (datepickerInput) {
+            if (arguments.length === 0) {
+                return options.datepickerInput;
+            }
+
+            if (typeof datepickerInput !== 'string') {
+                throw new TypeError('datepickerInput() expects a string parameter');
+            }
+
+            options.datepickerInput = datepickerInput;
+            return picker;
+        };
+
         // initializing element and component attributes
         if (element.is('input')) {
             input = element;
         } else {
-            input = element.find('.datepickerinput');
+            input = element.find(options.datepickerInput);
             if (input.size() === 0) {
                 input = element.find('input');
             } else if (!input.is('input')) {
-                throw new Error('CSS class "datepickerinput" cannot be applied to non input element');
+                throw new Error('CSS class "' + options.datepickerInput + '" cannot be applied to non input element');
             }
         }
 
@@ -1855,10 +1870,10 @@
         if (input.prop('disabled')) {
             picker.disable();
         }
-
         if (input.is('input') && input.val().trim().length !== 0) {
             setValue(parseInputDate(input.val().trim()));
-        } else if (options.defaultDate) {
+        }
+        else if (options.defaultDate && input.attr('placeholder') === undefined) {
             setValue(options.defaultDate);
         }
         if (options.inline) {
@@ -1926,56 +1941,87 @@
         keepOpen: false,
         inline: false,
         keepInvalid: false,
+        datepickerInput: '.datepickerinput',
         keyBinds: {
             up: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
-                    this.date(this.date().clone().subtract(7, 'd'));
+                    this.date(d.clone().subtract(7, 'd'));
                 } else {
-                    this.date(this.date().clone().add(1, 'm'));
+                    this.date(d.clone().add(1, 'm'));
                 }
             },
             down: function (widget) {
                 if (!widget) {
                     this.show();
+                    return;
                 }
-                else if (widget.find('.datepicker').is(':visible')) {
-                    this.date(this.date().clone().add(7, 'd'));
+                var d = this.date() || moment();
+                if (widget.find('.datepicker').is(':visible')) {
+                    this.date(d.clone().add(7, 'd'));
                 } else {
-                    this.date(this.date().clone().subtract(1, 'm'));
+                    this.date(d.clone().subtract(1, 'm'));
                 }
             },
             'control up': function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
-                    this.date(this.date().clone().subtract(1, 'y'));
+                    this.date(d.clone().subtract(1, 'y'));
                 } else {
-                    this.date(this.date().clone().add(1, 'h'));
+                    this.date(d.clone().add(1, 'h'));
                 }
             },
             'control down': function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
-                    this.date(this.date().clone().add(1, 'y'));
+                    this.date(d.clone().add(1, 'y'));
                 } else {
-                    this.date(this.date().clone().subtract(1, 'h'));
+                    this.date(d.clone().subtract(1, 'h'));
                 }
             },
             left: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
-                    this.date(this.date().clone().subtract(1, 'd'));
+                    this.date(d.clone().subtract(1, 'd'));
                 }
             },
             right: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
-                    this.date(this.date().clone().add(1, 'd'));
+                    this.date(d.clone().add(1, 'd'));
                 }
             },
             pageUp: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
-                    this.date(this.date().clone().subtract(1, 'M'));
+                    this.date(d.clone().subtract(1, 'M'));
                 }
             },
             pageDown: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
-                    this.date(this.date().clone().add(1, 'M'));
+                    this.date(d.clone().add(1, 'M'));
                 }
             },
             enter: function () {
@@ -1999,7 +2045,6 @@
             'delete': function () {
                 this.clear();
             }
-
         },
         debug: false
     };
