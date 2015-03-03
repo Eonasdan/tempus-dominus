@@ -953,8 +953,8 @@
                 place();
 
 
-                if(options.focusOnShow){
-                    if(!input.is(':focus')){
+                if (options.focusOnShow) {
+                    if (!input.is(':focus')) {
                         input.focus();
                     }
                 } else {
@@ -1001,10 +1001,10 @@
                     'keydown': keydown
                 };
 
-                if(options.focusOnShow){
+                if (options.focusOnShow) {
                     events.blur = hide;
                 } else {
-                    $('html').click(function(){
+                    $('html').click(function() {
                         hide();
                     });
                 }
@@ -1016,7 +1016,7 @@
                         'focus': show
                     });
                 } else if (component) {
-                    component.on('click', function(event){
+                    component.on('click', function(event) {
                         toggle();
                         event.stopPropagation();
                     });
@@ -1030,7 +1030,7 @@
                     'keydown': keydown
                 };
 
-                if(options.focusOnShow){
+                if (options.focusOnShow) {
                     events.blur = hide;
                 } else {
                     $('html').off('click');
