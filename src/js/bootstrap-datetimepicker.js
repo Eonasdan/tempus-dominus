@@ -1004,7 +1004,7 @@
                 if (options.focusOnShow) {
                     events.blur = hide;
                 } else {
-                    $('html').click(function() {
+                    $('html').click(function () {
                         hide();
                     });
                 }
@@ -1016,7 +1016,7 @@
                         'focus': show
                     });
                 } else if (component) {
-                    component.on('click', function(event) {
+                    component.on('click', function (event) {
                         toggle();
                         event.stopPropagation();
                     });
