@@ -473,12 +473,8 @@
                 if (options.disabledDates && isInDisabledDates(targetMoment) && granularity !== 'M') {
                     return false;
                 }
-                if (options.enabledDates) {
-                    if (isInEnabledDates(targetMoment)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                if (options.enabledDates && isInEnabledDates(targetMoment) && granularity !== 'M') {
+                    return false;
                 }
                 if (options.minDate && targetMoment.isBefore(options.minDate, granularity)) {
                     return false;
@@ -1422,7 +1418,7 @@
                 setValue(options.maxDate);
             }
             if (viewDate.isAfter(parsedDate)) {
-                viewDate = parsedDate;
+                viewDate = parsedDate.clone();
             }
             update();
             return picker;
@@ -1458,7 +1454,7 @@
                 setValue(options.minDate);
             }
             if (viewDate.isBefore(parsedDate)) {
-                viewDate = parsedDate;
+                viewDate = parsedDate.clone();
             }
             update();
             return picker;
