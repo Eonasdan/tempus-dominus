@@ -805,7 +805,9 @@
                     viewDate.month(month);
                     if (currentViewMode === minViewModeNumber) {
                         setValue(date.clone().year(viewDate.year()).month(viewDate.month()));
-                        hide();
+                        if (!options.inline) {
+                            hide();
+                        }
                     } else {
                         showMode(-1);
                         fillDate();
@@ -817,7 +819,9 @@
                     viewDate.year(year);
                     if (currentViewMode === minViewModeNumber) {
                         setValue(date.clone().year(viewDate.year()));
-                        hide();
+                        if (!options.inline) {
+                            hide();
+                        }
                     } else {
                         showMode(-1);
                         fillDate();
@@ -833,7 +837,7 @@
                         day.add(1, 'M');
                     }
                     setValue(day.date(parseInt($(e.target).text(), 10)));
-                    if (!hasTime() && !options.keepOpen) {
+                    if (!hasTime() && !options.keepOpen && !options.inline) {
                         hide();
                     }
                 },
