@@ -1170,9 +1170,9 @@
                 var format = options.format || 'L LT';
 
                 actualFormat = format.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (formatInput) {
-                    var newinput = moment().localeData().longDateFormat(formatInput) || formatInput;
+                    var newinput = date.localeData().longDateFormat(formatInput) || formatInput;
                     return newinput.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (formatInput2) { //temp fix for #740
-                        return moment().localeData().longDateFormat(formatInput2) || formatInput2;
+                        return date.localeData().longDateFormat(formatInput2) || formatInput2;
                     });
                 });
 
