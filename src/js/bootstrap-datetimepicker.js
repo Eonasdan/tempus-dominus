@@ -1016,8 +1016,13 @@
                 widget.show();
                 place();
 
-                if (!input.is(':focus')) {
-                    input.focus();
+
+                if (options.focusOnShow) {
+                    if (!input.is(':focus')) {
+                        input.focus();
+                    }
+                } else {
+                    input.blur();
                 }
 
                 notifyEvent({
@@ -1113,30 +1118,47 @@
             },
 
             attachDatePickerElementEvents = function () {
-                input.on({
+                var events = {
                     'change': change,
-                    'blur': options.debug ? '' : hide,
-                    'keydown': keydown,
-                    'keyup': keyup
-                });
+                    'keydown': keydown
+                };
+
+                if (options.focusOnShow) {
+                    events.blur = hide;
+                } else {
+                    $('html').click(function () {
+                        hide();
+                    });
+                }
+
+                input.on(events);
 
                 if (element.is('input')) {
                     input.on({
                         'focus': show
                     });
                 } else if (component) {
-                    component.on('click', toggle);
+                    component.on('click', function (event) {
+                        toggle();
+                        event.stopPropagation();
+                    });
                     component.on('mousedown', false);
                 }
             },
 
             detachDatePickerElementEvents = function () {
-                input.off({
+                var events = {
                     'change': change,
-                    'blur': hide,
-                    'keydown': keydown,
-                    'keyup': keyup
-                });
+                    'keydown': keydown
+                };
+
+                if (options.focusOnShow) {
+                    events.blur = hide;
+                } else {
+                    $('html').off('click');
+                }
+
+                input.off(events);
 
                 if (element.is('input')) {
                     input.off({
@@ -1760,6 +1782,18 @@
             return picker;
         };
 
+        picker.focusOnShow = function (focusOnShow) {
+            if (arguments.length === 0) {
+                return options.format;
+            }
+
+            if (typeof focusOnShow !== 'boolean') {
+                throw new TypeError('focusOnShow() expects a boolean parameter');
+            }
+
+            options.focusOnShow = focusOnShow;
+        };
+
         picker.inline = function (inline) {
             if (arguments.length === 0) {
                 return options.inline;
@@ -1935,6 +1969,8 @@
         widgetParent: null,
         ignoreReadonly: false,
         keepOpen: false,
+        focusOnShow: true,
+        disallowReadOnly: true,
         inline: false,
         keepInvalid: false,
         datepickerInput: '.datepickerinput',
