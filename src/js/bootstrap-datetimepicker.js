@@ -473,7 +473,7 @@
                 if (options.disabledDates && isInDisabledDates(targetMoment) && granularity !== 'M') {
                     return false;
                 }
-                if (options.enabledDates && isInEnabledDates(targetMoment) && granularity !== 'M') {
+                if (options.enabledDates && !isInEnabledDates(targetMoment) && granularity !== 'M') {
                     return false;
                 }
                 if (options.minDate && targetMoment.isBefore(options.minDate, granularity)) {
