@@ -43,7 +43,7 @@
 .bootstrap-datetimepicker-widget.dropdown-menu.bottom:after {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid white;
+  border-bottom: 6px solid #ffffff;
   top: -6px;
   left: 8px;
 }
@@ -58,7 +58,7 @@
 .bootstrap-datetimepicker-widget.dropdown-menu.top:after {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-top: 6px solid white;
+  border-top: 6px solid #ffffff;
   bottom: -6px;
   left: 7px;
 }
