@@ -406,10 +406,10 @@ describe('Public API method tests', function () {
         });
     });
 
-    describe('disallowReadOnly() function', function () {
+    describe('ignoreReadonly() function', function () {
         describe('existence', function () {
             it('is defined', function () {
-                expect(dtp.disallowReadOnly).toBeDefined();
+                expect(dtp.ignoreReadonly).toBeDefined();
             });
         });
     });
