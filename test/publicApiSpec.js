@@ -7,15 +7,6 @@ describe('Plugin initialization and component basic construction', function () {
         expect($('<div>').datetimepicker.defaults).toBeDefined();
     });
 
-    it('throws an Error if constructing on a structure with no input element', function () {
-        var dtp = $('<div>');
-        $(document).find('body').append(dtp);
-
-        expect(function () {
-            dtp = dtp.datetimepicker();
-        }).toThrow();
-    });
-
     it('creates the component with default options on an input element', function () {
         var dtp = $('<input>');
         $(document).find('body').append(dtp);
@@ -415,6 +406,14 @@ describe('Public API method tests', function () {
         });
     });
 
+    describe('ignoreReadonly() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.ignoreReadonly).toBeDefined();
+            });
+        });
+    });
+
     describe('stepping() function', function () {
         describe('existence', function () {
             it('is defined', function () {
@@ -491,6 +490,210 @@ describe('Public API method tests', function () {
         describe('existence', function () {
             it('is defined', function () {
                 expect(dtp.showClear).toBeDefined();
+            });
+        });
+    });
+
+    describe('dayViewHeaderFormat() function', function () {
+        describe('typechecking', function () {
+            it('does not accept a false value', function () {
+                expect(function () {
+                    dtp.dayViewHeaderFormat(false);
+                }).toThrow();
+            });
+
+            it('accepts a string', function () {
+                expect(function () {
+                    dtp.dayViewHeaderFormat('YYYY-MM-DD');
+                }).not.toThrow();
+            });
+
+            it('does not accept undefined', function () {
+                expect(function () {
+                    dtp.dayViewHeaderFormat(undefined);
+                }).toThrow();
+            });
+
+            it('does not accept true', function () {
+                expect(function () {
+                    dtp.dayViewHeaderFormat(true);
+                }).toThrow();
+            });
+
+            it('does not accept a generic Object', function () {
+                expect(function () {
+                    dtp.dayViewHeaderFormat({});
+                }).toThrow();
+            });
+        });
+
+        describe('functionality', function () {
+            it('expects dayViewHeaderFormat to be default of MMMM YYYY', function () {
+                expect(dtp.dayViewHeaderFormat()).toBe('MMMM YYYY');
+            });
+
+            it('sets the dayViewHeaderFormat correctly', function () {
+                dtp.dayViewHeaderFormat('MM YY');
+                expect(dtp.dayViewHeaderFormat()).toBe('MM YY');
+            });
+        });
+    });
+
+    describe('extraFormats() function', function () {
+        describe('typechecking', function () {
+            it('accepts a false value', function () {
+                expect(function () {
+                    dtp.extraFormats(false);
+                }).not.toThrow();
+            });
+
+            it('does not accept a string', function () {
+                expect(function () {
+                    dtp.extraFormats('YYYY-MM-DD');
+                }).toThrow();
+            });
+
+            it('does not accept undefined', function () {
+                expect(function () {
+                    dtp.extraFormats(undefined);
+                }).toThrow();
+            });
+
+            it('does not accept true', function () {
+                expect(function () {
+                    dtp.extraFormats(true);
+                }).toThrow();
+            });
+
+            it('accepts an Array', function () {
+                expect(function () {
+                    dtp.extraFormats(['YYYY-MM-DD']);
+                }).not.toThrow();
+            });
+        });
+
+        describe('functionality', function () {
+            it('returns no extraFormats before extraFormats is set', function () {
+                expect(dtp.extraFormats()).toBe(false);
+            });
+
+            it('sets the extraFormats correctly', function () {
+                dtp.extraFormats(['YYYY-MM-DD']);
+                expect(dtp.extraFormats()[0]).toBe('YYYY-MM-DD');
+            });
+        });
+    });
+
+    describe('toolbarPlacement() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.toolbarPlacement).toBeDefined();
+            });
+        });
+        describe('check type and parameter validity', function () {
+            it('does not accept a false value', function () {
+                expect(function () {
+                    dtp.dayViewHeaderFormat(false);
+                }).toThrow();
+            });
+            it('does not accept a false value', function () {
+                expect(function () {
+                    dtp.dayViewHeaderFormat(false);
+                }).toThrow();
+            });
+            it('accepts a string', function () {
+                var toolbarPlacementOptions = ['default', 'top', 'bottom'];
+
+                toolbarPlacementOptions.forEach(function (value) {
+                    expect(function () {
+                        dtp.toolbarPlacement(value);
+                    }).not.toThrow();
+                });
+
+                expect(function () {
+                    dtp.toolbarPlacement('test');
+                }).toThrow();
+                expect(function () {
+                    dtp.toolbarPlacement({});
+                }).toThrow();
+            });
+        });
+    });
+
+    describe('widgetParent() function', function () {
+        describe('typechecking', function () {
+            it('accepts a null', function () {
+                expect(function () {
+                    dtp.widgetParent(null);
+                }).not.toThrow();
+            });
+
+            it('accepts a string', function () {
+                expect(function () {
+                    dtp.widgetParent('testDiv');
+                }).not.toThrow();
+            });
+
+            it('accepts a jquery object', function () {
+                expect(function () {
+                    dtp.widgetParent($('#testDiv'));
+                }).not.toThrow();
+            });
+
+            it('does not accept undefined', function () {
+                expect(function () {
+                    dtp.widgetParent(undefined);
+                }).toThrow();
+            });
+
+            it('does not accept a number', function () {
+                expect(function () {
+                    dtp.widgetParent(0);
+                }).toThrow();
+            });
+
+            it('does not accept a generic Object', function () {
+                expect(function () {
+                    dtp.widgetParent({});
+                }).toThrow();
+            });
+
+            it('does not accept a boolean', function () {
+                expect(function () {
+                    dtp.widgetParent(false);
+                }).toThrow();
+            });
+        });
+    });
+
+    describe('keepOpen() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.keepOpen).toBeDefined();
+            });
+        });
+    });
+
+    describe('inline() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.inline).toBeDefined();
+            });
+        });
+    });
+
+    describe('clear() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.clear).toBeDefined();
+            });
+        });
+    });
+
+    describe('keyBinds() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.keyBinds).toBeDefined();
             });
         });
     });
