@@ -15,7 +15,7 @@
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
         <link href="../css/prettify-1.0.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
-        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -152,11 +152,21 @@
         
             <li><a href="#showclear">showClear</a></li>
         
+            <li><a href="#showclose">showClose</a></li>
+        
             <li><a href="#widgetpositioning">widgetPositioning</a></li>
         
             <li><a href="#widgetparent">widgetParent</a></li>
         
             <li><a href="#keepopen">keepOpen</a></li>
+        
+            <li><a href="#inline">inline</a></li>
+        
+            <li><a href="#keepinvalid">keepInvalid</a></li>
+        
+            <li><a href="#keybinds">keyBinds</a></li>
+        
+            <li><a href="#debug">debug</a></li>
         
     
     </ul>
@@ -249,7 +259,7 @@ Accepts: object with all or some of the parameters above
 <h3 id="usestrict">useStrict</h3>
 <pre><code>Default: false
 </code></pre>
-<p>Defines if moment should use scrict date parsing when considering a date to be valid</p>
+<p>Defines if moment should use strict date parsing when considering a date to be valid</p>
 <hr />
 <h3 id="sidebyside">sideBySide</h3>
 <pre><code>Default: false
@@ -295,6 +305,12 @@ Accepts: 'default', 'top', 'bottom'
 <p>Show the "Clear" button in the icon toolbar.</p>
 <p>Clicking the "Clear" button will set the calendar to null.</p>
 <hr />
+<h3 id="showclose">showClose</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Show the "Close" button in the icon toolbar.</p>
+<p>Clicking the "Close" button will call <code>hide()</code></p>
+<hr />
 <h3 id="widgetpositioning">widgetPositioning</h3>
 <pre><code>Default: {
             horizontal: 'auto'
@@ -314,6 +330,93 @@ Accepts: string or jQuery object
 <pre><code>Default: false
 </code></pre>
 <p>Will cause the date picker to stay open after selecting a date if no time components are being used.</p>
+<hr />
+<h3 id="inline">inline</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Will display the picker inline without the need of a input field. This will also hide borders and shadows.</p>
+<hr />
+<h3 id="keepinvalid">keepInvalid</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Will cause the date picker to <strong>not</strong> revert or overwrite invalid dates.</p>
+<hr />
+<h3 id="keybinds">keyBinds</h3>
+<pre><code>Default: up: function (widget) {
+            if (widget.find('.datepicker').is(':visible')) {
+                this.date(this.date().clone().subtract(7, 'd'));
+            } else {
+                this.date(this.date().clone().add(1, 'm'));
+            }
+        },
+        down: function (widget) {
+            if (!widget) {
+                this.show();
+            }
+            else if (widget.find('.datepicker').is(':visible')) {
+                this.date(this.date().clone().add(7, 'd'));
+            } else {
+                this.date(this.date().clone().subtract(1, 'm'));
+            }
+        },
+        'control up': function (widget) {
+            if (widget.find('.datepicker').is(':visible')) {
+                this.date(this.date().clone().subtract(1, 'y'));
+            } else {
+                this.date(this.date().clone().add(1, 'h'));
+            }
+        },
+        'control down': function (widget) {
+            if (widget.find('.datepicker').is(':visible')) {
+                this.date(this.date().clone().add(1, 'y'));
+            } else {
+                this.date(this.date().clone().subtract(1, 'h'));
+            }
+        },
+        left: function (widget) {
+            if (widget.find('.datepicker').is(':visible')) {
+                this.date(this.date().clone().subtract(1, 'd'));
+            }
+        },
+        right: function (widget) {
+            if (widget.find('.datepicker').is(':visible')) {
+                this.date(this.date().clone().add(1, 'd'));
+            }
+        },
+        pageUp: function (widget) {
+            if (widget.find('.datepicker').is(':visible')) {
+                this.date(this.date().clone().subtract(1, 'M'));
+            }
+        },
+        pageDown: function (widget) {
+            if (widget.find('.datepicker').is(':visible')) {
+                this.date(this.date().clone().add(1, 'M'));
+            }
+        },
+        enter: function () {
+            this.hide();
+        },
+        escape: function () {
+            this.hide();
+        },
+        'control space': function (widget) {
+            if (widget.find('.timepicker').is(':visible')) {
+                widget.find('.btn[data-action="togglePeriod"]').click();
+            }
+        },
+        t: function () {
+            this.date(moment());
+        },
+        'delete': function () {
+            this.clear();
+        }
+</code></pre>
+<p>Will cause the date picker to stay open after selecting a date if no time components are being used.</p>
+<hr />
+<h3 id="debug">debug</h3>
+<pre><code>Default: false
+</code></pre>
+<p>Will cause the date picker to stay open after a <code>blur</code> event.</p>
 </div>
 			</div>
         </div>

@@ -15,7 +15,7 @@
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
         <link href="../css/prettify-1.0.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
-        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -164,6 +164,20 @@
         
             <li><a href="#dayviewheaderformat">dayViewHeaderFormat</a></li>
         
+            <li><a href="#keybinds">keybinds</a></li>
+        
+            <li><a href="#clear">clear()</a></li>
+        
+            <li><a href="#inline">inline</a></li>
+        
+            <li><a href="#ignorereadonly">ignoreReadonly</a></li>
+        
+            <li><a href="#showclose">showClose</a></li>
+        
+            <li><a href="#debug">debug</a></li>
+        
+            <li><a href="#keepinvalid">keepInvalid</a></li>
+        
     
     </ul>
 </div></div>
@@ -259,9 +273,9 @@
 <hr />
 <h3 id="usecurrent">useCurrent</h3>
 <h4 id="usecurrent_1">useCurrent()</h4>
-<p>Returns a boolean or string with the <code>options.useCurrent</code> option configuration</p>
+<p>Returns a <code>boolean</code> or <code>string</code> with the <code>options.useCurrent</code> option configuration</p>
 <h4 id="usecurrentboolean-or-string">useCurrent(boolean or string)</h4>
-<p>Takes a <code>boolean</code> or <code>string</code>. If a boolean true is passed and the components model moment is not set (either through <code>setDate</code> or through a valid value on the input element the component is attached to) then the first time the user opens the datetimepicker widget the value is initialized to the current moment of the action. If a false boolean is passed then no initialization happens on the input element. You can select the granularity on the initialized moment by passing one of the following strings (<code>'year', 'month', 'day', 'hour', 'minute'</code>) in the variable.</p>
+<p>Takes a <code>boolean</code> or <code>string</code>. If a <code>boolean</code> true is passed and the components model moment is not set (either through <code>setDate</code> or through a valid value on the input element the component is attached to) then the first time the user opens the datetimepicker widget the value is initialized to the current moment of the action. If a false <code>boolean</code> is passed then no initialization happens on the input element. You can select the granularity on the initialized moment by passing one of the following strings (<code>'year', 'month', 'day', 'hour', 'minute'</code>) in the variable.</p>
 <p>If for example you pass <code>'day'</code> to the <code>setUseCurrent</code> function and the input field is empty the first time the user opens the datetimepicker widget the input text will be initialized to the current datetime with day granularity (ie if currentTime = <code>2014-08-10 13:32:33</code> the input value will be initialized to <code>2014-08-10 00:00:00</code>)</p>
 <p><strong>Note:</strong> If the <code>options.defaultDate</code> is set or the input element the component is attached to has already a value that takes precedence and the functionality of <code>useCurrent</code> is not triggered!</p>
 <hr />
@@ -341,11 +355,11 @@
 <h4 id="formatformat">format(format)</h4>
 <p>Takes a <a href="http://momentjs.com/docs/#/displaying/format/">moment.js</a> format <code>string</code> and sets the components  <code>options.format</code>. This is used for displaying and also for parsing input strings either from the input element the component is attached to or the <code>date()</code> function.
 The parameter can also be a <code>boolean:false</code> in which case the format is set to the locale's <code>L LT</code>.</p>
-<p><strong>Note:</strong> this is also used to determine if the TimePicker sub component will display the hours in 12 or 24 format. (if 'a' or 'h' exists in the passed string then a 12 hour mode is set)</p>
+<p><strong>Note:</strong> this is also used to determine if the TimePicker sub component will display the hours in 12 or 24 format. (if 'a' or 'h' exists in the passed <code>string</code> then a 12 hour mode is set)</p>
 <hr />
 <h3 id="extraformats">extraFormats</h3>
 <h4 id="extraformats_1">extraFormats()</h4>
-<p>Returns a boolean or array with the <code>options.extraFormats</code> option configuration</p>
+<p>Returns a <code>boolean</code> or array with the <code>options.extraFormats</code> option configuration</p>
 <h4 id="extraformatsformats">extraFormats(formats)</h4>
 <p>Takes an array of valid input moment format options.  See PR #666</p>
 <hr />
@@ -411,35 +425,76 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <hr />
 <h3 id="calendarweeks">calendarWeeks</h3>
 <h4 id="calendarweeks_1">calendarWeeks()</h4>
-<p>Returns a boolean with the current <code>options.calendarWeeks</code> option configuration</p>
+<p>Returns a <code>boolean</code> with the current <code>options.calendarWeeks</code> option configuration</p>
 <h4 id="calendarweeksboolean">calendarWeeks(boolean)</h4>
-<p>Takes a boolean variable to set if the week numbers will appear to the left on the days view</p>
+<p>Takes a <code>boolean</code> variable to set if the week numbers will appear to the left on the days view</p>
 <hr />
 <h3 id="showclear">showClear</h3>
 <h4 id="showclear_1">showClear()</h4>
-<p>Returns a boolean variable with the currently set <code>options.showClear</code> option.</p>
+<p>Returns a <code>boolean</code> variable with the currently set <code>options.showClear</code> option.</p>
 <h4 id="showclearboolean">showClear(boolean)</h4>
-<p>Takes a boolean variable to set if the clear date button will appear on the widget</p>
+<p>Takes a <code>boolean</code> variable to set if the clear date button will appear on the widget</p>
 <hr />
 <h3 id="showtodaybutton">showTodayButton</h3>
 <h4 id="showtodaybutton_1">showTodayButton()</h4>
-<p>Returns a boolean variable with the currently set <code>options.showTodayButton</code> option.</p>
+<p>Returns a <code>boolean</code> variable with the currently set <code>options.showTodayButton</code> option.</p>
 <h4 id="showtodaybuttonboolean">showTodayButton(boolean)</h4>
-<p>Takes a boolean variable to set if the Today button will appear on the widget</p>
+<p>Takes a <code>boolean</code> variable to set if the Today button will appear on the widget</p>
 <hr />
 <h3 id="toolbarplacement">toolbarplacement</h3>
 <h4 id="toolbarplacement_1">toolbarplacement()</h4>
-<p>Returns a string variable with the currently set <code>options.toolbarplacement</code> option.</p>
+<p>Returns a <code>string</code> variable with the currently set <code>options.toolbarplacement</code> option.</p>
 <h4 id="toolbarplacementstring">toolbarplacement(string)</h4>
 <p>Takes a <code>string</code> value. Valid values are <code>'default'</code>, <code>'top'</code> and <code>'bottom'</code>.</p>
 <p>Changes the placement of the toolbar where the today, clear, component switch icon are located.</p>
 <hr />
 <h3 id="dayviewheaderformat">dayViewHeaderFormat</h3>
 <h4 id="dayviewheaderformat_1">dayViewHeaderFormat()</h4>
-<p>Returns a string variable with the currently set <code>options.dayViewHeaderFormat</code> option.</p>
+<p>Returns a <code>string</code> variable with the currently set <code>options.dayViewHeaderFormat</code> option.</p>
 <h4 id="dayviewheaderformatstring">dayViewHeaderFormat(string)</h4>
 <p>Takes a <code>string</code> value.</p>
 <p>Used to customize the header of the day view.</p>
+<hr />
+<h3 id="keybinds">keybinds</h3>
+<h4 id="keybinds_1">keybinds()</h4>
+<p>Returns a <code>string</code> variable with the currently set <code>options.keybinds</code> option.</p>
+<h4 id="keybindsobject">keybinds(object)</h4>
+<p>Takes an <code>object</code> value.</p>
+<p>Allows for several keyBinding functions to be specified for ease of access or accessibility. See the options page for defaults.</p>
+<hr />
+<h3 id="clear">clear()</h3>
+<p>Clears the datepicker by setting the value to <code>null</code></p>
+<hr />
+<h3 id="inline">inline</h3>
+<h4 id="inline_1">inline()</h4>
+<p>Returns a <code>boolean</code> variable with the currently set <code>options.inline</code> option.</p>
+<h4 id="inlineboolean">inline(boolean)</h4>
+<p>Takes a <code>boolean</code> value.</p>
+<p>Used to customize the header of the day view.</p>
+<hr />
+<h3 id="ignorereadonly">ignoreReadonly</h3>
+<h4 id="ignorereadonly_1">ignoreReadonly()</h4>
+<p>Returns a <code>boolean</code> variable with the currently set <code>options.ignoreReadonly</code> option.</p>
+<h4 id="ignorereadonlyboolean">ignoreReadonly(boolean)</h4>
+<p>Takes a <code>boolean</code> value.</p>
+<p>Set this to <code>true</code> to allow the picker to be used even if the input field is <code>readonly</code>. This will <strong>not</strong> bypass the <code>disabled</code> property</p>
+<hr />
+<h3 id="showclose">showClose</h3>
+<h4 id="showclose_1">showClose()</h4>
+<p>Returns a <code>boolean</code> variable with the currently set <code>options.showClose</code> option.</p>
+<h4 id="showcloseboolean">showClose(boolean)</h4>
+<p>Takes a <code>boolean</code> value.</p>
+<p>If <code>true</code>, an icon will be displayed on the toolbar that will hide the picker</p>
+<hr />
+<h3 id="debug">debug</h3>
+<p>For the moment this function will only prevent the picker from calling <code>hide()</code> on <code>blur</code> so that the picker can be inspected.</p>
+<hr />
+<h3 id="keepinvalid">keepInvalid</h3>
+<h4 id="keepinvalid_1">keepInvalid()</h4>
+<p>Returns a <code>string</code> variable with the currently set <code>options.keepInvalid</code> option.</p>
+<h4 id="keepinvalidboolean">keepInvalid(boolean)</h4>
+<p>Takes a <code>boolean</code> value.</p>
+<p>If <code>true</code>, invalid dates will not be reverted to a previous selection or changed.</p>
 </div>
 			</div>
         </div>
