@@ -769,6 +769,8 @@
                 widget.remove();
                 widget = false;
 
+                element.blur();
+
                 notifyEvent({
                     type: 'dp.hide',
                     date: date.clone()
