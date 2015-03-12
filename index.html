@@ -25,7 +25,7 @@
 	<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-	<script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/src/js/bootstrap-datetimepicker.js"></script>
+	<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/src/js/bootstrap-datetimepicker.js"></script>
     </head>
 
     <body>
@@ -655,24 +655,23 @@ daysOfWeekDisabled: [0,6]
 
 <h4 id="code_10">Code</h4>
 <pre><code>&lt;div class=&quot;container&quot;&gt;
-&lt;div class=&quot;col-sm-6&quot;&gt;
-&lt;div class=&quot;form-group&quot;&gt;
-&lt;div class='input-group date' id='datetimepicker12'&gt;
-&lt;input type='text' class=&quot;form-control&quot; /&gt;
-&lt;span class=&quot;input-group-addon&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;
-&lt;/span&gt;
-&lt;/span&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-$(function () {
-$('#datetimepicker12').datetimepicker({
-inline: true,
-sideBySide: true
-});
-});
-&lt;/script&gt;
+    &lt;div class=&quot;col-sm-6&quot;&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;div class=&quot;row&quot;&gt;
+                &lt;div class=&quot;col-md-8&quot;&gt;
+                    &lt;div id=&quot;datetimepicker12&quot;&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        $(function () {
+            $('#datetimepicker12').datetimepicker({
+                inline: true,
+                sideBySide: true
+            });
+        });
+    &lt;/script&gt;
 &lt;/div&gt;
 </code></pre>
 
