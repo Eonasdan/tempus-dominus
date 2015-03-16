@@ -366,7 +366,7 @@
                 if (options.widgetParent) {
                     parent = options.widgetParent.append(widget);
                 } else if (element.is('input')) {
-                    parent = element.parent().append(widget);
+                    parent = element.after(widget);
                 } else if (options.inline) {
                     parent = element.append(widget);
                     return;
