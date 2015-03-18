@@ -1,4 +1,4 @@
-/*! version : 4.7.14
+/*! version : 4.7.15
  =========================================================
  bootstrap-datetimejs
  https://github.com/Eonasdan/bootstrap-datetimepicker
@@ -560,7 +560,8 @@
                     currentDate,
                     html = [],
                     row,
-                    clsName;
+                    clsName,
+                    i;
 
                 if (!hasDate()) {
                     return;
@@ -578,7 +579,8 @@
 
                 currentDate = viewDate.clone().startOf('M').startOf('week');
 
-                while (!viewDate.clone().endOf('M').endOf('w').isBefore(currentDate, 'd')) {
+                // while (!viewDate.clone().endOf('M').endOf('w').isBefore(currentDate, 'd')) {
+                for (i = 0; i < 42; i++) { //always display 42 days (should show 6 weeks)
                     if (currentDate.weekday() === 0) {
                         row = $('<tr>');
                         if (options.calendarWeeks) {
@@ -605,7 +607,7 @@
                     if (currentDate.day() === 0 || currentDate.day() === 6) {
                         clsName += ' weekend';
                     }
-                    row.append('<td data-action="selectDay" class="day' + clsName + '">' + currentDate.date() + '</td>');
+                    row.append('<td data-action="selectDay" data-day="' + currentDate.format('L') + '" class="day' + clsName + '">' + currentDate.date() + '</td>');
                     currentDate.add(1, 'd');
                 }
 
