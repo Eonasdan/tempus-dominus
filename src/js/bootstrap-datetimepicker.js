@@ -579,8 +579,8 @@
                 currentDate = viewDate.clone().startOf('M').startOf('week');
 
                 while (!viewDate.clone().endOf('M').endOf('w').isBefore(currentDate, 'd')) {
+                    row = $('<tr>');
                     if (currentDate.weekday() === 0) {
-                        row = $('<tr>');
                         if (options.calendarWeeks) {
                             row.append('<td class="cw">' + currentDate.week() + '</td>');
                         }
