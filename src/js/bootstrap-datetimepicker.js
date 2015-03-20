@@ -1798,13 +1798,13 @@
             return picker;
         };
 
-        picker.allowInputToggle = function(allowInputToggle) {
-          if(typeof allowInputToggle !== 'boolean') {
-            throw new TypeError('allowInputToggle() expects a boolean parameter');
-          }
+        picker.allowInputToggle = function (allowInputToggle) {
+            if (typeof allowInputToggle !== 'boolean') {
+                throw new TypeError('allowInputToggle() expects a boolean parameter');
+            }
 
-          options.allowInputToggle = allowInputToggle;
-          return picker;
+            options.allowInputToggle = allowInputToggle;
+            return picker;
         };
 
         picker.showClose = function (showClose) {
