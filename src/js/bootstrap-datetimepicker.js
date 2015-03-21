@@ -1123,7 +1123,8 @@
                     'change': change,
                     'blur': options.debug ? '' : hide,
                     'keydown': keydown,
-                    'keyup': keyup
+                    'keyup': keyup,
+                    'focus': options.allowInputToggle ? show : ''
                 });
 
                 if (element.is('input')) {
@@ -1141,7 +1142,8 @@
                     'change': change,
                     'blur': hide,
                     'keydown': keydown,
-                    'keyup': keyup
+                    'keyup': keyup,
+                    'focus': options.allowInputToggle ? hide : ''
                 });
 
                 if (element.is('input')) {
@@ -1798,6 +1800,15 @@
             return picker;
         };
 
+        picker.allowInputToggle = function (allowInputToggle) {
+            if (typeof allowInputToggle !== 'boolean') {
+                throw new TypeError('allowInputToggle() expects a boolean parameter');
+            }
+
+            options.allowInputToggle = allowInputToggle;
+            return picker;
+        };
+
         picker.showClose = function (showClose) {
             if (arguments.length === 0) {
                 return options.showClose;
@@ -2048,6 +2059,7 @@
                 this.clear();
             }
         },
-        debug: false
+        debug: false,
+        allowInputToggle: false
     };
 }));
