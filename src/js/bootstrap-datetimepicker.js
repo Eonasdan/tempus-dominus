@@ -1022,7 +1022,7 @@
                 widget.show();
                 place();
 
-                if (!input.is(':focus')) {
+                if (options.focusOnShow && !input.is(':focus')) {
                     input.focus();
                 }
 
@@ -1768,6 +1768,19 @@
             return picker;
         };
 
+        picker.focusOnShow = function (focusOnShow) {
+            if (arguments.length === 0) {
+                return options.focusOnShow;
+            }
+
+            if (typeof focusOnShow !== 'boolean') {
+                throw new TypeError('focusOnShow() expects a boolean parameter');
+            }
+
+            options.focusOnShow = focusOnShow;
+            return picker;
+        };
+
         picker.inline = function (inline) {
             if (arguments.length === 0) {
                 return options.inline;
@@ -1952,6 +1965,7 @@
         widgetParent: null,
         ignoreReadonly: false,
         keepOpen: false,
+        focusOnShow: true,
         inline: false,
         keepInvalid: false,
         datepickerInput: '.datepickerinput',
