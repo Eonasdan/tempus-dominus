@@ -4,10 +4,10 @@
   "version": "4.7.14",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eonasdan/bootstrap-datetimepicker.git"
+    "url": "https://github.com/cava23/bootstrap-datetimepicker.git"
   },
   "bugs": {
-    "url": "https://github.com/eonasdan/bootstrap-datetimepicker/issues"
+    "url": "https://github.com/cava23/bootstrap-datetimepicker/issues"
   },
   "keywords": [
     "twitter-bootstrap",
