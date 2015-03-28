@@ -25,7 +25,7 @@
 		<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 			<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/src/js/bootstrap-datetimepicker.js"></script>
+			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/src/js/bootstrap-datetimepicker.js"></script>
     </head>
 
     <body>
@@ -67,6 +67,12 @@
             
                 <li >
                     <a href="../Options">Options</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Events">Events</a>
                 </li>
             
             
@@ -178,6 +184,16 @@
         
             <li><a href="#keepinvalid">keepInvalid</a></li>
         
+            <li><a href="#allowinputtoggle">allowInputToggle</a></li>
+        
+            <li><a href="#focusonshow">focusOnShow</a></li>
+        
+            <li><a href="#disabledtimeintervals">disabledTimeIntervals</a></li>
+        
+            <li><a href="#endisabledhours">en/disabledHours</a></li>
+        
+            <li><a href="#viewdate">viewDate</a></li>
+        
     
     </ul>
 </div></div>
@@ -192,13 +208,13 @@
 <h4 id="emits">Emits</h4>
 <ul>
 <li>
-<p><code>hide.dp</code> - if the widget is hidden after the toggle call</p>
+<p><code>dp.hide</code> - if the widget is hidden after the toggle call</p>
 </li>
 <li>
-<p><code>show.dp</code> - if the widget is show after the toggle call</p>
+<p><code>dp.show</code> - if the widget is show after the toggle call</p>
 </li>
 <li>
-<p><code>change.dp</code> - if the widget is opened for the first time and the input element is empty and <code>options.useCurrent != false</code></p>
+<p><code>dp.change</code> - if the widget is opened for the first time and the input element is empty and <code>options.useCurrent != false</code></p>
 </li>
 </ul>
 <hr />
@@ -207,10 +223,10 @@
 <h4 id="emits_1">Emits</h4>
 <ul>
 <li>
-<p><code>show.dp</code> - if the widget was hidden before that call</p>
+<p><code>dp.show</code> - if the widget was hidden before that call</p>
 </li>
 <li>
-<p><code>change.dp</code> - if the widget is opened for the first time and the useCurrent is set to true or to a granularity value and the input element the component is attached to has an empty value</p>
+<p><code>dp.change</code> - if the widget is opened for the first time and the useCurrent is set to true or to a granularity value and the input element the component is attached to has an empty value</p>
 </li>
 </ul>
 <hr />
@@ -218,14 +234,14 @@
 <p>Hides the widget</p>
 <h4 id="emits_2">Emits</h4>
 <ul>
-<li><code>hide.dp</code> - if the widget was visible before that call</li>
+<li><code>dp.hide</code> - if the widget was visible before that call</li>
 </ul>
 <hr />
 <h3 id="disable">disable()</h3>
 <p>Disables the input element, the component is attached to, by adding a <code>disabled="true"</code> attribute to it. If the widget was visible before that call it is hidden.</p>
 <h4 id="emits_3">Emits</h4>
 <ul>
-<li><code>hide.dp</code> - if the widget was visible before that call</li>
+<li><code>dp.hide</code> - if the widget was visible before that call</li>
 </ul>
 <hr />
 <h3 id="enable">enable()</h3>
@@ -235,14 +251,14 @@
 <h4 id="date_1">date()</h4>
 <p>Returns the component's model current date, a <code>moment</code> object or <code>null</code> if not set.</p>
 <h4 id="datenewdate">date([newDate])</h4>
-<p>Takes <code>newDate</code> <code>string, Date, moment, null</code> parameter and sets the components model current moment to it. Passing a <code>null</code> value unsets the components model current moment. Parsing of the newDate parameter is made using moment library with the <code>options.format</code> and <code>options.useStrict</code> components configuration.</p>
+<p>Takes <code>string, Date, moment, null</code> parameter and sets the components model current moment to it. Passing a <code>null</code> value unsets the components model current moment. Parsing of the newDate parameter is made using moment library with the <code>options.format</code> and <code>options.useStrict</code> components configuration.</p>
 <h5 id="throws">Throws</h5>
 <ul>
 <li><code>TypeError</code> - in case the <code>newDate</code> cannot be parsed</li>
 </ul>
 <h5 id="emits_4">Emits</h5>
 <ul>
-<li><code>change.dp</code> - In case <code>newDate</code> is different from current moment</li>
+<li><code>dp.change</code> - In case <code>newDate</code> is different from current moment</li>
 </ul>
 <h3 id="endisableddates">en/disabledDates</h3>
 <h4 id="disableddates">disabledDates()</h4>
@@ -297,10 +313,10 @@
 <h5 id="emits_5">Emits</h5>
 <ul>
 <li>
-<p><code>change.dp</code> - if the new minDate is after currently selected moment (waiting for #472 to close in order to finalize this part)</p>
+<p><code>dp.change</code> - if the new minDate is after currently selected moment (waiting for #472 to close in order to finalize this part)</p>
 </li>
 <li>
-<p><code>error.dp</code> - if the new minDate is after currently selected moment (waiting for #472 to close in order to finalize this part)</p>
+<p><code>dp.error</code> - if the new minDate is after currently selected moment (waiting for #472 to close in order to finalize this part)</p>
 </li>
 </ul>
 <hr />
@@ -321,10 +337,10 @@
 <h5 id="emits_6">Emits</h5>
 <ul>
 <li>
-<p><code>change.dp</code> - if the new maxDate is after currently selected moment  (waiting for #472 to close in order to finalize this part)</p>
+<p><code>dp.change</code> - if the new maxDate is after currently selected moment  (waiting for #472 to close in order to finalize this part)</p>
 </li>
 <li>
-<p><code>error.dp</code> - if the new maxDate is after currently selected moment  (waiting for #472 to close in order to finalize this part)</p>
+<p><code>dp.error</code> - if the new maxDate is after currently selected moment  (waiting for #472 to close in order to finalize this part)</p>
 </li>
 </ul>
 <hr />
@@ -336,10 +352,10 @@
 <h5 id="emits_7">Emits</h5>
 <ul>
 <li>
-<p><code>change.dp</code> - if the currently selected moment falls in the values passed on the daysOfWeek parameter. (waiting for #472 to close in order to finalize this part)</p>
+<p><code>dp.change</code> - if the currently selected moment falls in the values passed on the daysOfWeek parameter. (waiting for #472 to close in order to finalize this part)</p>
 </li>
 <li>
-<p><code>error.dp</code> - if the currently selected moment falls in the values passed on the daysOfWeek parameter. (waiting for #472 to close in order to finalize this part)</p>
+<p><code>dp.error</code> - if the currently selected moment falls in the values passed on the daysOfWeek parameter. (waiting for #472 to close in order to finalize this part)</p>
 </li>
 </ul>
 <hr />
@@ -417,7 +433,7 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <h4 id="viewmode_1">viewMode()</h4>
 <p>Returns a <code>string</code> of the <code>options.viewMode</code>.</p>
 <h4 id="viewmodenewviewmode">viewMode(newViewMode)</h4>
-<p>Takes a <code>string</code>. Valid values are <code>'days'</code>, <code>'months'</code>, and <code>'years'</code></p>
+<p>Takes a <code>string</code>. Valid values are <code>'days'</code>, <code>'months'</code>, <code>'years'</code> and <code>'decades'</code></p>
 <h5 id="throws_5">Throws</h5>
 <ul>
 <li><code>TypeError</code> - if <code>newViewMode</code> parameter is not an a <code>string</code> or if <code>newViewMode</code> is not a valid value</li>
@@ -495,6 +511,54 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <h4 id="keepinvalidboolean">keepInvalid(boolean)</h4>
 <p>Takes a <code>boolean</code> value.</p>
 <p>If <code>true</code>, invalid dates will not be reverted to a previous selection or changed.</p>
+<hr />
+<h3 id="allowinputtoggle">allowInputToggle</h3>
+<p>PR #929</p>
+<h4 id="allowinputtoggle_1">allowInputToggle()</h4>
+<p>Returns a <code>boolean</code> variable with the currently set <code>options.allowInputToggle</code> option.</p>
+<h4 id="allowinputtoggleboolean">allowInputToggle(boolean)</h4>
+<p>Takes a <code>boolean</code> value.</p>
+<p>If <code>true</code>, the picker will show on textbox focus and icon click when used in a button group</p>
+<hr />
+<h3 id="focusonshow">focusOnShow</h3>
+<p>PR #884</p>
+<h4 id="focusonshow_1">focusOnShow()</h4>
+<p>Returns a <code>boolean</code> variable with the currently set <code>options.focusOnShow</code> option.</p>
+<h4 id="focusonshowboolean">focusOnShow(boolean)</h4>
+<p>Takes a <code>boolean</code> value.</p>
+<p>If <code>false</code>, the textbox will not be given focus when the picker is shown</p>
+<hr />
+<h3 id="disabledtimeintervals">disabledTimeIntervals</h3>
+<p>Issue: #644</p>
+<h4 id="disabledtimeintervals_1">disabledTimeIntervals()</h4>
+<p>Returns an <code>array</code> variable with the currently set <code>options.disabledTimeIntervals</code> option.</p>
+<h4 id="disabledtimeintervalsarray">disabledTimeIntervals(array)</h4>
+<p>Takes a <code>array</code> value.</p>
+<p>The array <strong>must</strong> be in the following format <code>[moment(),moment()]</code></p>
+<p>For example:</p>
+<pre><code>disabledTimeIntervals: [[moment({ h: 0 }), moment({ h: 8 })], [moment({ h: 18 }), moment({ h: 24 })]]
+</code></pre>
+<p>Will disable times between 12-8am and 6-12pm today</p>
+<hr />
+<h3 id="endisabledhours">en/disabledHours</h3>
+<p>Issue: #851</p>
+<h4 id="keepinvalid_2">keepInvalid()</h4>
+<p>Returns an <code>array</code> variable with the currently set <code>options.en/disabledHours</code> option.</p>
+<h4 id="keepinvalidboolean_1">keepInvalid(boolean)</h4>
+<p>Takes a <code>array</code> value.</p>
+<p>Must be in 24 hour format. Will allow or disallow hour selections (much like <code>disabledTimeIntervals</code>) but will affect all days.</p>
+<p>Like <code>en/disabledDates</code>, these options are mutually exclusive and will reset one of the options back to false.</p>
+<pre><code>disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 8, 18, 19, 20, 21, 22, 23, 24]
+enabledHours: [9, 10, 11, 12, 13, 14, 15, 16]
+</code></pre>
+<hr />
+<h3 id="viewdate">viewDate</h3>
+<p>Issue #872</p>
+<h4 id="viewdate_1">viewDate()</h4>
+<p>Returns a <code>moment</code> variable with the currently set <code>options.viewDate</code> option.</p>
+<h4 id="viewdateviewdate">viewDate(viewDate)</h4>
+<p>Takes a <code>string, moment or Date</code> value.</p>
+<p>This will change the <code>viewDate</code> without changing or setting the selected date.</p>
 </div>
 			</div>
         </div>

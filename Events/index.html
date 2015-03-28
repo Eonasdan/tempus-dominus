@@ -15,7 +15,7 @@
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
         <link href="../css/prettify-1.0.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
-        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -25,7 +25,7 @@
 		<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 			<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/src/js/bootstrap-datetimepicker.js"></script>
+			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/src/js/bootstrap-datetimepicker.js"></script>
     </head>
 
     <body>
@@ -53,8 +53,8 @@
             <ul class="nav navbar-nav">
             
             
-                <li class="active">
-                    <a href=".">Events</a>
+                <li >
+                    <a href="../Installing">Installing</a>
                 </li>
             
             
@@ -71,14 +71,20 @@
             
             
             
-                <li >
-                    <a href="../Version 4 Changelog">Version 4 Changelog</a>
+                <li class="active">
+                    <a href=".">Events</a>
                 </li>
             
             
             
                 <li >
-                    <a href="../Version 4 Contributors guide">Version 4 Contributors guide</a>
+                    <a href="../Version 4 Changelog">Change Log</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Version 4 Contributors guide">Dev Guide</a>
                 </li>
             
             
@@ -87,14 +93,14 @@
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 
-                <li >
-                    <a rel="next" href="..">
-                        <i class="fa fa-arrow-left"></i> Previous
-                    </a>
-                </li>
-                <li >
-                    <a rel="prev" href="../Functions">
-                        Next <i class="fa fa-arrow-right"></i>
+				
+                
+                <li>
+                    <a href="https://github.com/Eonasdan/bootstrap-datetimepicker">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
                     </a>
                 </li>
                 
@@ -117,6 +123,8 @@
             <li><a href="#dpchange">dp.change</a></li>
         
             <li><a href="#dperror">dp.error</a></li>
+        
+            <li><a href="#dpupdate">dp.update</a></li>
         
     
     </ul>
@@ -162,6 +170,10 @@
 <li>daysOfWeekDisabled()</li>
 <li>setValue() <em>private function</em></li>
 </ul>
+<hr />
+<h3 id="dpupdate">dp.update</h3>
+<p>Fired (in most cases) when the <code>viewDate</code> changes. E.g. Next and Previous buttons, selecting a year.</p>
+<p>Includes the new <code>viewDate</code> and a change type, e.g <code>YYYY</code> and <code>M</code> for year and month.</p>
 </div>
 			</div>
         </div>

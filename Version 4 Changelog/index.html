@@ -25,7 +25,7 @@
 		<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 			<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/src/js/bootstrap-datetimepicker.js"></script>
+			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/src/js/bootstrap-datetimepicker.js"></script>
     </head>
 
     <body>
@@ -71,6 +71,12 @@
             
             
             
+                <li >
+                    <a href="../Events">Events</a>
+                </li>
+            
+            
+            
                 <li class="active">
                     <a href=".">Change Log</a>
                 </li>
@@ -110,6 +116,8 @@
     
         <li class="main active"><a href="#v4-changelog">V4 Changelog</a></li>
         
+            <li><a href="#41328">4.13.28</a></li>
+        
             <li><a href="#4714">4.7.14</a></li>
         
             <li><a href="#4">4</a></li>
@@ -120,6 +128,29 @@
 				<div class="col-md-9" role="main">
 
 <h1 id="v4-changelog">V4 Changelog</h1>
+<h2 id="41328">4.13.28</h2>
+<h3 id="new-features">New Features</h3>
+<p><code>disabledTimeIntervals</code> #644</p>
+<p><code>allowInputToggle</code> #929</p>
+<p><code>focusOnShow</code> #884</p>
+<p>public <code>viewDate</code> function #872</p>
+<p><code>enabledHours</code> and <code>disabledHours</code>.</p>
+<p><code>dp.update</code> fires when <code>viewDate</code> is changed (in most cases) #937</p>
+<p><code>viewMode</code> now supports a decades view. </p>
+<p><strong>Note</strong>: because the year picker shows 12 years told, I've elected to make this view show blocks of 12 years</p>
+<p><strong>Note</strong>: when selecting a decade the <code>viewDate</code> will change to the <strong>center</strong> of the selected years</p>
+<h3 id="bug-squashing">Bug Squashing</h3>
+<p>fixed #815 by adding <code>.wider</code> when using both seconds and am/pm.</p>
+<p>fixed #816 changed both min/max date to move the selected date inside.</p>
+<p>fixed #855 #881 <code>fillDate</code>, <code>fillMonths</code>, <code>fillDow</code> uses <code>startOf('day')</code>, which will hopefully fix the DST issues.</p>
+<p>fixed #885 <code>daysOfWeekDisabled</code> will move the date to a valid date if <code>useCurrent</code> is <code>true</code>. Today button will check if the DoW is disabled.</p>
+<p>fixed #906</p>
+<p>fixed #912 if <code>useCurrent:false</code> month and year view will no longer have the current month/year selected.</p>
+<p>fixed #914 <code>use24hours</code> will ignore anything in side of <code>[]</code> in the format string.</p>
+<p>fixed #916 added titles to all icons. At some point the text should be moved to the icon's array, but this would probably be a breaking change.</p>
+<p>fixed #940 added -1 tab index to am/pm selector</p>
+<h3 id="other-changes">Other Changes</h3>
+<p>changed in/decrement behavior to check if the new date is valid at that granularity (hours, minutes, seconds). will also validate as before</p>
 <h2 id="4714">4.7.14</h2>
 <p>Added several in new features:</p>
 <pre><code>`keybinds`, `inline`, `debug`, `clear()`, `showClose`, `ingoreReadOnly`, `datepickerInput` and `keepInvalid`.
