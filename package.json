@@ -1,7 +1,7 @@
 {
   "name": "bootstrap-datetimepicker",
   "main": "src/js/bootstrap-datetimepicker.js",
-  "version": "4.7.14",
+  "version": "4.13.28",
   "homepage": "http://eonasdan.github.io/bootstrap-datetimepicker/",
   "author": {
     "name": "Jonathan Peterson"
