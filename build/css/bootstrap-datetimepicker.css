@@ -1,6 +1,6 @@
 /*!
  * Datetimepicker for Bootstrap 3
- * ! version : 4.7.14
+ * ! version : 4.13.28
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 .bootstrap-datetimepicker-widget {
@@ -350,6 +350,12 @@
 .bootstrap-datetimepicker-widget.usetwentyfour td.hour {
   height: 27px;
   line-height: 27px;
+}
+.bootstrap-datetimepicker-widget.wider {
+  width: 21em;
+}
+.bootstrap-datetimepicker-widget .datepicker-decades .decade {
+  line-height: 1.8em !important;
 }
 .input-group.date .input-group-addon {
   cursor: pointer;
