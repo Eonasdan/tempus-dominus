@@ -22,6 +22,12 @@ div.source-links {
  */
 
 /* By default it's not affixed in mobile views, so undo that */
+.bs-sidebar {
+  overflow-y: scroll;
+  max-height: 86%;
+  overflow-x: hidden;
+}
+
 .bs-sidebar.affix {
     position: static;
 }
