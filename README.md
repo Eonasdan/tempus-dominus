@@ -18,8 +18,8 @@ If you have issues, please check the following first:
 * Please test and/or fork [this jsfiddle](http://jsfiddle.net/Eonasdan/0Ltv25o8/) with an example of your issue before you post an issue here. 
 
 ## Where do you use this?
-I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `eonasdan at outlook dot com`. Do not submit issue/feature request to this email, they will be ignored.
+I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `eonasdan at outlook dot com`. Do not submit issue/feature request to this email, they will be **ignored**.
 
-## [Installation instructions](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Installation)
+## [Installation instructions](http://eonasdan.github.io/bootstrap-datetimepicker/Installing/)
 
-## [Change Log](https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Version-4-changelog)
+## [Change Log](http://eonasdan.github.io/bootstrap-datetimepicker/Version%204%20Changelog/)
