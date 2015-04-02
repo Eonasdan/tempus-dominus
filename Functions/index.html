@@ -12,7 +12,7 @@
         <title>Functions - Bootstrap 3 Datepicker</title>
 
         <link rel="stylesheet" type="text/css" media="screen" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
-        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <link href="../css/prettify-1.0.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
         <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
@@ -85,6 +85,12 @@
             
                 <li >
                     <a href="../Version 4 Contributors guide">Dev Guide</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Extras">Extras</a>
                 </li>
             
             
@@ -182,39 +188,17 @@
         
             <li><a href="#debug">debug</a></li>
         
-            <li><a href="#keepinvalid">keepInvalid()</a></li>
+            <li><a href="#keepinvalid">keepInvalid</a></li>
         
-            <li><a href="#keepinvalidboolean">keepInvalid(boolean)</a></li>
+            <li><a href="#allowinputtoggle">allowInputToggle</a></li>
         
-    
-        <li class="main "><a href="#allowinputtoggle">allowInputToggle()</a></li>
+            <li><a href="#focusonshow">focusOnShow</a></li>
         
-    
-        <li class="main "><a href="#allowinputtoggleboolean">allowInputToggle(boolean)</a></li>
+            <li><a href="#disabledtimeintervals">disabledTimeIntervals</a></li>
         
-    
-        <li class="main "><a href="#focusonshow">focusOnShow()</a></li>
+            <li><a href="#endisabledhours">en/disabledHours</a></li>
         
-    
-        <li class="main "><a href="#focusonshowboolean">focusOnShow(boolean)</a></li>
-        
-    
-        <li class="main "><a href="#disabledtimeintervals">disabledTimeIntervals()</a></li>
-        
-    
-        <li class="main "><a href="#disabledtimeintervalsarray">disabledTimeIntervals(array)</a></li>
-        
-    
-        <li class="main "><a href="#disabledhours">disabledHours()</a></li>
-        
-    
-        <li class="main "><a href="#disabledhoursboolean">disabledHours(boolean)</a></li>
-        
-    
-        <li class="main "><a href="#viewdate">viewDate()</a></li>
-        
-    
-        <li class="main "><a href="#viewdateviewdate">viewDate(viewDate)</a></li>
+            <li><a href="#viewdate">viewDate</a></li>
         
     
     </ul>
@@ -527,32 +511,33 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <h3 id="debug">debug</h3>
 <p>For the moment this function will only prevent the picker from calling <code>hide()</code> on <code>blur</code> so that the picker can be inspected.</p>
 <hr />
-<h3 id="keepinvalid-4714">keepInvalid <small>4.7.14</small></h3>
-<h4 id="keepinvalid">keepInvalid()</h4>
+<h3 id="keepinvalid">keepInvalid</h3>
+<p><small>4.7.14</small></p>
+<h4 id="keepinvalid_1">keepInvalid()</h4>
 <p>Returns a <code>string</code> variable with the currently set <code>options.keepInvalid</code> option.</p>
 <h4 id="keepinvalidboolean">keepInvalid(boolean)</h4>
 <p>Takes a <code>boolean</code> value.</p>
 <p>If <code>true</code>, invalid dates will not be reverted to a previous selection or changed.</p>
 <hr />
-<h3 id="allowinputtoggle-41328">allowInputToggle <small>4.13.28</small></h3>
-<p>PR #929</p>
-<h4 id="allowinputtoggle">allowInputToggle()</h4>
+<h3 id="allowinputtoggle">allowInputToggle</h3>
+<p><small>4.7.14</small></p>
+<h4 id="allowinputtoggle_1">allowInputToggle()</h4>
 <p>Returns a <code>boolean</code> variable with the currently set <code>options.allowInputToggle</code> option.</p>
 <h4 id="allowinputtoggleboolean">allowInputToggle(boolean)</h4>
 <p>Takes a <code>boolean</code> value.</p>
 <p>If <code>true</code>, the picker will show on textbox focus and icon click when used in a button group</p>
 <hr />
-<h3 id="focusonshow-41328">focusOnShow <small>4.13.28</small></h3>
-<p>PR #884</p>
-<h4 id="focusonshow">focusOnShow()</h4>
+<h3 id="focusonshow">focusOnShow</h3>
+<p><small>4.13.28</small> PR #884</p>
+<h4 id="focusonshow_1">focusOnShow()</h4>
 <p>Returns a <code>boolean</code> variable with the currently set <code>options.focusOnShow</code> option.</p>
 <h4 id="focusonshowboolean">focusOnShow(boolean)</h4>
 <p>Takes a <code>boolean</code> value.</p>
 <p>If <code>false</code>, the textbox will not be given focus when the picker is shown</p>
 <hr />
-<h3 id="disabledtimeintervals-41328">disabledTimeIntervals <small>4.13.28</small></h3>
-<p>Issue: #644</p>
-<h4 id="disabledtimeintervals">disabledTimeIntervals()</h4>
+<h3 id="disabledtimeintervals">disabledTimeIntervals</h3>
+<p><small>4.13.28</small> Issue: #644</p>
+<h4 id="disabledtimeintervals_1">disabledTimeIntervals()</h4>
 <p>Returns an <code>array</code> variable with the currently set <code>options.disabledTimeIntervals</code> option.</p>
 <h4 id="disabledtimeintervalsarray">disabledTimeIntervals(array)</h4>
 <p>Takes a <code>array</code> value.</p>
@@ -562,8 +547,8 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 </code></pre>
 <p>Will disable times between 12-8am and 6-12pm today</p>
 <hr />
-<h3 id="endisabledhours-41328">en/disabledHours <small>4.13.28</small></h3>
-<p>Issue: #851</p>
+<h3 id="endisabledhours">en/disabledHours</h3>
+<p><small>4.13.28</small> Issue: #851</p>
 <h4 id="disabledhours">disabledHours()</h4>
 <p>Returns an <code>array</code> variable with the currently set <code>options.en/disabledHours</code> option.</p>
 <h4 id="disabledhoursboolean">disabledHours(boolean)</h4>
@@ -574,9 +559,9 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 enabledHours: [9, 10, 11, 12, 13, 14, 15, 16]
 </code></pre>
 <hr />
-<h3 id="viewdate-41328">viewDate <small>4.13.28</small></h3>
-<p>Issue #872</p>
-<h4 id="viewdate">viewDate()</h4>
+<h3 id="viewdate">viewDate</h3>
+<p><small>4.13.28</small> Issue #872</p>
+<h4 id="viewdate_1">viewDate()</h4>
 <p>Returns a <code>moment</code> variable with the currently set <code>options.viewDate</code> option.</p>
 <h4 id="viewdateviewdate">viewDate(viewDate)</h4>
 <p>Takes a <code>string, moment or Date</code> value.</p>
