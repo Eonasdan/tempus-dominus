@@ -1038,9 +1038,8 @@
                 if (moment.isMoment(inputDate) || inputDate instanceof Date) {
                     inputDate = moment(inputDate);
                 } else {
-                    inputDate = moment(inputDate, parseFormats, options.useStrict);
+                    inputDate = moment(inputDate, parseFormats, options.locale, options.useStrict);
                 }
-                inputDate.locale(options.locale);
                 return inputDate;
             },
 
