@@ -769,9 +769,20 @@
             },
 
             fillTime = function () {
-                var timeComponents = widget.find('.timepicker span[data-time-component]');
+                var toggle, newDate, timeComponents;
+                timeComponents = widget.find('.timepicker span[data-time-component]');
+
                 if (!use24Hours) {
-                    widget.find('.timepicker [data-action=togglePeriod]').text(date.format('A'));
+                    toggle = widget.find('.timepicker [data-action=togglePeriod]');
+                    newDate = date.clone().add((date.hours() >= 12) ? -12 : 12, 'h');
+
+                    toggle.text(date.format('A'));
+
+                    if (isValid(newDate, 'h')) {
+                        toggle.removeClass('disabled');
+                    } else {
+                        toggle.addClass('disabled');
+                    }
                 }
                 timeComponents.filter('[data-time-component=hours]').text(date.format(use24Hours ? 'HH' : 'hh'));
                 timeComponents.filter('[data-time-component=minutes]').text(date.format('mm'));
