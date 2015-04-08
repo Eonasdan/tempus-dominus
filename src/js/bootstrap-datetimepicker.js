@@ -2115,8 +2115,8 @@
                 var tries = 0;
                 while (!isValid(date, 'h')) {
                     date.add(1, 'h');
-                    if (tries === 7) {
-                        throw 'Tried 7 times to find a valid date';
+                    if (tries === 24) {
+                        throw 'Tried 24 times to find a valid date';
                     }
                     tries++;
                 }
@@ -2153,8 +2153,8 @@
                 var tries = 0;
                 while (!isValid(date, 'h')) {
                     date.add(1, 'h');
-                    if (tries === 7) {
-                        throw 'Tried 7 times to find a valid date';
+                    if (tries === 24) {
+                        throw 'Tried 24 times to find a valid date';
                     }
                     tries++;
                 }
