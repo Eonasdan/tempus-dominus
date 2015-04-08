@@ -378,7 +378,7 @@
                 if (options.widgetParent) {
                     parent = options.widgetParent.append(widget);
                 } else if (element.is('input')) {
-                    parent = element.after(widget);
+                    parent = element.after(widget).parent();
                 } else if (options.inline) {
                     parent = element.append(widget);
                     return;
@@ -433,8 +433,8 @@
                 widget.css({
                     top: vertical === 'top' ? 'auto' : position.top + element.outerHeight(),
                     bottom: vertical === 'top' ? position.top + element.outerHeight() : 'auto',
-                    left: horizontal === 'left' ? parent.css('padding-left') : 'auto',
-                    right: horizontal === 'left' ? 'auto' : parent.width() - element.outerWidth()
+                    left: horizontal === 'left' ? position.left : 'auto',
+                    right: horizontal === 'left' ? 'auto' : parent.width() - element.outerWidth() - position.left
                 });
             },
 
