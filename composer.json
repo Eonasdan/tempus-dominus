@@ -1,7 +1,7 @@
 {
   "name": "eonasdan/bootstrap-datetimepicker",
   "type": "component",
-  "version": "4.7.14",
+  "version": "4.13.28",
   "description": "Date/time picker widget based on twitter bootstrap",
   "keywords": [
     "bootstrap",
@@ -21,10 +21,7 @@
       ],
       "files": [
         "build/js/bootstrap-datetimepicker.min.js",
-        "build/css/bootstrap-datetimepicker.css",
-        "build/css/bootstrap-datetimepicker.min.css",
-		"src/less/_bootstrap-datetimepicker.less",
-		"src/less/bootstrap-datetimepicker-build.less"
+        "build/css/bootstrap-datetimepicker.min.css"
       ]
     }
   }

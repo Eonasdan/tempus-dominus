@@ -1,7 +1,15 @@
 {
   "name": "bootstrap-datetimepicker",
   "main": "src/js/bootstrap-datetimepicker.js",
-  "version": "4.7.14",
+  "version": "4.13.28",
+  "homepage": "http://eonasdan.github.io/bootstrap-datetimepicker/",
+  "author": {
+    "name": "Jonathan Peterson"
+  },
+  "license": {
+    "license": "MIT"
+  },
+  "description": "A date/time picker component designed to work with Bootstrap 3 and Momentjs. For usage, installation and demos see Project Site on GitHub",
   "repository": {
     "type": "git",
     "url": "https://github.com/eonasdan/bootstrap-datetimepicker.git"
