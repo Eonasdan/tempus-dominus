@@ -1035,10 +1035,14 @@
             },
 
             parseInputDate = function (inputDate) {
-                if (moment.isMoment(inputDate) || inputDate instanceof Date) {
-                    inputDate = moment(inputDate);
+                if (options.parseInputDate === undefined) {
+                    if (moment.isMoment(inputDate) || inputDate instanceof Date) {
+                        inputDate = moment(inputDate);
+                    } else {
+                        inputDate = moment(inputDate, parseFormats, options.useStrict);
+                    }
                 } else {
-                    inputDate = moment(inputDate, parseFormats, options.useStrict);
+                    inputDate = options.parseInputDate(inputDate);
                 }
                 inputDate.locale(options.locale);
                 return inputDate;
@@ -1831,6 +1835,20 @@
             }
 
             options.datepickerInput = datepickerInput;
+            return picker;
+        };
+
+        picker.parseInputDate = function (parseInputDate) {
+            if (arguments.length === 0) {
+                return options.parseInputDate;
+            }
+
+            if (typeof parseInputDate !== 'function') {
+                throw new TypeError('parseInputDate() sholud be as function');
+            }
+
+            options.parseInputDate = parseInputDate;
+
             return picker;
         };
 
