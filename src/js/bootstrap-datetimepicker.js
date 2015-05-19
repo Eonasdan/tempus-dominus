@@ -1044,28 +1044,14 @@
                 return inputDate;
             },
 
-            keydown = function (e) {
-                //if (e.keyCode === 27 && widget) { // allow escape to hide picker
-                //    hide();
-                //    return false;
-                //}
-                //if (e.keyCode === 40 && !widget) { // allow down to show picker
-                //    show();
-                //    e.preventDefault();
-                //}
-                //return true;
-
-                var handler = null,
-                    index,
+            getKeyHandler = function (keyState, currentKey) {
+                var index,
                     index2,
                     pressedKeys = [],
                     pressedModifiers = {},
-                    currentKey = e.which,
                     keyBindKeys,
                     allModifiersPressed,
                     pressed = 'p';
-
-                keyState[currentKey] = pressed;
 
                 for (index in keyState) {
                     if (keyState.hasOwnProperty(index) && keyState[index] === pressed) {
@@ -1088,24 +1074,46 @@
                                 }
                             }
                             if (allModifiersPressed) {
-                                handler = options.keyBinds[index];
-                                break;
+                                return options.keyBinds[index];
                             }
                         }
                     }
                 }
 
-                if (handler) {
-                    handler.call(picker, widget);
+                return null;
+            },
+
+            keydown = function (e) {
+                //if (e.keyCode === 27 && widget) { // allow escape to hide picker
+                //    hide();
+                //    return false;
+                //}
+                //if (e.keyCode === 40 && !widget) { // allow down to show picker
+                //    show();
+                //    e.preventDefault();
+                //}
+                //return true;
+
+                keyState[e.which] = 'p';
+
+                var handler = getKeyHandler(keyState, e.which);
+
+                if (handler && !handler.call(picker, widget)) {
                     e.stopPropagation();
                     e.preventDefault();
                 }
             },
 
             keyup = function (e) {
-                keyState[e.which] = 'r';
-                e.stopPropagation();
-                e.preventDefault();
+                var currentKey = e.which,
+                    handler = getKeyHandler(keyState, currentKey);
+
+                keyState[currentKey] = 'r';
+
+                if (handler) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
             },
 
             change = function (e) {
@@ -1945,7 +1953,7 @@
         keyBinds: {
             up: function (widget) {
                 if (!widget) {
-                    return;
+                    return true;
                 }
                 var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
@@ -1957,7 +1965,7 @@
             down: function (widget) {
                 if (!widget) {
                     this.show();
-                    return;
+                    return true;
                 }
                 var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
@@ -1968,7 +1976,7 @@
             },
             'control up': function (widget) {
                 if (!widget) {
-                    return;
+                    return true;
                 }
                 var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
@@ -1979,7 +1987,7 @@
             },
             'control down': function (widget) {
                 if (!widget) {
-                    return;
+                    return true;
                 }
                 var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
@@ -1990,44 +1998,58 @@
             },
             left: function (widget) {
                 if (!widget) {
-                    return;
+                    return true;
                 }
                 var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'd'));
+                } else {
+                    return true;
                 }
             },
             right: function (widget) {
                 if (!widget) {
-                    return;
+                    return true;
                 }
                 var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'd'));
+                } else {
+                    return true;
                 }
             },
             pageUp: function (widget) {
                 if (!widget) {
-                    return;
+                    return true;
                 }
                 var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'M'));
+                } else {
+                    return true;
                 }
             },
             pageDown: function (widget) {
                 if (!widget) {
-                    return;
+                    return true;
                 }
                 var d = this.date() || moment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'M'));
+                } else {
+                    return true;
                 }
             },
-            enter: function () {
+            enter: function (widget) {
+                if (!widget) {
+                    return true;
+                }
                 this.hide();
             },
-            escape: function () {
+            escape:  function (widget) {
+                if (!widget) {
+                    return true;
+                }
                 this.hide();
             },
             //tab: function (widget) { //this break the flow of the form. disabling for now
@@ -2037,12 +2059,17 @@
             'control space': function (widget) {
                 if (widget.find('.timepicker').is(':visible')) {
                     widget.find('.btn[data-action="togglePeriod"]').click();
+                } else {
+                    return true;
                 }
             },
             t: function () {
                 this.date(moment());
             },
-            'delete': function () {
+            'delete': function (widget) {
+                if (!widget) {
+                    return true;
+                }
                 this.clear();
             }
         },
