@@ -704,7 +704,7 @@
                     element.data('date', '');
                     notifyEvent({
                         type: 'dp.change',
-                        date: null,
+                        date: false,
                         oldDate: oldDate
                     });
                     update();
