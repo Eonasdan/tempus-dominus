@@ -1,0 +1,16 @@
+site_name: Bootstrap 3 Datepicker
+theme: bootstrap
+extra_javascript: ['//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js','//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/src/js/bootstrap-datetimepicker.js']
+extra_css: ['//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/build/css/bootstrap-datetimepicker.css']
+repo_url: https://github.com/Eonasdan/bootstrap-datetimepicker
+pages:
+- ['index.md', 'Usage']
+- ['Installing.md', 'Installing']
+- ['Functions.md', 'Functions']
+- ['Options.md', 'Options']
+- ['Events.md', 'Events']
+- ['Changelog.md', 'Change Log']
+- ['ContributorsGuide.md', 'Dev Guide']
+- ['Extras.md', 'Extras']
+- ['Version 4 Changelog.md', '']
+- ['Version 4 Contributors guide.md', '']

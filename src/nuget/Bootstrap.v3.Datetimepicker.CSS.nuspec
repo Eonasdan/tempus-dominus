@@ -16,7 +16,7 @@ For LESS version install Bootstrap.v3.Datetimepicker</description>
         <releaseNotes>Check the change log on Github at https://github.com/Eonasdan/bootstrap-datetimepicker/wiki/Change-Log</releaseNotes>
         <tags>bootstrap date time picker datetimepicker datepicker jquery</tags>
         <dependencies>
-            <dependency id="bootstrap" version="3.0.0" />
+            <dependency id="bootstrap" version="3.3.0" />
             <dependency id="Moment.js" version="2.9.0" />
         </dependencies>
     </metadata>

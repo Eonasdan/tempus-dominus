@@ -10,3 +10,8 @@
 *.swp
 *~
 *.tgz
+/site
+*.user
+*.csproj
+*.sln
+*.nupkg
