@@ -78,19 +78,31 @@
             
             
                 <li >
-                    <a href="../Version 4 Changelog">Change Log</a>
+                    <a href="../Changelog">Change Log</a>
                 </li>
             
             
             
                 <li >
-                    <a href="../Version 4 Contributors guide">Dev Guide</a>
+                    <a href="../ContributorsGuide">Dev Guide</a>
                 </li>
             
             
             
                 <li >
                     <a href="../Extras">Extras</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Version 4 Changelog"></a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../Version 4 Contributors guide"></a>
                 </li>
             
             
@@ -444,37 +456,37 @@ Accepts: string or jQuery object
 <p>Will cause the date picker to stay open after a <code>blur</code> event.</p>
 <hr />
 <h3 id="disabledtimeintervals">disabledTimeIntervals</h3>
-<p><small>4.13.28</small></p>
+<p><small>4.14.40</small></p>
 <pre><code>Default: false
 </code></pre>
 <p>Disables time selection between the given <code>moments</code></p>
 <hr />
 <h3 id="allowinputtoggle">allowInputToggle</h3>
-<p><small>4.13.28</small></p>
+<p><small>4.14.40</small></p>
 <pre><code>Default: false
 </code></pre>
 <p>If <code>true</code>, the picker will show on textbox focus and icon click when used in a button group</p>
 <hr />
 <h3 id="focusonshow">focusOnShow</h3>
-<p><small>4.13.28</small></p>
+<p><small>4.14.40</small></p>
 <pre><code>Default: true
 </code></pre>
 <p>If <code>false</code>, the textbox will not be given focus when the picker is shown</p>
 <hr />
 <h3 id="enabledhours">enabledHours</h3>
-<p><small>4.13.28</small></p>
+<p><small>4.14.40</small></p>
 <pre><code>Default: false
 </code></pre>
 <p>Will allow or disallow hour selections (much like <code>disabledTimeIntervals</code>) but will affect all days</p>
 <hr />
 <h3 id="disabledhours">disabledHours</h3>
-<p><small>4.13.28</small></p>
+<p><small>4.14.40</small></p>
 <pre><code>Default: false
 </code></pre>
 <p>Will allow or disallow hour selections (much like <code>disabledTimeIntervals</code>) but will affect all days</p>
 <hr />
 <h3 id="viewdate">viewDate</h3>
-<p><small>4.13.28</small></p>
+<p><small>4.14.40</small></p>
 <pre><code>Default: false
 </code></pre>
 <p>This will change the <code>viewDate</code> without changing or setting the selected date.</p>
@@ -487,6 +499,7 @@ Accepts: string or jQuery object
         <script src="../js/prettify-1.0.min.js"></script>
         <script src="../js/base.js"></script>
 		<script>
+		if (top != self) { top.location.replace(self.location.href); }
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
