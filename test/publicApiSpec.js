@@ -697,4 +697,12 @@ describe('Public API method tests', function () {
             });
         });
     });
+
+    describe('parseInputDate() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.parseInputDate).toBeDefined();
+            });
+        });
+    });
 });
