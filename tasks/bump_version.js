@@ -1,7 +1,7 @@
 module.exports = function (grunt) {
     grunt.registerTask('bump_version', function (version) {
         if (!version || version.split('.').length !== 3) {
-            grunt.fail.fatal("malformed version. Use\n\n    grunt bump_version:1.2.3")
+            grunt.fail.fatal('malformed version. Use\n\n    grunt bump_version:1.2.3');
         }
 
         grunt.config('string-replace.bootstrap-datetimepicker-js', {
@@ -9,20 +9,20 @@ module.exports = function (grunt) {
             options: {
                 replacements: [
                     {
-                        pattern:     /\/\/! version : .*/,
-                        replacement: '//! version : ' + version
+                        pattern: /\/*! version : .*/,
+                        replacement: '! version : ' + version
                     }
                 ]
             }
         });
 
         grunt.config('string-replace.bootstrap-datetimepicker-css', {
-            files: {'src/less/bootstrap-datetimepicker.less': 'src/less/bootstrap-datetimepicker.less'},
+            files: { 'src/less/_bootstrap-datetimepicker.less': 'src/less/_bootstrap-datetimepicker.less' },
             options: {
                 replacements: [
                     {
-                        pattern:     /\/\/! version : .*/,
-                        replacement: '//! version : ' + version
+                        pattern:     / * version : .*/,
+                        replacement: ' version : ' + version
                     }
                 ]
             }

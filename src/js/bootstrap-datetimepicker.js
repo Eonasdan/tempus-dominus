@@ -1,4 +1,4 @@
-/*! version : 4.13.28
+/*! version : 4.14.30
  =========================================================
  bootstrap-datetimejs
  https://github.com/Eonasdan/bootstrap-datetimepicker
@@ -501,10 +501,10 @@
                 if (!targetMoment.isValid()) {
                     return false;
                 }
-                if (options.disabledDates && granularity !== 'M' && isInDisabledDates(targetMoment)) {
+                if (options.disabledDates && granularity === 'd' && isInDisabledDates(targetMoment)) {
                     return false;
                 }
-                if (options.enabledDates && granularity !== 'M' && !isInEnabledDates(targetMoment)) {
+                if (options.enabledDates && granularity === 'd' && !isInEnabledDates(targetMoment)) {
                     return false;
                 }
                 if (options.minDate && targetMoment.isBefore(options.minDate, granularity)) {
@@ -769,8 +769,7 @@
             },
 
             fillTime = function () {
-                var toggle, newDate, timeComponents;
-                timeComponents = widget.find('.timepicker span[data-time-component]');
+                var toggle, newDate, timeComponents = widget.find('.timepicker span[data-time-component]');
 
                 if (!use24Hours) {
                     toggle = widget.find('.timepicker [data-action=togglePeriod]');
@@ -1140,7 +1139,7 @@
                 if (input.prop('disabled') || (!options.ignoreReadonly && input.prop('readonly')) || widget) {
                     return picker;
                 }
-                if (input.val().trim().length !== 0) {
+                if (input.val() !== undefined && input.val().trim().length !== 0) {
                     setValue(parseInputDate(input.val().trim()));
                 } else if (options.useCurrent && unset && ((input.is('input') && input.val().trim().length === 0) || options.inline)) {
                     currentMoment = moment();
