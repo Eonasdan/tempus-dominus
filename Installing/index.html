@@ -137,6 +137,8 @@
         
             <li><a href="#manual">Manual</a></li>
         
+            <li><a href="#knockout">Knockout</a></li>
+        
     
     </ul>
 </div></div>
@@ -204,10 +206,11 @@
 <h2 id="rails"><a href="http://rubygems.org/gems/bootstrap3-datetimepicker-rails">Rails</a> <img alt="Gem Version" src="https://badge.fury.io/rb/bootstrap3-datetimepicker-rails.png" /></h2>
 <p>Add the following to your <code>Gemfile</code>:</p>
 <pre><code class="ruby">gem 'momentjs-rails', '&gt;= 2.8.1'
-gem 'bootstrap3-datetimepicker-rails', '~&gt; 4.0.0'
+gem 'bootstrap3-datetimepicker-rails', '~&gt; 4.7.14'
 </code></pre>
 
-<p>Read the rest of the install instructions @ 
+<p>Note: You may need to change the version number above to the version number on the badge above.
+Read the rest of the install instructions @ 
 <a href="https://github.com/TrevorS/bootstrap3-datetimepicker-rails">TrevorS/bootstrap3-datetimepicker-rails</a></p>
 <h2 id="angular-wrapper">Angular Wrapper</h2>
 <p>Follow the link <a href="https://gist.github.com/eugenekgn/f00c4d764430642dca4b">here</a></p>
@@ -227,6 +230,48 @@ Alternatively you could include the whole bundle of bootstrap plugins from <a hr
 &lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/bootstrap/js/collapse.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/bootstrap/dist/bootstrap.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/bootstrap-datetimepicker.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<h2 id="knockout">Knockout</h2>
+<pre><code>ko.bindingHandlers.dateTimePicker = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+        //initialize datepicker with some optional options
+        var options = allBindingsAccessor().dateTimePickerOptions || {};
+        $(element).datetimepicker(options);
+
+        //when a user changes the date, update the view model
+        ko.utils.registerEventHandler(element, &quot;dp.change&quot;, function (event) {
+            var value = valueAccessor();
+            if (ko.isObservable(value)) {
+                if (event.date != null &amp;&amp; !(event.date instanceof Date)) {
+                    value(event.date.toDate());
+                } else {
+                    value(event.date);
+                }
+            }
+        });
+
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+            var picker = $(element).data(&quot;DateTimePicker&quot;);
+            if (picker) {
+                picker.destroy();
+            }
+        });
+    },
+    update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+
+        var picker = $(element).data(&quot;DateTimePicker&quot;);
+        //when the view model is updated, update the widget
+        if (picker) {
+            var koDate = ko.utils.unwrapObservable(valueAccessor());
+
+            //in case return from server datetime i am get in this form for example /Date(93989393)/ then fomat this
+            koDate = (typeof (koDate) !== 'object') ? new Date(parseFloat(koDate.replace(/[^0-9]/g, ''))) : koDate;
+
+            picker.date(koDate);
+        }
+    }
+};
 </code></pre>
 
 <h3 id="css-styles">CSS styles</h3>

@@ -200,6 +200,8 @@
         
             <li><a href="#viewdate">viewDate</a></li>
         
+            <li><a href="#parseinputdate">parseInputDate</a></li>
+        
     
     </ul>
 </div></div>
@@ -520,7 +522,7 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <p>If <code>true</code>, invalid dates will not be reverted to a previous selection or changed.</p>
 <hr />
 <h3 id="allowinputtoggle">allowInputToggle</h3>
-<p><small>4.13.28</small></p>
+<p><small>4.7.14</small></p>
 <h4 id="allowinputtoggle_1">allowInputToggle()</h4>
 <p>Returns a <code>boolean</code> variable with the currently set <code>options.allowInputToggle</code> option.</p>
 <h4 id="allowinputtoggleboolean">allowInputToggle(boolean)</h4>
@@ -528,7 +530,7 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <p>If <code>true</code>, the picker will show on textbox focus and icon click when used in a button group</p>
 <hr />
 <h3 id="focusonshow">focusOnShow</h3>
-<p><small>4.13.28</small> PR #884</p>
+<p><small>4.14.40</small> PR #884</p>
 <h4 id="focusonshow_1">focusOnShow()</h4>
 <p>Returns a <code>boolean</code> variable with the currently set <code>options.focusOnShow</code> option.</p>
 <h4 id="focusonshowboolean">focusOnShow(boolean)</h4>
@@ -536,7 +538,7 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <p>If <code>false</code>, the textbox will not be given focus when the picker is shown</p>
 <hr />
 <h3 id="disabledtimeintervals">disabledTimeIntervals</h3>
-<p><small>4.13.28</small> Issue: #644</p>
+<p><small>4.14.40</small> Issue: #644</p>
 <h4 id="disabledtimeintervals_1">disabledTimeIntervals()</h4>
 <p>Returns an <code>array</code> variable with the currently set <code>options.disabledTimeIntervals</code> option.</p>
 <h4 id="disabledtimeintervalsarray">disabledTimeIntervals(array)</h4>
@@ -548,7 +550,7 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <p>Will disable times between 12-8am and 6-12pm today</p>
 <hr />
 <h3 id="endisabledhours">en/disabledHours</h3>
-<p><small>4.13.28</small> Issue: #851</p>
+<p><small>4.14.40</small> Issue: #851</p>
 <h4 id="disabledhours">disabledHours()</h4>
 <p>Returns an <code>array</code> variable with the currently set <code>options.en/disabledHours</code> option.</p>
 <h4 id="disabledhoursboolean">disabledHours(boolean)</h4>
@@ -560,12 +562,55 @@ enabledHours: [9, 10, 11, 12, 13, 14, 15, 16]
 </code></pre>
 <hr />
 <h3 id="viewdate">viewDate</h3>
-<p><small>4.13.28</small> Issue #872</p>
+<p><small>4.14.40</small> Issue #872</p>
 <h4 id="viewdate_1">viewDate()</h4>
 <p>Returns a <code>moment</code> variable with the currently set <code>options.viewDate</code> option.</p>
 <h4 id="viewdateviewdate">viewDate(viewDate)</h4>
 <p>Takes a <code>string, moment or Date</code> value.</p>
 <p>This will change the <code>viewDate</code> without changing or setting the selected date.</p>
+<h3 id="parseinputdate">parseInputDate</h3>
+<p><small>4.14.40</small> Issue #1095</p>
+<h4 id="parseinputdate_1">parseInputDate()</h4>
+<p>Returns a <code>function</code> with the currently set <code>options.parseInputDate</code></p>
+<h4 id="parseinputdatefunction">parseInputDate(function)</h4>
+<p>Takes a <code>function</code></p>
+<p>Allows custom input formatting For example: the user can enter 'yesterday' or '30 days ago'.</p>
+<p>Example:</p>
+<pre><code>var parseRelativeDate = function(relativeDate) {
+
+    switch (relativeDate) {
+        case 'today':
+            return moment()
+        case 'yesterday':
+            return moment().subtract(1, 'day');
+        default:
+            return moment()
+                .subtract(Number(relativeDate.replace(&quot;days ago&quot;, &quot;&quot;).trim()), 'days');
+    }
+}
+
+var parseInputDate = function(inputDate) {
+    var relativeDatePattern = /today|yesterday|[0-9]+\s+(days ago)/,
+        resultDate;
+
+    if (moment.isMoment(inputDate) || inputDate instanceof Date) {
+        resultDate = moment(inputDate);
+    } else {
+        var relativeDate = inputDate.match(relativeDatePattern),
+            parseDate = null;
+
+        if (relativeDate !== null) 
+          parseDate = this.parseRelativeDate(inputDate.match(relativeDatePattern)[0]);
+        else 
+          parseDate = moment();
+
+        resultDate = moment(parseDate, &quot;YYYY-MM-DD&quot;);
+    }
+
+    return resultDate;
+}
+</code></pre>
+
 </div>
 			</div>
         </div>
