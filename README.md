@@ -24,7 +24,9 @@ If you have issues, please check the following first:
 * Please indicate which version of the picker you are using (this can be found at the top of any included file)
 
 ## Where do you use this?
-I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `eonasdan at outlook dot com`. Do not submit issue/feature request to this email, they will be **ignored**.
+I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `me at eonasdan dot com`.
+
+##Priority support is available at an hourly rate. If you have an urgent request, bug or need installation help, please contact me at `me at eonasdan dot com` for a quote.
 
 ## [Installation instructions](http://eonasdan.github.io/bootstrap-datetimepicker/Installing/)
 
