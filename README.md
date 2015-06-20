@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/Eonasdan/bootstrap-datetimepicker.png?label=ready&title=Ready)](https://waffle.io/Eonasdan/bootstrap-datetimepicker)
 # Bootstrap 3 Date/Time Picker
 ![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)&nbsp;&nbsp;&nbsp;![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=development)
 
