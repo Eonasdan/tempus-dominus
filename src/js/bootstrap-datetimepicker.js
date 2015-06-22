@@ -57,7 +57,9 @@
     }
 
     var dateTimePicker = function (element, options) {
-        var picker = {},
+            if(!options.timeZone)
+                 options.timeZone = '';
+            var picker = {},
             date = moment().tz(options.timeZone).startOf('d'),
             viewDate = date.clone(),
             unset = true,
