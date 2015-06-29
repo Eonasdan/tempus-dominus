@@ -33,7 +33,7 @@
     ],
     "license": "MIT",
     "main": "src/js/bootstrap-datetimepicker.js",
-    "name": "bootstrap-datetimepicker",
+    "name": "eonasdan-bootstrap-datetimepicker",
     "repository": {
         "type": "git",
         "url": "https://github.com/eonasdan/bootstrap-datetimepicker.git"
