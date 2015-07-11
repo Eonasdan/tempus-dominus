@@ -1,5 +1,8 @@
 ## Functions
 
+## Note
+All functions are accessed via the `data` attribute e.g. `$('#datetimepicker6').data("DateTimePicker").FUNCTION()`
+
 ###destroy()
 
 Destroys the widget and removes all attached event listeners
