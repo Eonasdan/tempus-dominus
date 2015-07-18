@@ -65,8 +65,8 @@ PM> Install-Package Bootstrap.v3.Datetimepicker.CSS
 
 Add the following to your `Gemfile`:
 ```ruby
-gem 'momentjs-rails', '>= 2.8.1'
-gem 'bootstrap3-datetimepicker-rails', '~> 4.7.14'
+gem 'momentjs-rails', '>= 2.9.0'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
 ```
 Note: You may need to change the version number above to the version number on the badge above.
 Read the rest of the install instructions @ 

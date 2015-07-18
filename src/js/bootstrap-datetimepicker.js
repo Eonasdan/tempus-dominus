@@ -316,14 +316,20 @@
                 if (isEnabled('s') && !use24Hours) {
                     template.addClass('wider');
                 }
+
                 if (options.sideBySide && hasDate() && hasTime()) {
                     template.addClass('timepicker-sbs');
+                    if (options.toolbarPlacement === 'top') {
+                        template.append(toolbar);
+                    }
                     template.append(
                         $('<div>').addClass('row')
-                            .append(dateView.addClass('col-sm-6'))
-                            .append(timeView.addClass('col-sm-6'))
+                            .append(dateView.addClass('col-md-6'))
+                            .append(timeView.addClass('col-md-6'))
                     );
-                    template.append(toolbar);
+                    if (options.toolbarPlacement === 'bottom') {
+                        template.append(toolbar);
+                    }
                     return template;
                 }
 
@@ -880,6 +886,9 @@
                     type: 'dp.hide',
                     date: date.clone()
                 });
+
+                input.blur();
+
                 return picker;
             },
 
@@ -1284,7 +1293,7 @@
             detachDatePickerElementEvents = function () {
                 input.off({
                     'change': change,
-                    'blur': hide,
+                    'blur': blur,
                     'keydown': keydown,
                     'keyup': keyup,
                     'focus': options.allowInputToggle ? hide : ''
@@ -1630,7 +1639,7 @@
                 setValue(options.maxDate);
             }
             if (viewDate.isAfter(parsedDate)) {
-                viewDate = parsedDate.clone();
+                viewDate = parsedDate.clone().subtract(options.stepping, 'm');
             }
             update();
             return picker;
@@ -1666,7 +1675,7 @@
                 setValue(options.minDate);
             }
             if (viewDate.isBefore(parsedDate)) {
-                viewDate = parsedDate.clone();
+                viewDate = parsedDate.clone().add(options.stepping, 'm');
             }
             update();
             return picker;
@@ -2236,7 +2245,7 @@
         if (element.hasClass('input-group')) {
             // in case there is more then one 'input-group-addon' Issue #48
             if (element.find('.datepickerbutton').size() === 0) {
-                component = element.find('[class^="input-group-"]');
+                component = element.find('.input-group-addon');
             } else {
                 component = element.find('.datepickerbutton');
             }
@@ -2339,7 +2348,7 @@
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(7, 'd'));
                 } else {
-                    this.date(d.clone().add(1, 'm'));
+                    this.date(d.clone().add(this.stepping(), 'm'));
                 }
             },
             down: function (widget) {
@@ -2351,7 +2360,7 @@
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(7, 'd'));
                 } else {
-                    this.date(d.clone().subtract(1, 'm'));
+                    this.date(d.clone().subtract(this.stepping(), 'm'));
                 }
             },
             'control up': function (widget) {

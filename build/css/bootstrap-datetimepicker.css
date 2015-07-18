@@ -299,7 +299,8 @@
 .bootstrap-datetimepicker-widget table td.today:before {
   content: '';
   display: inline-block;
-  border: 0 0 7px 7px solid transparent;
+  border: solid transparent;
+  border-width: 0 0 7px 7px;
   border-bottom-color: #337ab7;
   border-top-color: rgba(0, 0, 0, 0.2);
   position: absolute;

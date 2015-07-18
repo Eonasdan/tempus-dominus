@@ -4,6 +4,14 @@
 
 Fired when the widget is hidden.
 
+Parameters:
+
+```
+e = {
+    date //the currently set date. Type: moment object (clone)
+}
+```
+
 Emitted from:
 
 * toggle()
@@ -14,7 +22,11 @@ Emitted from:
 
 ### dp.show
 
-Fired when the widget is shown
+Fired when the widget is shown.
+
+Parameters:
+
+No parameters are include, listen to `dp.change` instead
 
 Emitted from:
 
@@ -25,7 +37,16 @@ Emitted from:
 
 ### dp.change
 
-Fired when the date is changed
+Fired when the date is changed.
+
+Parameters:
+
+```
+e = {
+    date, //date the picker changed to. Type: moment object (clone)
+    oldDate //previous date. Type: moment object (clone) or false in the event of a null
+}
+```
 
 Emitted from:
 
@@ -40,7 +61,15 @@ Emitted from:
 
 ### dp.error
 
-Fired when a selected date fails to pass validation
+Fired when a selected date fails to pass validation.
+
+Parameters:
+
+```
+e = {
+    date //the invalid date. Type: moment object (clone)
+}
+```
 
 Emmited from:
 
@@ -53,6 +82,15 @@ Emmited from:
 
 ### dp.update
 
+<small>4.14.30</small>
+
 Fired (in most cases) when the `viewDate` changes. E.g. Next and Previous buttons, selecting a year.
 
-Includes the new `viewDate` and a change type, e.g `YYYY` and `M` for year and month.
+Parameters:
+
+```
+e = {
+   change, //Change type as a momentjs format token. Type: string e.g. yyyy on year change
+   viewDate //new viewDate. Type: moment object
+}
+```

@@ -349,7 +349,7 @@ Will cause the date picker to **not** revert or overwrite invalid dates.
                 this.clear();
             }
 
-Will cause the date picker to stay open after selecting a date if no time components are being used.
+Allows for custom events to fire on keyboard press.
 
 ----------------------
 
@@ -367,7 +367,7 @@ Will cause the date picker to stay open after a `blur` event.
 
 ### disabledTimeIntervals 
 
-<small>4.14.40</small>
+<small>4.14.30</small>
 
 	Default: false
 
@@ -378,7 +378,7 @@ Disables time selection between the given `moments`
 
 ### allowInputToggle 
 
-<small>4.14.40</small>
+<small>4.14.30</small>
 
 	Default: false
 
@@ -389,7 +389,7 @@ If `true`, the picker will show on textbox focus and icon click when used in a b
 
 ### focusOnShow 
 
-<small>4.14.40</small>
+<small>4.14.30</small>
 
 	Default: true
 
@@ -400,7 +400,7 @@ If `false`, the textbox will not be given focus when the picker is shown
 
 ### enabledHours 
 
-<small>4.14.40</small>
+<small>4.14.30</small>
 
 	Default: false
 
@@ -411,7 +411,7 @@ Will allow or disallow hour selections (much like `disabledTimeIntervals`) but w
 
 ### disabledHours 
 
-<small>4.14.40</small>
+<small>4.14.30</small>
 
 	Default: false
 
@@ -422,7 +422,7 @@ Will allow or disallow hour selections (much like `disabledTimeIntervals`) but w
 
 ### viewDate 
 
-<small>4.14.40</small>
+<small>4.14.30</small>
 
 	Default: false
 
