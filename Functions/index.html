@@ -188,7 +188,7 @@
         
             <li><a href="#dayviewheaderformat">dayViewHeaderFormat</a></li>
         
-            <li><a href="#keybinds">keybinds</a></li>
+            <li><a href="#keybinds">keyBinds</a></li>
         
             <li><a href="#clear">clear()</a></li>
         
@@ -220,6 +220,11 @@
 				<div class="col-md-9" role="main">
 
 <h2 id="functions">Functions</h2>
+<div class="alert alert-info">
+    <strong>Note</strong>
+    All functions are accessed via the <code>data</code> attribute e.g. <code>$('#datetimepicker').data("DateTimePicker").FUNCTION()</code>
+</div>
+
 <h3 id="destroy">destroy()</h3>
 <p>Destroys the widget and removes all attached event listeners</p>
 <hr />
@@ -491,10 +496,10 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <p>Takes a <code>string</code> value.</p>
 <p>Used to customize the header of the day view.</p>
 <hr />
-<h3 id="keybinds">keybinds</h3>
-<h4 id="keybinds_1">keybinds()</h4>
-<p>Returns a <code>string</code> variable with the currently set <code>options.keybinds</code> option.</p>
-<h4 id="keybindsobject">keybinds(object)</h4>
+<h3 id="keybinds">keyBinds</h3>
+<h4 id="keybinds_1">keyBinds()</h4>
+<p>Returns a <code>string</code> variable with the currently set <code>options.keyBinds</code> option.</p>
+<h4 id="keybindsobject">keyBinds(object)</h4>
 <p>Takes an <code>object</code> value.</p>
 <p>Allows for several keyBinding functions to be specified for ease of access or accessibility. See the options page for defaults.</p>
 <hr />
@@ -542,7 +547,7 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <p>If <code>true</code>, the picker will show on textbox focus and icon click when used in a button group</p>
 <hr />
 <h3 id="focusonshow">focusOnShow</h3>
-<p><small>4.14.40</small> PR #884</p>
+<p><small>4.14.30</small> PR #884</p>
 <h4 id="focusonshow_1">focusOnShow()</h4>
 <p>Returns a <code>boolean</code> variable with the currently set <code>options.focusOnShow</code> option.</p>
 <h4 id="focusonshowboolean">focusOnShow(boolean)</h4>
@@ -550,7 +555,7 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <p>If <code>false</code>, the textbox will not be given focus when the picker is shown</p>
 <hr />
 <h3 id="disabledtimeintervals">disabledTimeIntervals</h3>
-<p><small>4.14.40</small> Issue: #644</p>
+<p><small>4.14.30</small> Issue: #644</p>
 <h4 id="disabledtimeintervals_1">disabledTimeIntervals()</h4>
 <p>Returns an <code>array</code> variable with the currently set <code>options.disabledTimeIntervals</code> option.</p>
 <h4 id="disabledtimeintervalsarray">disabledTimeIntervals(array)</h4>
@@ -562,7 +567,7 @@ The parameter can also be a <code>boolean:false</code> in which case the format 
 <p>Will disable times between 12-8am and 6-12pm today</p>
 <hr />
 <h3 id="endisabledhours">en/disabledHours</h3>
-<p><small>4.14.40</small> Issue: #851</p>
+<p><small>4.14.30</small> Issue: #851</p>
 <h4 id="disabledhours">disabledHours()</h4>
 <p>Returns an <code>array</code> variable with the currently set <code>options.en/disabledHours</code> option.</p>
 <h4 id="disabledhoursboolean">disabledHours(boolean)</h4>
@@ -574,14 +579,14 @@ enabledHours: [9, 10, 11, 12, 13, 14, 15, 16]
 </code></pre>
 <hr />
 <h3 id="viewdate">viewDate</h3>
-<p><small>4.14.40</small> Issue #872</p>
+<p><small>4.14.30</small> Issue #872</p>
 <h4 id="viewdate_1">viewDate()</h4>
 <p>Returns a <code>moment</code> variable with the currently set <code>options.viewDate</code> option.</p>
 <h4 id="viewdateviewdate">viewDate(viewDate)</h4>
 <p>Takes a <code>string, moment or Date</code> value.</p>
 <p>This will change the <code>viewDate</code> without changing or setting the selected date.</p>
 <h3 id="parseinputdate">parseInputDate</h3>
-<p><small>4.14.40</small> Issue #1095</p>
+<p><small>4.14.30</small> Issue #1095</p>
 <h4 id="parseinputdate_1">parseInputDate()</h4>
 <p>Returns a <code>function</code> with the currently set <code>options.parseInputDate</code></p>
 <h4 id="parseinputdatefunction">parseInputDate(function)</h4>
