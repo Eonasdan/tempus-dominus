@@ -443,6 +443,9 @@
                     return;
                 }
                 element.trigger(e);
+                if(e.type === 'dp.change') {
+                    input.trigger('change');
+                }
             },
 
             viewUpdate = function (e) {
@@ -1258,8 +1261,6 @@
                 var val = $(e.target).val().trim(),
                     parsedDate = val ? parseInputDate(val) : null;
                 setValue(parsedDate);
-                e.stopImmediatePropagation();
-                return false;
             },
 
             attachDatePickerElementEvents = function () {
