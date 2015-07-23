@@ -4,7 +4,7 @@
 
 	Default: false
 
-See [momentjs' docs](http://momentjs.com/docs/#/displaying/format/) for valid formats. Format also dictates what components are show, e.g. `MM/dd/YYYY` will not diplay the time picker.
+See [momentjs' docs](http://momentjs.com/docs/#/displaying/format/) for valid formats. Format also dictates what components are shown, e.g. `MM/dd/YYYY` will not display the time picker.
 
 ----------------------
 
