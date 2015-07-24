@@ -306,7 +306,7 @@ THE SOFTWARE.
                 }
             }
             if (placePosition === 'top') {
-                offset.bottom = $window.height() - offset.top + picker.element.outerHeight() + 3;
+                offset.top = offset.top -  picker.element.outerHeight() - picker.widget.height() - 13;
                 picker.widget.addClass('top').removeClass('bottom');
             } else {
                 offset.top += 1;
@@ -340,8 +340,8 @@ THE SOFTWARE.
             if (placePosition === 'top') {
                 picker.widget.css({
                     position: position,
-                    bottom: offset.bottom,
-                    top: 'auto',
+                    bottom: 'auto',
+                    top: offset.top,
                     left: offset.left,
                     right: offset.right
                 });
