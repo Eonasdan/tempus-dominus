@@ -4,7 +4,7 @@
 
 	Default: false
 
-See [momentjs' docs](http://momentjs.com/docs/#/displaying/format/) for valid formats. Format also dictates what components are show, e.g. `MM/dd/YYYY` will not diplay the time picker.
+See [momentjs' docs](http://momentjs.com/docs/#/displaying/format/) for valid formats. Format also dictates what components are shown, e.g. `MM/dd/YYYY` will not display the time picker.
 
 ----------------------
 
@@ -427,3 +427,31 @@ Will allow or disallow hour selections (much like `disabledTimeIntervals`) but w
 	Default: false
 
 This will change the `viewDate` without changing or setting the selected date.
+
+----------------------
+
+
+### tooltips 
+
+<small>4.15.35</small>
+
+```
+tooltips: {
+    today: 'Go to today',
+    clear: 'Clear selection',
+    close: 'Close the picker',
+    selectMonth: 'Select Month',
+    prevMonth: 'Previous Month',
+    nextMonth: 'Next Month',
+    selectYear: 'Select Year',
+    prevYear: 'Previous Year',
+    nextYear: 'Next Year',
+    selectDecade: 'Select Decade',
+    prevDecade: 'Previous Decade',
+    nextDecade: 'Next Decade',
+    prevCentury: 'Previous Century',
+    nextCentury: 'Next Century'
+}
+```
+
+This will change the `tooltips` over each icon to a custom string

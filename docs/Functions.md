@@ -651,3 +651,20 @@ var parseInputDate = function(inputDate) {
     return resultDate;
 }
 ```
+
+----------------------
+
+### tooltips
+<small>4.14.30</small> 
+
+#### tooltips()
+
+Returns an `Ojbect` of `options.tooltips` 
+
+#### tooltips(tooltips)
+
+Takes an `Ojbect` of `strings`.
+
+##### Throws
+
+* `TypeError` - if tooltips parameter is not an `Ojbect`

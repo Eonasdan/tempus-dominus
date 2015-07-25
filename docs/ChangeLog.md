@@ -1,6 +1,10 @@
 # Version 4
 
-## 4.14.35
+## 4.15.35
+
+### New Features
+
+`tooltips` allows custom, localized text to be included for icon tooltips
 
 ### Bug Squashing
 
