@@ -1,6 +1,6 @@
 {
   "name": "eonasdan-bootstrap-datetimepicker",
-  "version": "4.14.30",
+  "version": "4.15.35",
   "main": [
     "build/css/bootstrap-datetimepicker.min.css",
     "build/js/bootstrap-datetimepicker.min.js"
