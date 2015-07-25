@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <link href="../css/prettify-1.0.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
-        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -25,7 +25,7 @@
 		<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 			<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/src/js/bootstrap-datetimepicker.js"></script>
+			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
     </head>
 
     <body>
@@ -204,6 +204,8 @@
         
             <li><a href="#viewdate">viewDate</a></li>
         
+            <li><a href="#tooltips">tooltips</a></li>
+        
     
     </ul>
 </div></div>
@@ -213,7 +215,7 @@
 <h3 id="format">format</h3>
 <pre><code>Default: false
 </code></pre>
-<p>See <a href="http://momentjs.com/docs/#/displaying/format/">momentjs' docs</a> for valid formats. Format also dictates what components are show, e.g. <code>MM/dd/YYYY</code> will not diplay the time picker.</p>
+<p>See <a href="http://momentjs.com/docs/#/displaying/format/">momentjs' docs</a> for valid formats. Format also dictates what components are shown, e.g. <code>MM/dd/YYYY</code> will not display the time picker.</p>
 <hr />
 <h3 id="dayviewheaderformat">dayViewHeaderFormat</h3>
 <pre><code>Default: 'MMMM YYYY'
@@ -490,6 +492,28 @@ Accepts: string or jQuery object
 <pre><code>Default: false
 </code></pre>
 <p>This will change the <code>viewDate</code> without changing or setting the selected date.</p>
+<hr />
+<h3 id="tooltips">tooltips</h3>
+<p><small>4.15.35</small></p>
+<pre><code>tooltips: {
+    today: 'Go to today',
+    clear: 'Clear selection',
+    close: 'Close the picker',
+    selectMonth: 'Select Month',
+    prevMonth: 'Previous Month',
+    nextMonth: 'Next Month',
+    selectYear: 'Select Year',
+    prevYear: 'Previous Year',
+    nextYear: 'Next Year',
+    selectDecade: 'Select Decade',
+    prevDecade: 'Previous Decade',
+    nextDecade: 'Next Decade',
+    prevCentury: 'Previous Century',
+    nextCentury: 'Next Century'
+}
+</code></pre>
+
+<p>This will change the <code>tooltips</code> over each icon to a custom string</p>
 </div>
 			</div>
         </div>
