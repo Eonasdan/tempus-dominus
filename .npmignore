@@ -5,7 +5,6 @@
 /node_modules
 /Makefile
 /test
-/build
 *.log
 *.swp
 *~

@@ -1,5 +1,10 @@
 ## Functions
 
+<div class="alert alert-info">
+    <strong>Note</strong>
+    All functions are accessed via the <code>data</code> attribute e.g. <code>$('#datetimepicker').data("DateTimePicker").FUNCTION()</code>
+</div>
+
 ###destroy()
 
 Destroys the widget and removes all attached event listeners
@@ -422,13 +427,13 @@ Used to customize the header of the day view.
 
 ----------------------
 
-### keybinds
+### keyBinds
 
-#### keybinds()
+#### keyBinds()
 
-Returns a `string` variable with the currently set `options.keybinds` option.
+Returns a `string` variable with the currently set `options.keyBinds` option.
 
-#### keybinds(object)
+#### keyBinds(object)
 
 Takes an `object` value.
 
@@ -524,7 +529,7 @@ If `true`, the picker will show on textbox focus and icon click when used in a b
 
 ### focusOnShow
 
-<small>4.14.40</small> PR #884
+<small>4.14.30</small> PR #884
 
 #### focusOnShow()
 
@@ -541,7 +546,7 @@ If `false`, the textbox will not be given focus when the picker is shown
 
 ### disabledTimeIntervals
 
-<small>4.14.40</small> Issue: #644
+<small>4.14.30</small> Issue: #644
 
 #### disabledTimeIntervals()
 
@@ -563,7 +568,7 @@ Will disable times between 12-8am and 6-12pm today
 
 ### en/disabledHours
 
-<small>4.14.40</small> Issue: #851
+<small>4.14.30</small> Issue: #851
 
 #### disabledHours()
 
@@ -584,7 +589,7 @@ Like `en/disabledDates`, these options are mutually exclusive and will reset one
 
 ### viewDate
 
-<small>4.14.40</small> Issue #872
+<small>4.14.30</small> Issue #872
 
 #### viewDate()
 
@@ -597,7 +602,7 @@ Takes a `string, moment or Date` value.
 This will change the `viewDate` without changing or setting the selected date.
 
 ### parseInputDate
-<small>4.14.40</small> Issue #1095
+<small>4.14.30</small> Issue #1095
 
 #### parseInputDate()
 
@@ -646,3 +651,20 @@ var parseInputDate = function(inputDate) {
     return resultDate;
 }
 ```
+
+----------------------
+
+### tooltips
+<small>4.14.30</small> 
+
+#### tooltips()
+
+Returns an `Ojbect` of `options.tooltips` 
+
+#### tooltips(tooltips)
+
+Takes an `Ojbect` of `strings`.
+
+##### Throws
+
+* `TypeError` - if tooltips parameter is not an `Ojbect`

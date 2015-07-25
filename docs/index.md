@@ -2,7 +2,7 @@
 
 <div class="alert alert-info">
     <strong>Note</strong>
-    All functions are accessed via the <code>data</code> attribute e.g. <code>$('#datetimepicker6').data("DateTimePicker").FUNCTION()</code>
+    All functions are accessed via the <code>data</code> attribute e.g. <code>$('#datetimepicker').data("DateTimePicker").FUNCTION()</code>
 </div>
 
 ### Minimum Setup
@@ -547,13 +547,11 @@
 
 ### Inline
 
-<div class="container">
-    <div class="col-sm-6">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-8">
-                    <div id="datetimepicker12"></div>
-                </div>
+<div style="overflow:hidden;">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-8">
+                <div id="datetimepicker12"></div>
             </div>
         </div>
     </div>
@@ -570,13 +568,11 @@
 #### Code
 
 ```
-<div class="container">
-    <div class="col-sm-6">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-8">
-                    <div id="datetimepicker12"></div>
-                </div>
+<div style="overflow:hidden;">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-8">
+                <div id="datetimepicker12"></div>
             </div>
         </div>
     </div>

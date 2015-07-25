@@ -34,7 +34,7 @@ module.exports = function (grunt) {
                 replacements: [
                     {
                         pattern:     /"version": .*/,
-                        replacement: '"version": "' + version + '",'
+                        replacement: '"version": "' + version + '"'
                     }
                 ]
             }
