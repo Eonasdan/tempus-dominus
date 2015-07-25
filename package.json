@@ -6,7 +6,7 @@
         "url": "https://github.com/eonasdan/bootstrap-datetimepicker/issues"
     },
     "dependencies": {
-        "moment": "~2.8.2",
+        "moment": "~2.8",
         "bootstrap": "^3.0",
         "jquery": ">=1.8.3 <2.2.0"
     },
@@ -33,7 +33,7 @@
     ],
     "license": "MIT",
     "main": "src/js/bootstrap-datetimepicker.js",
-    "name": "bootstrap-datetimepicker",
+    "name": "eonasdan-bootstrap-datetimepicker",
     "repository": {
         "type": "git",
         "url": "https://github.com/eonasdan/bootstrap-datetimepicker.git"

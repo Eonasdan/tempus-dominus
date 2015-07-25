@@ -1,5 +1,5 @@
 # Bootstrap 3 Date/Time Picker
-![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)&nbsp;&nbsp;&nbsp;![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=development)
+![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)&nbsp;&nbsp;&nbsp;![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=development)&nbsp;&nbsp;&nbsp;[![Stories in Ready](https://badge.waffle.io/Eonasdan/bootstrap-datetimepicker.png?label=ready&title=Ready)](https://waffle.io/Eonasdan/bootstrap-datetimepicker)
 
 ![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
 
@@ -10,6 +10,8 @@
 Is the current stable release. The latest and greatest changes are available from the [development branch](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/development)
 
 # Version 5
+
+IMPORANT! The Nuget packages will be depreciated in this release. Moving forward, Asp.Net/Nuget will **NOT** be delivering content packages like this one and you will need to use bower. See [this issue for more]( https://github.com/Eonasdan/bootstrap-datetimepicker/issues/1128)
 
 v5 is [in planning](https://github.com/Eonasdan/bootstrap-datetimepicker/issues/841). We welcome your suggestions.
 
