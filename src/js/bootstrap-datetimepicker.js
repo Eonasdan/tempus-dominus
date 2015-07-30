@@ -209,12 +209,12 @@
 
                 if (isEnabled('h')) {
                     topRow.append($('<td>')
-                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Increment Hour'}).addClass('btn').attr('data-action', 'incrementHours')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title': options.tooltips.incrementHour}).addClass('btn').attr('data-action', 'incrementHours')
                             .append($('<span>').addClass(options.icons.up))));
                     middleRow.append($('<td>')
-                        .append($('<span>').addClass('timepicker-hour').attr({'data-time-component':'hours', 'title':'Pick Hour'}).attr('data-action', 'showHours')));
+                        .append($('<span>').addClass('timepicker-hour').attr({'data-time-component':'hours', 'title': options.tooltips.pickHour}).attr('data-action', 'showHours')));
                     bottomRow.append($('<td>')
-                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Decrement Hour'}).addClass('btn').attr('data-action', 'decrementHours')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title': options.tooltips.decrementHour}).addClass('btn').attr('data-action', 'decrementHours')
                             .append($('<span>').addClass(options.icons.down))));
                 }
                 if (isEnabled('m')) {
@@ -224,12 +224,12 @@
                         bottomRow.append($('<td>').addClass('separator'));
                     }
                     topRow.append($('<td>')
-                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Increment Minute'}).addClass('btn').attr('data-action', 'incrementMinutes')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title': options.tooltips.incrementMinute}).addClass('btn').attr('data-action', 'incrementMinutes')
                             .append($('<span>').addClass(options.icons.up))));
                     middleRow.append($('<td>')
-                        .append($('<span>').addClass('timepicker-minute').attr({'data-time-component': 'minutes', 'title':'Pick Minute'}).attr('data-action', 'showMinutes')));
+                        .append($('<span>').addClass('timepicker-minute').attr({'data-time-component': 'minutes', 'title': options.tooltips.pickMinute}).attr('data-action', 'showMinutes')));
                     bottomRow.append($('<td>')
-                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Decrement Minute'}).addClass('btn').attr('data-action', 'decrementMinutes')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title': options.tooltips.decrementMinute}).addClass('btn').attr('data-action', 'decrementMinutes')
                             .append($('<span>').addClass(options.icons.down))));
                 }
                 if (isEnabled('s')) {
@@ -239,19 +239,19 @@
                         bottomRow.append($('<td>').addClass('separator'));
                     }
                     topRow.append($('<td>')
-                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Increment Second'}).addClass('btn').attr('data-action', 'incrementSeconds')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title': options.tooltips.incrementSecond}).addClass('btn').attr('data-action', 'incrementSeconds')
                             .append($('<span>').addClass(options.icons.up))));
                     middleRow.append($('<td>')
-                        .append($('<span>').addClass('timepicker-second').attr({'data-time-component': 'seconds', 'title':'Pick Second'}).attr('data-action', 'showSeconds')));
+                        .append($('<span>').addClass('timepicker-second').attr({'data-time-component': 'seconds', 'title': options.tooltips.pickSecond}).attr('data-action', 'showSeconds')));
                     bottomRow.append($('<td>')
-                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Decrement Second'}).addClass('btn').attr('data-action', 'decrementSeconds')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title': options.tooltips.decrementSecond}).addClass('btn').attr('data-action', 'decrementSeconds')
                             .append($('<span>').addClass(options.icons.down))));
                 }
 
                 if (!use24Hours) {
                     topRow.append($('<td>').addClass('separator'));
                     middleRow.append($('<td>')
-                        .append($('<button>').addClass('btn btn-primary').attr({'data-action': 'togglePeriod', tabindex: '-1', 'title':'Toggle Period'})));
+                        .append($('<button>').addClass('btn btn-primary').attr({'data-action': 'togglePeriod', tabindex: '-1', 'title': options.tooltips.togglePeriod})));
                     bottomRow.append($('<td>').addClass('separator'));
                 }
 
@@ -2349,7 +2349,17 @@
             prevDecade: 'Previous Decade',
             nextDecade: 'Next Decade',
             prevCentury: 'Previous Century',
-            nextCentury: 'Next Century'
+            nextCentury: 'Next Century',
+            pickHour: 'Pick Hour',
+            incrementHour: 'Increment Hour',
+            decrementHour: 'Decrement Hour',
+            pickMinute: 'Pick Minute',
+            incrementMinute: 'Increment Minute',
+            decrementMinute: 'Decrement Minute',
+            pickSecond: 'Pick Second',
+            incrementSecond: 'Increment Second',
+            decrementSecond: 'Decrement Second',
+            togglePeriod: 'Toggle Period'
         },
         useStrict: false,
         sideBySide: false,
