@@ -1412,6 +1412,20 @@
             input.prop('disabled', false);
             return picker;
         };
+		
+		 picker.addReadonly = function () {
+            if (input.prop('readonly')) return;
+
+            input.prop('readonly', true);
+            detachDatePickerElementEvents();
+        };
+
+        picker.removeReadonly = function () {
+            if (!input.prop('readonly')) return;
+
+            input.prop('readonly', false);
+            attachDatePickerElementEvents();
+        };
 
         picker.ignoreReadonly = function (ignoreReadonly) {
             if (arguments.length === 0) {
