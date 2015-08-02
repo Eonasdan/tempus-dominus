@@ -128,7 +128,8 @@ Disables selection of dates **NOT** in the array, e.g. holidays
                 previous: 'glyphicon glyphicon-chevron-left'
                 next: 'glyphicon glyphicon-chevron-right'
                 today: 'glyphicon glyphicon-screenshot'
-                clear: 'glyphicon glyphicon-trash'
+                clear: 'glyphicon glyphicon-trash',
+                close: 'glyphicon glyphicon-remove'
             }
     Accepts: object with all or some of the parameters above
 
