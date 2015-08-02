@@ -593,9 +593,9 @@
                     endYear = viewDate.clone().add(6, 'y'),
                     html = '';
 
-                yearsViewHeader.eq(0).find('span').attr('title', options.tooltips.nextDecade);
+                yearsViewHeader.eq(0).find('span').attr('title', options.tooltips.prevDecade);
                 yearsViewHeader.eq(1).attr('title', options.tooltips.selectDecade);
-                yearsViewHeader.eq(2).find('span').attr('title', options.tooltips.prevDecade);
+                yearsViewHeader.eq(2).find('span').attr('title', options.tooltips.nextDecade);
 
                 yearsView.find('.disabled').removeClass('disabled');
 
