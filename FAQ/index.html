@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-        <title>Extras - Bootstrap 3 Datepicker</title>
+        <title>FAQs - Bootstrap 3 Datepicker</title>
 
         <link rel="stylesheet" type="text/css" media="screen" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -89,14 +89,14 @@
             
             
             
-                <li class="active">
-                    <a href=".">Extras</a>
+                <li >
+                    <a href="../Extras">Extras</a>
                 </li>
             
             
             
-                <li >
-                    <a href="../FAQ">FAQs</a>
+                <li class="active">
+                    <a href=".">FAQs</a>
                 </li>
             
             
@@ -138,100 +138,30 @@
 				<div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#extras">Extras</a></li>
+        <li class="main active"><a href="#faqs">FAQs</a></li>
         
-            <li><a href="#rails-3">Rails 3</a></li>
+    
+        <li class="main "><a href="#how-do-i-disable-the-date-or-time-element">How do I disable the date or time element</a></li>
         
-            <li><a href="#ie-7">IE 7</a></li>
+    
+        <li class="main "><a href="#how-do-i-change-the-languagelocale">How do I change the language/locale</a></li>
+        
+    
+        <li class="main "><a href="#how-do-i-change-the-styles-the-picker-closes">How do I change the styles? The picker closes.</a></li>
         
     
     </ul>
 </div></div>
 				<div class="col-md-9" role="main">
 
-<h1 id="extras">Extras</h1>
-<p>Guides for making the picker work better with rails, IE, etc</p>
-<h2 id="rails-3">Rails 3</h2>
-<p>by <a href="https://github.com/dhulihan">dhulihan</a></p>
-<p>You can easily override the default rails form helpers (<code>date_select</code> and <code>datetime_select</code>) with bootstrap-datetimepicker for a much nicer experience. </p>
-<pre><code class="rb"># Add to config/initializers/form.rb or the end of app/helpers/application_helper.rb
-module ActionView
-  module Helpers
-    class FormBuilder 
-      def date_select(method, options = {}, html_options = {})
-        existing_date = @object.send(method) 
-        formatted_date = existing_date.to_date.strftime(&quot;%F&quot;) if existing_date.present?
-        @template.content_tag(:div, :class =&gt; &quot;input-group&quot;) do    
-          text_field(method, :value =&gt; formatted_date, :class =&gt; &quot;form-control datepicker&quot;, :&quot;data-date-format&quot; =&gt; &quot;YYYY-MM-DD&quot;) +
-          @template.content_tag(:span, @template.content_tag(:span, &quot;&quot;, :class =&gt; &quot;glyphicon glyphicon-calendar&quot;) ,:class =&gt; &quot;input-group-addon&quot;)
-        end
-      end
-
-      def datetime_select(method, options = {}, html_options = {})
-        existing_time = @object.send(method) 
-        formatted_time = existing_time.to_time.strftime(&quot;%F %I:%M %p&quot;) if existing_time.present?
-        @template.content_tag(:div, :class =&gt; &quot;input-group&quot;) do    
-          text_field(method, :value =&gt; formatted_time, :class =&gt; &quot;form-control datetimepicker&quot;, :&quot;data-date-format&quot; =&gt; &quot;YYYY-MM-DD hh:mm A&quot;) +
-          @template.content_tag(:span, @template.content_tag(:span, &quot;&quot;, :class =&gt; &quot;glyphicon glyphicon-calendar&quot;) ,:class =&gt; &quot;input-group-addon&quot;)
-        end
-      end
-    end
-  end
-end
-</code></pre>
-
-<p>The time format used here is ActiveRecord-friendly, which means it will be parsed correctly when passed in through <code>params</code> to your record.</p>
-<p>That's all there is to it! Now all of your forms that use <code>datetime_select</code> or <code>date_select</code> will be automatically updated:</p>
-<pre><code class="erb">&lt;% form_for @post do |f| %&gt;
-    &lt;div class=&quot;form-group&quot;&gt;
-        &lt;label&gt;Published At&lt;/label&gt;
-        &lt;%= f.datetime_select :published_at %&gt;
-    &lt;/div&gt;
-&lt;% end %&gt;
-</code></pre>
-
-<h2 id="ie-7">IE 7</h2>
-<p>by <a href="https://github.com/EquilibriumCST">EquilibriumCST</a></p>
-<p>I succeed to run this widget under IE7.
-Here is what I did.</p>
-<ol>
-<li>
-<p>gliphicons are not working under IE7 so add <a href="https://github.com/coliff/bootstrap-ie7">this css file</a>. And this enables the icons.</p>
-</li>
-<li>
-<p>Z-index problem with IE 7. I added position: relative and <code>z-index: 10</code> to the parent container. Otherwise popup is shown under the next elements.</p>
-</li>
-<li>
-<p>JS events were not working well. </p>
-</li>
-</ol>
-<p>If you open the datetimepicker widget and click on some button or date inside it, widget is automatically closed.
-So I added <code>debug: true</code> as an option when initializing the widget. Why I did this? I saw on line 1121 from bootsrap-datetimepicker.js the code <code>'blur': options.debug ? '' : hide</code>. 
-And now widget window is not closed on every click inside it, but now you can't close it anyway :) 
-And closing should be done manually. I've added this document click handler. If you click something outside the widget, now closing works.</p>
-<pre><code>$(document).click(function(e){
-            var target = $(e.target);
-            if(target.parents('.bootstrap-datetimepicker-widget').length &lt; 1 &amp;&amp; !target.hasClass('datetimepickerInput') &amp;&amp; !target.hasClass('datepickerIcon') &amp;&amp; !target.hasClass('clockpickerIcon')){
-                if($('.bootstrap-datetimepicker-widget').length &gt; 0){
-                    $('#startDate').data('DateTimePicker').hide();
-                    $('#startTime').data('DateTimePicker').hide();
-                    $('.datetimepickerInput').blur();
-                }
-            }
-        });
-</code></pre>
-
-<p>But if you have more than one widget on the page like I did, clicking on one widget does'n close the other. Added below lines and now all works fine.</p>
-<pre><code>$('#widget1').on(&quot;dp.show&quot;,function (e) {
-    $('#widget2).data('DateTimePicker').hide();
-});
-
-$('#widget2').on(&quot;dp.show&quot;,function (e) {
-    $('#widget1).data('DateTimePicker').hide();
-});
-</code></pre>
-
-<p>I hope this will help to the others who are fighting with the old IE versions :)</p>
+<h1 id="faqs">FAQs</h1>
+<h1 id="how-do-i-disable-the-date-or-time-element">How do I disable the date or time element</h1>
+<p><small>How do I format ...; How do I add seconds; etc.</small></p>
+<p>The picker uses the <code>format</code> option to decide what components to show. Set <code>format</code> to <code>LT</code>, <code>LTS</code> or another valid <a href="http://momentjs.com/docs/#/displaying/format/">MomentJs format string</a> to display certain components</p>
+<h1 id="how-do-i-change-the-languagelocale">How do I change the language/locale</h1>
+<p>The picker uses MomentJs to determine the language string. You can use <code>moment-with-locales</code> or you can include whatever local file you need. Set the picker's <code>locale</code> option to <code>de</code> or whatever the locale string is.</p>
+<h1 id="how-do-i-change-the-styles-the-picker-closes">How do I change the styles? The picker closes.</h1>
+<p>Set <code>debug:true</code> which will force the picker to stay open, even <code>onBlur</code>. You can hide the picker manually by calling <code>hide()</code></p>
 </div>
 			</div>
         </div>
