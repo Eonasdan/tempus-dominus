@@ -366,6 +366,17 @@ Will cause the date picker to stay open after a `blur` event.
 ----------------------
 
 
+### ignoreReadonly
+
+<small>4.7.14</small>
+
+	Default: false
+
+Allow date picker show event to fire even when the associated input element has the `readonly="readonly"`property.
+
+----------------------
+
+
 ### disabledTimeIntervals 
 
 <small>4.14.30</small>
