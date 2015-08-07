@@ -116,6 +116,7 @@ module.exports = function (grunt) {
                     vendor: [
                         'node_modules/jquery/dist/jquery.min.js',
                         'node_modules/moment/min/moment-with-locales.min.js',
+                        'node_modules/moment-timezone/moment-timezone.js',
                         'node_modules/bootstrap/dist/js/bootstrap.min.js'
                     ],
                     display: 'none',

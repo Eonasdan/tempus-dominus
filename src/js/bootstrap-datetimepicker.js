@@ -37,9 +37,9 @@
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // AMD is used - Register as an anonymous module.
-        define(['jquery', 'moment'], factory);
+        define(['jquery', 'moment', 'moment-timezone'], factory);
     } else if (typeof exports === 'object') {
-        factory(require('jquery'), require('moment'));
+        factory(require('jquery'), require('moment'), require('moment-timezone'));
     } else {
         // Neither AMD nor CommonJS used. Use global variables.
         if (typeof jQuery === 'undefined') {
@@ -58,7 +58,7 @@
 
     var dateTimePicker = function (element, options) {
         var picker = {},
-            date = moment().startOf('d'),
+            date = moment().tz(options.timeZone).startOf('d'),
             viewDate = date.clone(),
             unset = true,
             input,
@@ -699,7 +699,7 @@
                     if (!isValid(currentDate, 'd')) {
                         clsName += ' disabled';
                     }
-                    if (currentDate.isSame(moment(), 'd')) {
+                    if (currentDate.isSame(moment().tz(options.timeZone), 'd')) {
                         clsName += ' today';
                     }
                     if (currentDate.day() === 0 || currentDate.day() === 6) {
@@ -1108,8 +1108,8 @@
                 clear: clear,
 
                 today: function () {
-                    if (isValid(moment(), 'd')) {
-                        setValue(moment());
+                    if (isValid(moment().tz(options.timeZone), 'd')) {
+                        setValue(moment().tz(options.timeZone));
                     }
                 },
 
@@ -1151,7 +1151,7 @@
                 if (input.val() !== undefined && input.val().trim().length !== 0) {
                     setValue(parseInputDate(input.val().trim()));
                 } else if (options.useCurrent && unset && ((input.is('input') && input.val().trim().length === 0) || options.inline)) {
-                    currentMoment = moment();
+                    currentMoment = moment().tz(options.timeZone);
                     if (typeof options.useCurrent === 'string') {
                         currentMoment = useCurrentGranularity[options.useCurrent](currentMoment);
                     }
@@ -1200,7 +1200,7 @@
                     if (moment.isMoment(inputDate) || inputDate instanceof Date) {
                         inputDate = moment(inputDate);
                     } else {
-                        inputDate = moment(inputDate, parseFormats, options.useStrict);
+                        inputDate = moment(inputDate, parseFormats, options.useStrict).tz(options.timeZone);
                     }
                 } else {
                     inputDate = options.parseInputDate(inputDate);
@@ -1486,6 +1486,16 @@
             return picker;
         };
 
+        picker.timeZone = function (newZone) {
+            if (arguments.length === 0) {
+                return options.timeZone;
+            }
+
+            options.timeZone = newZone;
+
+            return picker;
+        };
+
         picker.dayViewHeaderFormat = function (newFormat) {
             if (arguments.length === 0) {
                 return options.dayViewHeaderFormat;
@@ -1622,7 +1632,7 @@
 
             if (typeof maxDate === 'string') {
                 if (maxDate === 'now' || maxDate === 'moment') {
-                    maxDate = moment();
+                    maxDate = moment().tz(options.timeZone);
                 }
             }
 
@@ -1658,7 +1668,7 @@
 
             if (typeof minDate === 'string') {
                 if (minDate === 'now' || minDate === 'moment') {
-                    minDate = moment();
+                    minDate = moment().tz(options.timeZone);
                 }
             }
 
@@ -1700,7 +1710,7 @@
 
             if (typeof defaultDate === 'string') {
                 if (defaultDate === 'now' || defaultDate === 'moment') {
-                    defaultDate = moment();
+                    defaultDate = moment().tz(options.timeZone);
                 }
             }
 
@@ -2312,6 +2322,7 @@
     };
 
     $.fn.datetimepicker.defaults = {
+        timeZone: 'Etc/UTC',
         format: false,
         dayViewHeaderFormat: 'MMMM YYYY',
         extraFormats: false,
@@ -2386,7 +2397,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || moment().tz(this.timeZone());
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(7, 'd'));
                 } else {
@@ -2398,7 +2409,7 @@
                     this.show();
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || moment().tz(this.timeZone());
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(7, 'd'));
                 } else {
@@ -2409,7 +2420,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || moment().tz(this.timeZone());
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'y'));
                 } else {
@@ -2420,7 +2431,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || moment().tz(this.timeZone());
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'y'));
                 } else {
@@ -2431,7 +2442,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || moment().tz(this.timeZone());
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'd'));
                 }
@@ -2440,7 +2451,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || moment().tz(this.timeZone());
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'd'));
                 }
@@ -2449,7 +2460,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || moment().tz(this.timeZone());
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'M'));
                 }
@@ -2458,7 +2469,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || moment().tz(this.timeZone());
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'M'));
                 }
@@ -2479,7 +2490,7 @@
                 }
             },
             t: function () {
-                this.date(moment());
+                this.date(moment().tz(this.timeZone()));
             },
             'delete': function () {
                 this.clear();
