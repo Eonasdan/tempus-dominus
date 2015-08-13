@@ -7,6 +7,7 @@
     },
     "dependencies": {
         "moment": "~2.8",
+        "moment-timezone" : "~0.4",
         "bootstrap": "^3.0",
         "jquery": ">=1.8.3 <2.2.0"
     },
