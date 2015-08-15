@@ -183,7 +183,7 @@ Shows the week of the year to the left of first day of the week.
 ### viewMode
 
 	Default: 'days'
-    Accepts: 'years','months','days'
+    Accepts: 'decades','years','months','days'
 
 The default view to display when the picker is shown.
 

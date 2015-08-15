@@ -16,3 +16,7 @@ Set `debug:true` which will force the picker to stay open, even `onBlur`. You ca
 # How do I change the start of the week?
 
 Start of the week is based on the [`locale` provided](Options.md#locale). This is defined by moment's locales. If you want to change it, create your own locale file or override. [See moment's docs](http://momentjs.com/docs/#/i18n/).
+
+# How I use the picker as birthday picker?
+
+Use the [`viewMode`](Options.md#viewmode) option to `'years'`
