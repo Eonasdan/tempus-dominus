@@ -58,8 +58,8 @@
 
     var dateTimePicker = function (element, options) {
         var picker = {},
-            date = moment().startOf('d'),
-            viewDate = date.clone(),
+            date,
+            viewDate,
             unset = true,
             input,
             component = false,
@@ -132,6 +132,40 @@
              * Private functions
              *
              ********************************************************************************/
+            getMoment = function (d) {
+                var tzEnabled = false,
+                    returnMoment,
+                    currentZoneOffset,
+                    incomingZoneOffset,
+                    timeZoneIndicator,
+                    dateWithTimeZoneInfo;
+
+                if (moment.tz !== undefined && options.timeZone !== undefined && options.timeZone !== null && options.timeZone !== '') {
+                    tzEnabled = true;
+                }
+                if (d === undefined || d === null) {
+                    if (tzEnabled) {
+                        returnMoment = moment().tz(options.timeZone).startOf('d');
+                    } else {
+                        returnMoment = moment().startOf('d');
+                    }
+                } else {
+                    if (tzEnabled) {
+                        currentZoneOffset = moment().tz(options.timeZone).utcOffset();
+                        incomingZoneOffset = moment(d, parseFormats, options.useStrict).utcOffset();
+                        if (incomingZoneOffset !== currentZoneOffset) {
+                            timeZoneIndicator = moment().tz(options.timeZone).format('Z');
+                            dateWithTimeZoneInfo = moment(d, parseFormats, options.useStrict).format('YYYY-MM-DD[T]HH:mm:ss') + timeZoneIndicator;
+                            returnMoment = moment(dateWithTimeZoneInfo, parseFormats, options.useStrict).tz(options.timeZone);
+                        } else {
+                            returnMoment = moment(d, parseFormats, options.useStrict).tz(options.timeZone);
+                        }
+                    } else {
+                        returnMoment = moment(d, parseFormats, options.useStrict);
+                    }
+                }
+                return returnMoment;
+            },
             isEnabled = function (granularity) {
                 if (typeof granularity !== 'string' || granularity.length > 1) {
                     throw new TypeError('isEnabled expects a single character string parameter');
@@ -699,7 +733,7 @@
                     if (!isValid(currentDate, 'd')) {
                         clsName += ' disabled';
                     }
-                    if (currentDate.isSame(moment(), 'd')) {
+                    if (currentDate.isSame(getMoment(), 'd')) {
                         clsName += ' today';
                     }
                     if (currentDate.day() === 0 || currentDate.day() === 6) {
@@ -1108,8 +1142,9 @@
                 clear: clear,
 
                 today: function () {
-                    if (isValid(moment(), 'd')) {
-                        setValue(moment());
+                    var todaysDate = getMoment();
+                    if (isValid(todaysDate, 'd')) {
+                        setValue(todaysDate);
                     }
                 },
 
@@ -1151,7 +1186,7 @@
                 if (input.val() !== undefined && input.val().trim().length !== 0) {
                     setValue(parseInputDate(input.val().trim()));
                 } else if (options.useCurrent && unset && ((input.is('input') && input.val().trim().length === 0) || options.inline)) {
-                    currentMoment = moment();
+                    currentMoment = getMoment();
                     if (typeof options.useCurrent === 'string') {
                         currentMoment = useCurrentGranularity[options.useCurrent](currentMoment);
                     }
@@ -1200,7 +1235,7 @@
                     if (moment.isMoment(inputDate) || inputDate instanceof Date) {
                         inputDate = moment(inputDate);
                     } else {
-                        inputDate = moment(inputDate, parseFormats, options.useStrict);
+                        inputDate = getMoment(inputDate);
                     }
                 } else {
                     inputDate = options.parseInputDate(inputDate);
@@ -1486,6 +1521,16 @@
             return picker;
         };
 
+        picker.timeZone = function (newZone) {
+            if (arguments.length === 0) {
+                return options.timeZone;
+            }
+
+            options.timeZone = newZone;
+
+            return picker;
+        };
+
         picker.dayViewHeaderFormat = function (newFormat) {
             if (arguments.length === 0) {
                 return options.dayViewHeaderFormat;
@@ -1622,7 +1667,7 @@
 
             if (typeof maxDate === 'string') {
                 if (maxDate === 'now' || maxDate === 'moment') {
-                    maxDate = moment();
+                    maxDate = getMoment();
                 }
             }
 
@@ -1658,7 +1703,7 @@
 
             if (typeof minDate === 'string') {
                 if (minDate === 'now' || minDate === 'moment') {
-                    minDate = moment();
+                    minDate = getMoment();
                 }
             }
 
@@ -1700,7 +1745,7 @@
 
             if (typeof defaultDate === 'string') {
                 if (defaultDate === 'now' || defaultDate === 'moment') {
-                    defaultDate = moment();
+                    defaultDate = getMoment();
                 }
             }
 
@@ -2041,6 +2086,10 @@
             return picker;
         };
 
+        picker.getMoment = function (d) {
+            return getMoment(d);
+        };
+
         picker.debug = function (debug) {
             if (typeof debug !== 'boolean') {
                 throw new TypeError('debug() expects a boolean parameter');
@@ -2271,6 +2320,10 @@
             throw new Error('Could not initialize DateTimePicker without an input element');
         }
 
+        // Set defaults for date here now instead of in var declaration
+        date = getMoment();
+        viewDate = date.clone();
+
         $.extend(true, options, dataToOptions());
 
         picker.options(options);
@@ -2312,6 +2365,7 @@
     };
 
     $.fn.datetimepicker.defaults = {
+        timeZone: 'Etc/UTC',
         format: false,
         dayViewHeaderFormat: 'MMMM YYYY',
         extraFormats: false,
@@ -2386,7 +2440,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(7, 'd'));
                 } else {
@@ -2398,7 +2452,7 @@
                     this.show();
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(7, 'd'));
                 } else {
@@ -2409,7 +2463,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'y'));
                 } else {
@@ -2420,7 +2474,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'y'));
                 } else {
@@ -2431,7 +2485,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'd'));
                 }
@@ -2440,7 +2494,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'd'));
                 }
@@ -2449,7 +2503,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'M'));
                 }
@@ -2458,7 +2512,7 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || moment();
+                var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'M'));
                 }
@@ -2479,7 +2533,7 @@
                 }
             },
             t: function () {
-                this.date(moment());
+                this.date(this.getMoment());
             },
             'delete': function () {
                 this.clear();
