@@ -322,7 +322,7 @@
                     row.push($('<td>').append($('<a>').attr({'data-action':'today', 'title': options.tooltips.today}).append($('<span>').addClass(options.icons.today))));
                 }
                 if (!options.sideBySide && hasDate() && hasTime()) {
-                    row.push($('<td>').append($('<a>').attr({'data-action':'togglePicker', 'title':'Select Time'}).append($('<span>').addClass(options.icons.time))));
+                    row.push($('<td>').append($('<a>').attr({'data-action':'togglePicker', 'title': options.tooltips.selectTime}).append($('<span>').addClass(options.icons.time))));
                 }
                 if (options.showClear) {
                     row.push($('<td>').append($('<a>').attr({'data-action':'clear', 'title': options.tooltips.clear}).append($('<span>').addClass(options.icons.clear))));
@@ -2413,7 +2413,8 @@
             pickSecond: 'Pick Second',
             incrementSecond: 'Increment Second',
             decrementSecond: 'Decrement Second',
-            togglePeriod: 'Toggle Period'
+            togglePeriod: 'Toggle Period',
+            selectTime: 'Select Time'
         },
         useStrict: false,
         sideBySide: false,
