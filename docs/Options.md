@@ -43,7 +43,9 @@ Number of minutes the up/down arrow's will move the minutes value in the time pi
 	Default: false
     Accepts: date, moment, string
 
-Prevents date/time selections before this date
+Prevents date/time selections before this date.
+
+#### `minDate` will override `defaultDate` and `useCurrent` if either of these settings are the same day since both options are invalid according to the rules you've selected.
 
 ----------------------
 
@@ -53,7 +55,9 @@ Prevents date/time selections before this date
 	Default: false
     Accepts: date, moment, string
 
-Prevents date/time selections after this date
+Prevents date/time selections after this date.
+
+#### `maxDate` will override `defaultDate` and `useCurrent` if either of these settings are the same day since both options are invalid according to the rules you've selected.
 
 ----------------------
 
