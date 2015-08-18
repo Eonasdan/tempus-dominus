@@ -1002,7 +1002,10 @@
                 },
 
                 selectDay: function (e) {
-                    var day = viewDate.clone();
+                    var day = viewDate.clone(),
+                    hideHandler = function () {
+                        hide();
+                    };
                     if ($(e.target).is('.old')) {
                         day.subtract(1, 'M');
                     }
@@ -1013,6 +1016,14 @@
                     if (!hasTime() && !options.keepOpen && !options.inline) {
                         hide();
                     }
+                    setTimeout(function () {
+                        $('.active').on('click', hideHandler);
+                        $('.active').on('dblclick', hideHandler);
+                    }, 0);
+                    setTimeout(function () {
+                        $('.active').on('click', hideHandler);
+                        $('.active').on('dblclick', hideHandler);
+                    }, 200);
                 },
 
                 incrementHours: function () {
