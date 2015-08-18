@@ -1234,7 +1234,9 @@
 
             parseInputDate = function (inputDate) {
                 if (options.parseInputDate === undefined) {
-                    if (moment.isMoment(inputDate) || inputDate instanceof Date) {
+                    if (moment.isMoment(inputDate)) {
+                        inputDate = inputDate.clone();
+                    } else if (inputDate instanceof Date) {
                         inputDate = moment(inputDate);
                     } else {
                         inputDate = getMoment(inputDate);
