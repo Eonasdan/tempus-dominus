@@ -1,5 +1,18 @@
 # Version 4
 
+## 4.17.37
+
+### New Features
+
+* Momentjs TZ intergration #1242 thanks @bodrick
+* Independent CSS file, in case you don't want bootstrap for some reason
+
+### Bug Squashing
+
+* Slight changes decade view
+* Moved all tooltip text to `tooltips`
+* fixed #1212
+
 ## 4.15.35
 
 ### New Features

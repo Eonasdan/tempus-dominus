@@ -169,4 +169,15 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test', ['jshint', 'jscs', 'uglify', 'less', 'jasmine']);
+
+    grunt.registerTask('release', function (version) {
+        if (!version || version.split('.').length !== 3) {
+            grunt.fail.fatal('malformed version. Use\n\n    grunt release:1.2.3');
+        }
+
+        grunt.task.run([
+            'bump_version:' + version,
+            'build:travis'
+        ]);
+    });
 };

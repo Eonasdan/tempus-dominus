@@ -9,3 +9,4 @@ site/
 *.csproj
 *.sln
 *.nupkg
+index.html
