@@ -200,9 +200,22 @@
             height: 20px;
             line-height: 20px;
             width: 20px;
+            cursor: pointer;
+
+            &:hover {
+                background: @bs-datetimepicker-btn-hover-bg;
+            }
 
             &.picker-switch {
                 width: 145px;
+            }
+
+            &.dow {
+                cursor: auto;
+            }
+
+            &.dow:hover {
+                background: none;
             }
 
             &.disabled,
@@ -220,14 +233,6 @@
             &.next::after {
                 .sr-only();
                 content: "Next Month";
-            }
-        }
-
-        & thead tr:first-child th {
-            cursor: pointer;
-
-            &:hover {
-                background: @bs-datetimepicker-btn-hover-bg;
             }
         }
 
@@ -335,7 +340,7 @@
             line-height: 27px;
         }
     }
-	
+
 	&.wider {
 		width: 21em;
 	}

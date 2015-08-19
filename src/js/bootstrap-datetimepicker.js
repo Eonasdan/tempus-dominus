@@ -1038,6 +1038,32 @@
                 return picker;
             },
 
+            disable = function () {
+                var monthsView = widget.find('.datepicker-months'),
+                    yearsView = widget.find('.datepicker-years'),
+                    decadesView = widget.find('.datepicker-decades'),
+                    daysView = widget.find('.datepicker-days');
+
+                $(window).off('resize', place);
+                widget.off('click', '[data-action]');
+                widget.off('mousedown', false);
+
+                decadesView.find('th').addClass('disabled');
+                yearsView.find('th').addClass('disabled');
+                monthsView.find('th').addClass('disabled');
+                monthsView.find('tbody').find('span').removeClass('active').addClass('disabled');
+                daysView.find('th').addClass('disabled');
+                daysView.find('tbody').find('td').addClass('disabled');
+            },
+
+            enable = function () {
+                update();
+
+                $(window).on('resize', place);
+                widget.on('click', '[data-action]', doAction); // this handles clicks on the widget
+                widget.on('mousedown', false);
+            },
+
             clear = function () {
                 setValue(null);
             },
@@ -1561,7 +1587,11 @@
         picker.disable = function () {
             ///<summary>Disables the input element, the component is attached to, by adding a disabled="true" attribute to it.
             ///If the widget was visible before that call it is hidden. Possibly emits dp.hide</summary>
-            hide();
+            if (options.inline) {
+                disable();
+            } else {
+                hide();
+            }
             if (component && component.hasClass('btn')) {
                 component.addClass('disabled');
             }
@@ -1571,6 +1601,9 @@
 
         picker.enable = function () {
             ///<summary>Enables the input element, the component is attached to, by removing disabled attribute from it.</summary>
+            if (options.inline) {
+                enable();
+            }
             if (component && component.hasClass('btn')) {
                 component.removeClass('disabled');
             }
