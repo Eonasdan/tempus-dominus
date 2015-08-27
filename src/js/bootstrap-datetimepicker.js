@@ -487,6 +487,8 @@
                         }
                     } else if ((e.date && e.date.isSame(e.oldDate)) || (!e.date && !e.oldDate)) {
                         return;
+                    } else if ((!e.date && Array.isArray(e.oldDate) && e.oldDate.length === 0) || (!e.oldDate && Array.isArray(e.date) && e.date.length === 0)) {
+                        return;
                     }
                 }
                 element.trigger(e);
@@ -907,6 +909,7 @@
 
                 // case of calling setValue(null or false)
                 if (!targetMoment || (Array.isArray(targetMoment) && targetMoment.length === 0)) {
+                    dates = [];
                     unset = true;
                     input.val('');
                     element.data('date', '');
@@ -1053,15 +1056,15 @@
                 monthsView.find('th').addClass('disabled');
                 monthsView.find('tbody').find('span').removeClass('active').addClass('disabled');
                 daysView.find('th').addClass('disabled');
-                daysView.find('tbody').find('td').addClass('disabled');
+                daysView.find('tbody').find('td').removeClass('active').addClass('disabled');
             },
 
             enable = function () {
                 update();
 
-                $(window).on('resize', place);
-                widget.on('click', '[data-action]', doAction); // this handles clicks on the widget
-                widget.on('mousedown', false);
+                $(window).off('resize', place).on('resize', place);
+                widget.off('click', '[data-action]').on('click', '[data-action]', doAction); // this handles clicks on the widget
+                widget.off('mousedown', false).on('mousedown', false);
             },
 
             clear = function () {

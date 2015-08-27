@@ -14,14 +14,14 @@
     "description": "A date/time picker component designed to work with Bootstrap 3 and Momentjs. For usage, installation and demos see Project Site on GitHub",
     "devDependencies": {
         "grunt": "latest",
-        "grunt-contrib-jasmine": "^0.7.0",
+        "grunt-contrib-jasmine": "latest",
         "grunt-contrib-jshint": "latest",
         "grunt-contrib-less": "latest",
         "grunt-contrib-uglify": "latest",
         "grunt-jscs": "latest",
         "grunt-string-replace": "latest",
         "load-grunt-tasks": "latest",
-        "grunt-nuget": "^0.1.4"
+        "grunt-nuget": "latest"
     },
     "homepage": "http://eonasdan.github.io/bootstrap-datetimepicker/",
     "keywords": [
