@@ -154,6 +154,8 @@
     
         <li class="main active"><a href="#version-4">Version 4</a></li>
         
+            <li><a href="#41737">4.17.37</a></li>
+        
             <li><a href="#41535">4.15.35</a></li>
         
             <li><a href="#41430">4.14.30</a></li>
@@ -190,10 +192,22 @@
 				<div class="col-md-9" role="main">
 
 <h1 id="version-4">Version 4</h1>
-<h2 id="41535">4.15.35</h2>
+<h2 id="41737">4.17.37</h2>
 <h3 id="new-features">New Features</h3>
-<p><code>tooltips</code> allows custom, localized text to be included for icon tooltips</p>
+<ul>
+<li>Momentjs TZ intergration #1242 thanks @bodrick</li>
+<li>Independent CSS file, in case you don't want bootstrap for some reason</li>
+</ul>
 <h3 id="bug-squashing">Bug Squashing</h3>
+<ul>
+<li>Slight changes decade view</li>
+<li>Moved all tooltip text to <code>tooltips</code></li>
+<li>fixed #1212</li>
+</ul>
+<h2 id="41535">4.15.35</h2>
+<h3 id="new-features_1">New Features</h3>
+<p><code>tooltips</code> allows custom, localized text to be included for icon tooltips</p>
+<h3 id="bug-squashing_1">Bug Squashing</h3>
 <p>fixed #1066</p>
 <p>fixed #1087 <code>sideBySide</code> properly supports <code>toolbarPlacement [top, bottom]</code></p>
 <p>fixed #1119 </p>
@@ -201,7 +215,7 @@
 <p>fixed #1049 fixed doc example </p>
 <p>fixed #999 picker now looks for an element with <code>.input-group-addon</code></p>
 <h2 id="41430">4.14.30</h2>
-<h3 id="new-features_1">New Features</h3>
+<h3 id="new-features_2">New Features</h3>
 <p><code>disabledTimeIntervals</code> #644</p>
 <p><code>allowInputToggle</code> #929</p>
 <p><code>focusOnShow</code> #884</p>
@@ -212,7 +226,7 @@
 <p><strong>Note</strong>: because the year picker shows 12 years at a time, I've elected to make this view show blocks of 12 years</p>
 <p><strong>Note</strong>: when selecting a decade the <code>viewDate</code> will change to the <strong>center</strong> of the selected years</p>
 <p><code>parseInputDate</code> #1095</p>
-<h3 id="bug-squashing_1">Bug Squashing</h3>
+<h3 id="bug-squashing_2">Bug Squashing</h3>
 <p>fixed #815 by adding <code>.wider</code> when using both seconds and am/pm.</p>
 <p>fixed #816 changed both min/max date to move the selected date inside.</p>
 <p>fixed #855 #881 <code>fillDate</code>, <code>fillMonths</code>, <code>fillDow</code> uses <code>startOf('day')</code>, which will hopefully fix the DST issues.</p>

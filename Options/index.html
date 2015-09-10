@@ -212,6 +212,8 @@
         
             <li><a href="#debug">debug</a></li>
         
+            <li><a href="#ignorereadonly">ignoreReadonly</a></li>
+        
             <li><a href="#disabledtimeintervals">disabledTimeIntervals</a></li>
         
             <li><a href="#allowinputtoggle">allowInputToggle</a></li>
@@ -304,13 +306,13 @@ Accepts: array of [date, moment, string]
 <hr />
 <h3 id="icons">icons</h3>
 <pre><code>Default: {
-            time: 'glyphicon glyphicon-time'
-            date: 'glyphicon glyphicon-calendar'
-            up: 'glyphicon glyphicon-chevron-up'
-            down: 'glyphicon glyphicon-chevron-down'
-            previous: 'glyphicon glyphicon-chevron-left'
-            next: 'glyphicon glyphicon-chevron-right'
-            today: 'glyphicon glyphicon-screenshot'
+            time: 'glyphicon glyphicon-time',
+            date: 'glyphicon glyphicon-calendar',
+            up: 'glyphicon glyphicon-chevron-up',
+            down: 'glyphicon glyphicon-chevron-down',
+            previous: 'glyphicon glyphicon-chevron-left',
+            next: 'glyphicon glyphicon-chevron-right',
+            today: 'glyphicon glyphicon-screenshot',
             clear: 'glyphicon glyphicon-trash',
             close: 'glyphicon glyphicon-remove'
         }
@@ -342,7 +344,7 @@ Accepts: array of numbers from 0-6
 <hr />
 <h3 id="viewmode">viewMode</h3>
 <pre><code>Default: 'days'
-Accepts: 'years','months','days'
+Accepts: 'decades','years','months','days'
 </code></pre>
 <p>The default view to display when the picker is shown.</p>
 <p><strong>Note</strong>: To limit the picker to selecting, for instance the year and month, use <code>format: MM/YYYY</code></p>
@@ -479,6 +481,12 @@ Accepts: string or jQuery object
 <pre><code>Default: false
 </code></pre>
 <p>Will cause the date picker to stay open after a <code>blur</code> event.</p>
+<hr />
+<h3 id="ignorereadonly">ignoreReadonly</h3>
+<p><small>4.7.14</small></p>
+<pre><code>Default: false
+</code></pre>
+<p>Allow date picker show event to fire even when the associated input element has the <code>readonly="readonly"</code>property.</p>
 <hr />
 <h3 id="disabledtimeintervals">disabledTimeIntervals</h3>
 <p><small>4.14.30</small></p>

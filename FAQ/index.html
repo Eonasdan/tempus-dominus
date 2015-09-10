@@ -164,6 +164,12 @@
         <li class="main "><a href="#how-do-i-change-the-styles-the-picker-closes">How do I change the styles? The picker closes.</a></li>
         
     
+        <li class="main "><a href="#how-do-i-change-the-start-of-the-week">How do I change the start of the week?</a></li>
+        
+    
+        <li class="main "><a href="#how-i-use-the-picker-as-birthday-picker">How I use the picker as birthday picker?</a></li>
+        
+    
     </ul>
 </div></div>
 				<div class="col-md-9" role="main">
@@ -176,6 +182,10 @@
 <p>The picker uses MomentJs to determine the language string. You can use <code>moment-with-locales</code> or you can include whatever local file you need. Set the picker's <code>locale</code> option to <code>de</code> or whatever the locale string is.</p>
 <h1 id="how-do-i-change-the-styles-the-picker-closes">How do I change the styles? The picker closes.</h1>
 <p>Set <code>debug:true</code> which will force the picker to stay open, even <code>onBlur</code>. You can hide the picker manually by calling <code>hide()</code></p>
+<h1 id="how-do-i-change-the-start-of-the-week">How do I change the start of the week?</h1>
+<p>Start of the week is based on the <a href="../Options#locale"><code>locale</code> provided</a>. This is defined by moment's locales. If you want to change it, create your own locale file or override. <a href="http://momentjs.com/docs/#/i18n/">See moment's docs</a>.</p>
+<h1 id="how-i-use-the-picker-as-birthday-picker">How I use the picker as birthday picker?</h1>
+<p>Use the <a href="../Options#viewmode"><code>viewMode</code></a> option to <code>'years'</code></p>
 </div>
 			</div>
         </div>
