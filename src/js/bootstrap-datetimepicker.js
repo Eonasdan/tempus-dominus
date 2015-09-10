@@ -2307,6 +2307,7 @@
                 // create a private copy of the defaults object
                 options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
                 $this.data('DateTimePicker', dateTimePicker($this, options));
+                moment.locale(options.locale);
             }
         });
     };
