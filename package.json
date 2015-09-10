@@ -7,7 +7,8 @@
     },
     "dependencies": {
         "moment": "~2.8",
-        "bootstrap": "^3.0",
+        "moment-timezone" : "~0.4",
+        "bootstrap": "^3.3",
         "jquery": ">=1.8.3 <2.2.0"
     },
     "description": "A date/time picker component designed to work with Bootstrap 3 and Momentjs. For usage, installation and demos see Project Site on GitHub",
@@ -38,5 +39,5 @@
         "type": "git",
         "url": "https://github.com/eonasdan/bootstrap-datetimepicker.git"
     },
-    "version": "4.15.35"
+    "version": "4.17.37"
 }

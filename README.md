@@ -5,7 +5,7 @@
 
 ## [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
 
-# v4.15.35
+# v4.17.37
 
 Is the current stable release. The latest and greatest changes are available from the [development branch](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/development)
 
@@ -28,7 +28,9 @@ If you have issues, please check the following first:
 ## Where do you use this?
 I'd love to know if your public site is using this plugin and list your logo on the documentation site. Please email me `me at eonasdan dot com`.
 
-##Priority support is available at an hourly rate. If you have an urgent request, bug or need installation help, please contact me at `me at eonasdan dot com` for a quote.
+##Priority support is available at an hourly rate. 
+
+If you have an urgent request, bug or need installation help, please contact me at `me at eonasdan dot com` for a quote.
 
 ## [Installation instructions](http://eonasdan.github.io/bootstrap-datetimepicker/Installing/)
 

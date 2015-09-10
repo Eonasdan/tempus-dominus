@@ -43,7 +43,9 @@ Number of minutes the up/down arrow's will move the minutes value in the time pi
 	Default: false
     Accepts: date, moment, string
 
-Prevents date/time selections before this date
+Prevents date/time selections before this date.
+
+#### `minDate` will override `defaultDate` and `useCurrent` if either of these settings are the same day since both options are invalid according to the rules you've selected.
 
 ----------------------
 
@@ -53,7 +55,9 @@ Prevents date/time selections before this date
 	Default: false
     Accepts: date, moment, string
 
-Prevents date/time selections after this date
+Prevents date/time selections after this date.
+
+#### `maxDate` will override `defaultDate` and `useCurrent` if either of these settings are the same day since both options are invalid according to the rules you've selected.
 
 ----------------------
 
@@ -121,14 +125,15 @@ Disables selection of dates **NOT** in the array, e.g. holidays
 ### icons
 
 	Default: {
-                time: 'glyphicon glyphicon-time'
-                date: 'glyphicon glyphicon-calendar'
-                up: 'glyphicon glyphicon-chevron-up'
-                down: 'glyphicon glyphicon-chevron-down'
-                previous: 'glyphicon glyphicon-chevron-left'
-                next: 'glyphicon glyphicon-chevron-right'
-                today: 'glyphicon glyphicon-screenshot'
-                clear: 'glyphicon glyphicon-trash'
+                time: 'glyphicon glyphicon-time',
+                date: 'glyphicon glyphicon-calendar',
+                up: 'glyphicon glyphicon-chevron-up',
+                down: 'glyphicon glyphicon-chevron-down',
+                previous: 'glyphicon glyphicon-chevron-left',
+                next: 'glyphicon glyphicon-chevron-right',
+                today: 'glyphicon glyphicon-screenshot',
+                clear: 'glyphicon glyphicon-trash',
+                close: 'glyphicon glyphicon-remove'
             }
     Accepts: object with all or some of the parameters above
 
@@ -178,7 +183,7 @@ Shows the week of the year to the left of first day of the week.
 ### viewMode
 
 	Default: 'days'
-    Accepts: 'years','months','days'
+    Accepts: 'decades','years','months','days'
 
 The default view to display when the picker is shown.
 
@@ -361,6 +366,17 @@ Allows for custom events to fire on keyboard press.
 	Default: false
 
 Will cause the date picker to stay open after a `blur` event.
+
+----------------------
+
+
+### ignoreReadonly
+
+<small>4.7.14</small>
+
+	Default: false
+
+Allow date picker show event to fire even when the associated input element has the `readonly="readonly"`property.
 
 ----------------------
 
