@@ -144,11 +144,7 @@
                     tzEnabled = true;
                 }
                 if (d === undefined || d === null) {
-                    if (tzEnabled) {
-                        returnMoment = moment().tz(options.timeZone).startOf('d');
-                    } else {
-                        returnMoment = moment().startOf('d');
-                    }
+                    returnMoment = tzEnabled ? moment().tz(options.timeZone) : moment();
                 } else {
                     if (tzEnabled) {
                         currentZoneOffset = moment().tz(options.timeZone).utcOffset();
