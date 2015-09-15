@@ -4,7 +4,7 @@ node_modules
 .vs
 obj
 bin
-site/
+site
 *.user
 *.csproj
 *.sln

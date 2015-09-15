@@ -6,8 +6,7 @@
         "url": "https://github.com/eonasdan/bootstrap-datetimepicker/issues"
     },
     "dependencies": {
-        "moment": "~2.8",
-        "moment-timezone" : "~0.4",
+        "moment": "~2.10.5",
         "bootstrap": "^3.3",
         "jquery": ">=1.8.3 <2.2.0"
     },
@@ -39,5 +38,5 @@
         "type": "git",
         "url": "https://github.com/eonasdan/bootstrap-datetimepicker.git"
     },
-    "version": "4.17.37"
+    "version": "4.17.42"
 }

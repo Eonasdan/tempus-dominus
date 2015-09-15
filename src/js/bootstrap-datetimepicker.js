@@ -1,4 +1,4 @@
-/*! version : 4.17.37
+/*! version : 4.17.42
  =========================================================
  bootstrap-datetimejs
  https://github.com/Eonasdan/bootstrap-datetimepicker
@@ -148,7 +148,7 @@
                     if (tzEnabled) {
                         returnMoment = moment().tz(options.timeZone);
                     } else {
-                        returnMoment = moment();
+                        returnMoment = moment(); //TODO should this use format? and locale?
                     }
                 } else {
                     if (tzEnabled) {
@@ -167,6 +167,7 @@
                 }
                 return returnMoment;
             },
+
             isEnabled = function (granularity) {
                 if (typeof granularity !== 'string' || granularity.length > 1) {
                     throw new TypeError('isEnabled expects a single character string parameter');
@@ -189,6 +190,7 @@
                         return false;
                 }
             },
+
             hasTime = function () {
                 return (isEnabled('h') || isEnabled('m') || isEnabled('s'));
             },
@@ -247,7 +249,7 @@
                         .append($('<a>').attr({href: '#', tabindex: '-1', 'title': options.tooltips.incrementHour}).addClass('btn').attr('data-action', 'incrementHours')
                             .append($('<span>').addClass(options.icons.up))));
                     middleRow.append($('<td>')
-                        .append($('<span>').addClass('timepicker-hour').attr({'data-time-component':'hours', 'title': options.tooltips.pickHour}).attr('data-action', 'showHours')));
+                        .append($('<span>').addClass('timepicker-hour').attr({'data-time-component': 'hours', 'title': options.tooltips.pickHour}).attr('data-action', 'showHours')));
                     bottomRow.append($('<td>')
                         .append($('<a>').attr({href: '#', tabindex: '-1', 'title': options.tooltips.decrementHour}).addClass('btn').attr('data-action', 'decrementHours')
                             .append($('<span>').addClass(options.icons.down))));
@@ -320,16 +322,16 @@
             getToolbar = function () {
                 var row = [];
                 if (options.showTodayButton) {
-                    row.push($('<td>').append($('<a>').attr({'data-action':'today', 'title': options.tooltips.today}).append($('<span>').addClass(options.icons.today))));
+                    row.push($('<td>').append($('<a>').attr({'data-action': 'today', 'title': options.tooltips.today}).append($('<span>').addClass(options.icons.today))));
                 }
                 if (!options.sideBySide && hasDate() && hasTime()) {
-                    row.push($('<td>').append($('<a>').attr({'data-action':'togglePicker', 'title': options.tooltips.selectTime}).append($('<span>').addClass(options.icons.time))));
+                    row.push($('<td>').append($('<a>').attr({'data-action': 'togglePicker', 'title': options.tooltips.selectTime}).append($('<span>').addClass(options.icons.time))));
                 }
                 if (options.showClear) {
-                    row.push($('<td>').append($('<a>').attr({'data-action':'clear', 'title': options.tooltips.clear}).append($('<span>').addClass(options.icons.clear))));
+                    row.push($('<td>').append($('<a>').attr({'data-action': 'clear', 'title': options.tooltips.clear}).append($('<span>').addClass(options.icons.clear))));
                 }
                 if (options.showClose) {
-                    row.push($('<td>').append($('<a>').attr({'data-action':'close', 'title': options.tooltips.close}).append($('<span>').addClass(options.icons.close))));
+                    row.push($('<td>').append($('<a>').attr({'data-action': 'close', 'title': options.tooltips.close}).append($('<span>').addClass(options.icons.close))));
                 }
                 return $('<table>').addClass('table-condensed').append($('<tbody>').append($('<tr>').append(row)));
             },
@@ -540,6 +542,8 @@
                 }
                 if (dir) {
                     currentViewMode = Math.max(minViewModeNumber, Math.min(3, currentViewMode + dir));
+                } else {
+                    currentViewMode = 0;
                 }
                 widget.find('.datepicker > div').hide().filter('.datepicker-' + datePickerModes[currentViewMode].clsName).show();
             },
@@ -1001,8 +1005,10 @@
                 }
             },
 
+            /**
+             * Hides the widget. Possibly will emit dp.hide
+             */
             hide = function () {
-                ///<summary>Hides the widget. Possibly will emit dp.hide</summary>
                 var transitioning = false;
                 if (!widget) {
                     return picker;
@@ -1069,6 +1075,18 @@
 
             clear = function () {
                 setValue(null);
+            },
+
+            parseInputDate = function (inputDate) {
+                if (options.parseInputDate === undefined) {
+                    if (!moment.isMoment(inputDate)) {
+                        inputDate = getMoment(inputDate);
+                    }
+                } else {
+                    inputDate = options.parseInputDate(inputDate);
+                }
+                //inputDate.locale(options.locale);
+                return inputDate;
             },
 
             /********************************************************************************
@@ -1300,8 +1318,10 @@
                 return false;
             },
 
+            /**
+             * Shows the widget. Possibly will emit dp.show and dp.change
+             */
             show = function () {
-                ///<summary>Shows the widget. Possibly will emit dp.show and dp.change</summary>
                 var currentMoment,
                     useCurrentGranularity = {
                         'year': function (m) {
@@ -1330,7 +1350,7 @@
                     } else {
                         currentMoment = parseInputDate(input.val().trim());
                     }
-                } else if (options.useCurrent && unset && ((input.is('input') && input.val().trim().length === 0) || options.inline)) {
+                } else if (options.useCurrent && unset && (options.inline || (input.is('input') && input.val().trim().length === 0))) {
                     currentMoment = getMoment();
                     if (typeof options.useCurrent === 'string') {
                         currentMoment = useCurrentGranularity[options.useCurrent](currentMoment);
@@ -1357,9 +1377,8 @@
                 if (component && component.hasClass('btn')) {
                     component.toggleClass('active');
                 }
-                widget.show();
                 place();
-
+                widget.show();
                 if (options.focusOnShow && !input.is(':focus')) {
                     input.focus();
                 }
@@ -1370,8 +1389,10 @@
                 return picker;
             },
 
+            /**
+             * Shows or hides the widget
+             */
             toggle = function () {
-                /// <summary>Shows or hides the widget</summary>
                 return (widget ? hide() : show());
             },
 
@@ -1380,26 +1401,23 @@
                     if (Array.isArray(inputDate)) {
                         inputDate = $.map(inputDate, function (item) {
                             var newMoment;
-                            if (moment.isMoment(item) || item instanceof Date) {
+                            if (!moment.isMoment(item)) {
                                 newMoment = moment(item);
+                                newMoment.locale(options.locale);
+                                return newMoment;
                             } else {
-                                newMoment = getMoment(item);
+                                return item;
                             }
-                            newMoment.locale(options.locale);
-                            return newMoment;
                         });
                     } else {
-                        if (moment.isMoment(inputDate) || inputDate instanceof Date) {
+                        if (!moment.isMoment(inputDate)) {
                             inputDate = moment(inputDate);
-                        } else {
-                            inputDate = getMoment(inputDate);
                         }
-                        inputDate.locale(options.locale);
                     }
                 } else {
                     inputDate = options.parseInputDate(inputDate);
-                    inputDate.locale(options.locale);
                 }
+                inputDate.locale(options.locale);
                 return inputDate;
             },
 
@@ -1710,6 +1728,10 @@
                 return options.timeZone;
             }
 
+            if (typeof newZone !== 'string') {
+                throw new TypeError('newZone() expects a string parameter');
+            }
+
             options.timeZone = newZone;
 
             return picker;
@@ -1930,6 +1952,8 @@
             if (typeof defaultDate === 'string') {
                 if (defaultDate === 'now' || defaultDate === 'moment') {
                     defaultDate = getMoment();
+                } else {
+                    defaultDate = getMoment(defaultDate);
                 }
             }
 
@@ -2535,7 +2559,7 @@
         }
 
         // Set defaults for date here now instead of in var declaration
-        date = getMoment();
+        date = getMoment(); //TODO change?
         viewDate = date.clone();
 
         $.extend(true, options, dataToOptions());
@@ -2585,7 +2609,7 @@
     $.fn.datetimepicker.defaults = {
         multiDate: false,
         multiDateDelimiter: ',',
-        timeZone: 'Etc/UTC',
+        timeZone: '',
         format: false,
         dayViewHeaderFormat: 'MMMM YYYY',
         extraFormats: false,

@@ -5,7 +5,7 @@
 
 ## [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
 
-# v4.17.37
+# v4.17.42
 
 Is the current stable release. The latest and greatest changes are available from the [development branch](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/development)
 

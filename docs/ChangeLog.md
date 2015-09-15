@@ -1,5 +1,20 @@
 # Version 4
 
+## 4.17.42
+
+### Bug Squashing
+
+* fixed moment dependencies to all be the same
+* defaulted `option.timeZone` to `''` instead of UTC. This way it will default to the local timezone if it's not set.
+* fixed #959
+* fixed #1311 internal `getMoment` function no longer sets `startOf('d')`
+* fixed #935
+
+### Other
+
+* moved some (will move the rest soon) inline docs to JSDoc now that ReSharper supports it.
+* moved getter/setter functions to options page instead. #1313
+
 ## 4.17.37
 
 ### New Features
