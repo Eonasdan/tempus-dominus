@@ -1079,8 +1079,21 @@
 
             parseInputDate = function (inputDate) {
                 if (options.parseInputDate === undefined) {
-                    if (!moment.isMoment(inputDate)) {
-                        inputDate = getMoment(inputDate);
+                    if (Array.isArray(inputDate)) {
+                        inputDate = $.map(inputDate, function (item) {
+                            var newMoment;
+                            if (!moment.isMoment(item)) {
+                                newMoment = moment(item);
+                                newMoment.locale(options.locale);
+                                return newMoment;
+                            } else {
+                                return item;
+                            }
+                        });
+                    } else {
+                        if (!moment.isMoment(inputDate)) {
+                            inputDate = moment(inputDate);
+                        }
                     }
                 } else {
                     inputDate = options.parseInputDate(inputDate);
@@ -1394,31 +1407,6 @@
              */
             toggle = function () {
                 return (widget ? hide() : show());
-            },
-
-            parseInputDate = function (inputDate) {
-                if (options.parseInputDate === undefined) {
-                    if (Array.isArray(inputDate)) {
-                        inputDate = $.map(inputDate, function (item) {
-                            var newMoment;
-                            if (!moment.isMoment(item)) {
-                                newMoment = moment(item);
-                                newMoment.locale(options.locale);
-                                return newMoment;
-                            } else {
-                                return item;
-                            }
-                        });
-                    } else {
-                        if (!moment.isMoment(inputDate)) {
-                            inputDate = moment(inputDate);
-                        }
-                    }
-                } else {
-                    inputDate = options.parseInputDate(inputDate);
-                }
-                inputDate.locale(options.locale);
-                return inputDate;
             },
 
             keydown = function (e) {
