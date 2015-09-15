@@ -2549,4 +2549,5 @@
         enabledHours: false,
         viewDate: false
     };
+    window.$.fn.datetimepicker = $.fn.datetimepicker;
 }));
