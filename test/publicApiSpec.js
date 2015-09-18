@@ -705,4 +705,29 @@ describe('Public API method tests', function () {
             });
         });
     });
+
+    describe('Time zone tests', function () {
+        var oldTimeZone, oldFormat;
+        beforeEach(function () {
+            oldTimeZone = dtp.timeZone();
+            oldFormat = dtp.format();
+            dtp.timeZone('UTC');
+            dtp.format('YYYY-MM-DD HH:mm:ss Z');
+        });
+
+        afterEach(function () {
+            dtp.timeZone(oldTimeZone);
+            dtp.format(oldFormat);
+        });
+
+        it('should not change the value that was set', function () { // #1326
+            var now = moment().startOf('second');
+            dtp.date(now);
+            dpChangeSpy.calls.reset();
+            dtp.show();
+            dtp.hide();
+            expect(dpChangeSpy).not.toHaveBeenCalled();
+            expect(dtp.date().format()).toEqual(now.tz('UTC').format());
+        });
+    });
 });
