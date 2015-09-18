@@ -2561,4 +2561,5 @@
         enabledHours: false,
         viewDate: false
     };
+    module.exports = $.fn.datetimepicker;
 }));
