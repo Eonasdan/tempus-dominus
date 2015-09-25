@@ -569,8 +569,10 @@
                 if (options.disabledTimeIntervals && (granularity === 'h' || granularity === 'm' || granularity === 's')) {
                     var found = false;
                     $.each(options.disabledTimeIntervals, function () {
-                        if (targetMoment.isBetween(this[0], this[1])) {
-                            found = true;
+                        var a = targetMoment.clone(),
+                            b = targetMoment.clone().add(1, granularity);
+                        found = this[0] < a && b <= this[1];
+                        if (found) {
                             return false;
                         }
                     });
