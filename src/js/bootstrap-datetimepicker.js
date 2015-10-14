@@ -1755,6 +1755,8 @@
                 return picker;
             }
 
+            initFormatting();
+
             if (typeof defaultDate === 'string') {
                 if (defaultDate === 'now' || defaultDate === 'moment') {
                     defaultDate = getMoment();
