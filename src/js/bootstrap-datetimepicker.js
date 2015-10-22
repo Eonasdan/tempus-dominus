@@ -680,7 +680,7 @@
                 }
 
                 while (!startDecade.isAfter(endDecade, 'y')) {
-                    isCurrentDecade = startDecade.isBefore(viewDate) && viewDate.year() <= startDecade.year() + 12;
+                    isCurrentDecade = startDecade.isBefore(date) && date.year() <= startDecade.year() + 12;
                     html += '<span data-action="selectDecade" class="decade' + (isCurrentDecade ? ' active' : '') +
                         (!isValid(startDecade, 'y') && !isCurrentDecade ? ' disabled' : '') + '" data-selection="' + (startDecade.year() + 6) + '">' + (startDecade.year() + 1) + ' - ' + (startDecade.year() + 12) + '</span>';
                     startDecade.add(12, 'y');
