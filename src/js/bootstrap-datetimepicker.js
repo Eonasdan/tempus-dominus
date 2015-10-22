@@ -661,6 +661,7 @@
                     startDecade = moment({y: viewDate.year() - (viewDate.year() % 100) - 1}),
                     endDecade = startDecade.clone().add(100, 'y'),
                     startedAt = startDecade.clone(),
+                    isCurrentDecade = false,
                     html = '';
 
                 decadesViewHeader.eq(0).find('span').attr('title', options.tooltips.prevCentury);
@@ -679,8 +680,9 @@
                 }
 
                 while (!startDecade.isAfter(endDecade, 'y')) {
-                    html += '<span data-action="selectDecade" class="decade' + (startDecade.isSame(date, 'y') ? ' active' : '') +
-                        (!isValid(startDecade, 'y') ? ' disabled' : '') + '" data-selection="' + (startDecade.year() + 6) + '">' + (startDecade.year() + 1) + ' - ' + (startDecade.year() + 12) + '</span>';
+                    isCurrentDecade = startDecade.isBefore(viewDate) && viewDate.year() <= startDecade.year() + 12;
+                    html += '<span data-action="selectDecade" class="decade' + (isCurrentDecade ? ' active' : '') +
+                        (!isValid(startDecade, 'y') && !isCurrentDecade ? ' disabled' : '') + '" data-selection="' + (startDecade.year() + 6) + '">' + (startDecade.year() + 1) + ' - ' + (startDecade.year() + 12) + '</span>';
                     startDecade.add(12, 'y');
                 }
                 html += '<span></span><span></span><span></span>'; //push the dangling block over, at least this way it's even
