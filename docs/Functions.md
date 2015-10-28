@@ -307,15 +307,15 @@ Takes a `boolean`. If set to `false` the picker will display similar to `sideByS
 
 #### icons()
 
-Returns an `Ojbect` of `options.icons` 
+Returns an `Object` of `options.icons` 
 
 #### icons(icons)
 
-Takes an `Ojbect` of `strings`.
+Takes an `Object` of `strings`.
 
 ##### Throws
 
-* `TypeError` - if icons parameter is not an `Ojbect`
+* `TypeError` - if icons parameter is not an `Object`
 
 ----------------------
 
@@ -659,12 +659,12 @@ var parseInputDate = function(inputDate) {
 
 #### tooltips()
 
-Returns an `Ojbect` of `options.tooltips` 
+Returns an `Object` of `options.tooltips` 
 
 #### tooltips(tooltips)
 
-Takes an `Ojbect` of `strings`.
+Takes an `Object` of `strings`.
 
 ##### Throws
 
-* `TypeError` - if tooltips parameter is not an `Ojbect`
+* `TypeError` - if tooltips parameter is not an `Object`
