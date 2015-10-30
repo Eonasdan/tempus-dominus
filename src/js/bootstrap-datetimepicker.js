@@ -1210,7 +1210,10 @@
                 $(window).on('resize', place);
                 widget.on('click', '[data-action]', doAction); // this handles clicks on the widget
                 //widget.on('mousedown', false); //can not work under ie8
-                widget.on('mousedown', function(e){e.target.unselectable = true; return false;});
+                widget.on('mousedown', function(e){
+                 e.target.unselectable = true; 
+                 return false;
+                });
 
                 if (component && component.hasClass('btn')) {
                     component.toggleClass('active');
