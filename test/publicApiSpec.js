@@ -705,4 +705,32 @@ describe('Public API method tests', function () {
             });
         });
     });
+
+    describe('Time zone tests', function () {
+        function makeFormatTest (format, displayTimeZone) {
+            it('should not change the value that was set when using format ' + format, function () { // #1326
+                var oldFormat = dtp.format(),
+                    oldTimeZone = dtp.timeZone(),
+                    now = moment().startOf('second');
+
+                dtp.timeZone(displayTimeZone);
+                dtp.format(format);
+
+                dtp.date(now);
+                dpChangeSpy.calls.reset();
+                dtp.show();
+                dtp.hide();
+                expect(dpChangeSpy).not.toHaveBeenCalled();
+                expect(dtp.date().format()).toEqual(now.tz(displayTimeZone).format());
+
+                dtp.format(oldFormat);
+                dtp.timeZone(oldTimeZone);
+            });
+        }
+
+        makeFormatTest('YYYY-MM-DD HH:mm:ss Z', 'UTC');
+        makeFormatTest('YYYY-MM-DD HH:mm:ss', 'UTC');
+        makeFormatTest('YYYY-MM-DD HH:mm:ss Z', 'America/New_York');
+        makeFormatTest('YYYY-MM-DD HH:mm:ss', 'America/New_York');
+    });
 });

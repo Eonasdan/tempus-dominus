@@ -103,12 +103,27 @@ module.exports = function (grunt) {
             }
         },
 
+        env: {
+            paris: {
+                TZ : 'Europe/Paris' // sets env for phantomJS https://github.com/ariya/phantomjs/issues/10379#issuecomment-36058589
+            }
+        },
+
+        connect: {
+            server: {
+                options: {
+                    port: 8099
+                }
+            }
+        },
+
         jasmine: {
             customTemplate: {
                 src: 'src/js/*.js',
                 options: {
                     specs: 'test/*Spec.js',
                     helpers: 'test/*Helper.js',
+                    host: 'http://127.0.0.1:8099',
                     styles: [
                         'node_modules/bootstrap/dist/css/bootstrap.min.css',
                         'build/css/bootstrap-datetimepicker.min.css'
@@ -116,6 +131,7 @@ module.exports = function (grunt) {
                     vendor: [
                         'node_modules/jquery/dist/jquery.min.js',
                         'node_modules/moment/min/moment-with-locales.min.js',
+                        'node_modules/moment-timezone/moment-timezone.js',
                         'node_modules/bootstrap/dist/js/bootstrap.min.js'
                     ],
                     display: 'none',
@@ -144,6 +160,8 @@ module.exports = function (grunt) {
 
     grunt.loadTasks('tasks');
 
+    grunt.loadNpmTasks('grunt-env');
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-nuget');
 
@@ -151,7 +169,7 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'jscs', 'less', 'jasmine']);
+    grunt.registerTask('default', ['jshint', 'jscs', 'less', 'env:paris', 'connect', 'jasmine']);
 
     // travis build task
     grunt.registerTask('build:travis', [
@@ -160,7 +178,7 @@ module.exports = function (grunt) {
         // build
         'uglify', 'less',
         // tests
-        'jasmine'
+        'env:paris', 'connect', 'jasmine'
     ]);
 
     // Task to be run when building
@@ -168,7 +186,7 @@ module.exports = function (grunt) {
         'jshint', 'jscs', 'uglify', 'less'
     ]);
 
-    grunt.registerTask('test', ['jshint', 'jscs', 'uglify', 'less', 'jasmine']);
+    grunt.registerTask('test', ['jshint', 'jscs', 'uglify', 'less', 'env:paris', 'connect', 'jasmine']);
 
     grunt.registerTask('docs', 'Generate docs', function () {
         grunt.util.spawn({
