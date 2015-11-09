@@ -2559,5 +2559,7 @@
         enabledHours: false,
         viewDate: false
     };
-    module.exports = $.fn.datetimepicker;
+    if (typeof module !== 'undefined') {
+        module.exports = $.fn.datetimepicker;
+    }
 }));
