@@ -2559,7 +2559,7 @@
         enabledHours: false,
         viewDate: false
     };
-    if(typeof module !== 'undefined') {
-     module.exports = $.fn.datetimepicker;
+    if (typeof module !== 'undefined') {
+        module.exports = $.fn.datetimepicker;
     }
 }));
