@@ -413,10 +413,25 @@
                     offset = (component || element).offset(),
                     vertical = options.widgetPositioning.vertical,
                     horizontal = options.widgetPositioning.horizontal,
-                    parent;
+                    parent,
+                    node,
+                    nodePosition;
 
                 if (options.widgetParent) {
                     parent = options.widgetParent.append(widget);
+
+                    // parent maybe not element's parent
+                    if (!element.parent().is(parent)) {
+                        node = element.parent();
+                        while (!node.is(parent)) {
+                            if (node.css('position') === 'relative') {
+                                nodePosition = node.position();
+                                position.top += nodePosition.top;
+                                position.left += nodePosition.left;
+                            }
+                            node = node.parent();
+                        }
+                    }
                 } else if (element.is('input')) {
                     parent = element.after(widget).parent();
                 } else if (options.inline) {
@@ -426,6 +441,7 @@
                     parent = element;
                     element.children().first().after(widget);
                 }
+
 
                 // Top and bottom logic
                 if (vertical === 'auto') {
