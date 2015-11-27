@@ -2389,7 +2389,7 @@
             previous: 'fa fa-arrow-left',
             next: 'fa fa-arrow-right',
             today: 'fa fa-calendar-plus-o',
-            clear: 'fa fa-delete',
+            clear: 'fa fa-ban',
             close: 'fa fa-close'
         },
         tooltips: {
