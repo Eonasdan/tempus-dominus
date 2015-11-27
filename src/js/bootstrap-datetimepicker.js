@@ -179,7 +179,7 @@
              *
              * Private functions
              *
-             ********************************************************************************/
+             ********************************************************************************/,
             isEnabled = function (granularity) {
                 if (typeof granularity !== 'string' || granularity.length > 1) {
                     throw new TypeError('isEnabled expects a single character string parameter');
