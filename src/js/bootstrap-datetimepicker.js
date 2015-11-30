@@ -508,13 +508,14 @@
 
             fillDow = function () {
                 var row = $('<tr>'),
-                    currentDate = viewDate.clone().startOf('w').startOf('d');
+                    dowFormat = options.isoWeeks ? 'W' : 'w',
+                    currentDate = viewDate.clone().startOf(dowFormat).startOf('d');
 
                 if (options.calendarWeeks === true) {
                     row.append($('<th>').addClass('cw').text('#'));
                 }
 
-                while (currentDate.isBefore(viewDate.clone().endOf('w'))) {
+                while (currentDate.isBefore(viewDate.clone().endOf(dowFormat))) {
                     row.append($('<th>').addClass('dow').text(currentDate.format('dd')));
                     currentDate.add(1, 'd');
                 }
@@ -692,7 +693,8 @@
                     html = [],
                     row,
                     clsName,
-                    i;
+                    i,
+                    dowFormat = options.isoWeeks ? 'W' : 'w';
 
                 if (!hasDate()) {
                     return;
@@ -712,15 +714,25 @@
                     daysViewHeader.eq(2).addClass('disabled');
                 }
 
-                currentDate = viewDate.clone().startOf('M').startOf('w').startOf('d');
+                currentDate = viewDate.clone().startOf('M').startOf(dowFormat).startOf('d');
 
                 for (i = 0; i < 42; i++) { //always display 42 days (should show 6 weeks)
-                    if (currentDate.weekday() === 0) {
-                        row = $('<tr>');
-                        if (options.calendarWeeks) {
-                            row.append('<td class="cw">' + currentDate.week() + '</td>');
+                    if (options.isoWeeks) {
+                        if (currentDate.weekday() === 1) {
+                            row = $('<tr>');
+                            if (options.calendarWeeks) {
+                                row.append('<td class="cw">' + currentDate.isoWeek() + '</td>');
+                            }
+                            html.push(row);
                         }
-                        html.push(row);
+                    } else {
+                        if (currentDate.weekday() === 0) {
+                            row = $('<tr>');
+                            if (options.calendarWeeks) {
+                                row.append('<td class="cw">' + currentDate.week() + '</td>');
+                            }
+                            html.push(row);
+                        }
                     }
                     clsName = '';
                     if (currentDate.isBefore(viewDate, 'M')) {
@@ -1984,6 +1996,17 @@
             return picker;
         };
 
+        picker.isoWeeks = function (isoWeeks) {
+            if (arguments.length === 0) {
+                return options.isoWeeks;
+            }
+
+            if (typeof isoWeeks !== 'boolean') {
+                throw new TypeError('isoWeeks() expects a boolean parameter');
+            }
+            return picker;
+        };
+
         picker.showTodayButton = function (showTodayButton) {
             if (arguments.length === 0) {
                 return options.showTodayButton;
@@ -2422,6 +2445,7 @@
         sideBySide: false,
         daysOfWeekDisabled: false,
         calendarWeeks: false,
+        isoWeeks: false,
         viewMode: 'days',
         toolbarPlacement: 'default',
         showTodayButton: false,

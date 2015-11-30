@@ -180,6 +180,16 @@ Shows the week of the year to the left of first day of the week.
 ----------------------
 
 
+### isoWeeks
+
+	Default: false
+
+Use ISO 8601 format for the day of the week and the week of the year.
+
+
+----------------------
+
+
 ### viewMode
 
 	Default: 'days'
