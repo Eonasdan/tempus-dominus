@@ -864,7 +864,7 @@
                 }
 
                 if (options.stepping !== 1) {
-                    targetMoment.minutes((Math.round(targetMoment.minutes() / options.stepping) * options.stepping) % 60).seconds(0);
+                    targetMoment.minutes((Math.round(targetMoment.minutes() / options.stepping) * options.stepping)).seconds(0);
                 }
 
                 if (isValid(targetMoment)) {
