@@ -862,7 +862,11 @@
                 targetMoment = targetMoment.clone().locale(options.locale);
 
                 if (options.stepping !== 1) {
-                    targetMoment.minutes((Math.round(targetMoment.minutes() / options.stepping) * options.stepping) % 60).seconds(0);
+                	var minutes = Math.round(targetMoment.minutes() / options.stepping) * options.stepping
+                    targetMoment.minutes(minutes % 60).seconds(0);
+                    if (minutes >= 60){
+                    	targetMoment.add(1, 'h');
+                    }
                 }
 
                 if (isValid(targetMoment)) {
