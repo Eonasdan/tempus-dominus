@@ -843,7 +843,7 @@
             },
 
             setValue = function (targetMoment) {
-                var oldDate = unset ? null : date;
+                var oldDate = unset ? null : date, roundedMinutes;
 
                 // case of calling setValue(null or false)
                 if (!targetMoment) {
@@ -862,10 +862,10 @@
                 targetMoment = targetMoment.clone().locale(options.locale);
 
                 if (options.stepping !== 1) {
-                	var minutes = Math.round(targetMoment.minutes() / options.stepping) * options.stepping;
-                    targetMoment.minutes(minutes % 60).seconds(0);
-                    if (minutes >= 60){
-                    	targetMoment.add(1, 'h');
+                    roundedMinutes = Math.round(targetMoment.minutes() / options.stepping) * options.stepping;
+                    targetMoment.minutes(roundedMinutes % 60).seconds(0);
+                    if (roundedMinutes >= 60) {
+                        targetMoment.add(1, 'h');
                     }
                 }
 
