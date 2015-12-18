@@ -1205,6 +1205,8 @@
                 }
                 if (input.val() !== undefined && input.val().trim().length !== 0) {
                     setValue(parseInputDate(input.val().trim()));
+                } else if (input.attr('placeholder') !== undefined && input.attr('placeholder').trim().length !== 0) {
+                    setValue(parseInputDate(input.attr('placeholder').trim()));
                 } else if (options.useCurrent && unset && (options.inline || (input.is('input') && input.val().trim().length === 0))) {
                     currentMoment = getMoment();
                     if (typeof options.useCurrent === 'string') {
