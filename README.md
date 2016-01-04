@@ -6,8 +6,16 @@
 ## [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
 
 #Notice
-I've had to take a break from working on this plugin. The ratio of issues verus helpful people and my available time is just to far out of balance.
-If anyone wants to volunteer to help with issues and developemt, please let me know.
+It's a new year and a new start. The issue tracker is open again.
+The issue tracker is now soley for bug reports.
+
+Discussion: https://groups.google.com/d/forum/eonasdan-bootstrap-datetimepicker
+
+IM: https://gitter.im/Eonasdan/bootstrap-datetimepicker
+
+SO: http://stackoverflow.com/tags/eonasdan-datetimepicker
+
+New issues that are requests for "how do I.." will be closed and redirected to Stack Overflow.
 
 # v4.17.37
 
