@@ -885,7 +885,8 @@
                     }
                     notifyEvent({
                         type: 'dp.error',
-                        date: targetMoment
+                        date: targetMoment,
+                        oldDate: oldDate
                     });
                 }
             },
