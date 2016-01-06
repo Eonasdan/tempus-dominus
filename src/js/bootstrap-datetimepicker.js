@@ -574,6 +574,9 @@
                         return false;
                     }
                 }
+                if (options.isValidCallback) {
+                   return options.isValidCallback(targetMoment, granularity)
+                }
                 return true;
             },
 
@@ -2100,7 +2103,7 @@
             options.debug = debug;
             return picker;
         };
-
+ 
         picker.allowInputToggle = function (allowInputToggle) {
             if (arguments.length === 0) {
                 return options.allowInputToggle;
@@ -2297,6 +2300,15 @@
             return picker;
         };
 
+        picker.isValidCallback = function (cb) {
+           if (typeof cb !== 'function') {
+                throw new TypeError('isValidCallback() expects a function parameter');
+            }
+    
+            options.isValidCallback = cb;
+            return picker;
+        };
+        
         // initializing element and component attributes
         if (element.is('input')) {
             input = element;
@@ -2380,6 +2392,7 @@
         defaultDate: false,
         disabledDates: false,
         enabledDates: false,
+        isValidCallback: false,
         icons: {
             time: 'glyphicon glyphicon-time',
             date: 'glyphicon glyphicon-calendar',
