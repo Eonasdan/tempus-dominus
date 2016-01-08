@@ -471,3 +471,23 @@ tooltips: {
 ```
 
 This will change the `tooltips` over each icon to a custom string
+
+----------------------
+
+
+### isValidCallback 
+
+<small>4.15.38</small>
+
+```
+isValidCallback: function (theMoment, granularity) {
+    if (granularity == 'd') {
+        // only friday of second week in month
+	    var isMoment = theMoment.clone().startOf('M').day(5).add(1, 'week');
+	    return isMoment.format('YYYY-MM-DD') == theMoment.format('YYYY-MM-DD');
+	}
+	return false
+}
+```
+
+This allows you to return a boolean to do custom date validation
