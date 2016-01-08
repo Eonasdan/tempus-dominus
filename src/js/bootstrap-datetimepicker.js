@@ -575,7 +575,7 @@
                     }
                 }
                 if (options.isValidCallback) {
-                   return options.isValidCallback(targetMoment, granularity)
+                   return options.isValidCallback(targetMoment, granularity);
                 }
                 return true;
             },
