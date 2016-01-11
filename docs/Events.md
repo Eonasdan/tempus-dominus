@@ -68,6 +68,7 @@ Parameters:
 ```
 e = {
     date //the invalid date. Type: moment object (clone)
+    oldDate //previous date. Type: moment object (clone) or false in the event of a null
 }
 ```
 
