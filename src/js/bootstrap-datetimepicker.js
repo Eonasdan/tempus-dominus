@@ -924,7 +924,7 @@
 
                 $(window).off('resize', place);
                 widget.off('click', '[data-action]');
-                widget.off('mousedown', false);
+                widget.off('mousedown', mousedown);
 
                 widget.remove();
                 widget = false;
@@ -1233,7 +1233,7 @@
 
                 $(window).on('resize', place);
                 widget.on('click', '[data-action]', doAction); // this handles clicks on the widget
-                widget.on('mousedown', false);
+                widget.on('mousedown', mousedown);
 
                 if (component && component.hasClass('btn')) {
                     component.toggleClass('active');
@@ -1319,6 +1319,11 @@
                 return false;
             },
 
+            mousedown = function (e) {
+                e.target.unselectable = true; // disable blur event in old IE browsers
+                return false;
+            },
+
             attachDatePickerElementEvents = function () {
                 input.on({
                     'change': change,
@@ -1334,7 +1339,7 @@
                     });
                 } else if (component) {
                     component.on('click', toggle);
-                    component.on('mousedown', false);
+                    component.on('mousedown', mousedown);
                 }
             },
 
@@ -1353,7 +1358,7 @@
                     });
                 } else if (component) {
                     component.off('click', toggle);
-                    component.off('mousedown', false);
+                    component.off('mousedown', mousedown);
                 }
             },
 
