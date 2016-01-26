@@ -137,6 +137,8 @@
 
                 if (d === undefined || d === null) {
                     returnMoment = moment(); //TODO should this use format? and locale?
+                } else if (isUTC()) { // There is a string to parse and we are working on UTC dates
+                    returnMoment = moment.utc(d, parseFormats, options.useStrict);
                 } else if (hasTimeZone()) { // There is a string to parse and a default time zone
                     // parse with the tz function which takes a default time zone if it is not in the format string
                     returnMoment = moment.tz(d, parseFormats, options.useStrict, options.timeZone);
@@ -144,7 +146,9 @@
                     returnMoment = moment(d, parseFormats, options.useStrict);
                 }
 
-                if (hasTimeZone()) {
+                if (isUTC()) {
+                    returnMoment.utc();
+                } else if (hasTimeZone()) {
                     returnMoment.tz(options.timeZone);
                 }
 
@@ -180,6 +184,10 @@
 
             hasTimeZone = function () {
                 return moment.tz !== undefined && options.timeZone !== undefined && options.timeZone !== null && options.timeZone !== '';
+            },
+
+            isUTC = function () {
+                return options.timeZone === 'UTC';
             },
 
             hasDate = function () {
@@ -859,7 +867,9 @@
 
                 targetMoment = targetMoment.clone().locale(options.locale);
 
-                if (hasTimeZone()) {
+                if (isUTC()) {
+                    targetMoment.utc();
+                } else if (hasTimeZone()) {
                     targetMoment.tz(options.timeZone);
                 }
 
