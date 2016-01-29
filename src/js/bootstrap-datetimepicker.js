@@ -2158,7 +2158,7 @@
             }
 
             if (typeof parseInputDate !== 'function') {
-                throw new TypeError('parseInputDate() sholud be as function');
+                throw new TypeError('parseInputDate() should be a function');
             }
 
             options.parseInputDate = parseInputDate;
