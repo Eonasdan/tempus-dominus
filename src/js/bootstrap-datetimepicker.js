@@ -95,6 +95,7 @@
             verticalModes = ['top', 'bottom', 'auto'],
             horizontalModes = ['left', 'right', 'auto'],
             toolbarPlacements = ['default', 'top', 'bottom'],
+            periodPlacements = ['default', 'left'],
             keyMap = {
                 'up': 38,
                 38: 'up',
@@ -273,10 +274,17 @@
                 }
 
                 if (!use24Hours) {
-                    topRow.append($('<td>').addClass('separator'));
-                    middleRow.append($('<td>')
-                        .append($('<button>').addClass('btn btn-primary').attr({'data-action': 'togglePeriod', tabindex: '-1', 'title': options.tooltips.togglePeriod})));
-                    bottomRow.append($('<td>').addClass('separator'));
+                    if (options.periodPlacement === 'left') {
+                        topRow.prepend($('<td>').addClass('separator'));
+                        middleRow.prepend($('<td>')
+                            .append($('<button>').addClass('btn btn-primary').attr({'data-action': 'togglePeriod', tabindex: '-1', 'title': options.tooltips.togglePeriod})));
+                        bottomRow.prepend($('<td>').addClass('separator'));
+                    } else {
+                        topRow.append($('<td>').addClass('separator'));
+                        middleRow.append($('<td>')
+                            .append($('<button>').addClass('btn btn-primary').attr({'data-action': 'togglePeriod', tabindex: '-1', 'title': options.tooltips.togglePeriod})));
+                        bottomRow.append($('<td>').addClass('separator'));
+                    }
                 }
 
                 return $('<div>').addClass('timepicker-picker')
@@ -1955,6 +1963,26 @@
             return picker;
         };
 
+        picker.periodPlacement = function (periodPlacement) {
+            if (arguments.length === 0) {
+                return options.periodPlacement;
+            }
+
+            if (typeof periodPlacement !== 'string') {
+                throw new TypeError('periodPlacement() expects a string parameter');
+            }
+            if (periodPlacements.indexOf(periodPlacement) === -1) {
+                throw new TypeError('periodPlacement() parameter must be one of (' + periodPlacements.join(', ') + ') value');
+            }
+            options.periodPlacement = periodPlacement;
+
+            if (widget) {
+                hide();
+                show();
+            }
+            return picker;
+        };
+
         picker.widgetPositioning = function (widgetPositioning) {
             if (arguments.length === 0) {
                 return $.extend({}, options.widgetPositioning);
@@ -2441,6 +2469,7 @@
         calendarWeeks: false,
         viewMode: 'days',
         toolbarPlacement: 'default',
+        periodPlacement: 'default',
         showTodayButton: false,
         showClear: false,
         showClose: false,
