@@ -274,10 +274,17 @@
                 }
 
                 if (!use24Hours) {
+                    if (options.periodPlacement === 'left') {
+                        topRow.prepend($('<td>').addClass('separator'));
+                        middleRow.prepend($('<td>')
+                            .append($('<button>').addClass('btn btn-primary').attr({'data-action': 'togglePeriod', tabindex: '-1', 'title': options.tooltips.togglePeriod})));
+                        bottomRow.prepend($('<td>').addClass('separator'));
+                    } else {
                     topRow.append($('<td>').addClass('separator'));
                     middleRow.append($('<td>')
                         .append($('<button>').addClass('btn btn-primary').attr({'data-action': 'togglePeriod', tabindex: '-1', 'title': options.tooltips.togglePeriod})));
                     bottomRow.append($('<td>').addClass('separator'));
+                    }
                 }
 
                 return $('<div>').addClass('timepicker-picker')
