@@ -2101,6 +2101,10 @@
         };
 
         picker.keyBinds = function (keyBinds) {
+            if (arguments.length === 0) {
+                return options.keyBinds;
+            }
+
             options.keyBinds = keyBinds;
             return picker;
         };
