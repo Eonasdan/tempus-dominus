@@ -2376,6 +2376,7 @@
         options = options || {};
 
         var args = Array.prototype.slice.call(arguments, 1),
+            isInstance = true,
             thisMethods = ['destroy', 'hide', 'show', 'toggle'],
             returnValue;
 
@@ -2391,17 +2392,16 @@
         } else if (typeof options === 'string') {
             this.each(function () {
                 var $this = $(this),
-                    instance = $this.data('DateTimePicker'),
-                    result;
+                    instance = $this.data('DateTimePicker');
                 if (!instance) {
-                    throw new Error('The bootstrap-datetimepicker("' + options + '") method was called on an element that is not using DateTimePicker');
+                    throw new Error('bootstrap-datetimepicker("' + options + '") method was called on an element that is not using DateTimePicker');
                 }
 
-                result = instance[options].apply(instance, args);
-                returnValue = result === instance ? this : result;
+                returnValue = instance[options].apply(instance, args);
+                isInstance = returnValue === instance;
             });
 
-            if ($.inArray(options, thisMethods) > -1) {
+            if (isInstance || $.inArray(options, thisMethods) > -1) {
                 return this;
             }
 
