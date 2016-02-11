@@ -2373,14 +2373,42 @@
      ********************************************************************************/
 
     $.fn.datetimepicker = function (options) {
-        return this.each(function () {
-            var $this = $(this);
-            if (!$this.data('DateTimePicker')) {
-                // create a private copy of the defaults object
-                options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
-                $this.data('DateTimePicker', dateTimePicker($this, options));
+        options = options || {};
+
+        var args = Array.prototype.slice.call(arguments, 1),
+            thisMethods = ['destroy', 'hide', 'show', 'toggle'],
+            returnValue;
+
+        if (typeof options === 'object') {
+            return this.each(function () {
+                var $this = $(this);
+                if (!$this.data('DateTimePicker')) {
+                    // create a private copy of the defaults object
+                    options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
+                    $this.data('DateTimePicker', dateTimePicker($this, options));
+                }
+            });
+        } else if (typeof options === 'string') {
+            this.each(function () {
+                var $this = $(this),
+                    instance = $this.data('DateTimePicker'),
+                    result;
+                if (!instance) {
+                    throw new Error('The bootstrap-datetimepicker("' + options + '") method was called on an element that is not using DateTimePicker');
+                }
+
+                result = instance[options].apply(instance, args);
+                returnValue = result === instance ? this : result;
+            });
+
+            if ($.inArray(options, thisMethods) > -1) {
+                return this;
             }
-        });
+
+            return returnValue;
+        }
+
+        throw new TypeError('Invalid arguments for DateTimePicker: ' + options);
     };
 
     $.fn.datetimepicker.defaults = {
