@@ -1524,7 +1524,7 @@
             }
 
             if ((typeof newFormat !== 'string') && ((typeof newFormat !== 'boolean') || (newFormat !== false))) {
-                throw new TypeError('format() expects a sting or boolean:false parameter ' + newFormat);
+                throw new TypeError('format() expects a string or boolean:false parameter ' + newFormat);
             }
 
             options.format = newFormat;
