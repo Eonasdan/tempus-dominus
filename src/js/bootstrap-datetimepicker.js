@@ -160,6 +160,8 @@
                         return actualFormat.indexOf('Y') !== -1;
                     case 'M':
                         return actualFormat.indexOf('M') !== -1;
+                    case 'w':
+                        return actualFormat.toLowerCase().indexOf('w') !== -1;
                     case 'd':
                         return actualFormat.toLowerCase().indexOf('d') !== -1;
                     case 'h':
@@ -183,7 +185,7 @@
             },
 
             hasDate = function () {
-                return (isEnabled('y') || isEnabled('M') || isEnabled('d'));
+                return (isEnabled('y') || isEnabled('M') || isEnabled('d') || isEnabled('w'));
             },
 
             getDatePickerTemplate = function () {
@@ -1413,7 +1415,7 @@
                 if (isEnabled('M')) {
                     minViewModeNumber = 1;
                 }
-                if (isEnabled('d')) {
+                if (isEnabled('d') || isEnabled('w')) {
                     minViewModeNumber = 0;
                 }
 
