@@ -386,6 +386,23 @@ Takes a `boolean` variable to set if the week numbers will appear to the left on
 
 ----------------------
 
+### selectWeeks
+
+	Default: false
+
+Hightlights whole month row on date selection. Returned result still depends on `format`
+
+![selectWeeks](img/selectWeeks.png)
+
+#### selectWeeks()
+
+Returns a `boolean` with the current `options.selectWeeks` option configuration
+
+#### selectWeeks(boolean)
+
+Takes a `boolean` variable to set if week selection is turned on
+----------------------
+
 ### viewMode
 
 	Default: 'days'
