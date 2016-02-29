@@ -329,13 +329,29 @@
         }
     }
 
+    .datepicker-days.select-week {
+        tr.highlighted td {
+            background-color: @bs-datetimepicker-active-bg;
+            color: @bs-datetimepicker-active-color;
+            text-shadow: @bs-datetimepicker-text-shadow;
+            border-radius: 0;
+
+            &:first-child {
+                border-radius: @bs-datetimepicker-border-radius 0 0 @bs-datetimepicker-border-radius;
+            }
+            &:last-child {
+                border-radius: 0 @bs-datetimepicker-border-radius @bs-datetimepicker-border-radius 0;
+            }
+        }
+    }
+
     &.usetwentyfour {
         td.hour {
             height: 27px;
             line-height: 27px;
         }
     }
-	
+
 	&.wider {
 		width: 21em;
 	}
