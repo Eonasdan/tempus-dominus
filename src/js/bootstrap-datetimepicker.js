@@ -700,6 +700,10 @@
                 daysViewHeader.eq(1).attr('title', options.tooltips.selectMonth);
                 daysViewHeader.eq(2).find('span').attr('title', options.tooltips.nextMonth);
 
+                if (options.selectWeek) {
+                    daysView.addClass('select-week');
+                }
+
                 daysView.find('.disabled').removeClass('disabled');
                 daysViewHeader.eq(1).text(viewDate.format(options.dayViewHeaderFormat));
 
@@ -717,6 +721,9 @@
                         row = $('<tr>');
                         if (options.calendarWeeks) {
                             row.append('<td class="cw">' + currentDate.week() + '</td>');
+                            if (options.selectWeek && currentDate.isSame(date, 'w') && !unset) {
+                                row.addClass('highlighted');
+                            }
                         }
                         html.push(row);
                     }
@@ -1997,6 +2004,20 @@
             }
 
             options.calendarWeeks = calendarWeeks;
+            update();
+            return picker;
+        };
+
+        picker.selectWeek = function (selectWeek) {
+            if (arguments.length === 0) {
+                return options.selectWeek;
+            }
+
+            if (typeof selectWeek !== 'boolean') {
+                throw new TypeError('selectWeek() expects parameter to be a boolean value');
+            }
+
+            options.selectWeek = selectWeek;
             update();
             return picker;
         };
