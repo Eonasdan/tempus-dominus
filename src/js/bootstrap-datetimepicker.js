@@ -955,6 +955,40 @@
                 return inputDate;
             },
 
+            /**@param classes type: string, individual classes should be separated by whitespace */
+            hasClasses = function ($element, classes) {
+                var elementClasses = $element.attr('class').split(/\s+/),
+                classArray = classes.split(/\s+/),
+                numberOfMatchingClasses = 0;
+
+                $.each(elementClasses, function (index1, elementClass) {
+                    $.each(classArray, function (index2, cssClass) {
+                        if (cssClass === elementClass) {
+                            numberOfMatchingClasses++;
+                        }
+                    });
+                });
+
+                return numberOfMatchingClasses === classArray.length;
+            },
+
+            updateToggleButtonTooltip = function ($toggleButton) {
+                if (!$toggleButton) {
+                    return;
+                }
+
+                var iconElement = $toggleButton.find('span'),
+                newTooltip = '';
+
+                if (hasClasses(iconElement, options.icons.time)) {
+                    newTooltip = options.tooltips.selectTime;
+                } else if (hasClasses(iconElement, options.icons.date)) {
+                    newTooltip = options.tooltips.selectDate;
+                }
+
+                $toggleButton.attr('title', newTooltip);
+            },
+
             /********************************************************************************
              *
              * Widget UI interaction functions
@@ -1105,8 +1139,10 @@
                         }
                         if ($this.is('span')) {
                             $this.toggleClass(options.icons.time + ' ' + options.icons.date);
+                            updateToggleButtonTooltip($this.parent());
                         } else {
                             $this.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
+                            updateToggleButtonTooltip($this);
                         }
 
                         // NOTE: uncomment if toggled state will be restored in show()
@@ -2465,7 +2501,8 @@
             incrementSecond: 'Increment Second',
             decrementSecond: 'Decrement Second',
             togglePeriod: 'Toggle Period',
-            selectTime: 'Select Time'
+            selectTime: 'Select Time',
+            selectDate: 'Select Date'
         },
         useStrict: false,
         sideBySide: false,
