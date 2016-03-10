@@ -7,6 +7,7 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use(['momentjs:moment@2.5.0','jquery@1.11.4']);
   api.addFiles([
     "build/css/bootstrap-datetimepicker.min.css",
     "build/js/bootstrap-datetimepicker.min.js"
