@@ -2208,7 +2208,7 @@
             return picker;
         };
 
-        picker.validator = function(validator) {
+        picker.validator = function (validator) {
             if (arguments.length === 0) {
                 return (options.validator ? $.extend({}, options.validator) : options.validator);
             }
@@ -2217,8 +2217,8 @@
                 update();
                 return picker;
             }
-            var isFunction = function(obj) {
-              return !!(obj && obj.constructor && obj.call && obj.apply);
+            var isFunction = function (obj) {
+                return !!(obj && obj.constructor && obj.call && obj.apply);
             };
             if (!(isFunction(validator))) {
                 throw new TypeError('validator() expects a function parameter');
