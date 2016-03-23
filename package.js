@@ -2,7 +2,7 @@ Package.describe({
   name: 'eonasdan:bootstrap-datetimepicker',
   version: '4.17.37',
   summary: 'Date/time picker widget based on twitter bootstrap',
-  git: 'https://github.com/rgnevashev/bootstrap-datetimepicker',
+  git: 'https://github.com/rgnevashev/bootstrap-datetimepicker.git',
   documentation: 'README.md'
 });
 
