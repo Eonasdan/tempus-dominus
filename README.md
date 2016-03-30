@@ -1,7 +1,6 @@
 # Bootstrap 3 Date/Time Picker
 
-[![Join the chat at https://gitter.im/Eonasdan/bootstrap-datetimepicker](https://badges.gitter.im/Eonasdan/bootstrap-datetimepicker.svg)](https://gitter.im/Eonasdan/bootstrap-datetimepicker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)&nbsp;&nbsp;&nbsp;![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=development)&nbsp;&nbsp;&nbsp;[![Stories in Ready](https://badge.waffle.io/Eonasdan/bootstrap-datetimepicker.png?label=ready&title=Ready)](https://waffle.io/Eonasdan/bootstrap-datetimepicker)
+![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)&nbsp;&nbsp;&nbsp;![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=development)
 
 ![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
 
