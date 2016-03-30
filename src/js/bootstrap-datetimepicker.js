@@ -504,8 +504,6 @@
                 }
                 if (dir) {
                     currentViewMode = Math.max(minViewModeNumber, Math.min(3, currentViewMode + dir));
-                } else {
-                    currentViewMode = 0;
                 }
                 widget.find('.datepicker > div').hide().filter('.datepicker-' + datePickerModes[currentViewMode].clsName).show();
             },
@@ -871,7 +869,7 @@
 
                 if (isValid(targetMoment)) {
                     date = targetMoment;
-                    viewDate = date.clone();
+                    //viewDate = date.clone(); // TODO this doesn't work right on first use
                     input.val(date.format(actualFormat));
                     element.data('date', date.format(actualFormat));
                     unset = false;
@@ -930,6 +928,9 @@
                 });
 
                 input.blur();
+
+                currentViewMode = 0;
+                viewDate = date.clone();
 
                 return picker;
             },
@@ -1207,7 +1208,7 @@
                 }
                 if (input.val() !== undefined && input.val().trim().length !== 0) {
                     setValue(parseInputDate(input.val().trim()));
-                } else if (options.useCurrent && unset && (options.inline || (input.is('input') && input.val().trim().length === 0))) {
+                } else if (unset && options.useCurrent && (options.inline || (input.is('input') && input.val().trim().length === 0))) {
                     currentMoment = getMoment();
                     if (typeof options.useCurrent === 'string') {
                         currentMoment = useCurrentGranularity[options.useCurrent](currentMoment);
@@ -2281,16 +2282,13 @@
             update();
             return picker;
         };
+        /**
+         * Returns the component's model current viewDate, a moment object or null if not set. Passing a null value unsets the components model current moment. Parsing of the newDate parameter is made using moment library with the options.format and options.useStrict components configuration.
+         * @param {Takes string, viewDate, moment, null parameter.} newDate 
+         * @returns {viewDate.clone()} 
+         */
 
         picker.viewDate = function (newDate) {
-            ///<signature helpKeyword="$.fn.datetimepicker.viewDate">
-            ///<summary>Returns the component's model current viewDate, a moment object or null if not set.</summary>
-            ///<returns type="Moment">viewDate.clone()</returns>
-            ///</signature>
-            ///<signature>
-            ///<summary>Sets the components model current moment to it. Passing a null value unsets the components model current moment. Parsing of the newDate parameter is made using moment library with the options.format and options.useStrict components configuration.</summary>
-            ///<param name="newDate" locid="$.fn.datetimepicker.date_p:newDate">Takes string, viewDate, moment, null parameter.</param>
-            ///</signature>
             if (arguments.length === 0) {
                 return viewDate.clone();
             }
@@ -2335,7 +2333,7 @@
         }
 
         // Set defaults for date here now instead of in var declaration
-        date = getMoment(); //TODO change?
+        date = getMoment();
         viewDate = date.clone();
 
         $.extend(true, options, dataToOptions());
@@ -2367,6 +2365,28 @@
      *
      ********************************************************************************/
 
+    /**
+    * See (http://jquery.com/).
+    * @name jQuery
+    * @class 
+    * See the jQuery Library  (http://jquery.com/) for full details.  This just
+    * documents the function and classes that are added to jQuery by this plug-in.
+    */
+
+    /**
+     * See (http://jquery.com/)
+     * @name fn
+     * @class 
+     * See the jQuery Library  (http://jquery.com/) for full details.  This just
+     * documents the function and classes that are added to jQuery by this plug-in.
+     * @memberOf jQuery
+     */
+
+    /**
+     * Show comments
+     * @class datetimepicker
+     * @memberOf jQuery.fn
+     */
     $.fn.datetimepicker = function (options) {
         return this.each(function () {
             var $this = $(this);
