@@ -145,23 +145,23 @@
                 }
                 if (d === undefined || d === null) {
                     if (tzEnabled) {
-                        returnMoment = moment().tz(options.timeZone).startOf('d');
+                        returnMoment = moment.utc().tz(options.timeZone).startOf('d');
                     } else {
-                        returnMoment = moment().startOf('d');
+                        returnMoment = moment.utc().startOf('d');
                     }
                 } else {
                     if (tzEnabled) {
-                        currentZoneOffset = moment().tz(options.timeZone).utcOffset();
-                        incomingZoneOffset = moment(d, parseFormats, options.useStrict).utcOffset();
+                        currentZoneOffset = moment.utc().tz(options.timeZone).utcOffset();
+                        incomingZoneOffset = moment.utc(d, parseFormats, options.useStrict).utcOffset();
                         if (incomingZoneOffset !== currentZoneOffset) {
-                            timeZoneIndicator = moment().tz(options.timeZone).format('Z');
-                            dateWithTimeZoneInfo = moment(d, parseFormats, options.useStrict).format('YYYY-MM-DD[T]HH:mm:ss') + timeZoneIndicator;
-                            returnMoment = moment(dateWithTimeZoneInfo, parseFormats, options.useStrict).tz(options.timeZone);
+                            timeZoneIndicator = moment.utc().tz(options.timeZone).format('Z');
+                            dateWithTimeZoneInfo = moment.utc(d, parseFormats, options.useStrict).format('YYYY-MM-DD[T]HH:mm:ss') + timeZoneIndicator;
+                            returnMoment = moment.utc(dateWithTimeZoneInfo, parseFormats, options.useStrict).tz(options.timeZone);
                         } else {
-                            returnMoment = moment(d, parseFormats, options.useStrict).tz(options.timeZone);
+                            returnMoment = moment.utc(d, parseFormats, options.useStrict).tz(options.timeZone);
                         }
                     } else {
-                        returnMoment = moment(d, parseFormats, options.useStrict);
+                        returnMoment = moment.utc(d, parseFormats, options.useStrict);
                     }
                 }
                 return returnMoment;
@@ -654,7 +654,7 @@
             updateDecades = function () {
                 var decadesView = widget.find('.datepicker-decades'),
                     decadesViewHeader = decadesView.find('th'),
-                    startDecade = moment({y: viewDate.year() - (viewDate.year() % 100) - 1}),
+                    startDecade = moment.utc({y: viewDate.year() - (viewDate.year() % 100) - 1}),
                     endDecade = startDecade.clone().add(100, 'y'),
                     startedAt = startDecade.clone(),
                     html = '';
@@ -664,13 +664,13 @@
 
                 decadesView.find('.disabled').removeClass('disabled');
 
-                if (startDecade.isSame(moment({y: 1900})) || (options.minDate && options.minDate.isAfter(startDecade, 'y'))) {
+                if (startDecade.isSame(moment.utc({y: 1900})) || (options.minDate && options.minDate.isAfter(startDecade, 'y'))) {
                     decadesViewHeader.eq(0).addClass('disabled');
                 }
 
                 decadesViewHeader.eq(1).text(startDecade.year() + '-' + endDecade.year());
 
-                if (startDecade.isSame(moment({y: 2000})) || (options.maxDate && options.maxDate.isBefore(endDecade, 'y'))) {
+                if (startDecade.isSame(moment.utc({y: 2000})) || (options.maxDate && options.maxDate.isBefore(endDecade, 'y'))) {
                     decadesViewHeader.eq(2).addClass('disabled');
                 }
 
