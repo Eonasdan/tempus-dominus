@@ -1660,8 +1660,8 @@
                 var tries = 0;
                 while (!isValid(date, 'd')) {
                     date.add(1, 'd');
-                    if (tries === 7) {
-                        throw 'Tried 7 times to find a valid date';
+                    if (tries === 31) {
+                        throw 'Tried 31 times to find a valid date';
                     }
                     tries++;
                 }
