@@ -1661,8 +1661,8 @@
                 var tries = 0;
                 while (!isValid(date, 'd')) {
                     date.add(1, 'd');
-                    if (tries === 7) {
-                        throw 'Tried 7 times to find a valid date';
+                    if (tries === 31) {
+                        throw 'Tried 31 times to find a valid date';
                     }
                     tries++;
                 }
@@ -2293,8 +2293,8 @@
         };
         /**
          * Returns the component's model current viewDate, a moment object or null if not set. Passing a null value unsets the components model current moment. Parsing of the newDate parameter is made using moment library with the options.format and options.useStrict components configuration.
-         * @param {Takes string, viewDate, moment, null parameter.} newDate 
-         * @returns {viewDate.clone()} 
+         * @param {Takes string, viewDate, moment, null parameter.} newDate
+         * @returns {viewDate.clone()}
          */
 
         picker.viewDate = function (newDate) {
@@ -2377,7 +2377,7 @@
     /**
     * See (http://jquery.com/).
     * @name jQuery
-    * @class 
+    * @class
     * See the jQuery Library  (http://jquery.com/) for full details.  This just
     * documents the function and classes that are added to jQuery by this plug-in.
     */
@@ -2385,7 +2385,7 @@
     /**
      * See (http://jquery.com/)
      * @name fn
-     * @class 
+     * @class
      * See the jQuery Library  (http://jquery.com/) for full details.  This just
      * documents the function and classes that are added to jQuery by this plug-in.
      * @memberOf jQuery
