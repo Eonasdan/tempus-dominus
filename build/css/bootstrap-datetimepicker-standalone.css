@@ -107,3 +107,18 @@
     padding-left: 0;
     list-style: none;
 }
+
+.list-unstyled li {
+    padding: 0;
+    margin: 0;
+}
+
+.table-condensed > thead > tr > th,
+.table-condensed > tbody > tr > th,
+.table-condensed > tfoot > tr > th,
+.table-condensed > thead > tr > td,
+.table-condensed > tbody > tr > td,
+.table-condensed > tfoot > tr > td {
+    padding: 5px;
+    margin: 0;
+}
