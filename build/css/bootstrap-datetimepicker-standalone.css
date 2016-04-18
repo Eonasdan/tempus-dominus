@@ -39,6 +39,18 @@
     content: "\e109";
 }
 
+.glyphicon-screenshot:before {
+    content: "\e087";
+}
+
+.glyphicon-trash:before {
+    content: "\e020";
+}
+
+.glyphicon-remove:before {
+    content: "\e014";
+}
+
 .btn {
     display: inline-block;
     padding: 6px 12px;
