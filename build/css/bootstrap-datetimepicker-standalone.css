@@ -121,4 +121,5 @@
 .table-condensed > tfoot > tr > td {
     padding: 5px;
     margin: 0;
+    display: table-cell;
 }
