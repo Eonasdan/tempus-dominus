@@ -8,7 +8,7 @@
 
 #Notice
 It's a new year and a new start. The issue tracker is open again.
-The issue tracker is now soley for bug reports.
+The issue tracker is now solely for bug reports.
 
 SO: http://stackoverflow.com/tags/eonasdan-datetimepicker
 
