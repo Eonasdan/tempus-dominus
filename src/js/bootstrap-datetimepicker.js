@@ -742,7 +742,14 @@
                         clsName += ' weekend';
                     }
                     row.append('<td data-action="selectDay" data-day="' + currentDate.format('L') + '" class="day' + clsName + '">' + currentDate.date() + '</td>');
-                    currentDate.add(1, 'd');
+                    var oldDate = currentDate.clone();
+                   currentDate.add().add(1, 'd');
+
+                   var diff = currentDate.diff(oldDate, "hours");
+                   var res = (24 - diff);
+                   if (res > 0) {
+                       currentDate.add(res, 'h');
+                   }
                 }
 
                 daysView.find('tbody').empty().append(html);
@@ -1009,7 +1016,7 @@
                     if ($(e.target).is('.new')) {
                         day.add(1, 'M');
                     }
-                    setValue(day.date(parseInt($(e.target).text(), 10)));
+                    setValue(day.date(parseInt($(e.target).text(), 10)).add(1,'h'));
                     if (!hasTime() && !options.keepOpen && !options.inline) {
                         hide();
                     }
