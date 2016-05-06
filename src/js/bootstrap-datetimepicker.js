@@ -643,12 +643,9 @@
             updateDecades = function () {
                 var decadesView = widget.find('.datepicker-decades'),
                     decadesViewHeader = decadesView.find('th'),
-                    startDecade = moment({ y: viewDate.year() - (viewDate.year() % 100) - 1 }),
+                    startDecade = moment({y: viewDate.year() - (viewDate.year() % 100) - 1}),
                     endDecade = startDecade.clone().add(100, 'y'),
                     startedAt = startDecade.clone(),
-                    minDateDecade = false,
-                    maxDateDecade = false,
-                    endDecadeYear,
                     html = '';
 
                 decadesViewHeader.eq(0).find('span').attr('title', options.tooltips.prevCentury);
@@ -656,28 +653,26 @@
 
                 decadesView.find('.disabled').removeClass('disabled');
 
-                if (startDecade.isSame(moment({ y: 1900 })) || (options.minDate && options.minDate.isAfter(startDecade, 'y'))) {
+                if (startDecade.isSame(moment({y: 1900})) || (options.minDate && options.minDate.isAfter(startDecade, 'y'))) {
                     decadesViewHeader.eq(0).addClass('disabled');
                 }
 
-                decadesViewHeader.eq(1).text(startDecade.year() + '-' + endDecade.year());
-
-                if (startDecade.isSame(moment({ y: 2000 })) || (options.maxDate && options.maxDate.isBefore(endDecade, 'y'))) {
+                if (startDecade.isSame(moment({y: 2000})) || (options.maxDate && options.maxDate.isBefore(endDecade, 'y'))) {
                     decadesViewHeader.eq(2).addClass('disabled');
                 }
 
+                decadesViewHeader.eq(1).text((startedAt.year() + 1) + '-' + (startDecade.year()));
+
                 while (!startDecade.isAfter(endDecade, 'y')) {
-                    endDecadeYear = startDecade.year() + 12;
-                    minDateDecade = options.minDate && options.minDate.isAfter(startDecade, 'y') && options.minDate.year() <= endDecadeYear;
-                    maxDateDecade = options.maxDate && options.maxDate.isAfter(startDecade, 'y') && options.maxDate.year() <= endDecadeYear;
-                    html += '<span data-action="selectDecade" class="decade' + (date.isAfter(startDecade) && date.year() <= endDecadeYear ? ' active' : '') +
-                        (!isValid(startDecade, 'y') && !minDateDecade && !maxDateDecade ? ' disabled' : '') + '" data-selection="' + (startDecade.year() + 6) + '">' + (startDecade.year() + 1) + ' - ' + (startDecade.year() + 12) + '</span>';
-                    startDecade.add(12, 'y');
+                    var activeClass = startDecade.isSame(date, 'y') ? ' active' : '',
+                        disabledClass = !isValid(startDecade, 'y') ? ' disabled' : '',
+                        label = (startDecade.year() + 1) + "'s";
+                    html += '<span data-action="selectDecade" class="decade' + activeClass + disabledClass + '" data-selection="' + (startDecade.year() + 6) + '">' + label + '</span>';
+                    startDecade.add(10, 'y');
                 }
                 html += '<span></span><span></span><span></span>'; //push the dangling block over, at least this way it's even
 
                 decadesView.find('td').html(html);
-                decadesViewHeader.eq(1).text((startedAt.year() + 1) + '-' + (startDecade.year()));
             },
 
             fillDate = function () {
