@@ -1039,42 +1039,80 @@
                 },
 
                 incrementHours: function () {
-                    var newDate = date.clone().add(1, 'h');
+                    var newDate;
+                    if (options.noRollTime && date.hours() === 23) {  // if noRollTime option set do not increment date just set hours
+                        newDate = date.clone().hours(0);
+                    } else {
+                        newDate = date.clone().add(1, 'h');
+                    }
                     if (isValid(newDate, 'h')) {
                         setValue(newDate);
                     }
                 },
 
                 incrementMinutes: function () {
-                    var newDate = date.clone().add(options.stepping, 'm');
+                    var newDate,
+                        newMinutes,
+                        adjustedMinutes;
+                    newMinutes = date.minutes() + options.stepping;  // calculate new minutes by adding stepping value
+                    adjustedMinutes = newMinutes % 60;  // adjust new minutes value if greater than 59
+                    if (options.noRollTime && adjustedMinutes < date.minutes()) {  // if noRollTime option set do not increment hours just set minutes
+                        newDate = date.clone().minutes(adjustedMinutes);
+                    } else {
+                        newDate = date.clone().add(options.stepping, 'm');
+                    }
                     if (isValid(newDate, 'm')) {
                         setValue(newDate);
                     }
                 },
 
                 incrementSeconds: function () {
-                    var newDate = date.clone().add(1, 's');
+                    var newDate;
+                    if (options.noRollTime && date.seconds() === 59) {  // if noRollTime option set do not increment minutes just set seconds
+                        newDate = date.clone().seconds(0);
+                    } else {
+                        newDate = date.clone().add(1, 's');
+                    }
                     if (isValid(newDate, 's')) {
                         setValue(newDate);
                     }
                 },
 
                 decrementHours: function () {
-                    var newDate = date.clone().subtract(1, 'h');
+                    var newDate;
+                    if (options.noRollTime && date.hours() === 0) {  // if noRollTime option set do not decrement date just set hours
+                        newDate = date.clone().hours(23);
+                    } else {
+                        newDate = date.clone().subtract(1, 'h');
+                    }
                     if (isValid(newDate, 'h')) {
                         setValue(newDate);
                     }
                 },
 
                 decrementMinutes: function () {
-                    var newDate = date.clone().subtract(options.stepping, 'm');
+                    var newDate,
+                        newMinutes,
+                        adjustedMinutes;
+                    newMinutes = (date.minutes() - options.stepping);  // calculate new minutes by subtracting stepping value
+                    adjustedMinutes = (newMinutes < 0) ? (newMinutes + 60) : newMinutes;  // adjust new minutes value if outside of 0 - 59
+                    if (options.noRollTime && adjustedMinutes > date.minutes()) {  // if noRollTime option set do not decrement hours just set minutes
+                        newDate = date.clone().minutes(adjustedMinutes);
+                    } else {
+                        newDate = date.clone().subtract(options.stepping, 'm');
+                    }
                     if (isValid(newDate, 'm')) {
                         setValue(newDate);
                     }
                 },
 
                 decrementSeconds: function () {
-                    var newDate = date.clone().subtract(1, 's');
+                    var newDate;
+                    if (options.noRollTime && date.seconds() === 0) {  // if noRollTime option set do not derement minutes just set seconds
+                        newDate = date.clone().seconds(59);
+                    } else {
+                        newDate = date.clone().subtract(1, 's');
+                    }
                     if (isValid(newDate, 's')) {
                         setValue(newDate);
                     }
@@ -2314,6 +2352,14 @@
             return picker;
         };
 
+        picker.noRollTime = function (noRollTime) {
+            if (typeof noRollTime !== 'boolean') {
+                throw new TypeError('noRollTime() expects a boolean parameter');
+            }
+            options.noRollTime = noRollTime;
+            return picker;
+        };
+
         // initializing element and component attributes
         if (element.is('input')) {
             input = element;
@@ -2612,7 +2658,8 @@
         disabledTimeIntervals: false,
         disabledHours: false,
         enabledHours: false,
-        viewDate: false
+        viewDate: false,
+        noRollTime: false
     };
     if (typeof module !== 'undefined') {
         module.exports = $.fn.datetimepicker;
