@@ -2558,8 +2558,8 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || this.getMoment(),
-                    adjusteMinutes;
+                var adjustedMinutes,
+                    d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(7, 'd'));
                 } else {
@@ -2601,7 +2601,7 @@
                 } else {
                     if (this.noRollTime() && d.hours() === 23) {  // if noRollTime option set do not increment date just set hours
                         this.date(d.clone().hours(0));
-                    } else{
+                    } else {
                         this.date(d.clone().add(1, 'h'));
                     }
                 }
