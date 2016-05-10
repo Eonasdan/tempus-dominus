@@ -468,7 +468,9 @@
             },
 
             notifyEvent = function (e) {
-                if (e.type === 'dp.change' && ((e.date && e.date.isSame(e.oldDate)) || (!e.date && !e.oldDate))) {
+                if (e.type === 'dp.change' &&
+                    ((e.date && e.date.isSame(e.oldDate)) || (!e.date && !e.oldDate)) &&
+                    !options.alwaysFireChange) {
                     return;
                 }
                 element.trigger(e);
@@ -1450,6 +1452,10 @@
             }
             input.prop('disabled', true);
             return picker;
+        };
+
+        picker.alwaysFireChange = function (alwaysFireChange) {
+            options.alwaysFireChange = alwaysFireChange;
         };
 
         picker.enable = function () {
@@ -2488,6 +2494,7 @@
         daysOfWeekDisabled: false,
         calendarWeeks: false,
         viewMode: 'days',
+        alwaysFireChange: false,
         toolbarPlacement: 'default',
         showTodayButton: false,
         showClear: false,

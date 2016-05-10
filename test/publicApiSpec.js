@@ -514,6 +514,31 @@ describe('Public API method tests', function () {
                 dtp.defaultDate(moment().year(2000));
                 expect(dtp.date().isSame(timestamp)).toBe(true);
             });
+
+            it('triggers a change event upon setting the same default date when alwaysFireChange is true and inline', function () {
+                dtp.date(null);
+                var when = moment();
+
+                dtp.alwaysFireChange(true);
+                dtp.inline(true);
+
+                dtp.defaultDate(when);
+                expect(dpChangeSpy).toHaveBeenCalled();
+                dtp.defaultDate(when);
+                expect(dpChangeSpy).toHaveBeenCalledTimes(2);
+            });
+
+            it('does not trigger a change event upon setting the same default date when alwaysFireChange is false', function () {
+                dtp.date(null);
+                var when = moment();
+
+                dtp.inline(true);
+
+                dtp.defaultDate(when);
+                expect(dpChangeSpy).toHaveBeenCalled();
+                dtp.defaultDate(when);
+                expect(dpChangeSpy).toHaveBeenCalledTimes(1);
+            });
         });
 
         describe('access', function () {
