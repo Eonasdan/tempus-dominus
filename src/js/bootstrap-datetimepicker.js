@@ -2353,6 +2353,10 @@
         };
 
         picker.noRollTime = function (noRollTime) {
+            if (arguments.length === 0) {
+                return options.stepping;
+            }
+
             if (typeof noRollTime !== 'boolean') {
                 throw new TypeError('noRollTime() expects a boolean parameter');
             }
@@ -2554,11 +2558,17 @@
                 if (!widget) {
                     return;
                 }
-                var d = this.date() || this.getMoment();
+                var d = this.date() || this.getMoment(),
+                    adjusteMinutes;
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(7, 'd'));
                 } else {
-                    this.date(d.clone().add(this.stepping(), 'm'));
+                    adjustedMinutes = (d.minutes() + this.stepping()) % 60;  // adjust new minutes value if greater than 59
+                    if (this.noRollTime() && (adjustedMinutes) < d.minutes()) {  // if noRollTime option set do not increment hours just set minutes
+                        this.date(d.clone().minutes(adjustedMinutes));
+                    } else {
+                        this.date(d.clone().add(this.stepping(), 'm'));
+                    }
                 }
             },
             down: function (widget) {
@@ -2566,11 +2576,19 @@
                     this.show();
                     return;
                 }
-                var d = this.date() || this.getMoment();
+                var d = this.date() || this.getMoment(),
+                    newMinutes,
+                    adjustedMinutes;
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(7, 'd'));
                 } else {
-                    this.date(d.clone().subtract(this.stepping(), 'm'));
+                    newMinutes = (d.minutes() - this.stepping());  // calculate new minutes by subtracting stepping value
+                    adjustedMinutes = (newMinutes < 0) ? (newMinutes + 60) : newMinutes;  // adjust new minutes value if outside of 0 - 59
+                    if (this.noRollTime() && adjustedMinutes > d.minutes()) {  // if noRollTime option set do not decrement hours just set minutes
+                        this.date(d.clone().minutes(adjustedMinutes));
+                    } else {
+                        this.date(d.clone().subtract(this.stepping(), 'm'));
+                    }
                 }
             },
             'control up': function (widget) {
@@ -2581,7 +2599,11 @@
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'y'));
                 } else {
-                    this.date(d.clone().add(1, 'h'));
+                    if (this.noRollTime() && d.hours() === 23) {  // if noRollTime option set do not increment date just set hours
+                        this.date(d.clone().hours(0));
+                    } else{
+                        this.date(d.clone().add(1, 'h'));
+                    }
                 }
             },
             'control down': function (widget) {
@@ -2592,7 +2614,11 @@
                 if (widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'y'));
                 } else {
-                    this.date(d.clone().subtract(1, 'h'));
+                    if (this.noRollTime() && d.hours() === 0) {  // if noRollTime option set do not decrement date just set hours
+                        this.date(d.clone().hours(23));
+                    } else {
+                        this.date(d.clone().subtract(1, 'h'));
+                    }
                 }
             },
             left: function (widget) {
