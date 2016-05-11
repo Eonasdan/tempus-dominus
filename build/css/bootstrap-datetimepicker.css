@@ -355,6 +355,9 @@
 .bootstrap-datetimepicker-widget.wider {
   width: 21em;
 }
+.bootstrap-datetimepicker-widget.wider.timepicker-sbs {
+  width: 40em;
+}
 .bootstrap-datetimepicker-widget .datepicker-decades .decade {
   line-height: 1.8em !important;
 }
