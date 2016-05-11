@@ -2095,6 +2095,10 @@
             return picker;
         };
 
+        picker.hasTime = hasTime;
+
+        picker.hasDate = hasDate;
+
         picker.clear = function () {
             clear();
             return picker;

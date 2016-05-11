@@ -237,6 +237,34 @@ describe('Public API method tests', function () {
         });
     });
 
+    describe('hasTime and hasDate functions', function () {
+        describe('functionality', function () {
+            it('hasTime returns true if the format has a time part', function () {
+                var format = 'HH:mm:ss';
+                dtp.format(format);
+                expect(dtp.hasTime()).toBe(true);
+            });
+
+            it('hasTime returns false if the format has no time part', function () {
+                var format = 'YYYY-MM-DD';
+                dtp.format(format);
+                expect(dtp.hasTime()).toBe(false);
+            });
+
+            it('hasDate returns true if the format has a date part', function () {
+                var format = 'YYYY-MM-DD';
+                dtp.format(format);
+                expect(dtp.hasDate()).toBe(true);
+            });
+
+            it('hasDate returns false if the format has no date part', function () {
+                var format = 'HH:mm:ss';
+                dtp.format(format);
+                expect(dtp.hasDate()).toBe(false);
+            });
+        });
+    });
+
     describe('destroy() function', function () {
         describe('existence', function () {
             it('is defined', function () {
