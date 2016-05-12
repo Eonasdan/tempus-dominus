@@ -837,6 +837,22 @@
                 fillTime();
             },
 
+            beforeUpdate = function (targetMoment) {
+                var oldDate = unset ? null : date;
+                targetMoment = targetMoment.clone().locale(options.locale);
+                date = targetMoment;
+                viewDate = date.clone();
+                input.val(date.format(actualFormat));
+                element.data('date', date.format(actualFormat));
+                unset = false;
+                update();
+                notifyEvent({
+                    type: 'dp.change',
+                    date: date.clone(),
+                    oldDate: oldDate
+                });
+            },
+
             setValue = function (targetMoment) {
                 var oldDate = unset ? null : date;
 
@@ -865,17 +881,11 @@
                 }
 
                 if (isValid(targetMoment)) {
-                    date = targetMoment;
-                    //viewDate = date.clone(); // TODO this doesn't work right on first use
-                    input.val(date.format(actualFormat));
-                    element.data('date', date.format(actualFormat));
-                    unset = false;
-                    update();
-                    notifyEvent({
-                        type: 'dp.change',
-                        date: date.clone(),
-                        oldDate: oldDate
-                    });
+                    beforeUpdate(targetMoment);
+                } else if (options.minDate && targetMoment.isSame(options.minDate, 'd')) {
+                    beforeUpdate(options.minDate);
+                } else if (options.maxDate && targetMoment.isSame(options.maxDate, 'd')) {
+                    beforeUpdate(options.maxDate);
                 } else {
                     if (!options.keepInvalid) {
                         input.val(unset ? '' : date.format(actualFormat));
