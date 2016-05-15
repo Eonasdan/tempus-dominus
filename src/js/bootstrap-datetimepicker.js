@@ -1429,6 +1429,7 @@
          ********************************************************************************/
         picker.destroy = function () {
             ///<summary>Destroys the widget and removes all attached event listeners</summary>
+            $(document).off('mousedown', clickedOutside);
             hide();
             detachDatePickerElementEvents();
             element.removeData('DateTimePicker');
@@ -1440,6 +1441,15 @@
         picker.show = show;
 
         picker.hide = hide;
+
+        picker.clickedOutside = function (e) {
+            // Clicked outside the datetimepicker, hide it
+            if ($(e.target).closest('.datetimepicker').length === 0) {
+                hide();
+            }
+        };
+
+        $(document).on('mousedown', picker.clickedOutside);
 
         picker.disable = function () {
             ///<summary>Disables the input element, the component is attached to, by adding a disabled="true" attribute to it.
