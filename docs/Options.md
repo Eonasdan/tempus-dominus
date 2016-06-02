@@ -83,7 +83,7 @@ Using a Bootstraps collapse to switch between date/time pickers.
 ### locale
 
 	Default: moment.locale()
-    Accepts: string, moment.local('locale')
+    Accepts: string, moment.locale('locale')
 
 See [momentjs](https://github.com/moment/moment/tree/develop/locale) for valid locales.
 
