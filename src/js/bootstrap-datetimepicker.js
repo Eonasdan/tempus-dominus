@@ -68,6 +68,7 @@
             minViewModeNumber = 0,
             actualFormat,
             parseFormats,
+            actualFormatEscapedCharsRemoved,
             currentViewMode,
             datePickerModes = [
                 {
@@ -162,18 +163,18 @@
                 }
                 switch (granularity) {
                     case 'y':
-                        return actualFormat.indexOf('Y') !== -1;
+                        return actualFormatEscapedCharsRemoved.indexOf('Y') !== -1;
                     case 'M':
-                        return actualFormat.indexOf('M') !== -1;
+                        return actualFormatEscapedCharsRemoved.indexOf('M') !== -1;
                     case 'd':
-                        return actualFormat.toLowerCase().indexOf('d') !== -1;
+                        return actualFormatEscapedCharsRemoved.toLowerCase().indexOf('d') !== -1;
                     case 'h':
                     case 'H':
-                        return actualFormat.toLowerCase().indexOf('h') !== -1;
+                        return actualFormatEscapedCharsRemoved.toLowerCase().indexOf('h') !== -1;
                     case 'm':
-                        return actualFormat.indexOf('m') !== -1;
+                        return actualFormatEscapedCharsRemoved.indexOf('m') !== -1;
                     case 's':
-                        return actualFormat.indexOf('s') !== -1;
+                        return actualFormatEscapedCharsRemoved.indexOf('s') !== -1;
                     default:
                         return false;
                 }
@@ -1398,7 +1399,9 @@
                     parseFormats.push(actualFormat);
                 }
 
-                use24Hours = (actualFormat.toLowerCase().indexOf('a') < 1 && actualFormat.replace(/\[.*?\]/g, '').indexOf('h') < 1);
+                actualFormatEscapedCharsRemoved = actualFormat.replace(/\[.*?\]/g, '');
+
+                use24Hours = (actualFormatEscapedCharsRemoved.toLowerCase().indexOf('a') < 1 && actualFormatEscapedCharsRemoved.indexOf('h') < 1);
 
                 if (isEnabled('y')) {
                     minViewModeNumber = 2;
