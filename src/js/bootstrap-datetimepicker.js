@@ -1104,12 +1104,24 @@
                             expanded.removeClass('in');
                             closed.addClass('in');
                         }
+                        
+                        var $parent;
+                        var $span;
                         if ($this.is('span')) {
-                            $this.toggleClass(options.icons.time + ' ' + options.icons.date);
+                            $parent = $this.parent();
+                            $span = $this;
                         } else {
-                            $this.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
+                            $parent = $this;
+                            $span = $this.find('span');
                         }
-
+                        $span.toggleClass(options.icons.time + ' ' + options.icons.date);
+                        if ($span.hasClass(options.icons.date)){
+                            $parent.attr('title',options.tooltips.selectDate);
+                        }
+                        else{
+                            $parent.attr('title',options.tooltips.selectTime);
+                        }
+                        
                         // NOTE: uncomment if toggled state will be restored in show()
                         //if (component) {
                         //    component.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
@@ -2484,7 +2496,8 @@
             incrementSecond: 'Increment Second',
             decrementSecond: 'Decrement Second',
             togglePeriod: 'Toggle Period',
-            selectTime: 'Select Time'
+            selectTime: 'Select Time',
+            selectDate: 'Select Date'
         },
         useStrict: false,
         sideBySide: false,
