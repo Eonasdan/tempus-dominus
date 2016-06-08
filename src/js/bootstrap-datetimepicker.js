@@ -428,7 +428,13 @@
 
                 // Left and right logic
                 if (horizontal === 'auto') {
-                    if (parent.width() < offset.left + widget.outerWidth() / 2 &&
+                    if (options.widgetPositioning.avoidRightOverlap &&
+                        offset.left + widget.outerWidth() > $(window).width()) {
+                        horizontal = 'right';
+
+                        //if more than half widget is overflowing the right boundary of parent
+                        // and any of the widget is truncated by the window
+                    } else if (parent.width() < offset.left + widget.outerWidth() / 2 &&
                         offset.left + widget.outerWidth() > $(window).width()) {
                         horizontal = 'right';
                     } else {
@@ -1983,6 +1989,12 @@
                 }
                 options.widgetPositioning.vertical = widgetPositioning.vertical;
             }
+            if (widgetPositioning.avoidRightOverlap) {
+                if (typeof widgetPositioning.avoidRightOverlap !== 'boolean') {
+                    throw new TypeError('widgetPositioning() avoidRightOverlap variable must be a boolean value');
+                }
+                options.widgetPositioning.avoidRightOverlap = widgetPositioning.avoidRightOverlap;
+            }
             update();
             return picker;
         };
@@ -2494,7 +2506,8 @@
         showClose: false,
         widgetPositioning: {
             horizontal: 'auto',
-            vertical: 'auto'
+            vertical: 'auto',
+            avoidRightOverlap: false
         },
         widgetParent: null,
         ignoreReadonly: false,

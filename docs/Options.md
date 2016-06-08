@@ -489,12 +489,14 @@ If `true`, an icon will be displayed on the toolbar that will hide the picker
 ### widgetPositioning
 
 	Default: {
-                horizontal: 'auto'
-                vertical: 'auto'
+                horizontal: 'auto',
+                vertical: 'auto',
+                avoidRightOverlap: false
              }
     Accepts: object with the all or one of the parameters above
              horizontal: 'auto', 'left', 'right'
              vertical: 'auto', 'top', 'bottom'
+             avoidRightOverlap: true, false
 
 #### widgetPositioning()
 
@@ -505,6 +507,8 @@ Returns the currently set `options.widgetPositioning` object containing two keys
 Takes an object parameter that can contain two keys `vertical` and `horizontal` each having a value of `'auto', 'top', 'bottom'` for `vertical` and `'auto', 'left', 'right'` for `horizontal` which defines where the dropdown with the widget will appear relative to the input element the component is attached to.
 
 `'auto'` is the default value for both `horizontal` and `vertical` keys and it tries to automatically place the dropdown in a position that is visible to the user. Usually you should not override those options unless you have a special need in your layout.
+
+The 'avoidRightOverlap' key is used to always avoid the widget being placed partially off the right edge - it can have up to half off before auto changes its alignment from left to right.
 
 ----------------------
 

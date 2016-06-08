@@ -762,7 +762,7 @@ describe('Public API method tests', function () {
             });
 
             it('sets widget positioning', function () {
-                var widgetPositioning = {horizontal: 'left'};
+                var widgetPositioning = {horizontal: 'left', vertical: 'bottom', avoidRightOverlap: true};
                 expect(dtpElement.datetimepicker('widgetPositioning', widgetPositioning)).toBe(dtpElement);
                 expect(dtpElement.datetimepicker('widgetPositioning')).toEqual($.extend(true, {}, dtpElement.datetimepicker.defaults.widgetPositioning, widgetPositioning));
             });
