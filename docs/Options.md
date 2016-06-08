@@ -525,6 +525,23 @@ Takes a `string` or `$(element)` value.
 
 ----------------------
 
+### forceElementPosition
+
+Default: false
+
+When using widgetParent to parent the widget in the DOM, position as if parented by the input.
+Used to overcome the input container clipping the widget e.g. when styled with "overflow: hidden" (often in a table).
+
+#### forceElementPosition()
+
+Returns a `boolean` variable with the currently set `options.forceElementPosition` option.
+
+#### forceElementPosition(boolean)
+
+Takes a `boolean` value.
+
+----------------------
+
 ### keepOpen
 
 	Default: false

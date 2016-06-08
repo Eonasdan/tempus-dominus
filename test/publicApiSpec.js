@@ -1048,6 +1048,26 @@ describe('Public API method tests', function () {
         });
     });
 
+    describe('forceElementPosition() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.forceElementPosition).toBeDefined();
+            });
+        });
+
+        describe('access', function () {
+            it('gets force element position', function () {
+                expect(dtpElement.datetimepicker('forceElementPosition')).toBe(false);
+            });
+
+            it('sets force element position', function () {
+                var forceElementPosition = true;
+                expect(dtpElement.datetimepicker('forceElementPosition', forceElementPosition)).toBe(dtpElement);
+                expect(dtpElement.datetimepicker('forceElementPosition')).toBe(forceElementPosition);
+            });
+        });
+    });
+
     describe('keepOpen() function', function () {
         describe('existence', function () {
             it('is defined', function () {
