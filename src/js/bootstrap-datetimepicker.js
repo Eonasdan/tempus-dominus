@@ -1682,7 +1682,7 @@
                 throw new TypeError('maxDate() date parameter is before options.minDate: ' + parsedDate.format(actualFormat));
             }
             options.maxDate = parsedDate;
-            if (options.useCurrent && !options.keepInvalid && date.isAfter(maxDate)) {
+            if (options.useCurrent && !options.keepInvalid && date.isAfter(options.maxDate)) {
                 setValue(options.maxDate);
             }
             if (viewDate.isAfter(parsedDate)) {
@@ -1718,7 +1718,7 @@
                 throw new TypeError('minDate() date parameter is after options.maxDate: ' + parsedDate.format(actualFormat));
             }
             options.minDate = parsedDate;
-            if (options.useCurrent && !options.keepInvalid && date.isBefore(minDate)) {
+            if (options.useCurrent && !options.keepInvalid && date.isBefore(options.minDate)) {
                 setValue(options.minDate);
             }
             if (viewDate.isBefore(parsedDate)) {
