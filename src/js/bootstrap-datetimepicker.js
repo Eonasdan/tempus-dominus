@@ -2402,11 +2402,12 @@
 
         if (typeof options === 'object') {
             return this.each(function () {
-                var $this = $(this);
+                var $this = $(this),
+                    _options;
                 if (!$this.data('DateTimePicker')) {
                     // create a private copy of the defaults object
-                    options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
-                    $this.data('DateTimePicker', dateTimePicker($this, options));
+                    _options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
+                    $this.data('DateTimePicker', dateTimePicker($this, _options));
                 }
             });
         } else if (typeof options === 'string') {
