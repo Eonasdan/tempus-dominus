@@ -1214,7 +1214,8 @@
                 if (component && component.hasClass('btn')) {
                     component.toggleClass('active');
                 }
-                widget.show();
+                // widget.show();
+                widget.css('display', 'block');
                 place();
 
                 if (options.focusOnShow && !input.is(':focus')) {
