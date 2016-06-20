@@ -1214,7 +1214,8 @@
                 if (component && component.hasClass('btn')) {
                     component.toggleClass('active');
                 }
-                widget.show();
+                // widget.show();
+                widget.css('display', 'block');
                 place();
 
                 if (options.focusOnShow && !input.is(':focus')) {
@@ -2302,7 +2303,7 @@
             input = element;
         } else {
             input = element.find(options.datepickerInput);
-            if (input.size() === 0) {
+            if (input.length === 0) {
                 input = element.find('input');
             } else if (!input.is('input')) {
                 throw new Error('CSS class "' + options.datepickerInput + '" cannot be applied to non input element');
@@ -2311,7 +2312,7 @@
 
         if (element.hasClass('input-group')) {
             // in case there is more then one 'input-group-addon' Issue #48
-            if (element.find('.datepickerbutton').size() === 0) {
+            if (element.find('.datepickerbutton').length === 0) {
                 component = element.find('.input-group-addon');
             } else {
                 component = element.find('.datepickerbutton');
