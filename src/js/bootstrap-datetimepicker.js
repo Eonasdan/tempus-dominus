@@ -736,7 +736,7 @@
                     if (currentDate.day() === 0 || currentDate.day() === 6) {
                         clsName += ' weekend';
                     }
-                    row.append('<td data-action="selectDay" data-day="' + currentDate.format('L') + '" class="day' + clsName + '">' + currentDate.date() + '</td>');
+                    row.append('<td data-action="selectDay" data-day="' + currentDate.utc().format('L') + '" class="day' + clsName + '">' + currentDate.utc().date() + '</td>');
                     currentDate.add(1, 'd');
                 }
 
@@ -1697,7 +1697,7 @@
                 throw new TypeError('maxDate() date parameter is before options.minDate: ' + parsedDate.format(actualFormat));
             }
             options.maxDate = parsedDate;
-            if (options.useCurrent && !options.keepInvalid && date.isAfter(maxDate)) {
+            if (options.useCurrent && !options.keepInvalid && date.isAfter(parsedDate)) {
                 setValue(options.maxDate);
             }
             if (viewDate.isAfter(parsedDate)) {
@@ -1733,7 +1733,7 @@
                 throw new TypeError('minDate() date parameter is after options.maxDate: ' + parsedDate.format(actualFormat));
             }
             options.minDate = parsedDate;
-            if (options.useCurrent && !options.keepInvalid && date.isBefore(minDate)) {
+            if (options.useCurrent && !options.keepInvalid && date.isBefore(parsedDate)) {
                 setValue(options.minDate);
             }
             if (viewDate.isBefore(parsedDate)) {
