@@ -5,7 +5,7 @@
     "bugs": {
         "url": "https://github.com/eonasdan/bootstrap-datetimepicker/issues"
     },
-    "dependencies": {
+    "peerDependencies": {
         "moment": "~2.8",
         "moment-timezone" : "~0.4",
         "bootstrap": "^3.3",
