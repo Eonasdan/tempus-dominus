@@ -159,9 +159,15 @@ describe('Public API method tests', function () {
                 expect(dtp.date()).toBe(null);
             });
 
-            it('sets the date correctly', function () {
+            it('sets the date correctly when called with moment object', function () {
                 var timestamp = moment();
                 dtp.date(timestamp);
+                expect(dtp.date().isSame(timestamp)).toBe(true);
+            });
+
+            it('sets the date correctly when called with Date object', function () {
+                var timestamp = moment();
+                dtp.date(timestamp.toDate());
                 expect(dtp.date().isSame(timestamp)).toBe(true);
             });
         });
