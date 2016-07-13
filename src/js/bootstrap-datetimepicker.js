@@ -1163,6 +1163,8 @@
 
             show = function () {
                 ///<summary>Shows the widget. Possibly will emit dp.show and dp.change</summary>
+                keyState = {};
+
                 var currentMoment,
                     useCurrentGranularity = {
                         'year': function (m) {
@@ -1257,6 +1259,10 @@
                     allModifiersPressed,
                     pressed = 'p';
 
+                // make the command key on osx behave the same as control on windows
+                if (currentKey === 224 || currentKey === 91 || currentKey === 93) {
+                    currentKey = 17;
+                }
                 keyState[currentKey] = pressed;
 
                 for (index in keyState) {
@@ -1288,14 +1294,29 @@
                 }
 
                 if (handler) {
-                    handler.call(picker, widget);
-                    e.stopPropagation();
-                    e.preventDefault();
+                    // on tab, we may or may not want to stop the event
+                    // all other keys will always preventDefault
+                    handler.call(picker, widget, e);
+                    if (e.which !== 9) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                }
+
+                // the command key prevents other keys from firing a keyup event
+                // whenever the control or command modifier is being held down, release the other key
+                if (keyState[17] === 'p') {
+                    keyState[e.which] = 'r';
                 }
             },
 
             keyup = function (e) {
-                keyState[e.which] = 'r';
+                var currentKey = e.which;
+                // make the command key on osx behave the same as control on windows
+                if (currentKey === 224 || currentKey === 91 || currentKey === 93) {
+                    currentKey = 17;
+                }
+                keyState[currentKey] = 'r';
                 e.stopPropagation();
                 e.preventDefault();
             },
@@ -2526,10 +2547,32 @@
             escape: function () {
                 this.hide();
             },
-            //tab: function (widget) { //this break the flow of the form. disabling for now
-            //    var toggle = widget.find('.picker-switch a[data-action="togglePicker"]');
-            //    if(toggle.length > 0) toggle.click();
-            //},
+            tab: function (widget, e) {
+                if (!widget) {
+                    return;
+                }
+                var toggle = widget.find('.picker-switch a[data-action="togglePicker"]');
+                if (toggle.length > 0) {
+                    if (toggle.find('span').hasClass('fa-clock-o')) {
+                        toggle.click();
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                }
+            },
+            'shift tab': function (widget, e) {
+                if (!widget) {
+                    return;
+                }
+                var toggle = widget.find('.picker-switch a[data-action="togglePicker"]');
+                if (toggle.length > 0) {
+                    if (toggle.find('span').hasClass('fa-calendar')) {
+                        toggle.click();
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                }
+            },
             'control space': function (widget) {
                 if (widget.find('.timepicker').is(':visible')) {
                     widget.find('.btn[data-action="togglePeriod"]').click();
