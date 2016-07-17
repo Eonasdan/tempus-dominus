@@ -439,7 +439,7 @@
 
                 // Left and right logic
                 if (horizontal === 'auto') {
-                    if (parent.width() < offset.left + widget.outerWidth() / 2 &&
+                    if (parent.width() + offset.left > widget.outerWidth() &&
                         offset.left + widget.outerWidth() > $(window).width()) {
                         horizontal = 'right';
                     } else {
