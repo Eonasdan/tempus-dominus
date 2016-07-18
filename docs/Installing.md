@@ -88,6 +88,7 @@ For more detail see the package page on [Atmosphere](http://atmospherejs.com/pac
 
 ### Acquire [jQuery](http://jquery.com)
 ### Acquire  [Moment.js](https://github.com/moment/moment)
+### Acquire  [bootstrap-datetimepciker.js](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/master/build/js)
 ### Bootstrap 3 collapse and transition plugins
 Make sure to include *.JS files for plugins [collapse](http://getbootstrap.com/javascript/#collapse) and [transitions](http://getbootstrap.com/javascript/#transitions). They are included with [bootstrap in js/ directory](https://github.com/twbs/bootstrap/tree/master/js)
 Alternatively you could include the whole bundle of bootstrap plugins from [bootstrap.js](https://github.com/twbs/bootstrap/tree/master/dist/js)
