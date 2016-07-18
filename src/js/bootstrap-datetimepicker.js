@@ -2596,6 +2596,9 @@
             //    if(toggle.length > 0) toggle.click();
             //},
             'control space': function (widget) {
+                if (!widget) {
+                    return;
+                }
                 if (widget.find('.timepicker').is(':visible')) {
                     widget.find('.btn[data-action="togglePeriod"]').click();
                 }
