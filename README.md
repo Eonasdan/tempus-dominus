@@ -4,7 +4,7 @@
 
 ![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
 
-## [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
+## [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)(打不开可查看docs文件夹或index.md)
 
 #Notice
 It's a new year and a new start. The issue tracker is open again.
