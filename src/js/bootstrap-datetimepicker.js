@@ -504,7 +504,7 @@
                 }
 
                 while (currentDate.isBefore(viewDate.clone().endOf('w'))) {
-                    row.append($('<th>').addClass('dow').text(currentDate.format('dd')));
+                    row.append($('<th>').addClass('dow').text(currentDate.utc().format('dd')));
                     currentDate.add(1, 'd');
                 }
                 widget.find('.datepicker-days thead').append(row);
