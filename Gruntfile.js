@@ -2,11 +2,10 @@ module.exports = function (grunt) {
     'use strict';
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
-        uglify : {
+        uglify: {
             target: {
                 files: {
-                    'build/js/bootstrap-datetimepicker.min.js' : 'src/js/bootstrap-datetimepicker.js'
+                    'build/js/bootstrap-datetimepicker.min.js': 'src/js/bootstrap-datetimepicker.js'
                 }
             },
             options: {
@@ -21,41 +20,40 @@ module.exports = function (grunt) {
                 preserveComments: 'some'
             }
         },
-
         jshint: {
             all: [
                 'Gruntfile.js', 'src/js/*.js', 'test/*.js'
             ],
             options: {
-                'browser'  : true,
-                'node'     : true,
-                'jquery'   : true,
-                'boss'     : false,
-                'curly'    : true,
-                'debug'    : false,
-                'devel'    : false,
-                'eqeqeq'   : true,
-                'bitwise'  : true,
-                'eqnull'   : true,
-                'evil'     : false,
-                'forin'    : true,
-                'immed'    : false,
-                'laxbreak' : false,
-                'newcap'   : true,
-                'noarg'    : true,
-                'noempty'  : false,
-                'nonew'    : false,
-                'onevar'   : true,
-                'plusplus' : false,
-                'regexp'   : false,
-                'undef'    : true,
-                'sub'      : true,
-                'strict'   : true,
-                'unused'   : true,
-                'white'    : true,
-                'es3'      : true,
-                'camelcase' : true,
-                'quotmark' : 'single',
+                'browser': true,
+                'node': true,
+                'jquery': true,
+                'boss': false,
+                'curly': true,
+                'debug': false,
+                'devel': false,
+                'eqeqeq': true,
+                'bitwise': true,
+                'eqnull': true,
+                'evil': false,
+                'forin': true,
+                'immed': false,
+                'laxbreak': false,
+                'newcap': true,
+                'noarg': true,
+                'noempty': false,
+                'nonew': false,
+                'onevar': true,
+                'plusplus': false,
+                'regexp': false,
+                'undef': true,
+                'sub': true,
+                'strict': true,
+                'unused': true,
+                'white': true,
+                'es3': true,
+                'camelcase': true,
+                'quotmark': 'single',
                 'globals': {
                     'define': false,
                     'moment': false,
@@ -72,7 +70,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-
         jscs: {
             all: [
                 'Gruntfile.js', 'src/js/*.js', 'test/*.js'
@@ -81,7 +78,6 @@ module.exports = function (grunt) {
                 config: '.jscs.json'
             }
         },
-
         less: {
             production: {
                 options: {
@@ -102,13 +98,25 @@ module.exports = function (grunt) {
                 }
             }
         },
-
+        env: {
+            paris: {
+                TZ: 'Europe/Paris' // sets env for phantomJS https://github.com/ariya/phantomjs/issues/10379#issuecomment-36058589
+            }
+        },
+        connect: {
+            server: {
+                options: {
+                    port: 8099
+                }
+            }
+        },
         jasmine: {
             customTemplate: {
                 src: 'src/js/*.js',
                 options: {
                     specs: 'test/*Spec.js',
                     helpers: 'test/*Helper.js',
+                    host: 'http://127.0.0.1:8099',
                     styles: [
                         'node_modules/bootstrap/dist/css/bootstrap.min.css',
                         'build/css/bootstrap-datetimepicker.min.css'
@@ -116,6 +124,7 @@ module.exports = function (grunt) {
                     vendor: [
                         'node_modules/jquery/dist/jquery.min.js',
                         'node_modules/moment/min/moment-with-locales.min.js',
+                        'node_modules/moment-timezone/moment-timezone.js',
                         'node_modules/bootstrap/dist/js/bootstrap.min.js'
                     ],
                     display: 'none',
@@ -123,7 +132,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-
         nugetpack: {
             less: {
                 src: 'src/nuget/Bootstrap.v3.Datetimepicker.nuspec',
@@ -144,31 +152,26 @@ module.exports = function (grunt) {
 
     grunt.loadTasks('tasks');
 
+    grunt.loadNpmTasks('grunt-env');
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-nuget');
 
-    // These plugins provide necessary tasks.
     require('load-grunt-tasks')(grunt);
-
-    // Default task.
-    grunt.registerTask('default', ['jshint', 'jscs', 'less', 'jasmine']);
-
-    // travis build task
+    grunt.registerTask('default', ['jshint', 'jscs', 'less', 'env:paris', 'connect', 'jasmine']);
     grunt.registerTask('build:travis', [
         // code style
         'jshint', 'jscs',
         // build
         'uglify', 'less',
         // tests
-        'jasmine'
+        'env:paris', 'connect', 'jasmine'
     ]);
 
     // Task to be run when building
-    grunt.registerTask('build', [
-        'jshint', 'jscs', 'uglify', 'less'
-    ]);
+    grunt.registerTask('build', ['jshint', 'jscs', 'uglify', 'less']);
 
-    grunt.registerTask('test', ['jshint', 'jscs', 'uglify', 'less', 'jasmine']);
+    grunt.registerTask('test', ['jshint', 'jscs', 'uglify', 'less', 'env:paris', 'connect', 'jasmine']);
 
     grunt.registerTask('docs', 'Generate docs', function () {
         grunt.util.spawn({

@@ -1,5 +1,4 @@
 # Bootstrap 3 Date/Time Picker
-
 ![GitHub version](https://badge.fury.io/gh/Eonasdan%2Fbootstrap-datetimepicker.png)&nbsp;&nbsp;&nbsp;![Travis](https://travis-ci.org/Eonasdan/bootstrap-datetimepicker.svg?branch=development)
 
 ![DateTimePicker](http://i.imgur.com/nfnvh5g.png)
@@ -7,14 +6,13 @@
 ## [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
 
 #Notice
-It's a new year and a new start. The issue tracker is open again.
 The issue tracker is now solely for bug reports.
 
 SO: http://stackoverflow.com/tags/eonasdan-datetimepicker
 
 New issues that are requests for "how do I.." will be closed and redirected to Stack Overflow.
 
-# v4.17.37
+# v4.17.42
 
 Is the current stable release. The latest and greatest changes are available from the [development branch](https://github.com/Eonasdan/bootstrap-datetimepicker/tree/development)
 
