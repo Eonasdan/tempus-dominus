@@ -1315,7 +1315,7 @@
                 var val = $(e.target).val().trim(),
                     parsedDate = val ? parseInputDate(val) : null;
                 setValue(parsedDate);
-                e.stopImmediatePropagation();
+                e.stopPropagation();
                 return false;
             },
 
