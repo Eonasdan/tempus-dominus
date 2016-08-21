@@ -25,7 +25,7 @@ module.exports = function (grunt) {
                 'Gruntfile.js', 'src/js/*.js', 'test/*.js'
             ],
             options: {
-                'browser': true,
+                'browser': false,
                 'node': true,
                 'jquery': true,
                 'boss': false,
@@ -57,6 +57,8 @@ module.exports = function (grunt) {
                 'globals': {
                     'define': false,
                     'moment': false,
+                    'window': false,
+                    'document': false,
                     // Jasmine
                     'jasmine': false,
                     'describe': false,

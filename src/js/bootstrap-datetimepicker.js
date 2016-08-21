@@ -1323,42 +1323,38 @@
                 return false;
             },
 
+            inputEvents,
+            componentEvents,
+
             attachDatePickerElementEvents = function () {
-                input.on({
+                var elementIsInput = element.is('input');
+
+                inputEvents = {
                     'change': change,
                     'blur': options.debug ? '' : hide,
                     'keydown': keydown,
                     'keyup': keyup,
-                    'focus': options.allowInputToggle ? show : ''
-                });
+                    'focus': options.allowInputToggle || elementIsInput ? show : ''
+                };
+                input.on(inputEvents);
 
-                if (element.is('input')) {
-                    input.on({
-                        'focus': show
-                    });
-                } else if (component) {
-                    component.on('click', toggle);
-                    component.on('mousedown', false);
+                if (!elementIsInput && component) {
+                    componentEvents = {
+                        'click': toggle,
+                        'mousedown': function () {
+                            return false;
+                        }
+                    };
+                    component.on(componentEvents);
                 }
             },
 
             detachDatePickerElementEvents = function () {
-                input.off({
-                    'change': change,
-                    'blur': blur,
-                    'keydown': keydown,
-                    'keyup': keyup,
-                    'focus': options.allowInputToggle ? hide : ''
-                });
-
-                if (element.is('input')) {
-                    input.off({
-                        'focus': show
-                    });
-                } else if (component) {
-                    component.off('click', toggle);
-                    component.off('mousedown', false);
+                input.off(inputEvents);
+                if (componentEvents) {
+                    component.off(componentEvents);
                 }
+                inputEvents = componentEvents = null;
             },
 
             indexGivenDates = function (givenDatesArray) {

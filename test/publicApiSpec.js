@@ -244,6 +244,16 @@ describe('Public API method tests', function () {
             });
         });
 
+        describe('functionality', function () {
+            it('removes error handlers', function () {
+                dtpElement.datetimepicker('destroy');
+                // $._data(element, 'events') is not a public API, so some precautions are needed.
+                // It might be removed or changed in future versions of jQuery.
+                var events = $._data(dtpElement[0], 'events');
+                expect(events).toBeUndefined();
+            });
+        });
+
         describe('access', function () {
             it('returns jQuery object', function () {
                 expect(dtpElement.datetimepicker('destroy')).toBe(dtpElement);
