@@ -577,6 +577,19 @@
                 return true;
             },
 
+            isValidDecade = function(startDecade){
+                var endDecade = moment({y: startDecade.year() + 12});
+                
+                if (options.minDate && endDecade.isBefore(options.minDate, 'y')) {
+                    return false;
+                }
+                if (options.maxDate && startDecade.isAfter(options.maxDate, 'y')) {
+                    return false;
+                }
+
+                return true;
+            },
+
             fillMonths = function () {
                 var spans = [],
                     monthsShort = viewDate.clone().startOf('y').startOf('d');
@@ -676,7 +689,7 @@
 
                 while (!startDecade.isAfter(endDecade, 'y')) {
                     html += '<span data-action="selectDecade" class="decade' + (startDecade.isSame(date, 'y') ? ' active' : '') +
-                        (!isValid(startDecade, 'y') ? ' disabled' : '') + '" data-selection="' + (startDecade.year() + 6) + '">' + (startDecade.year() + 1) + ' - ' + (startDecade.year() + 12) + '</span>';
+                        (!isValidDecade(startDecade, 'y') ? ' disabled' : '') + '" data-selection="' + (startDecade.year() + 6) + '">' + (startDecade.year() + 1) + ' - ' + (startDecade.year() + 12) + '</span>';
                     startDecade.add(12, 'y');
                 }
                 html += '<span></span><span></span><span></span>'; //push the dangling block over, at least this way it's even
