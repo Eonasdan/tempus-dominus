@@ -1298,10 +1298,23 @@
                     }
                 }
 
-                if (handler) {
-                    handler.call(picker, widget);
-                    e.stopPropagation();
-                    e.preventDefault();
+                if ((handler && widget !== false) || (handler && e.which === 40)) {
+                  // FIX: Adding if statement for tab key and enter key causing failure in the continued functinoality of the component after being pressed
+                  handler.call(picker, widget);
+
+                  // TAB, ENTER, or ESC
+                  if(e.which === 9 || e.which === 13 || e.which === 27) {
+                     keyState = {};
+                  }
+
+                  if(e.which !== 9){
+                     e.stopPropagation();
+                     e.preventDefault();
+                  }
+                }
+
+                if(pressedKeys.indexOf("9") != -1) {
+                   keyState = {};
                 }
             },
 
