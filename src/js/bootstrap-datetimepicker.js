@@ -403,8 +403,7 @@
             },
 
             place = function () {
-                var position = (component || element).position(),
-                    offset = (component || element).offset(),
+                var offset = element.offset(),
                     vertical = options.widgetPositioning.vertical,
                     horizontal = options.widgetPositioning.horizontal,
                     parent;
@@ -441,35 +440,17 @@
                     }
                 }
 
-                if (vertical === 'top') {
-                    widget.addClass('top').removeClass('bottom');
-                } else {
-                    widget.addClass('bottom').removeClass('top');
-                }
-
-                if (horizontal === 'right') {
-                    widget.addClass('pull-right');
-                } else {
-                    widget.removeClass('pull-right');
-                }
-
-                // find the first parent element that has a relative css positioning
-                if (parent.css('position') !== 'relative') {
-                    parent = parent.parents().filter(function () {
-                        return $(this).css('position') === 'relative';
-                    }).first();
-                }
-
-                if (parent.length === 0) {
-                    throw new Error('datetimepicker component should be placed within a relative positioned container');
-                }
-
-                widget.css({
-                    top: vertical === 'top' ? 'auto' : position.top + element.outerHeight(),
-                    bottom: vertical === 'top' ? parent.outerHeight() - (parent === element ? 0 : position.top) : 'auto',
-                    left: horizontal === 'left' ? (parent === element ? 0 : position.left) : 'auto',
-                    right: horizontal === 'left' ? 'auto' : parent.outerWidth() - element.outerWidth() - (parent === element ? 0 : position.left)
-                });
+                widget
+                    .toggleClass('top', vertical === 'top')
+                    .toggleClass('bottom', vertical !== 'top')
+                    .toggleClass('pull-right', horizontal === 'right')
+                    // If we try to position an invisible element with the `offset` setter, the results
+                    // might be unexpected. So let's call show() first.
+                    .show()
+                    .offset({
+                        top: offset.top + (vertical === 'top' ? -widget.outerHeight() - 2 : element.outerHeight() + 2),
+                        left: offset.left + (horizontal === 'left' ? 0 : element.outerWidth() - widget.outerWidth())
+                    });
             },
 
             notifyEvent = function (e) {
@@ -1252,7 +1233,6 @@
                     component.toggleClass('active');
                 }
                 place();
-                widget.show();
                 if (options.focusOnShow && !input.is(':focus')) {
                     input.focus();
                 }
