@@ -1,7 +1,7 @@
 {
   "name": "eonasdan/bootstrap-datetimepicker",
   "type": "component",
-  "version": "4.17.37",
+  "version": "4.17.42",
   "description": "Date/time picker widget based on twitter bootstrap",
   "keywords": [
     "bootstrap",
@@ -12,7 +12,7 @@
   "require": {
     "robloach/component-installer": "*",
     "components/jquery": ">=1.9.1",
-    "moment/moment": ">=2.8"
+    "moment": ">=2.10.5"
   },
   "extra": {
     "component": {
