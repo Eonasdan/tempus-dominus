@@ -932,7 +932,8 @@
                 });
 
                 input.blur();
-
+                input.change();
+             
                 currentViewMode = 0;
                 viewDate = date.clone();
 
