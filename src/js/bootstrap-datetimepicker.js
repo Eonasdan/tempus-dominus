@@ -687,7 +687,7 @@
                     currentDate,
                     html = [],
                     row,
-                    clsName,
+                    clsNames = [],
                     i;
 
                 if (!hasDate()) {
@@ -718,26 +718,31 @@
                         }
                         html.push(row);
                     }
-                    clsName = '';
+                    clsNames = ['day'];
                     if (currentDate.isBefore(viewDate, 'M')) {
-                        clsName += ' old';
+                        clsNames.push('old');
                     }
                     if (currentDate.isAfter(viewDate, 'M')) {
-                        clsName += ' new';
+                        clsNames.push('new');
                     }
                     if (currentDate.isSame(date, 'd') && !unset) {
-                        clsName += ' active';
+                        clsNames.push('active');
                     }
                     if (!isValid(currentDate, 'd')) {
-                        clsName += ' disabled';
+                        clsNames.push('disabled');
                     }
                     if (currentDate.isSame(getMoment(), 'd')) {
-                        clsName += ' today';
+                        clsNames.push('today');
                     }
                     if (currentDate.day() === 0 || currentDate.day() === 6) {
-                        clsName += ' weekend';
+                        clsNames.push('weekend');
                     }
-                    row.append('<td data-action="selectDay" data-day="' + currentDate.format('L') + '" class="day' + clsName + '">' + currentDate.date() + '</td>');
+                    notifyEvent({
+                        type: 'dp.classify',
+                        date: currentDate,
+                        classNames: clsNames
+                    });
+                    row.append('<td data-action="selectDay" data-day="' + currentDate.format('L') + '" class="' + clsNames.join(' ') + '">' + currentDate.date() + '</td>');
                     currentDate.add(1, 'd');
                 }
 
