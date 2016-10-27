@@ -206,7 +206,7 @@ Takes a `boolean`. If set to `false` the picker will display similar to `sideByS
 ### locale
 
 	Default: moment.locale()
-    Accepts: string, moment.local('locale')
+    Accepts: string, moment.locale('locale')
 
 See [momentjs](https://github.com/moment/moment/tree/develop/locale) for valid locales.
 
