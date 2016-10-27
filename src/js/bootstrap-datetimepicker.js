@@ -336,6 +336,7 @@
                 if (use24Hours) {
                     template.addClass('usetwentyfour');
                 }
+
                 if (isEnabled('s') && !use24Hours) {
                     template.addClass('wider');
                 }
@@ -937,7 +938,6 @@
 
                 input.blur();
 
-                currentViewMode = 0;
                 viewDate = date.clone();
 
                 return picker;
