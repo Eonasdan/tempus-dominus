@@ -105,7 +105,7 @@
 
 ----------------------
 
-### Custom Formats
+### Time Only
 
 <div class="container">
     <div class="row">
@@ -123,6 +123,58 @@
             $(function () {
                 $('#datetimepicker3').datetimepicker({
                     format: 'LT'
+                });
+            });
+        </script>
+    </div>
+</div>
+
+#### Code
+
+```
+<div class="container">
+    <div class="row">
+        <div class='col-sm-6'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker3'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker3').datetimepicker({
+                    format: 'LT'
+                });
+            });
+        </script>
+    </div>
+</div>
+```
+
+----------------------
+
+### Date Only
+
+<div class="container">
+    <div class="row">
+        <div class='col-sm-6'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker3'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker3').datetimepicker({
+                    format: 'L'
                 });
             });
         </script>
@@ -281,7 +333,9 @@
 <script type="text/javascript">
     $(function () {
         $('#datetimepicker6').datetimepicker();
-        $('#datetimepicker7').datetimepicker();
+        $('#datetimepicker7').datetimepicker({
+			useCurrent: false
+		});
         $("#datetimepicker6").on("dp.change", function (e) {
             $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
         });
@@ -319,7 +373,9 @@
 <script type="text/javascript">
     $(function () {
         $('#datetimepicker6').datetimepicker();
-        $('#datetimepicker7').datetimepicker();
+        $('#datetimepicker7').datetimepicker({
+			useCurrent: false //Important! See issue #1075
+		});
         $("#datetimepicker6").on("dp.change", function (e) {
             $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
         });

@@ -1,5 +1,33 @@
 # Version 4
 
+## 4.17.42
+
+### Bug Squashing
+
+* fixed moment dependencies to all be the same
+* defaulted `option.timeZone` to `''` instead of UTC. This way it will default to the local timezone if it's not set.
+* fixed #959
+* fixed #1311 internal `getMoment` function no longer sets `startOf('d')`
+* fixed #935
+
+### Other
+
+* moved some (will move the rest soon) inline docs to JSDoc now that ReSharper supports it.
+* moved getter/setter functions to options page instead. #1313
+
+## 4.17.37
+
+### New Features
+
+* Momentjs TZ intergration #1242 thanks @bodrick
+* Independent CSS file, in case you don't want bootstrap for some reason
+
+### Bug Squashing
+
+* Slight changes decade view
+* Moved all tooltip text to `tooltips`
+* fixed #1212
+
 ## 4.15.35
 
 ### New Features
