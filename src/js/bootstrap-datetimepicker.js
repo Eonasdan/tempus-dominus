@@ -2631,7 +2631,6 @@
         enabledHours: false,
         viewDate: false
     };
-    if (typeof module !== 'undefined') {
-        module.exports = $.fn.datetimepicker;
-    }
+
+    return $.fn.datetimepicker;
 }));
