@@ -1239,7 +1239,9 @@
                     component.toggleClass('active');
                 }
                 place();
-                widget.show();
+                // TODO KI https://github.com/Eonasdan/bootstrap-datetimepicker/issues/1657
+                //widget.show();
+                widget.css('display', 'block');
                 if (options.focusOnShow && !input.is(':focus')) {
                     input.focus();
                 }
