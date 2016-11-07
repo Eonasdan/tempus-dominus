@@ -1340,17 +1340,25 @@
             },
 
             attachDatePickerElementEvents = function () {
-                input.on({
-                    'change': change,
-                    'blur': options.debug ? '' : hide,
-                    'keydown': keydown,
-                    'keyup': keyup,
-                    'focus': options.allowInputToggle ? show : ''
-                });
+                var hasPopup = input.data('no-popup') === undefined
+                if (hasPopup) {
+                    input.on({
+                        'change': change,
+                        'blur': options.debug ? '' : hide,
+                        'keydown': keydown,
+                        'keyup': keyup,
+                        'focus': options.allowInputToggle ? show : ''
+                    });
+                } else {
+                    input.on({
+                        'change': change,
+                        'blur': options.debug ? '' : hide,
+                    });
+                }
 
                 if (element.is('input')) {
                     // NOTE KI not wanting to autoshow on focus (keyboard accessibility)
-                    if (input.data('no-popup') === undefined) {
+                    if (hasPopup) {
                         input.on({
                             'click': show
                         });
