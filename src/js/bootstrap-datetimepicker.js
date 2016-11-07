@@ -2623,7 +2623,7 @@
             },
             escape: function (widget) {
                 if (!widget) {
-                  return false;
+                    return false;
                 }
                 this.hide();
                 return true;
@@ -2648,7 +2648,7 @@
             },
             'delete': function (widget) {
                 if (!widget) {
-                  return false;
+                    return false;
                 }
                 this.clear();
                 return true;
