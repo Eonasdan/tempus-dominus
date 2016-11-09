@@ -1311,8 +1311,7 @@
                     }
                 }
 
-                if (handler) {
-                    handler.call(picker, widget);
+                if (handler && !handler.call(picker, widget)) {
                     e.stopPropagation();
                     e.preventDefault();
                 }
@@ -2565,7 +2564,7 @@
             },
             left: function (widget) {
                 if (!widget) {
-                    return;
+                    return true;
                 }
                 var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
@@ -2574,7 +2573,7 @@
             },
             right: function (widget) {
                 if (!widget) {
-                    return;
+                    return true;
                 }
                 var d = this.date() || this.getMoment();
                 if (widget.find('.datepicker').is(':visible')) {
