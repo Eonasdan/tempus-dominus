@@ -2016,7 +2016,7 @@
             update();
             return picker;
         };
- 
+
         picker.showTodayButton = function (showTodayButton) {
             if (arguments.length === 0) {
                 return options.showTodayButton;
