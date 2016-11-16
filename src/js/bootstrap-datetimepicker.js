@@ -714,8 +714,7 @@
                         row = $('<tr>');
                         if (options.isoCalendarWeeks) {
                             row.append('<td class="cw">' + currentDate.isoWeek() + '</td>');
-                        } 
-                        else if (options.calendarWeeks) {
+                        } else if (options.calendarWeeks) {
                             row.append('<td class="cw">' + currentDate.week() + '</td>');
                         }
                         html.push(row);
@@ -2017,7 +2016,7 @@
             update();
             return picker;
         };
-        
+ 
         picker.showTodayButton = function (showTodayButton) {
             if (arguments.length === 0) {
                 return options.showTodayButton;
