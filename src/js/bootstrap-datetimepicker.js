@@ -1099,9 +1099,11 @@
 
                 togglePicker: function (e) {
                     var $this = $(e.target),
+                        $link = $this.closest('a'),
                         $parent = $this.closest('ul'),
                         expanded = $parent.find('.in'),
                         closed = $parent.find('.collapse:not(.in)'),
+                        $span = $this.is('span') ? $this : $this.find('span'),
                         collapseData;
 
                     if (expanded && expanded.length) {
@@ -1116,16 +1118,19 @@
                             expanded.removeClass('in');
                             closed.addClass('in');
                         }
-                        if ($this.is('span')) {
-                            $this.toggleClass(options.icons.time + ' ' + options.icons.date);
-                        } else {
-                            $this.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
-                        }
+
+                        $span.toggleClass(options.icons.time + ' ' + options.icons.date);
 
                         // NOTE: uncomment if toggled state will be restored in show()
                         //if (component) {
                         //    component.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
                         //}
+
+                        if ($span.hasClass(options.icons.date)) {
+                            $link.attr('title', options.tooltips.selectDate);
+                        } else {
+                            $link.attr('title', options.tooltips.selectTime);
+                        }
                     }
                 },
 
@@ -2495,7 +2500,8 @@
             incrementSecond: 'Increment Second',
             decrementSecond: 'Decrement Second',
             togglePeriod: 'Toggle Period',
-            selectTime: 'Select Time'
+            selectTime: 'Select Time',
+            selectDate: 'Select Date'
         },
         useStrict: false,
         sideBySide: false,
