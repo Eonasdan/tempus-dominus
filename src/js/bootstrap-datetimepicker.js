@@ -91,7 +91,7 @@
                     navStep: 100
                 }
             ],
-            viewModes = ['days', 'months', 'years', 'decades'],
+            viewModes = ['time', 'days', 'months', 'years', 'decades'],
             verticalModes = ['top', 'bottom', 'auto'],
             horizontalModes = ['left', 'right', 'auto'],
             toolbarPlacements = ['default', 'top', 'bottom'],
@@ -310,12 +310,23 @@
             },
 
             getToolbar = function () {
-                var row = [];
+                var row = [],
+                    title,
+                    icon;
+
                 if (options.showTodayButton) {
                     row.push($('<td>').append($('<a>').attr({ 'data-action': 'today', 'title': options.tooltips.today }).append($('<span>').addClass(options.icons.today))));
                 }
                 if (!options.sideBySide && hasDate() && hasTime()) {
-                    row.push($('<td>').append($('<a>').attr({ 'data-action': 'togglePicker', 'title': options.tooltips.selectTime }).append($('<span>').addClass(options.icons.time))));
+                    if (options.viewMode === 'time') {
+                        title = options.tooltips.selectDate;
+                        icon = options.icons.date;
+                    } else {
+                        title = options.tooltips.selectTime;
+                        icon = options.icons.time;
+                    }
+
+                    row.push($('<td>').append($('<a>').attr({ 'data-action': 'togglePicker', 'title': title }).append($('<span>').addClass(icon))));
                 }
                 if (options.showClear) {
                     row.push($('<td>').append($('<a>').attr({ 'data-action': 'clear', 'title': options.tooltips.clear }).append($('<span>').addClass(options.icons.clear))));
@@ -364,14 +375,23 @@
                 if (options.toolbarPlacement === 'top') {
                     content.append(toolbar);
                 }
+
                 if (hasDate()) {
-                    content.append($('<li>').addClass((options.collapse && hasTime() ? 'collapse in' : '')).append(dateView));
+                    content.append($('<li>')
+                        .addClass((options.collapse && hasTime() ? 'collapse' : ''))
+                        .addClass((options.collapse && hasTime() && options.viewMode === 'time' ? '' : 'in'))
+                        .append(dateView)
+                    );
                 }
                 if (options.toolbarPlacement === 'default') {
                     content.append(toolbar);
                 }
                 if (hasTime()) {
-                    content.append($('<li>').addClass((options.collapse && hasDate() ? 'collapse' : '')).append(timeView));
+                    content.append($('<li>')
+                        .addClass((options.collapse && hasDate() ? 'collapse' : ''))
+                        .addClass((options.collapse && hasDate() && options.viewMode === 'time' ? 'in' : ''))
+                        .append(timeView)
+                    );
                 }
                 if (options.toolbarPlacement === 'bottom') {
                     content.append(toolbar);
@@ -1947,7 +1967,7 @@
             }
 
             options.viewMode = viewMode;
-            currentViewMode = Math.max(viewModes.indexOf(viewMode), minViewModeNumber);
+            currentViewMode = Math.max(viewModes.indexOf(viewMode) - 1, minViewModeNumber);
 
             showMode();
             return picker;
