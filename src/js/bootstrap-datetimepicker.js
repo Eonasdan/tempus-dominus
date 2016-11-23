@@ -1340,7 +1340,7 @@
             },
 
             attachDatePickerElementEvents = function () {
-                var hasPopup = input.data('no-popup') === undefined
+                var hasPopup = input.data('no-popup') === undefined;
                 if (hasPopup) {
                     input.on({
                         'change': change,
@@ -1352,7 +1352,7 @@
                 } else {
                     input.on({
                         'change': change,
-                        'blur': options.debug ? '' : hide,
+                        'blur': options.debug ? '' : hide
                     });
                 }
 
