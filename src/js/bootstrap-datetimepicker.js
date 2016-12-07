@@ -2392,7 +2392,7 @@
      * @class datetimepicker
      * @memberOf jQuery.fn
      */
-    $.fn.datetimepicker = function (options) {
+    $.fn.datetimepicker = function (options, jquery) {
         options = options || {};
 
         var args = Array.prototype.slice.call(arguments, 1),
@@ -2402,6 +2402,9 @@
 
         if (typeof options === 'object') {
             return this.each(function () {
+                if(jquery) {
+                    $ = jquery;
+                }
                 var $this = $(this);
                 if (!$this.data('DateTimePicker')) {
                     // create a private copy of the defaults object
@@ -2409,6 +2412,7 @@
                     $this.data('DateTimePicker', dateTimePicker($this, options));
                 }
             });
+            window.$.fn.datetimepicker = $.fn.datetimepicker;
         } else if (typeof options === 'string') {
             this.each(function () {
                 var $this = $(this),
