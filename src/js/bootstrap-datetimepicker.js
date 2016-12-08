@@ -350,7 +350,7 @@
                             .append(dateView.addClass('col-md-6'))
                             .append(timeView.addClass('col-md-6'))
                     );
-                    if (options.toolbarPlacement === 'bottom') {
+                    if (options.toolbarPlacement === 'bottom' ||  options.toolbarPlacement === 'default') {
                         template.append(toolbar);
                     }
                     return template;
