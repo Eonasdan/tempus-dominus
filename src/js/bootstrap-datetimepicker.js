@@ -844,6 +844,7 @@
                 if (!targetMoment) {
                     unset = true;
                     input.val('');
+                    input.trigger('input');
                     element.data('date', '');
                     notifyEvent({
                         type: 'dp.change',
@@ -868,6 +869,7 @@
                     date = targetMoment;
                     //viewDate = date.clone(); // TODO this doesn't work right on first use
                     input.val(date.format(actualFormat));
+                    input.trigger('input');
                     element.data('date', date.format(actualFormat));
                     unset = false;
                     update();
@@ -879,6 +881,7 @@
                 } else {
                     if (!options.keepInvalid) {
                         input.val(unset ? '' : date.format(actualFormat));
+                        input.trigger('input');
                     } else {
                         notifyEvent({
                             type: 'dp.change',
