@@ -947,6 +947,7 @@
 
                 input.blur();
 
+                currentViewMode = 0;
                 viewDate = date.clone();
 
                 return picker;
@@ -958,7 +959,7 @@
 
             parseInputDate = function (inputDate) {
                 if (options.parseInputDate === undefined) {
-                    if (!moment.isMoment(inputDate)) {
+                    if (!moment.isMoment(inputDate) || inputDate instanceof Date) {
                         inputDate = getMoment(inputDate);
                     }
                 } else {
