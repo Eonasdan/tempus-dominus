@@ -63,13 +63,15 @@ describe('Public API method tests', function () {
         dpChangeSpy,
         dpShowSpy,
         dpHideSpy,
-        dpErrorSpy;
+        dpErrorSpy,
+        dpClassifySpy;
 
     beforeEach(function () {
         dpChangeSpy = jasmine.createSpy('dp.change event Spy');
         dpShowSpy = jasmine.createSpy('dp.show event Spy');
         dpHideSpy = jasmine.createSpy('dp.hide event Spy');
         dpErrorSpy = jasmine.createSpy('dp.error event Spy');
+        dpClassifySpy = jasmine.createSpy('dp.classify event Spy');
         dtpElement = $('<input>').attr('id', 'dtp');
 
         $(document).find('body').append($('<div>').attr('class', 'row').append($('<div>').attr('class', 'col-md-12').append(dtpElement)));
@@ -77,6 +79,7 @@ describe('Public API method tests', function () {
         $(document).find('body').on('dp.show', dpShowSpy);
         $(document).find('body').on('dp.hide', dpHideSpy);
         $(document).find('body').on('dp.error', dpErrorSpy);
+        $(document).find('body').on('dp.classify', dpClassifySpy);
 
         dtpElement.datetimepicker();
         dtp = dtpElement.data('DateTimePicker');
@@ -290,9 +293,28 @@ describe('Public API method tests', function () {
                 expect(dpShowSpy).not.toHaveBeenCalled();
             });
 
+            it('calls the classify event for each day that is shown', function () {
+                dtp.show();
+                expect(dpClassifySpy.calls.count()).toEqual(42);
+            });
+
             it('actually shows the widget', function () {
                 dtp.show();
                 expect($(document).find('body').find('.bootstrap-datetimepicker-widget').length).toEqual(1);
+            });
+
+            it('applies the styles appended in the classify event handler', function () {
+                var handler = function (event) {
+                    if (event.date.get('weekday') === 4) {
+                        event.classNames.push('humpday');
+                    }
+                    event.classNames.push('injected');
+                };
+                $(document).find('body').on('dp.classify', handler);
+                dtp.show();
+                $(document).find('body').off('dp.classify', handler);
+                expect($(document).find('body').find('.bootstrap-datetimepicker-widget td.day.injected').length).toEqual(42);
+                expect($(document).find('body').find('.bootstrap-datetimepicker-widget td.day.humpday').length).toEqual(6);
             });
         });
 
