@@ -1,4 +1,4 @@
-/*! version : 4.17.42
+/*! version : 4.17.43
  =========================================================
  bootstrap-datetimejs
  https://github.com/Eonasdan/bootstrap-datetimepicker
@@ -880,7 +880,7 @@
 
                 if (isValid(targetMoment)) {
                     date = targetMoment;
-                    //viewDate = date.clone(); // TODO this doesn't work right on first use
+                    viewDate = date.clone();
                     input.val(date.format(actualFormat));
                     element.data('date', date.format(actualFormat));
                     unset = false;
