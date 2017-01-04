@@ -947,7 +947,7 @@
 
                 input.blur();
 
-                currentViewMode = 0;
+                currentViewMode = Math.max(viewModes.indexOf(options.viewMode), minViewModeNumber);
                 viewDate = date.clone();
 
                 return picker;
