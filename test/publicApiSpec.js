@@ -551,6 +551,26 @@ describe('Public API method tests', function () {
         });
     });
 
+    describe('collapseExpandedClass() function', function () {
+        describe('existence', function () {
+            it('is defined', function () {
+                expect(dtp.collapseExpandedClass).toBeDefined();
+            });
+        });
+
+        describe('access', function () {
+            it('gets collapse expanded class', function () {
+                expect(dtpElement.datetimepicker('collapseExpandedClass')).toBe('in');
+            });
+
+            it('sets collapse expanded class', function () {
+                var collapseExpandedClass = 'show';
+                expect(dtpElement.datetimepicker('collapseExpandedClass', collapseExpandedClass)).toBe(dtpElement);
+                expect(dtpElement.datetimepicker('collapseExpandedClass')).toBe(collapseExpandedClass);
+            });
+        });
+    });
+
     describe('locale() function', function () {
         describe('functionality', function () {
             it('it has the same locale as the global moment locale with default options', function () {

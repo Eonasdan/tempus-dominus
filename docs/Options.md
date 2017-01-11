@@ -203,6 +203,24 @@ Takes a `boolean`. If set to `false` the picker will display similar to `sideByS
 ----------------------
 
 
+### collapseExpandedClass
+
+	Default: 'in'
+
+Define a Bootstraps collapse class, used to set if the collapse is expanded or not.
+
+#### collapseExpandedClass()
+
+Returns a `string` of the `options.collapseExpandedClass`.
+
+
+#### collapseExpandedClass(collapseExpandedClass)
+
+Takes a `string`.
+
+----------------------
+
+
 ### locale
 
 	Default: moment.locale()
