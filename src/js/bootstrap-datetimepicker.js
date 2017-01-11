@@ -1195,6 +1195,10 @@
                     return false;
                 }
                 actions[$(e.currentTarget).data('action')].apply(picker, arguments);
+                notifyEvent({
+                    type: 'dp.clicked',
+                    change: e
+                });
                 return false;
             },
 
