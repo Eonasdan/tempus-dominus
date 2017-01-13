@@ -1,12 +1,13 @@
 /*!
  * Datetimepicker for Bootstrap 3
- * version : 4.17.44
+ * version : 4.17.45
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 .bootstrap-datetimepicker-widget {
   list-style: none;
 }
 .bootstrap-datetimepicker-widget.dropdown-menu {
+  display: block;
   margin: 2px 0;
   padding: 4px;
   width: 19em;
