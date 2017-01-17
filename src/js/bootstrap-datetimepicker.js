@@ -1610,10 +1610,14 @@
                 update();
                 return picker;
             }
-            if (!(dates instanceof Array)) {
+
+            // Deep extend to prevent mutation
+            var disabledDates = $.extend(true, [], dates);
+
+            if (!(disabledDates instanceof Array)) {
                 throw new TypeError('disabledDates() expects an array parameter');
             }
-            options.disabledDates = indexGivenDates(dates);
+            options.disabledDates = indexGivenDates(disabledDates);
             options.enabledDates = false;
             update();
             return picker;
@@ -1637,10 +1641,14 @@
                 update();
                 return picker;
             }
-            if (!(dates instanceof Array)) {
+
+            // Deep extend to prevent mutation
+            var enabledDates = $.extend(true, [], dates);
+
+            if (!(enabledDates instanceof Array)) {
                 throw new TypeError('enabledDates() expects an array parameter');
             }
-            options.enabledDates = indexGivenDates(dates);
+            options.enabledDates = indexGivenDates(enabledDates);
             options.disabledDates = false;
             update();
             return picker;
