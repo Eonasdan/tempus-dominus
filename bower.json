@@ -9,9 +9,10 @@
     "jquery": ">=1.8.3",
     "moment": ">=2.10.5"
   },
-  "homepage": "https://github.com/Eonasdan/bootstrap-datetimepicker",
+  "homepage": "https://github.com/deanproxy/bootstrap-datetimepicker",
   "authors": [
-    "Eonasdan"
+    "Eonasdan",
+    "deanproxy"
   ],
   "description": "bootstrap3 datetimepicker",
   "keywords": [
