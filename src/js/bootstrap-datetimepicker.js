@@ -407,9 +407,15 @@
                     offset = (component || element).offset(),
                     vertical = options.widgetPositioning.vertical,
                     horizontal = options.widgetPositioning.horizontal,
-                    parent;
+                    parent,
+                    inputOffset,
+                    inputHeight,
+                    input;
 
-                if (options.widgetParent) {
+
+                if (options.appendToBody) {
+                    parent = $('body').append(widget);
+                } else if (options.widgetParent) {
                     parent = options.widgetParent.append(widget);
                 } else if (element.is('input')) {
                     parent = element.after(widget).parent();
@@ -460,16 +466,23 @@
                     }).first();
                 }
 
-                if (parent.length === 0) {
+                if (options.appendToBody) {
+                    /* If we appended this to the body, we want to position it below the input element it's tied to. */
+                    input = element.find('input');
+                    inputHeight = input.height();
+                    inputOffset = input.offset();
+                    inputOffset.top = inputOffset.top + inputHeight + 10; // A little extra padding
+                    widget.offset(inputOffset);
+                } else if (parent.length === 0) {
                     throw new Error('datetimepicker component should be placed within a non-static positioned container');
+                } else {
+                    widget.css({
+                        top: vertical === 'top' ? 'auto' : position.top + element.outerHeight(),
+                        bottom: vertical === 'top' ? parent.outerHeight() - (parent === element ? 0 : position.top) : 'auto',
+                        left: horizontal === 'left' ? (parent === element ? 0 : position.left) : 'auto',
+                        right: horizontal === 'left' ? 'auto' : parent.outerWidth() - element.outerWidth() - (parent === element ? 0 : position.left)
+                    });
                 }
-
-                widget.css({
-                    top: vertical === 'top' ? 'auto' : position.top + element.outerHeight(),
-                    bottom: vertical === 'top' ? parent.outerHeight() - (parent === element ? 0 : position.top) : 'auto',
-                    left: horizontal === 'left' ? (parent === element ? 0 : position.left) : 'auto',
-                    right: horizontal === 'left' ? 'auto' : parent.outerWidth() - element.outerWidth() - (parent === element ? 0 : position.left)
-                });
             },
 
             notifyEvent = function (e) {
@@ -2070,6 +2083,19 @@
             return picker;
         };
 
+        picker.appendToBody = function (appendToBody) {
+            if (arguments.length === 0) {
+                return options.appendToBody;
+            }
+
+            if (typeof appendToBody !== 'boolean') {
+                throw new TypeError('appendToBody() expects a boolean parameter');
+            }
+
+            options.appendToBody = appendToBody;
+            return picker;
+        };
+
         picker.keepOpen = function (keepOpen) {
             if (arguments.length === 0) {
                 return options.keepOpen;
@@ -2512,6 +2538,7 @@
             vertical: 'auto'
         },
         widgetParent: null,
+        appendToBody: false,
         ignoreReadonly: false,
         keepOpen: false,
         focusOnShow: true,
