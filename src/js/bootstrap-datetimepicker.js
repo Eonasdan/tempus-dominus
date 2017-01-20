@@ -692,7 +692,8 @@
                     html = [],
                     row,
                     clsNames = [],
-                    i;
+                    i,
+                    timeDuration;
 
                 if (!hasDate()) {
                     return;
@@ -712,8 +713,8 @@
                     daysViewHeader.eq(2).addClass('disabled');
                 }
 
-                var TimeDuration = moment.duration(viewDate.clone().format('HH:mm:ss'));
-                currentDate = viewDate.clone().startOf('M').startOf('w').startOf('d').add(TimeDuration);
+                timeDuration = moment.duration(viewDate.clone().format('HH:mm:ss'));
+                currentDate = viewDate.clone().startOf('M').startOf('w').startOf('d').add(timeDuration);
 
                 for (i = 0; i < 42; i++) { //always display 42 days (should show 6 weeks)
                     if (currentDate.weekday() === 0) {
