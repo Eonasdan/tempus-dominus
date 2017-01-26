@@ -198,16 +198,14 @@
 
             getDatePickerTemplate = function () {
                 var headTemplate = $('<thead>')
-                        .append($('<span>').addClass('datepicker-header-day'))
-                        .append('<br>')
                         .append($('<tr class="datepicker-header-navigation">')
                           .append($('<td>').addClass('prev').attr('data-action', 'previous')
-                            .append('<svg class="icon arrow left"><use xlink:href="#arrow"/></svg>')
+                          	.append($('<span>').addClass(options.icons.previous))
                           )
                           .append($('<td>').addClass('picker-switch').attr('data-action', 'pickerSwitch').attr('colspan', (options.calendarWeeks ? '6' : '5')))
                           .append($('<td>').addClass('next').attr('data-action', 'next')
-                            .append('<svg class="icon arrow right"><use xlink:href="#arrow"/></svg>')
-                          )
+                          	.append($('<span>').addClass(options.icons.next))
+                          	)
                         ),
                     contTemplate = $('<tbody>')
                         .append($('<tr class="datepicker-body-content">')
@@ -689,7 +687,6 @@
 
             fillDate = function () {
                 var daysView = widget.find('.datepicker-days'),
-                    datepickerHeader = daysView.find('.datepicker-header-day'),
                     daysViewHeader = daysView.find('.datepicker-header-navigation td'),
                     currentDate,
                     html = [],
