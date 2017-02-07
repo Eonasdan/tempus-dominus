@@ -63,7 +63,7 @@
     var dateTimePicker = function (element, options) {
         $('body').on('click', function (e) {
             if ($('body').hasClass('picker-open') && !$(e.target).hasClass('picker-toggle')) {
-                hide(true);
+                cancel(e);
             }
         });
         var picker = {},
