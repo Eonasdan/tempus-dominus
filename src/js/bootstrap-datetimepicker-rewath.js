@@ -2529,7 +2529,7 @@
      * @class datetimepicker
      * @memberOf jQuery.fn
      */
-    $.fn.datetimepicker = function (options) {
+    $.fn.datetimepickerrewath = function (options) {
         options = options || {};
 
         var args = Array.prototype.slice.call(arguments, 1),
@@ -2542,7 +2542,7 @@
                 var $this = $(this);
                 if (!$this.data('DateTimePicker')) {
                     // create a private copy of the defaults object
-                    options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
+                    options = $.extend(true, {}, $.fn.datetimepickerrewath.defaults, options);
                     $this.data('DateTimePicker', dateTimePicker($this, options));
                 }
             });
@@ -2568,7 +2568,7 @@
         throw new TypeError('Invalid arguments for DateTimePicker: ' + options);
     };
 
-    $.fn.datetimepicker.defaults = {
+    $.fn.datetimepickerrewath.defaults = {
         timeZone: '',
         format: false,
         dayViewHeaderFormat: 'MMMM YYYY',
@@ -2756,6 +2756,6 @@
         viewDate: false
     };
     if (typeof module !== 'undefined') {
-        module.exports = $.fn.datetimepicker;
+        module.exports = $.fn.datetimepickerrewath;
     }
 }));
