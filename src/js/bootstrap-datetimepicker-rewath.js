@@ -1150,9 +1150,11 @@
                     if (!hasTime() && !options.keepOpen && !options.inline) {
                         hide();
                     }
-                    var toggle = widget.find('.picker-switch a[data-action="togglePicker"]');
-                    if (toggle.length > 0) {
-                        toggle.click();
+                    else {
+                        var toggle = widget.find('.picker-switch a[data-action="togglePicker"]');
+                        if (toggle.length > 0) {
+                            toggle.click();
+                        }
                     }
                 },
 
