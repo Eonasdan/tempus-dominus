@@ -2756,6 +2756,6 @@
         viewDate: false
     };
     if (typeof module !== 'undefined') {
-        module.exports = $.fn.datetimepickerrewath;
+        module.exports = $.fn.datetimepicker;
     }
 }));
