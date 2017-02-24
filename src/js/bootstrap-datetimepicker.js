@@ -403,8 +403,8 @@
             },
 
             place = function () {
-                var position = (component || element).position(),
-                    offset = (component || element).offset(),
+                var position = element.position(),
+                    offset = element.offset(),
                     vertical = options.widgetPositioning.vertical,
                     horizontal = options.widgetPositioning.horizontal,
                     parent;
