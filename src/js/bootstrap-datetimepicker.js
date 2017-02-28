@@ -1,4 +1,4 @@
-/*! version : 4.17.43
+/*! version : 4.17.46
  =========================================================
  bootstrap-datetimejs
  https://github.com/Eonasdan/bootstrap-datetimepicker
@@ -142,6 +142,10 @@
 
                 if (d === undefined || d === null) {
                     returnMoment = moment(); //TODO should this use format? and locale?
+                } else if (moment.isDate(d) || moment.isMoment(d)) {
+                    // If the date that is passed in is already a Date() or moment() object,
+                    // pass it directly to moment.
+                    returnMoment = moment(d);
                 } else if (hasTimeZone()) { // There is a string to parse and a default time zone
                     // parse with the tz function which takes a default time zone if it is not in the format string
                     returnMoment = moment.tz(d, parseFormats, options.useStrict, options.timeZone);
@@ -336,6 +340,7 @@
                 if (use24Hours) {
                     template.addClass('usetwentyfour');
                 }
+
                 if (isEnabled('s') && !use24Hours) {
                     template.addClass('wider');
                 }
@@ -448,15 +453,15 @@
                     widget.removeClass('pull-right');
                 }
 
-                // find the first parent element that has a relative css positioning
-                if (parent.css('position') !== 'relative') {
+                // find the first parent element that has a non-static css positioning
+                if (parent.css('position') === 'static') {
                     parent = parent.parents().filter(function () {
-                        return $(this).css('position') === 'relative';
+                        return $(this).css('position') !== 'static';
                     }).first();
                 }
 
                 if (parent.length === 0) {
-                    throw new Error('datetimepicker component should be placed within a relative positioned container');
+                    throw new Error('datetimepicker component should be placed within a non-static positioned container');
                 }
 
                 widget.css({
@@ -686,7 +691,7 @@
                     currentDate,
                     html = [],
                     row,
-                    clsName,
+                    clsNames = [],
                     i;
 
                 if (!hasDate()) {
@@ -719,26 +724,31 @@
                         }
                         html.push(row);
                     }
-                    clsName = '';
+                    clsNames = ['day'];
                     if (currentDate.isBefore(viewDate, 'M')) {
-                        clsName += ' old';
+                        clsNames.push('old');
                     }
                     if (currentDate.isAfter(viewDate, 'M')) {
-                        clsName += ' new';
+                        clsNames.push('new');
                     }
                     if (currentDate.isSame(date, 'd') && !unset) {
-                        clsName += ' active';
+                        clsNames.push('active');
                     }
                     if (!isValid(currentDate, 'd')) {
-                        clsName += ' disabled';
+                        clsNames.push('disabled');
                     }
                     if (currentDate.isSame(getMoment(), 'd')) {
-                        clsName += ' today';
+                        clsNames.push('today');
                     }
                     if (currentDate.day() === 0 || currentDate.day() === 6) {
-                        clsName += ' weekend';
+                        clsNames.push('weekend');
                     }
-                    row.append('<td data-action="selectDay" data-day="' + currentDate.format('L') + '" class="day' + clsName + '">' + currentDate.date() + '</td>');
+                    notifyEvent({
+                        type: 'dp.classify',
+                        date: currentDate,
+                        classNames: clsNames
+                    });
+                    row.append('<td data-action="selectDay" data-day="' + currentDate.format('L') + '" class="' + clsNames.join(' ') + '">' + currentDate.date() + '</td>');
                     currentDate.add(1, 'd');
                 }
 
@@ -864,11 +874,15 @@
 
                 if (options.stepping !== 1) {
                     targetMoment.minutes((Math.round(targetMoment.minutes() / options.stepping) * options.stepping)).seconds(0);
+
+                    while (options.minDate && targetMoment.isBefore(options.minDate)) {
+                        targetMoment.add(options.stepping, 'minutes');
+                    }
                 }
 
                 if (isValid(targetMoment)) {
                     date = targetMoment;
-                    //viewDate = date.clone(); // TODO this doesn't work right on first use
+                    viewDate = date.clone();
                     input.val(date.format(actualFormat));
                     element.data('date', date.format(actualFormat));
                     unset = false;
@@ -935,7 +949,6 @@
 
                 input.blur();
 
-                currentViewMode = 0;
                 viewDate = date.clone();
 
                 return picker;
@@ -947,7 +960,7 @@
 
             parseInputDate = function (inputDate) {
                 if (options.parseInputDate === undefined) {
-                    if (!moment.isMoment(inputDate)) {
+                    if (!moment.isMoment(inputDate) || inputDate instanceof Date) {
                         inputDate = getMoment(inputDate);
                     }
                 } else {
@@ -2418,11 +2431,12 @@
 
         if (typeof options === 'object') {
             return this.each(function () {
-                var $this = $(this);
+                var $this = $(this),
+                    _options;
                 if (!$this.data('DateTimePicker')) {
                     // create a private copy of the defaults object
-                    options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
-                    $this.data('DateTimePicker', dateTimePicker($this, options));
+                    _options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
+                    $this.data('DateTimePicker', dateTimePicker($this, _options));
                 }
             });
         } else if (typeof options === 'string') {
@@ -2634,7 +2648,6 @@
         enabledHours: false,
         viewDate: false
     };
-    if (typeof module !== 'undefined') {
-        module.exports = $.fn.datetimepicker;
-    }
+
+    return $.fn.datetimepicker;
 }));
