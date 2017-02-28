@@ -501,14 +501,15 @@
             },
 
             fillDow = function () {
+            	var weekname = (options.isoCalendarWeeks ? 'isoWeek' : 'week')
                 var row = $('<tr>'),
-                    currentDate = viewDate.clone().startOf('w').startOf('d');
+                    currentDate = viewDate.clone().startOf(weekname).startOf('d');
 
                 if (options.calendarWeeks === true || options.isoCalendarWeeks === true) {
                     row.append($('<th>').addClass('cw').text('#'));
                 }
 
-                while (currentDate.isBefore(viewDate.clone().endOf('w'))) {
+                while (currentDate.isBefore(viewDate.clone().endOf(weekname))) {
                     row.append($('<th>').addClass('dow').text(currentDate.format('dd')));
                     currentDate.add(1, 'd');
                 }
@@ -712,10 +713,13 @@
                     daysViewHeader.eq(2).addClass('disabled');
                 }
 
-                currentDate = viewDate.clone().startOf('M').startOf('w').startOf('d');
+                var weekname = (options.isoCalendarWeeks ? 'isoWeek' : 'w')
+                var weekstart = (options.isoCalendarWeeks ? 1 : 0)
+                
+                currentDate = viewDate.clone().startOf('M').startOf(weekname).startOf('d');
 
                 for (i = 0; i < 42; i++) { //always display 42 days (should show 6 weeks)
-                    if (currentDate.weekday() === 0) {
+                    if ((options.isoCalendarWeeks ? currentDate.isoWeekday() : currentDate.weekday()) === weekstart) {
                         row = $('<tr>');
                         if (options.isoCalendarWeeks) {
                             row.append('<td class="cw">' + currentDate.isoWeek() + '</td>');
