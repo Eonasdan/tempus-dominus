@@ -335,6 +335,10 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
             line-height: 27px;
         }
     }
+
+    .timepicker-picker tbody {
+        direction: ltr;
+    }
 }
 
 .input-group.date {
