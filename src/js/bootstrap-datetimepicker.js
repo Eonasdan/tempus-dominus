@@ -535,6 +535,9 @@
                 if (!targetMoment.isValid()) {
                     return false;
                 }
+                if (options.validator && options.validatorFor.indexOf(granularity) >= 0) {
+                    return options.validator(targetMoment, granularity);
+                }
                 if (options.disabledDates && granularity === 'd' && isInDisabledDates(targetMoment)) {
                     return false;
                 }
@@ -2227,6 +2230,39 @@
             return picker;
         };
 
+        picker.validator = function(validator) {
+            if (arguments.length === 0) {
+                return (options.validator ? $.extend({}, options.validator) : options.validator);
+            }
+            if (!validator) {
+                options.validator = false;
+                update();
+                return picker;
+            }
+            var isFunction = function(obj) {
+              return !!(obj && obj.constructor && obj.call && obj.apply);
+            };
+            if (!(isFunction(validator))) {
+                throw new TypeError('validator() expects a function parameter');
+            }
+            options.validator = validator;
+            update();
+            return picker;
+        };
+
+        picker.validatorFor = function (validatorFor) {
+            if (arguments.length === 0) {
+                return options.validatorFor;
+            }
+
+            if (typeof validatorFor !== 'string') {
+                throw new TypeError('validatorFor() expects a string parameter');
+            }
+
+            options.validatorFor = validatorFor;
+            return picker;
+        };
+
         picker.disabledHours = function (hours) {
             ///<signature helpKeyword="$.fn.datetimepicker.disabledHours">
             ///<summary>Returns an array with the currently set disabled hours on the component.</summary>
@@ -2629,6 +2665,8 @@
         disabledTimeIntervals: false,
         disabledHours: false,
         enabledHours: false,
+        validator: false,
+        validatorFor: 'dhms',
         viewDate: false
     };
 
