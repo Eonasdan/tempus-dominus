@@ -386,6 +386,16 @@ Takes a `boolean` variable to set if the week numbers will appear to the left on
 
 ----------------------
 
+### isoWeeks
+
+	Default: false
+
+Use ISO 8601 format for the day of the week and the week of the year.
+
+
+----------------------
+
+
 ### viewMode
 
 	Default: 'days'
