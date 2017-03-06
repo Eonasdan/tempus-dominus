@@ -886,9 +886,7 @@
                     unset = false;
                     update();
                     notifyEvent({
-                        type: 'dp.change',
-                        date: date.clone(),
-                        oldDate: oldDate
+                        type: 'dp.change'
                     });
                 } else {
                     if (!options.keepInvalid) {
