@@ -35,6 +35,28 @@
 /*global moment:false */
 (function (factory) {
     'use strict';
+    
+    function LTrim(str){
+        var i;
+        for(i=0;i<str.length;i++)
+        {
+            if(str.charAt(i)!=" "&&str.charAt(i)!=" ")break;
+        }
+        str=str.substring(i,str.length);
+        return str;
+    }
+    function RTrim(str){
+        var i;
+        for(i=str.length-1;i>=0;i--){
+            if(str.charAt(i)!=" "&&str.charAt(i)!=" ")break;
+        }
+        str=str.substring(0,i+1);
+        return str;
+    }
+    function Trim(str){
+        return LTrim(RTrim(str));
+    }
+    
     if (typeof define === 'function' && define.amd) {
         // AMD is used - Register as an anonymous module.
         define(['jquery', 'moment'], factory);
@@ -1956,6 +1978,19 @@
             if (typeof toolbarPlacement !== 'string') {
                 throw new TypeError('toolbarPlacement() expects a string parameter');
             }
+            
+            // indexOf support IE8
+            if(!Array.indexOf){
+                Array.prototype.indexOf = function(obj){              
+                    for(var i=0; i<this.length; i++){
+                        if(this[i]==obj){
+                            return i;
+                        }
+                    }
+                    return -1;
+                }
+            }
+            
             if (toolbarPlacements.indexOf(toolbarPlacement) === -1) {
                 throw new TypeError('toolbarPlacement() parameter must be one of (' + toolbarPlacements.join(', ') + ') value');
             }
