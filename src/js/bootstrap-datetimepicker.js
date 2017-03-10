@@ -2327,12 +2327,25 @@
             return picker;
         };
 
+        /**
+         * Sets the view in inline mode
+         * @param {Takes string, 'datepicker', 'timepicker'} newDate
+         * @returns {picker instance}
+         */
         picker.setInlineView = function(view) {
             if (picker.options().inline) {
+                var cache = picker.setInlineView.cache;
+                
                 if (view === 'datepicker') {
                     //show the date picker
+                    cache.firstLi.collapse('show');
+                    cache.lastLi.collapse('hide');
+                    cache.span.removeClass('glyphicon-calendar').addClass('glyphicon-time');
                 } else if(view === 'timepicker') {
                     //show the time picker
+                    cache.firstLi.collapse('hide');
+                    cache.lastLi.collapse('show');
+                    cache.span.removeClass('glyphicon-time').addClass('glyphicon-calendar');
                 }
             }
             return picker;
@@ -2386,6 +2399,12 @@
         }
         if (options.inline) {
             show();
+            var elems = $('li', widget) 
+            picker.setInlineView.cache = {
+                firstLi : elems.first()
+                span: elems.first().next().first(),
+                lastLi : elems.last()
+            };
         }
         return picker;
     };
