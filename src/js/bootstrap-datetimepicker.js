@@ -2327,6 +2327,17 @@
             return picker;
         };
 
+        picker.setInlineView = function(view) {
+            if (picker.options().inline) {
+                if (view === 'datepicker') {
+                    //show the date picker
+                } else if(view === 'timepicker') {
+                    //show the time picker
+                }
+            }
+            return picker;
+        };
+
         // initializing element and component attributes
         if (element.is('input')) {
             input = element;
@@ -2406,6 +2417,7 @@
      * @memberOf jQuery.fn
      */
     $.fn.datetimepicker = function (options) {
+        console.log('foo')
         options = options || {};
 
         var args = Array.prototype.slice.call(arguments, 1),
