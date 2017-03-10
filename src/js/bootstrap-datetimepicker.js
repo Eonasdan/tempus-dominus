@@ -2401,7 +2401,7 @@
             show();
             var elems = $('li', widget) 
             picker.setInlineView.cache = {
-                firstLi : elems.first()
+                firstLi : elems.first(),
                 span: elems.first().next().first(),
                 lastLi : elems.last()
             };
