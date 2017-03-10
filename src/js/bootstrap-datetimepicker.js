@@ -2402,7 +2402,7 @@
             var elems = $('li', widget) 
             picker.setInlineView.cache = {
                 firstLi : elems.first(),
-                span: elems.first().next().first(),
+                span: elems.find('span'),
                 lastLi : elems.last()
             };
         }
