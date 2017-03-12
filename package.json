@@ -5,9 +5,15 @@
   "bugs": {
     "url": "https://github.com/eonasdan/bootstrap-datetimepicker/issues"
   },
+  "peerDependencies": {
+    "bootstrap": "^3.3",
+    "jquery": "^1.8.3 || ^2.0 || ^3.0",
+    "moment": "^2.10",
+    "moment-timezone": "^0.4.0"
+  },
   "dependencies": {
     "bootstrap": "^3.3",
-    "jquery": "^1.8.3 || ^2.0",
+    "jquery": "^1.8.3 || ^2.0 || ^3.0",
     "moment": "^2.10",
     "moment-timezone": "^0.4.0"
   },
@@ -41,5 +47,5 @@
     "type": "git",
     "url": "https://github.com/eonasdan/bootstrap-datetimepicker.git"
   },
-  "version": "4.17.43"
+  "version": "4.17.47"
 }
