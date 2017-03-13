@@ -365,7 +365,7 @@
                     content.append(toolbar);
                 }
                 if (hasDate()) {
-                    content.append($('<li>').addClass((options.collapse && hasTime() ? 'collapse in' : '')).append(dateView));
+                    content.append($('<li>').addClass((options.collapse && hasTime() ? 'collapse ' + options.collapseExpandedClass : '')).append(dateView));
                 }
                 if (options.toolbarPlacement === 'default') {
                     content.append(toolbar);
@@ -1100,8 +1100,8 @@
                 togglePicker: function (e) {
                     var $this = $(e.target),
                         $parent = $this.closest('ul'),
-                        expanded = $parent.find('.in'),
-                        closed = $parent.find('.collapse:not(.in)'),
+                        expanded = $parent.find('.' + options.collapseExpandedClass),
+                        closed = $parent.find('.collapse:not(.' + options.collapseExpandedClass + ')'),
                         collapseData;
 
                     if (expanded && expanded.length) {
@@ -1871,6 +1871,23 @@
             return picker;
         };
 
+        picker.collapseExpandedClass = function (collapseExpandedClass) {
+            if (arguments.length === 0) {
+                return options.collapseExpandedClass;
+            }
+
+            if (typeof collapseExpandedClass !== 'string' || !collapseExpandedClass) {
+                throw new TypeError('collapseExpandedClass() expects a string parameter');
+            }
+
+            if (options.collapseExpandedClass === collapseExpandedClass) {
+                return picker;
+            }
+
+            options.collapseExpandedClass = collapseExpandedClass;
+            return picker;
+        };
+
         picker.icons = function (icons) {
             if (arguments.length === 0) {
                 return $.extend({}, options.icons);
@@ -2488,6 +2505,7 @@
         maxDate: false,
         useCurrent: true,
         collapse: true,
+        collapseExpandedClass: 'in',
         locale: moment.locale(),
         defaultDate: false,
         disabledDates: false,
