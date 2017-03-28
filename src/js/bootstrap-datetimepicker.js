@@ -1698,7 +1698,7 @@
             if (typeof maxDate === 'string') {
                 if (maxDate === 'now' || maxDate === 'moment') {
                     maxDate = getMoment();
-                }else if(maxDate.toLowerCase() === "false"){
+                }else if(maxDate.toLowerCase() === 'false'){
                     options.maxDate = false;
                     update();
                     return picker;
@@ -1738,7 +1738,7 @@
             if (typeof minDate === 'string') {
                 if (minDate === 'now' || minDate === 'moment') {
                     minDate = getMoment();
-                }else if(minDate.toLowerCase() === "false"){
+                }else if(minDate.toLowerCase() === 'false'){
                     options.minDate = false;
                     update();
                     return picker;
