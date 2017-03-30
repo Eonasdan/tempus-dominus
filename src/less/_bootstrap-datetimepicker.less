@@ -349,5 +349,9 @@
 .input-group.date {
     & .input-group-addon {
         cursor: pointer;
+        &:hover {
+            background-color: darken(@btn-default-bg, 10%);
+            border-color: darken(@btn-default-border, 12%);
+        }
     }
 }
