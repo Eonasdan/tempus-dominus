@@ -934,7 +934,7 @@
                 widget.hide();
 
                 $(window).off('resize', place);
-                widget.off('click', '[data-action]');
+                widget.off('click touchstart', '[data-action]');
                 widget.off('mousedown', false);
 
                 widget.remove();
@@ -1245,7 +1245,7 @@
                 showMode();
 
                 $(window).on('resize', place);
-                widget.on('click', '[data-action]', doAction); // this handles clicks on the widget
+                widget.on('click touchstart', '[data-action]', doAction); // this handles clicks and touchstart on the widget
                 widget.on('mousedown', false);
 
                 if (component && component.hasClass('btn')) {
@@ -1346,7 +1346,7 @@
                         'focus': show
                     });
                 } else if (component) {
-                    component.on('click', toggle);
+                    component.on('click touchstart', toggle);
                     component.on('mousedown', false);
                 }
             },
@@ -1365,7 +1365,7 @@
                         'focus': show
                     });
                 } else if (component) {
-                    component.off('click', toggle);
+                    component.off('click touchstart', toggle);
                     component.off('mousedown', false);
                 }
             },
