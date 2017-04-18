@@ -228,10 +228,10 @@ Bug squashing
 * Fix for #46, fixed active date highlighting
 * Fix for #47, `change.dp` event to also include the previous date.
 
-####2.0.1
+#### 2.0.1
 * New event `error.dp` fires when plugin cannot parse date or when increase/descreasing hours/minutes to a disabled date.
 * Minor fixes
 
-####2.0.0
+#### 2.0.0
 * `disabledDates` is now an option to set the disabled dates. It accepts date objects like `new Date("November 12, 2013 00:00:00")` and `12/25/2013' and `moment` date objects
 * Events are easier to use
