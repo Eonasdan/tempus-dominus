@@ -20,7 +20,7 @@ Takes an object variable with option key:value properties and configures the com
 
  Returns the component's model current date, a `moment` object or `null` if not set.
 
-####date([newDate])
+#### date([newDate])
 
  Takes `string, Date, moment, null` parameter and sets the components model current moment to it. Passing a `null` value unsets the components model current moment. Parsing of the newDate parameter is made using moment library with the `options.format` and `options.useStrict` components configuration.
 

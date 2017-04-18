@@ -1,4 +1,4 @@
-#Bootstrap 3 Datepicker v4 Docs
+# Bootstrap 3 Datepicker v4 Docs
 
 <div class="alert alert-info">
     <strong>Note</strong>
