@@ -1045,9 +1045,13 @@
                     if ($(e.target).is('.new')) {
                         day.add(1, 'M');
                     }
-                    setValue(day.date(parseInt($(e.target).text(), 10)));
-                    if (!hasTime() && !options.keepOpen && !options.inline) {
-                        hide();
+                    if (!hasTime()) {
+                        setValue(day.date(parseInt($(e.target).text(), 10)).startOf('day'));
+                        if (!options.keepOpen && !options.inline) {
+                            hide();
+                        }
+                    } else {
+                        setValue(day.date(parseInt($(e.target).text(), 10)));
                     }
                 },
 
