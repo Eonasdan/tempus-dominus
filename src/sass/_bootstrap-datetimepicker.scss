@@ -268,7 +268,8 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
                 &:before {
                     content: '';
                     display: inline-block;
-                    border: 0 0 7px 7px solid transparent;
+                    border: solid transparent;
+                    border-width: 0 0 7px 7px;
                     border-bottom-color: $bs-datetimepicker-active-bg;
                     border-top-color: $bs-datetimepicker-secondary-border-color-rgba;
                     position: absolute;

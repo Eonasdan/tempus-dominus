@@ -37,7 +37,7 @@ Emitted from:
 
 ### dp.change
 
-Fired when the date is changed.
+Fired when the date is changed, including when changed to a non-date (e.g. When keepInvalid=true).
 
 Parameters:
 
@@ -68,6 +68,7 @@ Parameters:
 ```
 e = {
     date //the invalid date. Type: moment object (clone)
+    oldDate //previous date. Type: moment object (clone) or false in the event of a null
 }
 ```
 
