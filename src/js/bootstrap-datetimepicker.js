@@ -1100,25 +1100,28 @@
             },
 
             parseInputDate = function (inputDate) {
+                var parsedDate;
                 if (options.parseInputDate === undefined) {
                     if (Array.isArray(inputDate)) {
-                        inputDate = $.map(inputDate, function (item) {
+                        parsedDate = $.map(inputDate, function (item) {
                             if (!moment.isMoment(item) || item instanceof Date) {
                                 return getMoment(item);
                             } else {
-                                return item;
+                                return item.clone();
                             }
                         });
                     } else {
                         if (!moment.isMoment(inputDate) || inputDate instanceof Date) {
-                            inputDate = getMoment(inputDate);
+                            parsedDate = getMoment(inputDate);
+                        } else {
+                            parsedDate = inputDate.clone();
                         }
                     }
                 } else {
-                    inputDate = options.parseInputDate(inputDate);
+                    parsedDate = options.parseInputDate(inputDate);
                 }
                 //inputDate.locale(options.locale);
-                return inputDate;
+                return parsedDate;
             },
 
             /********************************************************************************
