@@ -884,6 +884,9 @@
                     input.val(date.format(actualFormat));
                     element.data('date', date.format(actualFormat));
                     unset = false;
+                    if ((viewDate && viewDate.isSame(oldDate)) || (!viewDate && !oldDate)) {
+                        return;
+                    }
                     update();
                     notifyEvent({
                         type: 'dp.change',
