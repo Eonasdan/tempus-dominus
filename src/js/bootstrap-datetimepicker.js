@@ -983,8 +983,8 @@
                     fillDate();
                     viewUpdate(navFnc);
 					notifyEvent({
-                        type: 'dp.pageChange'
-                    });
+                            type: 'dp.pageChange'
+                        });
                 },
 
                 previous: function () {
@@ -993,8 +993,8 @@
                     fillDate();
                     viewUpdate(navFnc);
 					notifyEvent({
-                        type: 'dp.pageChange'
-                    });
+                            type: 'dp.pageChange'
+                        });
                 },
 
                 pickerSwitch: function () {
