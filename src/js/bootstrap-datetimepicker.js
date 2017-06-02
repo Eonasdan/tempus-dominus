@@ -884,6 +884,9 @@
                     input.val(date.format(actualFormat));
                     element.data('date', date.format(actualFormat));
                     unset = false;
+                    if ((viewDate && viewDate.isSame(oldDate)) || (!viewDate && !oldDate)) {
+                        return;
+                    }
                     update();
                     notifyEvent({
                         type: 'dp.change',
@@ -979,6 +982,9 @@
                     viewDate.add(datePickerModes[currentViewMode].navStep, navFnc);
                     fillDate();
                     viewUpdate(navFnc);
+                    notifyEvent({
+                        type: 'dp.pageChange'
+                    });
                 },
 
                 previous: function () {
@@ -986,6 +992,9 @@
                     viewDate.subtract(datePickerModes[currentViewMode].navStep, navFnc);
                     fillDate();
                     viewUpdate(navFnc);
+                    notifyEvent({
+                        type: 'dp.pageChange'
+                    });
                 },
 
                 pickerSwitch: function () {
