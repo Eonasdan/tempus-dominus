@@ -982,6 +982,9 @@
                     viewDate.add(datePickerModes[currentViewMode].navStep, navFnc);
                     fillDate();
                     viewUpdate(navFnc);
+					notifyEvent({
+                        type: 'dp.pageChange'
+                    });
                 },
 
                 previous: function () {
@@ -989,6 +992,9 @@
                     viewDate.subtract(datePickerModes[currentViewMode].navStep, navFnc);
                     fillDate();
                     viewUpdate(navFnc);
+					notifyEvent({
+                        type: 'dp.pageChange'
+                    });
                 },
 
                 pickerSwitch: function () {
