@@ -474,6 +474,8 @@ Show the "Close" button in the icon toolbar.
 
 Clicking the "Close" button will call `hide()`
 
+To show when in side by side mode use `toolbarPlacement:'bottom'`
+
 #### showClose()
 
 Returns a `boolean` variable with the currently set `options.showClose` option.
