@@ -362,6 +362,10 @@
 .input-group.date .input-group-addon {
   cursor: pointer;
 }
+.input-group.date .input-group-addon:hover {
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
 .sr-only {
   position: absolute;
   width: 1px;
