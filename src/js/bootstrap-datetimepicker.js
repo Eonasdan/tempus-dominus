@@ -197,14 +197,14 @@
                             .append($('<th>').addClass('prev').attr('data-action', 'previous')
                                 .append($('<span>').addClass(options.icons.previous))
                                 )
-                            .append($('<th>').addClass('picker-switch').attr('data-action', 'pickerSwitch').attr('colspan', (options.calendarWeeks ? '6' : '5')))
+                            .append($('<th>').addClass('picker-switch').attr('data-action', 'pickerSwitch').attr('colspan', ((options.calendarWeeks || options.isoCalendarWeeks) ? '6' : '5')))
                             .append($('<th>').addClass('next').attr('data-action', 'next')
                                 .append($('<span>').addClass(options.icons.next))
                                 )
                             ),
                     contTemplate = $('<tbody>')
                         .append($('<tr>')
-                            .append($('<td>').attr('colspan', (options.calendarWeeks ? '8' : '7')))
+                            .append($('<td>').attr('colspan', ((options.calendarWeeks || options.isoCalendarWeeks) ? '8' : '7')))
                             );
 
                 return [
@@ -501,14 +501,15 @@
             },
 
             fillDow = function () {
+            	var weekname = (options.isoCalendarWeeks ? 'isoWeek' : 'week')
                 var row = $('<tr>'),
-                    currentDate = viewDate.clone().startOf('w').startOf('d');
+                    currentDate = viewDate.clone().startOf(weekname).startOf('d');
 
-                if (options.calendarWeeks === true) {
+                if (options.calendarWeeks === true || options.isoCalendarWeeks === true) {
                     row.append($('<th>').addClass('cw').text('#'));
                 }
 
-                while (currentDate.isBefore(viewDate.clone().endOf('w'))) {
+                while (currentDate.isBefore(viewDate.clone().endOf(weekname))) {
                     row.append($('<th>').addClass('dow').text(currentDate.format('dd')));
                     currentDate.add(1, 'd');
                 }
@@ -712,12 +713,17 @@
                     daysViewHeader.eq(2).addClass('disabled');
                 }
 
-                currentDate = viewDate.clone().startOf('M').startOf('w').startOf('d');
+                var weekname = (options.isoCalendarWeeks ? 'isoWeek' : 'w')
+                var weekstart = (options.isoCalendarWeeks ? 1 : 0)
+                
+                currentDate = viewDate.clone().startOf('M').startOf(weekname).startOf('d');
 
                 for (i = 0; i < 42; i++) { //always display 42 days (should show 6 weeks)
-                    if (currentDate.weekday() === 0) {
+                    if ((options.isoCalendarWeeks ? currentDate.isoWeekday() : currentDate.weekday()) === weekstart) {
                         row = $('<tr>');
-                        if (options.calendarWeeks) {
+                        if (options.isoCalendarWeeks) {
+                            row.append('<td class="cw">' + currentDate.isoWeek() + '</td>');
+                        } else if (options.calendarWeeks) {
                             row.append('<td class="cw">' + currentDate.week() + '</td>');
                         }
                         html.push(row);
@@ -2014,6 +2020,20 @@
             return picker;
         };
 
+        picker.isoCalendarWeeks = function (isoCalendarWeeks) {
+            if (arguments.length === 0) {
+                return options.isoCalendarWeeks;
+            }
+
+            if (typeof isoCalendarWeeks !== 'boolean') {
+                throw new TypeError('isoCalendarWeeks() expects parameter to be a boolean value');
+            }
+
+            options.isoCalendarWeeks = isoCalendarWeeks;
+            update();
+            return picker;
+        };
+
         picker.showTodayButton = function (showTodayButton) {
             if (arguments.length === 0) {
                 return options.showTodayButton;
@@ -2501,6 +2521,7 @@
         sideBySide: false,
         daysOfWeekDisabled: false,
         calendarWeeks: false,
+        isoCalendarWeeks: false,
         viewMode: 'days',
         toolbarPlacement: 'default',
         showTodayButton: false,
