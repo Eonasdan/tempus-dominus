@@ -1180,7 +1180,12 @@
                 clear: clear,
 
                 today: function () {
-                    var todaysDate = getMoment();
+                    var todaysDate = getMoment().startOf('d');
+
+                    if (hasTime()) {
+                        todaysDate.set({h:date.hour(), m: date.minute(), s: date.second(), ms: date.millisecond()});
+                    }
+
                     if (isValid(todaysDate, 'd')) {
                         setValue(todaysDate);
                     }
