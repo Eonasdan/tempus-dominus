@@ -5,7 +5,7 @@
     All functions are accessed via the <code>data</code> attribute e.g. <code>$('#datetimepicker').data("DateTimePicker").FUNCTION()</code>
 </div>
 
-###destroy()
+### destroy()
 
 Destroys the widget and removes all attached event listeners
 
