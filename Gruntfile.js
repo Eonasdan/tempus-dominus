@@ -5,7 +5,8 @@ module.exports = function (grunt) {
         uglify: {
             target: {
                 files: {
-                    'build/js/bootstrap-datetimepicker.min.js': 'src/js/bootstrap-datetimepicker.js'
+                    'build/js/bootstrap-datetimepicker.min.js': 'src/js/bootstrap-datetimepicker.js',
+                    'build/js/bootstrap-datetimepicker-rewath.min.js': 'src/js/bootstrap-datetimepicker-rewath.js'
                 }
             },
             options: {
