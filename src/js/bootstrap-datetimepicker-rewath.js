@@ -381,7 +381,6 @@
                     }).append($('<span>').addClass(options.icons.clear))));
                 }
 
-
                 if (options.showClose) {
                     row.push($('<td>').append($('<a>').attr({
                         'data-action': 'close',
@@ -1159,6 +1158,8 @@
                 },
 
                 incrementHours: function () {
+                    if (options.porting && date.hour() === 16 && date.minute() === 30)
+                        return false;
                     var newDate = date.clone().add(1, 'h');
                     if (isValid(newDate, 'h')) {
                         setValue(newDate);
@@ -1166,6 +1167,8 @@
                 },
 
                 incrementMinutes: function () {
+                    if (options.porting && date.hour() === 17)
+                        return false;
                     var newDate = date.clone().add(options.stepping, 'm');
                     if (isValid(newDate, 'm')) {
                         setValue(newDate);
@@ -1514,7 +1517,6 @@
                         return date.localeData().longDateFormat(formatInput2) || formatInput2;
                     });
                 });
-
 
                 parseFormats = options.extraFormats ? options.extraFormats.slice() : [];
                 if (parseFormats.indexOf(format) < 0 && parseFormats.indexOf(actualFormat) < 0) {
@@ -2453,6 +2455,19 @@
             return picker;
         };
 
+        picker.porting = function (porting) {
+            if (arguments.length === 0) {
+                return options.porting;
+            }
+
+            if (typeof porting !== 'boolean') {
+                throw new TypeError('porting() expects a boolean parameter');
+            }
+
+            options.porting = porting;
+            return picker;
+        };
+
         // initializing element and component attributes
         if (element.is('input')) {
             input = element;
@@ -2755,7 +2770,8 @@
         disabledTimeIntervals: false,
         disabledHours: false,
         enabledHours: false,
-        viewDate: false
+        viewDate: false,
+        porting: false
     };
     if (typeof module !== 'undefined') {
         module.exports = $.fn.datetimepicker;
