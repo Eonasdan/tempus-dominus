@@ -1158,8 +1158,9 @@
                 },
 
                 incrementHours: function () {
-                    if (options.porting && date.hour() === 16 && date.minute() === 30)
+                    if (options.porting && date.hour() === 16 && date.minute() === 30) {
                         return false;
+                    }
                     var newDate = date.clone().add(1, 'h');
                     if (isValid(newDate, 'h')) {
                         setValue(newDate);
@@ -1167,8 +1168,9 @@
                 },
 
                 incrementMinutes: function () {
-                    if (options.porting && date.hour() === 17)
+                    if (options.porting && date.hour() === 17) {
                         return false;
+                    }
                     var newDate = date.clone().add(options.stepping, 'm');
                     if (isValid(newDate, 'm')) {
                         setValue(newDate);
