@@ -1150,6 +1150,15 @@
                         hide();
                     }
                     else {
+                        if(options.porting && day.hour()<8 || !moment().isSame(day,'day')) {
+                            day.hour(8).minute(0);
+                            setValue(day);
+                        }
+                        else if(options.porting && moment().isSame(day,'day')){
+                            day.hour(moment().hour()).minute(moment().minute());
+                            setValue(day);
+                        }
+
                         var toggle = widget.find('.picker-switch a[data-action="togglePicker"]');
                         if (toggle.length > 0) {
                             toggle.click();
@@ -1158,7 +1167,7 @@
                 },
 
                 incrementHours: function () {
-                    if (options.porting && date.hour() === 16 && date.minute() === 30) {
+                    if (options.porting && date.hour() === 16 && date.minute() >= 1) {
                         return false;
                     }
                     var newDate = date.clone().add(1, 'h');
@@ -1314,6 +1323,12 @@
              * Shows the widget. Possibly will emit dp.show and dp.change
              */
             show = function () {
+                //disable current date if time has exceeded
+                if (options.porting && moment().hour() >= 17)
+                    options.minDate = moment().add(1, 'day').hour(8).minute(0);
+                else if(options.porting)
+                    options.minDate=moment();
+
                 var currentMoment,
                     useCurrentGranularity = {
                         'year': function (m) {
