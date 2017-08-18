@@ -1150,11 +1150,11 @@
                         hide();
                     }
                     else {
-                        if(options.porting && day.hour()<8 || !moment().isSame(day,'day')) {
+                        if (options.porting && day.hour() < 8 || !moment().isSame(day, 'day')) {
                             day.hour(8).minute(0);
                             setValue(day);
                         }
-                        else if(options.porting && moment().isSame(day,'day')){
+                        else if (options.porting && moment().isSame(day, 'day')) {
                             day.hour(moment().hour()).minute(moment().minute());
                             setValue(day);
                         }
@@ -1324,10 +1324,12 @@
              */
             show = function () {
                 //disable current date if time has exceeded
-                if (options.porting && moment().hour() >= 17)
+                if (options.porting && moment().hour() >= 17) {
                     options.minDate = moment().add(1, 'day').hour(8).minute(0);
-                else if(options.porting)
-                    options.minDate=moment();
+                }
+                else if (options.porting) {
+                    options.minDate = moment();
+                }
 
                 var currentMoment,
                     useCurrentGranularity = {
