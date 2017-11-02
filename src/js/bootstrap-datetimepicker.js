@@ -1046,7 +1046,7 @@
                         day.add(1, 'M');
                     }
                     setValue(day.date(parseInt($(e.target).text(), 10)));
-                    if (!hasTime() && !options.keepOpen && !options.inline) {
+                    if ((!hasTime() || options.closeOnDateSelection) && !options.keepOpen && !options.inline) {
                         hide();
                     }
                 },
@@ -1928,6 +1928,18 @@
             return picker;
         };
 
+        picker.closeOnDateSelection = function(closeOnDateSelection) {
+            if (arguments.length === 0) {
+                return options.closeOnDateSelection;
+            }
+
+            if (typeof closeOnDateSelection !== 'boolean') {
+                throw new TypeError('closeOnDateSelection() expects a boolean parameter');
+            }
+            options.closeOnDateSelection = closeOnDateSelection;
+            return closeOnDateSelection;
+        }
+
         picker.viewMode = function (viewMode) {
             if (arguments.length === 0) {
                 return options.viewMode;
@@ -2629,7 +2641,8 @@
         disabledTimeIntervals: false,
         disabledHours: false,
         enabledHours: false,
-        viewDate: false
+        viewDate: false,
+        closeOnDateSelection: false
     };
 
     return $.fn.datetimepicker;
