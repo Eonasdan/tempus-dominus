@@ -126,6 +126,7 @@
                 46: 'delete'
             },
             keyState = {},
+            hasRange = false,
 
             /********************************************************************************
              *
@@ -571,6 +572,23 @@
                 return true;
             },
 
+            isInRange = function (targetMoment, granularity) {
+                if (!targetMoment.isValid()) {
+                    return false;
+                }
+                if (targetMoment.isBefore(options.rangeStarted, granularity)) {
+                    return false;
+                }
+                if (targetMoment.isAfter(options.rangeFinished, granularity)) {
+                    return false;
+                }
+                return true;
+            },
+            
+            checkRange = function () {
+                hasRange = moment.isMoment(options.rangeStarted) && moment.isMoment(options.rangeFinished) && options.rangeStarted.isSameOrBefore(options.rangeFinished);
+            },
+            
             fillMonths = function () {
                 var spans = [],
                     monthsShort = viewDate.clone().startOf('y').startOf('d');
@@ -612,6 +630,15 @@
                         $(this).addClass('disabled');
                     }
                 });
+
+                months.removeClass('range');
+                if (hasRange) {
+                    months.each(function (index) {
+                        if (isInRange(viewDate.clone().month(index), 'M')) {
+                            $(this).addClass('range');
+                        }
+                    });
+                }
             },
 
             updateYears = function () {
@@ -626,6 +653,7 @@
                 yearsViewHeader.eq(2).find('span').attr('title', options.tooltips.nextDecade);
 
                 yearsView.find('.disabled').removeClass('disabled');
+                yearsView.find('.range').removeClass('range');
 
                 if (options.minDate && options.minDate.isAfter(startYear, 'y')) {
                     yearsViewHeader.eq(0).addClass('disabled');
@@ -638,7 +666,11 @@
                 }
 
                 while (!startYear.isAfter(endYear, 'y')) {
-                    html += '<span data-action="selectYear" class="year' + (startYear.isSame(date, 'y') && !unset ? ' active' : '') + (!isValid(startYear, 'y') ? ' disabled' : '') + '">' + startYear.year() + '</span>';
+                    html += '<span data-action="selectYear" class="year' +
+                        (hasRange && isInRange(startYear, 'y') ? ' range' : '') +
+                        (startYear.isSame(date, 'y') && !unset ? ' active' : '') +
+                        (!isValid(startYear, 'y') ? ' disabled' : '') + '">' +
+                        startYear.year() + '</span>';
                     startYear.add(1, 'y');
                 }
 
@@ -654,12 +686,14 @@
                     minDateDecade = false,
                     maxDateDecade = false,
                     endDecadeYear,
-                    html = '';
+                    html = '',
+                    inRange = false;
 
                 decadesViewHeader.eq(0).find('span').attr('title', options.tooltips.prevCentury);
                 decadesViewHeader.eq(2).find('span').attr('title', options.tooltips.nextCentury);
 
                 decadesView.find('.disabled').removeClass('disabled');
+                decadesView.find('.range').removeClass('range');
 
                 if (startDecade.isSame(moment({ y: 1900 })) || (options.minDate && options.minDate.isAfter(startDecade, 'y'))) {
                     decadesViewHeader.eq(0).addClass('disabled');
@@ -675,8 +709,12 @@
                     endDecadeYear = startDecade.year() + 12;
                     minDateDecade = options.minDate && options.minDate.isAfter(startDecade, 'y') && options.minDate.year() <= endDecadeYear;
                     maxDateDecade = options.maxDate && options.maxDate.isAfter(startDecade, 'y') && options.maxDate.year() <= endDecadeYear;
-                    html += '<span data-action="selectDecade" class="decade' + (date.isAfter(startDecade) && date.year() <= endDecadeYear ? ' active' : '') +
-                        (!isValid(startDecade, 'y') && !minDateDecade && !maxDateDecade ? ' disabled' : '') + '" data-selection="' + (startDecade.year() + 6) + '">' + (startDecade.year() + 1) + ' - ' + (startDecade.year() + 12) + '</span>';
+                    inRange = hasRange && startDecade.isSameOrBefore(options.rangeFinished, 'y') && options.rangeStarted.year() <= endDecadeYear;
+                    html += '<span data-action="selectDecade" class="decade' + 
+                        (inRange ? ' range' : '') +
+                        (date.isAfter(startDecade) && date.year() <= endDecadeYear ? ' active' : '') +
+                        (!isValid(startDecade, 'y') && !minDateDecade && !maxDateDecade ? ' disabled' : '') +
+                        '" data-selection="' + (startDecade.year() + 6) + '">' + (startDecade.year() + 1) + ' - ' + (startDecade.year() + 12) + '</span>';
                     startDecade.add(12, 'y');
                 }
                 html += '<span></span><span></span><span></span>'; //push the dangling block over, at least this way it's even
@@ -741,6 +779,15 @@
                     if (currentDate.day() === 0 || currentDate.day() === 6) {
                         clsNames.push('weekend');
                     }
+                    if (hasRange && isInRange(currentDate, 'd')) {
+                        clsNames.push('range');
+                    }
+                    if (hasRange && currentDate.isSame(options.rangeStarted, 'd')) {
+                        clsNames.push('range-start');
+                    }
+                    if (hasRange && currentDate.isSame(options.rangeFinished, 'd')) {
+                        clsNames.push('range-end');
+                    }
                     notifyEvent({
                         type: 'dp.classify',
                         date: currentDate,
@@ -763,7 +810,8 @@
                 var table = widget.find('.timepicker-hours table'),
                     currentHour = viewDate.clone().startOf('d'),
                     html = [],
-                    row = $('<tr>');
+                    row = $('<tr>'),
+                    clsNames = [];
 
                 if (viewDate.hour() > 11 && !use24Hours) {
                     currentHour.hour(12);
@@ -773,7 +821,23 @@
                         row = $('<tr>');
                         html.push(row);
                     }
-                    row.append('<td data-action="selectHour" class="hour' + (!isValid(currentHour, 'h') ? ' disabled' : '') + '">' + currentHour.format(use24Hours ? 'HH' : 'hh') + '</td>');
+                    clsNames = ['hour'];
+                    if (currentHour.isSame(date, 'h') && !unset) {
+                        clsNames.push('active');
+                    }
+                    if (!isValid(currentHour, 'h')) {
+                        clsNames.push('disabled');
+                    }
+                    if (hasRange && isInRange(currentHour, 'h')) {
+                        clsNames.push('range');
+                    }
+                    if (hasRange && currentHour.isSame(options.rangeStarted, 'h')) {
+                        clsNames.push('range-start');
+                    }
+                    if (hasRange && currentHour.isSame(options.rangeFinished, 'h')) {
+                        clsNames.push('range-end');
+                    }
+                    row.append('<td data-action="selectHour" class="' + clsNames.join(' ') + '">' + currentHour.format(use24Hours ? 'HH' : 'hh') + '</td>');
                     currentHour.add(1, 'h');
                 }
                 table.empty().append(html);
@@ -784,14 +848,31 @@
                     currentMinute = viewDate.clone().startOf('h'),
                     html = [],
                     row = $('<tr>'),
-                    step = options.stepping === 1 ? 5 : options.stepping;
+                    step = options.stepping === 1 ? 5 : options.stepping,
+                    clsNames = [];
 
                 while (viewDate.isSame(currentMinute, 'h')) {
                     if (currentMinute.minute() % (step * 4) === 0) {
                         row = $('<tr>');
                         html.push(row);
                     }
-                    row.append('<td data-action="selectMinute" class="minute' + (!isValid(currentMinute, 'm') ? ' disabled' : '') + '">' + currentMinute.format('mm') + '</td>');
+                    clsNames = ['minute'];
+                    if (currentMinute.isSame(date, 'm') && !unset) {
+                        clsNames.push('active');
+                    }
+                    if (!isValid(currentMinute, 'm')) {
+                        clsNames.push('disabled');
+                    }
+                    if (hasRange && isInRange(currentMinute, 'm')) {
+                        clsNames.push('range');
+                    }
+                    if (hasRange && currentMinute.isSame(options.rangeStarted, 'm')) {
+                        clsNames.push('range-start');
+                    }
+                    if (hasRange && currentMinute.isSame(options.rangeFinished, 'm')) {
+                        clsNames.push('range-end');
+                    }
+                    row.append('<td data-action="selectMinute" class="' + clsNames.join(' ') + '">' + currentMinute.format('mm') + '</td>');
                     currentMinute.add(step, 'm');
                 }
                 table.empty().append(html);
@@ -801,14 +882,31 @@
                 var table = widget.find('.timepicker-seconds table'),
                     currentSecond = viewDate.clone().startOf('m'),
                     html = [],
-                    row = $('<tr>');
+                    row = $('<tr>'),
+                    clsNames = [];
 
                 while (viewDate.isSame(currentSecond, 'm')) {
                     if (currentSecond.second() % 20 === 0) {
                         row = $('<tr>');
                         html.push(row);
                     }
-                    row.append('<td data-action="selectSecond" class="second' + (!isValid(currentSecond, 's') ? ' disabled' : '') + '">' + currentSecond.format('ss') + '</td>');
+                    clsNames = ['second'];
+                    if (currentSecond.isSame(date, 's') && !unset) {
+                        clsNames.push('active');
+                    }
+                    if (!isValid(currentSecond, 's')) {
+                        clsNames.push('disabled');
+                    }
+                    if (hasRange && isInRange(currentSecond, 's')) {
+                        clsNames.push('range');
+                    }
+                    if (hasRange && currentSecond.isSame(options.rangeStarted, 's')) {
+                        clsNames.push('range-start');
+                    }
+                    if (hasRange && currentSecond.isSame(options.rangeFinished, 's')) {
+                        clsNames.push('range-end');
+                    }
+                    row.append('<td data-action="selectSecond" class="' + clsNames.join(' ') + '">' + currentSecond.format('ss') + '</td>');
                     currentSecond.add(5, 's');
                 }
 
@@ -2326,7 +2424,33 @@
             viewUpdate();
             return picker;
         };
+     
+        picker.rangeStarted = function (date) {
+            if (arguments.length === 0) {
+                return options.rangeStarted ? options.rangeStarted.clone() : options.rangeStarted;
+            }
+            if (!moment.isMoment(date)) {
+                throw new TypeError('date parameter must be a moment object');
+            }
+            options.rangeStarted = date;
+			checkRange();
+            update();
+            return picker;
+        };
 
+        picker.rangeFinished = function (date) {
+            if (arguments.length === 0) {
+                return options.rangeFinished ? options.rangeFinished.clone() : options.rangeFinished;
+            }
+            if (!moment.isMoment(date)) {
+                throw new TypeError('date parameter must be a moment object');
+            }
+            options.rangeFinished = date;
+			checkRange();
+            update();
+            return picker;
+        };
+     
         // initializing element and component attributes
         if (element.is('input')) {
             input = element;
