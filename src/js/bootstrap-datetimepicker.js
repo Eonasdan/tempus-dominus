@@ -523,6 +523,10 @@
                 return options.enabledDates[testDate.format('YYYY-MM-DD')] === true;
             },
 
+            isInReenabledDates = function (testDate) {
+                return options.reenabledDates[testDate.format('YYYY-MM-DD')] === true;
+            },
+
             isInDisabledHours = function (testDate) {
                 return options.disabledHours[testDate.format('H')] === true;
             },
@@ -535,7 +539,7 @@
                 if (!targetMoment.isValid()) {
                     return false;
                 }
-                if (options.disabledDates && granularity === 'd' && isInDisabledDates(targetMoment)) {
+                if (options.disabledDates && granularity === 'd' && isInDisabledDates(targetMoment) && !isInReenabledDates(targetMoment)) {
                     return false;
                 }
                 if (options.enabledDates && granularity === 'd' && !isInEnabledDates(targetMoment)) {
@@ -547,7 +551,7 @@
                 if (options.maxDate && targetMoment.isAfter(options.maxDate, granularity)) {
                     return false;
                 }
-                if (options.daysOfWeekDisabled && granularity === 'd' && options.daysOfWeekDisabled.indexOf(targetMoment.day()) !== -1) {
+                if (options.daysOfWeekDisabled && granularity === 'd' && options.daysOfWeekDisabled.indexOf(targetMoment.day()) !== -1 && !isInReenabledDates(targetMoment)) {
                     return false;
                 }
                 if (options.disabledHours && (granularity === 'h' || granularity === 'm' || granularity === 's') && isInDisabledHours(targetMoment)) {
@@ -1645,6 +1649,28 @@
             return picker;
         };
 
+        picker.reenabledDates = function (dates) {
+            ///<signature helpKeyword="$.fn.datetimepicker.reenabledDates">
+            ///<summary>Returns an array with the currently set reenabled dates on the component.</summary>
+            ///<returns type="array">options.reenabledDates</returns>
+            ///</signature>           
+            if (arguments.length === 0) {
+                return (options.reenabledDates ? $.extend({}, options.reenabledDates) : options.reenabledDates);
+            }
+
+            if (!dates) {
+                options.reenabledDates = false;
+                update();
+                return picker;
+            }
+            if (!(dates instanceof Array)) {
+                throw new TypeError('enabledDates() expects an array parameter');
+            }
+            options.reenabledDates = indexGivenDates(dates);
+            update();
+            return picker;
+        };        
+
         picker.daysOfWeekDisabled = function (daysOfWeekDisabled) {
             if (arguments.length === 0) {
                 return options.daysOfWeekDisabled.splice(0);
@@ -2459,6 +2485,7 @@
         defaultDate: false,
         disabledDates: false,
         enabledDates: false,
+        reenabledDates: false,
         icons: {
             time: 'glyphicon glyphicon-time',
             date: 'glyphicon glyphicon-calendar',
