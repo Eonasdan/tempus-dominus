@@ -1212,6 +1212,9 @@
                         'day': function (m) {
                             return m.hours(0).seconds(0).minutes(0);
                         },
+                        'dayend': function (m) {
+                            return m.hours(23).seconds(59).minutes(59);
+                        },
                         'hour': function (m) {
                             return m.seconds(0).minutes(0);
                         },
@@ -1834,7 +1837,7 @@
         };
 
         picker.useCurrent = function (useCurrent) {
-            var useCurrentOptions = ['year', 'month', 'day', 'hour', 'minute'];
+            var useCurrentOptions = ['year', 'month', 'day', 'dayend', 'hour', 'minute'];
             if (arguments.length === 0) {
                 return options.useCurrent;
             }
