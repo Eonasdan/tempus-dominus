@@ -1212,6 +1212,9 @@
                         'day': function (m) {
                             return m.hours(0).seconds(0).minutes(0);
                         },
+                        'endDay': function (m) {
+                            return m.hours(23).seconds(59).minutes(59);
+                        },
                         'hour': function (m) {
                             return m.seconds(0).minutes(0);
                         },
