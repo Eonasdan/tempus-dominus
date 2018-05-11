@@ -1,6 +1,6 @@
 /*!
  * Datetimepicker for Bootstrap 3
- * version : 4.17.37
+ * version : 4.17.47
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 @bs-datetimepicker-timepicker-font-size: 1.2em;
@@ -19,6 +19,7 @@
     list-style: none;
 
     &.dropdown-menu {
+        display: block;
         margin: 2px 0;
         padding: 4px;
         width: 19em;
@@ -117,58 +118,8 @@
         padding: 6px;
     }
 
-    .btn[data-action="incrementHours"]::after {
-        .sr-only();
-        content: "Increment Hours";
-    }
-
-    .btn[data-action="incrementMinutes"]::after {
-        .sr-only();
-        content: "Increment Minutes";
-    }
-
-    .btn[data-action="decrementHours"]::after {
-        .sr-only();
-        content: "Decrement Hours";
-    }
-
-    .btn[data-action="decrementMinutes"]::after {
-        .sr-only();
-        content: "Decrement Minutes";
-    }
-
-    .btn[data-action="showHours"]::after {
-        .sr-only();
-        content: "Show Hours";
-    }
-
-    .btn[data-action="showMinutes"]::after {
-        .sr-only();
-        content: "Show Minutes";
-    }
-
-    .btn[data-action="togglePeriod"]::after {
-        .sr-only();
-        content: "Toggle AM/PM";
-    }
-
-    .btn[data-action="clear"]::after {
-        .sr-only();
-        content: "Clear the picker";
-    }
-
-    .btn[data-action="today"]::after {
-        .sr-only();
-        content: "Set the date to today";
-    }
-
     .picker-switch {
         text-align: center;
-
-        &::after {
-            .sr-only();
-            content: "Toggle Date and Time Screens";
-        }
 
         td {
             padding: 0;
@@ -210,16 +161,6 @@
                 background: none;
                 color: @bs-datetimepicker-disabled-color;
                 cursor: not-allowed;
-            }
-
-            &.prev::after {
-                .sr-only();
-                content: "Previous Month";
-            }
-
-            &.next::after {
-                .sr-only();
-                content: "Next Month";
             }
         }
 
