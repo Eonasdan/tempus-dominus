@@ -1,9 +1,9 @@
 {
   "author": {
-    "name": "Jonathan Peterson"
+    "name": "Luke Wilson"
   },
   "bugs": {
-    "url": "https://github.com/eonasdan/bootstrap-datetimepicker/issues"
+    "url": "https://github.com/luke-wilson/bootstrap-datetimepicker/issues"
   },
   "peerDependencies": {
     "bootstrap": "^3.3",
