@@ -1,5 +1,5 @@
 {
-  "name": "eonasdan/bootstrap-datetimepicker",
+  "name": "luke-wilson/bootstrap-datetimepicker",
   "type": "component",
   "version": "4.17.47",
   "description": "Date/time picker widget based on twitter bootstrap",
@@ -7,7 +7,6 @@
     "bootstrap",
     "datetimepicker"
   ],
-  "homepage": "http://eonasdan.github.io/bootstrap-datetimepicker/",
   "license": "MIT",
   "require": {
     "robloach/component-installer": "*",
