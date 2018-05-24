@@ -989,7 +989,9 @@
                 },
 
                 pickerSwitch: function () {
+                  if (!options.disablePickerSwitch) {
                     showMode(1);
+                  }
                 },
 
                 selectMonth: function (e) {
@@ -1928,6 +1930,13 @@
             return picker;
         };
 
+        picker.disablePickerSwitch = function (disablePickerSwitch) {
+          if (arguments.length === 0) {
+              return options.disablePickerSwitch;
+          }
+          return picker;
+        };
+
         picker.viewMode = function (viewMode) {
             if (arguments.length === 0) {
                 return options.viewMode;
@@ -2501,6 +2510,7 @@
         sideBySide: false,
         daysOfWeekDisabled: false,
         calendarWeeks: false,
+        disablePickerSwitch: false,
         viewMode: 'days',
         toolbarPlacement: 'default',
         showTodayButton: false,
