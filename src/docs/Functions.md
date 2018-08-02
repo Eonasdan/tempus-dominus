@@ -1,4 +1,4 @@
-## Functions
+##Functions
 
 <div class="alert alert-info">
     <strong>Note</strong>

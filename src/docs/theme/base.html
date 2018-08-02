@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -41,7 +41,10 @@
 		<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 		{%- for path in extra_javascript %}
-			<script src="{{ path }}"></script>
+        {% if 'search' in path %}
+        {% else %}
+        <script src="{{ path }}"></script>
+        {% endif %}
         {%- endfor %}
     </head>
 
