@@ -2323,6 +2323,7 @@
             }
 
             viewDate = parseInputDate(newDate);
+            fillDate();
             viewUpdate();
             return picker;
         };
