@@ -1,7 +1,11 @@
-/*! version : 4.17.47
+/*! version : 4.17.47.mrweiss
  =========================================================
  bootstrap-datetimejs
- https://github.com/Eonasdan/bootstrap-datetimepicker
+ https://github.com/mrweiss/bootstrap-datetimepicker
+
+ forked from  https://github.com/Eonasdan/bootstrap-datetimepicker
+  - added uKTaxYear week option
+
  Copyright (c) 2015 Jonathan Peterson
  =========================================================
  */
@@ -193,41 +197,41 @@
 
             getDatePickerTemplate = function () {
                 var headTemplate = $('<thead>')
-                        .append($('<tr>')
-                            .append($('<th>').addClass('prev').attr('data-action', 'previous')
-                                .append($('<span>').addClass(options.icons.previous))
-                                )
-                            .append($('<th>').addClass('picker-switch').attr('data-action', 'pickerSwitch').attr('colspan', (options.calendarWeeks ? '6' : '5')))
-                            .append($('<th>').addClass('next').attr('data-action', 'next')
-                                .append($('<span>').addClass(options.icons.next))
-                                )
-                            ),
+                    .append($('<tr>')
+                        .append($('<th>').addClass('prev').attr('data-action', 'previous')
+                            .append($('<span>').addClass(options.icons.previous))
+                        )
+                        .append($('<th>').addClass('picker-switch').attr('data-action', 'pickerSwitch').attr('colspan', ((options.calendarWeeks || options.ukTaxYearWeeks) ? '6' : '5')))
+                        .append($('<th>').addClass('next').attr('data-action', 'next')
+                            .append($('<span>').addClass(options.icons.next))
+                        )
+                    ),
                     contTemplate = $('<tbody>')
                         .append($('<tr>')
-                            .append($('<td>').attr('colspan', (options.calendarWeeks ? '8' : '7')))
-                            );
+                            .append($('<td>').attr('colspan', ((options.calendarWeeks || options.ukTaxYearWeeks) ? '8' : '7')))
+                        );
 
                 return [
                     $('<div>').addClass('datepicker-days')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate)
                             .append($('<tbody>'))
-                            ),
+                        ),
                     $('<div>').addClass('datepicker-months')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate.clone())
                             .append(contTemplate.clone())
-                            ),
+                        ),
                     $('<div>').addClass('datepicker-years')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate.clone())
                             .append(contTemplate.clone())
-                            ),
+                        ),
                     $('<div>').addClass('datepicker-decades')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate.clone())
                             .append(contTemplate.clone())
-                            )
+                        )
                 ];
             },
 
@@ -289,7 +293,7 @@
 
             getTimePickerTemplate = function () {
                 var hoursView = $('<div>').addClass('timepicker-hours')
-                        .append($('<table>').addClass('table-condensed')),
+                    .append($('<table>').addClass('table-condensed')),
                     minutesView = $('<div>').addClass('timepicker-minutes')
                         .append($('<table>').addClass('table-condensed')),
                     secondsView = $('<div>').addClass('timepicker-seconds')
@@ -504,7 +508,7 @@
                 var row = $('<tr>'),
                     currentDate = viewDate.clone().startOf('w').startOf('d');
 
-                if (options.calendarWeeks === true) {
+                if ((options.calendarWeeks || options.ukTaxYearWeeks) === true) {
                     row.append($('<th>').addClass('cw').text('#'));
                 }
 
@@ -719,6 +723,11 @@
                         row = $('<tr>');
                         if (options.calendarWeeks) {
                             row.append('<td class="cw">' + currentDate.week() + '</td>');
+                        } else if (options.ukTaxYearWeeks) {
+                            row.append('<td class="cw">' + (currentDate.week() < moment('04-06-2018', 'MM-DD-YYYY').week() ?
+                                (53 - moment('04-06-2018', 'MM-DD-YYYY').week() + currentDate.week())
+                                :
+                                (1 + currentDate.week() - moment('04-06-2018', 'MM-DD-YYYY').week())) + '</td>');
                         }
                         html.push(row);
                     }
@@ -2014,6 +2023,20 @@
             return picker;
         };
 
+        picker.ukTaxYearWeeks = function (ukTaxYearWeeks) {
+            if (arguments.length === 0) {
+                return options.ukTaxYearWeeks;
+            }
+
+            if (typeof ukTaxYearWeeks !== 'boolean') {
+                throw new TypeError('ukTaxYearWeeks() expects parameter to be a boolean value');
+            }
+
+            options.ukTaxYearWeeks = ukTaxYearWeeks;
+            update();
+            return picker;
+        };
+
         picker.showTodayButton = function (showTodayButton) {
             if (arguments.length === 0) {
                 return options.showTodayButton;
@@ -2501,6 +2524,7 @@
         sideBySide: false,
         daysOfWeekDisabled: false,
         calendarWeeks: false,
+        ukTaxYearWeeks: false,
         viewMode: 'days',
         toolbarPlacement: 'default',
         showTodayButton: false,
