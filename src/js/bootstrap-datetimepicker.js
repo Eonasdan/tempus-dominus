@@ -193,41 +193,41 @@
 
             getDatePickerTemplate = function () {
                 var headTemplate = $('<thead>')
-                        .append($('<tr>')
-                            .append($('<th>').addClass('prev').attr('data-action', 'previous')
-                                .append($('<span>').addClass(options.icons.previous))
-                                )
-                            .append($('<th>').addClass('picker-switch').attr('data-action', 'pickerSwitch').attr('colspan', (options.calendarWeeks ? '6' : '5')))
-                            .append($('<th>').addClass('next').attr('data-action', 'next')
-                                .append($('<span>').addClass(options.icons.next))
-                                )
-                            ),
+                    .append($('<tr>')
+                        .append($('<th>').addClass('prev').attr('data-action', 'previous')
+                            .append($('<span>').addClass(options.icons.previous))
+                        )
+                        .append($('<th>').addClass('picker-switch').attr('data-action', 'pickerSwitch').attr('colspan', (options.calendarWeeks ? '6' : '5')))
+                        .append($('<th>').addClass('next').attr('data-action', 'next')
+                            .append($('<span>').addClass(options.icons.next))
+                        )
+                    ),
                     contTemplate = $('<tbody>')
                         .append($('<tr>')
                             .append($('<td>').attr('colspan', (options.calendarWeeks ? '8' : '7')))
-                            );
+                        );
 
                 return [
                     $('<div>').addClass('datepicker-days')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate)
                             .append($('<tbody>'))
-                            ),
+                        ),
                     $('<div>').addClass('datepicker-months')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate.clone())
                             .append(contTemplate.clone())
-                            ),
+                        ),
                     $('<div>').addClass('datepicker-years')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate.clone())
                             .append(contTemplate.clone())
-                            ),
+                        ),
                     $('<div>').addClass('datepicker-decades')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate.clone())
                             .append(contTemplate.clone())
-                            )
+                        )
                 ];
             },
 
@@ -289,7 +289,7 @@
 
             getTimePickerTemplate = function () {
                 var hoursView = $('<div>').addClass('timepicker-hours')
-                        .append($('<table>').addClass('table-condensed')),
+                    .append($('<table>').addClass('table-condensed')),
                     minutesView = $('<div>').addClass('timepicker-minutes')
                         .append($('<table>').addClass('table-condensed')),
                     secondsView = $('<div>').addClass('timepicker-seconds')
@@ -401,44 +401,80 @@
                 });
                 return dataOptions;
             },
-
+            /* please check https://github.com/Eonasdan/bootstrap-datetimepicker/issues/1694 */
             place = function () {
+                /* 
                 var position = (component || element).position(),
                     offset = (component || element).offset(),
                     vertical = options.widgetPositioning.vertical,
                     horizontal = options.widgetPositioning.horizontal,
                     parent;
+                */
+                var
+                    $window,
+                    offset,
+                    vertical,
+                    horizontal,
+                    parent,
+                    isFixed,
+                    widgetWidth,
+                    widgetHeight,
+                    elementWidth,
+                    elementHeight;
 
                 if (options.widgetParent) {
                     parent = options.widgetParent.append(widget);
-                } else if (element.is('input')) {
-                    parent = element.after(widget).parent();
+                    //} else if (element.is('input')) {
+                    //    parent = element.after(widget).parent();
                 } else if (options.inline) {
                     parent = element.append(widget);
                     return;
                 } else {
-                    parent = element;
-                    element.children().first().after(widget);
+                    // if parent does not set parent always set body element
+                    parent = $('body').append(widget);
+                    //parent = element;
+                    //element.children().first().after(widget);
                 }
+
+                offset = element.offset();
+                vertical = options.widgetPositioning.vertical;
+                horizontal = options.widgetPositioning.horizontal;
+                $window = $(window);
+                isFixed = false;
+                element.parents().each(function () {
+                    isFixed |= $(this).css("position") === "fixed";
+                    return !isFixed;
+                });
+
+                widgetWidth = widget.outerWidth(true);
+                widgetHeight = widget.outerHeight(true);
+                elementWidth = element.outerWidth();
+                elementHeight = element.outerHeight();
+
 
                 // Top and bottom logic
                 if (vertical === 'auto') {
+
+                    vertical =
+                        (widgetHeight <= $window.height() - (offset.top - $window.scrollTop()) - elementHeight) ||
+                            ((offset.top - $window.scrollTop()) < $window.height() - (offset.top - $window.scrollTop()) - elementHeight)
+                            ? 'bottom' : 'top';
+                    /*
                     if (offset.top + widget.height() * 1.5 >= $(window).height() + $(window).scrollTop() &&
                         widget.height() + element.outerHeight() < offset.top) {
                         vertical = 'top';
                     } else {
                         vertical = 'bottom';
                     }
+                    */
                 }
 
                 // Left and right logic
                 if (horizontal === 'auto') {
-                    if (parent.width() < offset.left + widget.outerWidth() / 2 &&
-                        offset.left + widget.outerWidth() > $(window).width()) {
-                        horizontal = 'right';
-                    } else {
-                        horizontal = 'left';
-                    }
+                    horizontal =
+                        (parent.width() < (offset.left + widgetWidth / 2) &&
+                            (offset.left + widgetWidth) > $window.width())
+                            ? 'right' : 'left';
                 }
 
                 if (vertical === 'top') {
@@ -453,23 +489,40 @@
                     widget.removeClass('pull-right');
                 }
 
-                // find the first parent element that has a non-static css positioning
-                if (parent.css('position') === 'static') {
+                /*
+                // find the first parent element that has a relative css positioning
+                if (parent.css('position') !== 'relative') {
                     parent = parent.parents().filter(function () {
-                        return $(this).css('position') !== 'static';
+                        return $(this).css('position') === 'relative';
                     }).first();
                 }
-
+            
                 if (parent.length === 0) {
-                    throw new Error('datetimepicker component should be placed within a non-static positioned container');
+                    throw new Error('datetimepicker component should be placed within a relative positioned container');
+                }
+                */
+
+
+                if (horizontal === 'right') {
+                    offset.left += elementWidth - widgetWidth;
                 }
 
+                if (vertical === 'top') {
+                    offset.top -= widgetHeight - (parseFloat(widget.css('margin-top')) || 0);
+                } else {
+                    offset.top += elementHeight + (parseFloat(widget.css('margin-top')) || 0);
+                }
+
+                widget
+                    .css({ position: isFixed ? 'fixed' : 'absolute', top: 'auto', left: 'auto', bottom: 'auto', right: 'auto' })
+                    .offset(offset);
+                /*
                 widget.css({
                     top: vertical === 'top' ? 'auto' : position.top + element.outerHeight(),
-                    bottom: vertical === 'top' ? parent.outerHeight() - (parent === element ? 0 : position.top) : 'auto',
+                    bottom: vertical === 'top' ? position.top + element.outerHeight() : 'auto',
                     left: horizontal === 'left' ? (parent === element ? 0 : position.left) : 'auto',
                     right: horizontal === 'left' ? 'auto' : parent.outerWidth() - element.outerWidth() - (parent === element ? 0 : position.left)
-                });
+                });*/
             },
 
             notifyEvent = function (e) {
