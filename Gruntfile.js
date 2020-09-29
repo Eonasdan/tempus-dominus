@@ -189,7 +189,6 @@ module.exports = function (grunt) {
             'bump_version:' + version,
             'build:travis',
             'docs',
-            'nugetpack'
         ]);
     });
 };

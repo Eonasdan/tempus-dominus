@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3",
-    "jquery": "^1.8.3 || ^2.0 || ^3.0",
+    "jquery": "^3.5.1",
     "moment": "^2.10",
     "moment-timezone": "^0.4.0"
   },
@@ -21,13 +21,12 @@
   "devDependencies": {
     "grunt": "latest",
     "grunt-contrib-connect": "^1.0.1",
-    "grunt-contrib-jasmine": "^1.0.3",
+    "grunt-contrib-jasmine": "^2.2.0",
     "grunt-contrib-jshint": "latest",
     "grunt-contrib-less": "latest",
     "grunt-contrib-uglify": "latest",
-    "grunt-env": "^0.4.4",
-    "grunt-jscs": "latest",
-    "grunt-nuget": "^0.1.5",
+    "grunt-env": "^1.0.1",
+    "grunt-nuget": "^0.3.1",
     "grunt-string-replace": "latest",
     "load-grunt-tasks": "latest"
   },
