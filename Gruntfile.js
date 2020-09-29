@@ -161,7 +161,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['jshint', 'jscs', 'less', 'env:paris', 'connect', 'jasmine']);
     grunt.registerTask('build:travis', [
         // code style
-        'jshint', 'jscs',
+        'jshint',
         // build
         'uglify', 'less',
         // tests
@@ -188,7 +188,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'bump_version:' + version,
             'build:travis',
-            'docs',
+            'docs'
         ]);
     });
 };
