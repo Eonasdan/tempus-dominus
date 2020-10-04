@@ -1,5 +1,5 @@
 #Bootstrap 3 Datepicker v4 Docs
-<div class="container">
+<div class="container-fluid">
 <div class="row center-block">
    <h3>Get awesome Dashboard Templates</h3>
    <p>Looking for a template with the datepicker ready to go? Then get check out these templates from our partners.</p>
@@ -45,6 +45,7 @@
       <img src="https://flatlogic.com/assets/templates/one_bootstrap_full-afead8dd8432ed7fd0a81ad3a75aadc06d008998570c0fd78e5bbe20740812f9.webp" alt="Light Sing App Vue" class="img-responsive">
       </a>
    </div>
+</div>
 </div>
 <hr/>
 <div class="alert alert-info">
