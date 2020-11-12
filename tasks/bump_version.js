@@ -9,8 +9,8 @@ module.exports = function (grunt) {
             options: {
                 replacements: [
                     {
-                        pattern: /\/*! version : .*/,
-                        replacement: '! version : ' + version
+                        pattern: /\/*Bootstrap Datetime Picker v.*/,
+                        replacement: 'Bootstrap Datetime Picker v' + version
                     }
                 ]
             }
@@ -21,8 +21,8 @@ module.exports = function (grunt) {
             options: {
                 replacements: [
                     {
-                        pattern:     / * version : .*/,
-                        replacement: ' version : ' + version
+                        pattern:     / * Bootstrap Datetime Picker v.*/,
+                        replacement: ' Bootstrap Datetime Picker v' + version
                     }
                 ]
             }

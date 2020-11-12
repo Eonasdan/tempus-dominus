@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Bootstrap.v3.Datetimepicker</id>
-        <version>4.0.0</version>
+        <version>4.17.47</version>
         <title>Bootstrap 3 Datetimepicker</title>
         <authors>Eonasdan</authors>
         <owners>Eonasdan</owners>
@@ -20,7 +20,7 @@ For CSS version install Bootstrap.v3.Datetimepicker.CSS</description>
         </releaseNotes>
         <tags>bootstrap date time picker datetimepicker datepicker jquery</tags>
         <dependencies>
-            <dependency id="bootstrap.Less" version="3.3.0" />
+            <dependency id="bootstrap.Less" version="3.4.1" />
             <dependency id="Moment.js" version="2.9.0" />
         </dependencies>
     </metadata>
@@ -28,7 +28,6 @@ For CSS version install Bootstrap.v3.Datetimepicker.CSS</description>
         <file src="..\..\src\js\bootstrap-datetimepicker.js" target="content\Scripts" />
         <file src="..\..\build\js\bootstrap-datetimepicker.min.js" target="content\Scripts" />
         <file src="..\..\src\less\_bootstrap-datetimepicker.less" target="content\Content\" />
-        <file src="..\..\src\less\bootstrap-datetimepicker-build.less" target="content\Content\" />		
-        <file src="install.ps1" target="tools\" />
+        <file src="..\..\src\less\bootstrap-datetimepicker-build.less" target="content\Content\" />
     </files>
 </package>

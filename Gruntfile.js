@@ -17,7 +17,10 @@ module.exports = function (grunt) {
                     ascii_only: true // jshint ignore:line
                 },
                 report: 'min',
-                preserveComments: 'some'
+                preserveComments: function(node, comment) {
+                    // preserve comments that start with a bang
+                    return /^!/.test( comment.value );
+                }
             }
         },
         jshint: {
@@ -188,7 +191,8 @@ module.exports = function (grunt) {
         grunt.task.run([
             'bump_version:' + version,
             'build:travis',
-            'docs'
+            'docs',
+            'nugetpack'
         ]);
     });
 };
