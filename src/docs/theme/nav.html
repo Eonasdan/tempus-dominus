@@ -1,76 +1,32 @@
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
+<header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+    <a class="navbar-brand" href="https://getdatepicker.com"><img src="favicon-32x32.png" alt="home" /></a>
 
-        <!-- Collapsed navigation -->
-        <div class="navbar-header">
-            <!-- Expander button -->
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-            <!-- Main title -->
-            <a class="navbar-brand" href="{{ homepage_url }}">{{ site_name }}</a>
-        </div>
-
-        <!-- Expanded navigation -->
-        <div class="navbar-collapse collapse">
-            <!-- Main navigation -->
-            <ul class="nav navbar-nav">
+    <div class="navbar-nav-scroll">
+        <ul class="navbar-nav bd-navbar-nav flex-row">
             {% for nav_item in nav %}
             {% if nav_item.children %}
-                <li class="dropdown{% if nav_item.active %} active{% endif %}">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ nav_item.title }} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-item nav-link dropdown-toggle mr-md-2" data-toggle="dropdown" id="{{ nav_item.title }}">{{ nav_item.title }}</a>
+                <div class="dropdown-menu dropdown-menu-right show" aria-labelledby="{{ nav_item.title }}">
                     {% for nav_item in nav_item.children %}
-                        <li {% if nav_item.active %}class="active"{% endif %}>
-                            <a href="{{ nav_item.url|url }}">{{ nav_item.title }}</a>
-                        </li>
+                    <a class="dropdown-item {% if nav_item.active %}active{% endif %}" href="{{ nav_item.url|url }}">{{ nav_item.title }}</a>
                     {% endfor %}
-                    </ul>
-                </li>
+                </div>
+            </li>
             {% else %}
-                <li {% if nav_item.active %}class="active"{% endif %}>
-                    <a href="{{ nav_item.url|url }}">{{ nav_item.title }}</a>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link {% if nav_item.active %}active{% endif %}" href="{{ nav_item.url|url }}">{{ nav_item.title }}</a>
+            </li>
             {% endif %}
             {% endfor %}
-            </ul>
-
-            <!-- Search, Navigation and Repo links -->
-            <ul class="nav navbar-nav navbar-right">
-                {% if include_search %}
-                <li>
-                    <a href="#searchModal" data-toggle="modal"><i class="fa fa-search"></i> Search</a>
-                </li>
-                {% endif %}
-				{% if false %}
-                <li {% if not previous_page %}class="disabled"{% endif %}>
-                    <a rel="next" {% if previous_page %}href="{{ previous_page.url }}"{% endif %}>
-                        <i class="fa fa-arrow-left"></i> Previous
-                    </a>
-                </li>
-                <li {% if not next_page %}class="disabled"{% endif %}>
-                    <a rel="prev" {% if next_page %}href="{{ next_page.url }}"{% endif %}>
-                        Next <i class="fa fa-arrow-right"></i>
-                    </a>
-                </li>
-				{% endif %}
-                {% if repo_url %}
-                <li>
-                    <a href="{{ repo_url }}">
-                        {% if repo_name == 'GitHub' %}
-                            <i class="fa fa-github"></i>
-                        {% elif repo_name == 'Bitbucket' %}
-                            <i class="fa fa-bitbucket"></i>
-                        {% endif %}
-                        {{ repo_name }}
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
+        </ul>
     </div>
-</div>
+
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+        <li class="nav-item">
+            <a class="nav-link p-2" href="https://github.com/eonasdan/tempus-dominus" target="_blank" rel="noopener" aria-label="GitHub">
+                <span class="fa fa-github"></span>
+            </a>
+        </li>
+    </ul>
+</header>

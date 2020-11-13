@@ -1,9 +1,8 @@
 {% if page.meta.source %}
 <div class="source-links">
-{% for filename in page.meta.source %}
+    {% for filename in page.meta.source %}
     <span class="label label-primary">{{ filename }}</span>
-{% endfor %}
+    {% endfor %}
 </div>
 {% endif %}
-
 {{ page.content }}
