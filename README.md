@@ -1,5 +1,10 @@
+# Tempus Dominus Date/Time Picker v6.0.0-alpha
+
+Version 6 is a complex "coming when it's ready". You can read the very high level tasks that need to be done before it's ready [here](https://github.com/Eonasdan/bootstrap-datetimepicker/issues/2326).
+
+
 # Bootstrap 3 Date/Time Picker v4.17.47
 
-We are in code freeze and this issue tracker is no longer actively monitored. I'll be closing PR that do not contribute emergency fixes and leaving some open as they are evaluated for migration into the new repo. I’ll be closing issues that do not meet minimum requirements or have been answered by the community. Issues that have been closed for longer than 30 days will be locked.
+The old bootstrap 3 version is no longer supported and issues/prs relating to this will be closed except for security vulerabilites etc. The code base for this is in the v4 branch.
 
 ## [View the manual and demos](http://eonasdan.github.io/bootstrap-datetimepicker/)
