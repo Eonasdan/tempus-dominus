@@ -151,13 +151,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        copy: {
-            old_docs: {
-                expand: true,
-                src: 'old_docs/**',
-                dest: 'docs/',
-            },
-        },
     });
 
     grunt.loadTasks('tasks');
@@ -166,7 +159,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-nuget');
-    grunt.loadNpmTasks('grunt-contrib-copy');
 
     require('load-grunt-tasks')(grunt);
     grunt.registerTask('default', ['jshint', 'jscs', 'less', 'env:paris', 'connect', 'jasmine']);
