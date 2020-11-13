@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    
-    
+
+
+
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
@@ -36,8 +36,8 @@
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-    
-    
+
+
 </head>
 
 <body>
@@ -63,68 +63,68 @@
         <div class="navbar-collapse collapse">
             <!-- Main navigation -->
             <ul class="nav navbar-nav">
-            
-            
+
+
                 <li >
                     <a href="..">Usage</a>
                 </li>
-            
-            
-            
+
+
+
                 <li >
                     <a href="../Installing/">Installing</a>
                 </li>
-            
-            
-            
+
+
+
                 <li >
                     <a href="../Functions/">Functions</a>
                 </li>
-            
-            
-            
+
+
+
                 <li >
                     <a href="../Options/">Options</a>
                 </li>
-            
-            
-            
+
+
+
                 <li >
                     <a href="../Events/">Events</a>
                 </li>
-            
-            
-            
+
+
+
                 <li >
-                    <a href="../Changelog.md">Change Log</a>
+                    <a href="../ChangeLog/">Change Log</a>
                 </li>
-            
-            
-            
+
+
+
                 <li >
                     <a href="../ContributorsGuide/">Dev Guide</a>
                 </li>
-            
-            
-            
+
+
+
                 <li class="active">
                     <a href="./">Extras</a>
                 </li>
-            
-            
-            
+
+
+
                 <li >
                     <a href="../FAQ/">FAQs</a>
                 </li>
-            
-            
+
+
             </ul>
 
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
-                
-				
-                
+
+
+
             </ul>
         </div>
     </div>
@@ -134,14 +134,14 @@
     <div class="row">
         <div class="col-md-3"><script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7DC5QN&placement=eonasdangithubio" id="_carbonads_js"></script>
 <div class="bs-sidebar hidden-print affix well" role="complementary">    <ul class="nav bs-sidenav">
-    
+
         <li class="main active"><a href="#extras">Extras</a></li>
-        
+
             <li><a href="#rails-3">Rails 3</a></li>
-        
+
             <li><a href="#ie-7">IE 7</a></li>
-        
-    
+
+
     </ul>
 </div></div>
         <div class="col-md-8" role="main">
@@ -149,7 +149,7 @@
                 <strong>Important!</strong>
                 Please read this <a href="https://eonasdan.com/posts/state-of-my-picker" target="_blank">blog post</a>
             </div>
-            
+
 
 <h1 id="extras">Extras</h1>
 <p>Guides for making the picker work better with rails, IE, etc</p>
@@ -159,20 +159,20 @@
 <pre><code class="rb"># Add to config/initializers/form.rb or the end of app/helpers/application_helper.rb
 module ActionView
   module Helpers
-    class FormBuilder 
+    class FormBuilder
       def date_select(method, options = {}, html_options = {})
-        existing_date = @object.send(method) 
+        existing_date = @object.send(method)
         formatted_date = existing_date.to_date.strftime(&quot;%F&quot;) if existing_date.present?
-        @template.content_tag(:div, :class =&gt; &quot;input-group&quot;) do    
+        @template.content_tag(:div, :class =&gt; &quot;input-group&quot;) do
           text_field(method, :value =&gt; formatted_date, :class =&gt; &quot;form-control datepicker&quot;, :&quot;data-date-format&quot; =&gt; &quot;YYYY-MM-DD&quot;) +
           @template.content_tag(:span, @template.content_tag(:span, &quot;&quot;, :class =&gt; &quot;glyphicon glyphicon-calendar&quot;) ,:class =&gt; &quot;input-group-addon&quot;)
         end
       end
 
       def datetime_select(method, options = {}, html_options = {})
-        existing_time = @object.send(method) 
+        existing_time = @object.send(method)
         formatted_time = existing_time.to_time.strftime(&quot;%F %I:%M %p&quot;) if existing_time.present?
-        @template.content_tag(:div, :class =&gt; &quot;input-group&quot;) do    
+        @template.content_tag(:div, :class =&gt; &quot;input-group&quot;) do
           text_field(method, :value =&gt; formatted_time, :class =&gt; &quot;form-control datetimepicker&quot;, :&quot;data-date-format&quot; =&gt; &quot;YYYY-MM-DD hh:mm A&quot;) +
           @template.content_tag(:span, @template.content_tag(:span, &quot;&quot;, :class =&gt; &quot;glyphicon glyphicon-calendar&quot;) ,:class =&gt; &quot;input-group-addon&quot;)
         end
@@ -208,8 +208,8 @@ Here is what I did.</p>
 </li>
 </ol>
 <p>If you open the datetimepicker widget and click on some button or date inside it, widget is automatically closed.
-So I added <code>debug: true</code> as an option when initializing the widget. Why I did this? I saw on line 1121 from bootsrap-datetimepicker.js the code <code>'blur': options.debug ? '' : hide</code>. 
-And now widget window is not closed on every click inside it, but now you can't close it anyway :) 
+So I added <code>debug: true</code> as an option when initializing the widget. Why I did this? I saw on line 1121 from bootsrap-datetimepicker.js the code <code>'blur': options.debug ? '' : hide</code>.
+And now widget window is not closed on every click inside it, but now you can't close it anyway :)
 And closing should be done manually. I've added this document click handler. If you click something outside the widget, now closing works.</p>
 <pre><code>$(document).click(function(e){
             var target = $(e.target);
