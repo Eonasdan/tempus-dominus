@@ -1,3 +1,5 @@
+#This is for the old v4. Once there's a bit more done for the new v6, I'll update this.
+
 Submitting Issues
 =================
 
