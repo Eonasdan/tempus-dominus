@@ -10,17 +10,13 @@
   },
   "peerDependencies": {
     "bootstrap": ">=4.5.2",
-    "jquery": "^3.5.1",
-    "moment": "^2.29.0",
-    "moment-timezone": "^0.5.31",
-    "popper.js": "^1.16.1"
+    "jquery": "^3.5.1"
   },
   "dependencies": {
-    "bootstrap": "^4.5.2",
-    "jquery": "^3.5.1",
-    "moment": "^2.29.0",
-    "moment-timezone": "^0.5.31",
-    "popper.js": "^1.16.1"
+    "@popperjs/core": "^2.5.4",
+    "bootstrap": "^5.0.0-alpha3",
+    "dayjs": "^1.9.6",
+    "jquery": "^3.5.1"
   },
   "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
   "devDependencies": {

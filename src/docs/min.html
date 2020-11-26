@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>v6</title>
+
+    <link rel="stylesheet" href="bootstrap.min.css"/>
+
+    <link href="tempusdominus-bootstrap-4.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+            integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.9.6/dayjs.min.js" integrity="sha512-C2m821NxMpJ4Df47O4P/17VPqt0yiK10UmGl59/e5ynRRYiCSBvy0KHJjhp2XIjUJreuR+y3SIhVyiVilhCmcQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.9.6/plugin/weekday.min.js" integrity="sha512-BvToUIhnA0jrlErl0HKlxf6zY7rs4mJfxNj1/GdFI0gMpebKSGx/nc5HmwvgfIMRPp6WpXwY/xkYHCsBkYtvRg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.9.6/plugin/weekOfYear.min.js" integrity="sha512-vy3ZEQ8HsiU9h9ce7+YUR61IvtpXqN1vJY+aCvZ2SNV1F8yKQ3UnHhrIHMMof8xysB8ecpCRu8Y0T1K3j2cKZA==" crossorigin="anonymous"></script>
+    <script>
+        dayjs.extend(window.dayjs_plugin_weekday);
+        dayjs.extend(window.dayjs_plugin_weekOfYear);
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
+            integrity="sha512-ubuT8Z88WxezgSqf3RLuNi5lmjstiJcyezx34yIU2gAHonIi27Na7atqzUZCOoY4CExaoFumzOsFQ2Ch+I/HCw=="
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha3/js/bootstrap.min.js"
+            integrity="sha512-Qpek3fOFi+uCW8qSf92lltHNMRMHmLISYDIRFI4qgNV2U28+4Zc3EZC8szMMeVI9KA3zEZFtIP8gt41Pekd29w=="
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/solid.min.js"
+            integrity="sha512-JkeOaPqiSsfvmKzJUsqu7j2fv0KSB6Yqb1HHF0r9FNzIsfGv+zYi4h4jQKOogf10qLF3PMZEIYhziCEaw039tQ=="
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/fontawesome.min.js"
+            integrity="sha512-kI12xOdWTh/nL2vIx5Yf3z/kJSmY+nvdTXP2ARhepM/YGcmo/lmRGRttI3Da8FXLDw0Y9hRAyZ5JFO3NrCvvXA=="
+            crossorigin="anonymous"></script>
+
+
+
+</head>
+<body class="bg-dark">
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="col-6 bg-light bootstrap-datetimepicker-widget">
+                <table id="datetimepicker13" class="table table-striped"></table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 bg-light">
+                <div id="log">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="module">
+    /* $(function () {
+         $('#datetimepicker13').datetimepicker({
+             inline: true,
+             sideBySide: true,
+             buttons: {
+                 showToday: true
+             }
+         });
+     });*/
+    import TempusDominus from "../js/tempus-dominus.js";
+
+    var dt = new TempusDominus(document.getElementById('datetimepicker13'));
+</script>
+<script>
+    const log = document.getElementById('log');
+    ['log','debug','info','warn','error'].forEach(function (verb) {
+        console[verb] = (function (method, verb, log) {
+            return function () {
+                method.apply(console, arguments);
+                const msg = document.createElement('div');
+                msg.classList.add('alert');
+                switch (verb) {
+                    case 'log':
+                        msg.classList.add('alert-light')
+                        break;
+                    case 'debug':
+                        msg.classList.add('alert-secondary')
+                        break;
+                    case 'info':
+                        msg.classList.add('alert-info')
+                        break;
+                    case 'warn':
+                        msg.classList.add('alert-warning')
+                        break;
+                    case 'error':
+                        msg.classList.add('alert-error')
+                        break;
+                }
+                msg.textContent = `${verb}: ${Array.prototype.slice.call(arguments).join(' ')}`;
+                log.appendChild(msg);
+            };
+        })(console[verb], verb, log);
+    });
+</script>
+</body>
+</html>
