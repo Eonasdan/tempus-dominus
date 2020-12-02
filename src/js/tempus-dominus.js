@@ -1,4 +1,4 @@
-import Display from "./display.js";
+import Display from "./display/index.js";
 import Validation from "./validation.js";
 import Dates from "./dates.js";
 
@@ -231,10 +231,10 @@ export default class TempusDominus {
         this.validation = new Validation(this);
         this.dates = new Dates(this);
 
+        //this.wiget = ;
 
         //date calendar
-        element.appendChild(this.display.daysOfTheWeek());
-        this.display.dayGrid().forEach(row => element.appendChild(row));
+        element.appendChild(this.display.datePicker);
     }
 
     _getOptions(config) {

@@ -1,8 +1,6 @@
-//import Date from 'date'
+import DateTime from "../datetime.js";
 
-import DateTime from "./datetime.js";
-
-export default class Display {
+export default class DateDisplay {
     constructor(context) {
         this.context = context;
     }
@@ -12,52 +10,27 @@ export default class Display {
         daysDiv.classList.add('datepicker-days');
 
         const dayTable = document.createElement('table');
-        dayTable.classList.add('table table-sm'); //todo bootstrap
+        dayTable.classList.add('table', 'table-sm'); //todo bootstrap
+        const headTemplate = this.context.display.headTemplate;
+        const heads = headTemplate.getElementsByTagName('th');
+        const previous = heads[0];
+        const switcher = heads[1];
+        const next = heads[2];
 
-        const daysHeader = document.createElement('thead');
+        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.prevMonth);
+        switcher.setAttribute('title', this.context._options.tooltips.selectMonth)
+        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.nextMonth);
 
-        const previous = document.createElement('th');
-        previous.classList.add('prev');
-        previous.setAttribute('data-action', 'previous');
-        previous.appendChild(this._iconTag(this.context._options.icons.previous));
-        daysHeader.appendChild(previous);
+        switcher.innerText = this.context._viewDate.format(this.context._options.dayViewHeaderFormat)
 
-        const switcher = document.createElement('th');
-        switcher.classList.add('picker-switch');
-        switcher.setAttribute('data-action', 'pickerSwitch');
-        switcher.setAttribute('colspan', this.context._options.calendarWeeks ? '6' : '5');
-        daysHeader.appendChild(switcher);
-
-        const next = document.createElement('th');
-        next.classList.add('next');
-        next.setAttribute('data-action', 'next');
-        next.appendChild(this._iconTag(this.context._options.icons.next));
-        daysHeader.appendChild(next);
-
-        const daysBody = document.createElement('tbody');
-        const daysBodyRow = document.createElement('tr');
-        daysBody.appendChild(daysBodyRow);
-
-        const td = document.createElement('td');
-        td.setAttribute('colspan', this.context._options.calendarWeeks ? '6' : '5');
-        //daysBodyRow.appendChild(td);
-
-        dayTable.appendChild(daysHeader);
-        //dayTable.appendChild(daysBody);
-
+        dayTable.appendChild(headTemplate);
+        const dayBody = document.createElement('tbody');
+        dayBody.appendChild(this._daysOfTheWeek());
+        this._dayGrid().forEach(row => dayBody.appendChild(row));
+        dayTable.appendChild(dayBody);
         daysDiv.appendChild(dayTable);
-        daysDiv.appendChild(document.createElement('tbody'));
-    }
 
-    _iconTag(i) {
-        if (this.context._options.icons.type === 'sprites') {
-            const svg = document.createElement('svg');
-            svg.innerHTML = `<use xlink:href="${i}"></use>` //todo use createElement for this?
-            return svg;
-        }
-        const icon = document.createElement('i');
-        icon.classList.add(i);
-        return icon;
+        return daysDiv;
     }
 
     /***
@@ -126,7 +99,7 @@ export default class Display {
 
             const td = document.createElement('td')
             td.classList.add(...classes);
-            td.innerText = innerDate.date();
+            td.innerText = `${innerDate.date()}`;
             row.appendChild(td);
 
             innerDate = innerDate.add(1, 'd');
