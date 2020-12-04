@@ -42,15 +42,15 @@
             crossorigin="anonymous"></script>
 
 
-    <script src="../js/tempus-dominus-old.js"></script>
+    <script src="../js/tempus-dominus-old.js_"></script>
 
 
 </head>
 
-<body>
+<body  class="bg-dark">
 <div class="container">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-6 bg-light">
             <div class="form-group">
                 <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
                     <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
@@ -62,7 +62,10 @@
         </div>
         <script type="text/javascript">
             $(function () {
-                $('#datetimepicker1').datetimepicker({debug: true});
+                $('#datetimepicker1').datetimepicker({
+                    debug: true,
+                    format: 'hh:mm:ss a'
+                });
             });
         </script>
     </div>

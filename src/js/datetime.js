@@ -20,6 +20,10 @@ export default class DateTime {
         return this;
     }
 
+    subtract(value, unit) {
+        return this;
+    }
+
     format(template) {
         return '';
     }
@@ -36,6 +40,10 @@ export default class DateTime {
         return false;
     }
 
+    isBetween(left, right, unit) {
+        return false;
+    }
+
     day() {
         return 0;
     }
@@ -45,6 +53,10 @@ export default class DateTime {
     }
 
     weekday() {
+        return 0;
+    }
+
+    year(value) {
         return 0;
     }
 

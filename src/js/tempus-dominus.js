@@ -231,10 +231,16 @@ export default class TempusDominus {
         this.validation = new Validation(this);
         this.dates = new Dates(this);
 
-        //this.wiget = ;
+        //temp
+        this.dates.add(dayjs());
+
+        //this.widget = ;
 
         //date calendar
         element.appendChild(this.display.datePicker);
+        //element.appendChild(this.display.monthPicker);
+        //element.appendChild(this.display.yearPicker);
+        element.appendChild(this.display.decadePicker);
     }
 
     _getOptions(config) {

@@ -1,13 +1,38 @@
 import DateDisplay from './date-display.js';
+import MonthDisplay from './month-display.js';
+import YearDisplay from './year-display.js';
+import DecadeDisplay from "./decade-display.js";
+
 
 export default class Display {
     constructor(context) {
         this.context = context;
         this._dateDisplay = new DateDisplay(context);
+        this._monthDisplay = new MonthDisplay(context);
+        this._yearDisplay = new YearDisplay(context);
+        this._decadeDisplay = new DecadeDisplay(context);
     }
 
+    /*todo need a widget builder
+    the old way just created empty shells and then stuffed the tables
+    based on the views enabled and on display
+    the new way creates everything on get, which I think is ok
+     */
+
     get datePicker() {
-        return this._dateDisplay.datePicker;
+        return this._dateDisplay.picker;
+    }
+
+    get monthPicker() {
+        return this._monthDisplay.picker;
+    }
+
+    get yearPicker() {
+        return this._yearDisplay.picker;
+    }
+
+    get decadePicker() {
+        return this._decadeDisplay.picker;
     }
 
     /***

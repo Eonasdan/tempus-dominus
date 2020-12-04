@@ -5,7 +5,7 @@ export default class DateDisplay {
         this.context = context;
     }
 
-    get datePicker() {
+    get picker() {
         const daysDiv = document.createElement('div');
         daysDiv.classList.add('datepicker-days');
 
@@ -21,12 +21,19 @@ export default class DateDisplay {
         switcher.setAttribute('title', this.context._options.tooltips.selectMonth)
         next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.nextMonth);
 
-        switcher.innerText = this.context._viewDate.format(this.context._options.dayViewHeaderFormat)
+        switcher.innerText = this.context._viewDate.format(this.context._options.dayViewHeaderFormat);
+
+        if (!this.context.validation.isValid(this.context._viewDate.subtract(1, 'M'), 'M')) {
+            previous.classList.add('disabled');
+        }
+        if (!this.context.validation.isValid(this.context._viewDate.add(1, 'M'), 'M')) {
+            next.classList.add('disabled');
+        }
 
         dayTable.appendChild(headTemplate);
         const dayBody = document.createElement('tbody');
         dayBody.appendChild(this._daysOfTheWeek());
-        this._dayGrid().forEach(row => dayBody.appendChild(row));
+        this._grid().forEach(row => dayBody.appendChild(row));
         dayTable.appendChild(dayBody);
         daysDiv.appendChild(dayTable);
 
@@ -60,19 +67,21 @@ export default class DateDisplay {
         return row;
     }
 
-    _dayGrid() {
+    _grid() {
         const rows = [];
         let innerDate = this.context._viewDate.startOf('M').startOf('w').add(12, 'h'), row;
 
         for (let i = 0; i < 42; i++) {
             if (innerDate.weekday() === 0) {
+                if (row)
+                    rows.push(row);
+
                 row = document.createElement('tr');
                 if (this.context._options.calendarWeeks) {
                     const td = document.createElement('td')
                     td.classList.add('cw');
                     td.innerText = innerDate.week();
                 }
-                rows.push(row);
             }
 
             let classes = [];
@@ -84,7 +93,7 @@ export default class DateDisplay {
                 classes.push('new');
             }
 
-            if (!this.context.unset && this.context.dates.isPicked(innerDate)) {
+            if (!this.context.unset && this.context.dates.isPicked(innerDate, 'd')) {
                 classes.push('active');
             }
             if (!this.context.validation.isValid(innerDate, 'd')) {

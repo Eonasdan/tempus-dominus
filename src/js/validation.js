@@ -6,4 +6,8 @@ export default class Validation {
     isValid(targetMoment, granularity) {
         return true;
     }
+
+    isEnabled(unit) {
+        return true;
+    }
 }
