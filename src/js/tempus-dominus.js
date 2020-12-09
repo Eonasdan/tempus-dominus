@@ -234,13 +234,17 @@ export default class TempusDominus {
         //temp
         this.dates.add(dayjs());
 
-        //this.widget = ;
+        this.display._buildWidget();
+        this.display.update();
 
-        //date calendar
-        element.appendChild(this.display.datePicker);
+                //date calendar
+        //element.appendChild(this.display.datePicker);
         //element.appendChild(this.display.monthPicker);
         //element.appendChild(this.display.yearPicker);
-        element.appendChild(this.display.decadePicker);
+        //element.appendChild(this.display.decadePicker);
+        //element.appendChild(this.display.timePicker);
+        element.appendChild(this.display.widget);
+
     }
 
     _getOptions(config) {

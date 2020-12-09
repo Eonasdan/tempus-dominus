@@ -1,25 +1,37 @@
-import Dates from "../dates.js";
-
 export default class TimeDisplay {
     constructor(context) {
         this.context = context;
     }
 
     get picker() {
+        //todo could move some of this stuff to the ctor
+        //then picker function clears and appends table body
         const container = document.createElement('div');
         container.classList.add('timepicker-picker');
 
         const table = document.createElement('table');
-        const tableBody = document.createElement('tbody');
-        this._grid().forEach(row => tableBody.appendChild(row));
-        table.appendChild(tableBody);
+        table.appendChild(document.createElement('tbody'));
         container.appendChild(table);
 
         return container;
     }
 
+    update() {
+        const timesDiv = this.context.display.widget.getElementsByClassName('timepicker-days')[0];
+        const tableBody = timesDiv.getElementsByTagName('tbody')[0];
+        this._grid().forEach(row => tableBody.appendChild(row));
+
+        if (!this.context.use24Hours) {
+
+        }
+
+
+
+    }
+
     _grid() {
-        const rows = [], separator = document.createElement('td'),
+        const rows = [],
+            separator = document.createElement('td'), separatorColon = separator.cloneNode(true),
             topRow = document.createElement('tr'), middleRow = document.createElement('tr'),
             bottomRow = document.createElement('tr'),
             upIcon = this.context.display.iconTag(this.context._options.icons.up),
@@ -27,6 +39,7 @@ export default class TimeDisplay {
             actionLink = document.createElement('a');
 
         separator.classList.add('separator');
+        separatorColon.innerHTML = ':';
         actionLink.classList.add('btn');
         actionLink.setAttribute('href', 'javascript:void(0);');
         actionLink.setAttribute('tabindex', '-1');
@@ -36,7 +49,7 @@ export default class TimeDisplay {
             let actionLinkClone = actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.tooltips.incrementHour);
             actionLinkClone.setAttribute('data-action', 'incrementHours')
-            actionLinkClone.appendChild(upIcon);
+            actionLinkClone.appendChild(upIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             topRow.appendChild(td);
 
@@ -53,22 +66,22 @@ export default class TimeDisplay {
             actionLinkClone = actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.tooltips.decrementHour);
             actionLinkClone.setAttribute('data-action', 'decrementHours')
-            actionLinkClone.appendChild(downIcon);
+            actionLinkClone.appendChild(downIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             bottomRow.appendChild(td);
         }
         if (this.context.validation.isEnabled('m')) {
             if (this.context.validation.isEnabled('h')) {
                 topRow.appendChild(separator.cloneNode(true));
-                middleRow.append($('<td>').addClass('separator').html(':'));
-                bottomRow.append(separator.cloneNode(true));
+                middleRow.appendChild(separatorColon.cloneNode(true));
+                bottomRow.appendChild(separator.cloneNode(true));
             }
 
             let td = document.createElement('td');
             let actionLinkClone = actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.tooltips.incrementMinute);
             actionLinkClone.setAttribute('data-action', 'incrementMinutes')
-            actionLinkClone.appendChild(upIcon);
+            actionLinkClone.appendChild(upIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             topRow.appendChild(td);
 
@@ -85,41 +98,59 @@ export default class TimeDisplay {
             actionLinkClone = actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.tooltips.decrementMinute);
             actionLinkClone.setAttribute('data-action', 'decrementMinutes')
-            actionLinkClone.appendChild(downIcon);
+            actionLinkClone.appendChild(downIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             bottomRow.appendChild(td);
         }
         if (this.context.validation.isEnabled('s')) {
             if (this.context.validation.isEnabled('m')) {
-                topRow.append($('<td>').addClass('separator'));
-                middleRow.append($('<td>').addClass('separator').html(':'));
-                bottomRow.append($('<td>').addClass('separator'));
+                topRow.appendChild(separator.cloneNode(true));
+                middleRow.appendChild(separatorColon.cloneNode(true));
+                bottomRow.appendChild(separator.cloneNode(true));
             }
-            topRow.append($('<td>').append($('<a>').attr({
-                href: '#',
-                tabindex: '-1',
-                'title': this.context._options.tooltips.incrementSecond
-            }).addClass('btn').attr('data-action', 'incrementSeconds').append(upIcon)));
-            middleRow.append($('<td>').append($('<span>').addClass('timepicker-second').attr({
-                'data-time-component': 'seconds',
-                'title': this.context._options.tooltips.pickSecond
-            }).attr('data-action', 'showSeconds')));
-            bottomRow.append($('<td>').append($('<a>').attr({
-                href: '#',
-                tabindex: '-1',
-                'title': this.context._options.tooltips.decrementSecond
-            }).addClass('btn').attr('data-action', 'decrementSeconds').append(downIcon)));
+
+            let td = document.createElement('td');
+            let actionLinkClone = actionLink.cloneNode(true);
+            actionLinkClone.setAttribute('title', this.context._options.tooltips.incrementSecond);
+            actionLinkClone.setAttribute('data-action', 'incrementSeconds')
+            actionLinkClone.appendChild(upIcon.cloneNode(true));
+            td.appendChild(actionLinkClone);
+            topRow.appendChild(td);
+
+            td = document.createElement('td');
+            const span = document.createElement('span');
+            span.classList.add('timepicker-second');
+            span.setAttribute('title', this.context._options.tooltips.pickSecond);
+            span.setAttribute('data-action', 'showSeconds')
+            span.setAttribute('data-time-component', 'seconds')
+            td.appendChild(span);
+            middleRow.appendChild(td);
+
+            td = document.createElement('td');
+            actionLinkClone = actionLink.cloneNode(true);
+            actionLinkClone.setAttribute('title', this.context._options.tooltips.decrementSecond);
+            actionLinkClone.setAttribute('data-action', 'decrementSecond')
+            actionLinkClone.appendChild(downIcon.cloneNode(true));
+            td.appendChild(actionLinkClone);
+            bottomRow.appendChild(td);
         }
 
         if (!this.context.use24Hours) {
-            topRow.append($('<td>').addClass('separator'));
-            middleRow.append($('<td>').append($('<button>').addClass('btn btn-primary').attr({
-                'data-action': 'togglePeriod',
-                tabindex: '-1',
-                'title': this.context._options.tooltips.togglePeriod
-            })));
-            bottomRow.append($('<td>').addClass('separator'));
+            topRow.appendChild(separator.cloneNode(true));
+
+            let td = document.createElement('td');
+            let button = document.createElement('button');
+            button.classList.add('btn', 'btn-primary'); //todo bootstrap
+            button.setAttribute('title', this.context._options.tooltips.togglePeriod);
+            button.setAttribute('data-action', 'togglePeriod');
+            button.setAttribute('tabindex', '-1');
+            td.appendChild(button);
+            middleRow.appendChild(td);
+
+            bottomRow.appendChild(separator.cloneNode(true));
         }
+
+        rows.push(topRow, middleRow, bottomRow);
 
         return rows;
     }

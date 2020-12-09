@@ -11,8 +11,16 @@ export default class DateDisplay {
 
         const dayTable = document.createElement('table');
         dayTable.classList.add('table', 'table-sm'); //todo bootstrap
-        const headTemplate = this.context.display.headTemplate;
-        const heads = headTemplate.getElementsByTagName('th');
+        dayTable.appendChild(this.context.display.headTemplate);
+        dayTable.appendChild(document.createElement('tbody'));
+        daysDiv.appendChild(dayTable);
+
+        return daysDiv;
+    }
+
+    update() {
+        const datesDiv = this.context.display.widget.getElementsByClassName('datepicker-days')[0];
+        const heads = datesDiv.getElementsByTagName('thead')[0].getElementsByTagName('th');
         const previous = heads[0];
         const switcher = heads[1];
         const next = heads[2];
@@ -30,14 +38,9 @@ export default class DateDisplay {
             next.classList.add('disabled');
         }
 
-        dayTable.appendChild(headTemplate);
-        const dayBody = document.createElement('tbody');
+        const dayBody = datesDiv.getElementsByTagName('tbody')[0];
         dayBody.appendChild(this._daysOfTheWeek());
         this._grid().forEach(row => dayBody.appendChild(row));
-        dayTable.appendChild(dayBody);
-        daysDiv.appendChild(dayTable);
-
-        return daysDiv;
     }
 
     /***
