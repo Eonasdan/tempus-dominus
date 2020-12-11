@@ -1,6 +1,7 @@
 import Display from "./display/index.js";
 import Validation from "./validation.js";
 import Dates from "./dates.js";
+import Actions from "./actions.js";
 
 let Default = {
     timeZone: '',
@@ -230,6 +231,7 @@ export default class TempusDominus {
         this.display = new Display(this);
         this.validation = new Validation(this);
         this.dates = new Dates(this);
+        this.action = new Actions(this);
 
         //temp
         this.dates.add(dayjs());
@@ -245,6 +247,7 @@ export default class TempusDominus {
         //element.appendChild(this.display.timePicker);
         element.appendChild(this.display.widget);
 
+        Array.from(this.display.widget.querySelectorAll('[data-action]')).forEach(element => element.addEventListener('click', this.action.do));
     }
 
     _getOptions(config) {

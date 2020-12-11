@@ -1,4 +1,5 @@
 import DateTime from "../datetime.js";
+import {ActionTypes} from "../actions.js";
 
 export default class DateDisplay {
     constructor(context) {
@@ -39,6 +40,7 @@ export default class DateDisplay {
         }
 
         const dayBody = datesDiv.getElementsByTagName('tbody')[0];
+        dayBody.querySelectorAll('*').forEach(n => n.remove());
         dayBody.appendChild(this._daysOfTheWeek());
         this._grid().forEach(row => dayBody.appendChild(row));
     }
@@ -109,7 +111,9 @@ export default class DateDisplay {
                 classes.push('weekend');
             }
 
-            const td = document.createElement('td')
+            const td = document.createElement('td');
+            td.setAttribute('data-action', ActionTypes.selectDay);
+            td.setAttribute('data-day',innerDate.format('L'));
             td.classList.add(...classes);
             td.innerText = `${innerDate.date()}`;
             row.appendChild(td);

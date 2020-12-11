@@ -29,18 +29,6 @@ export default class Display {
         return this._widget;
     }
 
-    get monthPicker() {
-        return this._monthDisplay.picker;
-    }
-
-    get yearPicker() {
-        return this._yearDisplay.picker;
-    }
-
-    get decadePicker() {
-        return this._decadeDisplay.picker;
-    }
-
     update() {
         if (!this._widget) return;
         if (this._hasDate())
@@ -112,7 +100,7 @@ export default class Display {
         if (this._hasDate()) {
             const li = document.createElement('li');
             if (this.context._options.collapse && this._hasTime()) {
-                li.classList.add('collapse'); //todo bootstrap
+                //li.classList.add('collapse'); //todo bootstrap
                 if (this.context._options.viewMode !== 'times') li.classList.add('show');
             }
             li.appendChild(dateView);
@@ -124,7 +112,7 @@ export default class Display {
         if (this._hasTime()) {
             const li = document.createElement('li');
             if (this.context._options.collapse && this._hasDate()) {
-                li.classList.add('collapse'); //todo bootstrap
+                //li.classList.add('collapse'); //todo bootstrap
                 if (this.context._options.viewMode === 'times') li.classList.add('show');
             }
             li.appendChild(timeView);
@@ -148,7 +136,69 @@ export default class Display {
     }
 
     get _toolbar() {
-        return document.createElement('table');
+        const tbody = document.createElement('tbody');
+
+        if (this.context._options.buttons.showToday) {
+            const td = document.createElement('td');
+            const a = document.createElement('a');
+            a.setAttribute('href', 'javascript:void(0);');
+            a.setAttribute('tabindex', '-1');
+            a.setAttribute('data-action', 'today');
+            a.setAttribute('title', this.context._options.tooltips.today);
+
+            a.appendChild(this.iconTag(this.context._options.icons.today));
+            td.appendChild(a);
+            tbody.appendChild(td);
+        }
+        if (!this.context._options.sideBySide && this.context._options.collapse && this._hasDate() && this._hasTime()) {
+            let title, icon;
+            if (this.context._options.viewMode === 'times') {
+                title = this.context._options.tooltips.selectDate;
+                icon = this.context._options.icons.date;
+            } else {
+                title = this.context._options.tooltips.selectTime;
+                icon = this.context._options.icons.time;
+            }
+
+            const td = document.createElement('td');
+            const a = document.createElement('a');
+            a.setAttribute('href', 'javascript:void(0);');
+            a.setAttribute('tabindex', '-1');
+            a.setAttribute('data-action', 'togglePicker');
+            a.setAttribute('title', title);
+
+            a.appendChild(this.iconTag(icon));
+            td.appendChild(a);
+            tbody.appendChild(td);
+        }
+        if (this.context._options.buttons.showClear) {
+            const td = document.createElement('td');
+            const a = document.createElement('a');
+            a.setAttribute('href', 'javascript:void(0);');
+            a.setAttribute('tabindex', '-1');
+            a.setAttribute('data-action', 'clear');
+            a.setAttribute('title', this.context._options.tooltips.clear);
+
+            a.appendChild(this.iconTag(this.context._options.icons.today));
+            td.appendChild(a);
+            tbody.appendChild(td);
+        }
+        if (this.context._options.buttons.showClose) {
+            const td = document.createElement('td');
+            const a = document.createElement('a');
+            a.setAttribute('href', 'javascript:void(0);');
+            a.setAttribute('tabindex', '-1');
+            a.setAttribute('data-action', 'close');
+            a.setAttribute('title', this.context._options.tooltips.close);
+
+            a.appendChild(this.iconTag(this.context._options.icons.today));
+            td.appendChild(a);
+            tbody.appendChild(td);
+        }
+        const table = document.createElement('table');
+        table.appendChild(tbody);
+
+        return table;
     }
 
     /***

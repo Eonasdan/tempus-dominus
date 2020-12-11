@@ -10,22 +10,54 @@ export default class TimeDisplay {
         container.classList.add('timepicker-picker');
 
         const table = document.createElement('table');
-        table.appendChild(document.createElement('tbody'));
+        const tableBody = document.createElement('tbody');
+        this._grid().forEach(row => tableBody.appendChild(row));
+        table.appendChild(tableBody);
         container.appendChild(table);
 
         return container;
     }
 
     update() {
-        const timesDiv = this.context.display.widget.getElementsByClassName('timepicker-days')[0];
-        const tableBody = timesDiv.getElementsByTagName('tbody')[0];
-        this._grid().forEach(row => tableBody.appendChild(row));
+        const timesDiv = this.context.display.widget.getElementsByClassName('timepicker-picker')[0];
+        const lastPicked = this.context.dates.lastPicked || this.context._viewDate;
 
         if (!this.context.use24Hours) {
+            const toggle = timesDiv.querySelector('[data-action=togglePeriod]');
 
+            toggle.innerText = lastPicked.format('A');
+
+            if (!this.context.validation.isValid(lastPicked.add(lastPicked.hour() >= 12 ? -12 : 12, 'h'))) {
+                toggle.classList.add('disabled');
+            }
+            else {
+                toggle.classList.remove('disabled');
+            }
         }
 
+        Array.from(timesDiv.querySelectorAll('.disabled')).forEach(element => element.classList.remove('disabled'));
+        if (!this.context.validation.isValid(this.context._viewDate.add(1, 'h'), 'h')) {
+            timesDiv.querySelector('[data-action=incrementHours]').classList.add('disabled');
+        }
+        if (!this.context.validation.isValid(this.context._viewDate.subtract(1, 'h'), 'h')) {
+            timesDiv.querySelector('[data-action=decrementHours]').classList.add('disabled');
+        }
+        if (!this.context.validation.isValid(this.context._viewDate.add(1, 'm'), 'm')) {
+            timesDiv.querySelector('[data-action=incrementMinutes]').classList.add('disabled');
+        }
+        if (!this.context.validation.isValid(this.context._viewDate.subtract(1, 'm'), 'm')) {
+            timesDiv.querySelector('[data-action=decrementMinutes]').classList.add('disabled');
+        }
+        if (!this.context.validation.isValid(this.context._viewDate.add(1, 's'), 's')) {
+            timesDiv.querySelector('[data-action=incrementSeconds]').classList.add('disabled');
+        }
+        if (!this.context.validation.isValid(this.context._viewDate.subtract(1, 's'), 's')) {
+            timesDiv.querySelector('[data-action=decrementSeconds]').classList.add('disabled');
+        }
 
+        timesDiv.querySelector('[data-time-component=hours]').innerText = lastPicked.format(`${this.context.use24Hours ? 'HH' : 'hh'}`);
+        timesDiv.querySelector('[data-time-component=minutes]').innerText = lastPicked.format('mm');
+        timesDiv.querySelector('[data-time-component=seconds]').innerText = lastPicked.format('ss');
 
     }
 
@@ -129,7 +161,7 @@ export default class TimeDisplay {
             td = document.createElement('td');
             actionLinkClone = actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.tooltips.decrementSecond);
-            actionLinkClone.setAttribute('data-action', 'decrementSecond')
+            actionLinkClone.setAttribute('data-action', 'decrementSeconds')
             actionLinkClone.appendChild(downIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             bottomRow.appendChild(td);
