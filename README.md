@@ -9,6 +9,8 @@ The old bootstrap 3 version is no longer supported and issues/prs relating to th
 
 ## [View the v4 manual and demos](https://getdatepicker.com/4)
 
-# Discord
+# Community
 
 Need help or want to discuss the upcoming v6? Join [our discord](https://discord.gg/BHS9jw9YPf).
+
+Please also take a look at the [discussions](https://github.com/Eonasdan/tempus-dominus/discussions). There are several RFCs (Request For Comment) open and you can help shape the future of the picker by participating in these discussions.
