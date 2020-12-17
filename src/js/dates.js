@@ -51,4 +51,139 @@ export default class Dates {
             focusValue = Math.floor(year / step) * step;
         return [startYear, endYear, focusValue];
     }
+
+    _setValue(targetMoment, index) {
+        const noIndex = (typeof index === 'undefined'),
+            isClear = !targetMoment && noIndex,
+            isDateUpdateThroughDateOptionFromClientCode = this.isDateUpdateThroughDateOptionFromClientCode,
+            isNotAllowedProgrammaticUpdate = !this.isInit && this._options.updateOnlyThroughDateOption && !isDateUpdateThroughDateOptionFromClientCode;
+        let outputValue = '', isInvalid = false, oldDate = this.unset ? null : this._dates[index];
+        if (!oldDate && !this.unset && noIndex && isClear) {
+            oldDate = this._dates[this._dates.length - 1];
+        }
+
+        // case of calling setValue(null or false)
+        if (!targetMoment) {
+            if (isNotAllowedProgrammaticUpdate) {
+                this._notifyEvent({
+                    type: EVENT_CHANGE,
+                    date: targetMoment,
+                    oldDate: oldDate,
+                    isClear,
+                    isInvalid,
+                    isDateUpdateThroughDateOptionFromClientCode,
+                    isInit: this.isInit
+                });
+                return;
+            }
+            if (!this._options.allowMultidate || this._dates.length === 1 || isClear) {
+                this.unset = true;
+                this._dates = [];
+                this._datesFormatted = [];
+            } else {
+                outputValue = `${this._element.data('date')}${this._options.multidateSeparator}`; //todo jquery .data
+                outputValue = (oldDate && outputValue.replace(
+                    `${oldDate.format(this.actualFormat)}${this._options.multidateSeparator}`, '' //todo moment
+                )
+                    .replace(`${this._options.multidateSeparator}${this._options.multidateSeparator}`, '')
+                    .replace(new RegExp(`${escapeRegExp(this._options.multidateSeparator)}\\s*$`), '')) || '';
+                this._dates.splice(index, 1);
+                this._datesFormatted.splice(index, 1);
+            }
+            outputValue = trim(outputValue);
+            if (this.input !== undefined) {
+                this.input.val(outputValue); //todo jquery
+                this.input.trigger('input'); //todo jquery
+            }
+            this._element.data('date', outputValue); //todo jquery
+            this._notifyEvent({
+                type: EVENT_CHANGE,
+                date: false,
+                oldDate: oldDate,
+                isClear,
+                isInvalid,
+                isDateUpdateThroughDateOptionFromClientCode,
+                isInit: this.isInit
+            });
+            this._update();
+            return;
+        }
+
+        targetMoment = targetMoment.clone().locale(this._options.locale); //todo moment
+
+        if (this._hasTimeZone()) {
+            targetMoment.tz(this._options.timeZone); //todo moment
+        }
+
+        if (this._options.stepping !== 1) {
+            targetMoment.minutes(Math.round(targetMoment.minutes() / this._options.stepping) * this._options.stepping).seconds(0);  //todo moment
+        }
+
+        if (this._isValid(targetMoment)) {
+            if (isNotAllowedProgrammaticUpdate) {
+                this._notifyEvent({
+                    type: EVENT_CHANGE,
+                    date: targetMoment.clone(), //todo moment
+                    oldDate: oldDate,
+                    isClear,
+                    isInvalid,
+                    isDateUpdateThroughDateOptionFromClientCode,
+                    isInit: this.isInit
+                });
+                return;
+            }
+            this._dates[index] = targetMoment;
+            this._datesFormatted[index] = targetMoment.format('YYYY-MM-DD'); //todo moment
+            this._viewDate = targetMoment.clone(); //todo moment
+            if (this._options.allowMultidate && this._dates.length > 1) {
+                for (let i = 0; i < this._dates.length; i++) {
+                    outputValue += `${this._dates[i].format(this.actualFormat)}${this._options.multidateSeparator}`; //todo moment
+                }
+                outputValue = outputValue.replace(new RegExp(`${this._options.multidateSeparator}\\s*$`), '');
+            } else {
+                outputValue = this._dates[index].format(this.actualFormat); //todo moment
+            }
+            outputValue = trim(outputValue)
+            if (this.input !== undefined) {
+                this.input.val(outputValue); //todo jquery
+                this.input.trigger('input'); //todo jquery
+            }
+            this._element.data('date', outputValue); //todo jquery
+
+            this.unset = false;
+            this._update();
+            this._notifyEvent({
+                type: EVENT_CHANGE,
+                date: this._dates[index].clone(), //todo moment
+                oldDate: oldDate,
+                isClear,
+                isInvalid,
+                isDateUpdateThroughDateOptionFromClientCode,
+                isInit: this.isInit
+            });
+        } else {
+            isInvalid = true;
+            if (!this._options.keepInvalid) {
+                if (this.input !== undefined) {
+                    this.input.val(`${this.unset ? '' : this._dates[index].format(this.actualFormat)}`); //todo jquery
+                    this.input.trigger('input'); //todo jquery
+                }
+            } else {
+                this._notifyEvent({
+                    type: EVENT_CHANGE,
+                    date: targetMoment,
+                    oldDate: oldDate,
+                    isClear,
+                    isInvalid,
+                    isDateUpdateThroughDateOptionFromClientCode,
+                    isInit: this.isInit
+                });
+            }
+            this._notifyEvent({
+                type: EVENT_ERROR,
+                date: targetMoment,
+                oldDate: oldDate
+            });
+        }
+    }
 }

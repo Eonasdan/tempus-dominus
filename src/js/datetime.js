@@ -1,6 +1,7 @@
 /*
 mostly I'm considering if I can/should write a date class like this so that I can use dayjs without it bleeding into the rest
 of the project. This is super redundant right now, however, if the native js date functions ever catch up, it will be easier to replace.
+I think this could also allow for a bundle script to create both a dayjs and moment version
  */
 
 export default class DateTime {

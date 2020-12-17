@@ -1,8 +1,6 @@
-export default class Actions {
-    static types = [
-        'previous'
-    ]
+import {DatePickerModes} from "./conts.js";
 
+export default class Actions {
     constructor(context) {
         this.context = context;
     }
@@ -11,6 +9,90 @@ export default class Actions {
         if (e.currentTarget.classList.contains('disabled')) return false;
 
         action = action || e.currentTarget.dataset.action;
+
+        switch (action) {
+            case ActionTypes.next:
+            case ActionTypes.previous:
+                const navFnc = DatePickerModes[this.context.currentViewMode].NAV_FUNCTION;
+                if (action === ActionTypes.next)
+                    this.context._viewDate.add(DatePickerModes[this.context.currentViewMode].NAV_STEP, navFnc);
+                else
+                    this.context._viewDate.subtract(DatePickerModes[this.context.currentViewMode].NAV_STEP, navFnc);
+                this.context.display.updateDateView();
+                //this._viewUpdate(navFnc);todo trigger view date change event
+
+                break;
+            case ActionTypes.pickerSwitch:
+
+                break;
+            case ActionTypes.selectMonth:
+
+                break;
+            case ActionTypes.selectYear:
+
+                break;
+            case ActionTypes.selectDecade:
+
+                break;
+            case ActionTypes.selectDay:
+
+                break;
+            case ActionTypes.selectHour:
+
+                break;
+            case ActionTypes.selectMinute:
+
+                break;
+            case ActionTypes.selectSecond:
+
+                break;
+            case ActionTypes.incrementHours:
+
+                break;
+            case ActionTypes.incrementMinutes:
+
+                break;
+            case ActionTypes.incrementSeconds:
+
+                break;
+            case ActionTypes.decrementHours:
+
+                break;
+            case ActionTypes.decrementMinutes:
+
+                break;
+            case ActionTypes.decrementSeconds:
+
+                break;
+            case ActionTypes.togglePeriod:
+
+                break;
+            case ActionTypes.togglePicker:
+
+                break;
+            case ActionTypes.showPicker:
+
+                break;
+            case ActionTypes.showHours:
+
+                break;
+            case ActionTypes.showMinutes:
+
+                break;
+            case ActionTypes.showSeconds:
+
+                break;
+            case ActionTypes.clear:
+
+                break;
+            case ActionTypes.close:
+
+                break;
+            case ActionTypes.today:
+
+                break;
+        }
+
         console.log('action');
         console.log(action);
         console.log('e');

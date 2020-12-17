@@ -17,12 +17,6 @@ export default class Display {
         this._widget = undefined;
     }
 
-    /*todo need a widget builder
-    the old way just created empty shells and then stuffed the tables
-    based on the views enabled and on display
-    the new way creates everything on get, which I think is ok
-     */
-
     get widget() {
         if (!this._widget) this._buildWidget();
 
@@ -31,8 +25,16 @@ export default class Display {
 
     update() {
         if (!this._widget) return;
+        this.updateDateView();
+        this.updateTimeView();
+    }
+
+    updateDateView() {
         if (this._hasDate())
             this._dateDisplay.update();
+    }
+
+    updateTimeView() {
         if (this._hasTime())
             this._timeDisplay.update();
     }

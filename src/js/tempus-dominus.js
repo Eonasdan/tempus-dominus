@@ -1,232 +1,19 @@
-import Display from "./display/index.js";
-import Validation from "./validation.js";
-import Dates from "./dates.js";
-import Actions from "./actions.js";
-
-let Default = {
-    timeZone: '',
-    format: false,//todo migrate to display:
-    dayViewHeaderFormat: 'MMMM YYYY',//todo migrate to display:
-    extraFormats: false,//todo migrate to display:
-    stepping: 1,
-    minDate: false, //todo migrate to a sub object e.g. restrictions: [ min, max....]
-    maxDate: false, //todo migrate to restrictions:
-    useCurrent: true,
-    collapse: true,
-    locale: '',//moment.locale(), //todo moment
-    defaultDate: false,
-    disabledDates: false,//todo migrate to restrictions:
-    enabledDates: false,//todo migrate to restrictions:
-    icons: { //todo plugin
-        type: 'icons',
-        time: 'fas fa-clock',
-        date: 'fas fa-calendar',
-        up: 'fas fa-arrow-up',
-        down: 'fas fa-arrow-down',
-        previous: 'fas fa-chevron-left',
-        next: 'fas fa-chevron-right',
-        today: 'fas fa-calendar-check',
-        clear: 'fas fa-trash',
-        close: 'fas fa-times'
-    },
-    tooltips: { //todo plugin
-        today: 'Go to today',
-        clear: 'Clear selection',
-        close: 'Close the picker',
-        selectMonth: 'Select Month',
-        prevMonth: 'Previous Month',
-        nextMonth: 'Next Month',
-        selectYear: 'Select Year',
-        prevYear: 'Previous Year',
-        nextYear: 'Next Year',
-        selectDecade: 'Select Decade',
-        prevDecade: 'Previous Decade',
-        nextDecade: 'Next Decade',
-        prevCentury: 'Previous Century',
-        nextCentury: 'Next Century',
-        pickHour: 'Pick Hour',
-        incrementHour: 'Increment Hour',
-        decrementHour: 'Decrement Hour',
-        pickMinute: 'Pick Minute',
-        incrementMinute: 'Increment Minute',
-        decrementMinute: 'Decrement Minute',
-        pickSecond: 'Pick Second',
-        incrementSecond: 'Increment Second',
-        decrementSecond: 'Decrement Second',
-        togglePeriod: 'Toggle Period',
-        selectTime: 'Select Time',
-        selectDate: 'Select Date'
-    },
-    useStrict: false, //todo moment
-    sideBySide: false,//todo migrate to display:
-    daysOfWeekDisabled: false,//todo migrate to restrictions:
-    calendarWeeks: false,//todo migrate to display:
-    viewMode: 'days',//todo migrate to display:
-    toolbarPlacement: 'default',//todo migrate to display:
-    buttons: {
-        showToday: false,
-        showClear: false,
-        showClose: false
-    },
-    widgetPositioning: {
-        horizontal: 'auto',
-        vertical: 'auto'
-    },
-    widgetParent: null,
-    readonly: false,
-    ignoreReadonly: false,
-    keepOpen: false,
-    focusOnShow: true,
-    inline: false,
-    keepInvalid: false,
-    keyBinds: { //todo plugin //todo jquery //todo moment
-        up: function () {
-            if (!this.widget) {
-                return false;
-            }
-            const d = this._dates[0] || this.getMoment();
-            if (this.widget.find('.datepicker').is(':visible')) {
-                this.date(d.clone().subtract(7, 'd'));
-            } else {
-                this.date(d.clone().add(this.stepping(), 'm'));
-            }
-            return true;
-        },
-        down: function () {
-            if (!this.widget) {
-                this.show();
-                return false;
-            }
-            const d = this._dates[0] || this.getMoment();
-            if (this.widget.find('.datepicker').is(':visible')) {
-                this.date(d.clone().add(7, 'd'));
-            } else {
-                this.date(d.clone().subtract(this.stepping(), 'm'));
-            }
-            return true;
-        },
-        'control up': function () {
-            if (!this.widget) {
-                return false;
-            }
-            const d = this._dates[0] || this.getMoment();
-            if (this.widget.find('.datepicker').is(':visible')) {
-                this.date(d.clone().subtract(1, 'y'));
-            } else {
-                this.date(d.clone().add(1, 'h'));
-            }
-            return true;
-        },
-        'control down': function () {
-            if (!this.widget) {
-                return false;
-            }
-            const d = this._dates[0] || this.getMoment();
-            if (this.widget.find('.datepicker').is(':visible')) {
-                this.date(d.clone().add(1, 'y'));
-            } else {
-                this.date(d.clone().subtract(1, 'h'));
-            }
-            return true;
-        },
-        left: function () {
-            if (!this.widget) {
-                return false;
-            }
-            const d = this._dates[0] || this.getMoment();
-            if (this.widget.find('.datepicker').is(':visible')) {
-                this.date(d.clone().subtract(1, 'd'));
-            }
-            return true;
-        },
-        right: function () {
-            if (!this.widget) {
-                return false;
-            }
-            const d = this._dates[0] || this.getMoment();
-            if (this.widget.find('.datepicker').is(':visible')) {
-                this.date(d.clone().add(1, 'd'));
-            }
-            return true;
-        },
-        pageUp: function () {
-            if (!this.widget) {
-                return false;
-            }
-            const d = this._dates[0] || this.getMoment();
-            if (this.widget.find('.datepicker').is(':visible')) {
-                this.date(d.clone().subtract(1, 'M'));
-            }
-            return true;
-        },
-        pageDown: function () {
-            if (!this.widget) {
-                return false;
-            }
-            const d = this._dates[0] || this.getMoment();
-            if (this.widget.find('.datepicker').is(':visible')) {
-                this.date(d.clone().add(1, 'M'));
-            }
-            return true;
-        },
-        enter: function () {
-            if (!this.widget) {
-                return false;
-            }
-            this.hide();
-            return true;
-        },
-        escape: function () {
-            if (!this.widget) {
-                return false;
-            }
-            this.hide();
-            return true;
-        },
-        'control space': function () {
-            if (!this.widget) {
-                return false;
-            }
-            if (this.widget.find('.timepicker').is(':visible')) {
-                this.widget.find('.btn[data-action="togglePeriod"]').click();
-            }
-            return true;
-        },
-        t: function () {
-            if (!this.widget) {
-                return false;
-            }
-            this.date(this.getMoment());
-            return true;
-        },
-        'delete': function () {
-            if (!this.widget) {
-                return false;
-            }
-            this.clear();
-            return true;
-        }
-    },
-    debug: false,
-    allowInputToggle: false,
-    disabledTimeIntervals: false,
-    disabledHours: false,//todo migrate to restrictions:
-    enabledHours: false,//todo migrate to restrictions:
-    viewDate: false,
-    allowMultidate: false,
-    multidateSeparator: ', ',
-    updateOnlyThroughDateOption: false,
-    promptTimeOnDateChange: false,
-    promptTimeOnDateChangeTransitionDelay: 200
-};
-
+import Display from './display/index.js';
+import Validation from './validation.js';
+import Dates from './dates.js';
+import Actions from './actions.js';
+import {Default} from "./conts.js";
+import DateTime from "./datetime.js";
 
 export default class TempusDominus {
 
     constructor(element, options) {
         this._options = this._getOptions(options);
         this._element = element;
-        this._viewDate = dayjs();
+        this._viewDate = DateTime.today;
+        this.currentViewMode = null;
+        this.unset = true;
+        this.MinViewModeNumber = 0;
 
         this.display = new Display(this);
         this.validation = new Validation(this);
@@ -239,7 +26,7 @@ export default class TempusDominus {
         this.display._buildWidget();
         this.display.update();
 
-                //date calendar
+        //date calendar
         //element.appendChild(this.display.datePicker);
         //element.appendChild(this.display.monthPicker);
         //element.appendChild(this.display.yearPicker);
@@ -258,5 +45,38 @@ export default class TempusDominus {
         //todo missing Feather defaults
         //typeCheckConfig(NAME, config, DefaultType) //todo after the default structure gets changed, we can provide a object with value types
         return config
+    }
+
+    _initFormatting() {
+        const format = this._options.format || 'L LT', self = this;
+
+        this.actualFormat = format.replace(/(\[[^\[]*])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (formatInput) {
+            return ((self.isInitFormatting && self._options.date === null
+                ? self.getMoment() //todo moment
+                : self._dates[0]).localeData().longDateFormat(formatInput)) || formatInput; //todo taking the first date should be ok
+        });
+
+        this.parseFormats = this._options.extraFormats ? this._options.extraFormats.slice() : [];
+        if (this.parseFormats.indexOf(format) < 0 && this.parseFormats.indexOf(this.actualFormat) < 0) {
+            this.parseFormats.push(this.actualFormat);
+        }
+
+        this.use24Hours = this.actualFormat.toLowerCase().indexOf('a') < 1 && this.actualFormat.replace(/\[.*?]/g, '').indexOf('h') < 1;
+
+        if (this.validation._isEnabled('y')) {
+            this.MinViewModeNumber = 2;
+        }
+        if (this.validation._isEnabled('M')) {
+            this.MinViewModeNumber = 1;
+        }
+        if (this.validation._isEnabled('d')) {
+            this.MinViewModeNumber = 0;
+        }
+
+        this.currentViewMode = Math.max(this.MinViewModeNumber, this.currentViewMode);
+
+        if (!this.unset) {
+            this._setValue(this._dates[0], 0);
+        }
     }
 }
