@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%- block site_meta %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if page and page.is_homepage %}
+    <meta name="description" content="{{ config['site_description'] }}">{% endif %}
+    {% if config.site_author %}
+    <meta name="author" content="{{ config.site_author }}">{% endif %}
+    {% if page and page.canonical_url %}
+    <link rel="canonical" href="{{ page.canonical_url }}">{% endif %}
+    <link rel="shortcut icon" href="{{ base_url }}/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#144287">
+    <meta name="theme-color" content="#ffffff">
+    {%- endblock %}
+
+    {%- block htmltitle %}
+    <title>{% if page and page.title and not page.is_homepage %}{{ page.title }} - {% endif %}{{ config.site_name }}</title>
+    {%- endblock %}
+
+    {%- block styles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" />
+    {%- for path in extra_css %}
+    <link href="{{ path }}" rel="stylesheet">
+    {%- endfor %}
+    {%- endblock %}
+
+    {%- block libs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js" integrity="sha512-ubuT8Z88WxezgSqf3RLuNi5lmjstiJcyezx34yIU2gAHonIi27Na7atqzUZCOoY4CExaoFumzOsFQ2Ch+I/HCw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha512-M5KW3ztuIICmVIhjSqXe01oV2bpe248gOxqmlcYrEzAvws7Pw3z6BK0iGbrwvdrUQUhi3eXgtxp5I8PDo9YfjQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment-with-locales.min.js" integrity="sha512-EATaemfsDRVs6gs1pHbvhc6+rKFGv8+w4Wnxk4LmkC0fzdVoyWb+Xtexfrszd1YuUMBEhucNuorkf8LpFBhj6w==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.31/moment-timezone-with-data-10-year-range.min.js" integrity="sha512-Rb9RCtecTEK3SdnnQhrZx4GM1ascb2CNHybgugRDTriP/b1As79OemxeIT5qs6RMJ/fCpeJrDjtpASh7I7EKMQ==" crossorigin="anonymous"></script>
+    {%- endblock %}
+    {%- block scripts %}
+    <script>var base_url = '{{ base_url }}';</script>
+    {%- for path in extra_javascript %}
+    {% if 'search' in path %}
+    {% else %}
+    <script src="{{ path }}"></script>
+    {% endif %}
+    {%- endfor %}
+    {%- endblock %}
+
+    {%- block extrahead %} {% endblock %}
+</head>
+
+<body{% if page and page.is_homepage %} class="bd-home" {% endif %}>
+    {% include "nav.html" %}
+<div class="alert alert-danger" style="font-size:1.5em;">
+    <strong>Important!</strong>
+    Please read this <a href="https://eonasdan.com/state-of-my-picker" target="_blank">blog post</a>.<br/>
+    The Tempus Dominus projects are getting rolled back into the <a href="https://github.com/Eonasdan/tempus-dominus">orginal repo</a>. TD Bootsrap 3/4 are no longer supported.
+</div>
+
+    {% if not page.is_homepage %}
+    <div class="container-fluid">
+        <div class="row">
+            {%- block content %}
+            <div class="col-12 col-md-3 col-xl-2 bd-sidebar">{% include "toc.html" %}</div>
+            <div class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
+                <h1 class="bd-title">{{page.title}}</h1>
+                {% if page and page.meta.lead %}
+                <p class="bd-lead">
+                    {{page.meta.lead[0]}}
+                </p>
+                {% endif %}
+                {% include "content.html" %}
+            </div>
+            {%- endblock %}
+        </div>
+    </div>
+    {% else %}
+    {% include "content.html" %}
+    {% endif %}
+
+    <script>
+        if (top !== self) { top.location.replace(self.location.href); }
+        if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] ||
+                    function () {
+                        (i[r].q = i[r].q || []).push(arguments);
+                    }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m);
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-47462200-1', 'eonasdan.github.io');
+            ga('send', 'pageview');
+        }
+    </script>
+    </body>
+</html>
