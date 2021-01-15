@@ -10,22 +10,19 @@ export default class MonthDisplay {
         const table = document.createElement('table');
         table.classList.add('table', 'table-sm'); //todo bootstrap
         const headTemplate = this.context.display.headTemplate;
-        const heads = headTemplate.getElementsByTagName('th');
-        const previous = heads[0];
-        const switcher = heads[1];
-        const next = heads[2];
+        const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
-        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.prevYear);
-        switcher.setAttribute('title', this.context._options.tooltips.selectYear);
+        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousYear);
+        switcher.setAttribute('title', this.context._options.localization.selectYear);
         switcher.setAttribute('colspan', '1');
-        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.nextYear);
+        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextYear);
 
-        switcher.innerText = this.context._viewDate.format('YYYY');
+        switcher.innerText = this.context._viewDate.format({year: 'numeric'});
 
-        if (!this.context.validation.isValid(this.context._viewDate.subtract(1, 'y'), 'y')) {
+        if (!this.context.validation.isValid(this.context._viewDate.manipulate(-1, 'year'), 'year')) {
             previous.classList.add('disabled');
         }
-        if (!this.context.validation.isValid(this.context._viewDate.add(1, 'y'), 'y')) {
+        if (!this.context.validation.isValid(this.context._viewDate.manipulate(1, 'year'), 'year')) {
             next.classList.add('disabled');
         }
 
@@ -40,7 +37,7 @@ export default class MonthDisplay {
 
     _grid() {
         const rows = [], container = document.createElement('span');
-        let innerDate = this.context._viewDate.startOf('y'), row = document.createElement('tr');
+        let innerDate = this.context._viewDate.clone.startOf('year'), row = document.createElement('tr');
 
         container.setAttribute('data-action', 'selectMonth');
         container.classList.add('year');
@@ -53,22 +50,22 @@ export default class MonthDisplay {
 
             let classes = [];
 
-            if (!this.context.unset && this.context.dates.isPicked(innerDate, 'M')) {
+            if (!this.context.unset && this.context.dates.isPicked(innerDate, 'month')) {
                 classes.push('active');
             }
-            if (!this.context.validation.isValid(innerDate, 'M')) {
+            if (!this.context.validation.isValid(innerDate, 'month')) {
                 classes.push('disabled');
             }
 
             const td = document.createElement('td');
             const containerClone = container.cloneNode(true);
             containerClone.classList.add(...classes);
-            containerClone.innerText = `${innerDate.format('MMMM')}`;
+            containerClone.innerText = `${innerDate.format({month: 'long'})}`;
             td.appendChild(containerClone);
 
             row.appendChild(td);
 
-            innerDate = innerDate.add(1, 'M');
+            innerDate.manipulate(1, 'month');
         }
 
         return rows;

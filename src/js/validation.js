@@ -3,11 +3,13 @@ export default class Validation {
         this.context = context;
     }
 
-    isValid(targetMoment, granularity) {
-        return true;
-    }
-
-    isEnabled(unit) {
+    /**
+     *
+     * @param {Date|DateTime} targetDate
+     * @param {Unit?} granularity
+     * @returns {boolean}
+     */
+    isValid(targetDate, granularity) {
         return true;
     }
 }

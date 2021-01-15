@@ -26,16 +26,16 @@ export default class DateDisplay {
         const switcher = heads[1];
         const next = heads[2];
 
-        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.prevMonth);
-        switcher.setAttribute('title', this.context._options.tooltips.selectMonth)
-        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.nextMonth);
+        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousMonth);
+        switcher.setAttribute('title', this.context._options.localization.selectMonth)
+        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextMonth);
 
-        switcher.innerText = this.context._viewDate.format(this.context._options.dayViewHeaderFormat);
+        switcher.innerText = this.context._viewDate.format({ month: this.context._options.dayViewHeaderFormat});
 
-        if (!this.context.validation.isValid(this.context._viewDate.subtract(1, 'M'), 'M')) {
+        if (!this.context.validation.isValid(this.context._viewDate.manipulate(1, 'month'), 'month')) {
             previous.classList.add('disabled');
         }
-        if (!this.context.validation.isValid(this.context._viewDate.add(1, 'M'), 'M')) {
+        if (!this.context.validation.isValid(this.context._viewDate.manipulate(1, 'month'), 'month')) {
             next.classList.add('disabled');
         }
 
@@ -50,9 +50,9 @@ export default class DateDisplay {
      * @returns {HTMLTableRowElement}
      */
     _daysOfTheWeek() {
-        let innerDate = this.context._viewDate.startOf('w').startOf('d');
+        let innerDate = this.context._viewDate.clone.startOf('weekDay').startOf('date');
         const row = document.createElement('tr'),
-            endOfWeek = innerDate.endOf('w');
+            endOfWeek = innerDate.clone.endOf('weekDay');
 
         if (this.context._options.calendarWeeks) {
             const th = document.createElement('th')
@@ -65,7 +65,7 @@ export default class DateDisplay {
             const th = document.createElement('th')
             th.classList.add('dow');
             th.innerText = innerDate.format('dd');
-            innerDate = innerDate.add(1, 'd');
+            innerDate.add(1, 'd');
             row.appendChild(th);
         }
 
@@ -74,7 +74,7 @@ export default class DateDisplay {
 
     _grid() {
         const rows = [];
-        let innerDate = this.context._viewDate.startOf('M').startOf('w').add(12, 'h'), row;
+        let innerDate = this.context._viewDate.clone.startOf('month').startOf('weekDay').manipulate(12, 'hours'), row;
 
         for (let i = 0; i < 42; i++) {
             if (innerDate.weekday() === 0) {
@@ -85,40 +85,40 @@ export default class DateDisplay {
                 if (this.context._options.calendarWeeks) {
                     const td = document.createElement('td')
                     td.classList.add('cw');
-                    td.innerText = innerDate.week();
+                    td.innerText = `${innerDate.week()}`;
                 }
             }
 
             let classes = [];
             classes.push('day');
-            if (innerDate.isBefore(this.context._viewDate, 'M')) {
+            if (innerDate.isBefore(this.context._viewDate, 'month')) {
                 classes.push('old');
             }
-            if (innerDate.isAfter(this.context._viewDate, 'M')) {
+            if (innerDate.isAfter(this.context._viewDate, 'month')) {
                 classes.push('new');
             }
 
-            if (!this.context.unset && this.context.dates.isPicked(innerDate, 'd')) {
+            if (!this.context.unset && this.context.dates.isPicked(innerDate, 'date')) {
                 classes.push('active');
             }
-            if (!this.context.validation.isValid(innerDate, 'd')) {
+            if (!this.context.validation.isValid(innerDate, 'date')) {
                 classes.push('disabled');
             }
-            if (innerDate.isSame(DateTime.today, 'd')) {
+            if (innerDate.isSame(new DateTime(), 'date')) {
                 classes.push('today');
             }
-            if (innerDate.day() === 0 || innerDate.day() === 6) {
+            if (innerDate.weekday === 0 || innerDate.weekday === 6) {
                 classes.push('weekend');
             }
 
             const td = document.createElement('td');
             td.setAttribute('data-action', ActionTypes.selectDay);
-            td.setAttribute('data-day',innerDate.format('L'));
+            td.setAttribute('data-day', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
             td.classList.add(...classes);
-            td.innerText = `${innerDate.date()}`;
+            td.innerText = `${innerDate.date}`;
             row.appendChild(td);
 
-            innerDate = innerDate.add(1, 'd');
+            innerDate.manipulate(1, 'date');
         }
 
         return rows;

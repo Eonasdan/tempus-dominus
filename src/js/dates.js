@@ -1,4 +1,10 @@
 export default class Dates {
+
+    /**
+     *
+     * @type {DateTime[]}
+     * @private
+     */
     _dates = [];
 
     constructor(context) {
@@ -21,20 +27,26 @@ export default class Dates {
         this._dates.push(date);
     }
 
+    /**
+     *
+     * @param innerDate
+     * @param {Unit|undefined} unit
+     * @returns {*}
+     */
     isPicked(innerDate, unit) {
         if (!unit)
             return this._dates.find(x => x === innerDate);
 
         let format = '', innerDateFormatted = innerDate;
 
-        switch (unit.toLowerCase()) {
-            case 'd':
+        switch (unit) {
+            case 'date':
                 format = 'MM/DD/YYYY';
                 break;
-            case 'm':
+            case 'month':
                 format = 'MM/YYYY';
                 break;
-            case 'y':
+            case 'year':
                 format = 'YYYY';
                 break;
         }
@@ -54,48 +66,20 @@ export default class Dates {
 
     _setValue(targetMoment, index) {
         const noIndex = (typeof index === 'undefined'),
-            isClear = !targetMoment && noIndex,
-            isDateUpdateThroughDateOptionFromClientCode = this.isDateUpdateThroughDateOptionFromClientCode,
-            isNotAllowedProgrammaticUpdate = !this.isInit && this._options.updateOnlyThroughDateOption && !isDateUpdateThroughDateOptionFromClientCode;
-        let outputValue = '', isInvalid = false, oldDate = this.unset ? null : this._dates[index];
+            isClear = !targetMoment && noIndex;
+        let isInvalid = false, oldDate = this.unset ? null : this._dates[index];
         if (!oldDate && !this.unset && noIndex && isClear) {
-            oldDate = this._dates[this._dates.length - 1];
+            oldDate = this.lastPicked;
         }
 
         // case of calling setValue(null or false)
         if (!targetMoment) {
-            if (isNotAllowedProgrammaticUpdate) {
-                this._notifyEvent({
-                    type: EVENT_CHANGE,
-                    date: targetMoment,
-                    oldDate: oldDate,
-                    isClear,
-                    isInvalid,
-                    isDateUpdateThroughDateOptionFromClientCode,
-                    isInit: this.isInit
-                });
-                return;
-            }
-            if (!this._options.allowMultidate || this._dates.length === 1 || isClear) {
+            if (!this.context._options.allowMultidate || this._dates.length === 1 || isClear) {
                 this.unset = true;
                 this._dates = [];
-                this._datesFormatted = [];
             } else {
-                outputValue = `${this._element.data('date')}${this._options.multidateSeparator}`; //todo jquery .data
-                outputValue = (oldDate && outputValue.replace(
-                    `${oldDate.format(this.actualFormat)}${this._options.multidateSeparator}`, '' //todo moment
-                )
-                    .replace(`${this._options.multidateSeparator}${this._options.multidateSeparator}`, '')
-                    .replace(new RegExp(`${escapeRegExp(this._options.multidateSeparator)}\\s*$`), '')) || '';
                 this._dates.splice(index, 1);
-                this._datesFormatted.splice(index, 1);
             }
-            outputValue = trim(outputValue);
-            if (this.input !== undefined) {
-                this.input.val(outputValue); //todo jquery
-                this.input.trigger('input'); //todo jquery
-            }
-            this._element.data('date', outputValue); //todo jquery
             this._notifyEvent({
                 type: EVENT_CHANGE,
                 date: false,

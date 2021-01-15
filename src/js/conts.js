@@ -1,43 +1,70 @@
 const Default = {
-    timeZone: '',
-    format: false,//todo migrate to display:
-    dayViewHeaderFormat: 'MMMM YYYY',//todo migrate to display:
-    extraFormats: false,//todo migrate to display:
-    stepping: 1,
-    minDate: false, //todo migrate to a sub object e.g. restrictions: [ min, max....]
-    maxDate: false, //todo migrate to restrictions:
-    useCurrent: true,
-    collapse: true,
-    locale: '',//moment.locale(), //todo moment
-    defaultDate: false,
-    disabledDates: false,//todo migrate to restrictions:
-    enabledDates: false,//todo migrate to restrictions:
-    icons: { //todo plugin
-        type: 'icons',
-        time: 'fas fa-clock',
-        date: 'fas fa-calendar',
-        up: 'fas fa-arrow-up',
-        down: 'fas fa-arrow-down',
-        previous: 'fas fa-chevron-left',
-        next: 'fas fa-chevron-right',
-        today: 'fas fa-calendar-check',
-        clear: 'fas fa-trash',
-        close: 'fas fa-times'
+    restrictions: {
+        minDate: false,
+        maxDate: false,
+        disabledDates: false,
+        enabledDates: false,
+        daysOfWeekDisabled: false,
+        disabledTimeIntervals: false,
+        disabledHours: false,
+        enabledHours: false,
     },
-    tooltips: { //todo plugin
+    display: {
+        icons: {
+            type: 'icons',
+            time: 'fas fa-clock',
+            date: 'fas fa-calendar',
+            up: 'fas fa-arrow-up',
+            down: 'fas fa-arrow-down',
+            previous: 'fas fa-chevron-left',
+            next: 'fas fa-chevron-right',
+            today: 'fas fa-calendar-check',
+            clear: 'fas fa-trash',
+            close: 'fas fa-times'
+        },
+        collapse: true,
+        sideBySide: false,
+        calendarWeeks: false,
+        viewMode: 'days',
+        toolbarPlacement: 'default',
+        buttons: {
+            showToday: false,
+            showClear: false,
+            showClose: false
+        },
+        widgetPositioning: {
+            horizontal: 'auto',
+            vertical: 'auto'
+        },
+        components: {
+            century: true,
+            decades: true,
+            year: true,
+            month: true,
+            date: true,
+            hours: true,
+            minutes: true,
+            seconds: false,
+            useTwentyfourHour: false
+        }
+    },
+    stepping: 1,
+    useCurrent: true,
+    defaultDate: false,
+    localization: { //todo plugin
         today: 'Go to today',
         clear: 'Clear selection',
         close: 'Close the picker',
         selectMonth: 'Select Month',
-        prevMonth: 'Previous Month',
+        previousMonth: 'Previous Month',
         nextMonth: 'Next Month',
         selectYear: 'Select Year',
-        prevYear: 'Previous Year',
+        previousYear: 'Previous Year',
         nextYear: 'Next Year',
         selectDecade: 'Select Decade',
-        prevDecade: 'Previous Decade',
+        previousDecade: 'Previous Decade',
         nextDecade: 'Next Decade',
-        prevCentury: 'Previous Century',
+        previousCentury: 'Previous Century',
         nextCentury: 'Next Century',
         pickHour: 'Pick Hour',
         incrementHour: 'Increment Hour',
@@ -50,22 +77,8 @@ const Default = {
         decrementSecond: 'Decrement Second',
         togglePeriod: 'Toggle Period',
         selectTime: 'Select Time',
-        selectDate: 'Select Date'
-    },
-    useStrict: false, //todo moment
-    sideBySide: false,//todo migrate to display:
-    daysOfWeekDisabled: false,//todo migrate to restrictions:
-    calendarWeeks: false,//todo migrate to display:
-    viewMode: 'days',//todo migrate to display:
-    toolbarPlacement: 'default',//todo migrate to display:
-    buttons: {
-        showToday: false,
-        showClear: false,
-        showClose: false
-    },
-    widgetPositioning: {
-        horizontal: 'auto',
-        vertical: 'auto'
+        selectDate: 'Select Date',
+        dayViewHeaderFormat: 'long'
     },
     widgetParent: null,
     readonly: false,
@@ -204,13 +217,9 @@ const Default = {
     },
     debug: false,
     allowInputToggle: false,
-    disabledTimeIntervals: false,
-    disabledHours: false,//todo migrate to restrictions:
-    enabledHours: false,//todo migrate to restrictions:
     viewDate: false,
     allowMultidate: false,
     multidateSeparator: ', ',
-    updateOnlyThroughDateOption: false,
     promptTimeOnDateChange: false,
     promptTimeOnDateChangeTransitionDelay: 200
 };

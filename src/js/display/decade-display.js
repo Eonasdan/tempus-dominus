@@ -3,9 +3,11 @@ import Dates from "../dates.js";
 export default class DecadeDisplay {
     constructor(context) {
         this.context = context;
-        const yearCaps = Dates.getStartEndYear(100, this.context._viewDate.year());
-        this._startDecade = this.context._viewDate.year(yearCaps[0]).startOf('y');
-        this._endDecade = this.context._viewDate.year(yearCaps[1]).startOf('y');
+        const [start, end] = Dates.getStartEndYear(100, this.context._viewDate.year);
+        this._startDecade = this.context._viewDate.clone.startOf('year');
+        this._startDecade.year = start;
+        this._endDecade = this.context._viewDate.clone.startOf('year');
+        this._endDecade.year = end;
     }
 
     get picker() {
@@ -15,22 +17,19 @@ export default class DecadeDisplay {
         const table = document.createElement('table');
         table.classList.add('table', 'table-sm'); //todo bootstrap
         const headTemplate = this.context.display.headTemplate;
-        const heads = headTemplate.getElementsByTagName('th');
-        const previous = heads[0];
-        const switcher = heads[1];
-        const next = heads[2];
+        const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
-        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.prevCentury);
-        switcher.setAttribute('title', this.context._options.tooltips.selectDecade);
+        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousCentury);
+        switcher.setAttribute('title', this.context._options.localization.selectDecade);
         switcher.setAttribute('colspan', '1');
-        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.nextCentury);
+        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextCentury);
 
-        switcher.innerText = `${this._startDecade.year()}-${this._endDecade.year()}`;
+        switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
 
-        if (!this.context.validation.isValid(this._startDecade, 'y')) {
+        if (!this.context.validation.isValid(this._startDecade, 'year')) {
             previous.classList.add('disabled');
         }
-        if (!this.context.validation.isValid(this._endDecade, 'y')) {
+        if (!this.context.validation.isValid(this._endDecade, 'year')) {
             next.classList.add('disabled');
         }
 
@@ -50,7 +49,7 @@ export default class DecadeDisplay {
         container.setAttribute('data-action', 'selectDecade');
         container.classList.add('decade');
 
-        if (this._startDecade.year() - 10 < 0) {
+        if (this._startDecade.year - 10 < 0) {
             const td = document.createElement('td')
             const containerClone = document.createElement('span');
             containerClone.innerText = '&nbsp;';
@@ -60,18 +59,18 @@ export default class DecadeDisplay {
             const td = document.createElement('td')
             const containerClone = container.cloneNode(true);
             containerClone.classList.add('old');
-            containerClone.innerText = `${this._startDecade.year() - 10}`;
-            container.setAttribute('data-selection', this._startDecade.year() + 6);
+            containerClone.innerText = `${this._startDecade.year - 10}`;
+            container.setAttribute('data-selection', this._startDecade.year + 6);
             td.appendChild(containerClone);
 
             row.appendChild(td);
         }
 
-        const pickedYears = this.context.dates.picked.map(x => x.year());
+        const pickedYears = this.context.dates.picked.map(x => x.year);
 
         for (let i = 1; i <= 10; i++) {
-            const startDecadeYear = this._startDecade.year();
-            const endDecadeYear = this._startDecade.year() + 9;
+            const startDecadeYear = this._startDecade.year;
+            const endDecadeYear = this._startDecade.year + 9;
 
             if (i !== 0 && i % 3 === 0) {
                 rows.push(row);
@@ -90,20 +89,20 @@ export default class DecadeDisplay {
             const td = document.createElement('td')
             const containerClone = container.cloneNode(true);
             containerClone.classList.add(...classes);
-            container.setAttribute('data-selection', this._startDecade.year() + 6);
-            containerClone.innerText = `${this._startDecade.year()}`;
+            container.setAttribute('data-selection', this._startDecade.year + 6);
+            containerClone.innerText = `${this._startDecade.year}`;
             td.appendChild(containerClone);
 
             row.appendChild(td);
 
-            this._startDecade = this._startDecade.add(10, 'y');
+            this._startDecade.manipulate(10, 'year');
         }
 
         const td = document.createElement('td')
         const containerClone = container.cloneNode(true);
         containerClone.classList.add('old');
-        containerClone.innerText = `${this._startDecade.year()}`;
-        container.setAttribute('data-selection', this._startDecade.year() + 6);
+        containerClone.innerText = `${this._startDecade.year}`;
+        container.setAttribute('data-selection', this._startDecade.year + 6);
         td.appendChild(containerClone);
 
         row.appendChild(td);

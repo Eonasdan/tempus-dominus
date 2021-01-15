@@ -63,13 +63,11 @@ export default class Display {
             template.classList.add('dropdown-menu'); //todo bootstrap
         }*/
 
-        if (this.context.use24Hours) {
-            template.classList.add('usetwentyfour');  //todo namespace
+        if (this.context._options.display.components.useTwentyfourHour) {
+            template.classList.add('useTwentyfour');  //todo namespace
         }
-        if ((this.input !== undefined && this.input.prop('readonly')) || this.context._options.readonly) {
-            template.classList.add('bootstrap-datetimepicker-widget-readonly'); //todo namespace
-        }
-        if (this.context.validation.isEnabled('s') && !this.context.use24Hours) {
+
+        if (this.context._options.display.components.second && !this.context._options.display.components.useTwentyfourHour) {
             template.classList.add('wider'); //todo namespace?
         }
 
@@ -130,11 +128,11 @@ export default class Display {
     }
 
     _hasTime() {
-        return this.context.validation.isEnabled('h') || this.context.validation.isEnabled('m') || this.context.validation.isEnabled('s');
+        return this.context._options.display.components.hours || this.context._options.display.components.minutes || this.context._options.display.components.seconds;
     }
 
     _hasDate() {
-        return this.context.validation.isEnabled('y') || this.context.validation.isEnabled('M') || this.context.validation.isEnabled('d');
+        return this.context._options.display.components.year || this.context._options.display.components.month || this.context._options.display.components.date;
     }
 
     get _toolbar() {
@@ -146,20 +144,20 @@ export default class Display {
             a.setAttribute('href', 'javascript:void(0);');
             a.setAttribute('tabindex', '-1');
             a.setAttribute('data-action', 'today');
-            a.setAttribute('title', this.context._options.tooltips.today);
+            a.setAttribute('title', this.context._options.localization.today);
 
-            a.appendChild(this.iconTag(this.context._options.icons.today));
+            a.appendChild(this.iconTag(this.context._options.display.icons.today));
             td.appendChild(a);
             tbody.appendChild(td);
         }
         if (!this.context._options.sideBySide && this.context._options.collapse && this._hasDate() && this._hasTime()) {
             let title, icon;
             if (this.context._options.viewMode === 'times') {
-                title = this.context._options.tooltips.selectDate;
-                icon = this.context._options.icons.date;
+                title = this.context._options.localization.selectDate;
+                icon = this.context._options.display.icons.date;
             } else {
-                title = this.context._options.tooltips.selectTime;
-                icon = this.context._options.icons.time;
+                title = this.context._options.localization.selectTime;
+                icon = this.context._options.display.icons.time;
             }
 
             const td = document.createElement('td');
@@ -179,9 +177,9 @@ export default class Display {
             a.setAttribute('href', 'javascript:void(0);');
             a.setAttribute('tabindex', '-1');
             a.setAttribute('data-action', 'clear');
-            a.setAttribute('title', this.context._options.tooltips.clear);
+            a.setAttribute('title', this.context._options.localization.clear);
 
-            a.appendChild(this.iconTag(this.context._options.icons.today));
+            a.appendChild(this.iconTag(this.context._options.display.icons.today));
             td.appendChild(a);
             tbody.appendChild(td);
         }
@@ -191,9 +189,9 @@ export default class Display {
             a.setAttribute('href', 'javascript:void(0);');
             a.setAttribute('tabindex', '-1');
             a.setAttribute('data-action', 'close');
-            a.setAttribute('title', this.context._options.tooltips.close);
+            a.setAttribute('title', this.context._options.localization.close);
 
-            a.appendChild(this.iconTag(this.context._options.icons.today));
+            a.appendChild(this.iconTag(this.context._options.display.icons.today));
             td.appendChild(a);
             tbody.appendChild(td);
         }
@@ -212,7 +210,7 @@ export default class Display {
         const previous = document.createElement('th');
         previous.classList.add('prev');
         previous.setAttribute('data-action', 'previous');
-        previous.appendChild(this.iconTag(this.context._options.icons.previous));
+        previous.appendChild(this.iconTag(this.context._options.display.icons.previous));
         headTemplate.appendChild(previous);
 
         const switcher = document.createElement('th');
@@ -224,7 +222,7 @@ export default class Display {
         const next = document.createElement('th');
         next.classList.add('next');
         next.setAttribute('data-action', 'next');
-        next.appendChild(this.iconTag(this.context._options.icons.next));
+        next.appendChild(this.iconTag(this.context._options.display.icons.next));
         headTemplate.appendChild(next);
         return headTemplate.cloneNode(true);
     }
@@ -241,7 +239,7 @@ export default class Display {
 
     iconTag(i) {
         const container = document.createElement('span')
-        if (this.context._options.icons.type === 'sprites') {
+        if (this.context._options.display.icons.type === 'sprites') {
             const svg = document.createElement('svg');
             svg.innerHTML = `<use xlink:href="${i}"></use>`
             container.appendChild(svg);

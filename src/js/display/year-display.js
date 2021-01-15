@@ -22,10 +22,10 @@ export default class YearDisplay {
         const switcher = heads[1];
         const next = heads[2];
 
-        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.prevDecade);
-        switcher.setAttribute('title', this.context._options.tooltips.selectDecade);
+        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousDecade);
+        switcher.setAttribute('title', this.context._options.localization.selectDecade);
         switcher.setAttribute('colspan', '1');
-        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.tooltips.nextDecade);
+        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextDecade);
 
         switcher.innerText = `${this._startYear.year()}-${this._endYear.year()}`;
 
