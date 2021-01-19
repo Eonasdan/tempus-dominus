@@ -55,9 +55,12 @@ export default class TimeDisplay {
             timesDiv.querySelector('[data-action=decrementSeconds]').classList.add('disabled');
         }
 
-        timesDiv.querySelector('[data-time-component=hours]').innerText = lastPicked.format(`${this.context.use24Hours ? 'HH' : 'hh'}`);
-        timesDiv.querySelector('[data-time-component=minutes]').innerText = lastPicked.format('mm');
-        timesDiv.querySelector('[data-time-component=seconds]').innerText = lastPicked.format('ss');
+        if (this.context._options.display.components.hours)
+            timesDiv.querySelector('[data-time-component=hours]').innerText = lastPicked.hoursFormatted;
+        if (this.context._options.display.components.minutes)
+            timesDiv.querySelector('[data-time-component=minutes]').innerText = lastPicked.minutesFormatted;
+        if (this.context._options.display.components.seconds)
+            timesDiv.querySelector('[data-time-component=seconds]').innerText = lastPicked.secondsFormatted;
 
     }
 

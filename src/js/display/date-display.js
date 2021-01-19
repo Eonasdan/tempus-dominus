@@ -21,21 +21,18 @@ export default class DateDisplay {
 
     update() {
         const datesDiv = this.context.display.widget.getElementsByClassName('datepicker-days')[0];
-        const heads = datesDiv.getElementsByTagName('thead')[0].getElementsByTagName('th');
-        const previous = heads[0];
-        const switcher = heads[1];
-        const next = heads[2];
+        const [previous, switcher, next] = datesDiv.getElementsByTagName('thead')[0].getElementsByTagName('th');
 
         previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousMonth);
         switcher.setAttribute('title', this.context._options.localization.selectMonth)
         next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextMonth);
 
-        switcher.innerText = this.context._viewDate.format({ month: this.context._options.dayViewHeaderFormat});
+        switcher.innerText = this.context._viewDate.format({ month: this.context._options.localization.dayViewHeaderFormat});
 
-        if (!this.context.validation.isValid(this.context._viewDate.manipulate(1, 'month'), 'month')) {
+        if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, 'month'), 'month')) {
             previous.classList.add('disabled');
         }
-        if (!this.context.validation.isValid(this.context._viewDate.manipulate(1, 'month'), 'month')) {
+        if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, 'month'), 'month')) {
             next.classList.add('disabled');
         }
 
@@ -51,22 +48,23 @@ export default class DateDisplay {
      */
     _daysOfTheWeek() {
         let innerDate = this.context._viewDate.clone.startOf('weekDay').startOf('date');
-        const row = document.createElement('tr'),
-            endOfWeek = innerDate.clone.endOf('weekDay');
+        const row = document.createElement('tr');
 
-        if (this.context._options.calendarWeeks) {
+        if (this.context._options.display.calendarWeeks) {
             const th = document.createElement('th')
             th.classList.add('cw');
             th.innerText = '#';
             row.appendChild(th);
         }
 
-        while (innerDate.isBefore(endOfWeek)) {
+        let i = 0;
+        while (i < 7) {
             const th = document.createElement('th')
             th.classList.add('dow');
-            th.innerText = innerDate.format('dd');
-            innerDate.add(1, 'd');
+            th.innerText = innerDate.format({weekday: 'short'});
+            innerDate.manipulate(1, 'date');
             row.appendChild(th);
+            i++;
         }
 
         return row;
@@ -77,12 +75,12 @@ export default class DateDisplay {
         let innerDate = this.context._viewDate.clone.startOf('month').startOf('weekDay').manipulate(12, 'hours'), row;
 
         for (let i = 0; i < 42; i++) {
-            if (innerDate.weekday() === 0) {
+            if (innerDate.weekDay === 0) {
                 if (row)
                     rows.push(row);
 
                 row = document.createElement('tr');
-                if (this.context._options.calendarWeeks) {
+                if (this.context._options.display.calendarWeeks) {
                     const td = document.createElement('td')
                     td.classList.add('cw');
                     td.innerText = `${innerDate.week()}`;

@@ -6,8 +6,8 @@ export default class YearDisplay {
         /*const yearCaps = Dates.getStartEndYear(10, this.context._viewDate.year());
         this._startYear = this.context._viewDate.year(yearCaps[0]);
         this._endYear = this.context._viewDate.year(yearCaps[1]);*/
-        this._startYear = this.context._viewDate.subtract(1, 'y');
-        this._endYear = this.context._viewDate.add(10, 'y')
+        this._startYear = this.context._viewDate.clone.manipulate(-1, 'year');
+        this._endYear = this.context._viewDate.clone.manipulate(10, 'year');
     }
 
     get picker() {
@@ -29,10 +29,10 @@ export default class YearDisplay {
 
         switcher.innerText = `${this._startYear.year()}-${this._endYear.year()}`;
 
-        if (!this.context.validation.isValid(this._startYear, 'y')) {
+        if (!this.context.validation.isValid(this._startYear, 'year')) {
             previous.classList.add('disabled');
         }
-        if (!this.context.validation.isValid(this._endYear, 'y')) {
+        if (!this.context.validation.isValid(this._endYear, 'year')) {
             next.classList.add('disabled');
         }
 
@@ -47,7 +47,7 @@ export default class YearDisplay {
 
     _grid() {
         const rows = [], container = document.createElement('span');
-        let innerDate = this.context._viewDate.startOf('y').subtract(1, 'y'), row = document.createElement('tr');
+        let innerDate = this.context._viewDate.clone.startOf('year').manipulate(-1, 'year'), row = document.createElement('tr');
 
         container.setAttribute('data-action', 'selectYear');
         container.classList.add('year');
@@ -60,22 +60,22 @@ export default class YearDisplay {
 
             let classes = [];
 
-            if (!this.context.unset && this.context.dates.isPicked(innerDate, 'y')) {
+            if (!this.context.unset && this.context.dates.isPicked(innerDate, 'year')) {
                 classes.push('active');
             }
-            if (!this.context.validation.isValid(innerDate, 'y')) {
+            if (!this.context.validation.isValid(innerDate, 'year')) {
                 classes.push('disabled');
             }
 
             const td = document.createElement('td')
             const containerClone = container.cloneNode(true);
             containerClone.classList.add(...classes);
-            containerClone.innerText = `${innerDate.year()}`;
+            containerClone.innerText = `${innerDate.year}`;
             td.appendChild(containerClone);
 
             row.appendChild(td);
 
-            innerDate = innerDate.add(1, 'y');
+            innerDate.manipulate(1, 'year');
         }
 
         return rows;

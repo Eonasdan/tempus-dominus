@@ -138,7 +138,7 @@ export default class Display {
     get _toolbar() {
         const tbody = document.createElement('tbody');
 
-        if (this.context._options.buttons.showToday) {
+        if (this.context._options.display.buttons.showToday) {
             const td = document.createElement('td');
             const a = document.createElement('a');
             a.setAttribute('href', 'javascript:void(0);');
@@ -171,7 +171,7 @@ export default class Display {
             td.appendChild(a);
             tbody.appendChild(td);
         }
-        if (this.context._options.buttons.showClear) {
+        if (this.context._options.display.buttons.showClear) {
             const td = document.createElement('td');
             const a = document.createElement('a');
             a.setAttribute('href', 'javascript:void(0);');
@@ -183,7 +183,7 @@ export default class Display {
             td.appendChild(a);
             tbody.appendChild(td);
         }
-        if (this.context._options.buttons.showClose) {
+        if (this.context._options.display.buttons.showClose) {
             const td = document.createElement('td');
             const a = document.createElement('a');
             a.setAttribute('href', 'javascript:void(0);');

@@ -234,6 +234,14 @@ export default class DateTime extends Date {
     }
 
     /**
+     * Returns two digit hours
+     * @returns {string}
+     */
+    get secondsFormatted() {
+        return this.seconds < 10 ? (`0${this.seconds}`) : `${this.seconds}`;
+    }
+
+    /**
      * Shortcut to Date.getMinutes()
      * @returns {number}
      */
@@ -249,6 +257,14 @@ export default class DateTime extends Date {
     }
 
     /**
+     * Returns two digit hours
+     * @returns {string}
+     */
+    get minutesFormatted() {
+        return this.minutes < 10 ? (`0${this.minutes}`) : `${this.minutes}`;
+    }
+
+    /**
      * Shortcut to Date.getHours()
      * @returns {number}
      */
@@ -261,6 +277,14 @@ export default class DateTime extends Date {
      */
     set hours(value) {
         this.setHours(value);
+    }
+
+    /**
+     * Returns two digit hours
+     * @returns {string}
+     */
+    get hoursFormatted() {
+        return this.hours < 10 ? (`0${this.hours}`) : `${this.hours}`;
     }
 
     /**
