@@ -14,6 +14,16 @@ export default class DateTime extends Date {
     locale = 'default';
 
     /**
+     * Chainable way to set the {@link locale}
+     * @param value
+     * @returns {DateTime}
+     */
+    setLocale(value) {
+        this.locale = value;
+        return this;
+    }
+
+    /**
      * Converts a plain JS date object to a DateTime object.
      * Doing this allows access to format, etc.
      * @param {Date|DateTime} date
@@ -31,7 +41,7 @@ export default class DateTime extends Date {
      * @returns {DateTime}
      */
     get clone() {
-        return new DateTime(this.year, this.month, this.date, this.hours, this.minutes, this.seconds, this.getMilliseconds());
+        return new DateTime(this.year, this.month, this.date, this.hours, this.minutes, this.seconds, this.getMilliseconds()).setLocale(this.locale);
     }
 
     /**

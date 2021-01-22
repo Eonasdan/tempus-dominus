@@ -1,3 +1,8 @@
+# General
+* picker no longer set text field - this might be restored.
+* picker returns a `DateTime` which is an extended javascript `Date` object.
+* picker no longer uses jQuery, momentjs, or bootstrap
+
 # Configuration
 * renamed `tooltip` to `localization`
 * renamed `tooltip.prevMonth` to `localization.previousMonth`
@@ -36,3 +41,7 @@
   
 ## Styles
 * renamed `usetwentyfour` to `useTwentyfour`
+
+# Events
+* changed `isInvalid` to `isValid` (v5)
+* changed event now emits `undefined` instead of false when the date is being cleared

@@ -1,6 +1,11 @@
 import {DatePickerModes} from "./conts.js";
 
 export default class Actions {
+
+    /**
+     *
+     * @param {TempusDominus} context
+     */
     constructor(context) {
         this.context = context;
     }
@@ -13,20 +18,32 @@ export default class Actions {
         switch (action) {
             case ActionTypes.next:
             case ActionTypes.previous:
-                const navFnc = DatePickerModes[this.context.currentViewMode].NAV_FUNCTION;
+                const {NAV_FUNCTION, NAV_STEP} = DatePickerModes[this.context.currentViewMode];
                 if (action === ActionTypes.next)
-                    this.context._viewDate.add(DatePickerModes[this.context.currentViewMode].NAV_STEP, navFnc);
+                    this.context._viewDate.manipulate(NAV_STEP, NAV_FUNCTION);
                 else
-                    this.context._viewDate.subtract(DatePickerModes[this.context.currentViewMode].NAV_STEP, navFnc);
+                    this.context._viewDate.manipulate(NAV_STEP * -1, NAV_FUNCTION);
                 this.context.display.updateDateView();
-                //this._viewUpdate(navFnc);todo trigger view date change event
-
+                this.context._viewUpdate(NAV_FUNCTION);
                 break;
             case ActionTypes.pickerSwitch:
-
+                this.context.display._showMode(1);
                 break;
             case ActionTypes.selectMonth:
+                const month = +e.target.getAttribute('data-value');
+                this.context._viewDate.month = month;
 
+                if (this.context.currentViewMode === this.context.minViewModeNumber) {
+                    //todo in the old td this only used month/year and not the whole viewdate
+                    this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
+                    if (!this.context._options.inline) {
+                        this.context.display.hide();
+                    }
+                } else {
+                    this.context.display._showMode(-1);
+                    this.context.display.updateDateView();
+                }
+                this.context._viewUpdate('month');
                 break;
             case ActionTypes.selectYear:
 
@@ -93,10 +110,8 @@ export default class Actions {
                 break;
         }
 
-        console.log('action');
-        console.log(action);
-        console.log('e');
-        console.log(e);
+        console.log('action', action);
+        console.log('e', e);
     }
 }
 
@@ -129,4 +144,4 @@ let ActionTypes;
     ActionTypes["close"] = "close";
     ActionTypes["today"] = "today";
 })(ActionTypes || (ActionTypes = {}));
-export { ActionTypes }
+export {ActionTypes}

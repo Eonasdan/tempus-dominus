@@ -2,7 +2,7 @@ import Display from './display/index.js';
 import Validation from './validation.js';
 import Dates from './dates.js';
 import Actions from './actions.js';
-import {Default} from "./conts.js";
+import {Default, Namespace} from "./conts.js";
 import DateTime from "./datetime.js";
 
 export default class TempusDominus {
@@ -20,21 +20,21 @@ export default class TempusDominus {
         this.dates = new Dates(this);
         this.action = new Actions(this);
 
-        //temp
-        this.dates.add(new DateTime());
+        //#region temp - REMOVE THIS STUFF
+        //this.dates.add(new DateTime());
+        //#endregion
 
-        this.display._buildWidget();
-        this.display.update();
+        this._initFormatting();
 
-        //date calendar
-        //element.appendChild(this.display.datePicker);
-        //element.appendChild(this.display.monthPicker);
-        //element.appendChild(this.display.yearPicker);
-        //element.appendChild(this.display.decadePicker);
-        //element.appendChild(this.display.timePicker);
+        this.currentViewMode = 1; //todo temp
+
+        this.display.show();
+
         element.appendChild(this.display.widget);
 
-        this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', this.action.do));
+        this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
+            this.action.do(e);
+        }));
     }
 
     _getOptions(config) {
@@ -54,10 +54,27 @@ export default class TempusDominus {
         if (this._options.display.components.month) {
             this.minViewModeNumber = 1;
         }
-        if (this._options.display.components.day) {
+        if (this._options.display.components.date) {
             this.minViewModeNumber = 0;
         }
 
         this.currentViewMode = Math.max(this.minViewModeNumber, this.currentViewMode);
+    }
+
+    _notifyEvent(config) {
+        console.log('notify', JSON.stringify(config, null, 2));
+    }
+
+    /**
+     *
+     * @param {Unit} e
+     * @private
+     */
+    _viewUpdate(e) {
+        this._notifyEvent({
+            type: Namespace.EVENT_UPDATE,
+            change: e,
+            viewDate: this._viewDate.clone
+        });
     }
 }

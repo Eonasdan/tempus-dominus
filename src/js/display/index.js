@@ -3,6 +3,8 @@ import MonthDisplay from './month-display.js';
 import YearDisplay from './year-display.js';
 import DecadeDisplay from "./decade-display.js";
 import TimeDisplay from "./time-display.js";
+import DateTime from "../datetime.js";
+import {DatePickerModes, Namespace} from "../conts.js";
 
 
 export default class Display {
@@ -18,8 +20,6 @@ export default class Display {
     }
 
     get widget() {
-        if (!this._widget) this._buildWidget();
-
         return this._widget;
     }
 
@@ -39,6 +39,56 @@ export default class Display {
             this._timeDisplay.update();
     }
 
+    show() {
+        if (this.context._options.useCurrent) {
+            //todo in the td4 branch a pr changed this to allow granularity
+            this.context.dates._setValue(new DateTime());
+        }
+        this._buildWidget();
+        this._showMode();
+        window.addEventListener('resize', () => this._place());
+        this._place();
+        //todo unhide widget
+        this.context._notifyEvent({
+            type: Namespace.EVENT_SHOW
+        })
+    }
+
+    _showMode(dir) {
+        if (!this.widget) {
+            return;
+        }
+        if (dir) {
+            this.context.currentViewMode = Math.max(this.context.minViewModeNumber, Math.min(3, this.context.currentViewMode + dir));
+        }
+        this.widget.querySelectorAll('.datepicker > div, .timepicker > div').forEach(e => e.style.display = 'none');
+
+        const datePickerMode = DatePickerModes[this.context.currentViewMode];
+        let picker = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
+        if (picker == null) {
+            const dateContainer = this.widget.querySelector('.datepicker');
+            switch (datePickerMode.CLASS_NAME) {
+                case 'years':
+                    break;
+                case 'months':
+                    dateContainer.appendChild(this._monthDisplay.picker);
+                    this._monthDisplay.update();
+                    break;
+                case 'days':
+                    dateContainer.appendChild(this._dateDisplay.picker);
+                    this._dateDisplay.update();
+                    break;
+            }
+            picker = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
+        }
+
+        picker.style.display = 'block';
+    }
+
+    _place() {
+        console.log('place called');
+    }
+
     _buildWidget() {
         const template = document.createElement('div');
         //todo bootstrap, need to namespace classes
@@ -47,8 +97,8 @@ export default class Display {
             template.classList.add('tempusdominus-bootstrap-datetimepicker-widget-with-calendar-weeks');  //todo namespace
 
         const dateView = document.createElement('div');
-        dateView.classList.add('datepicker');
-        dateView.appendChild(this._dateDisplay.picker);
+        dateView.classList.add('datepicker');//todo I think I want to rename these to datepicker-container or something
+        //dateView.appendChild(this._dateDisplay.picker); //todo remove both of these appends. I'd rather only build then when needed
 
         const timeView = document.createElement('div');
         timeView.classList.add('timepicker');

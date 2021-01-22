@@ -47,15 +47,6 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
   padding: 4px;
   width: 14rem;
 }
-.bootstrap-datetimepicker-widget.dropdown-menu.tempusdominus-bootstrap-datetimepicker-widget-with-feather-icons {
-  width: 16rem;
-}
-.bootstrap-datetimepicker-widget.dropdown-menu.tempusdominus-bootstrap-datetimepicker-widget-with-calendar-weeks {
-  width: 16rem;
-}
-.bootstrap-datetimepicker-widget.dropdown-menu.tempusdominus-bootstrap-datetimepicker-widget-with-calendar-weeks.tempusdominus-bootstrap-datetimepicker-widget-with-feather-icons {
-  width: 17rem;
-}
 @media (min-width: 576px) {
   .bootstrap-datetimepicker-widget.dropdown-menu.timepicker-sbs {
     width: 38em;
@@ -119,6 +110,9 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
 }
 .bootstrap-datetimepicker-widget .list-unstyled {
   margin: 0;
+}
+.bootstrap-datetimepicker-widget [data-action] {
+  cursor: pointer;
 }
 .bootstrap-datetimepicker-widget a[data-action] {
   padding: 6px 0;
@@ -185,10 +179,6 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
   line-height: 2.5;
   height: 2.5em;
   width: 100%;
-}
-.bootstrap-datetimepicker-widget .picker-switch.picker-switch-with-feathers-icons td span {
-  line-height: 2.8;
-  height: 2.8em;
 }
 .bootstrap-datetimepicker-widget table {
   width: 100%;

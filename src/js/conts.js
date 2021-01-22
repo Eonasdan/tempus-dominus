@@ -226,20 +226,39 @@ const Default = {
 
 const DatePickerModes = [{
     CLASS_NAME: 'days',
-    NAV_FUNCTION: 'M',
+    NAV_FUNCTION: 'month',
     NAV_STEP: 1
 }, {
     CLASS_NAME: 'months',
-    NAV_FUNCTION: 'y',
+    NAV_FUNCTION: 'year',
     NAV_STEP: 1
 }, {
     CLASS_NAME: 'years',
-    NAV_FUNCTION: 'y',
+    NAV_FUNCTION: 'year',
     NAV_STEP: 10
 }, {
     CLASS_NAME: 'decades',
-    NAV_FUNCTION: 'y',
+    NAV_FUNCTION: 'year',
     NAV_STEP: 100
-}]
+}];
 
-export { Default, DatePickerModes }
+class Namespace {
+    static NAME = 'datetimepicker';//'tempus-dominus' todo
+    static VERSION = '6.0.0-alpha1';
+    static DATA_KEY = 'datetimepicker';//todo 'td'
+    static EVENT_KEY = `.${Namespace.DATA_KEY}`;
+    static DATA_API_KEY = '.data-api';
+
+    static EVENT_CHANGE = `hide${Namespace.EVENT_KEY}`;
+    static EVENT_ERROR = `error${Namespace.EVENT_KEY}`;
+    static EVENT_UPDATE = `update${Namespace.EVENT_KEY}`;
+    static EVENT_SHOW = `show${Namespace.EVENT_KEY}`;
+    static EVENT_HIDE = `hide${Namespace.EVENT_KEY}`;
+    static EVENT_BLUR = `blur${Namespace.EVENT_KEY}`;
+    static EVENT_KEYUP = `keyup${Namespace.EVENT_KEY}`;
+    static EVENT_KEYDOWN = `keydown${Namespace.EVENT_KEY}`;
+    static EVENT_FOCUS = `focus${Namespace.EVENT_KEY}`;
+    static EVENT_CLICK_DATA_API = `click${Namespace.EVENT_KEY}${Namespace.DATA_API_KEY}`;
+}
+
+export { Default, DatePickerModes, Namespace }

@@ -19,10 +19,10 @@ export default class MonthDisplay {
 
         switcher.innerText = this.context._viewDate.format({year: 'numeric'});
 
-        if (!this.context.validation.isValid(this.context._viewDate.manipulate(-1, 'year'), 'year')) {
+        if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, 'year'), 'year')) {
             previous.classList.add('disabled');
         }
-        if (!this.context.validation.isValid(this.context._viewDate.manipulate(1, 'year'), 'year')) {
+        if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, 'year'), 'year')) {
             next.classList.add('disabled');
         }
 
@@ -35,12 +35,21 @@ export default class MonthDisplay {
         return container;
     }
 
+    update() {
+        this.context.display.widget.querySelector('[data-action="pickerSwitch"]').innerText = this.context._viewDate.format({year: 'numeric'});
+    }
+
+    /**
+     *
+     * @returns {HTMLTableRowElement[]}
+     * @private
+     */
     _grid() {
         const rows = [], container = document.createElement('span');
         let innerDate = this.context._viewDate.clone.startOf('year'), row = document.createElement('tr');
 
         container.setAttribute('data-action', 'selectMonth');
-        container.classList.add('year');
+        container.classList.add('month');
 
         for(let i = 0; i <= 12; i++) {
             if (i !== 0 && i % 3 === 0) {
@@ -59,6 +68,7 @@ export default class MonthDisplay {
 
             const td = document.createElement('td');
             const containerClone = container.cloneNode(true);
+            containerClone.setAttribute('data-value', i);
             containerClone.classList.add(...classes);
             containerClone.innerText = `${innerDate.format({month: 'long'})}`;
             td.appendChild(containerClone);
