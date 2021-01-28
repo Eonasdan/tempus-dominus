@@ -8,10 +8,6 @@
 
     <link href="tempusdominus-bootstrap-4.css" rel="stylesheet">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-            integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
-            crossorigin="anonymous"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
             integrity="sha512-ubuT8Z88WxezgSqf3RLuNi5lmjstiJcyezx34yIU2gAHonIi27Na7atqzUZCOoY4CExaoFumzOsFQ2Ch+I/HCw=="
             crossorigin="anonymous"></script>
@@ -27,7 +23,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/fontawesome.min.js"
             integrity="sha512-kI12xOdWTh/nL2vIx5Yf3z/kJSmY+nvdTXP2ARhepM/YGcmo/lmRGRttI3Da8FXLDw0Y9hRAyZ5JFO3NrCvvXA=="
             crossorigin="anonymous"></script>
-
 
 
 </head>
@@ -51,7 +46,7 @@
     </div>
 
 </div>
-
+<script src="tempus-dominus.js"></script>
 <script type="module">
     /* $(function () {
          $('#datetimepicker13').datetimepicker({
@@ -61,12 +56,14 @@
                  showToday: true
              }
          });
-     });*/
-    import TempusDominus from "../js/tempus-dominus.js";
+     });
+    import { TempusDominus } from './tempus-dominus.js';
 
-    var dt = new TempusDominus(document.getElementById('datetimepicker13'));
+    var dt = new TempusDominus(document.getElementById('datetimepicker13'));*/
 </script>
 <script>
+    var dt = new tempusdominus.TempusDominus(document.getElementById('datetimepicker13'));
+
     const log = document.getElementById('log');
     ['log','debug','info','warn','error'].forEach(function (verb) {
         console[verb] = (function (method, verb, log) {

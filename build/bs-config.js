@@ -13,11 +13,11 @@ const fs = require('fs');
  */
 module.exports = {
     "ui": false,
-    "files": false,
+    "files": ['src/docs/**.*', 'src/js/**/*.js'],
     "watchEvents": [
         "change"
     ],
-    "watch": true,
+    "watch": false,
     "ignore": [
         'build'
     ],
