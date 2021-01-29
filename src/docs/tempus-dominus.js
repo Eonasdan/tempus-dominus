@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusdominus = {}));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('delegated-events')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'delegated-events'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusdominus = {}, global.delegatedEvents));
+}(this, (function (exports, delegatedEvents) { 'use strict';
 
     var Unit;
     (function (Unit) {
@@ -619,10 +619,6 @@
     Namespace.EVENT_CLICK_DATA_API = `click${Namespace.EVENT_KEY}${Namespace.DATA_API_KEY}`;
 
     class Actions {
-        /**
-         *
-         * @param {TempusDominus} context
-         */
         constructor(context) {
             this.context = context;
         }
@@ -630,6 +626,7 @@
             if (e.currentTarget.classList.contains('disabled'))
                 return false;
             action = action || e.currentTarget.dataset.action;
+            console.log('action', action);
             switch (action) {
                 case ActionTypes.next:
                 case ActionTypes.previous:
@@ -665,6 +662,31 @@
                 case ActionTypes.selectDecade:
                     break;
                 case ActionTypes.selectDay:
+                    const day = this.context._viewDate.clone;
+                    if (e.target.classList.contains('old')) {
+                        day.manipulate(-11, Unit.month);
+                    }
+                    if (e.target.classList.contains('new')) {
+                        day.manipulate(1, Unit.month);
+                    }
+                    day.date = +e.target.innerText;
+                    let index = 0;
+                    if (this.context._options.allowMultidate) {
+                        index = this.context.dates.pickedIndex(day, Unit.date);
+                        if (index !== -1) {
+                            this.context.dates._setValue(null, index); //deselect multidate
+                        }
+                        else {
+                            this.context.dates._setValue(day, this.context.dates.lastPickedIndex + 1);
+                        }
+                    }
+                    else {
+                        this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
+                    }
+                    if (!this.context.display._hasTime() && !this.context._options.keepOpen && !this.context._options.inline && !this.context._options.allowMultidate) {
+                        this.context.display.hide();
+                    }
+                    //todo register events or look at Document.createEvent or at dom/event-handler
                     break;
                 case ActionTypes.selectHour:
                     break;
@@ -703,8 +725,6 @@
                 case ActionTypes.today:
                     break;
             }
-            console.log('action', action);
-            console.log('e', e);
         }
     }
     let ActionTypes;
@@ -978,8 +998,7 @@
             return this._dates;
         }
         get lastPicked() {
-            var _a;
-            return (_a = this._dates[this.lastPickedIndex]) === null || _a === void 0 ? void 0 : _a.clone;
+            return this._dates[this.lastPickedIndex];
         }
         get lastPickedIndex() {
             return this._dates.length - 1;
@@ -998,7 +1017,7 @@
             let format = {}, innerDateFormatted = '';
             switch (unit) {
                 case 'date':
-                    format = { dateStyle: "short" };
+                    format = { dateStyle: 'short' };
                     break;
                 case 'month':
                     format = {
@@ -1012,6 +1031,27 @@
             }
             innerDateFormatted = innerDate.format(format);
             return this._dates.map(x => x.format(format)).find(x => x === innerDateFormatted) !== undefined;
+        }
+        pickedIndex(innerDate, unit) {
+            if (!unit)
+                return this._dates.indexOf(innerDate);
+            let format = {}, innerDateFormatted = '';
+            switch (unit) {
+                case 'date':
+                    format = { dateStyle: 'short' };
+                    break;
+                case 'month':
+                    format = {
+                        month: 'numeric',
+                        year: 'numeric'
+                    };
+                    break;
+                case 'year':
+                    format = { year: 'numeric' };
+                    break;
+            }
+            innerDateFormatted = innerDate.format(format);
+            return this._dates.map(x => x.format(format)).indexOf(innerDateFormatted);
         }
         static getStartEndYear(factor, year) {
             const step = factor / 10, startYear = Math.floor(year / factor) * factor, endYear = startYear + step * 9, focusValue = Math.floor(year / step) * step;
@@ -1400,6 +1440,13 @@
                         break;
                 }
                 picker = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
+                /*const actions = this.widget.querySelectorAll('[data-action]');
+                actions.forEach(element => element.removeEventListener('click', (e) => {
+                    this.context.action.do(e);
+                }))
+                actions.forEach(element => element.addEventListener('click', (e) => {
+                    this.context.action.do(e);
+                }));*/
             }
             picker.style.display = 'block';
         }
@@ -1629,9 +1676,10 @@
             this.currentViewMode = 1; //todo temp
             this.display.show();
             element.appendChild(this.display.widget);
-            this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
-                this.action.do(e);
-            }));
+            /* this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
+                 this.action.do(e);
+             }));*/
+            delegatedEvents.on('click', '[data-action', (e) => this.action.do(e));
         }
         _getOptions(config) {
             config = Object.assign(Object.assign({}, Default), config);

@@ -88,6 +88,13 @@ export default class Display {
                     break;
             }
             picker = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
+            /*const actions = this.widget.querySelectorAll('[data-action]');
+            actions.forEach(element => element.removeEventListener('click', (e) => {
+                this.context.action.do(e);
+            }))
+            actions.forEach(element => element.addEventListener('click', (e) => {
+                this.context.action.do(e);
+            }));*/
         }
 
         picker.style.display = 'block';

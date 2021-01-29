@@ -1,4 +1,4 @@
-import {Namespace} from "./conts.js";
+import {Namespace} from './conts.js';
 import {TempusDominus} from './tempus-dominus';
 import {DateTime, Unit} from './datetime';
 
@@ -8,23 +8,24 @@ export default class Dates {
 
     private context: TempusDominus;
 
-    constructor(context:TempusDominus) {
+    constructor(context: TempusDominus) {
         this.context = context;
     }
 
-    get picked() {
+
+    get picked(): DateTime[] {
         return this._dates;
     }
 
-    get lastPicked() {
-        return this._dates[this.lastPickedIndex]?.clone;
+    get lastPicked(): DateTime {
+        return this._dates[this.lastPickedIndex];
     }
 
-    get lastPickedIndex() {
+    get lastPickedIndex(): number {
         return this._dates.length - 1;
     }
 
-    add(date) {
+    add(date: DateTime): void {
         this._dates.push(date);
     }
 
@@ -33,7 +34,7 @@ export default class Dates {
      * @param innerDate
      * @param unit
      */
-    isPicked(innerDate: DateTime, unit: Unit): boolean {
+    isPicked(innerDate: DateTime, unit?: Unit): boolean {
         if (!unit)
             return this._dates.find(x => x === innerDate) !== undefined;
 
@@ -41,7 +42,7 @@ export default class Dates {
 
         switch (unit) {
             case 'date':
-                format = {dateStyle: "short"};
+                format = {dateStyle: 'short'};
                 break;
             case 'month':
                 format = {
@@ -59,7 +60,33 @@ export default class Dates {
         return this._dates.map(x => x.format(format)).find(x => x === innerDateFormatted) !== undefined;
     }
 
-    static getStartEndYear(factor: number, year: number) {
+    pickedIndex(innerDate: DateTime, unit?: Unit): number {
+        if (!unit)
+            return this._dates.indexOf(innerDate);
+
+        let format = {}, innerDateFormatted = '';
+
+        switch (unit) {
+            case 'date':
+                format = {dateStyle: 'short'};
+                break;
+            case 'month':
+                format = {
+                    month: 'numeric',
+                    year: 'numeric'
+                };
+                break;
+            case 'year':
+                format = {year: 'numeric'};
+                break;
+        }
+
+        innerDateFormatted = innerDate.format(format);
+
+        return this._dates.map(x => x.format(format)).indexOf(innerDateFormatted);
+    }
+
+    static getStartEndYear(factor: number, year: number): [number, number, number] {
         const step = factor / 10,
             startYear = Math.floor(year / factor) * factor,
             endYear = startYear + step * 9,
@@ -67,7 +94,7 @@ export default class Dates {
         return [startYear, endYear, focusValue];
     }
 
-    _setValue(target: DateTime|undefined, index?: number) {
+    _setValue(target: DateTime | undefined, index?: number): void {
         const noIndex = (typeof index === 'undefined'),
             isClear = !target && noIndex;
         let isValid = true, oldDate = this.context.unset ? null : this._dates[index];

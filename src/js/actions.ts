@@ -1,14 +1,10 @@
-import {DatePickerModes} from "./conts.js";
-import {DateTime} from './datetime';
+import {DatePickerModes} from './conts.js';
+import {Unit} from './datetime';
 import {TempusDominus} from './tempus-dominus';
 
 export default class Actions {
     private context: TempusDominus;
 
-    /**
-     *
-     * @param {TempusDominus} context
-     */
     constructor(context: TempusDominus) {
         this.context = context;
     }
@@ -17,6 +13,7 @@ export default class Actions {
         if (e.currentTarget.classList.contains('disabled')) return false;
 
         action = action || e.currentTarget.dataset.action;
+        console.log('action', action);
 
         switch (action) {
             case ActionTypes.next:
@@ -55,7 +52,31 @@ export default class Actions {
 
                 break;
             case ActionTypes.selectDay:
+                const day = this.context._viewDate.clone;
+                if (e.target.classList.contains('old')) {
+                    day.manipulate(-11, Unit.month);
+                }
+                if (e.target.classList.contains('new')) {
+                    day.manipulate(1, Unit.month);
+                }
 
+                day.date = +e.target.innerText;
+                let index = 0;
+                if (this.context._options.allowMultidate) {
+                    index = this.context.dates.pickedIndex(day, Unit.date);
+                    if (index !== -1) {
+                        this.context.dates._setValue(null, index); //deselect multidate
+                    } else {
+                        this.context.dates._setValue(day, this.context.dates.lastPickedIndex + 1);
+                    }
+                } else {
+                    this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
+                }
+
+                if (!this.context.display._hasTime() && !this.context._options.keepOpen && !this.context._options.inline && !this.context._options.allowMultidate) {
+                    this.context.display.hide();
+                }
+//todo register events or look at Document.createEvent or at dom/event-handler
                 break;
             case ActionTypes.selectHour:
 
@@ -112,9 +133,6 @@ export default class Actions {
 
                 break;
         }
-
-        console.log('action', action);
-        console.log('e', e);
     }
 }
 
