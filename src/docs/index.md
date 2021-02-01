@@ -6,16 +6,26 @@
       </div>
       <div class="col-md-6 order-md-1 text-center text-md-left pr-md-5">
         <h1 class="mb-3">Tempus Dominus</h1>
-        <p class="lead">
-          Tempus Dominus is the successor to the very popular to what was "bootstrap-datetimepicker". 
-		  The plugin provide a robust date and time picker designed to integrate into your project.
+       <p class="lead">
+          Tempus Dominus is the successor to the very popular "eonasdan/bootstrap-datetimepicker". 
+          The plugin provide a robust date and time picker designed to integrate into your project.
         </p>
         <p>
-        We're going through some changes right now and the docs will be updated soon. Please be sure to read the blog post linked above.
+        We're going through some changes right now and the docs will be updated soon. Please be sure to read the blog post linked above.<br/>
+            You can follow the changes in the github repo to see what's happening with v6. There's also a discussion section where you can help shape the future of the project.
         </p>
+          <h4>Version 4</h4>
         <p>
-        If you are looking for the old docs you can find them <a href="/4/">here</a>.  
+       You can find the docs for eonasdan/bootstrap-datetimepicker <a href="/4/">here</a>.  
         </p>
+          <h4>Version 5 for Bootstrap 3</h4>
+          <p>
+              You can find the docs <a href="/5-3/">here</a>.
+          </p>
+          <h4>Version 5 for Bootstrap 4</h4>
+          <p>
+              You can find the docs <a href="/5-4/">here</a>.
+          </p>
         <p class="text-muted mb-0">
 		 <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7DC5QN&placement=eonasdangithubio" id="_carbonads_js"></script>
         </p>
