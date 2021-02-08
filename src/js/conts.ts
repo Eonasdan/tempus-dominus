@@ -226,41 +226,83 @@ const Default = {
     promptTimeOnDateChangeTransitionDelay: 200
 };
 
+class Namespace {
+    static NAME = 'tempus-dominus';
+    static VERSION = '6.0.0-alpha1';
+    static DATA_KEY = 'td';
+    static DATA_API_KEY = '.data-api';
+
+    static Events = class {
+        static KEY = `.${Namespace.DATA_KEY}`;
+        static CHANGE = `hide${Namespace.Events.KEY}`
+        static UPDATE = `update${Namespace.Events.KEY}`;
+        static ERROR = `error${Namespace.Events.KEY}`;
+        static SHOW = `show${Namespace.Events.KEY}`;
+        static HIDE = `hide${Namespace.Events.KEY}`;
+        static BLUR = `blur${Namespace.Events.KEY}`;
+        static KEYUP = `keyup${Namespace.Events.KEY}`;
+        static KEYDOWN = `keydown${Namespace.Events.KEY}`;
+        static FOCUS = `focus${Namespace.Events.KEY}`;
+        static CLICK_DATA_API = `click${Namespace.Events.KEY}${Namespace.DATA_API_KEY}`;
+    }
+
+    static Css = class {
+        static widget = `${Namespace.NAME}-widget`;
+        static switch = 'picker-switch';
+        // todo the next several classes are to represent states of the picker that would
+        // make it wider then usual and it seems like this could be cleaned up.
+        static widgetCalendarWeeks = `${Namespace.Css.widget}-with-calendar-weeks`;
+        static useTwentyfour = 'useTwentyfour';
+        static wider = 'wider';
+        static sideBySide = 'timepicker-sbs';
+        static previous = 'previous';
+        static next = 'next';
+
+        static disabled = 'disabled';
+        static old = 'old';
+        static new = 'new';
+        static active = 'active';
+        //#region date container
+        static dateContainer = 'date-container';
+        static decadesContainer = `${Namespace.Css.dateContainer}-decades`;
+        static decade = 'decade';
+        static yearsContainer = `${Namespace.Css.dateContainer}-years`;
+        static year = 'year';
+        static monthsContainer = `${Namespace.Css.dateContainer}-months`;
+        static month = 'month';
+        static daysContainer = `${Namespace.Css.dateContainer}-days`;
+        static day = 'day';
+        static calendarWeeks = 'cw';
+        static dayOfTheWeek = 'dow';
+        static today = 'today';
+        static weekend = 'weekend';
+        //#endregion
+
+        //#region time container
+
+        static timeContainer = 'time-container';
+
+        //#endregion
+
+    }
+}
+
 const DatePickerModes = [{
-    CLASS_NAME: 'days',
+    CLASS_NAME: Namespace.Css.daysContainer,
     NAV_FUNCTION: Unit.month,
     NAV_STEP: 1
 }, {
-    CLASS_NAME: 'months',
+    CLASS_NAME: Namespace.Css.monthsContainer,
     NAV_FUNCTION: Unit.year,
     NAV_STEP: 1
 }, {
-    CLASS_NAME: 'years',
+    CLASS_NAME: Namespace.Css.yearsContainer,
     NAV_FUNCTION: Unit.year,
     NAV_STEP: 10
 }, {
-    CLASS_NAME: 'decades',
+    CLASS_NAME: Namespace.Css.decadesContainer,
     NAV_FUNCTION: Unit.year,
     NAV_STEP: 100
 }];
 
-class Namespace {
-    static NAME = 'datetimepicker';//'tempus-dominus' todo
-    static VERSION = '6.0.0-alpha1';
-    static DATA_KEY = 'datetimepicker';//todo 'td'
-    static EVENT_KEY = `.${Namespace.DATA_KEY}`;
-    static DATA_API_KEY = '.data-api';
-
-    static EVENT_CHANGE = `hide${Namespace.EVENT_KEY}`;
-    static EVENT_ERROR = `error${Namespace.EVENT_KEY}`;
-    static EVENT_UPDATE = `update${Namespace.EVENT_KEY}`;
-    static EVENT_SHOW = `show${Namespace.EVENT_KEY}`;
-    static EVENT_HIDE = `hide${Namespace.EVENT_KEY}`;
-    static EVENT_BLUR = `blur${Namespace.EVENT_KEY}`;
-    static EVENT_KEYUP = `keyup${Namespace.EVENT_KEY}`;
-    static EVENT_KEYDOWN = `keydown${Namespace.EVENT_KEY}`;
-    static EVENT_FOCUS = `focus${Namespace.EVENT_KEY}`;
-    static EVENT_CLICK_DATA_API = `click${Namespace.EVENT_KEY}${Namespace.DATA_API_KEY}`;
-}
-
-export { Default, DatePickerModes, Namespace }
+export {Default, DatePickerModes, Namespace}

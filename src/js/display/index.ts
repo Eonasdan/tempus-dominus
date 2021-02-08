@@ -1,11 +1,12 @@
 import DateDisplay from './date-display';
 import MonthDisplay from './month-display';
 import YearDisplay from './year-display';
-import DecadeDisplay from "./decade-display";
-import TimeDisplay from "./time-display";
-import { DateTime } from "../datetime";
-import {DatePickerModes, Namespace} from "../conts";
+import DecadeDisplay from './decade-display';
+import TimeDisplay from './time-display';
+import {DateTime} from '../datetime';
+import {DatePickerModes, Namespace} from '../conts';
 import {TempusDominus} from '../tempus-dominus';
+import {ActionTypes} from '../actions';
 
 
 export default class Display {
@@ -16,6 +17,7 @@ export default class Display {
     private _decadeDisplay: DecadeDisplay;
     private _timeDisplay: TimeDisplay;
     private _widget: HTMLElement;
+
     constructor(context: TempusDominus) {
         this.context = context;
         this._dateDisplay = new DateDisplay(context);
@@ -58,7 +60,7 @@ export default class Display {
         this._place();
         //todo unhide widget
         this.context._notifyEvent({
-            type: Namespace.EVENT_SHOW
+            type: Namespace.Events.SHOW
         })
     }
 
@@ -69,32 +71,33 @@ export default class Display {
         if (direction) {
             this.context.currentViewMode = Math.max(this.context.minViewModeNumber, Math.min(3, this.context.currentViewMode + direction));
         }
-        this.widget.querySelectorAll('.datepicker > div, .timepicker > div').forEach((e: HTMLElement) => e.style.display = 'none');
+        this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`).forEach((e: HTMLElement) => e.style.display = 'none');
 
         const datePickerMode = DatePickerModes[this.context.currentViewMode];
-        let picker: HTMLElement = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
+        let picker: HTMLElement = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
         if (picker == null) {
-            const dateContainer = this.widget.querySelector('.datepicker');
+            const dateContainer = this.widget.querySelector(`.${Namespace.Css.dateContainer}`);
             switch (datePickerMode.CLASS_NAME) {
-                case 'years':
+                case Namespace.Css.yearsContainer:
                     break;
-                case 'months':
+                case Namespace.Css.monthsContainer:
                     dateContainer.appendChild(this._monthDisplay.picker);
                     this._monthDisplay.update();
                     break;
-                case 'days':
+                case Namespace.Css.daysContainer:
                     dateContainer.appendChild(this._dateDisplay.picker);
                     this._dateDisplay.update();
                     break;
             }
             picker = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
-            /*const actions = this.widget.querySelectorAll('[data-action]');
+            //todo migrate this to bootstrap's eventhandler
+            const actions = this.widget.querySelectorAll('[data-action]');
             actions.forEach(element => element.removeEventListener('click', (e) => {
                 this.context.action.do(e);
             }))
             actions.forEach(element => element.addEventListener('click', (e) => {
                 this.context.action.do(e);
-            }));*/
+            }));
         }
 
         picker.style.display = 'block';
@@ -111,20 +114,19 @@ export default class Display {
     _buildWidget(): HTMLElement {
         const template = document.createElement('div');
         //todo bootstrap, need to namespace classes
-        template.classList.add('bootstrap-datetimepicker-widget');
+        template.classList.add(Namespace.Css.widget);
         if (this.context._options.calendarWeeks)
-            template.classList.add('tempusdominus-bootstrap-datetimepicker-widget-with-calendar-weeks');  //todo namespace
+            template.classList.add(Namespace.Css.widgetCalendarWeeks);
 
         const dateView = document.createElement('div');
-        dateView.classList.add('datepicker');//todo I think I want to rename these to datepicker-container or something
-        //dateView.appendChild(this._dateDisplay.picker); //todo remove both of these appends. I'd rather only build then when needed
+        dateView.classList.add(Namespace.Css.dateContainer);
 
         const timeView = document.createElement('div');
-        timeView.classList.add('timepicker');
+        timeView.classList.add(Namespace.Css.timeContainer);
         timeView.appendChild(this._timeDisplay.picker);
 
         const toolbar = document.createElement('li');
-        toolbar.classList.add('picker-switch');
+        toolbar.classList.add(Namespace.Css.switch);
         if (this.context._options.collapse) toolbar.classList.add('accordion-toggle'); //todo bootstrap
         toolbar.appendChild(this._toolbar);
 
@@ -133,15 +135,15 @@ export default class Display {
         }*/
 
         if (this.context._options.display.components.useTwentyfourHour) {
-            template.classList.add('useTwentyfour');  //todo namespace
+            template.classList.add(Namespace.Css.useTwentyfour);
         }
 
         if (this.context._options.display.components.second && !this.context._options.display.components.useTwentyfourHour) {
-            template.classList.add('wider'); //todo namespace?
+            template.classList.add(Namespace.Css.wider);
         }
 
         if (this.context._options.sideBySide && this._hasDate() && this._hasTime()) {
-            template.classList.add('timepicker-sbs'); //todo namespace?
+            template.classList.add(Namespace.Css.sideBySide);
             if (this.context._options.toolbarPlacement === 'top') {
                 template.appendChild(toolbar);
             }
@@ -212,7 +214,7 @@ export default class Display {
             const a = document.createElement('a');
             a.setAttribute('href', 'javascript:void(0);');
             a.setAttribute('tabindex', '-1');
-            a.setAttribute('data-action', 'today');
+            a.setAttribute('data-action', ActionTypes.today);
             a.setAttribute('title', this.context._options.localization.today);
 
             a.appendChild(this.iconTag(this.context._options.display.icons.today));
@@ -233,7 +235,7 @@ export default class Display {
             const a = document.createElement('a');
             a.setAttribute('href', 'javascript:void(0);');
             a.setAttribute('tabindex', '-1');
-            a.setAttribute('data-action', 'togglePicker');
+            a.setAttribute('data-action', ActionTypes.togglePicker);
             a.setAttribute('title', title);
 
             a.appendChild(this.iconTag(icon));
@@ -245,7 +247,7 @@ export default class Display {
             const a = document.createElement('a');
             a.setAttribute('href', 'javascript:void(0);');
             a.setAttribute('tabindex', '-1');
-            a.setAttribute('data-action', 'clear');
+            a.setAttribute('data-action', ActionTypes.clear);
             a.setAttribute('title', this.context._options.localization.clear);
 
             a.appendChild(this.iconTag(this.context._options.display.icons.today));
@@ -257,7 +259,7 @@ export default class Display {
             const a = document.createElement('a');
             a.setAttribute('href', 'javascript:void(0);');
             a.setAttribute('tabindex', '-1');
-            a.setAttribute('data-action', 'close');
+            a.setAttribute('data-action', ActionTypes.close);
             a.setAttribute('title', this.context._options.localization.close);
 
             a.appendChild(this.iconTag(this.context._options.display.icons.today));
@@ -276,20 +278,20 @@ export default class Display {
     get headTemplate(): HTMLElement {
         const headTemplate = document.createElement('thead');
         const previous = document.createElement('th');
-        previous.classList.add('prev');
-        previous.setAttribute('data-action', 'previous');
+        previous.classList.add(Namespace.Css.previous);
+        previous.setAttribute('data-action', ActionTypes.previous);
         previous.appendChild(this.iconTag(this.context._options.display.icons.previous));
         headTemplate.appendChild(previous);
 
         const switcher = document.createElement('th');
-        switcher.classList.add('picker-switch');
-        switcher.setAttribute('data-action', 'pickerSwitch');
+        switcher.classList.add(Namespace.Css.switch);
+        switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
         switcher.setAttribute('colspan', this.context._options.calendarWeeks ? '6' : '5');
         headTemplate.appendChild(switcher);
 
         const next = document.createElement('th');
-        next.classList.add('next');
-        next.setAttribute('data-action', 'next');
+        next.classList.add(Namespace.Css.next);
+        next.setAttribute('data-action', ActionTypes.next);
         next.appendChild(this.iconTag(this.context._options.display.icons.next));
         headTemplate.appendChild(next);
         return <HTMLElement>headTemplate.cloneNode(true);

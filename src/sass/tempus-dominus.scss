@@ -1,10 +1,10 @@
 $bs-datetimepicker-timepicker-font-size: 1.2em !default;
-$bs-datetimepicker-active-bg: $blue !default;
-$bs-datetimepicker-active-color: $white !default;
-$bs-datetimepicker-border-radius: $border-radius !default;
-$bs-datetimepicker-btn-hover-bg: $gray-200 !default;
-$bs-datetimepicker-disabled-color: $gray-600 !default;
-$bs-datetimepicker-alternate-color: $gray-600 !default;
+$bs-datetimepicker-active-bg: #0d6efd !default;
+$bs-datetimepicker-active-color: #ff !default;
+$bs-datetimepicker-border-radius: .25rem !default;
+$bs-datetimepicker-btn-hover-bg: #e9ecef !default;
+$bs-datetimepicker-disabled-color: #6c757d !default;
+$bs-datetimepicker-alternate-color: #6c757d !default;
 $bs-datetimepicker-secondary-border-color: #ccc !default;
 $bs-datetimepicker-secondary-border-color-rgba: rgba(0, 0, 0, 0.2) !default;
 $bs-datetimepicker-primary-border-color: white !default;
@@ -12,32 +12,25 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
 $bs-datetimepicker-buttons-color: #007bff;
 $bs-datetimepicker-buttons-color-dark: #0056b3;
 
-body.tempusdominus-bootstrap-datetimepicker-widget-day-click,
-body.tempusdominus-bootstrap-datetimepicker-widget-day-click * {
-  cursor: pointer !important;
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important; // Fix for https://github.com/twbs/bootstrap/issues/25686
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
 }
 
-body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
-  position: relative !important;
-}
-
-.tempusdominus-bootstrap-datetimepicker-widget-day-click-glass-panel {
-  position: absolute;
-  z-index: 999999999999;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  cursor: pointer !important;
-}
-
-.bootstrap-datetimepicker-widget .datepicker-days {
+.tempus-dominus-widget .datepicker-days {
   tbody td {
     cursor: pointer;
   }
 }
 
-.bootstrap-datetimepicker-widget {
+.tempus-dominus-widget {
     list-style: none;
 
     &.dropdown-menu {
@@ -46,28 +39,20 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
         padding: 4px;
         width: 14rem;
 
-        &.tempusdominus-bootstrap-datetimepicker-widget-with-feather-icons {
+        &.tempus-dominus-widget-with-calendar-weeks {
           width: 16rem;
-        }
-
-        &.tempusdominus-bootstrap-datetimepicker-widget-with-calendar-weeks {
-          width: 16rem;
-
-          &.tempusdominus-bootstrap-datetimepicker-widget-with-feather-icons {
-            width: 17rem;
-          }
         }
 
         &.timepicker-sbs {
-            @media (min-width: map-get($grid-breakpoints, 'sm')) {
+            @media (min-width: 576px) {
                 width: 38em;
             }
 
-            @media (min-width: map-get($grid-breakpoints, 'md')) {
+            @media (min-width:768px) {
                 width: 38em;
             }
 
-            @media (min-width: map-get($grid-breakpoints, 'lg')) {
+            @media (min-width: 992px) {
                 width: 38em;
             }
         }
@@ -158,53 +143,52 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
 
     .btn[data-action="togglePeriod"] {
         text-align: center;
-        font-family: Arial, sans-serif, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         width: 38px;
         height: 38px;
     }
 
     .btn[data-action="incrementHours"]::after {
-        @extend .sr-only;
-        content: "Increment Hours";
+        @extend .visually-hidden;
+        content: "Increment Hours"; /*migrate these to this: https://stackoverflow.com/a/19009056/237917*/
     }
 
     .btn[data-action="incrementMinutes"]::after {
-        @extend .sr-only;
+        @extend .visually-hidden;
         content: "Increment Minutes";
     }
 
     .btn[data-action="decrementHours"]::after {
-        @extend .sr-only;
+        @extend .visually-hidden;
         content: "Decrement Hours";
     }
 
     .btn[data-action="decrementMinutes"]::after {
-        @extend .sr-only;
+        @extend .visually-hidden;
         content: "Decrement Minutes";
     }
 
     .btn[data-action="showHours"]::after {
-        @extend .sr-only;
+        @extend .visually-hidden;
         content: "Show Hours";
     }
 
     .btn[data-action="showMinutes"]::after {
-        @extend .sr-only;
+        @extend .visually-hidden;
         content: "Show Minutes";
     }
 
     .btn[data-action="togglePeriod"]::after {
-        @extend .sr-only;
+        @extend .visually-hidden;
         content: "Toggle AM/PM";
     }
 
     .btn[data-action="clear"]::after {
-        @extend .sr-only;
+        @extend .visually-hidden;
         content: "Clear the picker";
     }
 
     .btn[data-action="today"]::after {
-        @extend .sr-only;
+        @extend .visually-hidden;
         content: "Set the date to today";
     }
 
@@ -212,7 +196,7 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
         text-align: center;
 
         &::after {
-            @extend .sr-only;
+            @extend .visually-hidden;
             content: "Toggle Date and Time Screens";
         }
 
@@ -227,15 +211,6 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
                 line-height: 2.5;
                 height: 2.5em;
                 width: 100%;
-            }
-        }
-
-        &.picker-switch-with-feathers-icons {
-            td {
-                span {
-                  line-height: 2.8;
-                  height: 2.8em;
-                }
             }
         }
     }
@@ -268,12 +243,12 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
             }
 
             &.prev::after {
-                @extend .sr-only;
+                @extend .visually-hidden;
                 content: "Previous Month";
             }
 
             &.next::after {
-                @extend .sr-only;
+                @extend .visually-hidden;
                 content: "Next Month";
             }
         }
@@ -401,7 +376,7 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
       color: $bs-datetimepicker-buttons-color-dark;
     }
 
-    &.bootstrap-datetimepicker-widget-readonly {
+    &.tempus-dominus-widget-readonly {
       table td.day, table td.hour, table td.minute, table td.second,
       table td [data-action="incrementHours"], table td [data-action="incrementMinutes"], table td [data-action="incrementSeconds"],
       table td [data-action="decrementHours"], table td [data-action="decrementMinutes"], table td [data-action="decrementSeconds"],
@@ -415,8 +390,4 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
         }
       }
     }
-}
-
-.input-group [data-toggle="datetimepicker"] {
-    cursor: pointer;
 }

@@ -38,24 +38,9 @@ export default class Dates {
         if (!unit)
             return this._dates.find(x => x === innerDate) !== undefined;
 
-        let format = {}, innerDateFormatted = '';
+        const format = Dates.getFormatByUnit(unit);
 
-        switch (unit) {
-            case 'date':
-                format = {dateStyle: 'short'};
-                break;
-            case 'month':
-                format = {
-                    month: 'numeric',
-                    year: 'numeric'
-                };
-                break;
-            case 'year':
-                format = {year: 'numeric'};
-                break;
-        }
-
-        innerDateFormatted = innerDate.format(format);
+        let innerDateFormatted = innerDate.format(format);
 
         return this._dates.map(x => x.format(format)).find(x => x === innerDateFormatted) !== undefined;
     }
@@ -64,24 +49,9 @@ export default class Dates {
         if (!unit)
             return this._dates.indexOf(innerDate);
 
-        let format = {}, innerDateFormatted = '';
+        const format = Dates.getFormatByUnit(unit);
 
-        switch (unit) {
-            case 'date':
-                format = {dateStyle: 'short'};
-                break;
-            case 'month':
-                format = {
-                    month: 'numeric',
-                    year: 'numeric'
-                };
-                break;
-            case 'year':
-                format = {year: 'numeric'};
-                break;
-        }
-
-        innerDateFormatted = innerDate.format(format);
+        let innerDateFormatted = innerDate.format(format);
 
         return this._dates.map(x => x.format(format)).indexOf(innerDateFormatted);
     }
@@ -111,7 +81,7 @@ export default class Dates {
                 this._dates.splice(index, 1);
             }
             this.context._notifyEvent({
-                type: Namespace.EVENT_CHANGE,
+                type: Namespace.Events.CHANGE,
                 date: undefined,
                 oldDate,
                 isClear,
@@ -134,7 +104,7 @@ export default class Dates {
             this.context.unset = false;
             this.context.display.update();
             this.context._notifyEvent({
-                type: Namespace.EVENT_CHANGE,
+                type: Namespace.Events.CHANGE,
                 date: this._dates[index],
                 oldDate,
                 isClear,
@@ -146,7 +116,7 @@ export default class Dates {
                 this._dates[index] = target;
                 this.context._viewDate = target.clone
                 this.context._notifyEvent({
-                    type: Namespace.EVENT_CHANGE,
+                    type: Namespace.Events.CHANGE,
                     date: target,
                     oldDate,
                     isClear,
@@ -154,10 +124,24 @@ export default class Dates {
                 });
             }
             this.context._notifyEvent({
-                type: Namespace.EVENT_ERROR,
+                type: Namespace.Events.ERROR,
                 date: target,
                 oldDate
             });
+        }
+    }
+
+    private static getFormatByUnit(unit: Unit): object {
+        switch (unit) {
+            case 'date':
+                return {dateStyle: 'short'};
+            case 'month':
+                return {
+                    month: 'numeric',
+                    year: 'numeric'
+                };
+            case 'year':
+                return {year: 'numeric'};
         }
     }
 }

@@ -1,5 +1,6 @@
 import {TempusDominus} from '../tempus-dominus';
 import {Unit} from '../datetime';
+import {Namespace} from '../conts';
 
 export default class MonthDisplay {
     private context: TempusDominus;
@@ -10,7 +11,7 @@ export default class MonthDisplay {
 
     get picker(): HTMLElement {
         const container = document.createElement('div');
-        container.classList.add('datepicker-months');
+        container.classList.add(Namespace.Css.monthsContainer);
 
         const table = document.createElement('table');
         table.classList.add('table', 'table-sm'); //todo bootstrap

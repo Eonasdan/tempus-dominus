@@ -1,11 +1,13 @@
 import {TempusDominus} from '../tempus-dominus';
 import Dates from '../dates';
 import {DateTime, Unit} from '../datetime';
+import {Namespace} from '../conts';
 
 export default class DecadeDisplay {
     private context: TempusDominus;
-    private _startDecade: DateTime;
-    private _endDecade: DateTime;
+    private readonly _startDecade: DateTime;
+    private readonly _endDecade: DateTime;
+
     constructor(context: TempusDominus) {
         this.context = context;
         const [start, end] = Dates.getStartEndYear(100, this.context._viewDate.year);
@@ -17,7 +19,7 @@ export default class DecadeDisplay {
 
     get picker() {
         const container = document.createElement('div');
-        container.classList.add('datepicker-decades');
+        container.classList.add(Namespace.Css.decadesContainer);
 
         const table = document.createElement('table');
         table.classList.add('table', 'table-sm'); //todo bootstrap
@@ -32,10 +34,10 @@ export default class DecadeDisplay {
         switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
 
         if (!this.context.validation.isValid(this._startDecade, Unit.year)) {
-            previous.classList.add('disabled');
+            previous.classList.add(Namespace.Css.disabled);
         }
         if (!this.context.validation.isValid(this._endDecade, Unit.year)) {
-            next.classList.add('disabled');
+            next.classList.add(Namespace.Css.disabled);
         }
 
         table.appendChild(headTemplate);
@@ -52,7 +54,7 @@ export default class DecadeDisplay {
         let row = document.createElement('tr');
 
         container.setAttribute('data-action', 'selectDecade');
-        container.classList.add('decade');
+        container.classList.add(Namespace.Css.decade);
 
         if (this._startDecade.year - 10 < 0) {
             const td = document.createElement('td')
@@ -63,7 +65,7 @@ export default class DecadeDisplay {
         } else {
             const td = document.createElement('td')
             const containerClone = <HTMLElement>container.cloneNode(true);
-            containerClone.classList.add('old');
+            containerClone.classList.add(Namespace.Css.old);
             containerClone.innerText = `${this._startDecade.year - 10}`;
             container.setAttribute('data-selection', `${this._startDecade.year + 6}`);
             td.appendChild(containerClone);
@@ -85,7 +87,7 @@ export default class DecadeDisplay {
             let classes = [];
 
             if (!this.context.unset && pickedYears.filter(x => x >= startDecadeYear && x <= endDecadeYear).length > 0) {
-                classes.push('active');
+                classes.push(Namespace.Css.active);
             }
            /* if (!this.context.validation.isValid(innerDate, 'y')) { //todo between
                 classes.push('disabled');
@@ -105,7 +107,7 @@ export default class DecadeDisplay {
 
         const td = document.createElement('td')
         const containerClone = <HTMLElement>container.cloneNode(true);
-        containerClone.classList.add('old');
+        containerClone.classList.add(Namespace.Css.old);
         containerClone.innerText = `${this._startDecade.year}`;
         container.setAttribute('data-selection', `${this._startDecade.year + 6}`);
         td.appendChild(containerClone);

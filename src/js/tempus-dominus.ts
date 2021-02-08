@@ -4,7 +4,6 @@ import Dates from './dates';
 import Actions from './actions';
 import {Default, Namespace} from "./conts";
 import { DateTime } from "./datetime";
-import {on, off, fire} from 'delegated-events';
 
 export class TempusDominus {
     _options: any;
@@ -43,10 +42,9 @@ export class TempusDominus {
 
         element.appendChild(this.display.widget);
 
-       /* this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
+       this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
             this.action.do(e);
-        }));*/
-        on('click', '[data-action', (e) => this.action.do(e));
+        }));
     }
 
     _getOptions(config) {
@@ -84,7 +82,7 @@ export class TempusDominus {
      */
     _viewUpdate(e) {
         this._notifyEvent({
-            type: Namespace.EVENT_UPDATE,
+            type: Namespace.Events.UPDATE,
             change: e,
             viewDate: this._viewDate.clone
         });

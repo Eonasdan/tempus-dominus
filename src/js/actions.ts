@@ -1,4 +1,4 @@
-import {DatePickerModes} from './conts.js';
+import {DatePickerModes, Namespace} from './conts.js';
 import {Unit} from './datetime';
 import {TempusDominus} from './tempus-dominus';
 
@@ -10,7 +10,7 @@ export default class Actions {
     }
 
     do(e, action?) {
-        if (e.currentTarget.classList.contains('disabled')) return false;
+        if (e.currentTarget.classList.contains(Namespace.Css.disabled)) return false;
 
         action = action || e.currentTarget.dataset.action;
         console.log('action', action);
@@ -53,10 +53,10 @@ export default class Actions {
                 break;
             case ActionTypes.selectDay:
                 const day = this.context._viewDate.clone;
-                if (e.target.classList.contains('old')) {
+                if (e.target.classList.contains(Namespace.Css.old)) {
                     day.manipulate(-11, Unit.month);
                 }
-                if (e.target.classList.contains('new')) {
+                if (e.target.classList.contains(Namespace.Css.new)) {
                     day.manipulate(1, Unit.month);
                 }
 
@@ -136,33 +136,30 @@ export default class Actions {
     }
 }
 
-
-let ActionTypes;
-(function (ActionTypes) {
-    ActionTypes["next"] = "next";
-    ActionTypes["previous"] = "previous";
-    ActionTypes["pickerSwitch"] = "pickerSwitch";
-    ActionTypes["selectMonth"] = "selectMonth";
-    ActionTypes["selectYear"] = "selectYear";
-    ActionTypes["selectDecade"] = "selectDecade";
-    ActionTypes["selectDay"] = "selectDay";
-    ActionTypes["selectHour"] = "selectHour";
-    ActionTypes["selectMinute"] = "selectMinute";
-    ActionTypes["selectSecond"] = "selectSecond";
-    ActionTypes["incrementHours"] = "incrementHours";
-    ActionTypes["incrementMinutes"] = "incrementMinutes";
-    ActionTypes["incrementSeconds"] = "incrementSeconds";
-    ActionTypes["decrementHours"] = "decrementHours";
-    ActionTypes["decrementMinutes"] = "decrementMinutes";
-    ActionTypes["decrementSeconds"] = "decrementSeconds";
-    ActionTypes["togglePeriod"] = "togglePeriod";
-    ActionTypes["togglePicker"] = "togglePicker";
-    ActionTypes["showPicker"] = "showPicker";
-    ActionTypes["showHours"] = "showHours";
-    ActionTypes["showMinutes"] = "showMinutes";
-    ActionTypes["showSeconds"] = "showSeconds";
-    ActionTypes["clear"] = "clear";
-    ActionTypes["close"] = "close";
-    ActionTypes["today"] = "today";
-})(ActionTypes || (ActionTypes = {}));
-export {ActionTypes}
+export enum ActionTypes {
+   next = 'next',
+   previous = 'previous',
+   pickerSwitch = 'pickerSwitch',
+   selectMonth = 'selectMonth',
+   selectYear = 'selectYear',
+   selectDecade = 'selectDecade',
+   selectDay = 'selectDay',
+   selectHour = 'selectHour',
+   selectMinute = 'selectMinute',
+   selectSecond = 'selectSecond',
+   incrementHours = 'incrementHours',
+   incrementMinutes = 'incrementMinutes',
+   incrementSeconds = 'incrementSeconds',
+   decrementHours = 'decrementHours',
+   decrementMinutes = 'decrementMinutes',
+   decrementSeconds = 'decrementSeconds',
+   togglePeriod = 'togglePeriod',
+   togglePicker = 'togglePicker',
+   showPicker = 'showPicker',
+   showHours = 'showHours',
+   showMinutes = 'showMinutes',
+   showSeconds = 'showSeconds',
+   clear = 'clear',
+   close = 'close',
+   today = 'today'
+}

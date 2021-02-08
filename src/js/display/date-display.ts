@@ -1,6 +1,7 @@
 import {TempusDominus} from '../tempus-dominus';
 import {DateTime, Unit} from '../datetime';
 import {ActionTypes} from '../actions';
+import {Namespace} from '../conts';
 
 export default class DateDisplay {
     private context: TempusDominus;
@@ -10,7 +11,7 @@ export default class DateDisplay {
 
     get picker(): HTMLElement {
         const daysDiv = document.createElement('div');
-        daysDiv.classList.add('datepicker-days');
+        daysDiv.classList.add(Namespace.Css.daysContainer);
 
         const dayTable = document.createElement('table');
         dayTable.classList.add('table', 'table-sm'); //todo bootstrap
@@ -22,7 +23,7 @@ export default class DateDisplay {
     }
 
     update(): void {
-        const datesDiv = this.context.display.widget.getElementsByClassName('datepicker-days')[0];
+        const datesDiv = this.context.display.widget.getElementsByClassName(Namespace.Css.daysContainer)[0];
         const [previous, switcher, next] = datesDiv.getElementsByTagName('thead')[0].getElementsByTagName('th');
 
         previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousMonth);
@@ -32,10 +33,10 @@ export default class DateDisplay {
         switcher.innerText = this.context._viewDate.format({ month: this.context._options.localization.dayViewHeaderFormat});
 
         if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.month), Unit.month)) {
-            previous.classList.add('disabled');
+            previous.classList.add(Namespace.Css.disabled);
         }
         if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.month), Unit.month)) {
-            next.classList.add('disabled');
+            next.classList.add(Namespace.Css.disabled);
         }
 
         const dayBody = datesDiv.getElementsByTagName('tbody')[0];
@@ -53,7 +54,7 @@ export default class DateDisplay {
 
         if (this.context._options.display.calendarWeeks) {
             const th = document.createElement('th')
-            th.classList.add('cw');
+            th.classList.add(Namespace.Css.calendarWeeks);
             th.innerText = '#';
             row.appendChild(th);
         }
@@ -61,7 +62,7 @@ export default class DateDisplay {
         let i = 0;
         while (i < 7) {
             const th = document.createElement('th')
-            th.classList.add('dow');
+            th.classList.add(Namespace.Css.dayOfTheWeek);
             th.innerText = innerDate.format({weekday: 'short'});
             innerDate.manipulate(1, Unit.date);
             row.appendChild(th);
@@ -83,31 +84,31 @@ export default class DateDisplay {
                 row = document.createElement('tr');
                 if (this.context._options.display.calendarWeeks) {
                     const td = document.createElement('td')
-                    td.classList.add('cw');
+                    td.classList.add(Namespace.Css.calendarWeeks);
                     td.innerText = `${innerDate.week}`;
                 }
             }
 
             let classes = [];
-            classes.push('day');
+            classes.push(Namespace.Css.day);
             if (innerDate.isBefore(this.context._viewDate, Unit.month)) {
-                classes.push('old');
+                classes.push(Namespace.Css.old);
             }
             if (innerDate.isAfter(this.context._viewDate, Unit.month)) {
-                classes.push('new');
+                classes.push(Namespace.Css.new);
             }
 
             if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.date)) {
-                classes.push('active');
+                classes.push(Namespace.Css.active);
             }
             if (!this.context.validation.isValid(innerDate, Unit.date)) {
-                classes.push('disabled');
+                classes.push(Namespace.Css.disabled);
             }
             if (innerDate.isSame(new DateTime(), Unit.date)) {
-                classes.push('today');
+                classes.push(Namespace.Css.today);
             }
             if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
-                classes.push('weekend');
+                classes.push(Namespace.Css.weekend);
             }
 
             const td = document.createElement('td');

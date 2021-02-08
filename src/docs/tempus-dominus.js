@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('delegated-events')) :
-    typeof define === 'function' && define.amd ? define(['exports', 'delegated-events'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusdominus = {}, global.delegatedEvents));
-}(this, (function (exports, delegatedEvents) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+    typeof define === 'function' && define.amd ? define(['exports'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusdominus = {}));
+}(this, (function (exports) { 'use strict';
 
     var Unit;
     (function (Unit) {
@@ -354,6 +354,7 @@
         }
     }
 
+    var _a;
     const Default = {
         restrictions: {
             minDate: false,
@@ -602,11 +603,16 @@
         }];
     class Namespace {
     }
-    Namespace.NAME = 'datetimepicker'; //'tempus-dominus' todo
+    Namespace.NAME = 'tempus-dominus';
     Namespace.VERSION = '6.0.0-alpha1';
-    Namespace.DATA_KEY = 'datetimepicker'; //todo 'td'
+    Namespace.DATA_KEY = 'td';
     Namespace.EVENT_KEY = `.${Namespace.DATA_KEY}`;
     Namespace.DATA_API_KEY = '.data-api';
+    Namespace.Events = (_a = class {
+        },
+        _a.CHANGE = `hide${Namespace.EVENT_KEY}`,
+        _a.UPDATE = `update${Namespace.EVENT_KEY}`,
+        _a);
     Namespace.EVENT_CHANGE = `hide${Namespace.EVENT_KEY}`;
     Namespace.EVENT_ERROR = `error${Namespace.EVENT_KEY}`;
     Namespace.EVENT_UPDATE = `update${Namespace.EVENT_KEY}`;
@@ -1073,7 +1079,7 @@
                     this._dates.splice(index, 1);
                 }
                 this.context._notifyEvent({
-                    type: Namespace.EVENT_CHANGE,
+                    type: Namespace.Events.CHANGE,
                     date: undefined,
                     oldDate,
                     isClear,
@@ -1440,13 +1446,14 @@
                         break;
                 }
                 picker = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
-                /*const actions = this.widget.querySelectorAll('[data-action]');
+                //todo migrate this to bootstrap's eventhandler
+                const actions = this.widget.querySelectorAll('[data-action]');
                 actions.forEach(element => element.removeEventListener('click', (e) => {
                     this.context.action.do(e);
-                }))
+                }));
                 actions.forEach(element => element.addEventListener('click', (e) => {
                     this.context.action.do(e);
-                }));*/
+                }));
             }
             picker.style.display = 'block';
         }
@@ -1676,10 +1683,9 @@
             this.currentViewMode = 1; //todo temp
             this.display.show();
             element.appendChild(this.display.widget);
-            /* this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
-                 this.action.do(e);
-             }));*/
-            delegatedEvents.on('click', '[data-action', (e) => this.action.do(e));
+            this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
+                this.action.do(e);
+            }));
         }
         _getOptions(config) {
             config = Object.assign(Object.assign({}, Default), config);
@@ -1709,7 +1715,7 @@
          */
         _viewUpdate(e) {
             this._notifyEvent({
-                type: Namespace.EVENT_UPDATE,
+                type: Namespace.Events.UPDATE,
                 change: e,
                 viewDate: this._viewDate.clone
             });
