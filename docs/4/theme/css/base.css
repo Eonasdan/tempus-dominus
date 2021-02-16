@@ -63,7 +63,7 @@ div.source-links {
     border-right: 1px solid;
 }
 
-/* Nav: second level (shown on .active) */
+/* Nav: secondContainer level (shown on .active) */
 .bs-sidebar .nav .nav {
     display: none; /* Hide by default, but at >768px, show it */
     margin-bottom: 8px;

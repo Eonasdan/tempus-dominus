@@ -42,18 +42,28 @@
     * collapse
 
 ## Styles
+
 ### Tip: All new css values are in `Namespace.Css.*` in the `consts.ts` file
 * renamed `bootstrap-datetimepicker-widget` to `tempus-dominus-widget`
 * renamed `tempusdominus-bootstrap-datetimepicker-widget-with-calendar-weeks` to `tempus-dominus-with-calendar-weeks`  (
   v5)
-* renamed `usetwentyfour` to `useTwentyfour`
+  * removed `.input-group [data-toggle="datetimepicker"]` setting the cursor type to pointer.
+  
+ #### Date
+
 * renamed `datepicker` to `date-container`
 * renamed `datepicker-decades` to `date-container-decades`
 * renamed `datepicker-years` to `date-container-years`
 * renamed `datepicker-months` to `date-container-months`
 * renamed `datepicker-days` to `date-container-days`
-* renamed `prev` to `previous` 
-* removed `.input-group [data-toggle="datetimepicker"]` setting the cursor type to pointer.
+* renamed `prev` to `previous`
+* renamed `data-day` to `data-value` to be consistent with other views
+#### Time
+* renamed `usetwentyfour` to `useTwentyfour`
+* renamed `timepicker` to `time-container`
+* renamed `timepicker-hour` to `time-container-hour`
+* renamed `timepicker-minute` to `time-container-minute`
+* renamed `timepicker-second` to `time-container-second`
 
 ### Saas
 

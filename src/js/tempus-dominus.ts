@@ -3,7 +3,8 @@ import Validation from './validation';
 import Dates from './dates';
 import Actions from './actions';
 import {Default, Namespace} from "./conts";
-import { DateTime } from "./datetime";
+import {DateTime, Unit} from './datetime';
+import EventHandler from './dom/event-handler';
 
 export class TempusDominus {
     _options: any;
@@ -36,7 +37,7 @@ export class TempusDominus {
 
         this._initFormatting();
 
-        this.currentViewMode = 1; //todo temp
+        this.currentViewMode = 3; //todo temp
 
         this.display.show();
 
@@ -45,6 +46,9 @@ export class TempusDominus {
        this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
             this.action.do(e);
         }));
+
+        /*EventHandler.on(this.display.widget.querySelectorAll('[data-action]'),
+            Namespace.Events.clickAction, '[data-action]', event => this.action.do(event));*/
     }
 
     _getOptions(config) {
@@ -80,7 +84,7 @@ export class TempusDominus {
      * @param {Unit} e
      * @private
      */
-    _viewUpdate(e) {
+    _viewUpdate(e: Unit) {
         this._notifyEvent({
             type: Namespace.Events.UPDATE,
             change: e,

@@ -354,7 +354,6 @@
         }
     }
 
-    var _a;
     const Default = {
         restrictions: {
             minDate: false,
@@ -584,52 +583,99 @@
         promptTimeOnDateChange: false,
         promptTimeOnDateChangeTransitionDelay: 200
     };
+    //this is not the way I want this to stay but nested classes seemed to blown once its compiled.
+    const NAME = 'tempus-dominus';
+    const VERSION = '6.0.0-alpha1';
+    const DATA_KEY = 'td';
+    const DATA_API_KEY = '.data-api';
+    class Events {
+        constructor() {
+            this.KEY = `.${DATA_KEY}`;
+            this.CHANGE = `change${this.KEY}`;
+            this.UPDATE = `update${this.KEY}`;
+            this.ERROR = `error${this.KEY}`;
+            this.SHOW = `show${this.KEY}`;
+            this.HIDE = `hide${this.KEY}`;
+            this.BLUR = `blur${this.KEY}`;
+            this.KEYUP = `keyup${this.KEY}`;
+            this.KEYDOWN = `keydown${this.KEY}`;
+            this.FOCUS = `focus${this.KEY}`;
+            this.CLICK_DATA_API = `click${this.KEY}${DATA_API_KEY}`;
+            this.clickAction = `click${this.KEY}.action`;
+        }
+    }
+    class Css {
+        constructor() {
+            this.widget = `${NAME}-widget`;
+            this.switch = 'picker-switch';
+            // todo the next several classes are to represent states of the picker that would
+            // make it wider then usual and it seems like this could be cleaned up.
+            this.widgetCalendarWeeks = `${this.widget}-with-calendar-weeks`;
+            this.useTwentyfour = 'useTwentyfour';
+            this.wider = 'wider';
+            this.sideBySide = 'timepicker-sbs';
+            this.previous = 'previous';
+            this.next = 'next';
+            this.disabled = 'disabled';
+            this.old = 'old';
+            this.new = 'new';
+            this.active = 'active';
+            this.separator = 'separator';
+            //#region date container
+            this.dateContainer = 'date-container';
+            this.decadesContainer = `${this.dateContainer}-decades`;
+            this.decade = 'decade';
+            this.yearsContainer = `${this.dateContainer}-years`;
+            this.year = 'year';
+            this.monthsContainer = `${this.dateContainer}-months`;
+            this.month = 'month';
+            this.daysContainer = `${this.dateContainer}-days`;
+            this.day = 'day';
+            this.calendarWeeks = 'cw';
+            this.dayOfTheWeek = 'dow';
+            this.today = 'today';
+            this.weekend = 'weekend';
+            //#endregion
+            //#region time container
+            this.timeContainer = 'time-container';
+            this.hourContainer = `${this.timeContainer}-hour`;
+            this.minuteContainer = `${this.timeContainer}-minute`;
+            this.secondContainer = `${this.timeContainer}-second`;
+            //#endregion
+        }
+    }
+    class Namespace {
+    }
+    Namespace.NAME = NAME;
+    Namespace.VERSION = VERSION;
+    Namespace.DATA_KEY = DATA_KEY;
+    Namespace.DATA_API_KEY = DATA_API_KEY;
+    Namespace.Events = new Events();
+    Namespace.Css = new Css();
     const DatePickerModes = [{
-            CLASS_NAME: 'days',
+            CLASS_NAME: Namespace.Css.daysContainer,
             NAV_FUNCTION: Unit.month,
             NAV_STEP: 1
         }, {
-            CLASS_NAME: 'months',
+            CLASS_NAME: Namespace.Css.monthsContainer,
             NAV_FUNCTION: Unit.year,
             NAV_STEP: 1
         }, {
-            CLASS_NAME: 'years',
+            CLASS_NAME: Namespace.Css.yearsContainer,
             NAV_FUNCTION: Unit.year,
             NAV_STEP: 10
         }, {
-            CLASS_NAME: 'decades',
+            CLASS_NAME: Namespace.Css.decadesContainer,
             NAV_FUNCTION: Unit.year,
             NAV_STEP: 100
         }];
-    class Namespace {
-    }
-    Namespace.NAME = 'tempus-dominus';
-    Namespace.VERSION = '6.0.0-alpha1';
-    Namespace.DATA_KEY = 'td';
-    Namespace.EVENT_KEY = `.${Namespace.DATA_KEY}`;
-    Namespace.DATA_API_KEY = '.data-api';
-    Namespace.Events = (_a = class {
-        },
-        _a.CHANGE = `hide${Namespace.EVENT_KEY}`,
-        _a.UPDATE = `update${Namespace.EVENT_KEY}`,
-        _a);
-    Namespace.EVENT_CHANGE = `hide${Namespace.EVENT_KEY}`;
-    Namespace.EVENT_ERROR = `error${Namespace.EVENT_KEY}`;
-    Namespace.EVENT_UPDATE = `update${Namespace.EVENT_KEY}`;
-    Namespace.EVENT_SHOW = `show${Namespace.EVENT_KEY}`;
-    Namespace.EVENT_HIDE = `hide${Namespace.EVENT_KEY}`;
-    Namespace.EVENT_BLUR = `blur${Namespace.EVENT_KEY}`;
-    Namespace.EVENT_KEYUP = `keyup${Namespace.EVENT_KEY}`;
-    Namespace.EVENT_KEYDOWN = `keydown${Namespace.EVENT_KEY}`;
-    Namespace.EVENT_FOCUS = `focus${Namespace.EVENT_KEY}`;
-    Namespace.EVENT_CLICK_DATA_API = `click${Namespace.EVENT_KEY}${Namespace.DATA_API_KEY}`;
 
     class Actions {
         constructor(context) {
             this.context = context;
         }
         do(e, action) {
-            if (e.currentTarget.classList.contains('disabled'))
+            if (e.currentTarget.classList.contains(Namespace.Css.disabled))
                 return false;
             action = action || e.currentTarget.dataset.action;
             console.log('action', action);
@@ -647,11 +693,10 @@
                 case ActionTypes.pickerSwitch:
                     this.context.display._showMode(1);
                     break;
-                case ActionTypes.selectMonth:
+                case ActionTypes.selectMonth: //todo seems like these could be merged
                     const month = +e.target.getAttribute('data-value');
                     this.context._viewDate.month = month;
                     if (this.context.currentViewMode === this.context.minViewModeNumber) {
-                        //todo in the old td this only used month/year and not the whole viewdate
                         this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
                         if (!this.context._options.inline) {
                             this.context.display.hide();
@@ -659,20 +704,43 @@
                     }
                     else {
                         this.context.display._showMode(-1);
-                        this.context.display.updateDateView();
                     }
-                    this.context._viewUpdate('month');
+                    this.context._viewUpdate(Unit.month);
                     break;
                 case ActionTypes.selectYear:
+                    const year = +e.target.getAttribute('data-value');
+                    this.context._viewDate.year = year;
+                    if (this.context.currentViewMode === this.context.minViewModeNumber) {
+                        this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
+                        if (!this.context._options.inline) {
+                            this.context.display.hide();
+                        }
+                    }
+                    else {
+                        this.context.display._showMode(-1);
+                    }
+                    this.context._viewUpdate(Unit.year);
                     break;
                 case ActionTypes.selectDecade:
+                    const decadeYear = +e.target.getAttribute('data-value');
+                    this.context._viewDate.year = decadeYear;
+                    if (this.context.currentViewMode === this.context.minViewModeNumber) {
+                        this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
+                        if (!this.context._options.inline) {
+                            this.context.display.hide();
+                        }
+                    }
+                    else {
+                        this.context.display._showMode(-1);
+                    }
+                    this.context._viewUpdate(Unit.year);
                     break;
                 case ActionTypes.selectDay:
                     const day = this.context._viewDate.clone;
-                    if (e.target.classList.contains('old')) {
+                    if (e.target.classList.contains(Namespace.Css.old)) {
                         day.manipulate(-11, Unit.month);
                     }
-                    if (e.target.classList.contains('new')) {
+                    if (e.target.classList.contains(Namespace.Css.new)) {
                         day.manipulate(1, Unit.month);
                     }
                     day.date = +e.target.innerText;
@@ -733,7 +801,7 @@
             }
         }
     }
-    let ActionTypes;
+    var ActionTypes;
     (function (ActionTypes) {
         ActionTypes["next"] = "next";
         ActionTypes["previous"] = "previous";
@@ -767,32 +835,86 @@
             this.context = context;
         }
         get picker() {
-            const daysDiv = document.createElement('div');
-            daysDiv.classList.add('datepicker-days');
-            const dayTable = document.createElement('table');
-            dayTable.classList.add('table', 'table-sm'); //todo bootstrap
-            dayTable.appendChild(this.context.display.headTemplate);
-            dayTable.appendChild(document.createElement('tbody'));
-            daysDiv.appendChild(dayTable);
-            return daysDiv;
-        }
-        update() {
-            const datesDiv = this.context.display.widget.getElementsByClassName('datepicker-days')[0];
-            const [previous, switcher, next] = datesDiv.getElementsByTagName('thead')[0].getElementsByTagName('th');
+            const container = document.createElement('div');
+            container.classList.add(Namespace.Css.daysContainer);
+            const table = document.createElement('table');
+            table.classList.add('table', 'table-sm'); //todo bootstrap
+            const headTemplate = this.context.display.headTemplate;
+            const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousMonth);
             switcher.setAttribute('title', this.context._options.localization.selectMonth);
             next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextMonth);
+            table.appendChild(headTemplate);
+            const tableBody = document.createElement('tbody');
+            tableBody.appendChild(this._daysOfTheWeek());
+            let row = document.createElement('tr');
+            for (let i = 0; i <= 42; i++) {
+                if (i !== 0 && i % 7 === 0) {
+                    tableBody.appendChild(row);
+                    row = document.createElement('tr');
+                    if (this.context._options.display.calendarWeeks) {
+                        const td = document.createElement('td');
+                        td.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+                        row.appendChild(td);
+                    }
+                }
+                const td = document.createElement('td');
+                const span = document.createElement('span');
+                span.setAttribute('data-action', ActionTypes.selectDay);
+                td.appendChild(span);
+                row.appendChild(td);
+            }
+            table.appendChild(tableBody);
+            container.appendChild(table);
+            return container;
+        }
+        update() {
+            const container = this.context.display.widget.getElementsByClassName(Namespace.Css.daysContainer)[0];
+            const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
             switcher.innerText = this.context._viewDate.format({ month: this.context._options.localization.dayViewHeaderFormat });
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.month), Unit.month)) {
-                previous.classList.add('disabled');
-            }
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.month), Unit.month)) {
-                next.classList.add('disabled');
-            }
-            const dayBody = datesDiv.getElementsByTagName('tbody')[0];
-            dayBody.querySelectorAll('*').forEach(n => n.remove());
-            dayBody.appendChild(this._daysOfTheWeek());
-            this._grid().forEach(row => dayBody.appendChild(row));
+            this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.month), Unit.month) ?
+                previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.month), Unit.month) ?
+                next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+            //const dayBody = container.getElementsByTagName('tbody')[0];
+            //dayBody.querySelectorAll('*').forEach(n => n.remove());
+            //dayBody.appendChild(this._daysOfTheWeek());
+            //this._grid().forEach(row => dayBody.appendChild(row));
+            this.newGrid(container.querySelectorAll('tbody td span'));
+        }
+        newGrid(nodeList) {
+            let innerDate = this.context._viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours);
+            nodeList.forEach((containerClone, index) => {
+                if (innerDate.weekDay === 0 && this.context._options.display.calendarWeeks) {
+                    containerClone.innerText = `${innerDate.week}`;
+                    return;
+                }
+                let classes = [];
+                classes.push(Namespace.Css.day);
+                if (innerDate.isBefore(this.context._viewDate, Unit.month)) {
+                    classes.push(Namespace.Css.old);
+                }
+                if (innerDate.isAfter(this.context._viewDate, Unit.month)) {
+                    classes.push(Namespace.Css.new);
+                }
+                if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.date)) {
+                    classes.push(Namespace.Css.active);
+                }
+                if (!this.context.validation.isValid(innerDate, Unit.date)) {
+                    classes.push(Namespace.Css.disabled);
+                }
+                if (innerDate.isSame(new DateTime(), Unit.date)) {
+                    classes.push(Namespace.Css.today);
+                }
+                if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
+                    classes.push(Namespace.Css.weekend);
+                }
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
+                containerClone.innerText = `${innerDate.date}`;
+                innerDate.manipulate(1, Unit.date);
+            });
         }
         /***
          * Generates an html row that contains the days of the week.
@@ -802,14 +924,14 @@
             const row = document.createElement('tr');
             if (this.context._options.display.calendarWeeks) {
                 const th = document.createElement('th');
-                th.classList.add('cw');
+                th.classList.add(Namespace.Css.calendarWeeks);
                 th.innerText = '#';
                 row.appendChild(th);
             }
             let i = 0;
             while (i < 7) {
                 const th = document.createElement('th');
-                th.classList.add('dow');
+                th.classList.add(Namespace.Css.dayOfTheWeek);
                 th.innerText = innerDate.format({ weekday: 'short' });
                 innerDate.manipulate(1, Unit.date);
                 row.appendChild(th);
@@ -827,29 +949,29 @@
                     row = document.createElement('tr');
                     if (this.context._options.display.calendarWeeks) {
                         const td = document.createElement('td');
-                        td.classList.add('cw');
+                        td.classList.add(Namespace.Css.calendarWeeks);
                         td.innerText = `${innerDate.week}`;
                     }
                 }
                 let classes = [];
-                classes.push('day');
+                classes.push(Namespace.Css.day);
                 if (innerDate.isBefore(this.context._viewDate, Unit.month)) {
-                    classes.push('old');
+                    classes.push(Namespace.Css.old);
                 }
                 if (innerDate.isAfter(this.context._viewDate, Unit.month)) {
-                    classes.push('new');
+                    classes.push(Namespace.Css.new);
                 }
                 if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.date)) {
-                    classes.push('active');
+                    classes.push(Namespace.Css.active);
                 }
                 if (!this.context.validation.isValid(innerDate, Unit.date)) {
-                    classes.push('disabled');
+                    classes.push(Namespace.Css.disabled);
                 }
                 if (innerDate.isSame(new DateTime(), Unit.date)) {
-                    classes.push('today');
+                    classes.push(Namespace.Css.today);
                 }
                 if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
-                    classes.push('weekend');
+                    classes.push(Namespace.Css.weekend);
                 }
                 const td = document.createElement('td');
                 td.setAttribute('data-action', ActionTypes.selectDay);
@@ -869,7 +991,7 @@
         }
         get picker() {
             const container = document.createElement('div');
-            container.classList.add('datepicker-months');
+            container.classList.add(Namespace.Css.monthsContainer);
             const table = document.createElement('table');
             table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
@@ -878,22 +1000,54 @@
             switcher.setAttribute('title', this.context._options.localization.selectYear);
             switcher.setAttribute('colspan', '1');
             next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextYear);
-            switcher.innerText = this.context._viewDate.format({ year: 'numeric' });
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.year), Unit.year)) {
-                previous.classList.add('disabled');
-            }
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.year), Unit.year)) {
-                next.classList.add('disabled');
-            }
             table.appendChild(headTemplate);
             const tableBody = document.createElement('tbody');
-            this._grid().forEach(row => tableBody.appendChild(row));
+            let row = document.createElement('tr');
+            for (let i = 0; i <= 12; i++) {
+                if (i !== 0 && i % 3 === 0) {
+                    tableBody.appendChild(row);
+                    row = document.createElement('tr');
+                }
+                const td = document.createElement('td');
+                const span = document.createElement('span');
+                span.setAttribute('data-action', ActionTypes.selectMonth);
+                td.appendChild(span);
+                row.appendChild(td);
+            }
             table.appendChild(tableBody);
             container.appendChild(table);
             return container;
         }
         update() {
-            this.context.display.widget.querySelector('[data-action="pickerSwitch"]').innerText = this.context._viewDate.format({ year: 'numeric' });
+            const container = this.context.display.widget.getElementsByClassName(Namespace.Css.monthsContainer)[0];
+            const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
+            switcher.innerText = this.context._viewDate.format({ year: 'numeric' });
+            this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.year), Unit.year) ?
+                previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.year), Unit.year) ?
+                next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+            //const tableBody = container.getElementsByTagName('tbody')[0];
+            //tableBody.querySelectorAll('*').forEach(n => n.remove());
+            //this._grid().forEach(row => tableBody.appendChild(row));
+            this.newGrid(container.querySelectorAll('tbody td span'));
+        }
+        newGrid(nodeList) {
+            let innerDate = this.context._viewDate.clone.startOf(Unit.year);
+            nodeList.forEach((containerClone, index) => {
+                let classes = [];
+                classes.push(Namespace.Css.month);
+                if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.month)) {
+                    classes.push(Namespace.Css.active);
+                }
+                if (!this.context.validation.isValid(innerDate, Unit.month)) {
+                    classes.push(Namespace.Css.disabled);
+                }
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${index}`);
+                containerClone.innerText = `${innerDate.format({ month: 'long' })}`;
+                innerDate.manipulate(1, Unit.month);
+            });
         }
         /**
          *
@@ -911,10 +1065,10 @@
                 }
                 let classes = [];
                 if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.month)) {
-                    classes.push('active');
+                    classes.push(Namespace.Css.active);
                 }
                 if (!this.context.validation.isValid(innerDate, Unit.month)) {
-                    classes.push('disabled');
+                    classes.push(Namespace.Css.disabled);
                 }
                 const td = document.createElement('td');
                 const containerClone = container.cloneNode(true);
@@ -932,45 +1086,71 @@
     class YearDisplay {
         constructor(context) {
             this.context = context;
-            /*const yearCaps = Dates.getStartEndYear(10, this.context._viewDate.year());
-            this._startYear = this.context._viewDate.year(yearCaps[0]);
-            this._endYear = this.context._viewDate.year(yearCaps[1]);*/
             this._startYear = this.context._viewDate.clone.manipulate(-1, Unit.year);
             this._endYear = this.context._viewDate.clone.manipulate(10, Unit.year);
         }
         get picker() {
             const container = document.createElement('div');
-            container.classList.add('datepicker-years');
+            container.classList.add(Namespace.Css.yearsContainer);
             const table = document.createElement('table');
             table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
-            const heads = headTemplate.getElementsByTagName('th');
-            const previous = heads[0];
-            const switcher = heads[1];
-            const next = heads[2];
+            const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousDecade);
             switcher.setAttribute('title', this.context._options.localization.selectDecade);
             switcher.setAttribute('colspan', '1');
             next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextDecade);
-            switcher.innerText = `${this._startYear.year}-${this._endYear.year}`;
-            if (!this.context.validation.isValid(this._startYear, Unit.year)) {
-                previous.classList.add('disabled');
-            }
-            if (!this.context.validation.isValid(this._endYear, Unit.year)) {
-                next.classList.add('disabled');
-            }
             table.appendChild(headTemplate);
             const tableBody = document.createElement('tbody');
-            this._grid().forEach(row => tableBody.appendChild(row));
+            let row = document.createElement('tr');
+            for (let i = 0; i <= 12; i++) {
+                if (i !== 0 && i % 3 === 0) {
+                    tableBody.appendChild(row);
+                    row = document.createElement('tr');
+                }
+                const td = document.createElement('td');
+                const span = document.createElement('span');
+                span.setAttribute('data-action', ActionTypes.selectYear);
+                td.appendChild(span);
+                row.appendChild(td);
+            }
             table.appendChild(tableBody);
             container.appendChild(table);
             return container;
+        }
+        update() {
+            const container = this.context.display.widget.getElementsByClassName(Namespace.Css.yearsContainer)[0];
+            const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
+            switcher.innerText = `${this._startYear.year}-${this._endYear.year}`;
+            this.context.validation.isValid(this._startYear, Unit.year) ? previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this._endYear, Unit.year) ? next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+            //const tableBody = container.getElementsByTagName('tbody')[0];
+            //tableBody.querySelectorAll('*').forEach(n => n.remove());
+            //this._grid().forEach(row => tableBody.appendChild(row));
+            this.newGrid(container.querySelectorAll('tbody td span'));
+        }
+        newGrid(nodeList) {
+            let innerDate = this.context._viewDate.clone.startOf(Unit.year).manipulate(-1, Unit.year);
+            nodeList.forEach((containerClone, index) => {
+                let classes = [];
+                classes.push(Namespace.Css.year);
+                if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.year)) {
+                    classes.push(Namespace.Css.active);
+                }
+                if (!this.context.validation.isValid(innerDate, Unit.year)) {
+                    classes.push(Namespace.Css.disabled);
+                }
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.innerText = `${innerDate.year}`;
+                innerDate.manipulate(1, Unit.year);
+            });
         }
         _grid() {
             const rows = [], container = document.createElement('span');
             let innerDate = this.context._viewDate.clone.startOf(Unit.year).manipulate(-1, Unit.year), row = document.createElement('tr');
             container.setAttribute('data-action', 'selectYear');
-            container.classList.add('year');
+            container.classList.add(Namespace.Css.year);
             for (let i = 0; i <= 12; i++) {
                 if (i !== 0 && i % 3 === 0) {
                     rows.push(row);
@@ -978,10 +1158,10 @@
                 }
                 let classes = [];
                 if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.year)) {
-                    classes.push('active');
+                    classes.push(Namespace.Css.active);
                 }
                 if (!this.context.validation.isValid(innerDate, Unit.year)) {
-                    classes.push('disabled');
+                    classes.push(Namespace.Css.disabled);
                 }
                 const td = document.createElement('td');
                 const containerClone = container.cloneNode(true);
@@ -1020,43 +1200,15 @@
         isPicked(innerDate, unit) {
             if (!unit)
                 return this._dates.find(x => x === innerDate) !== undefined;
-            let format = {}, innerDateFormatted = '';
-            switch (unit) {
-                case 'date':
-                    format = { dateStyle: 'short' };
-                    break;
-                case 'month':
-                    format = {
-                        month: 'numeric',
-                        year: 'numeric'
-                    };
-                    break;
-                case 'year':
-                    format = { year: 'numeric' };
-                    break;
-            }
-            innerDateFormatted = innerDate.format(format);
+            const format = Dates.getFormatByUnit(unit);
+            let innerDateFormatted = innerDate.format(format);
             return this._dates.map(x => x.format(format)).find(x => x === innerDateFormatted) !== undefined;
         }
         pickedIndex(innerDate, unit) {
             if (!unit)
                 return this._dates.indexOf(innerDate);
-            let format = {}, innerDateFormatted = '';
-            switch (unit) {
-                case 'date':
-                    format = { dateStyle: 'short' };
-                    break;
-                case 'month':
-                    format = {
-                        month: 'numeric',
-                        year: 'numeric'
-                    };
-                    break;
-                case 'year':
-                    format = { year: 'numeric' };
-                    break;
-            }
-            innerDateFormatted = innerDate.format(format);
+            const format = Dates.getFormatByUnit(unit);
+            let innerDateFormatted = innerDate.format(format);
             return this._dates.map(x => x.format(format)).indexOf(innerDateFormatted);
         }
         static getStartEndYear(factor, year) {
@@ -1099,7 +1251,7 @@
                 this.context.unset = false;
                 this.context.display.update();
                 this.context._notifyEvent({
-                    type: Namespace.EVENT_CHANGE,
+                    type: Namespace.Events.CHANGE,
                     date: this._dates[index],
                     oldDate,
                     isClear,
@@ -1112,7 +1264,7 @@
                     this._dates[index] = target;
                     this.context._viewDate = target.clone;
                     this.context._notifyEvent({
-                        type: Namespace.EVENT_CHANGE,
+                        type: Namespace.Events.CHANGE,
                         date: target,
                         oldDate,
                         isClear,
@@ -1120,10 +1272,23 @@
                     });
                 }
                 this.context._notifyEvent({
-                    type: Namespace.EVENT_ERROR,
+                    type: Namespace.Events.ERROR,
                     date: target,
                     oldDate
                 });
+            }
+        }
+        static getFormatByUnit(unit) {
+            switch (unit) {
+                case 'date':
+                    return { dateStyle: 'short' };
+                case 'month':
+                    return {
+                        month: 'numeric',
+                        year: 'numeric'
+                    };
+                case 'year':
+                    return { year: 'numeric' };
             }
         }
     }
@@ -1131,42 +1296,93 @@
     class DecadeDisplay {
         constructor(context) {
             this.context = context;
-            const [start, end] = Dates.getStartEndYear(100, this.context._viewDate.year);
-            this._startDecade = this.context._viewDate.clone.startOf(Unit.year);
-            this._startDecade.year = start;
-            this._endDecade = this.context._viewDate.clone.startOf(Unit.year);
-            this._endDecade.year = end;
         }
         get picker() {
             const container = document.createElement('div');
-            container.classList.add('datepicker-decades');
+            container.classList.add(Namespace.Css.decadesContainer);
             const table = document.createElement('table');
             table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousCentury);
-            switcher.setAttribute('title', this.context._options.localization.selectDecade);
+            switcher.setAttribute('title', '');
+            switcher.removeAttribute('data-action');
             switcher.setAttribute('colspan', '1');
             next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextCentury);
-            switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
-            if (!this.context.validation.isValid(this._startDecade, Unit.year)) {
-                previous.classList.add('disabled');
-            }
-            if (!this.context.validation.isValid(this._endDecade, Unit.year)) {
-                next.classList.add('disabled');
-            }
             table.appendChild(headTemplate);
             const tableBody = document.createElement('tbody');
-            this._grid().forEach(row => tableBody.appendChild(row));
+            let row = document.createElement('tr');
+            for (let i = 0; i <= 12; i++) {
+                if (i !== 0 && i % 3 === 0) {
+                    tableBody.appendChild(row);
+                    row = document.createElement('tr');
+                }
+                const td = document.createElement('td');
+                const span = document.createElement('span');
+                span.setAttribute('data-action', ActionTypes.selectDecade);
+                td.appendChild(span);
+                row.appendChild(td);
+            }
             table.appendChild(tableBody);
             container.appendChild(table);
             return container;
+        }
+        update() {
+            const [start, end] = Dates.getStartEndYear(100, this.context._viewDate.year);
+            this._startDecade = this.context._viewDate.clone.startOf(Unit.year);
+            this._startDecade.year = start;
+            this._endDecade = this.context._viewDate.clone.startOf(Unit.year);
+            this._endDecade.year = end;
+            const container = this.context.display.widget.getElementsByClassName(Namespace.Css.decadesContainer)[0];
+            const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
+            switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
+            this.context.validation.isValid(this._startDecade, Unit.year) ? previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this._endDecade, Unit.year) ? next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+            //const tableBody = container.getElementsByTagName('tbody')[0];
+            //tableBody.querySelectorAll('*').forEach(n => n.remove());
+            //this._grid().forEach(row => tableBody.appendChild(row));
+            this.newGrid(container.querySelectorAll('tbody td span'));
+        }
+        newGrid(nodeList) {
+            const pickedYears = this.context.dates.picked.map(x => x.year);
+            nodeList.forEach((containerClone, index) => {
+                if (index === 0) {
+                    containerClone.classList.add(Namespace.Css.old);
+                    if (this._startDecade.year - 10 < 0) {
+                        containerClone.innerText = '&nbsp;';
+                        return;
+                    }
+                    else {
+                        containerClone.innerText = `${this._startDecade.year - 10}`;
+                        containerClone.setAttribute('data-value', `${this._startDecade.year + 6}`);
+                        return;
+                    }
+                }
+                let classes = [];
+                classes.push(Namespace.Css.decade);
+                const startDecadeYear = this._startDecade.year;
+                const endDecadeYear = this._startDecade.year + 9;
+                if (!this.context.unset && pickedYears.filter(x => x >= startDecadeYear && x <= endDecadeYear).length > 0) {
+                    classes.push(Namespace.Css.active);
+                }
+                /* if (!this.context.validation.isValid(innerDate, 'y')) { //todo between
+                     classes.push('disabled');
+                 }*/
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${this._startDecade.year + 6}`);
+                containerClone.innerText = `${this._startDecade.year}`;
+                if (nodeList.length === index + 1) {
+                    containerClone.classList.add(Namespace.Css.old);
+                }
+                this._startDecade.manipulate(10, Unit.year);
+            });
         }
         _grid() {
             const rows = [], container = document.createElement('span');
             let row = document.createElement('tr');
             container.setAttribute('data-action', 'selectDecade');
-            container.classList.add('decade');
+            container.classList.add(Namespace.Css.decade);
             if (this._startDecade.year - 10 < 0) {
                 const td = document.createElement('td');
                 const containerClone = document.createElement('span');
@@ -1177,9 +1393,9 @@
             else {
                 const td = document.createElement('td');
                 const containerClone = container.cloneNode(true);
-                containerClone.classList.add('old');
+                containerClone.classList.add(Namespace.Css.old);
                 containerClone.innerText = `${this._startDecade.year - 10}`;
-                container.setAttribute('data-selection', `${this._startDecade.year + 6}`);
+                container.setAttribute('data-value', `${this._startDecade.year + 6}`);
                 td.appendChild(containerClone);
                 row.appendChild(td);
             }
@@ -1193,7 +1409,7 @@
                 }
                 let classes = [];
                 if (!this.context.unset && pickedYears.filter(x => x >= startDecadeYear && x <= endDecadeYear).length > 0) {
-                    classes.push('active');
+                    classes.push(Namespace.Css.active);
                 }
                 /* if (!this.context.validation.isValid(innerDate, 'y')) { //todo between
                      classes.push('disabled');
@@ -1201,7 +1417,7 @@
                 const td = document.createElement('td');
                 const containerClone = container.cloneNode(true);
                 containerClone.classList.add(...classes);
-                container.setAttribute('data-selection', `${this._startDecade.year + 6}`);
+                container.setAttribute('data-value', `${this._startDecade.year + 6}`);
                 containerClone.innerText = `${this._startDecade.year}`;
                 td.appendChild(containerClone);
                 row.appendChild(td);
@@ -1209,9 +1425,9 @@
             }
             const td = document.createElement('td');
             const containerClone = container.cloneNode(true);
-            containerClone.classList.add('old');
+            containerClone.classList.add(Namespace.Css.old);
             containerClone.innerText = `${this._startDecade.year}`;
-            container.setAttribute('data-selection', `${this._startDecade.year + 6}`);
+            container.setAttribute('data-value', `${this._startDecade.year + 6}`);
             td.appendChild(containerClone);
             row.appendChild(td);
             rows.push(row);
@@ -1227,7 +1443,7 @@
             //todo could move some of this stuff to the ctor
             //then picker function clears and appends table body
             const container = document.createElement('div');
-            container.classList.add('timepicker-picker');
+            container.classList.add(Namespace.Css.timeContainer);
             const table = document.createElement('table');
             const tableBody = document.createElement('tbody');
             this._grid().forEach(row => tableBody.appendChild(row));
@@ -1236,71 +1452,71 @@
             return container;
         }
         update() {
-            const timesDiv = this.context.display.widget.getElementsByClassName('timepicker-picker')[0];
+            const timesDiv = this.context.display.widget.getElementsByClassName(Namespace.Css.timeContainer)[0];
             const lastPicked = (this.context.dates.lastPicked || this.context._viewDate).clone;
             if (!this.context._options.display.components.use24Hours) {
-                const toggle = timesDiv.querySelector('[data-action=togglePeriod]');
+                const toggle = timesDiv.querySelector(`[data-action=${ActionTypes.togglePeriod}]`);
                 toggle.innerText = lastPicked.meridiem();
                 if (!this.context.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
-                    toggle.classList.add('disabled');
+                    toggle.classList.add(Namespace.Css.disabled);
                 }
                 else {
-                    toggle.classList.remove('disabled');
+                    toggle.classList.remove(Namespace.Css.disabled);
                 }
             }
-            timesDiv.querySelectorAll('.disabled').forEach(element => element.classList.remove('disabled'));
+            timesDiv.querySelectorAll('.disabled').forEach(element => element.classList.remove(Namespace.Css.disabled));
             if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
-                timesDiv.querySelector('[data-action=incrementHours]').classList.add('disabled');
+                timesDiv.querySelector(`[data-action=${ActionTypes.incrementHours}]`).classList.add(Namespace.Css.disabled);
             }
             if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
-                timesDiv.querySelector('[data-action=decrementHours]').classList.add('disabled');
+                timesDiv.querySelector(`[data-action=${ActionTypes.decrementHours}]`).classList.add(Namespace.Css.disabled);
             }
             if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
-                timesDiv.querySelector('[data-action=incrementMinutes]').classList.add('disabled');
+                timesDiv.querySelector(`[data-action=${ActionTypes.incrementMinutes}]`).classList.add(Namespace.Css.disabled);
             }
             if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
-                timesDiv.querySelector('[data-action=decrementMinutes]').classList.add('disabled');
+                timesDiv.querySelector(`[data-action=${ActionTypes.decrementMinutes}]`).classList.add(Namespace.Css.disabled);
             }
             if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
-                timesDiv.querySelector('[data-action=incrementSeconds]').classList.add('disabled');
+                timesDiv.querySelector(`[data-action=${ActionTypes.incrementSeconds}]`).classList.add(Namespace.Css.disabled);
             }
             if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
-                timesDiv.querySelector('[data-action=decrementSeconds]').classList.add('disabled');
+                timesDiv.querySelector(`[data-action=${ActionTypes.decrementSeconds}]`).classList.add(Namespace.Css.disabled);
             }
             if (this.context._options.display.components.hours)
-                timesDiv.querySelector('[data-time-component=hours]').innerText = lastPicked.hoursFormatted;
+                timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = lastPicked.hoursFormatted;
             if (this.context._options.display.components.minutes)
-                timesDiv.querySelector('[data-time-component=minutes]').innerText = lastPicked.minutesFormatted;
+                timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
             if (this.context._options.display.components.seconds)
-                timesDiv.querySelector('[data-time-component=seconds]').innerText = lastPicked.secondsFormatted;
+                timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
         }
         _grid() {
             const rows = [], separator = document.createElement('td'), separatorColon = separator.cloneNode(true), topRow = document.createElement('tr'), middleRow = document.createElement('tr'), bottomRow = document.createElement('tr'), upIcon = this.context.display.iconTag(this.context._options.display.icons.up), downIcon = this.context.display.iconTag(this.context._options.display.icons.down), actionLink = document.createElement('a');
-            separator.classList.add('separator');
+            separator.classList.add(Namespace.Css.separator);
             separatorColon.innerHTML = ':';
-            actionLink.classList.add('btn');
+            actionLink.classList.add('btn'); //todo bootstrap
             actionLink.setAttribute('href', 'javascript:void(0);');
             actionLink.setAttribute('tabindex', '-1');
             if (this.context._options.display.components.hours) {
                 let td = document.createElement('td');
                 let actionLinkClone = actionLink.cloneNode(true);
                 actionLinkClone.setAttribute('title', this.context._options.localization.incrementHour);
-                actionLinkClone.setAttribute('data-action', 'incrementHours');
+                actionLinkClone.setAttribute('data-action', ActionTypes.incrementHours);
                 actionLinkClone.appendChild(upIcon.cloneNode(true));
                 td.appendChild(actionLinkClone);
                 topRow.appendChild(td);
                 td = document.createElement('td');
                 const span = document.createElement('span');
-                span.classList.add('timepicker-hour');
+                span.classList.add(Namespace.Css.hourContainer);
                 span.setAttribute('title', this.context._options.localization.pickHour);
-                span.setAttribute('data-action', 'showHours');
-                span.setAttribute('data-time-component', 'hours');
+                span.setAttribute('data-action', ActionTypes.showHours);
+                span.setAttribute('data-time-component', Unit.hours);
                 td.appendChild(span);
                 middleRow.appendChild(td);
                 td = document.createElement('td');
                 actionLinkClone = actionLink.cloneNode(true);
                 actionLinkClone.setAttribute('title', this.context._options.localization.decrementHour);
-                actionLinkClone.setAttribute('data-action', 'decrementHours');
+                actionLinkClone.setAttribute('data-action', ActionTypes.decrementHours);
                 actionLinkClone.appendChild(downIcon.cloneNode(true));
                 td.appendChild(actionLinkClone);
                 bottomRow.appendChild(td);
@@ -1314,22 +1530,22 @@
                 let td = document.createElement('td');
                 let actionLinkClone = actionLink.cloneNode(true);
                 actionLinkClone.setAttribute('title', this.context._options.localization.incrementMinute);
-                actionLinkClone.setAttribute('data-action', 'incrementMinutes');
+                actionLinkClone.setAttribute('data-action', ActionTypes.incrementMinutes);
                 actionLinkClone.appendChild(upIcon.cloneNode(true));
                 td.appendChild(actionLinkClone);
                 topRow.appendChild(td);
                 td = document.createElement('td');
                 const span = document.createElement('span');
-                span.classList.add('timepicker-minute');
+                span.classList.add(Namespace.Css.minuteContainer);
                 span.setAttribute('title', this.context._options.localization.pickMinute);
-                span.setAttribute('data-action', 'showMinutes');
-                span.setAttribute('data-time-component', 'minutes');
+                span.setAttribute('data-action', ActionTypes.showMinutes);
+                span.setAttribute('data-time-component', Unit.minutes);
                 td.appendChild(span);
                 middleRow.appendChild(td);
                 td = document.createElement('td');
                 actionLinkClone = actionLink.cloneNode(true);
                 actionLinkClone.setAttribute('title', this.context._options.localization.decrementMinute);
-                actionLinkClone.setAttribute('data-action', 'decrementMinutes');
+                actionLinkClone.setAttribute('data-action', ActionTypes.decrementMinutes);
                 actionLinkClone.appendChild(downIcon.cloneNode(true));
                 td.appendChild(actionLinkClone);
                 bottomRow.appendChild(td);
@@ -1343,22 +1559,22 @@
                 let td = document.createElement('td');
                 let actionLinkClone = actionLink.cloneNode(true);
                 actionLinkClone.setAttribute('title', this.context._options.localization.incrementSecond);
-                actionLinkClone.setAttribute('data-action', 'incrementSeconds');
+                actionLinkClone.setAttribute('data-action', ActionTypes.incrementSeconds);
                 actionLinkClone.appendChild(upIcon.cloneNode(true));
                 td.appendChild(actionLinkClone);
                 topRow.appendChild(td);
                 td = document.createElement('td');
                 const span = document.createElement('span');
-                span.classList.add('timepicker-second');
+                span.classList.add(Namespace.Css.secondContainer);
                 span.setAttribute('title', this.context._options.localization.pickSecond);
-                span.setAttribute('data-action', 'showSeconds');
-                span.setAttribute('data-time-component', 'seconds');
+                span.setAttribute('data-action', ActionTypes.showSeconds);
+                span.setAttribute('data-time-component', Unit.seconds);
                 td.appendChild(span);
                 middleRow.appendChild(td);
                 td = document.createElement('td');
                 actionLinkClone = actionLink.cloneNode(true);
                 actionLinkClone.setAttribute('title', this.context._options.localization.decrementSecond);
-                actionLinkClone.setAttribute('data-action', 'decrementSeconds');
+                actionLinkClone.setAttribute('data-action', ActionTypes.decrementSeconds);
                 actionLinkClone.appendChild(downIcon.cloneNode(true));
                 td.appendChild(actionLinkClone);
                 bottomRow.appendChild(td);
@@ -1369,7 +1585,7 @@
                 let button = document.createElement('button');
                 button.classList.add('btn', 'btn-primary'); //todo bootstrap
                 button.setAttribute('title', this.context._options.localization.togglePeriod);
-                button.setAttribute('data-action', 'togglePeriod');
+                button.setAttribute('data-action', ActionTypes.togglePeriod);
                 button.setAttribute('tabindex', '-1');
                 td.appendChild(button);
                 middleRow.appendChild(td);
@@ -1418,7 +1634,7 @@
             this._place();
             //todo unhide widget
             this.context._notifyEvent({
-                type: Namespace.EVENT_SHOW
+                type: Namespace.Events.SHOW
             });
         }
         _showMode(direction) {
@@ -1426,34 +1642,48 @@
                 return;
             }
             if (direction) {
-                this.context.currentViewMode = Math.max(this.context.minViewModeNumber, Math.min(3, this.context.currentViewMode + direction));
+                const max = Math.max(this.context.minViewModeNumber, Math.min(3, this.context.currentViewMode + direction));
+                if (this.context.currentViewMode == max)
+                    return;
+                this.context.currentViewMode = max;
             }
-            this.widget.querySelectorAll('.datepicker > div, .timepicker > div').forEach((e) => e.style.display = 'none');
+            this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`)
+                .forEach((e) => e.style.display = 'none');
             const datePickerMode = DatePickerModes[this.context.currentViewMode];
-            let picker = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
-            if (picker == null) {
-                const dateContainer = this.widget.querySelector('.datepicker');
-                switch (datePickerMode.CLASS_NAME) {
-                    case 'years':
-                        break;
-                    case 'months':
+            let picker = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
+            const dateContainer = this.widget.querySelector(`.${Namespace.Css.dateContainer}`);
+            switch (datePickerMode.CLASS_NAME) {
+                case Namespace.Css.decadesContainer:
+                    if (picker == null)
+                        dateContainer.appendChild(this._decadeDisplay.picker);
+                    this._decadeDisplay.update();
+                    break;
+                case Namespace.Css.yearsContainer:
+                    if (picker == null)
+                        dateContainer.appendChild(this._yearDisplay.picker);
+                    this._yearDisplay.update();
+                    break;
+                case Namespace.Css.monthsContainer:
+                    if (picker == null)
                         dateContainer.appendChild(this._monthDisplay.picker);
-                        this._monthDisplay.update();
-                        break;
-                    case 'days':
+                    this._monthDisplay.update();
+                    break;
+                case Namespace.Css.daysContainer:
+                    if (picker == null)
                         dateContainer.appendChild(this._dateDisplay.picker);
-                        this._dateDisplay.update();
-                        break;
-                }
-                picker = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
+                    this._dateDisplay.update();
+                    break;
+            }
+            if (picker == null) {
+                picker = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
                 //todo migrate this to bootstrap's eventhandler
-                const actions = this.widget.querySelectorAll('[data-action]');
-                actions.forEach(element => element.removeEventListener('click', (e) => {
+                this.widget.querySelectorAll('[data-action]');
+                /*actions.forEach(element => element.removeEventListener('click', (e) => {
                     this.context.action.do(e);
-                }));
-                actions.forEach(element => element.addEventListener('click', (e) => {
+                }))*/
+                /*actions.forEach(element => element.addEventListener('click', (e) => {
                     this.context.action.do(e);
-                }));
+                }));*/
             }
             picker.style.display = 'block';
         }
@@ -1465,17 +1695,16 @@
         _buildWidget() {
             const template = document.createElement('div');
             //todo bootstrap, need to namespace classes
-            template.classList.add('bootstrap-datetimepicker-widget');
+            template.classList.add(Namespace.Css.widget);
             if (this.context._options.calendarWeeks)
-                template.classList.add('tempusdominus-bootstrap-datetimepicker-widget-with-calendar-weeks'); //todo namespace
+                template.classList.add(Namespace.Css.widgetCalendarWeeks);
             const dateView = document.createElement('div');
-            dateView.classList.add('datepicker'); //todo I think I want to rename these to datepicker-container or something
-            //dateView.appendChild(this._dateDisplay.picker); //todo remove both of these appends. I'd rather only build then when needed
+            dateView.classList.add(Namespace.Css.dateContainer);
             const timeView = document.createElement('div');
-            timeView.classList.add('timepicker');
+            timeView.classList.add(Namespace.Css.timeContainer);
             timeView.appendChild(this._timeDisplay.picker);
             const toolbar = document.createElement('li');
-            toolbar.classList.add('picker-switch');
+            toolbar.classList.add(Namespace.Css.switch);
             if (this.context._options.collapse)
                 toolbar.classList.add('accordion-toggle'); //todo bootstrap
             toolbar.appendChild(this._toolbar);
@@ -1483,13 +1712,13 @@
                 template.classList.add('dropdown-menu'); //todo bootstrap
             }*/
             if (this.context._options.display.components.useTwentyfourHour) {
-                template.classList.add('useTwentyfour'); //todo namespace
+                template.classList.add(Namespace.Css.useTwentyfour);
             }
             if (this.context._options.display.components.second && !this.context._options.display.components.useTwentyfourHour) {
-                template.classList.add('wider'); //todo namespace?
+                template.classList.add(Namespace.Css.wider);
             }
             if (this.context._options.sideBySide && this._hasDate() && this._hasTime()) {
-                template.classList.add('timepicker-sbs'); //todo namespace?
+                template.classList.add(Namespace.Css.sideBySide);
                 if (this.context._options.toolbarPlacement === 'top') {
                     template.appendChild(toolbar);
                 }
@@ -1552,7 +1781,7 @@
                 const a = document.createElement('a');
                 a.setAttribute('href', 'javascript:void(0);');
                 a.setAttribute('tabindex', '-1');
-                a.setAttribute('data-action', 'today');
+                a.setAttribute('data-action', ActionTypes.today);
                 a.setAttribute('title', this.context._options.localization.today);
                 a.appendChild(this.iconTag(this.context._options.display.icons.today));
                 td.appendChild(a);
@@ -1572,7 +1801,7 @@
                 const a = document.createElement('a');
                 a.setAttribute('href', 'javascript:void(0);');
                 a.setAttribute('tabindex', '-1');
-                a.setAttribute('data-action', 'togglePicker');
+                a.setAttribute('data-action', ActionTypes.togglePicker);
                 a.setAttribute('title', title);
                 a.appendChild(this.iconTag(icon));
                 td.appendChild(a);
@@ -1583,7 +1812,7 @@
                 const a = document.createElement('a');
                 a.setAttribute('href', 'javascript:void(0);');
                 a.setAttribute('tabindex', '-1');
-                a.setAttribute('data-action', 'clear');
+                a.setAttribute('data-action', ActionTypes.clear);
                 a.setAttribute('title', this.context._options.localization.clear);
                 a.appendChild(this.iconTag(this.context._options.display.icons.today));
                 td.appendChild(a);
@@ -1594,7 +1823,7 @@
                 const a = document.createElement('a');
                 a.setAttribute('href', 'javascript:void(0);');
                 a.setAttribute('tabindex', '-1');
-                a.setAttribute('data-action', 'close');
+                a.setAttribute('data-action', ActionTypes.close);
                 a.setAttribute('title', this.context._options.localization.close);
                 a.appendChild(this.iconTag(this.context._options.display.icons.today));
                 td.appendChild(a);
@@ -1610,18 +1839,18 @@
         get headTemplate() {
             const headTemplate = document.createElement('thead');
             const previous = document.createElement('th');
-            previous.classList.add('prev');
-            previous.setAttribute('data-action', 'previous');
+            previous.classList.add(Namespace.Css.previous);
+            previous.setAttribute('data-action', ActionTypes.previous);
             previous.appendChild(this.iconTag(this.context._options.display.icons.previous));
             headTemplate.appendChild(previous);
             const switcher = document.createElement('th');
-            switcher.classList.add('picker-switch');
-            switcher.setAttribute('data-action', 'pickerSwitch');
+            switcher.classList.add(Namespace.Css.switch);
+            switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
             switcher.setAttribute('colspan', this.context._options.calendarWeeks ? '6' : '5');
             headTemplate.appendChild(switcher);
             const next = document.createElement('th');
-            next.classList.add('next');
-            next.setAttribute('data-action', 'next');
+            next.classList.add(Namespace.Css.next);
+            next.setAttribute('data-action', ActionTypes.next);
             next.appendChild(this.iconTag(this.context._options.display.icons.next));
             headTemplate.appendChild(next);
             return headTemplate.cloneNode(true);
@@ -1680,12 +1909,14 @@
             //this.dates.add(new DateTime());
             //#endregion
             this._initFormatting();
-            this.currentViewMode = 1; //todo temp
+            this.currentViewMode = 3; //todo temp
             this.display.show();
             element.appendChild(this.display.widget);
             this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
                 this.action.do(e);
             }));
+            /*EventHandler.on(this.display.widget.querySelectorAll('[data-action]'),
+                Namespace.Events.clickAction, '[data-action]', event => this.action.do(event));*/
         }
         _getOptions(config) {
             config = Object.assign(Object.assign({}, Default), config);
@@ -1727,3 +1958,4 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
+//# sourceMappingURL=tempus-dominus.js.map

@@ -1,5 +1,7 @@
 import {TempusDominus} from '../tempus-dominus';
 import {Unit} from '../datetime';
+import {Namespace} from '../conts';
+import {ActionTypes} from '../actions';
 
 export default class TimeDisplay {
     private context: TempusDominus;
@@ -11,7 +13,7 @@ export default class TimeDisplay {
         //todo could move some of this stuff to the ctor
         //then picker function clears and appends table body
         const container = document.createElement('div');
-        container.classList.add('timepicker-picker');
+        container.classList.add(Namespace.Css.timeContainer);
 
         const table = document.createElement('table');
         const tableBody = document.createElement('tbody');
@@ -23,48 +25,48 @@ export default class TimeDisplay {
     }
 
     update(): void {
-        const timesDiv = this.context.display.widget.getElementsByClassName('timepicker-picker')[0];
+        const timesDiv = this.context.display.widget.getElementsByClassName(Namespace.Css.timeContainer)[0];
         const lastPicked = (this.context.dates.lastPicked || this.context._viewDate).clone;
 
         if (!this.context._options.display.components.use24Hours) {
-            const toggle = timesDiv.querySelector<HTMLElement>('[data-action=togglePeriod]');
+            const toggle = timesDiv.querySelector<HTMLElement>(`[data-action=${ActionTypes.togglePeriod}]`);
 
             toggle.innerText = lastPicked.meridiem();
 
             if (!this.context.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
-                toggle.classList.add('disabled');
+                toggle.classList.add(Namespace.Css.disabled);
             }
             else {
-                toggle.classList.remove('disabled');
+                toggle.classList.remove(Namespace.Css.disabled);
             }
         }
 
-        timesDiv.querySelectorAll('.disabled').forEach(element => element.classList.remove('disabled'));
+        timesDiv.querySelectorAll('.disabled').forEach(element => element.classList.remove(Namespace.Css.disabled));
         if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
-            timesDiv.querySelector('[data-action=incrementHours]').classList.add('disabled');
+            timesDiv.querySelector(`[data-action=${ActionTypes.incrementHours}]`).classList.add(Namespace.Css.disabled);
         }
         if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
-            timesDiv.querySelector('[data-action=decrementHours]').classList.add('disabled');
+            timesDiv.querySelector(`[data-action=${ActionTypes.decrementHours}]`).classList.add(Namespace.Css.disabled);
         }
         if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
-            timesDiv.querySelector('[data-action=incrementMinutes]').classList.add('disabled');
+            timesDiv.querySelector(`[data-action=${ActionTypes.incrementMinutes}]`).classList.add(Namespace.Css.disabled);
         }
         if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
-            timesDiv.querySelector('[data-action=decrementMinutes]').classList.add('disabled');
+            timesDiv.querySelector(`[data-action=${ActionTypes.decrementMinutes}]`).classList.add(Namespace.Css.disabled);
         }
         if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
-            timesDiv.querySelector('[data-action=incrementSeconds]').classList.add('disabled');
+            timesDiv.querySelector(`[data-action=${ActionTypes.incrementSeconds}]`).classList.add(Namespace.Css.disabled);
         }
         if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
-            timesDiv.querySelector('[data-action=decrementSeconds]').classList.add('disabled');
+            timesDiv.querySelector(`[data-action=${ActionTypes.decrementSeconds}]`).classList.add(Namespace.Css.disabled);
         }
 
         if (this.context._options.display.components.hours)
-            timesDiv.querySelector<HTMLElement>('[data-time-component=hours]').innerText = lastPicked.hoursFormatted;
+            timesDiv.querySelector<HTMLElement>(`[data-time-component=${Unit.hours}]`).innerText = lastPicked.hoursFormatted;
         if (this.context._options.display.components.minutes)
-            timesDiv.querySelector<HTMLElement>('[data-time-component=minutes]').innerText = lastPicked.minutesFormatted;
+            timesDiv.querySelector<HTMLElement>(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
         if (this.context._options.display.components.seconds)
-            timesDiv.querySelector<HTMLElement>('[data-time-component=seconds]').innerText = lastPicked.secondsFormatted;
+            timesDiv.querySelector<HTMLElement>(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
 
     }
 
@@ -77,9 +79,9 @@ export default class TimeDisplay {
             downIcon = this.context.display.iconTag(this.context._options.display.icons.down),
             actionLink = document.createElement('a');
 
-        separator.classList.add('separator');
+        separator.classList.add(Namespace.Css.separator);
         separatorColon.innerHTML = ':';
-        actionLink.classList.add('btn');
+        actionLink.classList.add('btn'); //todo bootstrap
         actionLink.setAttribute('href', 'javascript:void(0);');
         actionLink.setAttribute('tabindex', '-1');
 
@@ -87,24 +89,24 @@ export default class TimeDisplay {
             let td = document.createElement('td');
             let actionLinkClone = <HTMLElement>actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.localization.incrementHour);
-            actionLinkClone.setAttribute('data-action', 'incrementHours')
+            actionLinkClone.setAttribute('data-action', ActionTypes.incrementHours)
             actionLinkClone.appendChild(upIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             topRow.appendChild(td);
 
             td = document.createElement('td');
             const span = document.createElement('span');
-            span.classList.add('timepicker-hour');
+            span.classList.add(Namespace.Css.hourContainer);
             span.setAttribute('title', this.context._options.localization.pickHour);
-            span.setAttribute('data-action', 'showHours')
-            span.setAttribute('data-time-component', 'hours')
+            span.setAttribute('data-action', ActionTypes.showHours)
+            span.setAttribute('data-time-component', Unit.hours)
             td.appendChild(span);
             middleRow.appendChild(td);
 
             td = document.createElement('td');
             actionLinkClone = <HTMLElement>actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.localization.decrementHour);
-            actionLinkClone.setAttribute('data-action', 'decrementHours')
+            actionLinkClone.setAttribute('data-action', ActionTypes.decrementHours)
             actionLinkClone.appendChild(downIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             bottomRow.appendChild(td);
@@ -119,24 +121,24 @@ export default class TimeDisplay {
             let td = document.createElement('td');
             let actionLinkClone = <HTMLElement>actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.localization.incrementMinute);
-            actionLinkClone.setAttribute('data-action', 'incrementMinutes')
+            actionLinkClone.setAttribute('data-action', ActionTypes.incrementMinutes)
             actionLinkClone.appendChild(upIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             topRow.appendChild(td);
 
             td = document.createElement('td');
             const span = document.createElement('span');
-            span.classList.add('timepicker-minute');
+            span.classList.add(Namespace.Css.minuteContainer);
             span.setAttribute('title', this.context._options.localization.pickMinute);
-            span.setAttribute('data-action', 'showMinutes')
-            span.setAttribute('data-time-component', 'minutes')
+            span.setAttribute('data-action', ActionTypes.showMinutes)
+            span.setAttribute('data-time-component', Unit.minutes)
             td.appendChild(span);
             middleRow.appendChild(td);
 
             td = document.createElement('td');
             actionLinkClone = <HTMLElement>actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.localization.decrementMinute);
-            actionLinkClone.setAttribute('data-action', 'decrementMinutes')
+            actionLinkClone.setAttribute('data-action', ActionTypes.decrementMinutes)
             actionLinkClone.appendChild(downIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             bottomRow.appendChild(td);
@@ -151,24 +153,24 @@ export default class TimeDisplay {
             let td = document.createElement('td');
             let actionLinkClone = <HTMLElement>actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.localization.incrementSecond);
-            actionLinkClone.setAttribute('data-action', 'incrementSeconds')
+            actionLinkClone.setAttribute('data-action', ActionTypes.incrementSeconds)
             actionLinkClone.appendChild(upIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             topRow.appendChild(td);
 
             td = document.createElement('td');
             const span = document.createElement('span');
-            span.classList.add('timepicker-second');
+            span.classList.add(Namespace.Css.secondContainer);
             span.setAttribute('title', this.context._options.localization.pickSecond);
-            span.setAttribute('data-action', 'showSeconds')
-            span.setAttribute('data-time-component', 'seconds')
+            span.setAttribute('data-action', ActionTypes.showSeconds)
+            span.setAttribute('data-time-component', Unit.seconds)
             td.appendChild(span);
             middleRow.appendChild(td);
 
             td = document.createElement('td');
             actionLinkClone = <HTMLElement>actionLink.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context._options.localization.decrementSecond);
-            actionLinkClone.setAttribute('data-action', 'decrementSeconds')
+            actionLinkClone.setAttribute('data-action', ActionTypes.decrementSeconds)
             actionLinkClone.appendChild(downIcon.cloneNode(true));
             td.appendChild(actionLinkClone);
             bottomRow.appendChild(td);
@@ -181,7 +183,7 @@ export default class TimeDisplay {
             let button = document.createElement('button');
             button.classList.add('btn', 'btn-primary'); //todo bootstrap
             button.setAttribute('title', this.context._options.localization.togglePeriod);
-            button.setAttribute('data-action', 'togglePeriod');
+            button.setAttribute('data-action', ActionTypes.togglePeriod);
             button.setAttribute('tabindex', '-1');
             td.appendChild(button);
             middleRow.appendChild(td);

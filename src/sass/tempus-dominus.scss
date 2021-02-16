@@ -24,10 +24,8 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
     border: 0 !important;
 }
 
-.tempus-dominus-widget .datepicker-days {
-  tbody td {
+.tempus-dominus-widget [data-action]{
     cursor: pointer;
-  }
 }
 
 .tempus-dominus-widget {
@@ -254,8 +252,6 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
         }
 
         & thead tr:first-child th {
-            cursor: pointer;
-
             &:hover {
                 background: $bs-datetimepicker-btn-hover-bg;
             }
@@ -285,7 +281,6 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
             &.minute:hover,
             &.second:hover {
                 background: $bs-datetimepicker-btn-hover-bg;
-                cursor: pointer;
             }
 
             &.old,
@@ -334,7 +329,6 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
                 line-height: 54px;
                 margin-top: 2px;
                 margin-bottom: 2px;
-                cursor: pointer;
                 border-radius: $bs-datetimepicker-border-radius;
 
                 &:hover {

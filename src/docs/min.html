@@ -4,17 +4,15 @@
     <meta charset="UTF-8">
     <title>v6</title>
 
-    <link rel="stylesheet" href="bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/css/bootstrap.min.css" integrity="sha512-thoh2veB35ojlAhyYZC0eaztTAUhxLvSZlWrNtlV01njqs/UdY3421Jg7lX0Gq9SRdGVQeL8xeBp9x1IPyL1wQ==" crossorigin="anonymous" />
 
-    <link href="tempusdominus-bootstrap-4.css" rel="stylesheet">
+    <link href="tempus-dominus.css" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
             integrity="sha512-ubuT8Z88WxezgSqf3RLuNi5lmjstiJcyezx34yIU2gAHonIi27Na7atqzUZCOoY4CExaoFumzOsFQ2Ch+I/HCw=="
             crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha3/js/bootstrap.min.js"
-            integrity="sha512-Qpek3fOFi+uCW8qSf92lltHNMRMHmLISYDIRFI4qgNV2U28+4Zc3EZC8szMMeVI9KA3zEZFtIP8gt41Pekd29w=="
-            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/js/bootstrap.min.js" integrity="sha512-ZvbjbJnytX9Sa03/AcbP/nh9K95tar4R0IAxTS2gh2ChiInefr1r7EpnVClpTWUEN7VarvEsH3quvkY1h0dAFg==" crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/solid.min.js"
             integrity="sha512-JkeOaPqiSsfvmKzJUsqu7j2fv0KSB6Yqb1HHF0r9FNzIsfGv+zYi4h4jQKOogf10qLF3PMZEIYhziCEaw039tQ=="
@@ -38,6 +36,7 @@
         </div>
         <div class="row">
             <div class="col-6 bg-light">
+                <button id="clearLog" type="button" class="btn btn-primary m-3">Clear Log</button>
                 <div id="log">
 
                 </div>
@@ -62,9 +61,14 @@
     var dt = new TempusDominus(document.getElementById('datetimepicker13'));*/
 </script>
 <script>
+    const log = document.getElementById('log');
+
+    document.getElementById('clearLog').addEventListener('click', () => {
+        log.innerHTML = '';
+    });
+
     var dt = new tempusdominus.TempusDominus(document.getElementById('datetimepicker13'));
 
-    const log = document.getElementById('log');
     ['log','debug','info','warn','error'].forEach(function (verb) {
         console[verb] = (function (method, verb, log) {
             return function () {

@@ -2,19 +2,15 @@ import {TempusDominus} from '../tempus-dominus';
 import Dates from '../dates';
 import {DateTime, Unit} from '../datetime';
 import {Namespace} from '../conts';
+import {ActionTypes} from '../actions';
 
 export default class DecadeDisplay {
     private context: TempusDominus;
-    private readonly _startDecade: DateTime;
-    private readonly _endDecade: DateTime;
+    private _startDecade: DateTime;
+    private _endDecade: DateTime;
 
     constructor(context: TempusDominus) {
         this.context = context;
-        const [start, end] = Dates.getStartEndYear(100, this.context._viewDate.year);
-        this._startDecade = this.context._viewDate.clone.startOf(Unit.year);
-        this._startDecade.year = start;
-        this._endDecade = this.context._viewDate.clone.startOf(Unit.year);
-        this._endDecade.year = end;
     }
 
     get picker() {
@@ -27,26 +23,93 @@ export default class DecadeDisplay {
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
         previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousCentury);
-        switcher.setAttribute('title', this.context._options.localization.selectDecade);
+        switcher.setAttribute('title', '');
+        switcher.removeAttribute('data-action');
         switcher.setAttribute('colspan', '1');
         next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextCentury);
 
-        switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
-
-        if (!this.context.validation.isValid(this._startDecade, Unit.year)) {
-            previous.classList.add(Namespace.Css.disabled);
-        }
-        if (!this.context.validation.isValid(this._endDecade, Unit.year)) {
-            next.classList.add(Namespace.Css.disabled);
-        }
-
         table.appendChild(headTemplate);
+
         const tableBody = document.createElement('tbody');
-        this._grid().forEach(row => tableBody.appendChild(row));
+        let row = document.createElement('tr');
+        for (let i = 0; i <= 12; i++) {
+            if (i !== 0 && i % 3 === 0) {
+                tableBody.appendChild(row);
+                row = document.createElement('tr');
+            }
+            const td = document.createElement('td');
+            const span = document.createElement('span');
+            span.setAttribute('data-action', ActionTypes.selectDecade);
+            td.appendChild(span);
+            row.appendChild(td);
+        }
+
         table.appendChild(tableBody);
         container.appendChild(table);
-
         return container;
+    }
+
+    update() {
+        const [start, end] = Dates.getStartEndYear(100, this.context._viewDate.year);
+        this._startDecade = this.context._viewDate.clone.startOf(Unit.year);
+        this._startDecade.year = start;
+        this._endDecade = this.context._viewDate.clone.startOf(Unit.year);
+        this._endDecade.year = end;
+
+        const container = this.context.display.widget.getElementsByClassName(Namespace.Css.decadesContainer)[0];
+        const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
+
+        switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
+
+
+        this.context.validation.isValid(this._startDecade, Unit.year) ? previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
+        this.context.validation.isValid(this._endDecade, Unit.year) ? next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+
+        //const tableBody = container.getElementsByTagName('tbody')[0];
+        //tableBody.querySelectorAll('*').forEach(n => n.remove());
+        //this._grid().forEach(row => tableBody.appendChild(row));
+        this.newGrid(container.querySelectorAll('tbody td span'));
+    }
+
+    private newGrid(nodeList: NodeList) {
+        const pickedYears = this.context.dates.picked.map(x => x.year);
+
+        nodeList.forEach((containerClone: HTMLElement, index) => {
+            if (index === 0) {
+                containerClone.classList.add(Namespace.Css.old);
+                if (this._startDecade.year - 10 < 0) {
+                    containerClone.innerText = '&nbsp;';
+                    return;
+                } else {
+                    containerClone.innerText = `${this._startDecade.year - 10}`;
+                    containerClone.setAttribute('data-value', `${this._startDecade.year + 6}`);
+                    return;
+                }
+            }
+
+            let classes = [];
+            classes.push(Namespace.Css.decade);
+            const startDecadeYear = this._startDecade.year;
+            const endDecadeYear = this._startDecade.year + 9;
+
+            if (!this.context.unset && pickedYears.filter(x => x >= startDecadeYear && x <= endDecadeYear).length > 0) {
+                classes.push(Namespace.Css.active);
+            }
+            /* if (!this.context.validation.isValid(innerDate, 'y')) { //todo between
+                 classes.push('disabled');
+             }*/
+
+            containerClone.classList.remove(...containerClone.classList);
+            containerClone.classList.add(...classes);
+            containerClone.setAttribute('data-value', `${this._startDecade.year + 6}`);
+            containerClone.innerText = `${this._startDecade.year}`;
+
+            if (nodeList.length === index + 1) {
+                containerClone.classList.add(Namespace.Css.old);
+            }
+
+            this._startDecade.manipulate(10, Unit.year);
+        });
     }
 
     _grid() {
@@ -67,7 +130,7 @@ export default class DecadeDisplay {
             const containerClone = <HTMLElement>container.cloneNode(true);
             containerClone.classList.add(Namespace.Css.old);
             containerClone.innerText = `${this._startDecade.year - 10}`;
-            container.setAttribute('data-selection', `${this._startDecade.year + 6}`);
+            container.setAttribute('data-value', `${this._startDecade.year + 6}`);
             td.appendChild(containerClone);
 
             row.appendChild(td);
@@ -89,14 +152,14 @@ export default class DecadeDisplay {
             if (!this.context.unset && pickedYears.filter(x => x >= startDecadeYear && x <= endDecadeYear).length > 0) {
                 classes.push(Namespace.Css.active);
             }
-           /* if (!this.context.validation.isValid(innerDate, 'y')) { //todo between
-                classes.push('disabled');
-            }*/
+            /* if (!this.context.validation.isValid(innerDate, 'y')) { //todo between
+                 classes.push('disabled');
+             }*/
 
             const td = document.createElement('td')
             const containerClone = <HTMLElement>container.cloneNode(true);
             containerClone.classList.add(...classes);
-            container.setAttribute('data-selection', `${this._startDecade.year + 6}`);
+            container.setAttribute('data-value', `${this._startDecade.year + 6}`);
             containerClone.innerText = `${this._startDecade.year}`;
             td.appendChild(containerClone);
 
@@ -109,7 +172,7 @@ export default class DecadeDisplay {
         const containerClone = <HTMLElement>container.cloneNode(true);
         containerClone.classList.add(Namespace.Css.old);
         containerClone.innerText = `${this._startDecade.year}`;
-        container.setAttribute('data-selection', `${this._startDecade.year + 6}`);
+        container.setAttribute('data-value', `${this._startDecade.year + 6}`);
         td.appendChild(containerClone);
 
         row.appendChild(td);

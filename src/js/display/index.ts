@@ -69,35 +69,44 @@ export default class Display {
             return;
         }
         if (direction) {
-            this.context.currentViewMode = Math.max(this.context.minViewModeNumber, Math.min(3, this.context.currentViewMode + direction));
+            const max = Math.max(this.context.minViewModeNumber, Math.min(3, this.context.currentViewMode + direction));
+            if (this.context.currentViewMode == max) return;
+            this.context.currentViewMode = max;
         }
-        this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`).forEach((e: HTMLElement) => e.style.display = 'none');
+        this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`)
+            .forEach((e: HTMLElement) => e.style.display = 'none');
 
         const datePickerMode = DatePickerModes[this.context.currentViewMode];
         let picker: HTMLElement = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
+        const dateContainer = this.widget.querySelector(`.${Namespace.Css.dateContainer}`);
+        switch (datePickerMode.CLASS_NAME) {
+            case Namespace.Css.decadesContainer:
+                if (picker == null) dateContainer.appendChild(this._decadeDisplay.picker);
+                this._decadeDisplay.update();
+                break;
+            case Namespace.Css.yearsContainer:
+                if (picker == null) dateContainer.appendChild(this._yearDisplay.picker);
+                this._yearDisplay.update();
+                break;
+            case Namespace.Css.monthsContainer:
+                if (picker == null) dateContainer.appendChild(this._monthDisplay.picker);
+                this._monthDisplay.update();
+                break;
+            case Namespace.Css.daysContainer:
+                if (picker == null) dateContainer.appendChild(this._dateDisplay.picker);
+                this._dateDisplay.update();
+                break;
+        }
         if (picker == null) {
-            const dateContainer = this.widget.querySelector(`.${Namespace.Css.dateContainer}`);
-            switch (datePickerMode.CLASS_NAME) {
-                case Namespace.Css.yearsContainer:
-                    break;
-                case Namespace.Css.monthsContainer:
-                    dateContainer.appendChild(this._monthDisplay.picker);
-                    this._monthDisplay.update();
-                    break;
-                case Namespace.Css.daysContainer:
-                    dateContainer.appendChild(this._dateDisplay.picker);
-                    this._dateDisplay.update();
-                    break;
-            }
-            picker = this.widget.querySelector(`.datepicker-${datePickerMode.CLASS_NAME}`);
+            picker = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
             //todo migrate this to bootstrap's eventhandler
             const actions = this.widget.querySelectorAll('[data-action]');
-            actions.forEach(element => element.removeEventListener('click', (e) => {
+            /*actions.forEach(element => element.removeEventListener('click', (e) => {
                 this.context.action.do(e);
-            }))
-            actions.forEach(element => element.addEventListener('click', (e) => {
+            }))*/
+            /*actions.forEach(element => element.addEventListener('click', (e) => {
                 this.context.action.do(e);
-            }));
+            }));*/
         }
 
         picker.style.display = 'block';

@@ -29,27 +29,47 @@ export default class Actions {
             case ActionTypes.pickerSwitch:
                 this.context.display._showMode(1);
                 break;
-            case ActionTypes.selectMonth:
+            case ActionTypes.selectMonth: //todo seems like these could be merged
                 const month = +e.target.getAttribute('data-value');
                 this.context._viewDate.month = month;
 
                 if (this.context.currentViewMode === this.context.minViewModeNumber) {
-                    //todo in the old td this only used month/year and not the whole viewdate
                     this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
                     if (!this.context._options.inline) {
                         this.context.display.hide();
                     }
                 } else {
                     this.context.display._showMode(-1);
-                    this.context.display.updateDateView();
                 }
-                this.context._viewUpdate('month');
+                this.context._viewUpdate(Unit.month);
                 break;
             case ActionTypes.selectYear:
+                const year = +e.target.getAttribute('data-value');
+                this.context._viewDate.year = year;
 
+                if (this.context.currentViewMode === this.context.minViewModeNumber) {
+                    this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
+                    if (!this.context._options.inline) {
+                        this.context.display.hide();
+                    }
+                } else {
+                    this.context.display._showMode(-1);
+                }
+                this.context._viewUpdate(Unit.year);
                 break;
             case ActionTypes.selectDecade:
+                const decadeYear = +e.target.getAttribute('data-value');
+                this.context._viewDate.year = decadeYear;
 
+                if (this.context.currentViewMode === this.context.minViewModeNumber) {
+                    this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
+                    if (!this.context._options.inline) {
+                        this.context.display.hide();
+                    }
+                } else {
+                    this.context.display._showMode(-1);
+                }
+                this.context._viewUpdate(Unit.year);
                 break;
             case ActionTypes.selectDay:
                 const day = this.context._viewDate.clone;
@@ -137,29 +157,29 @@ export default class Actions {
 }
 
 export enum ActionTypes {
-   next = 'next',
-   previous = 'previous',
-   pickerSwitch = 'pickerSwitch',
-   selectMonth = 'selectMonth',
-   selectYear = 'selectYear',
-   selectDecade = 'selectDecade',
-   selectDay = 'selectDay',
-   selectHour = 'selectHour',
-   selectMinute = 'selectMinute',
-   selectSecond = 'selectSecond',
-   incrementHours = 'incrementHours',
-   incrementMinutes = 'incrementMinutes',
-   incrementSeconds = 'incrementSeconds',
-   decrementHours = 'decrementHours',
-   decrementMinutes = 'decrementMinutes',
-   decrementSeconds = 'decrementSeconds',
-   togglePeriod = 'togglePeriod',
-   togglePicker = 'togglePicker',
-   showPicker = 'showPicker',
-   showHours = 'showHours',
-   showMinutes = 'showMinutes',
-   showSeconds = 'showSeconds',
-   clear = 'clear',
-   close = 'close',
-   today = 'today'
+    next = 'next',
+    previous = 'previous',
+    pickerSwitch = 'pickerSwitch',
+    selectMonth = 'selectMonth',
+    selectYear = 'selectYear',
+    selectDecade = 'selectDecade',
+    selectDay = 'selectDay',
+    selectHour = 'selectHour',
+    selectMinute = 'selectMinute',
+    selectSecond = 'selectSecond',
+    incrementHours = 'incrementHours',
+    incrementMinutes = 'incrementMinutes',
+    incrementSeconds = 'incrementSeconds',
+    decrementHours = 'decrementHours',
+    decrementMinutes = 'decrementMinutes',
+    decrementSeconds = 'decrementSeconds',
+    togglePeriod = 'togglePeriod',
+    togglePicker = 'togglePicker',
+    showPicker = 'showPicker',
+    showHours = 'showHours',
+    showMinutes = 'showMinutes',
+    showSeconds = 'showSeconds',
+    clear = 'clear',
+    close = 'close',
+    today = 'today'
 }

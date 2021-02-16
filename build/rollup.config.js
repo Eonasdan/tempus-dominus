@@ -5,7 +5,8 @@ export default {
     output: {
         dir: 'src/docs',
         format: 'umd',
-        name: 'tempusdominus'
+        name: 'tempusdominus',
+        sourcemap: true
     },
     plugins: [typescript()],
 };

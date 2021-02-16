@@ -226,65 +226,80 @@ const Default = {
     promptTimeOnDateChangeTransitionDelay: 200
 };
 
+//this is not the way I want this to stay but nested classes seemed to blown once its compiled.
+const NAME = 'tempus-dominus';
+const VERSION = '6.0.0-alpha1';
+const DATA_KEY = 'td';
+const DATA_API_KEY = '.data-api';
+
+class Events {
+    KEY = `.${DATA_KEY}`;
+    CHANGE = `change${this.KEY}`
+    UPDATE = `update${this.KEY}`;
+    ERROR = `error${this.KEY}`;
+    SHOW = `show${this.KEY}`;
+    HIDE = `hide${this.KEY}`;
+    BLUR = `blur${this.KEY}`;
+    KEYUP = `keyup${this.KEY}`;
+    KEYDOWN = `keydown${this.KEY}`;
+    FOCUS = `focus${this.KEY}`;
+    CLICK_DATA_API = `click${this.KEY}${DATA_API_KEY}`;
+    clickAction = `click${this.KEY}.action`
+}
+
+class Css  {
+    widget = `${NAME}-widget`;
+    switch = 'picker-switch';
+    // todo the next several classes are to represent states of the picker that would
+    // make it wider then usual and it seems like this could be cleaned up.
+    widgetCalendarWeeks = `${this.widget}-with-calendar-weeks`;
+    useTwentyfour = 'useTwentyfour';
+    wider = 'wider';
+    sideBySide = 'timepicker-sbs';
+
+    previous = 'previous';
+    next = 'next';
+    disabled = 'disabled';
+    old = 'old';
+    new = 'new';
+    active = 'active';
+    separator = 'separator'
+    //#region date container
+    dateContainer = 'date-container';
+    decadesContainer = `${this.dateContainer}-decades`;
+    decade = 'decade';
+    yearsContainer = `${this.dateContainer}-years`;
+    year = 'year';
+    monthsContainer = `${this.dateContainer}-months`;
+    month = 'month';
+    daysContainer = `${this.dateContainer}-days`;
+    day = 'day';
+    calendarWeeks = 'cw';
+    dayOfTheWeek = 'dow';
+    today = 'today';
+    weekend = 'weekend';
+    //#endregion
+
+    //#region time container
+
+    timeContainer = 'time-container';
+    hourContainer = `${this.timeContainer}-hour`;
+    minuteContainer = `${this.timeContainer}-minute`;
+    secondContainer = `${this.timeContainer}-second`;
+
+    //#endregion
+
+}
+
 class Namespace {
-    static NAME = 'tempus-dominus';
-    static VERSION = '6.0.0-alpha1';
-    static DATA_KEY = 'td';
-    static DATA_API_KEY = '.data-api';
+    static NAME = NAME;
+    static VERSION = VERSION;
+    static DATA_KEY = DATA_KEY;
+    static DATA_API_KEY = DATA_API_KEY;
 
-    static Events = class {
-        static KEY = `.${Namespace.DATA_KEY}`;
-        static CHANGE = `hide${Namespace.Events.KEY}`
-        static UPDATE = `update${Namespace.Events.KEY}`;
-        static ERROR = `error${Namespace.Events.KEY}`;
-        static SHOW = `show${Namespace.Events.KEY}`;
-        static HIDE = `hide${Namespace.Events.KEY}`;
-        static BLUR = `blur${Namespace.Events.KEY}`;
-        static KEYUP = `keyup${Namespace.Events.KEY}`;
-        static KEYDOWN = `keydown${Namespace.Events.KEY}`;
-        static FOCUS = `focus${Namespace.Events.KEY}`;
-        static CLICK_DATA_API = `click${Namespace.Events.KEY}${Namespace.DATA_API_KEY}`;
-    }
+    static Events = new Events();
 
-    static Css = class {
-        static widget = `${Namespace.NAME}-widget`;
-        static switch = 'picker-switch';
-        // todo the next several classes are to represent states of the picker that would
-        // make it wider then usual and it seems like this could be cleaned up.
-        static widgetCalendarWeeks = `${Namespace.Css.widget}-with-calendar-weeks`;
-        static useTwentyfour = 'useTwentyfour';
-        static wider = 'wider';
-        static sideBySide = 'timepicker-sbs';
-        static previous = 'previous';
-        static next = 'next';
-
-        static disabled = 'disabled';
-        static old = 'old';
-        static new = 'new';
-        static active = 'active';
-        //#region date container
-        static dateContainer = 'date-container';
-        static decadesContainer = `${Namespace.Css.dateContainer}-decades`;
-        static decade = 'decade';
-        static yearsContainer = `${Namespace.Css.dateContainer}-years`;
-        static year = 'year';
-        static monthsContainer = `${Namespace.Css.dateContainer}-months`;
-        static month = 'month';
-        static daysContainer = `${Namespace.Css.dateContainer}-days`;
-        static day = 'day';
-        static calendarWeeks = 'cw';
-        static dayOfTheWeek = 'dow';
-        static today = 'today';
-        static weekend = 'weekend';
-        //#endregion
-
-        //#region time container
-
-        static timeContainer = 'time-container';
-
-        //#endregion
-
-    }
+    static Css = new Css();
 }
 
 const DatePickerModes = [{

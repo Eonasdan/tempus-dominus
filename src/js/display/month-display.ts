@@ -1,6 +1,7 @@
 import {TempusDominus} from '../tempus-dominus';
 import {Unit} from '../datetime';
 import {Namespace} from '../conts';
+import {ActionTypes} from '../actions';
 
 export default class MonthDisplay {
     private context: TempusDominus;
@@ -23,18 +24,21 @@ export default class MonthDisplay {
         switcher.setAttribute('colspan', '1');
         next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextYear);
 
-        switcher.innerText = this.context._viewDate.format({year: 'numeric'});
-
-        if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.year), Unit.year)) {
-            previous.classList.add('disabled');
-        }
-        if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.year), Unit.year)) {
-            next.classList.add('disabled');
-        }
-
         table.appendChild(headTemplate);
         const tableBody = document.createElement('tbody');
-        this._grid().forEach(row => tableBody.appendChild(row));
+        let row = document.createElement('tr');
+        for (let i = 0; i <= 12; i++) {
+            if (i !== 0 && i % 3 === 0) {
+                tableBody.appendChild(row);
+                row = document.createElement('tr');
+            }
+            const td = document.createElement('td');
+            const span = document.createElement('span');
+            span.setAttribute('data-action', ActionTypes.selectMonth);
+            td.appendChild(span);
+            row.appendChild(td);
+        }
+
         table.appendChild(tableBody);
         container.appendChild(table);
 
@@ -42,7 +46,43 @@ export default class MonthDisplay {
     }
 
     update(): void {
-        this.context.display.widget.querySelector<HTMLElement>('[data-action="pickerSwitch"]').innerText = this.context._viewDate.format({year: 'numeric'});
+        const container = this.context.display.widget.getElementsByClassName(Namespace.Css.monthsContainer)[0];
+        const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
+
+        switcher.innerText = this.context._viewDate.format({year: 'numeric'});
+
+        this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.year), Unit.year) ?
+            previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
+
+        this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.year), Unit.year) ?
+            next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+
+        //const tableBody = container.getElementsByTagName('tbody')[0];
+        //tableBody.querySelectorAll('*').forEach(n => n.remove());
+        //this._grid().forEach(row => tableBody.appendChild(row));
+        this.newGrid(container.querySelectorAll('tbody td span'));
+    }
+
+    private newGrid(nodeList: NodeList) {
+        let innerDate = this.context._viewDate.clone.startOf(Unit.year)
+
+        nodeList.forEach((containerClone: HTMLElement, index) => {
+            let classes = [];
+            classes.push(Namespace.Css.month);
+
+            if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.month)) {
+                classes.push(Namespace.Css.active);
+            }
+            if (!this.context.validation.isValid(innerDate, Unit.month)) {
+                classes.push(Namespace.Css.disabled);
+            }
+
+            containerClone.classList.remove(...containerClone.classList);
+            containerClone.classList.add(...classes);
+            containerClone.setAttribute('data-value', `${index}`);
+            containerClone.innerText = `${innerDate.format({month: 'long'})}`;
+            innerDate.manipulate(1, Unit.month);
+        });
     }
 
     /**
@@ -65,10 +105,10 @@ export default class MonthDisplay {
             let classes = [];
 
             if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.month)) {
-                classes.push('active');
+                classes.push(Namespace.Css.active);
             }
             if (!this.context.validation.isValid(innerDate, Unit.month)) {
-                classes.push('disabled');
+                classes.push(Namespace.Css.disabled);
             }
 
             const td = document.createElement('td');

@@ -1,0 +1,291 @@
+.visually-hidden, .tempus-dominus-widget table th.next::after, .tempus-dominus-widget table th.prev::after, .tempus-dominus-widget .picker-switch::after, .tempus-dominus-widget .btn[data-action=today]::after, .tempus-dominus-widget .btn[data-action=clear]::after, .tempus-dominus-widget .btn[data-action=togglePeriod]::after, .tempus-dominus-widget .btn[data-action=showMinutes]::after, .tempus-dominus-widget .btn[data-action=showHours]::after, .tempus-dominus-widget .btn[data-action=decrementMinutes]::after, .tempus-dominus-widget .btn[data-action=decrementHours]::after, .tempus-dominus-widget .btn[data-action=incrementMinutes]::after, .tempus-dominus-widget .btn[data-action=incrementHours]::after {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.tempus-dominus-widget [data-action] {
+  cursor: pointer;
+}
+
+.tempus-dominus-widget {
+  list-style: none;
+}
+.tempus-dominus-widget.dropdown-menu {
+  display: block;
+  margin: 2px 0;
+  padding: 4px;
+  width: 14rem;
+}
+.tempus-dominus-widget.dropdown-menu.tempus-dominus-widget-with-calendar-weeks {
+  width: 16rem;
+}
+@media (min-width: 576px) {
+  .tempus-dominus-widget.dropdown-menu.timepicker-sbs {
+    width: 38em;
+  }
+}
+@media (min-width: 768px) {
+  .tempus-dominus-widget.dropdown-menu.timepicker-sbs {
+    width: 38em;
+  }
+}
+@media (min-width: 992px) {
+  .tempus-dominus-widget.dropdown-menu.timepicker-sbs {
+    width: 38em;
+  }
+}
+.tempus-dominus-widget.dropdown-menu:before, .tempus-dominus-widget.dropdown-menu:after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+}
+.tempus-dominus-widget.dropdown-menu.bottom:before {
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  top: -7px;
+  left: 7px;
+}
+.tempus-dominus-widget.dropdown-menu.bottom:after {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid white;
+  top: -6px;
+  left: 8px;
+}
+.tempus-dominus-widget.dropdown-menu.top:before {
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid #ccc;
+  border-top-color: rgba(0, 0, 0, 0.2);
+  bottom: -7px;
+  left: 6px;
+}
+.tempus-dominus-widget.dropdown-menu.top:after {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid white;
+  bottom: -6px;
+  left: 7px;
+}
+.tempus-dominus-widget.dropdown-menu.float-right:before {
+  left: auto;
+  right: 6px;
+}
+.tempus-dominus-widget.dropdown-menu.float-right:after {
+  left: auto;
+  right: 7px;
+}
+.tempus-dominus-widget.dropdown-menu.wider {
+  width: 16rem;
+}
+.tempus-dominus-widget .list-unstyled {
+  margin: 0;
+}
+.tempus-dominus-widget a[data-action] {
+  padding: 6px 0;
+}
+.tempus-dominus-widget a[data-action]:active {
+  box-shadow: none;
+}
+.tempus-dominus-widget .timepicker-hour, .tempus-dominus-widget .timepicker-minute, .tempus-dominus-widget .timepicker-second {
+  width: 54px;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 0;
+}
+.tempus-dominus-widget button[data-action] {
+  padding: 6px;
+}
+.tempus-dominus-widget .btn[data-action=togglePeriod] {
+  text-align: center;
+  width: 38px;
+  height: 38px;
+}
+.tempus-dominus-widget .btn[data-action=incrementHours]::after {
+  content: "Increment Hours";
+  /*migrate these to this: https://stackoverflow.com/a/19009056/237917*/
+}
+.tempus-dominus-widget .btn[data-action=incrementMinutes]::after {
+  content: "Increment Minutes";
+}
+.tempus-dominus-widget .btn[data-action=decrementHours]::after {
+  content: "Decrement Hours";
+}
+.tempus-dominus-widget .btn[data-action=decrementMinutes]::after {
+  content: "Decrement Minutes";
+}
+.tempus-dominus-widget .btn[data-action=showHours]::after {
+  content: "Show Hours";
+}
+.tempus-dominus-widget .btn[data-action=showMinutes]::after {
+  content: "Show Minutes";
+}
+.tempus-dominus-widget .btn[data-action=togglePeriod]::after {
+  content: "Toggle AM/PM";
+}
+.tempus-dominus-widget .btn[data-action=clear]::after {
+  content: "Clear the picker";
+}
+.tempus-dominus-widget .btn[data-action=today]::after {
+  content: "Set the date to today";
+}
+.tempus-dominus-widget .picker-switch {
+  text-align: center;
+}
+.tempus-dominus-widget .picker-switch::after {
+  content: "Toggle Date and Time Screens";
+}
+.tempus-dominus-widget .picker-switch td {
+  padding: 0;
+  margin: 0;
+  height: auto;
+  width: auto;
+  line-height: inherit;
+}
+.tempus-dominus-widget .picker-switch td span {
+  line-height: 2.5;
+  height: 2.5em;
+  width: 100%;
+}
+.tempus-dominus-widget table {
+  width: 100%;
+  margin: 0;
+}
+.tempus-dominus-widget table td, .tempus-dominus-widget table th {
+  text-align: center;
+  border-radius: 0.25rem;
+}
+.tempus-dominus-widget table th {
+  height: 20px;
+  line-height: 20px;
+  width: 20px;
+}
+.tempus-dominus-widget table th.picker-switch {
+  width: 145px;
+}
+.tempus-dominus-widget table th.disabled, .tempus-dominus-widget table th.disabled:hover {
+  background: none;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+.tempus-dominus-widget table th.prev::after {
+  content: "Previous Month";
+}
+.tempus-dominus-widget table th.next::after {
+  content: "Next Month";
+}
+.tempus-dominus-widget table thead tr:first-child th:hover {
+  background: #e9ecef;
+}
+.tempus-dominus-widget table td {
+  height: 54px;
+  line-height: 54px;
+  width: 54px;
+}
+.tempus-dominus-widget table td.cw {
+  font-size: 0.8em;
+  height: 20px;
+  line-height: 20px;
+  color: #6c757d;
+  cursor: default;
+}
+.tempus-dominus-widget table td.day {
+  height: 20px;
+  line-height: 20px;
+  width: 20px;
+}
+.tempus-dominus-widget table td.day:hover, .tempus-dominus-widget table td.hour:hover, .tempus-dominus-widget table td.minute:hover, .tempus-dominus-widget table td.second:hover {
+  background: #e9ecef;
+}
+.tempus-dominus-widget table td.old, .tempus-dominus-widget table td.new {
+  color: #6c757d;
+}
+.tempus-dominus-widget table td.today {
+  position: relative;
+}
+.tempus-dominus-widget table td.today:before {
+  content: "";
+  display: inline-block;
+  border: solid transparent;
+  border-width: 0 0 7px 7px;
+  border-bottom-color: #0d6efd;
+  border-top-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+}
+.tempus-dominus-widget table td.active, .tempus-dominus-widget table td.active:hover {
+  background-color: #0d6efd;
+  color: #ff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.tempus-dominus-widget table td.active.today:before {
+  border-bottom-color: #fff;
+}
+.tempus-dominus-widget table td.disabled, .tempus-dominus-widget table td.disabled:hover {
+  background: none;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+.tempus-dominus-widget table td span {
+  display: inline-block;
+  width: 54px;
+  height: 54px;
+  line-height: 54px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-radius: 0.25rem;
+}
+.tempus-dominus-widget table td span:hover {
+  background: #e9ecef;
+}
+.tempus-dominus-widget table td span.active {
+  background-color: #0d6efd;
+  color: #ff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.tempus-dominus-widget table td span.old {
+  color: #6c757d;
+}
+.tempus-dominus-widget table td span.disabled, .tempus-dominus-widget table td span.disabled:hover {
+  background: none;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+.tempus-dominus-widget.useTwentyfour td.hour {
+  height: 27px;
+  line-height: 27px;
+}
+.tempus-dominus-widget .timepicker .timepicker-picker a.btn {
+  color: #007bff;
+  color: var(--blue, #007bff);
+}
+.tempus-dominus-widget .timepicker .timepicker-picker a.btn:hover {
+  color: #0056b3;
+}
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.day, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.minute, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.second,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementSeconds],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementSeconds],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showSeconds],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=togglePeriod] {
+  pointer-events: none;
+  cursor: default;
+}
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.day:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.minute:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.second:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementHours]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementMinutes]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementSeconds]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementHours]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementMinutes]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementSeconds]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showHours]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showMinutes]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showSeconds]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=togglePeriod]:hover {
+  background: none;
+}
+
+/*# sourceMappingURL=tempus-dominus.css.map */
