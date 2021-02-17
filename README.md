@@ -1,3 +1,5 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R53OEFF)
+
 # Tempus Dominus Date/Time Picker v6.0.0-alpha
 
 Version 6 is a complex "coming when it's ready". You can read the very high level tasks that need to be done before it's ready [here](https://github.com/Eonasdan/bootstrap-datetimepicker/issues/2326).
