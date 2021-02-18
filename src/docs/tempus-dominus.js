@@ -884,13 +884,9 @@
                 previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
             this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.month), Unit.month) ?
                 next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
-            //const dayBody = container.getElementsByTagName('tbody')[0];
-            //dayBody.querySelectorAll('*').forEach(n => n.remove());
-            //dayBody.appendChild(this._daysOfTheWeek());
-            //this._grid().forEach(row => dayBody.appendChild(row));
-            this.newGrid(container.querySelectorAll('tbody td span'));
+            this.grid(container.querySelectorAll('tbody td span'));
         }
-        newGrid(nodeList) {
+        grid(nodeList) {
             let innerDate = this.context._viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours);
             nodeList.forEach((containerClone, index) => {
                 if (this.context._options.display.calendarWeeks && containerClone.classList.contains(Namespace.Css.calendarWeeks)) {
@@ -947,50 +943,6 @@
             }
             return row;
         }
-        _grid() {
-            const rows = [];
-            let innerDate = this.context._viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours), row;
-            for (let i = 0; i < 42; i++) {
-                if (innerDate.weekDay === 0) {
-                    if (row)
-                        rows.push(row);
-                    row = document.createElement('tr');
-                    if (this.context._options.display.calendarWeeks) {
-                        const td = document.createElement('td');
-                        td.classList.add(Namespace.Css.calendarWeeks);
-                        td.innerText = `${innerDate.week}`;
-                    }
-                }
-                let classes = [];
-                classes.push(Namespace.Css.day);
-                if (innerDate.isBefore(this.context._viewDate, Unit.month)) {
-                    classes.push(Namespace.Css.old);
-                }
-                if (innerDate.isAfter(this.context._viewDate, Unit.month)) {
-                    classes.push(Namespace.Css.new);
-                }
-                if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.date)) {
-                    classes.push(Namespace.Css.active);
-                }
-                if (!this.context.validation.isValid(innerDate, Unit.date)) {
-                    classes.push(Namespace.Css.disabled);
-                }
-                if (innerDate.isSame(new DateTime(), Unit.date)) {
-                    classes.push(Namespace.Css.today);
-                }
-                if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
-                    classes.push(Namespace.Css.weekend);
-                }
-                const td = document.createElement('td');
-                td.setAttribute('data-action', ActionTypes.selectDay);
-                td.setAttribute('data-day', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
-                td.classList.add(...classes);
-                td.innerText = `${innerDate.date}`;
-                row.appendChild(td);
-                innerDate.manipulate(1, Unit.date);
-            }
-            return rows;
-        }
     }
 
     class MonthDisplay {
@@ -1034,12 +986,9 @@
                 previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
             this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.year), Unit.year) ?
                 next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
-            //const tableBody = container.getElementsByTagName('tbody')[0];
-            //tableBody.querySelectorAll('*').forEach(n => n.remove());
-            //this._grid().forEach(row => tableBody.appendChild(row));
-            this.newGrid(container.querySelectorAll('tbody td span'));
+            this.grid(container.querySelectorAll('tbody td span'));
         }
-        newGrid(nodeList) {
+        grid(nodeList) {
             let innerDate = this.context._viewDate.clone.startOf(Unit.year);
             nodeList.forEach((containerClone, index) => {
                 let classes = [];
@@ -1056,38 +1005,6 @@
                 containerClone.innerText = `${innerDate.format({ month: 'long' })}`;
                 innerDate.manipulate(1, Unit.month);
             });
-        }
-        /**
-         *
-         * @private
-         */
-        _grid() {
-            const rows = [], container = document.createElement('span');
-            let innerDate = this.context._viewDate.clone.startOf(Unit.year), row = document.createElement('tr');
-            container.setAttribute('data-action', 'selectMonth');
-            container.classList.add(Unit.month);
-            for (let i = 0; i <= 12; i++) {
-                if (i !== 0 && i % 3 === 0) {
-                    rows.push(row);
-                    row = document.createElement('tr');
-                }
-                let classes = [];
-                if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.month)) {
-                    classes.push(Namespace.Css.active);
-                }
-                if (!this.context.validation.isValid(innerDate, Unit.month)) {
-                    classes.push(Namespace.Css.disabled);
-                }
-                const td = document.createElement('td');
-                const containerClone = container.cloneNode(true);
-                containerClone.setAttribute('data-value', `${i}`);
-                containerClone.classList.add(...classes);
-                containerClone.innerText = `${innerDate.format({ month: 'long' })}`;
-                td.appendChild(containerClone);
-                row.appendChild(td);
-                innerDate.manipulate(1, Unit.month);
-            }
-            return rows;
         }
     }
 
@@ -1132,12 +1049,9 @@
             switcher.innerText = `${this._startYear.year}-${this._endYear.year}`;
             this.context.validation.isValid(this._startYear, Unit.year) ? previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
             this.context.validation.isValid(this._endYear, Unit.year) ? next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
-            //const tableBody = container.getElementsByTagName('tbody')[0];
-            //tableBody.querySelectorAll('*').forEach(n => n.remove());
-            //this._grid().forEach(row => tableBody.appendChild(row));
-            this.newGrid(container.querySelectorAll('tbody td span'));
+            this.grid(container.querySelectorAll('tbody td span'));
         }
-        newGrid(nodeList) {
+        grid(nodeList) {
             let innerDate = this.context._viewDate.clone.startOf(Unit.year).manipulate(-1, Unit.year);
             nodeList.forEach((containerClone, index) => {
                 let classes = [];
@@ -1153,33 +1067,6 @@
                 containerClone.innerText = `${innerDate.year}`;
                 innerDate.manipulate(1, Unit.year);
             });
-        }
-        _grid() {
-            const rows = [], container = document.createElement('span');
-            let innerDate = this.context._viewDate.clone.startOf(Unit.year).manipulate(-1, Unit.year), row = document.createElement('tr');
-            container.setAttribute('data-action', 'selectYear');
-            container.classList.add(Namespace.Css.year);
-            for (let i = 0; i <= 12; i++) {
-                if (i !== 0 && i % 3 === 0) {
-                    rows.push(row);
-                    row = document.createElement('tr');
-                }
-                let classes = [];
-                if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.year)) {
-                    classes.push(Namespace.Css.active);
-                }
-                if (!this.context.validation.isValid(innerDate, Unit.year)) {
-                    classes.push(Namespace.Css.disabled);
-                }
-                const td = document.createElement('td');
-                const containerClone = container.cloneNode(true);
-                containerClone.classList.add(...classes);
-                containerClone.innerText = `${innerDate.year}`;
-                td.appendChild(containerClone);
-                row.appendChild(td);
-                innerDate.manipulate(1, Unit.year);
-            }
-            return rows;
         }
     }
 
@@ -1347,12 +1234,9 @@
             switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
             this.context.validation.isValid(this._startDecade, Unit.year) ? previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
             this.context.validation.isValid(this._endDecade, Unit.year) ? next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
-            //const tableBody = container.getElementsByTagName('tbody')[0];
-            //tableBody.querySelectorAll('*').forEach(n => n.remove());
-            //this._grid().forEach(row => tableBody.appendChild(row));
-            this.newGrid(container.querySelectorAll('tbody td span'));
+            this.grid(container.querySelectorAll('tbody td span'));
         }
-        newGrid(nodeList) {
+        grid(nodeList) {
             const pickedYears = this.context.dates.picked.map(x => x.year);
             nodeList.forEach((containerClone, index) => {
                 if (index === 0) {
@@ -1386,61 +1270,6 @@
                 }
                 this._startDecade.manipulate(10, Unit.year);
             });
-        }
-        _grid() {
-            const rows = [], container = document.createElement('span');
-            let row = document.createElement('tr');
-            container.setAttribute('data-action', 'selectDecade');
-            container.classList.add(Namespace.Css.decade);
-            if (this._startDecade.year - 10 < 0) {
-                const td = document.createElement('td');
-                const containerClone = document.createElement('span');
-                containerClone.innerText = '&nbsp;';
-                td.appendChild(containerClone);
-                row.appendChild(td);
-            }
-            else {
-                const td = document.createElement('td');
-                const containerClone = container.cloneNode(true);
-                containerClone.classList.add(Namespace.Css.old);
-                containerClone.innerText = `${this._startDecade.year - 10}`;
-                container.setAttribute('data-value', `${this._startDecade.year + 6}`);
-                td.appendChild(containerClone);
-                row.appendChild(td);
-            }
-            const pickedYears = this.context.dates.picked.map(x => x.year);
-            for (let i = 1; i <= 10; i++) {
-                const startDecadeYear = this._startDecade.year;
-                const endDecadeYear = this._startDecade.year + 9;
-                if (i !== 0 && i % 3 === 0) {
-                    rows.push(row);
-                    row = document.createElement('tr');
-                }
-                let classes = [];
-                if (!this.context.unset && pickedYears.filter(x => x >= startDecadeYear && x <= endDecadeYear).length > 0) {
-                    classes.push(Namespace.Css.active);
-                }
-                /* if (!this.context.validation.isValid(innerDate, 'y')) { //todo between
-                     classes.push('disabled');
-                 }*/
-                const td = document.createElement('td');
-                const containerClone = container.cloneNode(true);
-                containerClone.classList.add(...classes);
-                container.setAttribute('data-value', `${this._startDecade.year + 6}`);
-                containerClone.innerText = `${this._startDecade.year}`;
-                td.appendChild(containerClone);
-                row.appendChild(td);
-                this._startDecade.manipulate(10, Unit.year);
-            }
-            const td = document.createElement('td');
-            const containerClone = container.cloneNode(true);
-            containerClone.classList.add(Namespace.Css.old);
-            containerClone.innerText = `${this._startDecade.year}`;
-            container.setAttribute('data-value', `${this._startDecade.year + 6}`);
-            td.appendChild(containerClone);
-            row.appendChild(td);
-            rows.push(row);
-            return rows;
         }
     }
 

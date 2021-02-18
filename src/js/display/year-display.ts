@@ -59,13 +59,10 @@ export default class YearDisplay {
         this.context.validation.isValid(this._startYear, Unit.year) ? previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
         this.context.validation.isValid(this._endYear, Unit.year) ? next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
 
-        //const tableBody = container.getElementsByTagName('tbody')[0];
-        //tableBody.querySelectorAll('*').forEach(n => n.remove());
-        //this._grid().forEach(row => tableBody.appendChild(row));
-        this.newGrid(container.querySelectorAll('tbody td span'));
+        this.grid(container.querySelectorAll('tbody td span'));
     }
 
-    private newGrid(nodeList: NodeList) {
+    private grid(nodeList: NodeList) {
         let innerDate = this.context._viewDate.clone.startOf(Unit.year).manipulate(-1, Unit.year)
 
         nodeList.forEach((containerClone: HTMLElement, index) => {
@@ -85,41 +82,5 @@ export default class YearDisplay {
 
             innerDate.manipulate(1, Unit.year);
         });
-    }
-
-    _grid(): HTMLElement[] {
-        const rows = [], container = document.createElement('span');
-        let innerDate = this.context._viewDate.clone.startOf(Unit.year).manipulate(-1, Unit.year), row = document.createElement('tr');
-
-        container.setAttribute('data-action', 'selectYear');
-        container.classList.add(Namespace.Css.year);
-
-        for (let i = 0; i <= 12; i++) {
-            if (i !== 0 && i % 3 === 0) {
-                rows.push(row);
-                row = document.createElement('tr');
-            }
-
-            let classes = [];
-
-            if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.year)) {
-                classes.push(Namespace.Css.active);
-            }
-            if (!this.context.validation.isValid(innerDate, Unit.year)) {
-                classes.push(Namespace.Css.disabled);
-            }
-
-            const td = document.createElement('td')
-            const containerClone = <HTMLElement>container.cloneNode(true);
-            containerClone.classList.add(...classes);
-            containerClone.innerText = `${innerDate.year}`;
-            td.appendChild(containerClone);
-
-            row.appendChild(td);
-
-            innerDate.manipulate(1, Unit.year);
-        }
-
-        return rows;
     }
 }

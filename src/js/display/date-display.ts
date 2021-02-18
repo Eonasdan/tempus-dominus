@@ -72,14 +72,10 @@ export default class DateDisplay {
         this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.month), Unit.month) ?
             next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
 
-        //const dayBody = container.getElementsByTagName('tbody')[0];
-        //dayBody.querySelectorAll('*').forEach(n => n.remove());
-        //dayBody.appendChild(this._daysOfTheWeek());
-        //this._grid().forEach(row => dayBody.appendChild(row));
-        this.newGrid(container.querySelectorAll('tbody td span'));
+        this.grid(container.querySelectorAll('tbody td span'));
     }
 
-    private newGrid(nodeList: NodeList) {
+    private grid(nodeList: NodeList) {
         let innerDate = this.context._viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours);
 
         nodeList.forEach((containerClone: HTMLElement, index) => {
@@ -144,58 +140,5 @@ export default class DateDisplay {
         }
 
         return row;
-    }
-
-    _grid(): HTMLElement[] {
-        const rows = [];
-        let innerDate = this.context._viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours),
-            row: HTMLElement;
-
-        for (let i = 0; i < 42; i++) {
-            if (innerDate.weekDay === 0) {
-                if (row)
-                    rows.push(row);
-
-                row = document.createElement('tr');
-                if (this.context._options.display.calendarWeeks) {
-                    const td = document.createElement('td')
-                    td.classList.add(Namespace.Css.calendarWeeks);
-                    td.innerText = `${innerDate.week}`;
-                }
-            }
-
-            let classes = [];
-            classes.push(Namespace.Css.day);
-            if (innerDate.isBefore(this.context._viewDate, Unit.month)) {
-                classes.push(Namespace.Css.old);
-            }
-            if (innerDate.isAfter(this.context._viewDate, Unit.month)) {
-                classes.push(Namespace.Css.new);
-            }
-
-            if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.date)) {
-                classes.push(Namespace.Css.active);
-            }
-            if (!this.context.validation.isValid(innerDate, Unit.date)) {
-                classes.push(Namespace.Css.disabled);
-            }
-            if (innerDate.isSame(new DateTime(), Unit.date)) {
-                classes.push(Namespace.Css.today);
-            }
-            if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
-                classes.push(Namespace.Css.weekend);
-            }
-
-            const td = document.createElement('td');
-            td.setAttribute('data-action', ActionTypes.selectDay);
-            td.setAttribute('data-day', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
-            td.classList.add(...classes);
-            td.innerText = `${innerDate.date}`;
-            row.appendChild(td);
-
-            innerDate.manipulate(1, Unit.date);
-        }
-
-        return rows;
     }
 }

@@ -57,13 +57,10 @@ export default class MonthDisplay {
         this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.year), Unit.year) ?
             next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
 
-        //const tableBody = container.getElementsByTagName('tbody')[0];
-        //tableBody.querySelectorAll('*').forEach(n => n.remove());
-        //this._grid().forEach(row => tableBody.appendChild(row));
-        this.newGrid(container.querySelectorAll('tbody td span'));
+        this.grid(container.querySelectorAll('tbody td span'));
     }
 
-    private newGrid(nodeList: NodeList) {
+    private grid(nodeList: NodeList) {
         let innerDate = this.context._viewDate.clone.startOf(Unit.year)
 
         nodeList.forEach((containerClone: HTMLElement, index) => {
@@ -83,46 +80,5 @@ export default class MonthDisplay {
             containerClone.innerText = `${innerDate.format({month: 'long'})}`;
             innerDate.manipulate(1, Unit.month);
         });
-    }
-
-    /**
-     *
-     * @private
-     */
-    _grid(): HTMLTableRowElement[] {
-        const rows = [], container = document.createElement('span');
-        let innerDate = this.context._viewDate.clone.startOf(Unit.year), row = document.createElement('tr');
-
-        container.setAttribute('data-action', 'selectMonth');
-        container.classList.add(Unit.month);
-
-        for(let i = 0; i <= 12; i++) {
-            if (i !== 0 && i % 3 === 0) {
-                rows.push(row);
-                row = document.createElement('tr');
-            }
-
-            let classes = [];
-
-            if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.month)) {
-                classes.push(Namespace.Css.active);
-            }
-            if (!this.context.validation.isValid(innerDate, Unit.month)) {
-                classes.push(Namespace.Css.disabled);
-            }
-
-            const td = document.createElement('td');
-            const containerClone = <HTMLElement>container.cloneNode(true);
-            containerClone.setAttribute('data-value', `${i}`);
-            containerClone.classList.add(...classes);
-            containerClone.innerText = `${innerDate.format({month: 'long'})}`;
-            td.appendChild(containerClone);
-
-            row.appendChild(td);
-
-            innerDate.manipulate(1, Unit.month);
-        }
-
-        return rows;
     }
 }
