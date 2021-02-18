@@ -78,35 +78,20 @@ export default class Display {
 
         const datePickerMode = DatePickerModes[this.context.currentViewMode];
         let picker: HTMLElement = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
-        const dateContainer = this.widget.querySelector(`.${Namespace.Css.dateContainer}`);
+
         switch (datePickerMode.CLASS_NAME) {
             case Namespace.Css.decadesContainer:
-                if (picker == null) dateContainer.appendChild(this._decadeDisplay.picker);
                 this._decadeDisplay.update();
                 break;
             case Namespace.Css.yearsContainer:
-                if (picker == null) dateContainer.appendChild(this._yearDisplay.picker);
                 this._yearDisplay.update();
                 break;
             case Namespace.Css.monthsContainer:
-                if (picker == null) dateContainer.appendChild(this._monthDisplay.picker);
                 this._monthDisplay.update();
                 break;
             case Namespace.Css.daysContainer:
-                if (picker == null) dateContainer.appendChild(this._dateDisplay.picker);
                 this._dateDisplay.update();
                 break;
-        }
-        if (picker == null) {
-            picker = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
-            //todo migrate this to bootstrap's eventhandler
-            const actions = this.widget.querySelectorAll('[data-action]');
-            /*actions.forEach(element => element.removeEventListener('click', (e) => {
-                this.context.action.do(e);
-            }))*/
-            /*actions.forEach(element => element.addEventListener('click', (e) => {
-                this.context.action.do(e);
-            }));*/
         }
 
         picker.style.display = 'block';
@@ -122,13 +107,16 @@ export default class Display {
 
     _buildWidget(): HTMLElement {
         const template = document.createElement('div');
-        //todo bootstrap, need to namespace classes
         template.classList.add(Namespace.Css.widget);
         if (this.context._options.calendarWeeks)
             template.classList.add(Namespace.Css.widgetCalendarWeeks);
 
         const dateView = document.createElement('div');
         dateView.classList.add(Namespace.Css.dateContainer);
+        dateView.appendChild(this._decadeDisplay.picker);
+        dateView.appendChild(this._yearDisplay.picker);
+        dateView.appendChild(this._monthDisplay.picker);
+        dateView.appendChild(this._dateDisplay.picker);
 
         const timeView = document.createElement('div');
         timeView.classList.add(Namespace.Css.timeContainer);

@@ -37,8 +37,10 @@
         <div class="row">
             <div class="col-6 bg-light">
                 <button id="clearLog" type="button" class="btn btn-primary m-3">Clear Log</button>
-                <div id="log">
+                <div>
+<pre id="log">
 
+</pre>
                 </div>
             </div>
         </div>
@@ -46,28 +48,18 @@
 
 </div>
 <script src="tempus-dominus.js"></script>
-<script type="module">
-    /* $(function () {
-         $('#datetimepicker13').datetimepicker({
-             inline: true,
-             sideBySide: true,
-             buttons: {
-                 showToday: true
-             }
-         });
-     });
-    import { TempusDominus } from './tempus-dominus.js';
-
-    var dt = new TempusDominus(document.getElementById('datetimepicker13'));*/
-</script>
 <script>
+    var dt = new tempusdominus.TempusDominus(document.getElementById('datetimepicker13'), {
+        display: {
+            calendarWeeks: true,
+        }
+    });
+
     const log = document.getElementById('log');
 
     document.getElementById('clearLog').addEventListener('click', () => {
         log.innerHTML = '';
     });
-
-    var dt = new tempusdominus.TempusDominus(document.getElementById('datetimepicker13'));
 
     ['log','debug','info','warn','error'].forEach(function (verb) {
         console[verb] = (function (method, verb, log) {

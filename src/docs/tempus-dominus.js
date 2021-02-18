@@ -309,12 +309,11 @@
          * Gets the week of the year
          */
         get week() {
-            const day = new Date();
             const MILLISECONDS_IN_WEEK = 604800000;
             const firstDayOfWeek = 1; // monday as the first day (0 = sunday)
-            const startOfYear = new Date(day.getFullYear(), 0, 1);
+            const startOfYear = new Date(this.year, 0, 1);
             startOfYear.setDate(startOfYear.getDate() + (firstDayOfWeek - (startOfYear.getDay() % 7)));
-            return Math.round((day.valueOf() - startOfYear.valueOf()) / MILLISECONDS_IN_WEEK) + 1;
+            return Math.round((this.valueOf() - startOfYear.valueOf()) / MILLISECONDS_IN_WEEK) + 1;
         }
         /**
          * Shortcut to Date.getDay()
@@ -757,10 +756,10 @@
                     else {
                         this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
                     }
-                    if (!this.context.display._hasTime() && !this.context._options.keepOpen && !this.context._options.inline && !this.context._options.allowMultidate) {
+                    if (!this.context.display._hasTime() && !this.context._options.keepOpen &&
+                        !this.context._options.inline && !this.context._options.allowMultidate) {
                         this.context.display.hide();
                     }
-                    //todo register events or look at Document.createEvent or at dom/event-handler
                     break;
                 case ActionTypes.selectHour:
                     break;
@@ -848,13 +847,22 @@
             const tableBody = document.createElement('tbody');
             tableBody.appendChild(this._daysOfTheWeek());
             let row = document.createElement('tr');
+            if (this.context._options.display.calendarWeeks) {
+                const td = document.createElement('td');
+                const span = document.createElement('span');
+                span.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+                td.appendChild(span);
+                row.appendChild(td);
+            }
             for (let i = 0; i <= 42; i++) {
                 if (i !== 0 && i % 7 === 0) {
                     tableBody.appendChild(row);
                     row = document.createElement('tr');
                     if (this.context._options.display.calendarWeeks) {
                         const td = document.createElement('td');
-                        td.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+                        const span = document.createElement('span');
+                        span.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+                        td.appendChild(span);
                         row.appendChild(td);
                     }
                 }
@@ -885,7 +893,7 @@
         newGrid(nodeList) {
             let innerDate = this.context._viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours);
             nodeList.forEach((containerClone, index) => {
-                if (innerDate.weekDay === 0 && this.context._options.display.calendarWeeks) {
+                if (this.context._options.display.calendarWeeks && containerClone.classList.contains(Namespace.Css.calendarWeeks)) {
                     containerClone.innerText = `${innerDate.week}`;
                     return;
                 }
@@ -1187,6 +1195,8 @@
             return this._dates[this.lastPickedIndex];
         }
         get lastPickedIndex() {
+            if (this._dates.length === 0)
+                return 0;
             return this._dates.length - 1;
         }
         add(date) {
@@ -1217,7 +1227,7 @@
         }
         _setValue(target, index) {
             const noIndex = (typeof index === 'undefined'), isClear = !target && noIndex;
-            let isValid = true, oldDate = this.context.unset ? null : this._dates[index];
+            let oldDate = this.context.unset ? null : this._dates[index];
             if (!oldDate && !this.context.unset && noIndex && isClear) {
                 oldDate = this.lastPicked;
             }
@@ -1235,7 +1245,7 @@
                     date: undefined,
                     oldDate,
                     isClear,
-                    isValid,
+                    isValid: true,
                 });
                 this.context.display.update();
                 return;
@@ -1255,28 +1265,27 @@
                     date: this._dates[index],
                     oldDate,
                     isClear,
-                    isValid,
+                    isValid: true,
                 });
+                console.log(JSON.stringify(this._dates, null, 2)); //todo remove
+                return;
             }
-            else {
-                isValid = false;
-                if (this.context._options.keepInvalid) {
-                    this._dates[index] = target;
-                    this.context._viewDate = target.clone;
-                    this.context._notifyEvent({
-                        type: Namespace.Events.CHANGE,
-                        date: target,
-                        oldDate,
-                        isClear,
-                        isValid,
-                    });
-                }
+            if (this.context._options.keepInvalid) {
+                this._dates[index] = target;
+                this.context._viewDate = target.clone;
                 this.context._notifyEvent({
-                    type: Namespace.Events.ERROR,
+                    type: Namespace.Events.CHANGE,
                     date: target,
-                    oldDate
+                    oldDate,
+                    isClear,
+                    isValid: false,
                 });
             }
+            this.context._notifyEvent({
+                type: Namespace.Events.ERROR,
+                date: target,
+                oldDate
+            });
         }
         static getFormatByUnit(unit) {
             switch (unit) {
@@ -1651,39 +1660,19 @@
                 .forEach((e) => e.style.display = 'none');
             const datePickerMode = DatePickerModes[this.context.currentViewMode];
             let picker = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
-            const dateContainer = this.widget.querySelector(`.${Namespace.Css.dateContainer}`);
             switch (datePickerMode.CLASS_NAME) {
                 case Namespace.Css.decadesContainer:
-                    if (picker == null)
-                        dateContainer.appendChild(this._decadeDisplay.picker);
                     this._decadeDisplay.update();
                     break;
                 case Namespace.Css.yearsContainer:
-                    if (picker == null)
-                        dateContainer.appendChild(this._yearDisplay.picker);
                     this._yearDisplay.update();
                     break;
                 case Namespace.Css.monthsContainer:
-                    if (picker == null)
-                        dateContainer.appendChild(this._monthDisplay.picker);
                     this._monthDisplay.update();
                     break;
                 case Namespace.Css.daysContainer:
-                    if (picker == null)
-                        dateContainer.appendChild(this._dateDisplay.picker);
                     this._dateDisplay.update();
                     break;
-            }
-            if (picker == null) {
-                picker = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
-                //todo migrate this to bootstrap's eventhandler
-                this.widget.querySelectorAll('[data-action]');
-                /*actions.forEach(element => element.removeEventListener('click', (e) => {
-                    this.context.action.do(e);
-                }))*/
-                /*actions.forEach(element => element.addEventListener('click', (e) => {
-                    this.context.action.do(e);
-                }));*/
             }
             picker.style.display = 'block';
         }
@@ -1694,12 +1683,15 @@
         }
         _buildWidget() {
             const template = document.createElement('div');
-            //todo bootstrap, need to namespace classes
             template.classList.add(Namespace.Css.widget);
             if (this.context._options.calendarWeeks)
                 template.classList.add(Namespace.Css.widgetCalendarWeeks);
             const dateView = document.createElement('div');
             dateView.classList.add(Namespace.Css.dateContainer);
+            dateView.appendChild(this._decadeDisplay.picker);
+            dateView.appendChild(this._yearDisplay.picker);
+            dateView.appendChild(this._monthDisplay.picker);
+            dateView.appendChild(this._dateDisplay.picker);
             const timeView = document.createElement('div');
             timeView.classList.add(Namespace.Css.timeContainer);
             timeView.appendChild(this._timeDisplay.picker);
@@ -1909,19 +1901,28 @@
             //this.dates.add(new DateTime());
             //#endregion
             this._initFormatting();
-            this.currentViewMode = 3; //todo temp
+            this.currentViewMode = 0; //todo temp
             this.display.show();
             element.appendChild(this.display.widget);
-            this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
+            this.display.widget.querySelectorAll('[data-action]')
+                .forEach(element => element.addEventListener('click', (e) => {
                 this.action.do(e);
             }));
-            /*EventHandler.on(this.display.widget.querySelectorAll('[data-action]'),
-                Namespace.Events.clickAction, '[data-action]', event => this.action.do(event));*/
         }
         _getOptions(config) {
+            //the spread operator caused sub keys to be missing after merging
+            //this is to fix that issue by using spread on the child objects first
+            const spread = (left, right) => {
+                Object.keys(left).forEach(key => {
+                    if (typeof right[key] !== 'object')
+                        return;
+                    spread(left[key], right[key]);
+                    left[key] = Object.assign(Object.assign({}, right[key]), left[key]);
+                });
+            };
+            spread(config, Default);
             config = Object.assign(Object.assign({}, Default), config);
-            //todo missing Feather defaults
-            //typeCheckConfig(NAME, config, DefaultType) //todo after the default structure gets changed, we can provide a object with value types
+            //typeCheckConfig(NAME, config, DefaultType) //todo
             return config;
         }
         _initFormatting() {

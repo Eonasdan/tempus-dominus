@@ -262,66 +262,6 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
             line-height: 54px;
             width: 54px;
 
-            &.cw {
-                font-size: .8em;
-                height: 20px;
-                line-height: 20px;
-                color: $bs-datetimepicker-alternate-color;
-                cursor: default;
-            }
-
-            &.day {
-                height: 20px;
-                line-height: 20px;
-                width: 20px;
-            }
-
-            &.day:hover,
-            &.hour:hover,
-            &.minute:hover,
-            &.second:hover {
-                background: $bs-datetimepicker-btn-hover-bg;
-            }
-
-            &.old,
-            &.new {
-                color: $bs-datetimepicker-alternate-color;
-            }
-
-            &.today {
-                position: relative;
-
-                &:before {
-                    content: '';
-                    display: inline-block;
-                    border: solid transparent;
-                    border-width: 0 0 7px 7px;
-                    border-bottom-color: $bs-datetimepicker-active-bg;
-                    border-top-color: $bs-datetimepicker-secondary-border-color-rgba;
-                    position: absolute;
-                    bottom: 4px;
-                    right: 4px;
-                }
-            }
-
-            &.active,
-            &.active:hover {
-                background-color: $bs-datetimepicker-active-bg;
-                color: $bs-datetimepicker-active-color;
-                text-shadow: $bs-datetimepicker-text-shadow;
-            }
-
-            &.active.today:before {
-                border-bottom-color: #fff;
-            }
-
-            &.disabled,
-            &.disabled:hover {
-                background: none;
-                color: $bs-datetimepicker-disabled-color;
-                cursor: not-allowed;
-            }
-
             span {
                 display: inline-block;
                 width: 54px;
@@ -341,7 +281,12 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
                     text-shadow: $bs-datetimepicker-text-shadow;
                 }
 
-                &.old {
+                &.active.today:before {
+                    border-bottom-color: #fff;
+                }
+
+                &.old,
+                &.new {
                     color: $bs-datetimepicker-alternate-color;
                 }
 
@@ -350,6 +295,33 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
                     background: none;
                     color: $bs-datetimepicker-disabled-color;
                     cursor: not-allowed;
+                }
+
+                &.cw {
+                    font-size: .8em;
+                    height: 20px;
+                    line-height: 20px;
+                    color: $bs-datetimepicker-alternate-color;
+                    cursor: default;
+                }
+
+                &.day {
+                }
+
+                &.today {
+                    position: relative;
+
+                    &:before {
+                        content: '';
+                        display: inline-block;
+                        border: solid transparent;
+                        border-width: 0 0 7px 7px;
+                        border-bottom-color: $bs-datetimepicker-active-bg;
+                        border-top-color: $bs-datetimepicker-secondary-border-color-rgba;
+                        position: absolute;
+                        bottom: 4px;
+                        right: 4px;
+                    }
                 }
             }
         }

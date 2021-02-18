@@ -22,6 +22,7 @@ export default class Dates {
     }
 
     get lastPickedIndex(): number {
+        if (this._dates.length === 0) return 0;
         return this._dates.length - 1;
     }
 
@@ -67,7 +68,7 @@ export default class Dates {
     _setValue(target: DateTime | undefined, index?: number): void {
         const noIndex = (typeof index === 'undefined'),
             isClear = !target && noIndex;
-        let isValid = true, oldDate = this.context.unset ? null : this._dates[index];
+        let oldDate = this.context.unset ? null : this._dates[index];
         if (!oldDate && !this.context.unset && noIndex && isClear) {
             oldDate = this.lastPicked;
         }
@@ -85,7 +86,7 @@ export default class Dates {
                 date: undefined,
                 oldDate,
                 isClear,
-                isValid,
+                isValid: true,
             });
             this.context.display.update();
             return;
@@ -108,27 +109,28 @@ export default class Dates {
                 date: this._dates[index],
                 oldDate,
                 isClear,
-                isValid,
+                isValid: true,
             });
-        } else {
-            isValid = false;
-            if (this.context._options.keepInvalid) {
-                this._dates[index] = target;
-                this.context._viewDate = target.clone
-                this.context._notifyEvent({
-                    type: Namespace.Events.CHANGE,
-                    date: target,
-                    oldDate,
-                    isClear,
-                    isValid,
-                });
-            }
+            console.log(JSON.stringify(this._dates, null, 2)); //todo remove
+            return;
+        }
+
+        if (this.context._options.keepInvalid) {
+            this._dates[index] = target;
+            this.context._viewDate = target.clone
             this.context._notifyEvent({
-                type: Namespace.Events.ERROR,
+                type: Namespace.Events.CHANGE,
                 date: target,
-                oldDate
+                oldDate,
+                isClear,
+                isValid: false,
             });
         }
+        this.context._notifyEvent({
+            type: Namespace.Events.ERROR,
+            date: target,
+            oldDate
+        });
     }
 
     private static getFormatByUnit(unit: Unit): object {

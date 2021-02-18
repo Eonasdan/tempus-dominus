@@ -93,10 +93,10 @@ export default class Actions {
                     this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
                 }
 
-                if (!this.context.display._hasTime() && !this.context._options.keepOpen && !this.context._options.inline && !this.context._options.allowMultidate) {
+                if (!this.context.display._hasTime() && !this.context._options.keepOpen &&
+                    !this.context._options.inline && !this.context._options.allowMultidate) {
                     this.context.display.hide();
                 }
-//todo register events or look at Document.createEvent or at dom/event-handler
                 break;
             case ActionTypes.selectHour:
 

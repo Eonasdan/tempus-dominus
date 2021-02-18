@@ -191,51 +191,6 @@
   line-height: 54px;
   width: 54px;
 }
-.tempus-dominus-widget table td.cw {
-  font-size: 0.8em;
-  height: 20px;
-  line-height: 20px;
-  color: #6c757d;
-  cursor: default;
-}
-.tempus-dominus-widget table td.day {
-  height: 20px;
-  line-height: 20px;
-  width: 20px;
-}
-.tempus-dominus-widget table td.day:hover, .tempus-dominus-widget table td.hour:hover, .tempus-dominus-widget table td.minute:hover, .tempus-dominus-widget table td.second:hover {
-  background: #e9ecef;
-}
-.tempus-dominus-widget table td.old, .tempus-dominus-widget table td.new {
-  color: #6c757d;
-}
-.tempus-dominus-widget table td.today {
-  position: relative;
-}
-.tempus-dominus-widget table td.today:before {
-  content: "";
-  display: inline-block;
-  border: solid transparent;
-  border-width: 0 0 7px 7px;
-  border-bottom-color: #0d6efd;
-  border-top-color: rgba(0, 0, 0, 0.2);
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
-}
-.tempus-dominus-widget table td.active, .tempus-dominus-widget table td.active:hover {
-  background-color: #0d6efd;
-  color: #ff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-}
-.tempus-dominus-widget table td.active.today:before {
-  border-bottom-color: #fff;
-}
-.tempus-dominus-widget table td.disabled, .tempus-dominus-widget table td.disabled:hover {
-  background: none;
-  color: #6c757d;
-  cursor: not-allowed;
-}
 .tempus-dominus-widget table td span {
   display: inline-block;
   width: 54px;
@@ -253,13 +208,37 @@
   color: #ff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
-.tempus-dominus-widget table td span.old {
+.tempus-dominus-widget table td span.active.today:before {
+  border-bottom-color: #fff;
+}
+.tempus-dominus-widget table td span.old, .tempus-dominus-widget table td span.new {
   color: #6c757d;
 }
 .tempus-dominus-widget table td span.disabled, .tempus-dominus-widget table td span.disabled:hover {
   background: none;
   color: #6c757d;
   cursor: not-allowed;
+}
+.tempus-dominus-widget table td span.cw {
+  font-size: 0.8em;
+  height: 20px;
+  line-height: 20px;
+  color: #6c757d;
+  cursor: default;
+}
+.tempus-dominus-widget table td span.today {
+  position: relative;
+}
+.tempus-dominus-widget table td span.today:before {
+  content: "";
+  display: inline-block;
+  border: solid transparent;
+  border-width: 0 0 7px 7px;
+  border-bottom-color: #0d6efd;
+  border-top-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
 }
 .tempus-dominus-widget.useTwentyfour td.hour {
   height: 27px;

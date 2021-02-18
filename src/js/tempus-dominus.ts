@@ -2,7 +2,7 @@ import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
 import Actions from './actions';
-import {Default, Namespace} from "./conts";
+import {Default, Namespace} from './conts';
 import {DateTime, Unit} from './datetime';
 import EventHandler from './dom/event-handler';
 
@@ -37,27 +37,36 @@ export class TempusDominus {
 
         this._initFormatting();
 
-        this.currentViewMode = 3; //todo temp
+        this.currentViewMode = 0; //todo temp
 
         this.display.show();
 
         element.appendChild(this.display.widget);
 
-       this.display.widget.querySelectorAll('[data-action]').forEach(element => element.addEventListener('click', (e) => {
-            this.action.do(e);
-        }));
-
-        /*EventHandler.on(this.display.widget.querySelectorAll('[data-action]'),
-            Namespace.Events.clickAction, '[data-action]', event => this.action.do(event));*/
+        this.display.widget.querySelectorAll('[data-action]')
+            .forEach(element => element.addEventListener('click', (e) => {
+                this.action.do(e);
+            }));
     }
 
     _getOptions(config) {
+        //the spread operator caused sub keys to be missing after merging
+        //this is to fix that issue by using spread on the child objects first
+        const spread = (left, right) => {
+            Object.keys(left).forEach(key => {
+                if (typeof right[key] !== 'object') return;
+                spread(left[key], right[key]);
+                left[key] = {...right[key], ...left[key]};
+            });
+        }
+        spread(config, Default);
+
         config = {
             ...Default,
             ...config
         }
-        //todo missing Feather defaults
-        //typeCheckConfig(NAME, config, DefaultType) //todo after the default structure gets changed, we can provide a object with value types
+
+        //typeCheckConfig(NAME, config, DefaultType) //todo
         return config
     }
 

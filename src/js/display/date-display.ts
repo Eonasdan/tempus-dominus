@@ -27,14 +27,23 @@ export default class DateDisplay {
         const tableBody = document.createElement('tbody');
         tableBody.appendChild(this._daysOfTheWeek());
         let row = document.createElement('tr');
+        if (this.context._options.display.calendarWeeks) {
+            const td = document.createElement('td')
+            const span = document.createElement('span');
+            span.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+            td.appendChild(span);
+            row.appendChild(td);
+        }
         for (let i = 0; i <= 42; i++) {
             if (i !== 0 && i % 7 === 0) {
                 tableBody.appendChild(row);
                 row = document.createElement('tr');
 
                 if (this.context._options.display.calendarWeeks) {
-                    const td = document.createElement('td')
-                    td.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+                    const td = document.createElement('td');
+                    const span = document.createElement('span');
+                    span.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+                    td.appendChild(span);
                     row.appendChild(td);
                 }
             }
@@ -74,11 +83,10 @@ export default class DateDisplay {
         let innerDate = this.context._viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours);
 
         nodeList.forEach((containerClone: HTMLElement, index) => {
-            if (innerDate.weekDay === 0 && this.context._options.display.calendarWeeks) {
+            if (this.context._options.display.calendarWeeks && containerClone.classList.contains(Namespace.Css.calendarWeeks)) {
                 containerClone.innerText = `${innerDate.week}`;
                 return;
             }
-
 
             let classes = [];
             classes.push(Namespace.Css.day);
