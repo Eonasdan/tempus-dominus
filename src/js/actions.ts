@@ -1,18 +1,21 @@
 import {DatePickerModes, Namespace} from './conts.js';
 import {Unit} from './datetime';
 import {TempusDominus} from './tempus-dominus';
+import Collapse from './display/collapse';
 
 export default class Actions {
     private context: TempusDominus;
+    private collapse: Collapse;
 
     constructor(context: TempusDominus) {
         this.context = context;
+        this.collapse = new Collapse();
     }
 
     do(e, action?) {
-        if (e.currentTarget.classList.contains(Namespace.Css.disabled)) return false;
-
-        action = action || e.currentTarget.dataset.action;
+        const currentTarget = e.currentTarget;
+        if (currentTarget.classList.contains(Namespace.Css.disabled)) return false;
+        action = action || currentTarget.dataset.action;
         console.log('action', action);
 
         switch (action) {
@@ -30,7 +33,7 @@ export default class Actions {
                 this.context.display._showMode(1);
                 break;
             case ActionTypes.selectMonth: //todo seems like these could be merged
-                const month = +e.target.getAttribute('data-value');
+                const month = +currentTarget.getAttribute('data-value');
                 this.context._viewDate.month = month;
 
                 if (this.context.currentViewMode === this.context.minViewModeNumber) {
@@ -44,7 +47,7 @@ export default class Actions {
                 this.context._viewUpdate(Unit.month);
                 break;
             case ActionTypes.selectYear:
-                const year = +e.target.getAttribute('data-value');
+                const year = +currentTarget.getAttribute('data-value');
                 this.context._viewDate.year = year;
 
                 if (this.context.currentViewMode === this.context.minViewModeNumber) {
@@ -58,7 +61,7 @@ export default class Actions {
                 this.context._viewUpdate(Unit.year);
                 break;
             case ActionTypes.selectDecade:
-                const decadeYear = +e.target.getAttribute('data-value');
+                const decadeYear = +currentTarget.getAttribute('data-value');
                 this.context._viewDate.year = decadeYear;
 
                 if (this.context.currentViewMode === this.context.minViewModeNumber) {
@@ -73,14 +76,14 @@ export default class Actions {
                 break;
             case ActionTypes.selectDay:
                 const day = this.context._viewDate.clone;
-                if (e.target.classList.contains(Namespace.Css.old)) {
+                if (currentTarget.classList.contains(Namespace.Css.old)) {
                     day.manipulate(-11, Unit.month);
                 }
-                if (e.target.classList.contains(Namespace.Css.new)) {
+                if (currentTarget.classList.contains(Namespace.Css.new)) {
                     day.manipulate(1, Unit.month);
                 }
 
-                day.date = +e.target.innerText;
+                day.date = +currentTarget.innerText;
                 let index = 0;
                 if (this.context._options.allowMultidate) {
                     index = this.context.dates.pickedIndex(day, Unit.date);
@@ -129,7 +132,19 @@ export default class Actions {
 
                 break;
             case ActionTypes.togglePicker:
+                this.context.display.widget
+                    .querySelectorAll(`.${Namespace.Css.dateContainer}, .${Namespace.Css.timeContainer}`)
+                    .forEach((e: HTMLElement) => this.collapse.toggle(e));
 
+                if (currentTarget.getAttribute('title') === this.context._options.localization.selectDate) {
+                    currentTarget.setAttribute('title', this.context._options.localization.selectTime);
+                    currentTarget.innerHTML = this.context.display.iconTag(this.context._options.display.icons.time).outerHTML;
+                    this.context.display.updateDateView();
+                } else {
+                    currentTarget.setAttribute('title', this.context._options.localization.selectDate);
+                    currentTarget.innerHTML = this.context.display.iconTag(this.context._options.display.icons.date).outerHTML;
+                    this.context.display.updateTimeView();
+                }
                 break;
             case ActionTypes.showPicker:
 

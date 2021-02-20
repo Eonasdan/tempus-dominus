@@ -152,7 +152,7 @@ export class DateTime extends Date {
     isBefore(compare: DateTime, unit: Unit): boolean {
         if (!unit) return this < compare;
         if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
-        return this.clone.startOf(unit).valueOf() < compare.startOf(unit).valueOf();
+        return this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf();
     }
 
     /**
@@ -164,7 +164,7 @@ export class DateTime extends Date {
     isAfter(compare: DateTime, unit: Unit): boolean {
         if (!unit) return this > compare;
         if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
-        return this.clone.startOf(unit).valueOf() > compare.startOf(unit).valueOf();
+        return this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf();
     }
 
     /**
@@ -275,6 +275,15 @@ export class DateTime extends Date {
      */
     get hoursFormatted(): string {
         return this.hours < 10 ? (`0${this.hours}`) : `${this.hours}`;
+    }
+
+    /**
+     * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
+     */
+    get twelveHoursFormatted(): string {
+        let hour = this.hours;
+        if (hour > 12) hour = hour - 12;
+        return hour < 10 ? (`0${hour}`) : `${hour}`;
     }
 
     /**

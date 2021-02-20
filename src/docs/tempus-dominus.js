@@ -159,7 +159,7 @@
                 return this < compare;
             if (this[unit] === undefined)
                 throw `Unit '${unit}' is not valid`;
-            return this.clone.startOf(unit).valueOf() < compare.startOf(unit).valueOf();
+            return this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf();
         }
         /**
          * Return true if {@link compare} is after this date
@@ -172,7 +172,7 @@
                 return this > compare;
             if (this[unit] === undefined)
                 throw `Unit '${unit}' is not valid`;
-            return this.clone.startOf(unit).valueOf() > compare.startOf(unit).valueOf();
+            return this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf();
         }
         /**
          * Return true if {@link compare} is same this date
@@ -269,6 +269,15 @@
          */
         get hoursFormatted() {
             return this.hours < 10 ? (`0${this.hours}`) : `${this.hours}`;
+        }
+        /**
+         * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
+         */
+        get twelveHoursFormatted() {
+            let hour = this.hours;
+            if (hour > 12)
+                hour = hour - 12;
+            return hour < 10 ? (`0${hour}`) : `${hour}`;
         }
         /**
          * Get the meridiem of the date. E.g. AM or PM.
@@ -375,7 +384,7 @@
                 next: 'fas fa-chevron-right',
                 today: 'fas fa-calendar-check',
                 clear: 'fas fa-trash',
-                close: 'fas fa-times'
+                close: 'fas fa-times',
             },
             collapse: true,
             sideBySide: false,
@@ -385,11 +394,11 @@
             buttons: {
                 showToday: false,
                 showClear: false,
-                showClose: false
+                showClose: false,
             },
             widgetPositioning: {
                 horizontal: 'auto',
-                vertical: 'auto'
+                vertical: 'auto',
             },
             components: {
                 century: true,
@@ -400,13 +409,14 @@
                 hours: true,
                 minutes: true,
                 seconds: false,
-                useTwentyfourHour: false
-            }
+                useTwentyfourHour: false,
+            },
         },
         stepping: 1,
         useCurrent: true,
         defaultDate: false,
         localization: {
+            //todo plugin
             today: 'Go to today',
             clear: 'Clear selection',
             close: 'Close the picker',
@@ -433,7 +443,7 @@
             togglePeriod: 'Toggle Period',
             selectTime: 'Select Time',
             selectDate: 'Select Date',
-            dayViewHeaderFormat: 'long'
+            dayViewHeaderFormat: 'long',
         },
         widgetParent: null,
         readonly: false,
@@ -443,6 +453,7 @@
         inline: false,
         keepInvalid: false,
         keyBinds: {
+            //todo plugin //todo jquery //todo moment
             up: function () {
                 if (!this.widget) {
                     return false;
@@ -566,13 +577,13 @@
                 this.date(this.getMoment());
                 return true;
             },
-            'delete': function () {
+            delete: function () {
                 if (!this.widget) {
                     return false;
                 }
                 this.clear();
                 return true;
-            }
+            },
         },
         debug: false,
         allowInputToggle: false,
@@ -580,7 +591,7 @@
         allowMultidate: false,
         multidateSeparator: ', ',
         promptTimeOnDateChange: false,
-        promptTimeOnDateChangeTransitionDelay: 200
+        promptTimeOnDateChangeTransitionDelay: 200,
     };
     //this is not the way I want this to stay but nested classes seemed to blown once its compiled.
     const NAME = 'tempus-dominus';
@@ -637,9 +648,16 @@
             //#endregion
             //#region time container
             this.timeContainer = 'time-container';
+            this.clockContainer = `${this.timeContainer}-clock`;
             this.hourContainer = `${this.timeContainer}-hour`;
             this.minuteContainer = `${this.timeContainer}-minute`;
             this.secondContainer = `${this.timeContainer}-second`;
+            //#endregion
+            //#region collapse
+            this.show = 'show';
+            this.hide = 'hide';
+            this.collapsing = 'td-collapsing';
+            this.collapse = 'td-collapse';
             //#endregion
         }
     }
@@ -651,32 +669,102 @@
     Namespace.DATA_API_KEY = DATA_API_KEY;
     Namespace.Events = new Events();
     Namespace.Css = new Css();
-    const DatePickerModes = [{
+    const DatePickerModes = [
+        {
             CLASS_NAME: Namespace.Css.daysContainer,
             NAV_FUNCTION: Unit.month,
-            NAV_STEP: 1
-        }, {
+            NAV_STEP: 1,
+        },
+        {
             CLASS_NAME: Namespace.Css.monthsContainer,
             NAV_FUNCTION: Unit.year,
-            NAV_STEP: 1
-        }, {
+            NAV_STEP: 1,
+        },
+        {
             CLASS_NAME: Namespace.Css.yearsContainer,
             NAV_FUNCTION: Unit.year,
-            NAV_STEP: 10
-        }, {
+            NAV_STEP: 10,
+        },
+        {
             CLASS_NAME: Namespace.Css.decadesContainer,
             NAV_FUNCTION: Unit.year,
-            NAV_STEP: 100
-        }];
+            NAV_STEP: 100,
+        },
+    ];
+
+    class Collapse {
+        constructor() {
+            this.getTransitionDurationFromElement = element => {
+                if (!element) {
+                    return 0;
+                }
+                // Get transition-duration of the element
+                let { transitionDuration, transitionDelay } = window.getComputedStyle(element);
+                const floatTransitionDuration = Number.parseFloat(transitionDuration);
+                const floatTransitionDelay = Number.parseFloat(transitionDelay);
+                // Return 0 if element or transition duration is not found
+                if (!floatTransitionDuration && !floatTransitionDelay) {
+                    return 0;
+                }
+                // If multiple durations are defined, take the first
+                transitionDuration = transitionDuration.split(',')[0];
+                transitionDelay = transitionDelay.split(',')[0];
+                return ((Number.parseFloat(transitionDuration) +
+                    Number.parseFloat(transitionDelay)) *
+                    1000);
+            };
+        }
+        toggle(target) {
+            if (target.classList.contains(Namespace.Css.show)) {
+                this.hide(target);
+            }
+            else {
+                this.show(target);
+            }
+        }
+        show(target) {
+            if (target.classList.contains(Namespace.Css.collapsing) ||
+                target.classList.contains(Namespace.Css.show))
+                return;
+            const complete = () => {
+                target.classList.remove(Namespace.Css.collapsing);
+                target.classList.add(Namespace.Css.collapse, Namespace.Css.show);
+                target.style.height = '';
+            };
+            target.style.height = '0';
+            target.classList.remove(Namespace.Css.collapse);
+            target.classList.add(Namespace.Css.collapsing);
+            setTimeout(complete, this.getTransitionDurationFromElement(target));
+            target.style.height = `${target.scrollHeight}px`;
+        }
+        hide(target) {
+            if (target.classList.contains(Namespace.Css.collapsing) ||
+                !target.classList.contains(Namespace.Css.show))
+                return;
+            const complete = () => {
+                target.classList.remove(Namespace.Css.collapsing);
+                target.classList.add(Namespace.Css.collapse);
+            };
+            target.style.height = `${target.getBoundingClientRect()['height']}px`;
+            const reflow = element => element.offsetHeight;
+            reflow(target);
+            target.classList.remove(Namespace.Css.collapse, Namespace.Css.show);
+            target.classList.add(Namespace.Css.collapsing);
+            target.style.height = '';
+            setTimeout(complete, this.getTransitionDurationFromElement(target));
+        }
+    }
 
     class Actions {
         constructor(context) {
             this.context = context;
+            this.collapse = new Collapse();
         }
         do(e, action) {
-            if (e.currentTarget.classList.contains(Namespace.Css.disabled))
+            const currentTarget = e.currentTarget;
+            if (currentTarget.classList.contains(Namespace.Css.disabled))
                 return false;
-            action = action || e.currentTarget.dataset.action;
+            action = action || currentTarget.dataset.action;
             console.log('action', action);
             switch (action) {
                 case ActionTypes.next:
@@ -693,7 +781,7 @@
                     this.context.display._showMode(1);
                     break;
                 case ActionTypes.selectMonth: //todo seems like these could be merged
-                    const month = +e.target.getAttribute('data-value');
+                    const month = +currentTarget.getAttribute('data-value');
                     this.context._viewDate.month = month;
                     if (this.context.currentViewMode === this.context.minViewModeNumber) {
                         this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
@@ -707,7 +795,7 @@
                     this.context._viewUpdate(Unit.month);
                     break;
                 case ActionTypes.selectYear:
-                    const year = +e.target.getAttribute('data-value');
+                    const year = +currentTarget.getAttribute('data-value');
                     this.context._viewDate.year = year;
                     if (this.context.currentViewMode === this.context.minViewModeNumber) {
                         this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
@@ -721,7 +809,7 @@
                     this.context._viewUpdate(Unit.year);
                     break;
                 case ActionTypes.selectDecade:
-                    const decadeYear = +e.target.getAttribute('data-value');
+                    const decadeYear = +currentTarget.getAttribute('data-value');
                     this.context._viewDate.year = decadeYear;
                     if (this.context.currentViewMode === this.context.minViewModeNumber) {
                         this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
@@ -736,13 +824,13 @@
                     break;
                 case ActionTypes.selectDay:
                     const day = this.context._viewDate.clone;
-                    if (e.target.classList.contains(Namespace.Css.old)) {
+                    if (currentTarget.classList.contains(Namespace.Css.old)) {
                         day.manipulate(-11, Unit.month);
                     }
-                    if (e.target.classList.contains(Namespace.Css.new)) {
+                    if (currentTarget.classList.contains(Namespace.Css.new)) {
                         day.manipulate(1, Unit.month);
                     }
-                    day.date = +e.target.innerText;
+                    day.date = +currentTarget.innerText;
                     let index = 0;
                     if (this.context._options.allowMultidate) {
                         index = this.context.dates.pickedIndex(day, Unit.date);
@@ -782,6 +870,19 @@
                 case ActionTypes.togglePeriod:
                     break;
                 case ActionTypes.togglePicker:
+                    this.context.display.widget
+                        .querySelectorAll(`.${Namespace.Css.dateContainer}, .${Namespace.Css.timeContainer}`)
+                        .forEach((e) => this.collapse.toggle(e));
+                    if (currentTarget.getAttribute('title') === this.context._options.localization.selectDate) {
+                        currentTarget.setAttribute('title', this.context._options.localization.selectTime);
+                        currentTarget.innerHTML = this.context.display.iconTag(this.context._options.display.icons.time).outerHTML;
+                        this.context.display.updateDateView();
+                    }
+                    else {
+                        currentTarget.setAttribute('title', this.context._options.localization.selectDate);
+                        currentTarget.innerHTML = this.context.display.iconTag(this.context._options.display.icons.date).outerHTML;
+                        this.context.display.updateTimeView();
+                    }
                     break;
                 case ActionTypes.showPicker:
                     break;
@@ -1278,10 +1379,8 @@
             this.context = context;
         }
         get picker() {
-            //todo could move some of this stuff to the ctor
-            //then picker function clears and appends table body
             const container = document.createElement('div');
-            container.classList.add(Namespace.Css.timeContainer);
+            container.classList.add(Namespace.Css.clockContainer);
             const table = document.createElement('table');
             const tableBody = document.createElement('tbody');
             this._grid().forEach(row => tableBody.appendChild(row));
@@ -1292,7 +1391,7 @@
         update() {
             const timesDiv = this.context.display.widget.getElementsByClassName(Namespace.Css.timeContainer)[0];
             const lastPicked = (this.context.dates.lastPicked || this.context._viewDate).clone;
-            if (!this.context._options.display.components.use24Hours) {
+            if (!this.context._options.display.components.useTwentyfourHour) {
                 const toggle = timesDiv.querySelector(`[data-action=${ActionTypes.togglePeriod}]`);
                 toggle.innerText = lastPicked.meridiem();
                 if (!this.context.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
@@ -1322,19 +1421,17 @@
                 timesDiv.querySelector(`[data-action=${ActionTypes.decrementSeconds}]`).classList.add(Namespace.Css.disabled);
             }
             if (this.context._options.display.components.hours)
-                timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = lastPicked.hoursFormatted;
+                timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = lastPicked.twelveHoursFormatted;
             if (this.context._options.display.components.minutes)
                 timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
             if (this.context._options.display.components.seconds)
                 timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
         }
         _grid() {
-            const rows = [], separator = document.createElement('td'), separatorColon = separator.cloneNode(true), topRow = document.createElement('tr'), middleRow = document.createElement('tr'), bottomRow = document.createElement('tr'), upIcon = this.context.display.iconTag(this.context._options.display.icons.up), downIcon = this.context.display.iconTag(this.context._options.display.icons.down), actionLink = document.createElement('a');
+            const rows = [], separator = document.createElement('td'), separatorColon = separator.cloneNode(true), topRow = document.createElement('tr'), middleRow = document.createElement('tr'), bottomRow = document.createElement('tr'), upIcon = this.context.display.iconTag(this.context._options.display.icons.up), downIcon = this.context.display.iconTag(this.context._options.display.icons.down), actionLink = document.createElement('span');
             separator.classList.add(Namespace.Css.separator);
             separatorColon.innerHTML = ':';
             actionLink.classList.add('btn'); //todo bootstrap
-            actionLink.setAttribute('href', 'javascript:void(0);');
-            actionLink.setAttribute('tabindex', '-1');
             if (this.context._options.display.components.hours) {
                 let td = document.createElement('td');
                 let actionLinkClone = actionLink.cloneNode(true);
@@ -1485,7 +1582,7 @@
                     return;
                 this.context.currentViewMode = max;
             }
-            this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`)
+            this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div`) //, .${Namespace.Css.timeContainer} > div`)
                 .forEach((e) => e.style.display = 'none');
             const datePickerMode = DatePickerModes[this.context.currentViewMode];
             let picker = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
@@ -1506,6 +1603,7 @@
             picker.style.display = 'block';
         }
         hide() {
+            console.log('hide called');
         }
         _place() {
             console.log('place called');
@@ -1513,7 +1611,7 @@
         _buildWidget() {
             const template = document.createElement('div');
             template.classList.add(Namespace.Css.widget);
-            if (this.context._options.calendarWeeks)
+            if (this.context._options.display.calendarWeeks)
                 template.classList.add(Namespace.Css.widgetCalendarWeeks);
             const dateView = document.createElement('div');
             dateView.classList.add(Namespace.Css.dateContainer);
@@ -1524,23 +1622,18 @@
             const timeView = document.createElement('div');
             timeView.classList.add(Namespace.Css.timeContainer);
             timeView.appendChild(this._timeDisplay.picker);
-            const toolbar = document.createElement('li');
+            const toolbar = document.createElement('div');
             toolbar.classList.add(Namespace.Css.switch);
-            if (this.context._options.collapse)
-                toolbar.classList.add('accordion-toggle'); //todo bootstrap
             toolbar.appendChild(this._toolbar);
-            /*if (!this.context._options.inline) { //todo restore this. for now I don't want the position stuff it adds
-                template.classList.add('dropdown-menu'); //todo bootstrap
-            }*/
             if (this.context._options.display.components.useTwentyfourHour) {
                 template.classList.add(Namespace.Css.useTwentyfour);
             }
-            if (this.context._options.display.components.second && !this.context._options.display.components.useTwentyfourHour) {
+            if (this.context._options.display.components.seconds && !this.context._options.display.components.useTwentyfourHour) {
                 template.classList.add(Namespace.Css.wider);
             }
-            if (this.context._options.sideBySide && this._hasDate() && this._hasTime()) {
+            if (this.context._options.display.sideBySide && this._hasDate() && this._hasTime()) {
                 template.classList.add(Namespace.Css.sideBySide);
-                if (this.context._options.toolbarPlacement === 'top') {
+                if (this.context._options.display.toolbarPlacement === 'top') {
                     template.appendChild(toolbar);
                 }
                 const row = document.createElement('div');
@@ -1549,41 +1642,36 @@
                 timeView.classList.add('col-md-6');
                 row.appendChild(dateView);
                 row.appendChild(timeView);
-                if (this.context._options.toolbarPlacement === 'bottom' || this.context._options.toolbarPlacement === 'default') {
+                if (this.context._options.display.toolbarPlacement === 'bottom' || this.context._options.display.toolbarPlacement === 'default') {
                     template.appendChild(toolbar);
                 }
                 this._widget = template;
                 return;
             }
-            const content = document.createElement('ul');
-            content.classList.add('list-unstyled'); //todo bootstrap
-            if (this.context._options.toolbarPlacement === 'top') {
+            const content = document.createElement('div');
+            if (this.context._options.display.toolbarPlacement === 'top') {
                 content.appendChild(toolbar);
             }
             if (this._hasDate()) {
-                const li = document.createElement('li');
-                if (this.context._options.collapse && this._hasTime()) {
-                    //li.classList.add('collapse'); //todo bootstrap
-                    if (this.context._options.viewMode !== 'times')
-                        li.classList.add('show');
+                if (this.context._options.display.collapse && this._hasTime()) {
+                    dateView.classList.add(Namespace.Css.collapse);
+                    if (this.context._options.display.viewMode !== 'times')
+                        dateView.classList.add(Namespace.Css.show);
                 }
-                li.appendChild(dateView);
-                content.appendChild(li);
+                content.appendChild(dateView);
             }
-            if (this.context._options.toolbarPlacement === 'default') {
+            if (this.context._options.display.toolbarPlacement === 'default') {
                 content.appendChild(toolbar);
             }
             if (this._hasTime()) {
-                const li = document.createElement('li');
-                if (this.context._options.collapse && this._hasDate()) {
-                    //li.classList.add('collapse'); //todo bootstrap
-                    if (this.context._options.viewMode === 'times')
-                        li.classList.add('show');
+                if (this.context._options.display.collapse && this._hasDate()) {
+                    timeView.classList.add(Namespace.Css.collapse);
+                    if (this.context._options.display.viewMode === 'times')
+                        timeView.classList.add(Namespace.Css.show);
                 }
-                li.appendChild(timeView);
-                content.appendChild(li);
+                content.appendChild(timeView);
             }
-            if (this.context._options.toolbarPlacement === 'bottom') {
+            if (this.context._options.display.toolbarPlacement === 'bottom') {
                 content.appendChild(toolbar);
             }
             template.appendChild(content);
@@ -1599,18 +1687,16 @@
             const tbody = document.createElement('tbody');
             if (this.context._options.display.buttons.showToday) {
                 const td = document.createElement('td');
-                const a = document.createElement('a');
-                a.setAttribute('href', 'javascript:void(0);');
-                a.setAttribute('tabindex', '-1');
-                a.setAttribute('data-action', ActionTypes.today);
-                a.setAttribute('title', this.context._options.localization.today);
-                a.appendChild(this.iconTag(this.context._options.display.icons.today));
-                td.appendChild(a);
+                const span = document.createElement('span');
+                span.setAttribute('data-action', ActionTypes.today);
+                span.setAttribute('title', this.context._options.localization.today);
+                span.appendChild(this.iconTag(this.context._options.display.icons.today));
+                td.appendChild(span);
                 tbody.appendChild(td);
             }
-            if (!this.context._options.sideBySide && this.context._options.collapse && this._hasDate() && this._hasTime()) {
+            if (!this.context._options.display.sideBySide && this.context._options.display.collapse && this._hasDate() && this._hasTime()) {
                 let title, icon;
-                if (this.context._options.viewMode === 'times') {
+                if (this.context._options.display.viewMode === 'times') {
                     title = this.context._options.localization.selectDate;
                     icon = this.context._options.display.icons.date;
                 }
@@ -1619,35 +1705,29 @@
                     icon = this.context._options.display.icons.time;
                 }
                 const td = document.createElement('td');
-                const a = document.createElement('a');
-                a.setAttribute('href', 'javascript:void(0);');
-                a.setAttribute('tabindex', '-1');
-                a.setAttribute('data-action', ActionTypes.togglePicker);
-                a.setAttribute('title', title);
-                a.appendChild(this.iconTag(icon));
-                td.appendChild(a);
+                const span = document.createElement('span');
+                span.setAttribute('data-action', ActionTypes.togglePicker);
+                span.setAttribute('title', title);
+                span.appendChild(this.iconTag(icon));
+                td.appendChild(span);
                 tbody.appendChild(td);
             }
             if (this.context._options.display.buttons.showClear) {
                 const td = document.createElement('td');
-                const a = document.createElement('a');
-                a.setAttribute('href', 'javascript:void(0);');
-                a.setAttribute('tabindex', '-1');
-                a.setAttribute('data-action', ActionTypes.clear);
-                a.setAttribute('title', this.context._options.localization.clear);
-                a.appendChild(this.iconTag(this.context._options.display.icons.today));
-                td.appendChild(a);
+                const span = document.createElement('span');
+                span.setAttribute('data-action', ActionTypes.clear);
+                span.setAttribute('title', this.context._options.localization.clear);
+                span.appendChild(this.iconTag(this.context._options.display.icons.today));
+                td.appendChild(span);
                 tbody.appendChild(td);
             }
             if (this.context._options.display.buttons.showClose) {
                 const td = document.createElement('td');
-                const a = document.createElement('a');
-                a.setAttribute('href', 'javascript:void(0);');
-                a.setAttribute('tabindex', '-1');
-                a.setAttribute('data-action', ActionTypes.close);
-                a.setAttribute('title', this.context._options.localization.close);
-                a.appendChild(this.iconTag(this.context._options.display.icons.today));
-                td.appendChild(a);
+                const span = document.createElement('span');
+                span.setAttribute('data-action', ActionTypes.close);
+                span.setAttribute('title', this.context._options.localization.close);
+                span.appendChild(this.iconTag(this.context._options.display.icons.today));
+                td.appendChild(span);
                 tbody.appendChild(td);
             }
             const table = document.createElement('table');
@@ -1658,45 +1738,37 @@
          *
          */
         get headTemplate() {
+            let span = document.createElement('span');
             const headTemplate = document.createElement('thead');
             const previous = document.createElement('th');
             previous.classList.add(Namespace.Css.previous);
             previous.setAttribute('data-action', ActionTypes.previous);
-            previous.appendChild(this.iconTag(this.context._options.display.icons.previous));
+            span.appendChild(this.iconTag(this.context._options.display.icons.previous));
+            previous.appendChild(span);
             headTemplate.appendChild(previous);
             const switcher = document.createElement('th');
             switcher.classList.add(Namespace.Css.switch);
             switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
-            switcher.setAttribute('colspan', this.context._options.calendarWeeks ? '6' : '5');
+            switcher.setAttribute('colspan', this.context._options.display.calendarWeeks ? '6' : '5');
             headTemplate.appendChild(switcher);
             const next = document.createElement('th');
             next.classList.add(Namespace.Css.next);
             next.setAttribute('data-action', ActionTypes.next);
-            next.appendChild(this.iconTag(this.context._options.display.icons.next));
+            span = document.createElement('span');
+            span.appendChild(this.iconTag(this.context._options.display.icons.next));
+            next.appendChild(span);
             headTemplate.appendChild(next);
             return headTemplate.cloneNode(true);
         }
-        get contentTemplate() {
-            const contentTemplate = document.createElement('tbody');
-            const rowElement = document.createElement('tr');
-            const td = document.createElement('td');
-            td.setAttribute('colspan', this.context._options.calendarWeeks ? '6' : '5');
-            rowElement.appendChild(td);
-            contentTemplate.appendChild(rowElement);
-            return contentTemplate.cloneNode(true);
-        }
         iconTag(i) {
-            const container = document.createElement('span');
             if (this.context._options.display.icons.type === 'sprites') {
                 const svg = document.createElement('svg');
                 svg.innerHTML = `<use xlink:href="${i}"></use>`;
-                container.appendChild(svg);
-                return container;
+                return svg;
             }
             const icon = document.createElement('i');
             DOMTokenList.prototype.add.apply(icon.classList, i.split(' '));
-            container.appendChild(icon);
-            return container;
+            return icon;
         }
     }
 
@@ -1716,7 +1788,7 @@
 
     class TempusDominus {
         constructor(element, options) {
-            this._options = this._getOptions(options);
+            this._options = this.initializeOptions(options);
             this._element = element;
             this._viewDate = new DateTime();
             this.currentViewMode = null;
@@ -1729,7 +1801,7 @@
             //#region temp - REMOVE THIS STUFF
             //this.dates.add(new DateTime());
             //#endregion
-            this._initFormatting();
+            this.initializeFormatting();
             this.currentViewMode = 0; //todo temp
             this.display.show();
             element.appendChild(this.display.widget);
@@ -1738,7 +1810,7 @@
                 this.action.do(e);
             }));
         }
-        _getOptions(config) {
+        initializeOptions(config) {
             //the spread operator caused sub keys to be missing after merging
             //this is to fix that issue by using spread on the child objects first
             const spread = (left, right) => {
@@ -1751,10 +1823,10 @@
             };
             spread(config, Default);
             config = Object.assign(Object.assign({}, Default), config);
-            //typeCheckConfig(NAME, config, DefaultType) //todo
+            //typeCheckConfig(NAME, config, DefaultType) //todo might be able to cast "config" as Option to see if it breaks?
             return config;
         }
-        _initFormatting() {
+        initializeFormatting() {
             if (this._options.display.components.year) {
                 this.minViewModeNumber = 2;
             }

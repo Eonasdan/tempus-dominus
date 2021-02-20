@@ -1,8 +1,8 @@
-import DateDisplay from './date-display';
-import MonthDisplay from './month-display';
-import YearDisplay from './year-display';
-import DecadeDisplay from './decade-display';
-import TimeDisplay from './time-display';
+import DateDisplay from './calendar/date-display';
+import MonthDisplay from './calendar/month-display';
+import YearDisplay from './calendar/year-display';
+import DecadeDisplay from './calendar/decade-display';
+import TimeDisplay from './time/time-display';
 import {DateTime} from '../datetime';
 import {DatePickerModes, Namespace} from '../conts';
 import {TempusDominus} from '../tempus-dominus';
@@ -73,7 +73,7 @@ export default class Display {
             if (this.context.currentViewMode == max) return;
             this.context.currentViewMode = max;
         }
-        this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`)
+        this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div`)//, .${Namespace.Css.timeContainer} > div`)
             .forEach((e: HTMLElement) => e.style.display = 'none');
 
         const datePickerMode = DatePickerModes[this.context.currentViewMode];
@@ -98,7 +98,7 @@ export default class Display {
     }
 
     hide(): void {
-
+        console.log('hide called');
     }
 
     _place(): void {
@@ -108,7 +108,7 @@ export default class Display {
     _buildWidget(): HTMLElement {
         const template = document.createElement('div');
         template.classList.add(Namespace.Css.widget);
-        if (this.context._options.calendarWeeks)
+        if (this.context._options.display.calendarWeeks)
             template.classList.add(Namespace.Css.widgetCalendarWeeks);
 
         const dateView = document.createElement('div');
@@ -122,26 +122,21 @@ export default class Display {
         timeView.classList.add(Namespace.Css.timeContainer);
         timeView.appendChild(this._timeDisplay.picker);
 
-        const toolbar = document.createElement('li');
+        const toolbar = document.createElement('div');
         toolbar.classList.add(Namespace.Css.switch);
-        if (this.context._options.collapse) toolbar.classList.add('accordion-toggle'); //todo bootstrap
         toolbar.appendChild(this._toolbar);
-
-        /*if (!this.context._options.inline) { //todo restore this. for now I don't want the position stuff it adds
-            template.classList.add('dropdown-menu'); //todo bootstrap
-        }*/
 
         if (this.context._options.display.components.useTwentyfourHour) {
             template.classList.add(Namespace.Css.useTwentyfour);
         }
 
-        if (this.context._options.display.components.second && !this.context._options.display.components.useTwentyfourHour) {
+        if (this.context._options.display.components.seconds && !this.context._options.display.components.useTwentyfourHour) {
             template.classList.add(Namespace.Css.wider);
         }
 
-        if (this.context._options.sideBySide && this._hasDate() && this._hasTime()) {
+        if (this.context._options.display.sideBySide && this._hasDate() && this._hasTime()) {
             template.classList.add(Namespace.Css.sideBySide);
-            if (this.context._options.toolbarPlacement === 'top') {
+            if (this.context._options.display.toolbarPlacement === 'top') {
                 template.appendChild(toolbar);
             }
             const row = document.createElement('div');
@@ -152,41 +147,36 @@ export default class Display {
             row.appendChild(dateView);
             row.appendChild(timeView);
 
-            if (this.context._options.toolbarPlacement === 'bottom' || this.context._options.toolbarPlacement === 'default') {
+            if (this.context._options.display.toolbarPlacement === 'bottom' || this.context._options.display.toolbarPlacement === 'default') {
                 template.appendChild(toolbar);
             }
             this._widget = template;
             return;
         }
 
-        const content = document.createElement('ul');
-        content.classList.add('list-unstyled'); //todo bootstrap
+        const content = document.createElement('div');
 
-        if (this.context._options.toolbarPlacement === 'top') {
+        if (this.context._options.display.toolbarPlacement === 'top') {
             content.appendChild(toolbar);
         }
         if (this._hasDate()) {
-            const li = document.createElement('li');
-            if (this.context._options.collapse && this._hasTime()) {
-                //li.classList.add('collapse'); //todo bootstrap
-                if (this.context._options.viewMode !== 'times') li.classList.add('show');
+            if (this.context._options.display.collapse && this._hasTime()) {
+                dateView.classList.add(Namespace.Css.collapse);
+                if (this.context._options.display.viewMode !== 'times') dateView.classList.add(Namespace.Css.show);
             }
-            li.appendChild(dateView);
-            content.appendChild(li);
+            content.appendChild(dateView);
         }
-        if (this.context._options.toolbarPlacement === 'default') {
+        if (this.context._options.display.toolbarPlacement === 'default') {
             content.appendChild(toolbar);
         }
         if (this._hasTime()) {
-            const li = document.createElement('li');
-            if (this.context._options.collapse && this._hasDate()) {
-                //li.classList.add('collapse'); //todo bootstrap
-                if (this.context._options.viewMode === 'times') li.classList.add('show');
+            if (this.context._options.display.collapse && this._hasDate()) {
+                timeView.classList.add(Namespace.Css.collapse);
+                if (this.context._options.display.viewMode === 'times') timeView.classList.add(Namespace.Css.show);
             }
-            li.appendChild(timeView);
-            content.appendChild(li);
+            content.appendChild(timeView);
         }
-        if (this.context._options.toolbarPlacement === 'bottom') {
+        if (this.context._options.display.toolbarPlacement === 'bottom') {
             content.appendChild(toolbar);
         }
 
@@ -208,19 +198,17 @@ export default class Display {
 
         if (this.context._options.display.buttons.showToday) {
             const td = document.createElement('td');
-            const a = document.createElement('a');
-            a.setAttribute('href', 'javascript:void(0);');
-            a.setAttribute('tabindex', '-1');
-            a.setAttribute('data-action', ActionTypes.today);
-            a.setAttribute('title', this.context._options.localization.today);
+            const span = document.createElement('span');
+            span.setAttribute('data-action', ActionTypes.today);
+            span.setAttribute('title', this.context._options.localization.today);
 
-            a.appendChild(this.iconTag(this.context._options.display.icons.today));
-            td.appendChild(a);
+            span.appendChild(this.iconTag(this.context._options.display.icons.today));
+            td.appendChild(span);
             tbody.appendChild(td);
         }
-        if (!this.context._options.sideBySide && this.context._options.collapse && this._hasDate() && this._hasTime()) {
+        if (!this.context._options.display.sideBySide && this.context._options.display.collapse && this._hasDate() && this._hasTime()) {
             let title, icon;
-            if (this.context._options.viewMode === 'times') {
+            if (this.context._options.display.viewMode === 'times') {
                 title = this.context._options.localization.selectDate;
                 icon = this.context._options.display.icons.date;
             } else {
@@ -229,38 +217,32 @@ export default class Display {
             }
 
             const td = document.createElement('td');
-            const a = document.createElement('a');
-            a.setAttribute('href', 'javascript:void(0);');
-            a.setAttribute('tabindex', '-1');
-            a.setAttribute('data-action', ActionTypes.togglePicker);
-            a.setAttribute('title', title);
+            const span = document.createElement('span');
+            span.setAttribute('data-action', ActionTypes.togglePicker);
+            span.setAttribute('title', title);
 
-            a.appendChild(this.iconTag(icon));
-            td.appendChild(a);
+            span.appendChild(this.iconTag(icon));
+            td.appendChild(span);
             tbody.appendChild(td);
         }
         if (this.context._options.display.buttons.showClear) {
             const td = document.createElement('td');
-            const a = document.createElement('a');
-            a.setAttribute('href', 'javascript:void(0);');
-            a.setAttribute('tabindex', '-1');
-            a.setAttribute('data-action', ActionTypes.clear);
-            a.setAttribute('title', this.context._options.localization.clear);
+            const span = document.createElement('span');
+            span.setAttribute('data-action', ActionTypes.clear);
+            span.setAttribute('title', this.context._options.localization.clear);
 
-            a.appendChild(this.iconTag(this.context._options.display.icons.today));
-            td.appendChild(a);
+            span.appendChild(this.iconTag(this.context._options.display.icons.today));
+            td.appendChild(span);
             tbody.appendChild(td);
         }
         if (this.context._options.display.buttons.showClose) {
             const td = document.createElement('td');
-            const a = document.createElement('a');
-            a.setAttribute('href', 'javascript:void(0);');
-            a.setAttribute('tabindex', '-1');
-            a.setAttribute('data-action', ActionTypes.close);
-            a.setAttribute('title', this.context._options.localization.close);
+            const span = document.createElement('span');
+            span.setAttribute('data-action', ActionTypes.close);
+            span.setAttribute('title', this.context._options.localization.close);
 
-            a.appendChild(this.iconTag(this.context._options.display.icons.today));
-            td.appendChild(a);
+            span.appendChild(this.iconTag(this.context._options.display.icons.today));
+            td.appendChild(span);
             tbody.appendChild(td);
         }
         const table = document.createElement('table');
@@ -273,48 +255,39 @@ export default class Display {
      *
      */
     get headTemplate(): HTMLElement {
+        let span = document.createElement('span');
         const headTemplate = document.createElement('thead');
         const previous = document.createElement('th');
         previous.classList.add(Namespace.Css.previous);
         previous.setAttribute('data-action', ActionTypes.previous);
-        previous.appendChild(this.iconTag(this.context._options.display.icons.previous));
+        span.appendChild(this.iconTag(this.context._options.display.icons.previous));
+        previous.appendChild(span);
         headTemplate.appendChild(previous);
 
         const switcher = document.createElement('th');
         switcher.classList.add(Namespace.Css.switch);
         switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
-        switcher.setAttribute('colspan', this.context._options.calendarWeeks ? '6' : '5');
+        switcher.setAttribute('colspan', this.context._options.display.calendarWeeks ? '6' : '5');
         headTemplate.appendChild(switcher);
 
         const next = document.createElement('th');
         next.classList.add(Namespace.Css.next);
         next.setAttribute('data-action', ActionTypes.next);
-        next.appendChild(this.iconTag(this.context._options.display.icons.next));
+        span = document.createElement('span');
+        span.appendChild(this.iconTag(this.context._options.display.icons.next));
+        next.appendChild(span);
         headTemplate.appendChild(next);
         return <HTMLElement>headTemplate.cloneNode(true);
     }
 
-    get contentTemplate(): HTMLElement {
-        const contentTemplate = document.createElement('tbody');
-        const rowElement = document.createElement('tr');
-        const td = document.createElement('td');
-        td.setAttribute('colspan', this.context._options.calendarWeeks ? '6' : '5');
-        rowElement.appendChild(td);
-        contentTemplate.appendChild(rowElement);
-        return <HTMLElement>contentTemplate.cloneNode(true);
-    }
-
     iconTag(i): HTMLElement {
-        const container = document.createElement('span')
         if (this.context._options.display.icons.type === 'sprites') {
             const svg = document.createElement('svg');
             svg.innerHTML = `<use xlink:href="${i}"></use>`
-            container.appendChild(svg);
-            return container;
+            return svg;
         }
         const icon = document.createElement('i');
         DOMTokenList.prototype.add.apply(icon.classList, i.split(' '));
-        container.appendChild(icon);
-        return container;
+        return icon;
     }
 }

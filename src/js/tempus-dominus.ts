@@ -2,12 +2,11 @@ import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
 import Actions from './actions';
-import {Default, Namespace} from './conts';
+import {Default, Namespace, Options} from './conts';
 import {DateTime, Unit} from './datetime';
-import EventHandler from './dom/event-handler';
 
 export class TempusDominus {
-    _options: any;
+    _options: Options;
     private _element: any;
     _viewDate: DateTime;
     currentViewMode: number;
@@ -19,7 +18,7 @@ export class TempusDominus {
     action: Actions;
 
     constructor(element, options) {
-        this._options = this._getOptions(options);
+        this._options = this.initializeOptions(options);
         this._element = element;
         this._viewDate = new DateTime();
         this.currentViewMode = null;
@@ -35,7 +34,7 @@ export class TempusDominus {
         //this.dates.add(new DateTime());
         //#endregion
 
-        this._initFormatting();
+        this.initializeFormatting();
 
         this.currentViewMode = 0; //todo temp
 
@@ -49,7 +48,7 @@ export class TempusDominus {
             }));
     }
 
-    _getOptions(config) {
+    private initializeOptions(config) {
         //the spread operator caused sub keys to be missing after merging
         //this is to fix that issue by using spread on the child objects first
         const spread = (left, right) => {
@@ -66,11 +65,11 @@ export class TempusDominus {
             ...config
         }
 
-        //typeCheckConfig(NAME, config, DefaultType) //todo
+        //typeCheckConfig(NAME, config, DefaultType) //todo might be able to cast "config" as Option to see if it breaks?
         return config
     }
 
-    _initFormatting() {
+    private initializeFormatting() {
         if (this._options.display.components.year) {
             this.minViewModeNumber = 2;
         }
