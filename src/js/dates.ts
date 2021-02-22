@@ -88,7 +88,7 @@ export default class Dates {
                 isClear,
                 isValid: true,
             });
-            this.context.display.update();
+            this.context.display.update('all');
             return;
         }
 
@@ -103,7 +103,7 @@ export default class Dates {
             this._dates[index] = target;
             this.context._viewDate = target.clone;
             this.context.unset = false;
-            this.context.display.update();
+            this.context.display.update('all');
             this.context._notifyEvent({
                 type: Namespace.Events.CHANGE,
                 date: this._dates[index],
@@ -111,7 +111,7 @@ export default class Dates {
                 isClear,
                 isValid: true,
             });
-            console.log(JSON.stringify(this._dates, null, 2)); //todo remove
+            console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2)); //todo remove
             return;
         }
 
@@ -133,7 +133,7 @@ export default class Dates {
         });
     }
 
-    private static getFormatByUnit(unit: Unit): object {
+     static getFormatByUnit(unit: Unit): object {
         switch (unit) {
             case 'date':
                 return {dateStyle: 'short'};

@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>v6</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/css/bootstrap.min.css" integrity="sha512-thoh2veB35ojlAhyYZC0eaztTAUhxLvSZlWrNtlV01njqs/UdY3421Jg7lX0Gq9SRdGVQeL8xeBp9x1IPyL1wQ==" crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/css/bootstrap.min.css"
+          integrity="sha512-thoh2veB35ojlAhyYZC0eaztTAUhxLvSZlWrNtlV01njqs/UdY3421Jg7lX0Gq9SRdGVQeL8xeBp9x1IPyL1wQ=="
+          crossorigin="anonymous"/>
 
     <link href="tempus-dominus.css" rel="stylesheet">
 
@@ -12,7 +15,9 @@
             integrity="sha512-ubuT8Z88WxezgSqf3RLuNi5lmjstiJcyezx34yIU2gAHonIi27Na7atqzUZCOoY4CExaoFumzOsFQ2Ch+I/HCw=="
             crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/js/bootstrap.min.js" integrity="sha512-ZvbjbJnytX9Sa03/AcbP/nh9K95tar4R0IAxTS2gh2ChiInefr1r7EpnVClpTWUEN7VarvEsH3quvkY1h0dAFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/js/bootstrap.min.js"
+            integrity="sha512-ZvbjbJnytX9Sa03/AcbP/nh9K95tar4R0IAxTS2gh2ChiInefr1r7EpnVClpTWUEN7VarvEsH3quvkY1h0dAFg=="
+            crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/solid.min.js"
             integrity="sha512-JkeOaPqiSsfvmKzJUsqu7j2fv0KSB6Yqb1HHF0r9FNzIsfGv+zYi4h4jQKOogf10qLF3PMZEIYhziCEaw039tQ=="
@@ -30,7 +35,7 @@
         <div class="row">
             <div class="col-6 bg-light">
                 <p>vvvv</p>
-                <div id="datetimepicker13"></div>
+                <div id="datetimepicker1"></div>
                 <p>^^^^</p>
             </div>
         </div>
@@ -49,9 +54,25 @@
 </div>
 <script src="tempus-dominus.js"></script>
 <script>
-    var dt = new tempusdominus.TempusDominus(document.getElementById('datetimepicker13'), {
+    //const tempusdominus = require("../js/tempus-dominus");
+    var dt = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'), {
         display: {
             calendarWeeks: true,
+            components: {
+                seconds: true,
+            },
+            buttons: {
+                today: true,
+                clear: true,
+                close: true
+            },
+        },
+        restrictions :{
+            disabledDates: [
+                //moment("12/25/2013").toDate(),
+                new Date(2021, 2 - 1, 10),
+                "11/22/2013 00:53"
+            ]
         }
     });
 
@@ -61,7 +82,7 @@
         log.innerHTML = '';
     });
 
-    ['log','debug','info','warn','error'].forEach(function (verb) {
+    ['log', 'debug', 'info', 'warn', 'error'].forEach(function (verb) {
         console[verb] = (function (method, verb, log) {
             return function () {
                 method.apply(console, arguments);

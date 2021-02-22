@@ -60,7 +60,8 @@ export default class TimeDisplay {
         }
 
         if (this.context._options.display.components.hours)
-            timesDiv.querySelector<HTMLElement>(`[data-time-component=${Unit.hours}]`).innerText = lastPicked.twelveHoursFormatted;
+            timesDiv.querySelector<HTMLElement>(`[data-time-component=${Unit.hours}]`).innerText =
+                this.context._options.display.components.useTwentyfourHour ? lastPicked.hoursFormatted : lastPicked.twelveHoursFormatted;
         if (this.context._options.display.components.minutes)
             timesDiv.querySelector<HTMLElement>(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
         if (this.context._options.display.components.seconds)
@@ -92,7 +93,6 @@ export default class TimeDisplay {
 
             td = document.createElement('td');
             const span = document.createElement('span');
-            span.classList.add(Namespace.Css.hourContainer);
             span.setAttribute('title', this.context._options.localization.pickHour);
             span.setAttribute('data-action', ActionTypes.showHours)
             span.setAttribute('data-time-component', Unit.hours)
@@ -124,7 +124,6 @@ export default class TimeDisplay {
 
             td = document.createElement('td');
             const span = document.createElement('span');
-            span.classList.add(Namespace.Css.minuteContainer);
             span.setAttribute('title', this.context._options.localization.pickMinute);
             span.setAttribute('data-action', ActionTypes.showMinutes)
             span.setAttribute('data-time-component', Unit.minutes)
@@ -156,7 +155,6 @@ export default class TimeDisplay {
 
             td = document.createElement('td');
             const span = document.createElement('span');
-            span.classList.add(Namespace.Css.secondContainer);
             span.setAttribute('title', this.context._options.localization.pickSecond);
             span.setAttribute('data-action', ActionTypes.showSeconds)
             span.setAttribute('data-time-component', Unit.seconds)

@@ -3,7 +3,10 @@ import MonthDisplay from './calendar/month-display';
 import YearDisplay from './calendar/year-display';
 import DecadeDisplay from './calendar/decade-display';
 import TimeDisplay from './time/time-display';
-import {DateTime} from '../datetime';
+import HourDisplay from './time/hour-display';
+import MinuteDisplay from './time/minute-display';
+import SecondDisplay from './time/second-display';
+import {DateTime, Unit} from '../datetime';
 import {DatePickerModes, Namespace} from '../conts';
 import {TempusDominus} from '../tempus-dominus';
 import {ActionTypes} from '../actions';
@@ -11,20 +14,26 @@ import {ActionTypes} from '../actions';
 
 export default class Display {
     private context: TempusDominus;
-    private _dateDisplay: DateDisplay;
-    private _monthDisplay: MonthDisplay;
-    private _yearDisplay: YearDisplay;
-    private _decadeDisplay: DecadeDisplay;
-    private _timeDisplay: TimeDisplay;
+    private dateDisplay: DateDisplay;
+    private monthDisplay: MonthDisplay;
+    private yearDisplay: YearDisplay;
+    private decadeDisplay: DecadeDisplay;
+    private timeDisplay: TimeDisplay;
     private _widget: HTMLElement;
+    private hourDisplay: HourDisplay;
+    private minuteDisplay: MinuteDisplay;
+    private secondDisplay: SecondDisplay;
 
     constructor(context: TempusDominus) {
         this.context = context;
-        this._dateDisplay = new DateDisplay(context);
-        this._monthDisplay = new MonthDisplay(context);
-        this._yearDisplay = new YearDisplay(context);
-        this._decadeDisplay = new DecadeDisplay(context);
-        this._timeDisplay = new TimeDisplay(context);
+        this.dateDisplay = new DateDisplay(context);
+        this.monthDisplay = new MonthDisplay(context);
+        this.yearDisplay = new YearDisplay(context);
+        this.decadeDisplay = new DecadeDisplay(context);
+        this.timeDisplay = new TimeDisplay(context);
+        this.hourDisplay = new HourDisplay(context);
+        this.minuteDisplay = new MinuteDisplay(context);
+        this.secondDisplay = new SecondDisplay(context);
 
         this._widget = undefined;
     }
@@ -33,20 +42,44 @@ export default class Display {
         return this._widget;
     }
 
-    update(): void {
+    update(unit: Unit | 'clock' | 'calendar'| 'all'): void {
         if (!this._widget) return;
-        this.updateDateView();
-        this.updateTimeView();
-    }
-
-    updateDateView(): void {
-        if (this._hasDate())
-            this._dateDisplay.update();
-    }
-
-    updateTimeView(): void {
-        if (this._hasTime())
-            this._timeDisplay.update();
+        //todo do I want some kind of error catching or other guards here?
+        switch (unit) {
+            case Unit.seconds:
+                this.secondDisplay.update();
+                break;
+            case Unit.minutes:
+                this.minuteDisplay.update();
+                break;
+            case Unit.hours:
+                this.hourDisplay.update();
+                break;
+            case Unit.date:
+                this.dateDisplay.update();
+                break;
+            case Unit.month:
+                this.monthDisplay.update();
+                break;
+            case Unit.year:
+                this.yearDisplay.update();
+                break;
+            case 'clock':
+                this.timeDisplay.update();
+                this.update(Unit.hours);
+                this.update(Unit.minutes);
+                this.update(Unit.seconds);
+                break;
+            case 'calendar':
+                this.update(Unit.date);
+                this.update(Unit.year);
+                this.update(Unit.month);
+                this.decadeDisplay.update();
+                break;
+            case 'all':
+                this.update('clock');
+                this.update('calendar');
+        }
     }
 
     show(): void {
@@ -73,7 +106,7 @@ export default class Display {
             if (this.context.currentViewMode == max) return;
             this.context.currentViewMode = max;
         }
-        this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div`)//, .${Namespace.Css.timeContainer} > div`)
+        this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`)
             .forEach((e: HTMLElement) => e.style.display = 'none');
 
         const datePickerMode = DatePickerModes[this.context.currentViewMode];
@@ -81,16 +114,16 @@ export default class Display {
 
         switch (datePickerMode.CLASS_NAME) {
             case Namespace.Css.decadesContainer:
-                this._decadeDisplay.update();
+                this.decadeDisplay.update();
                 break;
             case Namespace.Css.yearsContainer:
-                this._yearDisplay.update();
+                this.yearDisplay.update();
                 break;
             case Namespace.Css.monthsContainer:
-                this._monthDisplay.update();
+                this.monthDisplay.update();
                 break;
             case Namespace.Css.daysContainer:
-                this._dateDisplay.update();
+                this.dateDisplay.update();
                 break;
         }
 
@@ -113,14 +146,17 @@ export default class Display {
 
         const dateView = document.createElement('div');
         dateView.classList.add(Namespace.Css.dateContainer);
-        dateView.appendChild(this._decadeDisplay.picker);
-        dateView.appendChild(this._yearDisplay.picker);
-        dateView.appendChild(this._monthDisplay.picker);
-        dateView.appendChild(this._dateDisplay.picker);
+        dateView.appendChild(this.decadeDisplay.picker);
+        dateView.appendChild(this.yearDisplay.picker);
+        dateView.appendChild(this.monthDisplay.picker);
+        dateView.appendChild(this.dateDisplay.picker);
 
         const timeView = document.createElement('div');
         timeView.classList.add(Namespace.Css.timeContainer);
-        timeView.appendChild(this._timeDisplay.picker);
+        timeView.appendChild(this.timeDisplay.picker);
+        timeView.appendChild(this.hourDisplay.picker);
+        timeView.appendChild(this.minuteDisplay.picker);
+        timeView.appendChild(this.secondDisplay.picker);
 
         const toolbar = document.createElement('div');
         toolbar.classList.add(Namespace.Css.switch);
@@ -196,7 +232,7 @@ export default class Display {
     get _toolbar(): HTMLTableElement {
         const tbody = document.createElement('tbody');
 
-        if (this.context._options.display.buttons.showToday) {
+        if (this.context._options.display.buttons.today) {
             const td = document.createElement('td');
             const span = document.createElement('span');
             span.setAttribute('data-action', ActionTypes.today);
@@ -225,23 +261,23 @@ export default class Display {
             td.appendChild(span);
             tbody.appendChild(td);
         }
-        if (this.context._options.display.buttons.showClear) {
+        if (this.context._options.display.buttons.clear) {
             const td = document.createElement('td');
             const span = document.createElement('span');
             span.setAttribute('data-action', ActionTypes.clear);
             span.setAttribute('title', this.context._options.localization.clear);
 
-            span.appendChild(this.iconTag(this.context._options.display.icons.today));
+            span.appendChild(this.iconTag(this.context._options.display.icons.clear));
             td.appendChild(span);
             tbody.appendChild(td);
         }
-        if (this.context._options.display.buttons.showClose) {
+        if (this.context._options.display.buttons.close) {
             const td = document.createElement('td');
             const span = document.createElement('span');
             span.setAttribute('data-action', ActionTypes.close);
             span.setAttribute('title', this.context._options.localization.close);
 
-            span.appendChild(this.iconTag(this.context._options.display.icons.today));
+            span.appendChild(this.iconTag(this.context._options.display.icons.close));
             td.appendChild(span);
             tbody.appendChild(td);
         }

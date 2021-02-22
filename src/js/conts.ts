@@ -1,15 +1,15 @@
-import { Unit } from './datetime';
+import { DateTime, Unit } from './datetime';
 
 interface Options {
   restrictions: {
-    minDate: boolean;
-    enabledDates: boolean;
-    disabledHours: boolean;
-    maxDate: boolean;
-    disabledDates: boolean;
-    enabledHours: boolean;
-    disabledTimeIntervals: boolean;
-    daysOfWeekDisabled: boolean;
+    minDate: DateTime;
+    enabledDates: DateTime[];
+    disabledHours: number[];
+    maxDate: DateTime;
+    disabledDates: DateTime[];
+    enabledHours: number[];
+    disabledTimeIntervals: DateTime[];
+    daysOfWeekDisabled: number[];
   };
   display: {
     toolbarPlacement: 'top' | 'bottom' | 'default';
@@ -25,7 +25,7 @@ interface Options {
       decades: boolean;
       useTwentyfourHour: boolean;
     };
-    buttons: { showToday: boolean; showClose: boolean; showClear: boolean };
+    buttons: { today: boolean; close: boolean; clear: boolean };
     calendarWeeks: boolean;
     icons: {
       date: string;
@@ -108,14 +108,14 @@ interface Options {
 
 const Default: Options = {
   restrictions: {
-    minDate: false,
-    maxDate: false,
-    disabledDates: false,
-    enabledDates: false,
-    daysOfWeekDisabled: false,
-    disabledTimeIntervals: false,
-    disabledHours: false,
-    enabledHours: false,
+    minDate: undefined,
+    maxDate: undefined,
+    disabledDates: [],
+    enabledDates: [],
+    daysOfWeekDisabled: [],
+    disabledTimeIntervals: [],
+    disabledHours: [],
+    enabledHours: [],
   },
   display: {
     icons: {
@@ -136,9 +136,9 @@ const Default: Options = {
     viewMode: 'days',
     toolbarPlacement: 'default',
     buttons: {
-      showToday: false,
-      showClear: false,
-      showClose: false,
+      today: false,
+      clear: false,
+      close: false,
     },
     widgetPositioning: {
       horizontal: 'auto',
@@ -395,6 +395,10 @@ class Css {
   hourContainer = `${this.timeContainer}-hour`;
   minuteContainer = `${this.timeContainer}-minute`;
   secondContainer = `${this.timeContainer}-second`;
+
+  hour = 'hour';
+  minute = 'minute';
+  second = 'second';
 
   //#endregion
 

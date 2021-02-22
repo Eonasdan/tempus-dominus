@@ -190,7 +190,7 @@ export class DateTime extends Date {
      * @param inclusivity. A [ indicates inclusion of a value. A ( indicates exclusion.
      * If the inclusivity parameter is used, both indicators must be passed.
      */
-    isBetween(left: DateTime, right: DateTime, unit: Unit, inclusivity: '()' | '[]' | '(]' | '[)' = '()'): boolean {
+    isBetween(left: DateTime, right: DateTime, unit?: Unit, inclusivity: '()' | '[]' | '(]' | '[)' = '()'): boolean {
         if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
         const leftInclusivity = inclusivity[0] === '(';
         const rightInclusivity = inclusivity[1] === ')';
@@ -283,6 +283,7 @@ export class DateTime extends Date {
     get twelveHoursFormatted(): string {
         let hour = this.hours;
         if (hour > 12) hour = hour - 12;
+        if (hour === 0) hour = 12;
         return hour < 10 ? (`0${hour}`) : `${hour}`;
     }
 
