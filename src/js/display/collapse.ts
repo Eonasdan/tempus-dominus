@@ -1,6 +1,7 @@
 import { Namespace } from "../conts";
 
 export default class Collapse {
+    private timeOut;
     toggle(target: HTMLElement) {
         if (target.classList.contains(Namespace.Css.show)) {
             this.hide(target);
@@ -20,13 +21,14 @@ export default class Collapse {
             target.classList.remove(Namespace.Css.collapsing);
             target.classList.add(Namespace.Css.collapse, Namespace.Css.show);
             target.style.height = '';
+            this.timeOut = null;
         };
 
         target.style.height = '0';
         target.classList.remove(Namespace.Css.collapse);
         target.classList.add(Namespace.Css.collapsing);
 
-        setTimeout(complete, this.getTransitionDurationFromElement(target));
+        this.timeOut = setTimeout(complete, this.getTransitionDurationFromElement(target));
         target.style.height = `${target.scrollHeight}px`;
     }
 
@@ -40,6 +42,7 @@ export default class Collapse {
         const complete = () => {
             target.classList.remove(Namespace.Css.collapsing);
             target.classList.add(Namespace.Css.collapse);
+            this.timeOut = null;
         };
 
         target.style.height = `${target.getBoundingClientRect()['height']}px`;
@@ -52,7 +55,7 @@ export default class Collapse {
         target.classList.add(Namespace.Css.collapsing);
         target.style.height = '';
 
-        setTimeout(complete, this.getTransitionDurationFromElement(target));
+        this.timeOut = setTimeout(complete, this.getTransitionDurationFromElement(target));
     }
 
     private getTransitionDurationFromElement = element => {

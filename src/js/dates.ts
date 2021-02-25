@@ -92,6 +92,7 @@ export default class Dates {
             return;
         }
 
+        index = 0;
         target = target.clone;
 
         if (this.context._options.stepping !== 1) {
@@ -106,11 +107,12 @@ export default class Dates {
             this.context.display.update('all');
             this.context._notifyEvent({
                 type: Namespace.Events.CHANGE,
-                date: this._dates[index],
+                date: target,
                 oldDate,
                 isClear,
                 isValid: true,
             });
+            //todo remove this
             console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2)); //todo remove
             return;
         }
@@ -128,6 +130,7 @@ export default class Dates {
         }
         this.context._notifyEvent({
             type: Namespace.Events.ERROR,
+            reason: Namespace.ErrorMessages.failedToSetInvalidDate,
             date: target,
             oldDate
         });

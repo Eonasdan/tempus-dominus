@@ -54,28 +54,6 @@
 </div>
 <script src="tempus-dominus.js"></script>
 <script>
-    //const tempusdominus = require("../js/tempus-dominus");
-    var dt = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'), {
-        display: {
-            calendarWeeks: true,
-            components: {
-                seconds: true,
-            },
-            buttons: {
-                today: true,
-                clear: true,
-                close: true
-            },
-        },
-        restrictions :{
-            disabledDates: [
-                //moment("12/25/2013").toDate(),
-                new Date(2021, 2 - 1, 10),
-                "11/22/2013 00:53"
-            ]
-        }
-    });
-
     const log = document.getElementById('log');
 
     document.getElementById('clearLog').addEventListener('click', () => {
@@ -105,10 +83,26 @@
                         msg.classList.add('alert-error')
                         break;
                 }
-                msg.textContent = `${verb}: ${Array.prototype.slice.call(arguments).join(' ')}`;
+                msg.innerHTML = `${verb}: ${Array.prototype.slice.call(arguments).join(' ')}`;
                 log.appendChild(msg);
             };
         })(console[verb], verb, log);
+    });
+
+    //const tempusdominus = require("../js/tempus-dominus");
+    var dt = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'), {
+        restrictions :{
+            //minDate: 'cheese',
+            //maxDate: '11/22/2013 00:53',
+            //maxDate: new Date(2021, 2 - 1, 10),
+            disabledDates: [
+                //moment("12/25/2013").toDate(),
+                new Date(2021, 2 - 1, 10),
+                '11/22/2013 00:53',
+                //'cheese'
+            ],
+            enabledDates: null
+        }
     });
 </script>
 </body>

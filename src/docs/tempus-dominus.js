@@ -589,7 +589,7 @@
         },
         debug: false,
         allowInputToggle: false,
-        viewDate: false,
+        viewDate: new DateTime(),
         allowMultidate: false,
         multidateSeparator: ', ',
         promptTimeOnDateChange: false,
@@ -666,6 +666,28 @@
             //#endregion
         }
     }
+    class ErrorMessages {
+        constructor() {
+            this.dateString = 'TD: Using a string for date options is not recommended unless you specify an ISO string.';
+            //#endregion
+            //#region used with notify.error
+            this.failedToSetInvalidDate = 'Failed to set invalid date';
+            //#endregion
+        }
+        //#region out to console
+        unexpectedOption(optionName) {
+            return `TD: Unexpected option: ${optionName} does not match a known option.`;
+        }
+        typeMismatch(optionName, badType, expectedType) {
+            return `TD: Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
+        }
+        numbersOutOfRage(optionName, lower, upper) {
+            return `'TD: ${optionName} expected an array of number between ${lower} and ${upper}.'`;
+        }
+        failedToParseDate(optionName, date) {
+            return `TD: Could not correctly parse "${date}" to a date for option ${optionName}.`;
+        }
+    }
     class Namespace {
     }
     Namespace.NAME = NAME;
@@ -674,6 +696,7 @@
     Namespace.DATA_API_KEY = DATA_API_KEY;
     Namespace.Events = new Events();
     Namespace.Css = new Css();
+    Namespace.ErrorMessages = new ErrorMessages();
     const DatePickerModes = [
         {
             CLASS_NAME: Namespace.Css.daysContainer,
@@ -735,11 +758,12 @@
                 target.classList.remove(Namespace.Css.collapsing);
                 target.classList.add(Namespace.Css.collapse, Namespace.Css.show);
                 target.style.height = '';
+                this.timeOut = null;
             };
             target.style.height = '0';
             target.classList.remove(Namespace.Css.collapse);
             target.classList.add(Namespace.Css.collapsing);
-            setTimeout(complete, this.getTransitionDurationFromElement(target));
+            this.timeOut = setTimeout(complete, this.getTransitionDurationFromElement(target));
             target.style.height = `${target.scrollHeight}px`;
         }
         hide(target) {
@@ -749,6 +773,7 @@
             const complete = () => {
                 target.classList.remove(Namespace.Css.collapsing);
                 target.classList.add(Namespace.Css.collapse);
+                this.timeOut = null;
             };
             target.style.height = `${target.getBoundingClientRect()['height']}px`;
             const reflow = element => element.offsetHeight;
@@ -756,7 +781,7 @@
             target.classList.remove(Namespace.Css.collapse, Namespace.Css.show);
             target.classList.add(Namespace.Css.collapsing);
             target.style.height = '';
-            setTimeout(complete, this.getTransitionDurationFromElement(target));
+            this.timeOut = setTimeout(complete, this.getTransitionDurationFromElement(target));
         }
     }
 
@@ -1300,6 +1325,7 @@
                 this.context.display.update('all');
                 return;
             }
+            index = 0;
             target = target.clone;
             if (this.context._options.stepping !== 1) {
                 target.minutes = Math.round(target.minutes / this.context._options.stepping) * this.context._options.stepping;
@@ -1312,11 +1338,12 @@
                 this.context.display.update('all');
                 this.context._notifyEvent({
                     type: Namespace.Events.CHANGE,
-                    date: this._dates[index],
+                    date: target,
                     oldDate,
                     isClear,
                     isValid: true,
                 });
+                //todo remove this
                 console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2)); //todo remove
                 return;
             }
@@ -1333,6 +1360,7 @@
             }
             this.context._notifyEvent({
                 type: Namespace.Events.ERROR,
+                reason: Namespace.ErrorMessages.failedToSetInvalidDate,
                 date: target,
                 oldDate
             });
@@ -2043,16 +2071,28 @@
             return true;
         }
         _isInDisabledDates(testDate) {
-            return this.context._options.restrictions.disabledDates[testDate.format(Dates.getFormatByUnit(Unit.date))];
+            if (!this.context._options.restrictions.disabledDates && this.context._options.restrictions.disabledDates.length === 0)
+                return false;
+            const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
+            return this.context._options.restrictions.disabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
         }
         _isInEnabledDates(testDate) {
-            return this.context._options.restrictions.enabledDates[testDate.format(Dates.getFormatByUnit(Unit.date))];
+            if (!this.context._options.restrictions.enabledDates && this.context._options.restrictions.enabledDates.length === 0)
+                return true;
+            const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
+            return this.context._options.restrictions.enabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
         }
         _isInDisabledHours(testDate) {
-            return this.context._options.restrictions.disabledHours[testDate.hours];
+            if (!this.context._options.restrictions.disabledHours && this.context._options.restrictions.disabledHours.length === 0)
+                return false;
+            const formattedDate = testDate.hours;
+            return this.context._options.restrictions.disabledHours.find(x => x === formattedDate);
         }
         _isInEnabledHours(testDate) {
-            return this.context._options.restrictions.enabledHours[testDate.hours];
+            if (!this.context._options.restrictions.enabledHours && this.context._options.restrictions.enabledHours.length === 0)
+                return true;
+            const formattedDate = testDate.hours;
+            return this.context._options.restrictions.enabledHours.find(x => x === formattedDate);
         }
     }
 
@@ -2083,17 +2123,126 @@
         initializeOptions(config) {
             //the spread operator caused sub keys to be missing after merging
             //this is to fix that issue by using spread on the child objects first
-            const spread = (left, right) => {
-                Object.keys(left).forEach(key => {
-                    if (typeof right[key] !== 'object')
+            const dateArray = (optionName, value, providedType) => {
+                if (!Array.isArray(value)) {
+                    throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
+                }
+                for (let i = 0; i < value.length; i++) {
+                    let d = value[i];
+                    const dateTime = dateConversion(d, optionName);
+                    if (dateTime !== undefined) {
+                        value[i] = dateTime;
+                        continue;
+                    }
+                    throw Namespace.ErrorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
+                }
+            };
+            const numberArray = (optionName, value, providedType) => {
+                if (!Array.isArray(value)) {
+                    throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of numbers');
+                }
+                if (value.find(x => typeof x !== typeof 0))
+                    console.log('throw an error');
+                return;
+            };
+            const dateConversion = (d, optionName) => {
+                if (d.constructor.name === 'DateTime')
+                    return d;
+                if (d.constructor.name === 'Date') {
+                    return DateTime.convert(d);
+                }
+                if (typeof d === typeof '') {
+                    const dateTime = new DateTime(d);
+                    if (JSON.stringify(dateTime) === 'null') {
+                        throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
+                    }
+                    console.warn(Namespace.ErrorMessages.dateString);
+                    return dateTime;
+                }
+                return undefined;
+            };
+            let path = '';
+            const spread = (provided, defaultOption) => {
+                Object.keys(provided).forEach(key => {
+                    let providedType = typeof provided[key];
+                    if (providedType === undefined)
                         return;
-                    spread(left[key], right[key]);
-                    left[key] = Object.assign(Object.assign({}, right[key]), left[key]);
+                    path += `.${key}`;
+                    let defaultType = typeof defaultOption[key];
+                    let value = provided[key];
+                    if (!value)
+                        return; //todo not sure if null checking here is right
+                    switch (key) {
+                        case 'viewDate': {
+                            const dateTime = dateConversion(value, 'viewDate');
+                            if (dateTime !== undefined) {
+                                provided[key] = dateTime;
+                                break;
+                            }
+                            throw Namespace.ErrorMessages.typeMismatch('viewDate', providedType, 'DateTime or Date');
+                        }
+                        case 'minDate': {
+                            const dateTime = dateConversion(value, 'restrictions.minDate');
+                            if (dateTime !== undefined) {
+                                provided[key] = dateTime;
+                                break;
+                            }
+                            throw Namespace.ErrorMessages.typeMismatch('restrictions.minDate', providedType, 'DateTime or Date');
+                        }
+                        case 'maxDate': {
+                            const dateTime = dateConversion(value, 'restrictions.maxDate');
+                            if (dateTime !== undefined) {
+                                provided[key] = dateTime;
+                                break;
+                            }
+                            throw Namespace.ErrorMessages.typeMismatch('restrictions.maxDate', providedType, 'DateTime or Date');
+                        }
+                        case 'disabledHours':
+                            numberArray('restrictions.disabledHours', value, providedType);
+                            if (value.filter(x => x < 0 || x > 23))
+                                throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.disabledHours', 0, 23);
+                            break;
+                        case 'enabledHours':
+                            numberArray('restrictions.enabledHours', value, providedType);
+                            if (value.filter(x => x < 0 || x > 23))
+                                throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.enabledHours', 0, 23);
+                            break;
+                        case 'daysOfWeekDisabled':
+                            numberArray('restrictions.daysOfWeekDisabled', value, providedType);
+                            if (value.filter(x => x < 0 || x > 6))
+                                throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.daysOfWeekDisabled', 0, 6);
+                            break;
+                        case 'enabledDates':
+                            dateArray('restrictions.enabledDates', value, providedType);
+                            break;
+                        case 'disabledDates':
+                            dateArray('restrictions.disabledDates', value, providedType);
+                            break;
+                        case 'disabledTimeIntervals':
+                            dateArray('restrictions.disabledTimeIntervals', value, providedType);
+                            break;
+                        default:
+                            if (providedType !== defaultType) {
+                                if (defaultType === typeof undefined)
+                                    throw Namespace.ErrorMessages.unexpectedOption(path.substring(1));
+                                throw Namespace.ErrorMessages.typeMismatch(path.substring(1), providedType, defaultType);
+                            }
+                            break;
+                    }
+                    if (typeof defaultOption[key] !== 'object') {
+                        path = path.substring(0, path.lastIndexOf(`.${key}`));
+                        return;
+                    }
+                    if (!Array.isArray(provided[key]) && provided[key] != null) {
+                        spread(provided[key], defaultOption[key]);
+                        path = path.substring(0, path.lastIndexOf(`.${key}`));
+                        provided[key] = Object.assign(Object.assign({}, defaultOption[key]), provided[key]);
+                    }
+                    path = path.substring(0, path.lastIndexOf(`.${key}`));
                 });
             };
             spread(config, Default);
             config = Object.assign(Object.assign({}, Default), config);
-            //typeCheckConfig(NAME, config, DefaultType) //todo might be able to cast "config" as Option to see if it breaks?
             return config;
         }
         initializeFormatting() {
