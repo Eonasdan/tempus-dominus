@@ -4,6 +4,7 @@ import Dates from './dates';
 import Actions from './actions';
 import {Default, Namespace, Options} from './conts';
 import {DateTime, Unit} from './datetime';
+import { createPopper } from '@popperjs/core/lib/createPopper';
 
 export class TempusDominus {
     _options: Options;
@@ -16,9 +17,10 @@ export class TempusDominus {
     validation: Validation;
     dates: Dates;
     action: Actions;
+    private popperInstance: any;
 
     constructor(element, options: Options) {
-        this._options = this.initializeOptions(options);
+        this._options = this.initializeOptions(options, Default);
         this._element = element;
         this._viewDate = new DateTime();
         this.currentViewMode = null;
@@ -30,28 +32,42 @@ export class TempusDominus {
         this.dates = new Dates(this);
         this.action = new Actions(this);
 
-        //#region temp - REMOVE THIS STUFF
-        //this.dates.add(new DateTime());
-        //#endregion
-
-        this.initializeFormatting();
-
-        this.currentViewMode = 0; //todo temp
+        this.initializeViewMode();
 
         this.display.show();
 
-        element.appendChild(this.display.widget);
+        element.appendChild(this.display.widget); //todo this isn't right
 
         this.display.widget.querySelectorAll('[data-action]')
             .forEach(element => element.addEventListener('click', (e) => {
                 this.action.do(e);
             }));
+
+
+        this.popperInstance = createPopper(document.querySelector('#popcorn'), element, {
+            modifiers: [
+                {
+                    name: 'offset',
+                    options: {
+                        offset: [0, 8],
+                    },
+                },
+            ],
+        });
     }
 
-    private initializeOptions(config: Options) {
-        //the spread operator caused sub keys to be missing after merging
-        //this is to fix that issue by using spread on the child objects first
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     *
+     * @param options
+     * @public
+     */
+    updateOptions(options): void {
+        this._options = this.initializeOptions(options, this._options);
+    }
+
+    private initializeOptions(config: Options, mergeTo: Options): Options {
         const dateArray = (optionName: string, value, providedType: string) => {
             if (!Array.isArray(value)) {
                 throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
@@ -89,6 +105,8 @@ export class TempusDominus {
             return undefined;
         }
 
+        //the spread operator caused sub keys to be missing after merging
+        //this is to fix that issue by using spread on the child objects first
         let path = '';
         const spread = (provided, defaultOption) => {
             Object.keys(provided).forEach(key => {
@@ -175,17 +193,17 @@ export class TempusDominus {
                 path = path.substring(0, path.lastIndexOf(`.${key}`));
             });
         }
-        spread(config, Default);
+        spread(config, mergeTo);
 
         config = {
-            ...Default,
+            ...mergeTo,
             ...config
         }
 
         return config
     }
 
-    private initializeFormatting() {
+    private initializeViewMode() {
         if (this._options.display.components.year) {
             this.minViewModeNumber = 2;
         }
@@ -202,6 +220,7 @@ export class TempusDominus {
     _notifyEvent(config) {
         console.log('notify', JSON.stringify(config, null, 2));
     }
+
 
     /**
      *

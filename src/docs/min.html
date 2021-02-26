@@ -11,9 +11,7 @@
 
     <link href="tempus-dominus.css" rel="stylesheet">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
-            integrity="sha512-ubuT8Z88WxezgSqf3RLuNi5lmjstiJcyezx34yIU2gAHonIi27Na7atqzUZCOoY4CExaoFumzOsFQ2Ch+I/HCw=="
-            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.8.4/umd/popper.min.js" integrity="sha512-5glhqu2EfHF5pSsQmxjO3gtc9IpFehuRGunj36CEBHCi4GqXxT6674LI3FMt+NFzR0iE/htJ/LezxL3XpT3JIw==" crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/js/bootstrap.min.js"
             integrity="sha512-ZvbjbJnytX9Sa03/AcbP/nh9K95tar4R0IAxTS2gh2ChiInefr1r7EpnVClpTWUEN7VarvEsH3quvkY1h0dAFg=="
@@ -34,6 +32,7 @@
     <div class="container">
         <div class="row">
             <div class="col-6 bg-light">
+                <div id="popcorn"></div>
                 <p>vvvv</p>
                 <div id="datetimepicker1"></div>
                 <p>^^^^</p>
@@ -42,16 +41,23 @@
         <div class="row">
             <div class="col-6 bg-light">
                 <button id="clearLog" type="button" class="btn btn-primary m-3">Clear Log</button>
-                <div>
-<pre id="log">
+                <div id="log">
 
-</pre>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
+<style>
+    #popcorn {
+        display: inline-block;
+        width: 134px;
+        height: 120px;
+        background-image: url('https://popper.js.org/images/popcorn-box.svg');
+        margin-left: 80px;
+    }
+</style>
 <script src="tempus-dominus.js"></script>
 <script>
     const log = document.getElementById('log');
@@ -83,7 +89,9 @@
                         msg.classList.add('alert-error')
                         break;
                 }
-                msg.innerHTML = `${verb}: ${Array.prototype.slice.call(arguments).join(' ')}`;
+                const pre = document.createElement('pre');
+                pre.innerHTML = `${verb}: ${Array.prototype.slice.call(arguments).join(' ')}`;
+                msg.appendChild(pre);
                 log.appendChild(msg);
             };
         })(console[verb], verb, log);
@@ -102,6 +110,12 @@
                 //'cheese'
             ],
             enabledDates: null
+        }
+    });
+
+    dt.updateOptions({
+        restrictions : {
+            maxDate: '11/22/2013 00:53',
         }
     });
 </script>

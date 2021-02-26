@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusdominus = {}));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@popperjs/core/lib/createPopper')) :
+    typeof define === 'function' && define.amd ? define(['exports', '@popperjs/core/lib/createPopper'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusdominus = {}, global.createPopper));
+}(this, (function (exports, createPopper) { 'use strict';
 
     var Unit;
     (function (Unit) {
@@ -1818,7 +1818,8 @@
             this._showMode();
             window.addEventListener('resize', () => this._place());
             this._place();
-            //todo unhide widget
+            this.widget.classList.add(Namespace.Css.show);
+            this.widget.classList.remove(Namespace.Css.hide);
             this.context._notifyEvent({
                 type: Namespace.Events.SHOW
             });
@@ -1854,14 +1855,15 @@
             picker.style.display = 'block';
         }
         hide() {
-            console.log('hide called');
+            this.widget.classList.remove(Namespace.Css.show);
+            this.widget.classList.add(Namespace.Css.hide);
         }
         _place() {
-            console.log('place called');
         }
         _buildWidget() {
             const template = document.createElement('div');
             template.classList.add(Namespace.Css.widget);
+            //template.classList.add('dropdown-menu'); //todo bootstrap
             if (this.context._options.display.calendarWeeks)
                 template.classList.add(Namespace.Css.widgetCalendarWeeks);
             const dateView = document.createElement('div');
@@ -2098,7 +2100,7 @@
 
     class TempusDominus {
         constructor(element, options) {
-            this._options = this.initializeOptions(options);
+            this._options = this.initializeOptions(options, Default);
             this._element = element;
             this._viewDate = new DateTime();
             this.currentViewMode = null;
@@ -2108,21 +2110,34 @@
             this.validation = new Validation(this);
             this.dates = new Dates(this);
             this.action = new Actions(this);
-            //#region temp - REMOVE THIS STUFF
-            //this.dates.add(new DateTime());
-            //#endregion
-            this.initializeFormatting();
-            this.currentViewMode = 0; //todo temp
+            this.initializeViewMode();
             this.display.show();
-            element.appendChild(this.display.widget);
+            element.appendChild(this.display.widget); //todo this isn't right
             this.display.widget.querySelectorAll('[data-action]')
                 .forEach(element => element.addEventListener('click', (e) => {
                 this.action.do(e);
             }));
+            this.popperInstance = createPopper.createPopper(document.querySelector('#popcorn'), element, {
+                modifiers: [
+                    {
+                        name: 'offset',
+                        options: {
+                            offset: [0, 8],
+                        },
+                    },
+                ],
+            });
         }
-        initializeOptions(config) {
-            //the spread operator caused sub keys to be missing after merging
-            //this is to fix that issue by using spread on the child objects first
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         *
+         * @param options
+         * @public
+         */
+        updateOptions(options) {
+            this._options = this.initializeOptions(options, this._options);
+        }
+        initializeOptions(config, mergeTo) {
             const dateArray = (optionName, value, providedType) => {
                 if (!Array.isArray(value)) {
                     throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
@@ -2161,6 +2176,8 @@
                 }
                 return undefined;
             };
+            //the spread operator caused sub keys to be missing after merging
+            //this is to fix that issue by using spread on the child objects first
             let path = '';
             const spread = (provided, defaultOption) => {
                 Object.keys(provided).forEach(key => {
@@ -2241,11 +2258,11 @@
                     path = path.substring(0, path.lastIndexOf(`.${key}`));
                 });
             };
-            spread(config, Default);
-            config = Object.assign(Object.assign({}, Default), config);
+            spread(config, mergeTo);
+            config = Object.assign(Object.assign({}, mergeTo), config);
             return config;
         }
-        initializeFormatting() {
+        initializeViewMode() {
             if (this._options.display.components.year) {
                 this.minViewModeNumber = 2;
             }

@@ -91,7 +91,8 @@ export default class Display {
         this._showMode();
         window.addEventListener('resize', () => this._place());
         this._place();
-        //todo unhide widget
+        this.widget.classList.add(Namespace.Css.show);
+        this.widget.classList.remove(Namespace.Css.hide);
         this.context._notifyEvent({
             type: Namespace.Events.SHOW
         })
@@ -131,16 +132,17 @@ export default class Display {
     }
 
     hide(): void {
-        console.log('hide called');
+        this.widget.classList.remove(Namespace.Css.show);
+        this.widget.classList.add(Namespace.Css.hide);
     }
 
     _place(): void {
-        console.log('place called');
     }
 
     _buildWidget(): HTMLElement {
         const template = document.createElement('div');
         template.classList.add(Namespace.Css.widget);
+        //template.classList.add('dropdown-menu'); //todo bootstrap
         if (this.context._options.display.calendarWeeks)
             template.classList.add(Namespace.Css.widgetCalendarWeeks);
 

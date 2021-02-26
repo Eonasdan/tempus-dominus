@@ -35,6 +35,48 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
     padding: 4px;
     width: 14rem;
 
+    &.hidden {
+        display: none;
+    }
+
+    &.show {
+        display: block;
+    }
+
+   .arrow,
+   .arrow::before {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: inherit;
+    }
+
+   .arrow {
+        visibility: hidden;
+    }
+
+   .arrow::before {
+        visibility: visible;
+        content: '';
+        transform: rotate(45deg);
+    }
+
+    [data-popper-placement^='top'] >.arrow {
+        bottom: -4px;
+    }
+
+    [data-popper-placement^='bottom'] >.arrow {
+        top: -4px;
+    }
+
+    [data-popper-placement^='left'] >.arrow {
+        right: -4px;
+    }
+
+    [data-popper-placement^='right'] >.arrow {
+        left: -4px;
+    }
+
     .td-collapse {
         &:not(.show) {
             display: none;

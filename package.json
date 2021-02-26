@@ -8,7 +8,8 @@
     "sass": "sass ./src/sass/tempus-dominus.scss ./src/docs/tempus-dominus.css",
     "sass-watch": "sass ./src/sass/tempus-dominus.scss ./src/docs/tempus-dominus.css --watch",
     "rollup": "rollup -c ./build/rollup.config.js",
-    "rollup-watch": "rollup -c ./build/rollup.config.js -w"
+    "rollup-watch": "rollup -c ./build/rollup.config.js -w",
+    "build:declarations": "npx typescript ./src/js/**/*.ts --declaration --emitDeclarationOnly --outDir types"
   },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
@@ -18,7 +19,7 @@
     "jquery": "^3.5.1"
   },
   "dependencies": {
-    "@popperjs/core": "^2.5.4",
+    "@popperjs/core": "^2.8.4",
     "bootstrap": "^5.0.0-beta1"
   },
   "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
