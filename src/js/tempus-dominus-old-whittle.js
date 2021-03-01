@@ -293,9 +293,7 @@ const TempusDominus = ($ => {
         //#region Public
 
 
-        toggle() {
-            return this.widget ? this.hide() : this.show();
-        }
+
 
         //todo seems like all these options setter/getters could be cleaned up
         //could use bootstraps utility to verify type requirements and then

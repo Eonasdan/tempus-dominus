@@ -15,8 +15,6 @@
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
   },
   "peerDependencies": {
-    "bootstrap": ">=4.5.2",
-    "jquery": "^3.5.1"
   },
   "dependencies": {
     "@popperjs/core": "^2.8.4",
@@ -24,11 +22,13 @@
   },
   "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-typescript": "^8.1.0",
     "@types/node": "^14.14.22",
-    "browser-sync": "^2.26.13",
+    "browser-sync": "^2.26.14",
     "rollup": "^2.38.0",
     "sass": "^1.32.7",
+    "snowpack": "^3.0.13",
     "tslib": "^2.1.0",
     "typescript": "^4.1.3"
   },

@@ -4,11 +4,10 @@ import Dates from './dates';
 import Actions from './actions';
 import {Default, Namespace, Options} from './conts';
 import {DateTime, Unit} from './datetime';
-import { createPopper } from '@popperjs/core/lib/createPopper';
 
 export class TempusDominus {
     _options: Options;
-    private _element: any;
+    _element: any;
     _viewDate: DateTime;
     currentViewMode: number;
     unset: boolean;
@@ -17,7 +16,6 @@ export class TempusDominus {
     validation: Validation;
     dates: Dates;
     action: Actions;
-    private popperInstance: any;
 
     constructor(element, options: Options) {
         this._options = this.initializeOptions(options, Default);
@@ -34,26 +32,7 @@ export class TempusDominus {
 
         this.initializeViewMode();
 
-        this.display.show();
-
-        element.appendChild(this.display.widget); //todo this isn't right
-
-        this.display.widget.querySelectorAll('[data-action]')
-            .forEach(element => element.addEventListener('click', (e) => {
-                this.action.do(e);
-            }));
-
-
-        this.popperInstance = createPopper(document.querySelector('#popcorn'), element, {
-            modifiers: [
-                {
-                    name: 'offset',
-                    options: {
-                        offset: [0, 8],
-                    },
-                },
-            ],
-        });
+        element.addEventListener('click', () => this.display.toggle());
     }
 
 

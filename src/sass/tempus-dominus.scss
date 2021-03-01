@@ -13,394 +13,393 @@ $bs-datetimepicker-buttons-color: #007bff;
 $bs-datetimepicker-buttons-color-dark: #0056b3;
 
 .visually-hidden {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important; // Fix for https://github.com/twbs/bootstrap/issues/25686
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important; // Fix for https://github.com/twbs/bootstrap/issues/25686
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
-.tempus-dominus-widget [data-action]{
-    cursor: pointer;
+.tempus-dominus-widget [data-action] {
+  cursor: pointer;
 }
 
 .tempus-dominus-widget {
-    list-style: none;
+  list-style: none;
+  margin: 2px 0;
+  padding: 4px;
+  width: 14rem;
+  border-radius: 4px;
+  display: none;
+  background-color:white;
+
+  &.show {
     display: block;
-    margin: 2px 0;
-    padding: 4px;
-    width: 14rem;
+  }
 
-    &.hidden {
-        display: none;
+  .arrow,
+  .arrow::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+  }
+
+  .arrow {
+    visibility: hidden;
+  }
+
+  .arrow::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+  }
+
+  [data-popper-placement^='top'] > .arrow {
+    bottom: -4px;
+  }
+
+  [data-popper-placement^='bottom'] > .arrow {
+    top: -4px;
+  }
+
+  [data-popper-placement^='left'] > .arrow {
+    right: -4px;
+  }
+
+  [data-popper-placement^='right'] > .arrow {
+    left: -4px;
+  }
+
+  .td-collapse {
+    &:not(.show) {
+      display: none;
+    }
+  }
+
+  .td-collapsing {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.35s ease;
+  }
+
+  &.tempus-dominus-widget-with-calendar-weeks {
+    width: 16rem;
+  }
+
+  &.timepicker-sbs {
+    @media (min-width: 576px) {
+      width: 38em;
     }
 
-    &.show {
-        display: block;
+    @media (min-width: 768px) {
+      width: 38em;
     }
 
-   .arrow,
-   .arrow::before {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        background: inherit;
+    @media (min-width: 992px) {
+      width: 38em;
+    }
+  }
+
+  &:before, &:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+  }
+
+  &.bottom {
+    &:before {
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 7px solid $bs-datetimepicker-secondary-border-color;
+      border-bottom-color: $bs-datetimepicker-secondary-border-color-rgba;
+      top: -7px;
+      left: 7px;
     }
 
-   .arrow {
-        visibility: hidden;
+    &:after {
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 6px solid $bs-datetimepicker-primary-border-color;
+      top: -6px;
+      left: 8px;
+    }
+  }
+
+  &.top {
+    &:before {
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 7px solid $bs-datetimepicker-secondary-border-color;
+      border-top-color: $bs-datetimepicker-secondary-border-color-rgba;
+      bottom: -7px;
+      left: 6px;
     }
 
-   .arrow::before {
-        visibility: visible;
-        content: '';
-        transform: rotate(45deg);
+    &:after {
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid $bs-datetimepicker-primary-border-color;
+      bottom: -6px;
+      left: 7px;
+    }
+  }
+
+  &.float-right {
+    &:before {
+      left: auto;
+      right: 6px;
     }
 
-    [data-popper-placement^='top'] >.arrow {
-        bottom: -4px;
+    &:after {
+      left: auto;
+      right: 7px;
+    }
+  }
+
+  &.wider {
+    width: 16rem;
+  }
+
+  span[data-action] {
+    padding: 6px 0;
+  }
+
+  span[data-action]:active {
+    box-shadow: none;
+  }
+
+  .timepicker-hour, .timepicker-minute, .timepicker-second {
+    width: 54px;
+    font-weight: bold;
+    font-size: $bs-datetimepicker-timepicker-font-size;
+    margin: 0;
+  }
+
+  button[data-action] {
+    padding: 6px;
+  }
+
+  .btn[data-action="togglePeriod"] {
+    text-align: center;
+    width: 38px;
+    height: 38px;
+  }
+
+  .btn[data-action="incrementHours"]::after {
+    @extend .visually-hidden;
+    content: "Increment Hours"; /*migrate these to this: https://stackoverflow.com/a/19009056/237917*/
+  }
+
+  .btn[data-action="incrementMinutes"]::after {
+    @extend .visually-hidden;
+    content: "Increment Minutes";
+  }
+
+  .btn[data-action="decrementHours"]::after {
+    @extend .visually-hidden;
+    content: "Decrement Hours";
+  }
+
+  .btn[data-action="decrementMinutes"]::after {
+    @extend .visually-hidden;
+    content: "Decrement Minutes";
+  }
+
+  .btn[data-action="showHours"]::after {
+    @extend .visually-hidden;
+    content: "Show Hours";
+  }
+
+  .btn[data-action="showMinutes"]::after {
+    @extend .visually-hidden;
+    content: "Show Minutes";
+  }
+
+  .btn[data-action="togglePeriod"]::after {
+    @extend .visually-hidden;
+    content: "Toggle AM/PM";
+  }
+
+  .btn[data-action="clear"]::after {
+    @extend .visually-hidden;
+    content: "Clear the picker";
+  }
+
+  .btn[data-action="today"]::after {
+    @extend .visually-hidden;
+    content: "Set the date to today";
+  }
+
+  .picker-switch {
+    text-align: center;
+
+    &::after {
+      @extend .visually-hidden;
+      content: "Toggle Date and Time Screens";
     }
 
-    [data-popper-placement^='bottom'] >.arrow {
-        top: -4px;
-    }
+    td {
+      padding: 0;
+      margin: 0;
+      height: auto;
+      width: auto;
+      line-height: inherit;
 
-    [data-popper-placement^='left'] >.arrow {
-        right: -4px;
-    }
-
-    [data-popper-placement^='right'] >.arrow {
-        left: -4px;
-    }
-
-    .td-collapse {
-        &:not(.show) {
-            display: none;
-        }
-    }
-
-    .td-collapsing {
-        height: 0;
-        overflow: hidden;
-        transition: height 0.35s ease;
-    }
-
-    &.tempus-dominus-widget-with-calendar-weeks {
-        width: 16rem;
-    }
-
-    &.timepicker-sbs {
-        @media (min-width: 576px) {
-            width: 38em;
-        }
-
-        @media (min-width:768px) {
-            width: 38em;
-        }
-
-        @media (min-width: 992px) {
-            width: 38em;
-        }
-    }
-
-    &:before, &:after {
-        content: '';
-        display: inline-block;
-        position: absolute;
-    }
-
-    &.bottom {
-        &:before {
-            border-left: 7px solid transparent;
-            border-right: 7px solid transparent;
-            border-bottom: 7px solid $bs-datetimepicker-secondary-border-color;
-            border-bottom-color: $bs-datetimepicker-secondary-border-color-rgba;
-            top: -7px;
-            left: 7px;
-        }
-
-        &:after {
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 6px solid $bs-datetimepicker-primary-border-color;
-            top: -6px;
-            left: 8px;
-        }
-    }
-
-    &.top {
-        &:before {
-            border-left: 7px solid transparent;
-            border-right: 7px solid transparent;
-            border-top: 7px solid $bs-datetimepicker-secondary-border-color;
-            border-top-color: $bs-datetimepicker-secondary-border-color-rgba;
-            bottom: -7px;
-            left: 6px;
-        }
-
-        &:after {
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid $bs-datetimepicker-primary-border-color;
-            bottom: -6px;
-            left: 7px;
-        }
-    }
-
-    &.float-right {
-        &:before {
-            left: auto;
-            right: 6px;
-        }
-
-        &:after {
-            left: auto;
-            right: 7px;
-        }
-    }
-
-    &.wider {
-        width: 16rem;
-    }
-
-    span[data-action] {
-        padding: 6px 0;
-    }
-
-    span[data-action]:active {
-        box-shadow: none;
-    }
-
-    .timepicker-hour, .timepicker-minute, .timepicker-second {
-        width: 54px;
-        font-weight: bold;
-        font-size: $bs-datetimepicker-timepicker-font-size;
-        margin: 0;
-    }
-
-    button[data-action] {
-        padding: 6px;
-    }
-
-    .btn[data-action="togglePeriod"] {
-        text-align: center;
-        width: 38px;
-        height: 38px;
-    }
-
-    .btn[data-action="incrementHours"]::after {
-        @extend .visually-hidden;
-        content: "Increment Hours"; /*migrate these to this: https://stackoverflow.com/a/19009056/237917*/
-    }
-
-    .btn[data-action="incrementMinutes"]::after {
-        @extend .visually-hidden;
-        content: "Increment Minutes";
-    }
-
-    .btn[data-action="decrementHours"]::after {
-        @extend .visually-hidden;
-        content: "Decrement Hours";
-    }
-
-    .btn[data-action="decrementMinutes"]::after {
-        @extend .visually-hidden;
-        content: "Decrement Minutes";
-    }
-
-    .btn[data-action="showHours"]::after {
-        @extend .visually-hidden;
-        content: "Show Hours";
-    }
-
-    .btn[data-action="showMinutes"]::after {
-        @extend .visually-hidden;
-        content: "Show Minutes";
-    }
-
-    .btn[data-action="togglePeriod"]::after {
-        @extend .visually-hidden;
-        content: "Toggle AM/PM";
-    }
-
-    .btn[data-action="clear"]::after {
-        @extend .visually-hidden;
-        content: "Clear the picker";
-    }
-
-    .btn[data-action="today"]::after {
-        @extend .visually-hidden;
-        content: "Set the date to today";
-    }
-
-    .picker-switch {
-        text-align: center;
-
-        &::after {
-            @extend .visually-hidden;
-            content: "Toggle Date and Time Screens";
-        }
-
-        td {
-            padding: 0;
-            margin: 0;
-            height: auto;
-            width: auto;
-            line-height: inherit;
-
-            span {
-                line-height: 2.5;
-                height: 2.5em;
-                width: 100%;
-            }
-        }
-    }
-
-    table {
+      span {
+        line-height: 2.5;
+        height: 2.5em;
         width: 100%;
-        margin: 0;
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+    margin: 0;
 
 
-        & td,
-        & th {
-            text-align: center;
-            border-radius: $bs-datetimepicker-border-radius;
-        }
-
-        & th {
-            height: 20px;
-            line-height: 20px;
-            width: 20px;
-
-            &.picker-switch {
-                width: 145px;
-            }
-
-            &.disabled,
-            &.disabled:hover {
-                background: none;
-                color: $bs-datetimepicker-disabled-color;
-                cursor: not-allowed;
-            }
-
-            &.prev::after {
-                @extend .visually-hidden;
-                content: "Previous Month";
-            }
-
-            &.next::after {
-                @extend .visually-hidden;
-                content: "Next Month";
-            }
-        }
-
-        & thead tr:first-child th {
-            &:hover {
-                background: $bs-datetimepicker-btn-hover-bg;
-            }
-        }
-
-        & td {
-            height: 54px;
-            line-height: 54px;
-            width: 54px;
-
-            span {
-                display: inline-block;
-                width: 54px;
-                height: 54px;
-                line-height: 54px;
-                margin-top: 2px;
-                margin-bottom: 2px;
-                border-radius: $bs-datetimepicker-border-radius;
-
-                &:hover {
-                    background: $bs-datetimepicker-btn-hover-bg;
-                }
-
-                &.active {
-                    background-color: $bs-datetimepicker-active-bg;
-                    color: $bs-datetimepicker-active-color;
-                    text-shadow: $bs-datetimepicker-text-shadow;
-                }
-
-                &.active.today:before {
-                    border-bottom-color: #fff;
-                }
-
-                &.old,
-                &.new {
-                    color: $bs-datetimepicker-alternate-color;
-                }
-
-                &.disabled,
-                &.disabled:hover {
-                    background: none;
-                    color: $bs-datetimepicker-disabled-color;
-                    cursor: not-allowed;
-                }
-
-                &.cw {
-                    font-size: .8em;
-                    height: 20px;
-                    line-height: 20px;
-                    color: $bs-datetimepicker-alternate-color;
-                    cursor: default;
-                }
-
-                &.day {
-                }
-
-                &.today {
-                    position: relative;
-
-                    &:before {
-                        content: '';
-                        display: inline-block;
-                        border: solid transparent;
-                        border-width: 0 0 7px 7px;
-                        border-bottom-color: $bs-datetimepicker-active-bg;
-                        border-top-color: $bs-datetimepicker-secondary-border-color-rgba;
-                        position: absolute;
-                        bottom: 4px;
-                        right: 4px;
-                    }
-                }
-            }
-        }
+    & td,
+    & th {
+      text-align: center;
+      border-radius: $bs-datetimepicker-border-radius;
     }
 
-    &.useTwentyfour {
-        td.hour {
-            height: 27px;
-            line-height: 27px;
-        }
+    & th {
+      height: 20px;
+      line-height: 20px;
+      width: 20px;
+
+      &.picker-switch {
+        width: 145px;
+      }
+
+      &.disabled,
+      &.disabled:hover {
+        background: none;
+        color: $bs-datetimepicker-disabled-color;
+        cursor: not-allowed;
+      }
+
+      &.prev::after {
+        @extend .visually-hidden;
+        content: "Previous Month";
+      }
+
+      &.next::after {
+        @extend .visually-hidden;
+        content: "Next Month";
+      }
     }
 
-    .timepicker .timepicker-picker a.btn {
-      color: $bs-datetimepicker-buttons-color;
-      color: var(--blue, #{$bs-datetimepicker-buttons-color});
-    }
-    .timepicker .timepicker-picker a.btn:hover {
-      color: $bs-datetimepicker-buttons-color-dark;
+    & thead tr:first-child th {
+      &:hover {
+        background: $bs-datetimepicker-btn-hover-bg;
+      }
     }
 
-    &.tempus-dominus-widget-readonly {
-      table td.day, table td.hour, table td.minute, table td.second,
-      table td [data-action="incrementHours"], table td [data-action="incrementMinutes"], table td [data-action="incrementSeconds"],
-      table td [data-action="decrementHours"], table td [data-action="decrementMinutes"], table td [data-action="decrementSeconds"],
-      table td [data-action="showHours"], table td [data-action="showMinutes"], table td [data-action="showSeconds"],
-      table td [data-action="togglePeriod"] {
-        pointer-events: none;
-        cursor: default;
+    & td {
+      height: 20px;
+      line-height: 20px;
+      width: 20px;
+
+      span {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        margin-top: 2px;
+        margin-bottom: 2px;
+        border-radius: $bs-datetimepicker-border-radius;
 
         &:hover {
+          background: $bs-datetimepicker-btn-hover-bg;
+        }
+
+        &.active {
+          background-color: $bs-datetimepicker-active-bg;
+          color: $bs-datetimepicker-active-color;
+          text-shadow: $bs-datetimepicker-text-shadow;
+        }
+
+        &.active.today:before {
+          border-bottom-color: #fff;
+        }
+
+        &.old,
+        &.new {
+          color: $bs-datetimepicker-alternate-color;
+        }
+
+        &.disabled,
+        &.disabled:hover {
           background: none;
+          color: $bs-datetimepicker-disabled-color;
+          cursor: not-allowed;
+        }
+
+        &.cw {
+          font-size: .8em;
+          height: 20px;
+          line-height: 20px;
+          color: $bs-datetimepicker-alternate-color;
+          cursor: default;
+        }
+
+        &.day {
+        }
+
+        &.today {
+          position: relative;
+
+          &:before {
+            content: '';
+            display: inline-block;
+            border: solid transparent;
+            border-width: 0 0 7px 7px;
+            border-bottom-color: $bs-datetimepicker-active-bg;
+            border-top-color: $bs-datetimepicker-secondary-border-color-rgba;
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+          }
         }
       }
     }
+  }
+
+  &.useTwentyfour {
+    td.hour {
+      height: 27px;
+      line-height: 27px;
+    }
+  }
+
+  .timepicker .timepicker-picker a.btn {
+    color: $bs-datetimepicker-buttons-color;
+    color: var(--blue, #{$bs-datetimepicker-buttons-color});
+  }
+
+  .timepicker .timepicker-picker a.btn:hover {
+    color: $bs-datetimepicker-buttons-color-dark;
+  }
+
+  &.tempus-dominus-widget-readonly {
+    table td.day, table td.hour, table td.minute, table td.second,
+    table td [data-action="incrementHours"], table td [data-action="incrementMinutes"], table td [data-action="incrementSeconds"],
+    table td [data-action="decrementHours"], table td [data-action="decrementMinutes"], table td [data-action="decrementSeconds"],
+    table td [data-action="showHours"], table td [data-action="showMinutes"], table td [data-action="showSeconds"],
+    table td [data-action="togglePeriod"] {
+      pointer-events: none;
+      cursor: default;
+
+      &:hover {
+        background: none;
+      }
+    }
+  }
 }

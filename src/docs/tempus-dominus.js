@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@popperjs/core/lib/createPopper')) :
-    typeof define === 'function' && define.amd ? define(['exports', '@popperjs/core/lib/createPopper'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusdominus = {}, global.createPopper));
-}(this, (function (exports, createPopper) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@popperjs/core')) :
+    typeof define === 'function' && define.amd ? define(['exports', '@popperjs/core'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusdominus = {}, global.Popper));
+}(this, (function (exports, core) { 'use strict';
 
     var Unit;
     (function (Unit) {
@@ -660,7 +660,6 @@
             //#endregion
             //#region collapse
             this.show = 'show';
-            this.hide = 'hide';
             this.collapsing = 'td-collapsing';
             this.collapse = 'td-collapse';
             //#endregion
@@ -1492,31 +1491,34 @@
                 }
             }
             timesDiv.querySelectorAll('.disabled').forEach(element => element.classList.remove(Namespace.Css.disabled));
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
-                timesDiv.querySelector(`[data-action=${ActionTypes.incrementHours}]`).classList.add(Namespace.Css.disabled);
-            }
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
-                timesDiv.querySelector(`[data-action=${ActionTypes.decrementHours}]`).classList.add(Namespace.Css.disabled);
-            }
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
-                timesDiv.querySelector(`[data-action=${ActionTypes.incrementMinutes}]`).classList.add(Namespace.Css.disabled);
-            }
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
-                timesDiv.querySelector(`[data-action=${ActionTypes.decrementMinutes}]`).classList.add(Namespace.Css.disabled);
-            }
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
-                timesDiv.querySelector(`[data-action=${ActionTypes.incrementSeconds}]`).classList.add(Namespace.Css.disabled);
-            }
-            if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
-                timesDiv.querySelector(`[data-action=${ActionTypes.decrementSeconds}]`).classList.add(Namespace.Css.disabled);
-            }
-            if (this.context._options.display.components.hours)
+            if (this.context._options.display.components.hours) {
+                if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
+                    timesDiv.querySelector(`[data-action=${ActionTypes.incrementHours}]`).classList.add(Namespace.Css.disabled);
+                }
+                if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
+                    timesDiv.querySelector(`[data-action=${ActionTypes.decrementHours}]`).classList.add(Namespace.Css.disabled);
+                }
                 timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText =
                     this.context._options.display.components.useTwentyfourHour ? lastPicked.hoursFormatted : lastPicked.twelveHoursFormatted;
-            if (this.context._options.display.components.minutes)
+            }
+            if (this.context._options.display.components.minutes) {
+                if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
+                    timesDiv.querySelector(`[data-action=${ActionTypes.incrementMinutes}]`).classList.add(Namespace.Css.disabled);
+                }
+                if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
+                    timesDiv.querySelector(`[data-action=${ActionTypes.decrementMinutes}]`).classList.add(Namespace.Css.disabled);
+                }
                 timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
-            if (this.context._options.display.components.seconds)
+            }
+            if (this.context._options.display.components.seconds) {
+                if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
+                    timesDiv.querySelector(`[data-action=${ActionTypes.incrementSeconds}]`).classList.add(Namespace.Css.disabled);
+                }
+                if (!this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
+                    timesDiv.querySelector(`[data-action=${ActionTypes.decrementSeconds}]`).classList.add(Namespace.Css.disabled);
+                }
                 timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
+            }
         }
         _grid() {
             const rows = [], separator = document.createElement('td'), separatorColon = separator.cloneNode(true), topRow = document.createElement('tr'), middleRow = document.createElement('tr'), bottomRow = document.createElement('tr'), upIcon = this.context.display.iconTag(this.context._options.display.icons.up), downIcon = this.context.display.iconTag(this.context._options.display.icons.down), actionLink = document.createElement('span');
@@ -1816,10 +1818,28 @@
             }
             this._buildWidget();
             this._showMode();
-            window.addEventListener('resize', () => this._place());
-            this._place();
+            document.body.appendChild(this.widget);
+            this.widget.querySelectorAll('[data-action]')
+                .forEach(element => element.addEventListener('click', (e) => {
+                this.context.action.do(e);
+            }));
+            this.popperInstance = core.createPopper(this.context._element, this.widget, {
+                modifiers: [
+                    {
+                        name: 'offset',
+                        options: {
+                            offset: [0, 8],
+                        },
+                    },
+                ],
+            });
+            /*window.addEventListener('resize', () => this._place());
+            this._place();*/
             this.widget.classList.add(Namespace.Css.show);
-            this.widget.classList.remove(Namespace.Css.hide);
+            this.popperInstance.setOptions({
+                modifiers: [{ name: 'eventListeners', enabled: true }],
+            });
+            this.popperInstance.update();
             this.context._notifyEvent({
                 type: Namespace.Events.SHOW
             });
@@ -1856,7 +1876,18 @@
         }
         hide() {
             this.widget.classList.remove(Namespace.Css.show);
-            this.widget.classList.add(Namespace.Css.hide);
+            this.popperInstance.setOptions({
+                modifiers: [{ name: 'eventListeners', enabled: false }],
+            });
+            document.getElementsByClassName(Namespace.Css.widget)[0].remove();
+            this._widget = undefined;
+            this.context._notifyEvent({
+                type: Namespace.Events.HIDE,
+                date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
+            });
+        }
+        toggle() {
+            return this.widget ? this.hide() : this.show();
         }
         _place() {
         }
@@ -1904,9 +1935,9 @@
                 this._widget = template;
                 return;
             }
-            const content = document.createElement('div');
+            //const content = document.createElement('div');
             if (this.context._options.display.toolbarPlacement === 'top') {
-                content.appendChild(toolbar);
+                template.appendChild(toolbar);
             }
             if (this._hasDate()) {
                 if (this.context._options.display.collapse && this._hasTime()) {
@@ -1914,10 +1945,10 @@
                     if (this.context._options.display.viewMode !== 'times')
                         dateView.classList.add(Namespace.Css.show);
                 }
-                content.appendChild(dateView);
+                template.appendChild(dateView);
             }
             if (this.context._options.display.toolbarPlacement === 'default') {
-                content.appendChild(toolbar);
+                template.appendChild(toolbar);
             }
             if (this._hasTime()) {
                 if (this.context._options.display.collapse && this._hasDate()) {
@@ -1925,12 +1956,17 @@
                     if (this.context._options.display.viewMode === 'times')
                         timeView.classList.add(Namespace.Css.show);
                 }
-                content.appendChild(timeView);
+                template.appendChild(timeView);
             }
             if (this.context._options.display.toolbarPlacement === 'bottom') {
-                content.appendChild(toolbar);
+                template.appendChild(toolbar);
             }
-            template.appendChild(content);
+            //template.appendChild(template);
+            //<div class="arrow" data-popper-arrow></div>
+            const arrow = document.createElement('div');
+            arrow.classList.add('arrow');
+            arrow.setAttribute('data-popper-arrow', '');
+            template.appendChild(arrow);
             this._widget = template;
         }
         _hasTime() {
@@ -2073,25 +2109,25 @@
             return true;
         }
         _isInDisabledDates(testDate) {
-            if (!this.context._options.restrictions.disabledDates && this.context._options.restrictions.disabledDates.length === 0)
+            if (!this.context._options.restrictions.disabledDates || this.context._options.restrictions.disabledDates.length === 0)
                 return false;
             const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
             return this.context._options.restrictions.disabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
         }
         _isInEnabledDates(testDate) {
-            if (!this.context._options.restrictions.enabledDates && this.context._options.restrictions.enabledDates.length === 0)
+            if (!this.context._options.restrictions.enabledDates || this.context._options.restrictions.enabledDates.length === 0)
                 return true;
             const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
             return this.context._options.restrictions.enabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
         }
         _isInDisabledHours(testDate) {
-            if (!this.context._options.restrictions.disabledHours && this.context._options.restrictions.disabledHours.length === 0)
+            if (!this.context._options.restrictions.disabledHours || this.context._options.restrictions.disabledHours.length === 0)
                 return false;
             const formattedDate = testDate.hours;
             return this.context._options.restrictions.disabledHours.find(x => x === formattedDate);
         }
         _isInEnabledHours(testDate) {
-            if (!this.context._options.restrictions.enabledHours && this.context._options.restrictions.enabledHours.length === 0)
+            if (!this.context._options.restrictions.enabledHours || this.context._options.restrictions.enabledHours.length === 0)
                 return true;
             const formattedDate = testDate.hours;
             return this.context._options.restrictions.enabledHours.find(x => x === formattedDate);
@@ -2111,22 +2147,7 @@
             this.dates = new Dates(this);
             this.action = new Actions(this);
             this.initializeViewMode();
-            this.display.show();
-            element.appendChild(this.display.widget); //todo this isn't right
-            this.display.widget.querySelectorAll('[data-action]')
-                .forEach(element => element.addEventListener('click', (e) => {
-                this.action.do(e);
-            }));
-            this.popperInstance = createPopper.createPopper(document.querySelector('#popcorn'), element, {
-                modifiers: [
-                    {
-                        name: 'offset',
-                        options: {
-                            offset: [0, 8],
-                        },
-                    },
-                ],
-            });
+            element.addEventListener('click', () => this.display.toggle());
         }
         // noinspection JSUnusedGlobalSymbols
         /**

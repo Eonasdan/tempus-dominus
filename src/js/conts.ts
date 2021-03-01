@@ -405,7 +405,6 @@ class Css {
     //#region collapse
 
     show = 'show';
-    hide = 'hide';
     collapsing = 'td-collapsing';
     collapse = 'td-collapse';
 

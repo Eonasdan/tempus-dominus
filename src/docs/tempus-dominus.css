@@ -16,10 +16,42 @@
 
 .tempus-dominus-widget {
   list-style: none;
-  display: block;
   margin: 2px 0;
   padding: 4px;
   width: 14rem;
+  border-radius: 4px;
+  display: none;
+  background-color: white;
+}
+.tempus-dominus-widget.show {
+  display: block;
+}
+.tempus-dominus-widget .arrow,
+.tempus-dominus-widget .arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+.tempus-dominus-widget .arrow {
+  visibility: hidden;
+}
+.tempus-dominus-widget .arrow::before {
+  visibility: visible;
+  content: "";
+  transform: rotate(45deg);
+}
+.tempus-dominus-widget [data-popper-placement^=top] > .arrow {
+  bottom: -4px;
+}
+.tempus-dominus-widget [data-popper-placement^=bottom] > .arrow {
+  top: -4px;
+}
+.tempus-dominus-widget [data-popper-placement^=left] > .arrow {
+  right: -4px;
+}
+.tempus-dominus-widget [data-popper-placement^=right] > .arrow {
+  left: -4px;
 }
 .tempus-dominus-widget .td-collapse:not(.show) {
   display: none;
@@ -190,15 +222,15 @@
   background: #e9ecef;
 }
 .tempus-dominus-widget table td {
-  height: 54px;
-  line-height: 54px;
-  width: 54px;
+  height: 20px;
+  line-height: 20px;
+  width: 20px;
 }
 .tempus-dominus-widget table td span {
   display: inline-block;
-  width: 54px;
-  height: 54px;
-  line-height: 54px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
   margin-top: 2px;
   margin-bottom: 2px;
   border-radius: 0.25rem;

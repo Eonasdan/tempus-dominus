@@ -34,7 +34,9 @@
             <div class="col-6 bg-light">
                 <div id="popcorn"></div>
                 <p>vvvv</p>
-                <div id="datetimepicker1"></div>
+                <div id="datetimepicker1">
+
+                </div>
                 <p>^^^^</p>
             </div>
         </div>
@@ -56,6 +58,9 @@
         height: 120px;
         background-image: url('https://popper.js.org/images/popcorn-box.svg');
         margin-left: 80px;
+    }
+    .tempus-dominus-widget {
+        border:2px solid black;
     }
 </style>
 <script src="tempus-dominus.js"></script>
@@ -98,7 +103,7 @@
     });
 
     //const tempusdominus = require("../js/tempus-dominus");
-    var dt = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'), {
+    var dt = new tempusdominus.TempusDominus(document.getElementById('popcorn'), {
         restrictions :{
             //minDate: 'cheese',
             //maxDate: '11/22/2013 00:53',
@@ -106,18 +111,18 @@
             disabledDates: [
                 //moment("12/25/2013").toDate(),
                 new Date(2021, 2 - 1, 10),
-                '11/22/2013 00:53',
+                //'11/22/2013 00:53',
                 //'cheese'
             ],
             enabledDates: null
         }
     });
 
-    dt.updateOptions({
+    /*dt.updateOptions({
         restrictions : {
             maxDate: '11/22/2013 00:53',
         }
-    });
+    });*/
 </script>
 </body>
 </html>

@@ -6,7 +6,13 @@ export default {
         dir: 'src/docs',
         format: 'umd',
         name: 'tempusdominus',
-        sourcemap: true
+        sourcemap: true,
+        globals: {
+            '@popperjs/core': 'Popper'
+        }
     },
-    plugins: [typescript()],
+    external: [ '@popperjs/core' ],
+    plugins: [
+        typescript()
+    ],
 };

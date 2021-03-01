@@ -10,6 +10,7 @@ import {DateTime, Unit} from '../datetime';
 import {DatePickerModes, Namespace} from '../conts';
 import {TempusDominus} from '../tempus-dominus';
 import {ActionTypes} from '../actions';
+import { createPopper } from '@popperjs/core';
 
 
 export default class Display {
@@ -23,6 +24,7 @@ export default class Display {
     private hourDisplay: HourDisplay;
     private minuteDisplay: MinuteDisplay;
     private secondDisplay: SecondDisplay;
+    private popperInstance: any;
 
     constructor(context: TempusDominus) {
         this.context = context;
@@ -89,13 +91,37 @@ export default class Display {
         }
         this._buildWidget();
         this._showMode();
-        window.addEventListener('resize', () => this._place());
-        this._place();
+
+        document.body.appendChild(this.widget);
+
+        this.widget.querySelectorAll('[data-action]')
+            .forEach(element => element.addEventListener('click', (e) => {
+                this.context.action.do(e);
+            }));
+
+
+        this.popperInstance = createPopper(this.context._element, this.widget, {
+            modifiers: [
+                {
+                    name: 'offset',
+                    options: {
+                        offset: [0, 8],
+                    },
+                },
+            ],
+        });
+
+
+        /*window.addEventListener('resize', () => this._place());
+        this._place();*/
         this.widget.classList.add(Namespace.Css.show);
-        this.widget.classList.remove(Namespace.Css.hide);
+        this.popperInstance.setOptions({
+            modifiers: [{ name: 'eventListeners', enabled: true }],
+        });
+        this.popperInstance.update();
         this.context._notifyEvent({
             type: Namespace.Events.SHOW
-        })
+        });
     }
 
     _showMode(direction?: number): void {
@@ -133,7 +159,22 @@ export default class Display {
 
     hide(): void {
         this.widget.classList.remove(Namespace.Css.show);
-        this.widget.classList.add(Namespace.Css.hide);
+        this.popperInstance.setOptions({
+            modifiers: [{ name: 'eventListeners', enabled: false }],
+        });
+
+        document.getElementsByClassName(Namespace.Css.widget)[0].remove();
+
+        this._widget = undefined;
+
+        this.context._notifyEvent({
+            type: Namespace.Events.HIDE,
+            date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
+        });
+    }
+
+    toggle() {
+        return this.widget ? this.hide() : this.show();
     }
 
     _place(): void {
@@ -192,33 +233,38 @@ export default class Display {
             return;
         }
 
-        const content = document.createElement('div');
+        //const content = document.createElement('div');
 
         if (this.context._options.display.toolbarPlacement === 'top') {
-            content.appendChild(toolbar);
+            template.appendChild(toolbar);
         }
         if (this._hasDate()) {
             if (this.context._options.display.collapse && this._hasTime()) {
                 dateView.classList.add(Namespace.Css.collapse);
                 if (this.context._options.display.viewMode !== 'times') dateView.classList.add(Namespace.Css.show);
             }
-            content.appendChild(dateView);
+            template.appendChild(dateView);
         }
         if (this.context._options.display.toolbarPlacement === 'default') {
-            content.appendChild(toolbar);
+            template.appendChild(toolbar);
         }
         if (this._hasTime()) {
             if (this.context._options.display.collapse && this._hasDate()) {
                 timeView.classList.add(Namespace.Css.collapse);
                 if (this.context._options.display.viewMode === 'times') timeView.classList.add(Namespace.Css.show);
             }
-            content.appendChild(timeView);
+            template.appendChild(timeView);
         }
         if (this.context._options.display.toolbarPlacement === 'bottom') {
-            content.appendChild(toolbar);
+            template.appendChild(toolbar);
         }
 
-        template.appendChild(content);
+        //template.appendChild(template);
+        //<div class="arrow" data-popper-arrow></div>
+        const arrow = document.createElement('div');
+        arrow.classList.add('arrow');
+        arrow.setAttribute('data-popper-arrow','');
+        template.appendChild(arrow);
 
         this._widget = template;
     }
