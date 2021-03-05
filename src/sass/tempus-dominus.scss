@@ -37,10 +37,16 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
   display: none;
   background-color:white;
 
+  [data-action]::after {
+    @extend .visually-hidden;
+    content: attr(title);
+  }
+
   &.show {
     display: block;
   }
 
+  //popper
   .arrow,
   .arrow::before {
     position: absolute;
@@ -74,6 +80,7 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
   [data-popper-placement^='right'] > .arrow {
     left: -4px;
   }
+  //end popper
 
   .td-collapse {
     &:not(.show) {
@@ -190,58 +197,8 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
     height: 38px;
   }
 
-  .btn[data-action="incrementHours"]::after {
-    @extend .visually-hidden;
-    content: "Increment Hours"; /*migrate these to this: https://stackoverflow.com/a/19009056/237917*/
-  }
-
-  .btn[data-action="incrementMinutes"]::after {
-    @extend .visually-hidden;
-    content: "Increment Minutes";
-  }
-
-  .btn[data-action="decrementHours"]::after {
-    @extend .visually-hidden;
-    content: "Decrement Hours";
-  }
-
-  .btn[data-action="decrementMinutes"]::after {
-    @extend .visually-hidden;
-    content: "Decrement Minutes";
-  }
-
-  .btn[data-action="showHours"]::after {
-    @extend .visually-hidden;
-    content: "Show Hours";
-  }
-
-  .btn[data-action="showMinutes"]::after {
-    @extend .visually-hidden;
-    content: "Show Minutes";
-  }
-
-  .btn[data-action="togglePeriod"]::after {
-    @extend .visually-hidden;
-    content: "Toggle AM/PM";
-  }
-
-  .btn[data-action="clear"]::after {
-    @extend .visually-hidden;
-    content: "Clear the picker";
-  }
-
-  .btn[data-action="today"]::after {
-    @extend .visually-hidden;
-    content: "Set the date to today";
-  }
-
   .picker-switch {
     text-align: center;
-
-    &::after {
-      @extend .visually-hidden;
-      content: "Toggle Date and Time Screens";
-    }
 
     td {
       padding: 0;
@@ -283,16 +240,6 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
         background: none;
         color: $bs-datetimepicker-disabled-color;
         cursor: not-allowed;
-      }
-
-      &.prev::after {
-        @extend .visually-hidden;
-        content: "Previous Month";
-      }
-
-      &.next::after {
-        @extend .visually-hidden;
-        content: "Next Month";
       }
     }
 

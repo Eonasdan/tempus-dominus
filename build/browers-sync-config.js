@@ -26,10 +26,10 @@ module.exports = {
         "ignoreInitial": true
     },
     "server": true,
-    "https": {
+    /*"https": {
         key: "C:\\https\\localhost.key",
         cert: "C:\\https\\localhost.crt"
-    },
+    },*/
     "proxy": false,
     "port": 3000,
     "middleware": false,

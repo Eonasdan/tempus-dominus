@@ -3,7 +3,7 @@
     "name": "Jonathan Peterson"
   },
   "scripts": {
-    "start": "npm run build && browser-sync start --config build/bs-config.js",
+    "start": "npm run build && browser-sync start --config build/browers-sync-config.js",
     "build": "npm run rollup && npm run sass",
     "sass": "sass ./src/sass/tempus-dominus.scss ./src/docs/tempus-dominus.css",
     "sass-watch": "sass ./src/sass/tempus-dominus.scss ./src/docs/tempus-dominus.css --watch",

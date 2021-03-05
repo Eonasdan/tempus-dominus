@@ -31,22 +31,21 @@
 <div>
     <div class="container">
         <div class="row">
-            <div class="col-6 bg-light">
+            <div class="col-6">
                 <div id="popcorn"></div>
-                <p>vvvv</p>
                 <div id="datetimepicker1">
 
                 </div>
-                <p>^^^^</p>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-6 bg-light">
+            <div class="col-6">
                 <button id="clearLog" type="button" class="btn btn-primary m-3">Clear Log</button>
-                <div id="log">
+                <div id="log" style="max-height: 90vh;overflow-y: scroll;">
 
                 </div>
             </div>
+        </div>
+        <div class="row">
+
         </div>
     </div>
 
@@ -95,7 +94,7 @@
                         break;
                 }
                 const pre = document.createElement('pre');
-                pre.innerHTML = `${verb}: ${Array.prototype.slice.call(arguments).join(' ')}`;
+                pre.innerHTML = Array.prototype.slice.call(arguments).join(' ');
                 msg.appendChild(pre);
                 log.appendChild(msg);
             };
