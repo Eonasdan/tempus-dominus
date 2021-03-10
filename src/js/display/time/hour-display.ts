@@ -18,7 +18,7 @@ export default class HourDisplay {
         table.classList.add('table', 'table-sm'); //todo bootstrap
         const tableBody = document.createElement('tbody');
         let row = document.createElement('tr');
-        for (let i = 0; i <= (this.context._options.display.components.useTwentyfourHour ? 24 : 12) ; i++) {
+        for (let i = 0; i <= (this.context.options.display.components.useTwentyfourHour ? 24 : 12) ; i++) {
             if (i !== 0 && i % 4 === 0) {
                 tableBody.appendChild(row);
                 row = document.createElement('tr');
@@ -38,7 +38,7 @@ export default class HourDisplay {
 
     update(): void {
         const container = this.context.display.widget.getElementsByClassName(Namespace.Css.hourContainer)[0];
-        let innerDate = this.context._viewDate.clone.startOf(Unit.date);
+        let innerDate = this.context.viewDate.clone.startOf(Unit.date);
 
         container.querySelectorAll('tbody td span').forEach((containerClone: HTMLElement, index) => {
             let classes = [];
@@ -51,7 +51,7 @@ export default class HourDisplay {
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.hours}`);
-            containerClone.innerText = this.context._options.display.components.useTwentyfourHour ? innerDate.hoursFormatted : innerDate.twelveHoursFormatted;
+            containerClone.innerText = this.context.options.display.components.useTwentyfourHour ? innerDate.hoursFormatted : innerDate.twelveHoursFormatted;
             innerDate.manipulate(1, Unit.hours);
         });
     }

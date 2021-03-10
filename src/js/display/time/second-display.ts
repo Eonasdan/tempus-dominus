@@ -38,7 +38,7 @@ export default class secondDisplay {
 
     update(): void {
         const container = this.context.display.widget.getElementsByClassName(Namespace.Css.secondContainer)[0];
-        let innerDate = this.context._viewDate.clone.startOf(Unit.minutes);
+        let innerDate = this.context.viewDate.clone.startOf(Unit.minutes);
 
         container.querySelectorAll('tbody td span').forEach((containerClone: HTMLElement, index) => {
             let classes = [];

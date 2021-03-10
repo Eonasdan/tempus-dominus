@@ -16,7 +16,7 @@ export default class Actions {
         const currentTarget = e.currentTarget;
         if (currentTarget.classList.contains(Namespace.Css.disabled)) return false;
         action = action || currentTarget.dataset.action;
-        const lastPicked = (this.context.dates.lastPicked || this.context._viewDate).clone
+        const lastPicked = (this.context.dates.lastPicked || this.context.viewDate).clone
         console.log('action', action);
 
         const modifyTime = (unit: Unit, value = 1) => {
@@ -34,11 +34,11 @@ export default class Actions {
             case ActionTypes.previous:
                 const {NAV_FUNCTION, NAV_STEP} = DatePickerModes[this.context.currentViewMode];
                 if (action === ActionTypes.next)
-                    this.context._viewDate.manipulate(NAV_STEP, NAV_FUNCTION);
+                    this.context.viewDate.manipulate(NAV_STEP, NAV_FUNCTION);
                 else
-                    this.context._viewDate.manipulate(NAV_STEP * -1, NAV_FUNCTION);
+                    this.context.viewDate.manipulate(NAV_STEP * -1, NAV_FUNCTION);
                 this.context.display.update('calendar');
-                this.context._viewUpdate(NAV_FUNCTION);
+                this.context.viewUpdate(NAV_FUNCTION);
                 break;
             case ActionTypes.pickerSwitch:
                 this.context.display._showMode(1);
@@ -49,22 +49,22 @@ export default class Actions {
                 const value = +currentTarget.getAttribute('data-value');
                 switch (action) {
                     case ActionTypes.selectMonth:
-                        this.context._viewDate.month = value;
-                        this.context._viewUpdate(Unit.month);
+                        this.context.viewDate.month = value;
+                        this.context.viewUpdate(Unit.month);
                         break;
                     case ActionTypes.selectYear:
-                        this.context._viewDate.year = value;
-                        this.context._viewUpdate(Unit.year);
+                        this.context.viewDate.year = value;
+                        this.context.viewUpdate(Unit.year);
                         break;
                     case ActionTypes.selectDecade:
-                        this.context._viewDate.year = value;
-                        this.context._viewUpdate(Unit.year);
+                        this.context.viewDate.year = value;
+                        this.context.viewUpdate(Unit.year);
                         break;
                 }
 
                 if (this.context.currentViewMode === this.context.minViewModeNumber) {
-                    this.context.dates._setValue(this.context._viewDate, this.context.dates.lastPickedIndex);
-                    if (!this.context._options.inline) {
+                    this.context.dates._setValue(this.context.viewDate, this.context.dates.lastPickedIndex);
+                    if (!this.context.options.inline) {
                         this.context.display.hide();
                     }
                 } else {
@@ -72,7 +72,7 @@ export default class Actions {
                 }
                 break;
             case ActionTypes.selectDay:
-                const day = this.context._viewDate.clone;
+                const day = this.context.viewDate.clone;
                 if (currentTarget.classList.contains(Namespace.Css.old)) {
                     day.manipulate(-1, Unit.month);
                 }
@@ -82,7 +82,7 @@ export default class Actions {
 
                 day.date = +currentTarget.innerText;
                 let index = 0;
-                if (this.context._options.allowMultidate) {
+                if (this.context.options.allowMultidate) {
                     index = this.context.dates.pickedIndex(day, Unit.date);
                     if (index !== -1) {
                         this.context.dates._setValue(null, index); //deselect multidate
@@ -93,8 +93,8 @@ export default class Actions {
                     this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
                 }
 
-                if (!this.context.display._hasTime() && !this.context._options.keepOpen &&
-                    !this.context._options.inline && !this.context._options.allowMultidate) {
+                if (!this.context.display._hasTime() && !this.context.options.keepOpen &&
+                    !this.context.options.inline && !this.context.options.allowMultidate) {
                     this.context.display.hide();
                 }
                 break;
@@ -102,8 +102,8 @@ export default class Actions {
                 let hour = +currentTarget.getAttribute('data-value');
                 lastPicked.hours = hour;
                 this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                if (!this.context._options.display.components.useTwentyfourHour &&
-                    !this.context._options.display.components.minutes && !this.context._options.keepOpen && !this.context._options.inline) {
+                if (!this.context.options.display.components.useTwentyfourHour &&
+                    !this.context.options.display.components.minutes && !this.context.options.keepOpen && !this.context.options.inline) {
                     this.context.display.hide();
                 } else {
                     this.do(e, ActionTypes.showClock);
@@ -112,8 +112,8 @@ export default class Actions {
             case ActionTypes.selectMinute:
                 lastPicked.minutes = +currentTarget.innerText;
                 this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                if (!this.context._options.display.components.useTwentyfourHour &&
-                    !this.context._options.display.components.seconds && !this.context._options.keepOpen && !this.context._options.inline) {
+                if (!this.context.options.display.components.useTwentyfourHour &&
+                    !this.context.options.display.components.seconds && !this.context.options.keepOpen && !this.context.options.inline) {
                     this.context.display.hide();
                 } else {
                     this.do(e, ActionTypes.showClock);
@@ -122,8 +122,8 @@ export default class Actions {
             case ActionTypes.selectSecond:
                 lastPicked.seconds = +currentTarget.innerText;
                 this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                if (!this.context._options.display.components.useTwentyfourHour && !this.context._options.keepOpen &&
-                    !this.context._options.inline) {
+                if (!this.context.options.display.components.useTwentyfourHour && !this.context.options.keepOpen &&
+                    !this.context.options.inline) {
                     this.context.display.hide();
                 } else {
                     this.do(e, ActionTypes.showClock);
@@ -133,7 +133,7 @@ export default class Actions {
                 modifyTime(Unit.hours);
                 break;
             case ActionTypes.incrementMinutes:
-                modifyTime(Unit.minutes, this.context._options.stepping);
+                modifyTime(Unit.minutes, this.context.options.stepping);
                 break;
             case ActionTypes.incrementSeconds:
                 modifyTime(Unit.seconds);
@@ -142,7 +142,7 @@ export default class Actions {
                 modifyTime(Unit.hours, -1);
                 break;
             case ActionTypes.decrementMinutes:
-                modifyTime(Unit.minutes, this.context._options.stepping * -1);
+                modifyTime(Unit.minutes, this.context.options.stepping * -1);
                 break;
             case ActionTypes.decrementSeconds:
                 modifyTime(Unit.seconds, -1);
@@ -155,13 +155,13 @@ export default class Actions {
                     .querySelectorAll(`.${Namespace.Css.dateContainer}, .${Namespace.Css.timeContainer}`)
                     .forEach((e: HTMLElement) => this.collapse.toggle(e));
 
-                if (currentTarget.getAttribute('title') === this.context._options.localization.selectDate) {
-                    currentTarget.setAttribute('title', this.context._options.localization.selectTime);
-                    currentTarget.innerHTML = this.context.display.iconTag(this.context._options.display.icons.time).outerHTML;
+                if (currentTarget.getAttribute('title') === this.context.options.localization.selectDate) {
+                    currentTarget.setAttribute('title', this.context.options.localization.selectTime);
+                    currentTarget.innerHTML = this.context.display.iconTag(this.context.options.display.icons.time).outerHTML;
                     this.context.display.update('calendar');
                 } else {
-                    currentTarget.setAttribute('title', this.context._options.localization.selectDate);
-                    currentTarget.innerHTML = this.context.display.iconTag(this.context._options.display.icons.date).outerHTML;
+                    currentTarget.setAttribute('title', this.context.options.localization.selectDate);
+                    currentTarget.innerHTML = this.context.display.iconTag(this.context.options.display.icons.date).outerHTML;
                     this.do(e, ActionTypes.showClock);
                     this.context.display.update('clock');
                 }
@@ -203,7 +203,7 @@ export default class Actions {
                 break;
             case ActionTypes.today:
                 const today = new DateTime();
-                this.context._viewDate = today;
+                this.context.viewDate = today;
                 if (this.context.validation.isValid(today, Unit.date))
                     this.context.dates._setValue(today, this.context.dates.lastPickedIndex);
                 break;

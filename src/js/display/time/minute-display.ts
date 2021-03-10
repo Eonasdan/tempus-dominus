@@ -18,7 +18,7 @@ export default class MinuteDisplay {
         table.classList.add('table', 'table-sm'); //todo bootstrap
         const tableBody = document.createElement('tbody');
         let row = document.createElement('tr');
-        let step = this.context._options.stepping === 1 ? 5 : this.context._options.stepping;
+        let step = this.context.options.stepping === 1 ? 5 : this.context.options.stepping;
         for (let i = 0; i <= 60/step ; i++) {
             if (i !== 0 && i % 4 === 0) {
                 tableBody.appendChild(row);
@@ -39,8 +39,8 @@ export default class MinuteDisplay {
 
     update(): void {
         const container = this.context.display.widget.getElementsByClassName(Namespace.Css.minuteContainer)[0];
-        let innerDate = this.context._viewDate.clone.startOf(Unit.hours);
-        let step = this.context._options.stepping === 1 ? 5 : this.context._options.stepping;
+        let innerDate = this.context.viewDate.clone.startOf(Unit.hours);
+        let step = this.context.options.stepping === 1 ? 5 : this.context.options.stepping;
 
         container.querySelectorAll('tbody td span').forEach((containerClone: HTMLElement, index) => {
             let classes = [];

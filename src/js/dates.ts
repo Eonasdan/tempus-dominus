@@ -75,14 +75,13 @@ export default class Dates {
 
         // case of calling setValue(null or false)
         if (!target) {
-            if (!this.context._options.allowMultidate || this._dates.length === 1 || isClear) {
+            if (!this.context.options.allowMultidate || this._dates.length === 1 || isClear) {
                 this.context.unset = true;
                 this._dates = [];
             } else {
                 this._dates.splice(index, 1);
             }
-            this.context._notifyEvent({
-                type: Namespace.Events.CHANGE,
+            this.context.notifyEvent(Namespace.Events.CHANGE, {
                 date: undefined,
                 oldDate,
                 isClear,
@@ -95,18 +94,17 @@ export default class Dates {
         index = 0;
         target = target.clone;
 
-        if (this.context._options.stepping !== 1) {
-            target.minutes = Math.round(target.minutes / this.context._options.stepping) * this.context._options.stepping;
+        if (this.context.options.stepping !== 1) {
+            target.minutes = Math.round(target.minutes / this.context.options.stepping) * this.context.options.stepping;
             target.seconds = 0;
         }
 
         if (this.context.validation.isValid(target)) {
             this._dates[index] = target;
-            this.context._viewDate = target.clone;
+            this.context.viewDate = target.clone;
             this.context.unset = false;
             this.context.display.update('all');
-            this.context._notifyEvent({
-                type: Namespace.Events.CHANGE,
+            this.context.notifyEvent(Namespace.Events.CHANGE, {
                 date: target,
                 oldDate,
                 isClear,
@@ -117,19 +115,17 @@ export default class Dates {
             return;
         }
 
-        if (this.context._options.keepInvalid) {
+        if (this.context.options.keepInvalid) {
             this._dates[index] = target;
-            this.context._viewDate = target.clone
-            this.context._notifyEvent({
-                type: Namespace.Events.CHANGE,
+            this.context.viewDate = target.clone
+            this.context.notifyEvent(Namespace.Events.CHANGE,{
                 date: target,
                 oldDate,
                 isClear,
                 isValid: false,
             });
         }
-        this.context._notifyEvent({
-            type: Namespace.Events.ERROR,
+        this.context.notifyEvent(Namespace.Events.ERROR, {
             reason: Namespace.ErrorMessages.failedToSetInvalidDate,
             date: target,
             oldDate

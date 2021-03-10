@@ -1,14 +1,14 @@
 import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
-import Actions from './actions';
-import {Default, Namespace, Options} from './conts';
+import Actions, {ActionTypes} from './actions';
+import {DefaultOptions, Namespace, Options} from './conts';
 import {DateTime, Unit} from './datetime';
 
 export class TempusDominus {
-    _options: Options;
-    _element: any;
-    _viewDate: DateTime;
+    options: Options;
+    element: any;
+    viewDate: DateTime;
     currentViewMode: number;
     unset: boolean;
     minViewModeNumber: number;
@@ -16,11 +16,13 @@ export class TempusDominus {
     validation: Validation;
     dates: Dates;
     action: Actions;
+    _notifyChangeEventContext: number;
+    private _currentPromptTimeTimeout: any;
 
     constructor(element, options: Options) {
-        this._options = this.initializeOptions(options, Default);
-        this._element = element;
-        this._viewDate = new DateTime();
+        this.options = this.initializeOptions(options, DefaultOptions);
+        this.element = element;
+        this.viewDate = new DateTime();
         this.currentViewMode = null;
         this.unset = true;
         this.minViewModeNumber = 0;
@@ -40,10 +42,14 @@ export class TempusDominus {
     /**
      *
      * @param options
+     * @param reset
      * @public
      */
-    updateOptions(options): void {
-        this._options = this.initializeOptions(options, this._options);
+    updateOptions(options, reset = false): void {
+        if (reset)
+            this.options = this.initializeOptions(options, DefaultOptions);
+        else
+            this.options = this.initializeOptions(options, this.options);
     }
 
     private initializeOptions(config: Options, mergeTo: Options): Options {
@@ -183,34 +189,78 @@ export class TempusDominus {
     }
 
     private initializeViewMode() {
-        if (this._options.display.components.year) {
+        if (this.options.display.components.year) {
             this.minViewModeNumber = 2;
         }
-        if (this._options.display.components.month) {
+        if (this.options.display.components.month) {
             this.minViewModeNumber = 1;
         }
-        if (this._options.display.components.date) {
+        if (this.options.display.components.date) {
             this.minViewModeNumber = 0;
         }
 
         this.currentViewMode = Math.max(this.minViewModeNumber, this.currentViewMode);
     }
 
-    _notifyEvent(config) {
-        console.log('notify', JSON.stringify(config, null, 2));
+    notifyEvent(event: string, args?) {
+        console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
+        if (event === Namespace.Events.CHANGE) {
+            this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
+            this._notifyChangeEventContext++;
+            if (
+                (args.date && args.oldDate && args.date.isSame(args.oldDate))
+                ||
+                (!args.isClear && !args.date && !args.oldDate)
+                ||
+                (this._notifyChangeEventContext > 1)
+            ) {
+                this._notifyChangeEventContext = undefined;
+                return;
+            }
+            this.handlePromptTimeIfNeeded(args);
+        }
+
+        const evt = new CustomEvent(event, args);
+        this.element.dispatchEvent(evt);
+
+
+        //this.element.trigger(event); //todo jquery
+        this._notifyChangeEventContext = void 0;
     }
 
+    private handlePromptTimeIfNeeded(e) {
+        if (this.options.promptTimeOnDateChange) {
+            if (!e.oldDate && this.options.useCurrent) {
+                // First time ever. If useCurrent option is set to true (default), do nothing
+                // because the first date is selected automatically.
+                return;
+            } else if (
+                e.oldDate &&
+                e.date &&
+                e.data.isSame(e.oldDate)
+            ) {
+                // Date didn't change (time did) or date changed because time did.
+                return;
+            }
+
+            clearTimeout(this._currentPromptTimeTimeout);
+            this._currentPromptTimeTimeout = setTimeout(() => {
+                if (this.display.widget) {
+                    this.display.widget.querySelector(`[data-action="${ActionTypes.togglePicker}"]`)[0].click();
+                }
+            }, this.options.promptTimeOnDateChangeTransitionDelay);
+        }
+    }
 
     /**
      *
-     * @param {Unit} e
+     * @param {Unit} unit
      * @private
      */
-    _viewUpdate(e: Unit) {
-        this._notifyEvent({
-            type: Namespace.Events.UPDATE,
-            change: e,
-            viewDate: this._viewDate.clone
+    viewUpdate(unit: Unit) {
+        this.notifyEvent(Namespace.Events.UPDATE, {
+            change: unit,
+            viewDate: this.viewDate.clone
         });
     }
 }

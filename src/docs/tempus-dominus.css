@@ -206,7 +206,7 @@
 }
 .tempus-dominus-widget table td span.active {
   background-color: #0d6efd;
-  color: #ff;
+  color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 .tempus-dominus-widget table td span.active.today:before {
@@ -244,13 +244,6 @@
 .tempus-dominus-widget.useTwentyfour td.hour {
   height: 27px;
   line-height: 27px;
-}
-.tempus-dominus-widget .timepicker .timepicker-picker a.btn {
-  color: #007bff;
-  color: var(--blue, #007bff);
-}
-.tempus-dominus-widget .timepicker .timepicker-picker a.btn:hover {
-  color: #0056b3;
 }
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td.day, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.minute, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.second,
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementSeconds],

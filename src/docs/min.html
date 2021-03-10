@@ -122,6 +122,12 @@
             maxDate: '11/22/2013 00:53',
         }
     });*/
+
+    ['change','update','error','show','hide','blur','keyup','keydown','focus','click'].forEach(e => {
+        document.getElementById('popcorn').addEventListener(e, () => {
+            console.log('event:', e);
+        })
+    });
 </script>
 </body>
 </html>

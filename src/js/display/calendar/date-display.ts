@@ -19,15 +19,15 @@ export default class DateDisplay {
         const headTemplate = this.context.display.headTemplate;
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
-        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousMonth);
-        switcher.setAttribute('title', this.context._options.localization.selectMonth)
-        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextMonth);
+        previous.getElementsByTagName('span')[0].setAttribute('title', this.context.options.localization.previousMonth);
+        switcher.setAttribute('title', this.context.options.localization.selectMonth)
+        next.getElementsByTagName('span')[0].setAttribute('title', this.context.options.localization.nextMonth);
 
         table.appendChild(headTemplate);
         const tableBody = document.createElement('tbody');
         tableBody.appendChild(this._daysOfTheWeek());
         let row = document.createElement('tr');
-        if (this.context._options.display.calendarWeeks) {
+        if (this.context.options.display.calendarWeeks) {
             const td = document.createElement('td')
             const span = document.createElement('span');
             span.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
@@ -39,7 +39,7 @@ export default class DateDisplay {
                 tableBody.appendChild(row);
                 row = document.createElement('tr');
 
-                if (this.context._options.display.calendarWeeks) {
+                if (this.context.options.display.calendarWeeks) {
                     const td = document.createElement('td');
                     const span = document.createElement('span');
                     span.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
@@ -50,6 +50,7 @@ export default class DateDisplay {
             const td = document.createElement('td');
             const span = document.createElement('span');
             span.setAttribute('data-action', ActionTypes.selectDay);
+            //td.setAttribute('data-action', ActionTypes.selectDay);
             td.appendChild(span);
             row.appendChild(td);
         }
@@ -64,22 +65,22 @@ export default class DateDisplay {
         const container = this.context.display.widget.getElementsByClassName(Namespace.Css.daysContainer)[0];
         const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
 
-        switcher.innerText = this.context._viewDate.format({month: this.context._options.localization.dayViewHeaderFormat});
+        switcher.innerText = this.context.viewDate.format({month: this.context.options.localization.dayViewHeaderFormat});
 
-        this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.month), Unit.month) ?
+        this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.month), Unit.month) ?
             previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
 
-        this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.month), Unit.month) ?
+        this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.month), Unit.month) ?
             next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
 
         this.grid(container.querySelectorAll('tbody td span'));
     }
 
     private grid(nodeList: NodeList) {
-        let innerDate = this.context._viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours);
+        let innerDate = this.context.viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours);
 
         nodeList.forEach((containerClone: HTMLElement, index) => {
-            if (this.context._options.display.calendarWeeks && containerClone.classList.contains(Namespace.Css.calendarWeeks)) {
+            if (this.context.options.display.calendarWeeks && containerClone.classList.contains(Namespace.Css.calendarWeeks)) {
                 containerClone.innerText = `${innerDate.week}`;
                 return;
             }
@@ -87,10 +88,10 @@ export default class DateDisplay {
             let classes = [];
             classes.push(Namespace.Css.day);
 
-            if (innerDate.isBefore(this.context._viewDate, Unit.month)) {
+            if (innerDate.isBefore(this.context.viewDate, Unit.month)) {
                 classes.push(Namespace.Css.old);
             }
-            if (innerDate.isAfter(this.context._viewDate, Unit.month)) {
+            if (innerDate.isAfter(this.context.viewDate, Unit.month)) {
                 classes.push(Namespace.Css.new);
             }
 
@@ -119,10 +120,10 @@ export default class DateDisplay {
      * Generates an html row that contains the days of the week.
      */
     _daysOfTheWeek(): HTMLTableRowElement {
-        let innerDate = this.context._viewDate.clone.startOf('weekDay').startOf(Unit.date);
+        let innerDate = this.context.viewDate.clone.startOf('weekDay').startOf(Unit.date);
         const row = document.createElement('tr');
 
-        if (this.context._options.display.calendarWeeks) {
+        if (this.context.options.display.calendarWeeks) {
             const th = document.createElement('th')
             th.classList.add(Namespace.Css.calendarWeeks);
             th.innerText = '#';

@@ -19,10 +19,10 @@ export default class MonthDisplay {
         const headTemplate = this.context.display.headTemplate;
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
-        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousYear);
-        switcher.setAttribute('title', this.context._options.localization.selectYear);
+        previous.getElementsByTagName('span')[0].setAttribute('title', this.context.options.localization.previousYear);
+        switcher.setAttribute('title', this.context.options.localization.selectYear);
         switcher.setAttribute('colspan', '1');
-        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextYear);
+        next.getElementsByTagName('span')[0].setAttribute('title', this.context.options.localization.nextYear);
 
         table.appendChild(headTemplate);
         const tableBody = document.createElement('tbody');
@@ -49,19 +49,19 @@ export default class MonthDisplay {
         const container = this.context.display.widget.getElementsByClassName(Namespace.Css.monthsContainer)[0];
         const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
 
-        switcher.innerText = this.context._viewDate.format({year: 'numeric'});
+        switcher.innerText = this.context.viewDate.format({year: 'numeric'});
 
-        this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.year), Unit.year) ?
+        this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.year), Unit.year) ?
             previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
 
-        this.context.validation.isValid(this.context._viewDate.clone.manipulate(1, Unit.year), Unit.year) ?
+        this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.year), Unit.year) ?
             next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
 
         this.grid(container.querySelectorAll('tbody td span'));
     }
 
     private grid(nodeList: NodeList) {
-        let innerDate = this.context._viewDate.clone.startOf(Unit.year)
+        let innerDate = this.context.viewDate.clone.startOf(Unit.year)
 
         nodeList.forEach((containerClone: HTMLElement, index) => {
             let classes = [];

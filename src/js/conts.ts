@@ -75,7 +75,6 @@ interface Options {
         previousYear: string;
         previousDecade: string;
     };
-    widgetParent: null;
     readonly: boolean;
     ignoreReadonly: boolean;
     keepOpen: boolean;
@@ -106,7 +105,7 @@ interface Options {
     promptTimeOnDateChangeTransitionDelay: number;
 }
 
-const Default: Options = {
+const DefaultOptions: Options = {
     restrictions: {
         minDate: undefined,
         maxDate: undefined,
@@ -189,7 +188,6 @@ const Default: Options = {
         selectDate: 'Select Date',
         dayViewHeaderFormat: 'long',
     },
-    widgetParent: null,
     readonly: false,
     ignoreReadonly: false,
     keepOpen: false,
@@ -334,7 +332,7 @@ const Default: Options = {
     promptTimeOnDateChangeTransitionDelay: 200,
 };
 
-//this is not the way I want this to stay but nested classes seemed to blown once its compiled.
+//this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
 const NAME = 'tempus-dominus';
 const VERSION = '6.0.0-alpha1';
 const DATA_KEY = 'td';
@@ -430,6 +428,7 @@ class ErrorMessages {
     failedToParseDate(optionName: string, date: any) {
         return `TD: Could not correctly parse "${date}" to a date for option ${optionName}.`
     }
+
     //#endregion
 
     //#region used with notify.error
@@ -473,4 +472,4 @@ const DatePickerModes = [
     },
 ];
 
-export {Default, DatePickerModes, Namespace, Options};
+export {DefaultOptions, DatePickerModes, Namespace, Options};
