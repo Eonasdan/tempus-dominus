@@ -90,9 +90,15 @@ export default class Display {
             this.context.dates._setValue(new DateTime());
         }
         this._buildWidget();
-        this._showMode();
+        if (this._hasDate()) {
+            this._showMode();
+        }
 
         document.body.appendChild(this.widget);
+
+        if (this.context._options.display.viewMode == 'times') {
+            this.context.action.do({ currentTarget: this.widget.querySelector(`.${Namespace.Css.timeContainer}`) }, ActionTypes.showClock);
+        }
 
         this.widget.querySelectorAll('[data-action]')
             .forEach(element => element.addEventListener('click', (e) => {

@@ -878,7 +878,7 @@
                     let hour = +currentTarget.getAttribute('data-value');
                     lastPicked.hours = hour;
                     this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                    if (!this.context._options.display.components.useTwentyfourHour &&
+                    if (this.context._options.display.components.useTwentyfourHour &&
                         !this.context._options.display.components.minutes && !this.context._options.keepOpen && !this.context._options.inline) {
                         this.context.display.hide();
                     }
@@ -889,7 +889,7 @@
                 case ActionTypes.selectMinute:
                     lastPicked.minutes = +currentTarget.innerText;
                     this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                    if (!this.context._options.display.components.useTwentyfourHour &&
+                    if (this.context._options.display.components.useTwentyfourHour &&
                         !this.context._options.display.components.seconds && !this.context._options.keepOpen && !this.context._options.inline) {
                         this.context.display.hide();
                     }
@@ -900,7 +900,7 @@
                 case ActionTypes.selectSecond:
                     lastPicked.seconds = +currentTarget.innerText;
                     this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                    if (!this.context._options.display.components.useTwentyfourHour && !this.context._options.keepOpen &&
+                    if (this.context._options.display.components.useTwentyfourHour && !this.context._options.keepOpen &&
                         !this.context._options.inline) {
                         this.context.display.hide();
                     }
@@ -1024,7 +1024,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.daysContainer);
             const table = document.createElement('table');
-            table.classList.add('table', 'table-sm'); //todo bootstrap
+            //table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousMonth);
@@ -1140,7 +1140,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.monthsContainer);
             const table = document.createElement('table');
-            table.classList.add('table', 'table-sm'); //todo bootstrap
+            //table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousYear);
@@ -1205,7 +1205,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.yearsContainer);
             const table = document.createElement('table');
-            table.classList.add('table', 'table-sm'); //todo bootstrap
+            //table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousDecade);
@@ -1321,6 +1321,7 @@
                     isClear,
                     isValid: true,
                 });
+                //todo: update to only update the needed ui components
                 this.context.display.update('all');
                 return;
             }
@@ -1387,7 +1388,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.decadesContainer);
             const table = document.createElement('table');
-            table.classList.add('table', 'table-sm'); //todo bootstrap
+            //table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousCentury);
@@ -1629,7 +1630,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.hourContainer);
             const table = document.createElement('table');
-            table.classList.add('table', 'table-sm'); //todo bootstrap
+            //table.classList.add('table', 'table-sm'); //todo bootstrap
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
             for (let i = 0; i <= (this.context._options.display.components.useTwentyfourHour ? 24 : 12); i++) {
@@ -1673,7 +1674,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.minuteContainer);
             const table = document.createElement('table');
-            table.classList.add('table', 'table-sm'); //todo bootstrap
+            //table.classList.add('table', 'table-sm'); //todo bootstrap
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
             let step = this.context._options.stepping === 1 ? 5 : this.context._options.stepping;
@@ -1719,7 +1720,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.secondContainer);
             const table = document.createElement('table');
-            table.classList.add('table', 'table-sm'); //todo bootstrap
+            //table.classList.add('table', 'table-sm'); //todo bootstrap
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
             for (let i = 0; i <= 12; i++) {
@@ -1817,8 +1818,13 @@
                 this.context.dates._setValue(new DateTime());
             }
             this._buildWidget();
-            this._showMode();
+            if (this._hasDate()) {
+                this._showMode();
+            }
             document.body.appendChild(this.widget);
+            if (this.context._options.display.viewMode == 'times') {
+                this.context.action.do({ currentTarget: this.widget.querySelector(`.${Namespace.Css.timeContainer}`) }, ActionTypes.showClock);
+            }
             this.widget.querySelectorAll('[data-action]')
                 .forEach(element => element.addEventListener('click', (e) => {
                 this.context.action.do(e);

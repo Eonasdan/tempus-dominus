@@ -15,7 +15,7 @@ export default class MonthDisplay {
         container.classList.add(Namespace.Css.monthsContainer);
 
         const table = document.createElement('table');
-        table.classList.add('table', 'table-sm'); //todo bootstrap
+        //table.classList.add('table', 'table-sm'); //todo bootstrap
         const headTemplate = this.context.display.headTemplate;
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 

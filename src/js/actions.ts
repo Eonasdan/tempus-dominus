@@ -102,7 +102,7 @@ export default class Actions {
                 let hour = +currentTarget.getAttribute('data-value');
                 lastPicked.hours = hour;
                 this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                if (!this.context._options.display.components.useTwentyfourHour &&
+                if (this.context._options.display.components.useTwentyfourHour &&
                     !this.context._options.display.components.minutes && !this.context._options.keepOpen && !this.context._options.inline) {
                     this.context.display.hide();
                 } else {
@@ -112,7 +112,7 @@ export default class Actions {
             case ActionTypes.selectMinute:
                 lastPicked.minutes = +currentTarget.innerText;
                 this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                if (!this.context._options.display.components.useTwentyfourHour &&
+                if (this.context._options.display.components.useTwentyfourHour &&
                     !this.context._options.display.components.seconds && !this.context._options.keepOpen && !this.context._options.inline) {
                     this.context.display.hide();
                 } else {
@@ -122,7 +122,7 @@ export default class Actions {
             case ActionTypes.selectSecond:
                 lastPicked.seconds = +currentTarget.innerText;
                 this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                if (!this.context._options.display.components.useTwentyfourHour && !this.context._options.keepOpen &&
+                if (this.context._options.display.components.useTwentyfourHour && !this.context._options.keepOpen &&
                     !this.context._options.inline) {
                     this.context.display.hide();
                 } else {

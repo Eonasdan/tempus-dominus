@@ -15,7 +15,7 @@ export default class MinuteDisplay {
         container.classList.add(Namespace.Css.minuteContainer );
 
         const table = document.createElement('table');
-        table.classList.add('table', 'table-sm'); //todo bootstrap
+        //table.classList.add('table', 'table-sm'); //todo bootstrap
         const tableBody = document.createElement('tbody');
         let row = document.createElement('tr');
         let step = this.context._options.stepping === 1 ? 5 : this.context._options.stepping;

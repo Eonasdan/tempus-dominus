@@ -19,7 +19,7 @@ export default class YearDisplay {
         container.classList.add(Namespace.Css.yearsContainer);
 
         const table = document.createElement('table');
-        table.classList.add('table', 'table-sm'); //todo bootstrap
+        //table.classList.add('table', 'table-sm'); //todo bootstrap
         const headTemplate = this.context.display.headTemplate;
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 

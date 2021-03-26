@@ -15,7 +15,7 @@ export default class HourDisplay {
         container.classList.add(Namespace.Css.hourContainer );
 
         const table = document.createElement('table');
-        table.classList.add('table', 'table-sm'); //todo bootstrap
+        //table.classList.add('table', 'table-sm'); //todo bootstrap
         const tableBody = document.createElement('tbody');
         let row = document.createElement('tr');
         for (let i = 0; i <= (this.context._options.display.components.useTwentyfourHour ? 24 : 12) ; i++) {

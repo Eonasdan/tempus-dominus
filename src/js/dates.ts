@@ -88,6 +88,7 @@ export default class Dates {
                 isClear,
                 isValid: true,
             });
+            //todo: update to only update the needed ui components
             this.context.display.update('all');
             return;
         }
