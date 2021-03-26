@@ -1,127 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>v6</title>
 
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/css/bootstrap.min.css"
-          integrity="sha512-thoh2veB35ojlAhyYZC0eaztTAUhxLvSZlWrNtlV01njqs/UdY3421Jg7lX0Gq9SRdGVQeL8xeBp9x1IPyL1wQ=="
-          crossorigin="anonymous"/>
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/css/bootstrap.min.css"
+        integrity="sha512-thoh2veB35ojlAhyYZC0eaztTAUhxLvSZlWrNtlV01njqs/UdY3421Jg7lX0Gq9SRdGVQeL8xeBp9x1IPyL1wQ=="
+        crossorigin="anonymous" />
 
     <link href="tempus-dominus.css" rel="stylesheet">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.8.4/umd/popper.min.js" integrity="sha512-5glhqu2EfHF5pSsQmxjO3gtc9IpFehuRGunj36CEBHCi4GqXxT6674LI3FMt+NFzR0iE/htJ/LezxL3XpT3JIw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.8.4/umd/popper.min.js"
+        integrity="sha512-5glhqu2EfHF5pSsQmxjO3gtc9IpFehuRGunj36CEBHCi4GqXxT6674LI3FMt+NFzR0iE/htJ/LezxL3XpT3JIw=="
+        crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/js/bootstrap.min.js"
-            integrity="sha512-ZvbjbJnytX9Sa03/AcbP/nh9K95tar4R0IAxTS2gh2ChiInefr1r7EpnVClpTWUEN7VarvEsH3quvkY1h0dAFg=="
-            crossorigin="anonymous"></script>
+        integrity="sha512-ZvbjbJnytX9Sa03/AcbP/nh9K95tar4R0IAxTS2gh2ChiInefr1r7EpnVClpTWUEN7VarvEsH3quvkY1h0dAFg=="
+        crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/solid.min.js"
-            integrity="sha512-JkeOaPqiSsfvmKzJUsqu7j2fv0KSB6Yqb1HHF0r9FNzIsfGv+zYi4h4jQKOogf10qLF3PMZEIYhziCEaw039tQ=="
-            crossorigin="anonymous"></script>
+        integrity="sha512-JkeOaPqiSsfvmKzJUsqu7j2fv0KSB6Yqb1HHF0r9FNzIsfGv+zYi4h4jQKOogf10qLF3PMZEIYhziCEaw039tQ=="
+        crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/fontawesome.min.js"
-            integrity="sha512-kI12xOdWTh/nL2vIx5Yf3z/kJSmY+nvdTXP2ARhepM/YGcmo/lmRGRttI3Da8FXLDw0Y9hRAyZ5JFO3NrCvvXA=="
-            crossorigin="anonymous"></script>
+        integrity="sha512-kI12xOdWTh/nL2vIx5Yf3z/kJSmY+nvdTXP2ARhepM/YGcmo/lmRGRttI3Da8FXLDw0Y9hRAyZ5JFO3NrCvvXA=="
+        crossorigin="anonymous"></script>
 
 
 </head>
+
 <body class="bg-dark">
-<div>
-    <div class="container">
-        <div class="row">
-            <div class="col-6">
-                <div id="popcorn"></div>
-                <div id="datetimepicker1">
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <div id="popcorn"></div>
+                    <div id="datetimepicker1">
 
+                    </div>
+                </div>
+                <div class="col-6">
+                    <button id="clearLog" type="button" class="btn btn-primary m-3">Clear Log</button>
+                    <div id="log" style="max-height: 90vh;overflow-y: scroll;">
+
+                    </div>
                 </div>
             </div>
-            <div class="col-6">
-                <button id="clearLog" type="button" class="btn btn-primary m-3">Clear Log</button>
-                <div id="log" style="max-height: 90vh;overflow-y: scroll;">
+            <div class="row">
 
-                </div>
             </div>
         </div>
-        <div class="row">
 
-        </div>
     </div>
+    <style>
+        #popcorn {
+            display: inline-block;
+            width: 134px;
+            height: 120px;
+            background-image: url('https://popper.js.org/images/popcorn-box.svg');
+            margin-left: 80px;
+        }
 
-</div>
-<style>
-    #popcorn {
-        display: inline-block;
-        width: 134px;
-        height: 120px;
-        background-image: url('https://popper.js.org/images/popcorn-box.svg');
-        margin-left: 80px;
-    }
-    .tempus-dominus-widget {
-        border:2px solid black;
-    }
-</style>
-<script src="tempus-dominus.js"></script>
-<script>
-    const log = document.getElementById('log');
+        .tempus-dominus-widget {
+            border: 2px solid black;
+        }
+    </style>
+    <script src="tempus-dominus.js"></script>
+    <script>
+        const log = document.getElementById('log');
 
-    document.getElementById('clearLog').addEventListener('click', () => {
-        log.innerHTML = '';
-    });
+        document.getElementById('clearLog').addEventListener('click', () => {
+            log.innerHTML = '';
+        });
 
-    ['log', 'debug', 'info', 'warn', 'error'].forEach(function (verb) {
-        console[verb] = (function (method, verb, log) {
-            return function () {
-                method.apply(console, arguments);
-                const msg = document.createElement('div');
-                msg.classList.add('alert');
-                switch (verb) {
-                    case 'log':
-                        msg.classList.add('alert-light')
-                        break;
-                    case 'debug':
-                        msg.classList.add('alert-secondary')
-                        break;
-                    case 'info':
-                        msg.classList.add('alert-info')
-                        break;
-                    case 'warn':
-                        msg.classList.add('alert-warning')
-                        break;
-                    case 'error':
-                        msg.classList.add('alert-error')
-                        break;
+        ['log', 'debug', 'info', 'warn', 'error'].forEach(function (verb) {
+            console[verb] = (function (method, verb, log) {
+                return function () {
+                    method.apply(console, arguments);
+                    const msg = document.createElement('div');
+                    msg.classList.add('alert');
+                    switch (verb) {
+                        case 'log':
+                            msg.classList.add('alert-light')
+                            break;
+                        case 'debug':
+                            msg.classList.add('alert-secondary')
+                            break;
+                        case 'info':
+                            msg.classList.add('alert-info')
+                            break;
+                        case 'warn':
+                            msg.classList.add('alert-warning')
+                            break;
+                        case 'error':
+                            msg.classList.add('alert-error')
+                            break;
+                    }
+                    const pre = document.createElement('pre');
+                    pre.innerHTML = Array.prototype.slice.call(arguments).join(' ');
+                    msg.appendChild(pre);
+                    log.appendChild(msg);
+                };
+            })(console[verb], verb, log);
+        });
+
+        //const tempusdominus = require("../js/tempus-dominus");
+        var dt = new tempusdominus.TempusDominus(document.getElementById('popcorn'), {
+            display: {
+                viewMode: 'times',
+                components: {
+                    date: false,
+                    century: false,
+                    hours: true,
+                    seconds: false,
+                    month: false,
+                    year: false,
+                    minutes: true,
+                    decades: false,
+                    useTwentyfourHour: false
                 }
-                const pre = document.createElement('pre');
-                pre.innerHTML = Array.prototype.slice.call(arguments).join(' ');
-                msg.appendChild(pre);
-                log.appendChild(msg);
-            };
-        })(console[verb], verb, log);
-    });
+            }
+        });
 
-    //const tempusdominus = require("../js/tempus-dominus");
-    var dt = new tempusdominus.TempusDominus(document.getElementById('popcorn'), {
-        restrictions :{
-            //minDate: 'cheese',
-            //maxDate: '11/22/2013 00:53',
-            //maxDate: new Date(2021, 2 - 1, 10),
-            disabledDates: [
-                //moment("12/25/2013").toDate(),
-                new Date(2021, 2 - 1, 10),
-                //'11/22/2013 00:53',
-                //'cheese'
-            ],
-            enabledDates: null
-        }
-    });
-
-    /*dt.updateOptions({
-        restrictions : {
-            maxDate: '11/22/2013 00:53',
-        }
-    });*/
-</script>
+        /*dt.updateOptions({
+            restrictions : {
+                maxDate: '11/22/2013 00:53',
+            }
+        });*/
+    </script>
 </body>
+
 </html>

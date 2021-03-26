@@ -6,10 +6,10 @@ import TimeDisplay from './time/time-display';
 import HourDisplay from './time/hour-display';
 import MinuteDisplay from './time/minute-display';
 import SecondDisplay from './time/second-display';
-import {DateTime, Unit} from '../datetime';
-import {DatePickerModes, Namespace} from '../conts';
-import {TempusDominus} from '../tempus-dominus';
-import {ActionTypes} from '../actions';
+import { DateTime, Unit } from '../datetime';
+import { DatePickerModes, Namespace } from '../conts';
+import { TempusDominus } from '../tempus-dominus';
+import { ActionTypes } from '../actions';
 import { createPopper } from '@popperjs/core';
 
 
@@ -44,7 +44,7 @@ export default class Display {
         return this._widget;
     }
 
-    update(unit: Unit | 'clock' | 'calendar'| 'all'): void {
+    update(unit: Unit | 'clock' | 'calendar' | 'all'): void {
         if (!this._widget) return;
         //todo do I want some kind of error catching or other guards here?
         switch (unit) {
@@ -263,7 +263,7 @@ export default class Display {
         //<div class="arrow" data-popper-arrow></div>
         const arrow = document.createElement('div');
         arrow.classList.add('arrow');
-        arrow.setAttribute('data-popper-arrow','');
+        arrow.setAttribute('data-popper-arrow', '');
         template.appendChild(arrow);
 
         this._widget = template;
