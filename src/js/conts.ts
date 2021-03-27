@@ -1,4 +1,4 @@
-import {DateTime, Unit} from './datetime';
+import { DateTime, Unit } from './datetime';
 
 interface Options {
     restrictions: {
@@ -473,4 +473,33 @@ const DatePickerModes = [
     },
 ];
 
-export {Default, DatePickerModes, Namespace, Options};
+const PopperModifiers = {
+    offset: {
+        name: 'offset',
+        options: {
+            offset: [0, 8]
+        }
+    },
+    eventListeners: function (enabled: boolean) {
+        return {
+            name: 'eventListeners',
+            enabled: enabled
+        };
+    },
+    default: function (enabled: boolean) {
+        return [
+            {
+                name: 'eventListeners',
+                enabled: enabled
+            },
+            {
+                name: 'offset',
+                options: {
+                    offset: [0, 8]
+                }
+            }
+        ];
+    }
+}
+
+export { Default, DatePickerModes, Namespace, Options };

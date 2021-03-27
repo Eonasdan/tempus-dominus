@@ -117,20 +117,16 @@ export default class Display {
                     {
                         name: 'offset',
                         options: {
-                            offset: [0, 8],
+                            offset: [0,8]
                         },
                     },
+                    { name: 'eventListeners', enabled: true }
                 ],
                 placement: 'top'
             });
         }
 
-        /*window.addEventListener('resize', () => this._place());
-        this._place();*/
         this.widget.classList.add(Namespace.Css.show);
-        this.popperInstance.setOptions({
-            modifiers: [{ name: 'eventListeners', enabled: true }],
-        });
         this.popperInstance.update();
         this.context._notifyEvent({
             type: Namespace.Events.SHOW
@@ -173,14 +169,8 @@ export default class Display {
 
     hide(): void {
         this.widget.classList.remove(Namespace.Css.show);
-        this.popperInstance.setOptions({
-            modifiers: [{ name: 'eventListeners', enabled: false }],
-        });
-
-        // document.getElementsByClassName(Namespace.Css.widget)[0].remove();
-
-        // this._widget = undefined;
-
+        
+        //TODO: REMOVE?
         this.context._notifyEvent({
             type: Namespace.Events.HIDE,
             date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
