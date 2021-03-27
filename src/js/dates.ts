@@ -1,6 +1,6 @@
-import {Namespace} from './conts.js';
-import {TempusDominus} from './tempus-dominus';
-import {DateTime, Unit} from './datetime';
+import { Namespace } from './conts.js';
+import { TempusDominus } from './tempus-dominus';
+import { DateTime, Unit } from './datetime';
 
 export default class Dates {
 
@@ -142,17 +142,17 @@ export default class Dates {
         });
     }
 
-     static getFormatByUnit(unit: Unit): object {
+    static getFormatByUnit(unit: Unit): object {
         switch (unit) {
             case 'date':
-                return {dateStyle: 'short'};
+                return { dateStyle: 'short' };
             case 'month':
                 return {
                     month: 'numeric',
                     year: 'numeric'
                 };
             case 'year':
-                return {year: 'numeric'};
+                return { year: 'numeric' };
         }
     }
 }
