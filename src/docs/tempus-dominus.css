@@ -14,21 +14,6 @@
   cursor: pointer;
 }
 
-.tempus-dominus-widget {
-  list-style: none;
-  margin: 2px 0;
-  padding: 4px;
-  width: 18rem;
-  border-radius: 4px;
-  display: none;
-  background-color: white;
-}
-.tempus-dominus-widget [data-action]::after {
-  content: attr(title);
-}
-.tempus-dominus-widget.show {
-  display: block;
-}
 .tempus-dominus-widget .arrow,
 .tempus-dominus-widget .arrow::before {
   position: absolute;
@@ -44,17 +29,37 @@
   content: "";
   transform: rotate(45deg);
 }
-.tempus-dominus-widget [data-popper-placement^=top] > .arrow {
+
+.tempus-dominus-widget[data-popper-placement^=top] > .arrow {
   bottom: -4px;
 }
-.tempus-dominus-widget [data-popper-placement^=bottom] > .arrow {
+
+.tempus-dominus-widget[data-popper-placement^=bottom] > .arrow {
   top: -4px;
 }
-.tempus-dominus-widget [data-popper-placement^=left] > .arrow {
+
+.tempus-dominus-widget[data-popper-placement^=left] > .arrow {
   right: -4px;
 }
-.tempus-dominus-widget [data-popper-placement^=right] > .arrow {
+
+.tempus-dominus-widget[data-popper-placement^=right] > .arrow {
   left: -4px;
+}
+
+.tempus-dominus-widget {
+  list-style: none;
+  margin: 2px 0;
+  padding: 4px;
+  width: 18rem;
+  border-radius: 4px;
+  display: none;
+  background-color: white;
+}
+.tempus-dominus-widget [data-action]::after {
+  content: attr(title);
+}
+.tempus-dominus-widget.show {
+  display: block;
 }
 .tempus-dominus-widget .td-collapse:not(.show) {
   display: none;
