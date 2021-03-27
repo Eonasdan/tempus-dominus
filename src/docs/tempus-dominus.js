@@ -1035,7 +1035,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.daysContainer);
             const table = document.createElement('table');
-            //table.classList.add('table', 'table-sm'); //todo bootstrap
+            table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousMonth);
@@ -1151,7 +1151,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.monthsContainer);
             const table = document.createElement('table');
-            //table.classList.add('table', 'table-sm'); //todo bootstrap
+            table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousYear);
@@ -1216,7 +1216,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.yearsContainer);
             const table = document.createElement('table');
-            //table.classList.add('table', 'table-sm'); //todo bootstrap
+            table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousDecade);
@@ -1402,7 +1402,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.decadesContainer);
             const table = document.createElement('table');
-            //table.classList.add('table', 'table-sm'); //todo bootstrap
+            table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
             previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousCentury);
@@ -1644,7 +1644,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.hourContainer);
             const table = document.createElement('table');
-            //table.classList.add('table', 'table-sm'); //todo bootstrap
+            table.classList.add('table', 'table-sm'); //todo bootstrap
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
             for (let i = 0; i <= (this.context._options.display.components.useTwentyfourHour ? 24 : 12); i++) {
@@ -1688,7 +1688,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.minuteContainer);
             const table = document.createElement('table');
-            //table.classList.add('table', 'table-sm'); //todo bootstrap
+            table.classList.add('table', 'table-sm'); //todo bootstrap
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
             let step = this.context._options.stepping === 1 ? 5 : this.context._options.stepping;
@@ -1734,7 +1734,7 @@
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.secondContainer);
             const table = document.createElement('table');
-            //table.classList.add('table', 'table-sm'); //todo bootstrap
+            table.classList.add('table', 'table-sm'); //todo bootstrap
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
             for (let i = 0; i <= 12; i++) {

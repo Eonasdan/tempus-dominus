@@ -15,7 +15,7 @@ export default class secondDisplay {
         container.classList.add(Namespace.Css.secondContainer);
 
         const table = document.createElement('table');
-        //table.classList.add('table', 'table-sm'); //todo bootstrap
+        table.classList.add('table', 'table-sm'); //todo bootstrap
         const tableBody = document.createElement('tbody');
         let row = document.createElement('tr');
         for (let i = 0; i <= 12; i++) {

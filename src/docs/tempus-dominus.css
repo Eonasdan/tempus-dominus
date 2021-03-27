@@ -18,7 +18,7 @@
   list-style: none;
   margin: 2px 0;
   padding: 4px;
-  width: 14rem;
+  width: 18rem;
   border-radius: 4px;
   display: none;
   background-color: white;
@@ -129,7 +129,7 @@
   width: 16rem;
 }
 .tempus-dominus-widget span[data-action] {
-  padding: 6px 0;
+  padding: 6px;
 }
 .tempus-dominus-widget span[data-action]:active {
   box-shadow: none;
@@ -159,8 +159,6 @@
   line-height: inherit;
 }
 .tempus-dominus-widget .picker-switch td span {
-  line-height: 2.5;
-  height: 2.5em;
   width: 100%;
 }
 .tempus-dominus-widget table {
@@ -194,8 +192,6 @@
 }
 .tempus-dominus-widget table td span {
   display: inline-block;
-  width: 20px;
-  height: 20px;
   line-height: 20px;
   margin-top: 2px;
   margin-bottom: 2px;

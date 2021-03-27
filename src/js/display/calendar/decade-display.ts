@@ -1,8 +1,8 @@
-import {TempusDominus} from '../../tempus-dominus';
+import { TempusDominus } from '../../tempus-dominus';
 import Dates from '../../dates';
-import {DateTime, Unit} from '../../datetime';
-import {Namespace} from '../../conts';
-import {ActionTypes} from '../../actions';
+import { DateTime, Unit } from '../../datetime';
+import { Namespace } from '../../conts';
+import { ActionTypes } from '../../actions';
 
 export default class DecadeDisplay {
     private context: TempusDominus;
@@ -18,7 +18,7 @@ export default class DecadeDisplay {
         container.classList.add(Namespace.Css.decadesContainer);
 
         const table = document.createElement('table');
-        //table.classList.add('table', 'table-sm'); //todo bootstrap
+        table.classList.add('table', 'table-sm'); //todo bootstrap
         const headTemplate = this.context.display.headTemplate;
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 

@@ -32,7 +32,7 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
   list-style: none;
   margin: 2px 0;
   padding: 4px;
-  width: 14rem;
+  width: 18rem;
   border-radius: 4px;
   display: none;
   background-color:white;
@@ -173,7 +173,7 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
   }
 
   span[data-action] {
-    padding: 6px 0;
+    padding: 6px;
   }
 
   span[data-action]:active {
@@ -208,8 +208,6 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
       line-height: inherit;
 
       span {
-        line-height: 2.5;
-        height: 2.5em;
         width: 100%;
       }
     }
@@ -256,8 +254,6 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
 
       span {
         display: inline-block;
-        width: 20px;
-        height: 20px;
         line-height: 20px;
         margin-top: 2px;
         margin-bottom: 2px;

@@ -1,7 +1,7 @@
-import {TempusDominus} from '../../tempus-dominus';
-import {Unit} from '../../datetime';
-import {Namespace} from '../../conts';
-import {ActionTypes} from '../../actions';
+import { TempusDominus } from '../../tempus-dominus';
+import { Unit } from '../../datetime';
+import { Namespace } from '../../conts';
+import { ActionTypes } from '../../actions';
 
 export default class MonthDisplay {
     private context: TempusDominus;
@@ -15,7 +15,7 @@ export default class MonthDisplay {
         container.classList.add(Namespace.Css.monthsContainer);
 
         const table = document.createElement('table');
-        //table.classList.add('table', 'table-sm'); //todo bootstrap
+        table.classList.add('table', 'table-sm'); //todo bootstrap
         const headTemplate = this.context.display.headTemplate;
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
@@ -49,7 +49,7 @@ export default class MonthDisplay {
         const container = this.context.display.widget.getElementsByClassName(Namespace.Css.monthsContainer)[0];
         const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
 
-        switcher.innerText = this.context._viewDate.format({year: 'numeric'});
+        switcher.innerText = this.context._viewDate.format({ year: 'numeric' });
 
         this.context.validation.isValid(this.context._viewDate.clone.manipulate(-1, Unit.year), Unit.year) ?
             previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
@@ -77,7 +77,7 @@ export default class MonthDisplay {
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${index}`);
-            containerClone.innerText = `${innerDate.format({month: 'long'})}`;
+            containerClone.innerText = `${innerDate.format({ month: 'long' })}`;
             innerDate.manipulate(1, Unit.month);
         });
     }

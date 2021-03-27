@@ -369,7 +369,7 @@ export default class Display {
         return <HTMLElement>headTemplate.cloneNode(true);
     }
 
-    iconTag(i): HTMLElement {
+    iconTag(i: string): HTMLElement {
         if (this.context._options.display.icons.type === 'sprites') {
             const svg = document.createElement('svg');
             svg.innerHTML = `<use xlink:href="${i}"></use>`
