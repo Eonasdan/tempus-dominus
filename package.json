@@ -14,8 +14,7 @@
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
   },
-  "peerDependencies": {
-  },
+  "peerDependencies": {},
   "dependencies": {
     "@popperjs/core": "^2.8.4",
     "bootstrap": "^5.0.0-beta1"
