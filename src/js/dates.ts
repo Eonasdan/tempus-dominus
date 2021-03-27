@@ -89,12 +89,7 @@ export default class Dates {
                 isValid: true,
             });
 
-            if (this.context.display._hasDate()) {
-                this.context.display.update('calendar');
-            }
-            if (this.context.display._hasTime()) {
-                this.context.display.update('clock');
-            }
+            this.context.display.update('all');
             return;
         }
 
@@ -109,6 +104,12 @@ export default class Dates {
         if (this.context.validation.isValid(target)) {
             this._dates[index] = target;
             this.context._viewDate = target.clone;
+            
+            if(this.context._input.value != target.toString())
+            {
+                this.context._input.value = target.toString()
+            }
+
             this.context.unset = false;
             this.context.display.update('all');
             this.context._notifyEvent({
@@ -125,7 +126,7 @@ export default class Dates {
 
         if (this.context._options.keepInvalid) {
             this._dates[index] = target;
-            this.context._viewDate = target.clone
+            this.context._viewDate = target.clone;
             this.context._notifyEvent({
                 type: Namespace.Events.CHANGE,
                 date: target,

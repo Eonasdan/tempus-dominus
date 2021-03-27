@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <title>v6</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" />
+
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/css/bootstrap.min.css"
         integrity="sha512-thoh2veB35ojlAhyYZC0eaztTAUhxLvSZlWrNtlV01njqs/UdY3421Jg7lX0Gq9SRdGVQeL8xeBp9x1IPyL1wQ=="
@@ -24,8 +28,8 @@
         integrity="sha512-JkeOaPqiSsfvmKzJUsqu7j2fv0KSB6Yqb1HHF0r9FNzIsfGv+zYi4h4jQKOogf10qLF3PMZEIYhziCEaw039tQ=="
         crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/fontawesome.min.js"
-        integrity="sha512-kI12xOdWTh/nL2vIx5Yf3z/kJSmY+nvdTXP2ARhepM/YGcmo/lmRGRttI3Da8FXLDw0Y9hRAyZ5JFO3NrCvvXA=="
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+        integrity="sha512-RXf+QSDCUQs5uwRKaDoXt55jygZZm2V++WUZduaU/Ui/9EGp3f/2KZVahFZBKGH0s774sd3HmrhUy+SgOFQLVQ=="
         crossorigin="anonymous"></script>
 
 
@@ -37,9 +41,6 @@
             <div class="row">
                 <div class="col-6">
                     <div id="popcorn"></div>
-                    <div id="datetimepicker1">
-
-                    </div>
                 </div>
                 <div class="col-6">
                     <button id="clearLog" type="button" class="btn btn-primary m-3">Clear Log</button>
@@ -49,7 +50,15 @@
                 </div>
             </div>
             <div class="row">
-
+                <div class="col-6">
+                    <label for="startTimeInputId">Test</label>
+                    <div class="input-group" id="datetimepicker1" data-target-input="nearest">
+                        <input id="startTimeInputId" type="text" class="form-control" data-target="#datetimepicker1">
+                        <span class="input-group-text" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                            <span class="far fa-clock"></span>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -65,6 +74,10 @@
 
         .tempus-dominus-widget {
             border: 2px solid black;
+        }
+
+        label {
+            color: white;
         }
     </style>
     <script src="tempus-dominus.js"></script>
@@ -123,6 +136,8 @@
                 }
             }
         });
+
+        var dt2 = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'),{});
 
         /*dt.updateOptions({
             restrictions : {

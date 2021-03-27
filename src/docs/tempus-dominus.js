@@ -1321,12 +1321,7 @@
                     isClear,
                     isValid: true,
                 });
-                if (this.context.display._hasDate()) {
-                    this.context.display.update('calendar');
-                }
-                if (this.context.display._hasTime()) {
-                    this.context.display.update('clock');
-                }
+                this.context.display.update('all');
                 return;
             }
             index = 0;
@@ -1338,6 +1333,9 @@
             if (this.context.validation.isValid(target)) {
                 this._dates[index] = target;
                 this.context._viewDate = target.clone;
+                if (this.context._input.value != target.toString()) {
+                    this.context._input.value = target.toString();
+                }
                 this.context.unset = false;
                 this.context.display.update('all');
                 this.context._notifyEvent({
@@ -1812,8 +1810,12 @@
                     this.decadeDisplay.update();
                     break;
                 case 'all':
-                    this.update('clock');
-                    this.update('calendar');
+                    if (this._hasTime()) {
+                        this.update('clock');
+                    }
+                    if (this._hasDate()) {
+                        this.update('calendar');
+                    }
             }
         }
         show() {
@@ -2157,6 +2159,7 @@
             this.dates = new Dates(this);
             this.action = new Actions(this);
             this.initializeViewMode();
+            this.initializeInput();
             element.addEventListener('click', () => this.display.toggle());
         }
         // noinspection JSUnusedGlobalSymbols
@@ -2304,6 +2307,22 @@
                 this.minViewModeNumber = 0;
             }
             this.currentViewMode = Math.max(this.minViewModeNumber, this.currentViewMode);
+        }
+        initializeInput() {
+            if (this._element.tagName == 'INPUT') {
+                this._input = this._element;
+            }
+            else {
+                let query = this._element.dataset.targetInput;
+                if (query !== undefined) {
+                    if (query == 'nearest') {
+                        this._input = this._element.querySelector('input');
+                    }
+                    else {
+                        this._input = this._element.querySelector(query);
+                    }
+                }
+            }
         }
         _notifyEvent(config) {
             console.log('notify', JSON.stringify(config, null, 2));

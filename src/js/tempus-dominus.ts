@@ -2,12 +2,14 @@ import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
 import Actions from './actions';
-import {Default, Namespace, Options} from './conts';
-import {DateTime, Unit} from './datetime';
+import { Default, Namespace, Options } from './conts';
+import { DateTime, Unit } from './datetime';
+import { threadId } from 'worker_threads';
 
 export class TempusDominus {
     _options: Options;
-    _element: any;
+    _element: HTMLElement;
+    _input: HTMLInputElement;
     _viewDate: DateTime;
     currentViewMode: number;
     unset: boolean;
@@ -17,7 +19,7 @@ export class TempusDominus {
     dates: Dates;
     action: Actions;
 
-    constructor(element, options: Options) {
+    constructor(element: HTMLElement, options: Options) {
         this._options = this.initializeOptions(options, Default);
         this._element = element;
         this._viewDate = new DateTime();
@@ -31,6 +33,7 @@ export class TempusDominus {
         this.action = new Actions(this);
 
         this.initializeViewMode();
+        this.initializeInput();
 
         element.addEventListener('click', () => this.display.toggle());
     }
@@ -167,7 +170,7 @@ export class TempusDominus {
                 if (!Array.isArray(provided[key]) && provided[key] != null) {
                     spread(provided[key], defaultOption[key]);
                     path = path.substring(0, path.lastIndexOf(`.${key}`));
-                    provided[key] = {...defaultOption[key], ...provided[key]};
+                    provided[key] = { ...defaultOption[key], ...provided[key] };
                 }
                 path = path.substring(0, path.lastIndexOf(`.${key}`));
             });
@@ -194,6 +197,21 @@ export class TempusDominus {
         }
 
         this.currentViewMode = Math.max(this.minViewModeNumber, this.currentViewMode);
+    }
+
+    private initializeInput() {
+        if (this._element.tagName == 'INPUT') {
+            this._input = this._element as HTMLInputElement;
+        } else {
+            let query = this._element.dataset.targetInput;
+            if (query !== undefined) {
+                if (query == 'nearest') {
+                    this._input = this._element.querySelector('input');
+                } else {
+                    this._input = this._element.querySelector(query);
+                }
+            }
+        }
     }
 
     _notifyEvent(config) {

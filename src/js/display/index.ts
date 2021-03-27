@@ -79,8 +79,12 @@ export default class Display {
                 this.decadeDisplay.update();
                 break;
             case 'all':
-                this.update('clock');
-                this.update('calendar');
+                if (this._hasTime()) {
+                    this.update('clock');
+                }
+                if (this._hasDate()) {
+                    this.update('calendar');
+                }
         }
     }
 

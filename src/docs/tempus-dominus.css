@@ -206,7 +206,7 @@
 }
 .tempus-dominus-widget table td span.active {
   background-color: #0d6efd;
-  color: #ff;
+  color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 .tempus-dominus-widget table td span.active.today:before {

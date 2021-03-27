@@ -1,6 +1,6 @@
 $bs-datetimepicker-timepicker-font-size: 1.2em !default;
 $bs-datetimepicker-active-bg: #0d6efd !default;
-$bs-datetimepicker-active-color: #ff !default;
+$bs-datetimepicker-active-color: #fff !default;
 $bs-datetimepicker-border-radius: .25rem !default;
 $bs-datetimepicker-btn-hover-bg: #e9ecef !default;
 $bs-datetimepicker-disabled-color: #6c757d !default;
@@ -334,6 +334,10 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
   .timepicker .timepicker-picker a.btn:hover {
     color: $bs-datetimepicker-buttons-color-dark;
   }
+
+  // .time-container{
+  //   margin-bottom: 0.5rem;
+  // }
 
   &.tempus-dominus-widget-readonly {
     table td.day, table td.hour, table td.minute, table td.second,
