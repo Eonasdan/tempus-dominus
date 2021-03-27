@@ -88,8 +88,13 @@ export default class Dates {
                 isClear,
                 isValid: true,
             });
-            //todo: update to only update the needed ui components
-            this.context.display.update('all');
+
+            if (this.context.display._hasDate()) {
+                this.context.display.update('calendar');
+            }
+            if (this.context.display._hasTime()) {
+                this.context.display.update('clock');
+            }
             return;
         }
 
