@@ -25,6 +25,7 @@ export default class Display {
     private minuteDisplay: MinuteDisplay;
     private secondDisplay: SecondDisplay;
     private popperInstance: any;
+    private isVisible: boolean = false;
 
     constructor(context: TempusDominus) {
         this.context = context;
@@ -89,39 +90,40 @@ export default class Display {
     }
 
     show(): void {
-        if (this.context._options.useCurrent) {
-            //todo in the td4 branch a pr changed this to allow granularity
-            this.context.dates._setValue(new DateTime());
-        }
-        this._buildWidget();
-        if (this._hasDate()) {
-            this._showMode();
-        }
+        if (this.widget == undefined) {
+            if (this.context._options.useCurrent) {
+                //todo in the td4 branch a pr changed this to allow granularity
+                this.context.dates._setValue(new DateTime());
+            }
+            this._buildWidget();
+            if (this._hasDate()) {
+                this._showMode();
+            }
 
-        document.body.appendChild(this.widget);
+            document.body.appendChild(this.widget);
 
-        if (this.context._options.display.viewMode == 'times') {
-            this.context.action.do({ currentTarget: this.widget.querySelector(`.${Namespace.Css.timeContainer}`) }, ActionTypes.showClock);
-        }
+            if (this.context._options.display.viewMode == 'times') {
+                this.context.action.do({ currentTarget: this.widget.querySelector(`.${Namespace.Css.timeContainer}`) }, ActionTypes.showClock);
+            }
 
-        this.widget.querySelectorAll('[data-action]')
-            .forEach(element => element.addEventListener('click', (e) => {
-                this.context.action.do(e);
-            }));
+            this.widget.querySelectorAll('[data-action]')
+                .forEach(element => element.addEventListener('click', (e) => {
+                    this.context.action.do(e);
+                }));
 
 
-        this.popperInstance = createPopper(this.context._element, this.widget, {
-            modifiers: [
-                {
-                    name: 'offset',
-                    options: {
-                        offset: [0, 8],
+            this.popperInstance = createPopper(this.context._element, this.widget, {
+                modifiers: [
+                    {
+                        name: 'offset',
+                        options: {
+                            offset: [0, 8],
+                        },
                     },
-                },
-            ],
-            placement: 'top'
-        });
-
+                ],
+                placement: 'top'
+            });
+        }
 
         /*window.addEventListener('resize', () => this._place());
         this._place();*/
@@ -133,6 +135,7 @@ export default class Display {
         this.context._notifyEvent({
             type: Namespace.Events.SHOW
         });
+        this.isVisible = true;
     }
 
     _showMode(direction?: number): void {
@@ -174,18 +177,19 @@ export default class Display {
             modifiers: [{ name: 'eventListeners', enabled: false }],
         });
 
-        document.getElementsByClassName(Namespace.Css.widget)[0].remove();
+        // document.getElementsByClassName(Namespace.Css.widget)[0].remove();
 
-        this._widget = undefined;
+        // this._widget = undefined;
 
         this.context._notifyEvent({
             type: Namespace.Events.HIDE,
             date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
         });
+        this.isVisible = false;
     }
 
     toggle() {
-        return this.widget ? this.hide() : this.show();
+        return this.isVisible ? this.hide() : this.show();
     }
 
     _place(): void {
