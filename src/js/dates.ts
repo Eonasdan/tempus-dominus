@@ -2,6 +2,8 @@ import { Namespace } from './conts.js';
 import { TempusDominus } from './tempus-dominus';
 import { DateTime, Unit } from './datetime';
 
+
+
 export default class Dates {
 
     _dates: DateTime[] = [];
@@ -104,10 +106,10 @@ export default class Dates {
         if (this.context.validation.isValid(target)) {
             this._dates[index] = target;
             this.context._viewDate = target.clone;
-            
-            if(this.context._input.value != target.toString())
-            {
-                this.context._input.value = target.toString()
+
+            //TODO: format to the proper string
+            if (this.context._input && this.context._input.value != target.toString()) {
+                this.context._input.value = this.context._viewDate.formatWithOptions(this.context._options);
             }
 
             this.context.unset = false;

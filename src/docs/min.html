@@ -41,22 +41,22 @@
             <div class="row">
                 <div class="col-6">
                     <div id="popcorn"></div>
+                    <br />
+                    <label for="startTimeInputId">Test</label>
+                    <div>
+                        <div class="input-group" id="datetimepicker1" data-target-input="nearest">
+                            <input id="startTimeInputId" type="text" class="form-control"
+                                data-target="#datetimepicker1">
+                            <span class="input-group-text" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                <span class="far fa-clock"></span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-6">
                     <button id="clearLog" type="button" class="btn btn-primary m-3">Clear Log</button>
                     <div id="log" style="max-height: 90vh;overflow-y: scroll;">
 
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <label for="startTimeInputId">Test</label>
-                    <div class="input-group" id="datetimepicker1" data-target-input="nearest">
-                        <input id="startTimeInputId" type="text" class="form-control" data-target="#datetimepicker1">
-                        <span class="input-group-text" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                            <span class="far fa-clock"></span>
-                        </span>
                     </div>
                 </div>
             </div>
@@ -118,9 +118,7 @@
                 };
             })(console[verb], verb, log);
         });
-
-        //const tempusdominus = require("../js/tempus-dominus");
-        var dt = new tempusdominus.TempusDominus(document.getElementById('popcorn'), {
+        let options = {
             display: {
                 viewMode: 'times',
                 components: {
@@ -133,11 +131,14 @@
                     minutes: true,
                     decades: false,
                     useTwentyfourHour: false
-                }
+                },
+                toolbarPlacement: 'top'
             }
-        });
+        };
+        //const tempusdominus = require("../js/tempus-dominus");
+        var dt = new tempusdominus.TempusDominus(document.getElementById('popcorn'), options);
 
-        var dt2 = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'),{});
+        var dt2 = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'), options);
 
         /*dt.updateOptions({
             restrictions : {

@@ -119,6 +119,7 @@ export default class Display {
                     },
                 },
             ],
+            placement: 'top'
         });
 
 

@@ -252,6 +252,9 @@
 .tempus-dominus-widget .timepicker .timepicker-picker a.btn:hover {
   color: #0056b3;
 }
+.tempus-dominus-widget .time-container {
+  margin-bottom: 0.5rem;
+}
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td.day, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.minute, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.second,
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementSeconds],
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementSeconds],

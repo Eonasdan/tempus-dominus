@@ -148,6 +148,17 @@
         format(template, locale = this.locale) {
             return new Intl.DateTimeFormat(locale, template).format(this);
         }
+        formatWithOptions(options) {
+            return this.format({
+                year: options.display.components.date ? 'numeric' : undefined,
+                month: options.display.components.date ? '2-digit' : undefined,
+                day: options.display.components.date ? '2-digit' : undefined,
+                hour: options.display.components.hours ? '2-digit' : undefined,
+                minute: options.display.components.minutes ? '2-digit' : undefined,
+                second: options.display.components.seconds ? '2-digit' : undefined,
+                hour12: !options.display.components.useTwentyfourHour
+            });
+        }
         /**
          * Return true if {@link compare} is before this date
          * @param compare The Date/DateTime to compare
@@ -1333,8 +1344,9 @@
             if (this.context.validation.isValid(target)) {
                 this._dates[index] = target;
                 this.context._viewDate = target.clone;
-                if (this.context._input.value != target.toString()) {
-                    this.context._input.value = target.toString();
+                //TODO: format to the proper string
+                if (this.context._input && this.context._input.value != target.toString()) {
+                    this.context._input.value = this.context._viewDate.formatWithOptions(this.context._options);
                 }
                 this.context.unset = false;
                 this.context.display.update('all');
@@ -1844,6 +1856,7 @@
                         },
                     },
                 ],
+                placement: 'top'
             });
             /*window.addEventListener('resize', () => this._place());
             this._place();*/

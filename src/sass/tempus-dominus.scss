@@ -335,9 +335,9 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
     color: $bs-datetimepicker-buttons-color-dark;
   }
 
-  // .time-container{
-  //   margin-bottom: 0.5rem;
-  // }
+  .time-container{
+    margin-bottom: 0.5rem;
+  }
 
   &.tempus-dominus-widget-readonly {
     table td.day, table td.hour, table td.minute, table td.second,
