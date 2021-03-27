@@ -151,14 +151,15 @@ export class DateTime extends Date {
     }
 
     formatWithOptions(options: Options) {
+        let components = options.display.components;
         return this.format({
-            year: options.display.components.date ? 'numeric' : undefined,
-            month: options.display.components.date ? '2-digit' : undefined,
-            day: options.display.components.date ? '2-digit' : undefined,
-            hour: options.display.components.hours ? options.display.components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
-            minute: options.display.components.minutes ? '2-digit' : undefined,
-            second: options.display.components.seconds ? '2-digit' : undefined,
-            hour12: !options.display.components.useTwentyfourHour
+            year: components.date ? 'numeric' : undefined,
+            month: components.date ? '2-digit' : undefined,
+            day: components.date ? '2-digit' : undefined,
+            hour: components.hours ? components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
+            minute: components.minutes ? '2-digit' : undefined,
+            second: components.seconds ? '2-digit' : undefined,
+            hour12: !components.useTwentyfourHour
         });
     }
 
