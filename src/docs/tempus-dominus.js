@@ -153,7 +153,7 @@
                 year: options.display.components.date ? 'numeric' : undefined,
                 month: options.display.components.date ? '2-digit' : undefined,
                 day: options.display.components.date ? '2-digit' : undefined,
-                hour: options.display.components.hours ? '2-digit' : undefined,
+                hour: options.display.components.hours ? options.display.components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
                 minute: options.display.components.minutes ? '2-digit' : undefined,
                 second: options.display.components.seconds ? '2-digit' : undefined,
                 hour12: !options.display.components.useTwentyfourHour
@@ -880,7 +880,7 @@
                     else {
                         this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
                     }
-                    if (!this.context.display._hasTime() && !this.context._options.keepOpen &&
+                    if (!this.context.display._hasTime && !this.context._options.keepOpen &&
                         !this.context._options.inline && !this.context._options.allowMultidate) {
                         this.context.display.hide();
                     }
@@ -1823,10 +1823,10 @@
                     this.decadeDisplay.update();
                     break;
                 case 'all':
-                    if (this._hasTime()) {
+                    if (this._hasTime) {
                         this.update('clock');
                     }
-                    if (this._hasDate()) {
+                    if (this._hasDate) {
                         this.update('calendar');
                     }
             }
@@ -1838,7 +1838,7 @@
                     this.context.dates._setValue(new DateTime());
                 }
                 this._buildWidget();
-                if (this._hasDate()) {
+                if (this._hasDate) {
                     this._showMode();
                 }
                 document.body.appendChild(this.widget);
@@ -1916,7 +1916,6 @@
         _buildWidget() {
             const template = document.createElement('div');
             template.classList.add(Namespace.Css.widget);
-            //template.classList.add('dropdown-menu'); //todo bootstrap
             if (this.context._options.display.calendarWeeks)
                 template.classList.add(Namespace.Css.widgetCalendarWeeks);
             const dateView = document.createElement('div');
@@ -1940,7 +1939,7 @@
             if (this.context._options.display.components.seconds && !this.context._options.display.components.useTwentyfourHour) {
                 template.classList.add(Namespace.Css.wider);
             }
-            if (this.context._options.display.sideBySide && this._hasDate() && this._hasTime()) {
+            if (this.context._options.display.sideBySide && this._hasDate && this._hasTime) {
                 template.classList.add(Namespace.Css.sideBySide);
                 if (this.context._options.display.toolbarPlacement === 'top') {
                     template.appendChild(toolbar);
@@ -1957,12 +1956,11 @@
                 this._widget = template;
                 return;
             }
-            //const content = document.createElement('div');
             if (this.context._options.display.toolbarPlacement === 'top') {
                 template.appendChild(toolbar);
             }
-            if (this._hasDate()) {
-                if (this.context._options.display.collapse && this._hasTime()) {
+            if (this._hasDate) {
+                if (this.context._options.display.collapse && this._hasTime) {
                     dateView.classList.add(Namespace.Css.collapse);
                     if (this.context._options.display.viewMode !== 'times')
                         dateView.classList.add(Namespace.Css.show);
@@ -1972,8 +1970,8 @@
             if (this.context._options.display.toolbarPlacement === 'default') {
                 template.appendChild(toolbar);
             }
-            if (this._hasTime()) {
-                if (this.context._options.display.collapse && this._hasDate()) {
+            if (this._hasTime) {
+                if (this.context._options.display.collapse && this._hasDate) {
                     timeView.classList.add(Namespace.Css.collapse);
                     if (this.context._options.display.viewMode === 'times')
                         timeView.classList.add(Namespace.Css.show);
@@ -1983,18 +1981,16 @@
             if (this.context._options.display.toolbarPlacement === 'bottom') {
                 template.appendChild(toolbar);
             }
-            //template.appendChild(template);
-            //<div class="arrow" data-popper-arrow></div>
             const arrow = document.createElement('div');
             arrow.classList.add('arrow');
             arrow.setAttribute('data-popper-arrow', '');
             template.appendChild(arrow);
             this._widget = template;
         }
-        _hasTime() {
+        get _hasTime() {
             return this.context._options.display.components.hours || this.context._options.display.components.minutes || this.context._options.display.components.seconds;
         }
-        _hasDate() {
+        get _hasDate() {
             return this.context._options.display.components.year || this.context._options.display.components.month || this.context._options.display.components.date;
         }
         get _toolbar() {
@@ -2008,7 +2004,7 @@
                 td.appendChild(span);
                 tbody.appendChild(td);
             }
-            if (!this.context._options.display.sideBySide && this.context._options.display.collapse && this._hasDate() && this._hasTime()) {
+            if (!this.context._options.display.sideBySide && this.context._options.display.collapse && this._hasDate && this._hasTime) {
                 let title, icon;
                 if (this.context._options.display.viewMode === 'times') {
                     title = this.context._options.localization.selectDate;

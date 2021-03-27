@@ -1,6 +1,6 @@
-import {DatePickerModes, Namespace} from './conts.js';
-import {DateTime, Unit} from './datetime';
-import {TempusDominus} from './tempus-dominus';
+import { DatePickerModes, Namespace } from './conts.js';
+import { DateTime, Unit } from './datetime';
+import { TempusDominus } from './tempus-dominus';
 import Collapse from './display/collapse';
 
 export default class Actions {
@@ -32,7 +32,7 @@ export default class Actions {
         switch (action) {
             case ActionTypes.next:
             case ActionTypes.previous:
-                const {NAV_FUNCTION, NAV_STEP} = DatePickerModes[this.context.currentViewMode];
+                const { NAV_FUNCTION, NAV_STEP } = DatePickerModes[this.context.currentViewMode];
                 if (action === ActionTypes.next)
                     this.context._viewDate.manipulate(NAV_STEP, NAV_FUNCTION);
                 else
@@ -93,7 +93,7 @@ export default class Actions {
                     this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
                 }
 
-                if (!this.context.display._hasTime() && !this.context._options.keepOpen &&
+                if (!this.context.display._hasTime && !this.context._options.keepOpen &&
                     !this.context._options.inline && !this.context._options.allowMultidate) {
                     this.context.display.hide();
                 }

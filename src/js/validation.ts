@@ -1,5 +1,5 @@
-import {TempusDominus} from './tempus-dominus';
-import {DateTime, Unit} from './datetime';
+import { TempusDominus } from './tempus-dominus';
+import { DateTime, Unit } from './datetime';
 import Dates from './dates';
 
 export default class Validation {
@@ -44,7 +44,7 @@ export default class Validation {
             if (this.context._options.restrictions.disabledTimeIntervals) {
                 for (let i = 0; i < this.context._options.restrictions.disabledTimeIntervals.length; i++) {
                     if (targetDate.isBetween(this.context._options.restrictions.disabledTimeIntervals[i],
-                        this.context._options.restrictions.disabledTimeIntervals[i+1])) return false;
+                        this.context._options.restrictions.disabledTimeIntervals[i + 1])) return false;
                     i++;
                 }
             }

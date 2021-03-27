@@ -52,7 +52,7 @@ interface Options {
         incrementSecond: string;
         nextDecade: string;
         selectDecade: string;
-        dayViewHeaderFormat: string;
+        dayViewHeaderFormat: 'numeric' | '2-digit' | 'long' | 'short' | 'narrow';
         decrementHour: string;
         selectDate: string;
         incrementHour: string;

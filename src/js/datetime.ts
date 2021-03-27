@@ -150,12 +150,12 @@ export class DateTime extends Date {
         return new Intl.DateTimeFormat(locale, template).format(this);
     }
 
-    formatWithOptions(options: Options){
+    formatWithOptions(options: Options) {
         return this.format({
             year: options.display.components.date ? 'numeric' : undefined,
             month: options.display.components.date ? '2-digit' : undefined,
             day: options.display.components.date ? '2-digit' : undefined,
-            hour: options.display.components.hours ? '2-digit' : undefined,
+            hour: options.display.components.hours ? options.display.components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
             minute: options.display.components.minutes ? '2-digit' : undefined,
             second: options.display.components.seconds ? '2-digit' : undefined,
             hour12: !options.display.components.useTwentyfourHour
