@@ -473,33 +473,4 @@ const DatePickerModes = [
     },
 ];
 
-const PopperModifiers = {
-    offset: {
-        name: 'offset',
-        options: {
-            offset: [0, 8]
-        }
-    },
-    eventListeners: function (enabled: boolean) {
-        return {
-            name: 'eventListeners',
-            enabled: enabled
-        };
-    },
-    default: function (enabled: boolean) {
-        return [
-            {
-                name: 'eventListeners',
-                enabled: enabled
-            },
-            {
-                name: 'offset',
-                options: {
-                    offset: [0, 8]
-                }
-            }
-        ];
-    }
-}
-
 export { Default, DatePickerModes, Namespace, Options };
