@@ -43,7 +43,7 @@
                     <br />
                     <label for="startTimeInputId">Test</label>
                     <div>
-                        <div class="input-group" id="datetimepicker1" data-target-input="nearest">
+                        <div class="input-group" id="datetimepicker1" data-target-input="nearest" data-target-toggle="nearest">
                             <input id="startTimeInputId" type="text" class="form-control"
                                 data-target="#datetimepicker1">
                             <span class="input-group-text" data-target="#datetimepicker1" data-toggle="datetimepicker">
@@ -132,7 +132,8 @@
                 //     useTwentyfourHour: false
                 // },
                 components: {
-                    useTwentyfourHour: true
+                    useTwentyfourHour: false,
+                    seconds: true
                 },
                 //toolbarPlacement: 'top'
             }

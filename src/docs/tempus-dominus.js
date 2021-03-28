@@ -2167,7 +2167,7 @@
             this.action = new Actions(this);
             this.initializeViewMode();
             this.initializeInput();
-            element.addEventListener('click', () => this.display.toggle());
+            this.initializeToggle();
         }
         // noinspection JSUnusedGlobalSymbols
         /**
@@ -2316,20 +2316,61 @@
             this.currentViewMode = Math.max(this.minViewModeNumber, this.currentViewMode);
         }
         initializeInput() {
+            var _a;
             if (this._element.tagName == 'INPUT') {
                 this._input = this._element;
             }
             else {
                 let query = this._element.dataset.targetInput;
-                if (query !== undefined) {
-                    if (query == 'nearest') {
-                        this._input = this._element.querySelector('input');
-                    }
-                    else {
-                        this._input = this._element.querySelector(query);
-                    }
+                if (query == undefined || query == 'nearest') {
+                    this._input = this._element.querySelector('input');
+                }
+                else {
+                    this._input = this._element.querySelector(query);
                 }
             }
+            (_a = this._input) === null || _a === void 0 ? void 0 : _a.addEventListener('change', (ev) => {
+                let strValue = this._input.value;
+                //03/27/2021, 20:13:56
+                let valArray = strValue.split(/\D/).filter(x => x.length).map(x => parseInt(x));
+                let valIndex = 0;
+                let targetDate = this._viewDate.clone;
+                if (this.display._hasDate) {
+                    targetDate.month = valArray[valIndex++] - 1;
+                    targetDate.date = valArray[valIndex++];
+                    targetDate.year = valArray[valIndex++];
+                }
+                if (this._options.display.components.hours) {
+                    let twentyFourModifier = 0;
+                    if (!this._options.display.components.useTwentyfourHour) {
+                        if (strValue.includes('PM')) {
+                            twentyFourModifier = 12;
+                        }
+                        else if (valArray[valIndex] == 12) {
+                            twentyFourModifier = -12;
+                        }
+                    }
+                    else if (valArray[valIndex] == 24) {
+                        twentyFourModifier = -24;
+                    }
+                    targetDate.hours = valArray[valIndex++] + twentyFourModifier;
+                }
+                if (this._options.display.components.minutes) {
+                    targetDate.minutes = valArray[valIndex++];
+                }
+                if (this._options.display.components.seconds) {
+                    targetDate.seconds = valArray[valIndex];
+                }
+                this.dates._setValue(targetDate);
+            });
+        }
+        initializeToggle() {
+            let query = this._element.dataset.targetToggle;
+            if (query == 'nearest') {
+                query = '[data-toggle="datetimepicker"]';
+            }
+            this._toggle = query == undefined ? this._element : this._element.querySelector(query);
+            this._toggle.addEventListener('click', () => this.display.toggle());
         }
         _notifyEvent(config) {
             console.log('notify', JSON.stringify(config, null, 2));
