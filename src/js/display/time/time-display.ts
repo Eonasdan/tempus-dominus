@@ -78,15 +78,15 @@ export default class TimeDisplay {
             bottomRow = document.createElement('tr'),
             upIcon = this.context.display.iconTag(this.context.options.display.icons.up),
             downIcon = this.context.display.iconTag(this.context.options.display.icons.down),
-            actionSpan = document.createElement('span');
+            actionDiv = document.createElement('div');
 
         separator.classList.add(Namespace.Css.separator);
         separatorColon.innerHTML = ':';
-        actionSpan.classList.add('btn'); //todo bootstrap
+        actionDiv.classList.add('btn'); //todo bootstrap
 
         if (this.context.options.display.components.hours) {
             let td = document.createElement('td');
-            let actionLinkClone = <HTMLElement>actionSpan.cloneNode(true);
+            let actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context.options.localization.incrementHour);
             actionLinkClone.setAttribute('data-action', ActionTypes.incrementHours)
             actionLinkClone.appendChild(upIcon.cloneNode(true));
@@ -94,15 +94,15 @@ export default class TimeDisplay {
             topRow.appendChild(td);
 
             td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('title', this.context.options.localization.pickHour);
-            span.setAttribute('data-action', ActionTypes.showHours)
-            span.setAttribute('data-time-component', Unit.hours)
-            td.appendChild(span);
+            const div = document.createElement('div');
+            div.setAttribute('title', this.context.options.localization.pickHour);
+            div.setAttribute('data-action', ActionTypes.showHours)
+            div.setAttribute('data-time-component', Unit.hours)
+            td.appendChild(div);
             middleRow.appendChild(td);
 
             td = document.createElement('td');
-            actionLinkClone = <HTMLElement>actionSpan.cloneNode(true);
+            actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context.options.localization.decrementHour);
             actionLinkClone.setAttribute('data-action', ActionTypes.decrementHours)
             actionLinkClone.appendChild(downIcon.cloneNode(true));
@@ -117,7 +117,7 @@ export default class TimeDisplay {
             }
 
             let td = document.createElement('td');
-            let actionLinkClone = <HTMLElement>actionSpan.cloneNode(true);
+            let actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context.options.localization.incrementMinute);
             actionLinkClone.setAttribute('data-action', ActionTypes.incrementMinutes)
             actionLinkClone.appendChild(upIcon.cloneNode(true));
@@ -125,15 +125,15 @@ export default class TimeDisplay {
             topRow.appendChild(td);
 
             td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('title', this.context.options.localization.pickMinute);
-            span.setAttribute('data-action', ActionTypes.showMinutes)
-            span.setAttribute('data-time-component', Unit.minutes)
-            td.appendChild(span);
+            const div = document.createElement('div');
+            div.setAttribute('title', this.context.options.localization.pickMinute);
+            div.setAttribute('data-action', ActionTypes.showMinutes)
+            div.setAttribute('data-time-component', Unit.minutes)
+            td.appendChild(div);
             middleRow.appendChild(td);
 
             td = document.createElement('td');
-            actionLinkClone = <HTMLElement>actionSpan.cloneNode(true);
+            actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context.options.localization.decrementMinute);
             actionLinkClone.setAttribute('data-action', ActionTypes.decrementMinutes)
             actionLinkClone.appendChild(downIcon.cloneNode(true));
@@ -148,7 +148,7 @@ export default class TimeDisplay {
             }
 
             let td = document.createElement('td');
-            let actionLinkClone = <HTMLElement>actionSpan.cloneNode(true);
+            let actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context.options.localization.incrementSecond);
             actionLinkClone.setAttribute('data-action', ActionTypes.incrementSeconds)
             actionLinkClone.appendChild(upIcon.cloneNode(true));
@@ -156,15 +156,15 @@ export default class TimeDisplay {
             topRow.appendChild(td);
 
             td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('title', this.context.options.localization.pickSecond);
-            span.setAttribute('data-action', ActionTypes.showSeconds)
-            span.setAttribute('data-time-component', Unit.seconds)
-            td.appendChild(span);
+            const div = document.createElement('div');
+            div.setAttribute('title', this.context.options.localization.pickSecond);
+            div.setAttribute('data-action', ActionTypes.showSeconds)
+            div.setAttribute('data-time-component', Unit.seconds)
+            td.appendChild(div);
             middleRow.appendChild(td);
 
             td = document.createElement('td');
-            actionLinkClone = <HTMLElement>actionSpan.cloneNode(true);
+            actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
             actionLinkClone.setAttribute('title', this.context.options.localization.decrementSecond);
             actionLinkClone.setAttribute('data-action', ActionTypes.decrementSeconds)
             actionLinkClone.appendChild(downIcon.cloneNode(true));

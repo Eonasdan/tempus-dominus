@@ -279,12 +279,12 @@ export default class Display {
 
         if (this.context.options.display.buttons.today) {
             const td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('data-action', ActionTypes.today);
-            span.setAttribute('title', this.context.options.localization.today);
+            const div = document.createElement('div');
+            div.setAttribute('data-action', ActionTypes.today);
+            div.setAttribute('title', this.context.options.localization.today);
 
-            span.appendChild(this.iconTag(this.context.options.display.icons.today));
-            td.appendChild(span);
+            div.appendChild(this.iconTag(this.context.options.display.icons.today));
+            td.appendChild(div);
             tbody.appendChild(td);
         }
         if (!this.context.options.display.sideBySide && this.context.options.display.collapse && this._hasDate() && this._hasTime()) {
@@ -298,32 +298,32 @@ export default class Display {
             }
 
             const td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('data-action', ActionTypes.togglePicker);
-            span.setAttribute('title', title);
+            const div = document.createElement('div');
+            div.setAttribute('data-action', ActionTypes.togglePicker);
+            div.setAttribute('title', title);
 
-            span.appendChild(this.iconTag(icon));
-            td.appendChild(span);
+            div.appendChild(this.iconTag(icon));
+            td.appendChild(div);
             tbody.appendChild(td);
         }
         if (this.context.options.display.buttons.clear) {
             const td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('data-action', ActionTypes.clear);
-            span.setAttribute('title', this.context.options.localization.clear);
+            const div = document.createElement('div');
+            div.setAttribute('data-action', ActionTypes.clear);
+            div.setAttribute('title', this.context.options.localization.clear);
 
-            span.appendChild(this.iconTag(this.context.options.display.icons.clear));
-            td.appendChild(span);
+            div.appendChild(this.iconTag(this.context.options.display.icons.clear));
+            td.appendChild(div);
             tbody.appendChild(td);
         }
         if (this.context.options.display.buttons.close) {
             const td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('data-action', ActionTypes.close);
-            span.setAttribute('title', this.context.options.localization.close);
+            const div = document.createElement('div');
+            div.setAttribute('data-action', ActionTypes.close);
+            div.setAttribute('title', this.context.options.localization.close);
 
-            span.appendChild(this.iconTag(this.context.options.display.icons.close));
-            td.appendChild(span);
+            div.appendChild(this.iconTag(this.context.options.display.icons.close));
+            td.appendChild(div);
             tbody.appendChild(td);
         }
         const table = document.createElement('table');
@@ -336,13 +336,13 @@ export default class Display {
      *
      */
     get headTemplate(): HTMLElement {
-        let span = document.createElement('span');
+        let div = document.createElement('div');
         const headTemplate = document.createElement('thead');
         const previous = document.createElement('th');
         previous.classList.add(Namespace.Css.previous);
         previous.setAttribute('data-action', ActionTypes.previous);
-        span.appendChild(this.iconTag(this.context.options.display.icons.previous));
-        previous.appendChild(span);
+        div.appendChild(this.iconTag(this.context.options.display.icons.previous));
+        previous.appendChild(div);
         headTemplate.appendChild(previous);
 
         const switcher = document.createElement('th');
@@ -354,9 +354,9 @@ export default class Display {
         const next = document.createElement('th');
         next.classList.add(Namespace.Css.next);
         next.setAttribute('data-action', ActionTypes.next);
-        span = document.createElement('span');
-        span.appendChild(this.iconTag(this.context.options.display.icons.next));
-        next.appendChild(span);
+        div = document.createElement('div');
+        div.appendChild(this.iconTag(this.context.options.display.icons.next));
+        next.appendChild(div);
         headTemplate.appendChild(next);
         return <HTMLElement>headTemplate.cloneNode(true);
     }

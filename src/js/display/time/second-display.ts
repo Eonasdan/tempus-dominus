@@ -24,9 +24,9 @@ export default class secondDisplay {
                 row = document.createElement('tr');
             }
             const td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('data-action', ActionTypes.selectSecond);
-            td.appendChild(span);
+            const div = document.createElement('div');
+            div.setAttribute('data-action', ActionTypes.selectSecond);
+            td.appendChild(div);
             row.appendChild(td);
         }
 
@@ -40,7 +40,7 @@ export default class secondDisplay {
         const container = this.context.display.widget.getElementsByClassName(Namespace.Css.secondContainer)[0];
         let innerDate = this.context.viewDate.clone.startOf(Unit.minutes);
 
-        container.querySelectorAll('tbody td span').forEach((containerClone: HTMLElement, index) => {
+        container.querySelectorAll('tbody td div').forEach((containerClone: HTMLElement, index) => {
             let classes = [];
             classes.push(Namespace.Css.second);
 

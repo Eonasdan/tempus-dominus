@@ -19,10 +19,10 @@ export default class MonthDisplay {
         const headTemplate = this.context.display.headTemplate;
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
-        previous.getElementsByTagName('span')[0].setAttribute('title', this.context.options.localization.previousYear);
+        previous.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.previousYear);
         switcher.setAttribute('title', this.context.options.localization.selectYear);
         switcher.setAttribute('colspan', '1');
-        next.getElementsByTagName('span')[0].setAttribute('title', this.context.options.localization.nextYear);
+        next.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.nextYear);
 
         table.appendChild(headTemplate);
         const tableBody = document.createElement('tbody');
@@ -33,9 +33,9 @@ export default class MonthDisplay {
                 row = document.createElement('tr');
             }
             const td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('data-action', ActionTypes.selectMonth);
-            td.appendChild(span);
+            const div = document.createElement('div');
+            div.setAttribute('data-action', ActionTypes.selectMonth);
+            td.appendChild(div);
             row.appendChild(td);
         }
 
@@ -57,7 +57,7 @@ export default class MonthDisplay {
         this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.year), Unit.year) ?
             next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
 
-        this.grid(container.querySelectorAll('tbody td span'));
+        this.grid(container.querySelectorAll('tbody td div'));
     }
 
     private grid(nodeList: NodeList) {

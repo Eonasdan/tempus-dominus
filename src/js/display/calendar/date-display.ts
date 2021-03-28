@@ -19,9 +19,9 @@ export default class DateDisplay {
         const headTemplate = this.context.display.headTemplate;
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
-        previous.getElementsByTagName('span')[0].setAttribute('title', this.context.options.localization.previousMonth);
+        previous.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.previousMonth);
         switcher.setAttribute('title', this.context.options.localization.selectMonth)
-        next.getElementsByTagName('span')[0].setAttribute('title', this.context.options.localization.nextMonth);
+        next.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.nextMonth);
 
         table.appendChild(headTemplate);
         const tableBody = document.createElement('tbody');
@@ -29,9 +29,9 @@ export default class DateDisplay {
         let row = document.createElement('tr');
         if (this.context.options.display.calendarWeeks) {
             const td = document.createElement('td')
-            const span = document.createElement('span');
-            span.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
-            td.appendChild(span);
+            const div = document.createElement('div');
+            div.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+            td.appendChild(div);
             row.appendChild(td);
         }
         for (let i = 0; i <= 42; i++) {
@@ -41,17 +41,17 @@ export default class DateDisplay {
 
                 if (this.context.options.display.calendarWeeks) {
                     const td = document.createElement('td');
-                    const span = document.createElement('span');
-                    span.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
-                    td.appendChild(span);
+                    const div = document.createElement('div');
+                    div.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+                    td.appendChild(div);
                     row.appendChild(td);
                 }
             }
             const td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('data-action', ActionTypes.selectDay);
+            const div = document.createElement('div');
+            div.setAttribute('data-action', ActionTypes.selectDay);
             //td.setAttribute('data-action', ActionTypes.selectDay);
-            td.appendChild(span);
+            td.appendChild(div);
             row.appendChild(td);
         }
 
@@ -73,7 +73,7 @@ export default class DateDisplay {
         this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.month), Unit.month) ?
             next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
 
-        this.grid(container.querySelectorAll('tbody td span'));
+        this.grid(container.querySelectorAll('tbody td div'));
     }
 
     private grid(nodeList: NodeList) {
