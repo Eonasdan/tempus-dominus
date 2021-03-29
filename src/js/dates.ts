@@ -1,6 +1,6 @@
-import {Namespace} from './conts.js';
-import {TempusDominus} from './tempus-dominus';
-import {DateTime, Unit} from './datetime';
+import { Namespace } from './conts.js';
+import { TempusDominus } from './tempus-dominus';
+import { DateTime, Unit } from './datetime';
 
 export default class Dates {
 
@@ -87,6 +87,7 @@ export default class Dates {
                 isClear,
                 isValid: true,
             });
+
             this.context.display.update('all');
             return;
         }
@@ -102,6 +103,12 @@ export default class Dates {
         if (this.context.validation.isValid(target)) {
             this._dates[index] = target;
             this.context.viewDate = target.clone;
+
+            //TODO: format to the proper string
+            if (this.context._input && this.context._input.value != target.toString()) {
+                this.context._input.value = this.context.viewDate.formatWithOptions(this.context.options);
+            }
+
             this.context.unset = false;
             this.context.display.update('all');
             this.context.notifyEvent(Namespace.Events.CHANGE, {
@@ -117,7 +124,7 @@ export default class Dates {
 
         if (this.context.options.keepInvalid) {
             this._dates[index] = target;
-            this.context.viewDate = target.clone
+            this.context.viewDate = target.clone;
             this.context.notifyEvent(Namespace.Events.CHANGE,{
                 date: target,
                 oldDate,
@@ -132,17 +139,17 @@ export default class Dates {
         });
     }
 
-     static getFormatByUnit(unit: Unit): object {
+    static getFormatByUnit(unit: Unit): object {
         switch (unit) {
             case 'date':
-                return {dateStyle: 'short'};
+                return { dateStyle: 'short' };
             case 'month':
                 return {
                     month: 'numeric',
                     year: 'numeric'
                 };
             case 'year':
-                return {year: 'numeric'};
+                return { year: 'numeric' };
         }
     }
 }

@@ -1,14 +1,16 @@
 import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
-import Actions, {ActionTypes} from './actions';
-import {DefaultOptions, Namespace, Options} from './conts';
-import {DateTime, Unit} from './datetime';
+import Actions, { ActionTypes } from './actions';
+import { DefaultOptions, Namespace, Options } from './conts';
+import { DateTime, Unit } from './datetime';
 
 export class TempusDominus {
     options: Options;
     element: any;
     viewDate: DateTime;
+    _input: HTMLInputElement;
+    _toggle: HTMLElement;
     currentViewMode: number;
     unset: boolean;
     minViewModeNumber: number;
@@ -19,7 +21,7 @@ export class TempusDominus {
     _notifyChangeEventContext: number;
     private _currentPromptTimeTimeout: any;
 
-    constructor(element, options: Options) {
+    constructor(element: HTMLElement, options: Options) {
         this.options = this.initializeOptions(options, DefaultOptions);
         this.element = element;
         this.viewDate = new DateTime();
@@ -33,10 +35,9 @@ export class TempusDominus {
         this.action = new Actions(this);
 
         this.initializeViewMode();
-
-        element.addEventListener('click', () => this.display.toggle());
+        this.initializeInput();
+        this.initializeToggle();
     }
-
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -173,7 +174,7 @@ export class TempusDominus {
                 if (!Array.isArray(provided[key]) && provided[key] != null) {
                     spread(provided[key], defaultOption[key]);
                     path = path.substring(0, path.lastIndexOf(`.${key}`));
-                    provided[key] = {...defaultOption[key], ...provided[key]};
+                    provided[key] = { ...defaultOption[key], ...provided[key] };
                 }
                 path = path.substring(0, path.lastIndexOf(`.${key}`));
             });
@@ -226,6 +227,60 @@ export class TempusDominus {
 
         //this.element.trigger(event); //todo jquery
         this._notifyChangeEventContext = void 0;
+    }
+
+    private initializeInput() {
+        if (this.element.tagName == 'INPUT') {
+            this._input = this.element as HTMLInputElement;
+        } else {
+            let query = this.element.dataset.targetInput;
+            if (query == undefined || query == 'nearest') {
+                this._input = this.element.querySelector('input');
+            } else {
+                this._input = this.element.querySelector(query);
+            }
+        }
+        this._input?.addEventListener('change', (ev) => {
+            let strValue = this._input.value;
+            //03/27/2021, 20:13:56
+            let valArray = strValue.split(/\D/).filter(x => x.length).map(x => parseInt(x));
+            let valIndex = 0;
+            let targetDate = this.viewDate.clone;
+            if (this.display._hasDate) {
+                targetDate.month = valArray[valIndex++] - 1;
+                targetDate.date = valArray[valIndex++];
+                targetDate.year = valArray[valIndex++];
+            }
+            if (this.options.display.components.hours) {
+                let twentyFourModifier = 0;
+                if (!this.options.display.components.useTwentyfourHour) {
+                    if (strValue.includes('PM')) {
+                        twentyFourModifier = 12;
+                    } else if (valArray[valIndex] == 12) {
+                        twentyFourModifier = -12;
+                    }
+                } else if (valArray[valIndex] == 24) {
+                    twentyFourModifier = -24;
+                }
+                targetDate.hours = valArray[valIndex++] + twentyFourModifier;
+            }
+            if (this.options.display.components.minutes) {
+                targetDate.minutes = valArray[valIndex++];
+            }
+            if (this.options.display.components.seconds) {
+                targetDate.seconds = valArray[valIndex]
+            }
+            this.dates._setValue(targetDate);
+        });
+    }
+
+    private initializeToggle() {
+        let query = this.element.dataset.targetToggle;
+        if (query == 'nearest'){
+            query = '[data-toggle="datetimepicker"]';
+        }
+        this._toggle = query == undefined ? this.element : this.element.querySelector(query);
+        this._toggle.addEventListener('click', () => this.display.toggle());
     }
 
     private handlePromptTimeIfNeeded(e) {

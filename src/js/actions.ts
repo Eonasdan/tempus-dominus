@@ -1,6 +1,6 @@
-import {DatePickerModes, Namespace} from './conts.js';
-import {DateTime, Unit} from './datetime';
-import {TempusDominus} from './tempus-dominus';
+import { DatePickerModes, Namespace } from './conts.js';
+import { DateTime, Unit } from './datetime';
+import { TempusDominus } from './tempus-dominus';
 import Collapse from './display/collapse';
 
 export default class Actions {
@@ -32,7 +32,7 @@ export default class Actions {
         switch (action) {
             case ActionTypes.next:
             case ActionTypes.previous:
-                const {NAV_FUNCTION, NAV_STEP} = DatePickerModes[this.context.currentViewMode];
+                const { NAV_FUNCTION, NAV_STEP } = DatePickerModes[this.context.currentViewMode];
                 if (action === ActionTypes.next)
                     this.context.viewDate.manipulate(NAV_STEP, NAV_FUNCTION);
                 else
@@ -93,7 +93,7 @@ export default class Actions {
                     this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
                 }
 
-                if (!this.context.display._hasTime() && !this.context.options.keepOpen &&
+                if (!this.context.display._hasTime && !this.context.options.keepOpen &&
                     !this.context.options.inline && !this.context.options.allowMultidate) {
                     this.context.display.hide();
                 }
@@ -102,7 +102,7 @@ export default class Actions {
                 let hour = +currentTarget.getAttribute('data-value');
                 lastPicked.hours = hour;
                 this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                if (!this.context.options.display.components.useTwentyfourHour &&
+                if (this.context.options.display.components.useTwentyfourHour &&
                     !this.context.options.display.components.minutes && !this.context.options.keepOpen && !this.context.options.inline) {
                     this.context.display.hide();
                 } else {
@@ -112,7 +112,7 @@ export default class Actions {
             case ActionTypes.selectMinute:
                 lastPicked.minutes = +currentTarget.innerText;
                 this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                if (!this.context.options.display.components.useTwentyfourHour &&
+                if (this.context.options.display.components.useTwentyfourHour &&
                     !this.context.options.display.components.seconds && !this.context.options.keepOpen && !this.context.options.inline) {
                     this.context.display.hide();
                 } else {
@@ -122,7 +122,7 @@ export default class Actions {
             case ActionTypes.selectSecond:
                 lastPicked.seconds = +currentTarget.innerText;
                 this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                if (!this.context.options.display.components.useTwentyfourHour && !this.context.options.keepOpen &&
+                if (this.context.options.display.components.useTwentyfourHour && !this.context.options.keepOpen &&
                     !this.context.options.inline) {
                     this.context.display.hide();
                 } else {

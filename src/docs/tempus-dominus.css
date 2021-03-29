@@ -14,6 +14,38 @@
   cursor: pointer;
 }
 
+.tempus-dominus-widget .arrow,
+.tempus-dominus-widget .arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+.tempus-dominus-widget .arrow {
+  visibility: hidden;
+}
+.tempus-dominus-widget .arrow::before {
+  visibility: visible;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.tempus-dominus-widget[data-popper-placement^=top] > .arrow {
+  bottom: -4px;
+}
+
+.tempus-dominus-widget[data-popper-placement^=bottom] > .arrow {
+  top: -4px;
+}
+
+.tempus-dominus-widget[data-popper-placement^=left] > .arrow {
+  right: -4px;
+}
+
+.tempus-dominus-widget[data-popper-placement^=right] > .arrow {
+  left: -4px;
+}
+
 .tempus-dominus-widget {
   list-style: none;
   margin: 2px 0;
@@ -31,33 +63,6 @@
 }
 .tempus-dominus-widget.show {
   display: block;
-}
-.tempus-dominus-widget .arrow,
-.tempus-dominus-widget .arrow::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: inherit;
-}
-.tempus-dominus-widget .arrow {
-  visibility: hidden;
-}
-.tempus-dominus-widget .arrow::before {
-  visibility: visible;
-  content: "";
-  transform: rotate(45deg);
-}
-.tempus-dominus-widget [data-popper-placement^=top] > .arrow {
-  bottom: -4px;
-}
-.tempus-dominus-widget [data-popper-placement^=bottom] > .arrow {
-  top: -4px;
-}
-.tempus-dominus-widget [data-popper-placement^=left] > .arrow {
-  right: -4px;
-}
-.tempus-dominus-widget [data-popper-placement^=right] > .arrow {
-  left: -4px;
 }
 .tempus-dominus-widget .td-collapse:not(.show) {
   display: none;
@@ -252,6 +257,9 @@
 .tempus-dominus-widget.useTwentyfour td.hour {
   height: 27px;
   line-height: 27px;
+}
+.tempus-dominus-widget .time-container {
+  margin-bottom: 0.5rem;
 }
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td.day, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.minute, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.second,
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementSeconds],

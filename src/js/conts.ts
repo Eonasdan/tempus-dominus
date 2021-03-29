@@ -1,4 +1,4 @@
-import {DateTime, Unit} from './datetime';
+import { DateTime, Unit } from './datetime';
 
 interface Options {
     restrictions: {
@@ -52,7 +52,7 @@ interface Options {
         incrementSecond: string;
         nextDecade: string;
         selectDecade: string;
-        dayViewHeaderFormat: string;
+        dayViewHeaderFormat: 'numeric' | '2-digit' | 'long' | 'short' | 'narrow';
         decrementHour: string;
         selectDate: string;
         incrementHour: string;
@@ -472,4 +472,4 @@ const DatePickerModes = [
     },
 ];
 
-export {DefaultOptions, DatePickerModes, Namespace, Options};
+export { DefaultOptions, DatePickerModes, Namespace, Options };

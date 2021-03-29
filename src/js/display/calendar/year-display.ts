@@ -1,7 +1,7 @@
-import {TempusDominus} from '../../tempus-dominus';
-import {DateTime, Unit} from '../../datetime';
-import {Namespace} from '../../conts';
-import {ActionTypes} from '../../actions';
+import { TempusDominus } from '../../tempus-dominus';
+import { DateTime, Unit } from '../../datetime';
+import { Namespace } from '../../conts';
+import { ActionTypes } from '../../actions';
 
 export default class YearDisplay {
     private context: TempusDominus;

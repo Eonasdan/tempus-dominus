@@ -1,3 +1,5 @@
+import { Options } from "./conts";
+
 export enum Unit {
     seconds = 'seconds',
     minutes = 'minutes',
@@ -5,6 +7,11 @@ export enum Unit {
     date = 'date',
     month = 'month',
     year = 'year',
+}
+
+interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
+    timeStyle?: 'short' | 'medium' | 'long';
+    dateStyle?: 'short' | 'medium' | 'long' | 'full';
 }
 
 /**
@@ -139,8 +146,21 @@ export class DateTime extends Date {
      * @param template An object. Uses browser defaults otherwise.
      * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
      */
-    format(template: any, locale = this.locale): string {
+    format(template: DateTimeFormatOptions, locale = this.locale): string {
         return new Intl.DateTimeFormat(locale, template).format(this);
+    }
+
+    formatWithOptions(options: Options) {
+        let components = options.display.components;
+        return this.format({
+            year: components.date ? 'numeric' : undefined,
+            month: components.date ? '2-digit' : undefined,
+            day: components.date ? '2-digit' : undefined,
+            hour: components.hours ? components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
+            minute: components.minutes ? '2-digit' : undefined,
+            second: components.seconds ? '2-digit' : undefined,
+            hour12: !components.useTwentyfourHour
+        });
     }
 
     /**
@@ -208,7 +228,7 @@ export class DateTime extends Date {
      * @param locale
      * @param template
      */
-    parts(locale = this.locale, template: any = {dateStyle: 'full', timeStyle: 'long'}) {
+    parts(locale = this.locale, template: any = { dateStyle: 'full', timeStyle: 'long' }) {
         const parts = {}
         new Intl.DateTimeFormat(locale, template).formatToParts(this).filter(x => x.type !== 'literal').forEach(x => parts[x.type] = x.value)
         return parts;

@@ -1,8 +1,8 @@
-import {TempusDominus} from '../../tempus-dominus';
+import { TempusDominus } from '../../tempus-dominus';
 import Dates from '../../dates';
-import {DateTime, Unit} from '../../datetime';
-import {Namespace} from '../../conts';
-import {ActionTypes} from '../../actions';
+import { DateTime, Unit } from '../../datetime';
+import { Namespace } from '../../conts';
+import { ActionTypes } from '../../actions';
 
 export default class DecadeDisplay {
     private context: TempusDominus;
