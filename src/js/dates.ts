@@ -110,7 +110,7 @@ export default class Dates {
             if (this.context.input && this.context.input.value != target.toString()) {
                 this.context.input.value = this.context.viewDate.formatWithOptions(this.context.options);
             }
-
+          
             this.context.unset = false;
             this.context.display.update('all');
             this.context.notifyEvent(Namespace.Events.CHANGE, {

@@ -111,7 +111,6 @@ export default class Display {
                     this.context.action.do(e);
                 }));
 
-
             this.popperInstance = createPopper(this.context.element, this.widget, {
                 modifiers: [
                     {

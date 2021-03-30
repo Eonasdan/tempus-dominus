@@ -252,13 +252,11 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
           cursor: not-allowed;
         }
       }
-
       & thead tr:first-child th {
         &:hover {
           background: $bs-datetimepicker-btn-hover-bg;
         }
       }
-
       & td {
         //height: 20px;
         //line-height: 20px;
@@ -288,11 +286,9 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
             color: $bs-datetimepicker-active-color;
             text-shadow: $bs-datetimepicker-text-shadow;
           }
-
           &.active.today:before {
             border-bottom-color: #fff;
           }
-
           &.old,
           &.new {
             color: $bs-datetimepicker-alternate-color;

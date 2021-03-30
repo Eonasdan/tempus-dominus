@@ -1,7 +1,6 @@
 import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
-
 import Actions, {ActionTypes} from './actions';
 import {DefaultOptions, Namespace, Options} from './conts';
 import {DateTime, Unit} from './datetime';
@@ -21,7 +20,6 @@ export class TempusDominus {
     action: Actions;
     _notifyChangeEventContext: number;
     private _currentPromptTimeTimeout: any;
-
 
     constructor(element, options: Options) {
         this.options = this.initializeOptions(options, DefaultOptions);
@@ -258,7 +256,7 @@ export class TempusDominus {
         }
         this.toggle = query == undefined ? this.element : this.element.querySelector(query);
         this.toggle.addEventListener('click', () => this.display.toggle());
-    }
+
     
     notifyEvent(event: string, args?) {
         console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
