@@ -14,11 +14,15 @@
         integrity="sha512-N415hCJJdJx+1UBfULt+i+ihvOn42V/kOjOpp1UTh4CZ70Hx5bDlKryWaqEKfY/8EYOu/C2MuyaluJryK1Lb5Q=="
         crossorigin="anonymous" />
 
-    <link href="tempus-dominus.css" rel="stylesheet"/>
+    <link href="tempus-dominus.css" rel="stylesheet" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"
         integrity="sha512-g2PN+aYR0KupTVwea5Ppqw4bxWLLypWdd+h7E0ydT8zF+/Y2Qpk8Y1SnzVw6ZCVJPrgB/91s3VfhVhP7Y4+ucw=="
         crossorigin="anonymous"></script>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/js/bootstrap.min.js"
+        integrity="sha512-ZvbjbJnytX9Sa03/AcbP/nh9K95tar4R0IAxTS2gh2ChiInefr1r7EpnVClpTWUEN7VarvEsH3quvkY1h0dAFg=="
+        crossorigin="anonymous"></script>-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta3/js/bootstrap.min.js"
         integrity="sha512-mp3VeMpuFKbgxm/XMUU4QQUcJX4AZfV5esgX72JQr7H7zWusV6lLP1S78wZnX2z9dwvywil1VHkHZAqfGOW7Nw=="
@@ -43,23 +47,27 @@
                     <br />
                     <label for="startTimeInputId">Test</label>
                     <div>
-                        <div class="input-group" id="datetimepicker1" data-target-input="nearest" data-target-toggle="nearest">
+                        <div class="input-group" id="datetimepicker1" data-target-input="nearest"
+                            data-target-toggle="nearest">
                             <input id="startTimeInputId" type="text" class="form-control"
                                 data-target="#datetimepicker1">
                             <span class="input-group-text" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                                <span class="far fa-clock"></span>
+                                <span class="far fa-calendar"></span>
                             </span>
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-6">
                     <button id="clearLog" type="button" class="btn btn-primary m-3">Clear Log</button>
                     <div id="log" style="max-height: 90vh;overflow-y: scroll;">
-
+                
                     </div>
                 </div>
             </div>
+            
         </div>
+    </div>
 
     </div>
     <style>
@@ -148,6 +156,12 @@
                 maxDate: '11/22/2013 00:53',
             }
         });*/
+
+        ['change', 'update', 'error', 'show', 'hide', 'blur', 'keyup', 'keydown', 'focus', 'click'].forEach(e => {
+            document.getElementById('popcorn').addEventListener(e, () => {
+                console.log('event:', e);
+            })
+        });
     </script>
 </body>
 

@@ -1,17 +1,17 @@
 import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
-import Actions from './actions';
-import { Default, Namespace, Options } from './conts';
-import { DateTime, Unit } from './datetime';
-import { threadId } from 'worker_threads';
+
+import Actions, {ActionTypes} from './actions';
+import {DefaultOptions, Namespace, Options} from './conts';
+import {DateTime, Unit} from './datetime';
 
 export class TempusDominus {
-    _options: Options;
-    _element: HTMLElement;
-    _input: HTMLInputElement;
-    _toggle: HTMLElement;
-    _viewDate: DateTime;
+    options: Options;
+    element: HTMLElement;
+    input: HTMLInputElement;
+    toggle: HTMLElement;
+    viewDate: DateTime;
     currentViewMode: number;
     unset: boolean;
     minViewModeNumber: number;
@@ -19,11 +19,14 @@ export class TempusDominus {
     validation: Validation;
     dates: Dates;
     action: Actions;
+    _notifyChangeEventContext: number;
+    private _currentPromptTimeTimeout: any;
 
-    constructor(element: HTMLElement, options: Options) {
-        this._options = this.initializeOptions(options, Default);
-        this._element = element;
-        this._viewDate = new DateTime();
+
+    constructor(element, options: Options) {
+        this.options = this.initializeOptions(options, DefaultOptions);
+        this.element = element;
+        this.viewDate = new DateTime();
         this.currentViewMode = null;
         this.unset = true;
         this.minViewModeNumber = 0;
@@ -43,10 +46,14 @@ export class TempusDominus {
     /**
      *
      * @param options
+     * @param reset
      * @public
      */
-    updateOptions(options): void {
-        this._options = this.initializeOptions(options, this._options);
+    updateOptions(options, reset = false): void {
+        if (reset)
+            this.options = this.initializeOptions(options, DefaultOptions);
+        else
+            this.options = this.initializeOptions(options, this.options);
     }
 
     private initializeOptions(config: Options, mergeTo: Options): Options {
@@ -186,13 +193,13 @@ export class TempusDominus {
     }
 
     private initializeViewMode() {
-        if (this._options.display.components.year) {
+        if (this.options.display.components.year) {
             this.minViewModeNumber = 2;
         }
-        if (this._options.display.components.month) {
+        if (this.options.display.components.month) {
             this.minViewModeNumber = 1;
         }
-        if (this._options.display.components.date) {
+        if (this.options.display.components.date) {
             this.minViewModeNumber = 0;
         }
 
@@ -200,30 +207,30 @@ export class TempusDominus {
     }
 
     private initializeInput() {
-        if (this._element.tagName == 'INPUT') {
-            this._input = this._element as HTMLInputElement;
+        if (this.element.tagName == 'INPUT') {
+            this.input = this.element as HTMLInputElement;
         } else {
-            let query = this._element.dataset.targetInput;
+            let query = this.element.dataset.targetInput;
             if (query == undefined || query == 'nearest') {
-                this._input = this._element.querySelector('input');
+                this.input = this.element.querySelector('input');
             } else {
-                this._input = this._element.querySelector(query);
+                this.input = this.element.querySelector(query);
             }
         }
-        this._input?.addEventListener('change', (ev) => {
-            let strValue = this._input.value;
+        this.input?.addEventListener('change', (ev) => {
+            let strValue = this.input.value;
             //03/27/2021, 20:13:56
             let valArray = strValue.split(/\D/).filter(x => x.length).map(x => parseInt(x));
             let valIndex = 0;
-            let targetDate = this._viewDate.clone;
+            let targetDate = this.viewDate.clone;
             if (this.display._hasDate) {
                 targetDate.month = valArray[valIndex++] - 1;
                 targetDate.date = valArray[valIndex++];
                 targetDate.year = valArray[valIndex++];
             }
-            if (this._options.display.components.hours) {
+            if (this.options.display.components.hours) {
                 let twentyFourModifier = 0;
-                if (!this._options.display.components.useTwentyfourHour) {
+                if (!this.options.display.components.useTwentyfourHour) {
                     if (strValue.includes('PM')) {
                         twentyFourModifier = 12;
                     } else if (valArray[valIndex] == 12) {
@@ -234,10 +241,10 @@ export class TempusDominus {
                 }
                 targetDate.hours = valArray[valIndex++] + twentyFourModifier;
             }
-            if (this._options.display.components.minutes) {
+            if (this.options.display.components.minutes) {
                 targetDate.minutes = valArray[valIndex++];
             }
-            if (this._options.display.components.seconds) {
+            if (this.options.display.components.seconds) {
                 targetDate.seconds = valArray[valIndex]
             }
             this.dates._setValue(targetDate);
@@ -245,29 +252,73 @@ export class TempusDominus {
     }
 
     private initializeToggle() {
-        let query = this._element.dataset.targetToggle;
+        let query = this.element.dataset.targetToggle;
         if (query == 'nearest'){
             query = '[data-toggle="datetimepicker"]';
         }
-        this._toggle = query == undefined ? this._element : this._element.querySelector(query);
-        this._toggle.addEventListener('click', () => this.display.toggle());
+        this.toggle = query == undefined ? this.element : this.element.querySelector(query);
+        this.toggle.addEventListener('click', () => this.display.toggle());
+    }
+    
+    notifyEvent(event: string, args?) {
+        console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
+        if (event === Namespace.Events.CHANGE) {
+            this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
+            this._notifyChangeEventContext++;
+            if (
+                (args.date && args.oldDate && args.date.isSame(args.oldDate))
+                ||
+                (!args.isClear && !args.date && !args.oldDate)
+                ||
+                (this._notifyChangeEventContext > 1)
+            ) {
+                this._notifyChangeEventContext = undefined;
+                return;
+            }
+            this.handlePromptTimeIfNeeded(args);
+        }
+
+        const evt = new CustomEvent(event, args);
+        this.element.dispatchEvent(evt);
+
+
+        //this.element.trigger(event); //todo jquery
+        this._notifyChangeEventContext = void 0;
     }
 
-    _notifyEvent(config) {
-        console.log('notify', JSON.stringify(config, null, 2));
-    }
+    private handlePromptTimeIfNeeded(e) {
+        if (this.options.promptTimeOnDateChange) {
+            if (!e.oldDate && this.options.useCurrent) {
+                // First time ever. If useCurrent option is set to true (default), do nothing
+                // because the first date is selected automatically.
+                return;
+            } else if (
+                e.oldDate &&
+                e.date &&
+                e.data.isSame(e.oldDate)
+            ) {
+                // Date didn't change (time did) or date changed because time did.
+                return;
+            }
 
+            clearTimeout(this._currentPromptTimeTimeout);
+            this._currentPromptTimeTimeout = setTimeout(() => {
+                if (this.display.widget) {
+                    this.display.widget.querySelector(`[data-action="${ActionTypes.togglePicker}"]`)[0].click();
+                }
+            }, this.options.promptTimeOnDateChangeTransitionDelay);
+        }
+    }
 
     /**
      *
-     * @param {Unit} e
+     * @param {Unit} unit
      * @private
      */
-    _viewUpdate(e: Unit) {
-        this._notifyEvent({
-            type: Namespace.Events.UPDATE,
-            change: e,
-            viewDate: this._viewDate.clone
+    viewUpdate(unit: Unit) {
+        this.notifyEvent(Namespace.Events.UPDATE, {
+            change: unit,
+            viewDate: this.viewDate.clone
         });
     }
 }

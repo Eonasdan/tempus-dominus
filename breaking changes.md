@@ -19,6 +19,7 @@
 * removed `timeZone`
 * removed `format`
 * removed `extraFormats`
+* removed `widgetParent`
 
 * moved the following to `restrictions`
     * minDate
@@ -58,7 +59,9 @@
 * renamed `datepicker-days` to `date-container-days`
 * renamed `prev` to `previous`
 * renamed `data-day` to `data-value` to be consistent with other views
+
 #### Time
+
 * renamed `usetwentyfour` to `useTwentyfour`
 * renamed `timepicker` to `time-container`
 * renamed `timepicker-hour` to `time-container-hour`

@@ -10,8 +10,8 @@ export default class YearDisplay {
 
     constructor(context: TempusDominus) {
         this.context = context;
-        this._startYear = this.context._viewDate.clone.manipulate(-1, Unit.year);
-        this._endYear = this.context._viewDate.clone.manipulate(10, Unit.year);
+        this._startYear = this.context.viewDate.clone.manipulate(-1, Unit.year);
+        this._endYear = this.context.viewDate.clone.manipulate(10, Unit.year);
     }
 
     get picker(): HTMLElement {
@@ -23,10 +23,10 @@ export default class YearDisplay {
         const headTemplate = this.context.display.headTemplate;
         const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
-        previous.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.previousDecade);
-        switcher.setAttribute('title', this.context._options.localization.selectDecade);
+        previous.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.previousDecade);
+        switcher.setAttribute('title', this.context.options.localization.selectDecade);
         switcher.setAttribute('colspan', '1');
-        next.getElementsByTagName('span')[0].setAttribute('title', this.context._options.localization.nextDecade);
+        next.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.nextDecade);
 
         table.appendChild(headTemplate);
 
@@ -38,9 +38,9 @@ export default class YearDisplay {
                 row = document.createElement('tr');
             }
             const td = document.createElement('td');
-            const span = document.createElement('span');
-            span.setAttribute('data-action', ActionTypes.selectYear);
-            td.appendChild(span);
+            const div = document.createElement('div');
+            div.setAttribute('data-action', ActionTypes.selectYear);
+            td.appendChild(div);
             row.appendChild(td);
         }
 
@@ -59,11 +59,11 @@ export default class YearDisplay {
         this.context.validation.isValid(this._startYear, Unit.year) ? previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
         this.context.validation.isValid(this._endYear, Unit.year) ? next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
 
-        this.grid(container.querySelectorAll('tbody td span'));
+        this.grid(container.querySelectorAll('tbody td div'));
     }
 
     private grid(nodeList: NodeList) {
-        let innerDate = this.context._viewDate.clone.startOf(Unit.year).manipulate(-1, Unit.year)
+        let innerDate = this.context.viewDate.clone.startOf(Unit.year).manipulate(-1, Unit.year)
 
         nodeList.forEach((containerClone: HTMLElement, index) => {
             let classes = [];

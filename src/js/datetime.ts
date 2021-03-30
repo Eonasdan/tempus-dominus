@@ -193,7 +193,7 @@ export class DateTime extends Date {
      * @param unit If provided, uses {@link startOf} for
      * comparision.
      */
-    isSame(compare: DateTime, unit: Unit): boolean {
+    isSame(compare: DateTime, unit?: Unit): boolean {
         if (!unit) return this.valueOf() === compare.valueOf();
         if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
         compare = DateTime.convert(compare);
