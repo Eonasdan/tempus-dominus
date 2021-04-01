@@ -1,6 +1,6 @@
-import {Namespace} from './conts.js';
-import {TempusDominus} from './tempus-dominus';
-import {DateTime, Unit} from './datetime';
+import { TempusDominus } from './tempus-dominus';
+import { DateTime, Unit } from './datetime';
+import Namespace from './namespace';
 
 export default class Dates {
 
@@ -65,7 +65,7 @@ export default class Dates {
         return [startYear, endYear, focusValue];
     }
 
-    _setValue(target: DateTime | undefined, index?: number): void {
+    _setValue(target?: DateTime, index?: number): void {
         const noIndex = (typeof index === 'undefined'),
             isClear = !target && noIndex;
         let oldDate = this.context.unset ? null : this._dates[index];
@@ -87,6 +87,7 @@ export default class Dates {
                 isClear,
                 isValid: true,
             });
+
             this.context.display.update('all');
             return;
         }
@@ -102,6 +103,18 @@ export default class Dates {
         if (this.context.validation.isValid(target)) {
             this._dates[index] = target;
             this.context.viewDate = target.clone;
+
+            if (this.context._input) {
+                let newValue = target.format(this.context.options.display.inputFormat);
+                if (this.context.options.allowMultidate) {
+                    newValue = this._dates
+                        .map(d => d.format(this.context.options.display.inputFormat))
+                        .join(this.context.options.multidateSeparator);
+                }
+                if (this.context._input.value != newValue)
+                    this.context._input.value = newValue;
+            }
+
             this.context.unset = false;
             this.context.display.update('all');
             this.context.notifyEvent(Namespace.Events.CHANGE, {
@@ -111,13 +124,13 @@ export default class Dates {
                 isValid: true,
             });
             //todo remove this
-            console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2)); //todo remove
+            console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2));
             return;
         }
 
         if (this.context.options.keepInvalid) {
             this._dates[index] = target;
-            this.context.viewDate = target.clone
+            this.context.viewDate = target.clone;
             this.context.notifyEvent(Namespace.Events.CHANGE,{
                 date: target,
                 oldDate,
@@ -132,17 +145,17 @@ export default class Dates {
         });
     }
 
-     static getFormatByUnit(unit: Unit): object {
+    static getFormatByUnit(unit: Unit): object {
         switch (unit) {
             case 'date':
-                return {dateStyle: 'short'};
+                return { dateStyle: 'short' };
             case 'month':
                 return {
                     month: 'numeric',
                     year: 'numeric'
                 };
             case 'year':
-                return {year: 'numeric'};
+                return { year: 'numeric' };
         }
     }
 }

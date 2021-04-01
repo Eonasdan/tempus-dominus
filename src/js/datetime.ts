@@ -7,6 +7,11 @@ export enum Unit {
     year = 'year',
 }
 
+interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
+    timeStyle?: 'short' | 'medium' | 'long';
+    dateStyle?: 'short' | 'medium' | 'long' | 'full';
+}
+
 /**
  * For the most part this object behaves exactly the same way
  * as the native Date object with a little extra spice.
@@ -139,7 +144,7 @@ export class DateTime extends Date {
      * @param template An object. Uses browser defaults otherwise.
      * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
      */
-    format(template: any, locale = this.locale): string {
+    format(template: DateTimeFormatOptions, locale = this.locale): string {
         return new Intl.DateTimeFormat(locale, template).format(this);
     }
 
@@ -208,7 +213,7 @@ export class DateTime extends Date {
      * @param locale
      * @param template
      */
-    parts(locale = this.locale, template: any = {dateStyle: 'full', timeStyle: 'long'}) {
+    parts(locale = this.locale, template: any = { dateStyle: 'full', timeStyle: 'long' }) {
         const parts = {}
         new Intl.DateTimeFormat(locale, template).formatToParts(this).filter(x => x.type !== 'literal').forEach(x => parts[x.type] = x.value)
         return parts;

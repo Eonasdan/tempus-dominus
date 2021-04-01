@@ -1,4 +1,4 @@
-import { Namespace } from "../conts";
+import Namespace from '../namespace';
 
 export default class Collapse {
     private timeOut;

@@ -1,7 +1,7 @@
-import {TempusDominus} from '../../tempus-dominus';
-import {DateTime, Unit} from '../../datetime';
-import {ActionTypes} from '../../actions';
-import {Namespace} from '../../conts';
+import { TempusDominus } from '../../tempus-dominus';
+import { DateTime, Unit } from '../../datetime';
+import { ActionTypes } from '../../actions';
+import Namespace from '../../namespace';
 
 export default class DateDisplay {
     private context: TempusDominus;
@@ -65,7 +65,7 @@ export default class DateDisplay {
         const container = this.context.display.widget.getElementsByClassName(Namespace.Css.daysContainer)[0];
         const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
 
-        switcher.innerText = this.context.viewDate.format({month: this.context.options.localization.dayViewHeaderFormat});
+        switcher.innerText = this.context.viewDate.format({ month: this.context.options.localization.dayViewHeaderFormat });
 
         this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.month), Unit.month) ?
             previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
@@ -134,7 +134,7 @@ export default class DateDisplay {
         while (i < 7) {
             const th = document.createElement('th')
             th.classList.add(Namespace.Css.dayOfTheWeek);
-            th.innerText = innerDate.format({weekday: 'short'});
+            th.innerText = innerDate.format({ weekday: 'short' });
             innerDate.manipulate(1, Unit.date);
             row.appendChild(th);
             i++;

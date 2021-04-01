@@ -28,25 +28,8 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
   cursor: pointer;
 }
 
+//popper
 .tempus-dominus-widget {
-  list-style: none;
-  margin: 2px 0;
-  padding: 4px;
-  width: 19rem;
-  border-radius: 4px;
-  display: none;
-  background-color: white;
-
-  [data-action]::after {
-    @extend .visually-hidden;
-    content: attr(title);
-  }
-
-  &.show {
-    display: block;
-  }
-
-  //popper
   .arrow,
   .arrow::before {
     position: absolute;
@@ -64,24 +47,42 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
     content: '';
     transform: rotate(45deg);
   }
+}
 
-  [data-popper-placement^='top'] > .arrow {
-    bottom: -4px;
+.tempus-dominus-widget[data-popper-placement^='top'] > .arrow {
+  bottom: -4px;
+}
+
+.tempus-dominus-widget[data-popper-placement^='bottom'] > .arrow {
+  top: -4px;
+}
+
+.tempus-dominus-widget[data-popper-placement^='left'] > .arrow {
+  right: -4px;
+}
+
+.tempus-dominus-widget[data-popper-placement^='right'] > .arrow {
+  left: -4px;
+}
+//end popper
+
+.tempus-dominus-widget {
+  list-style: none;
+  margin: 2px 0;
+  padding: 4px;
+  width: 19rem;
+  border-radius: 4px;
+  display: none;
+  background-color:white;
+
+  [data-action]::after {
+    @extend .visually-hidden;
+    content: attr(title);
   }
 
-  [data-popper-placement^='bottom'] > .arrow {
-    top: -4px;
+  &.show {
+    display: block;
   }
-
-  [data-popper-placement^='left'] > .arrow {
-    right: -4px;
-  }
-
-  [data-popper-placement^='right'] > .arrow {
-    left: -4px;
-  }
-
-  //end popper
 
   .td-collapse {
     &:not(.show) {
@@ -96,7 +97,7 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
   }
 
   &.tempus-dominus-widget-with-calendar-weeks {
-    width: 16rem;
+    width: 21rem;
   }
 
   &.timepicker-sbs {
@@ -167,10 +168,6 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
       left: auto;
       right: 7px;
     }
-  }
-
-  &.wider {
-    width: 16rem;
   }
 
   /*div[data-action] {
@@ -336,6 +333,10 @@ $bs-datetimepicker-buttons-color-dark: #0056b3;
       height: 27px;
       line-height: 27px;
     }
+  }
+
+  .time-container{
+    margin-bottom: 0.5rem;
   }
 
   &.tempus-dominus-widget-readonly {

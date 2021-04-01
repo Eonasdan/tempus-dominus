@@ -2,13 +2,17 @@ import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
 import Actions, {ActionTypes} from './actions';
-import {DefaultOptions, Namespace, Options} from './conts';
+import {DefaultOptions} from './conts';
 import {DateTime, Unit} from './datetime';
+import Namespace from './namespace';
+import Options from './options';
 
 export class TempusDominus {
     options: Options;
     element: any;
     viewDate: DateTime;
+    _input: HTMLInputElement;
+    _toggle: HTMLElement;
     currentViewMode: number;
     unset: boolean;
     minViewModeNumber: number;
@@ -19,7 +23,7 @@ export class TempusDominus {
     _notifyChangeEventContext: number;
     private _currentPromptTimeTimeout: any;
 
-    constructor(element, options: Options) {
+    constructor(element: HTMLElement, options: Options) {
         this.options = this.initializeOptions(options, DefaultOptions);
         this.element = element;
         this.viewDate = new DateTime();
@@ -33,10 +37,9 @@ export class TempusDominus {
         this.action = new Actions(this);
 
         this.initializeViewMode();
-
-        element.addEventListener('click', () => this.display.toggle());
+        this.initializeInput();
+        this.initializeToggle();
     }
-
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -60,11 +63,10 @@ export class TempusDominus {
             for (let i = 0; i < value.length; i++) {
                 let d = value[i];
                 const dateTime = dateConversion(d, optionName);
-                if (dateTime !== undefined) {
-                    value[i] = dateTime;
-                    continue;
+                if (!dateTime) {
+                    throw Namespace.ErrorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
                 }
-                throw Namespace.ErrorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
+                value[i] = dateTime;
             }
         }
         const numberArray = (optionName: string, value, providedType: string) => {
@@ -75,19 +77,16 @@ export class TempusDominus {
             return;
         }
         const dateConversion = (d: any, optionName: string) => {
-            if (d.constructor.name === 'DateTime') return d;
-            if (d.constructor.name === 'Date') {
-                return DateTime.convert(d);
-            }
             if (typeof d === typeof '') {
-                const dateTime = new DateTime(d);
-                if (JSON.stringify(dateTime) === 'null') {
-                    throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
-                }
                 console.warn(Namespace.ErrorMessages.dateString);
-                return dateTime;
             }
-            return undefined;
+
+            const converted = this.dateTypeCheck(d);
+
+            if (!converted) {
+                throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
+            }
+            return converted;
         }
 
         //the spread operator caused sub keys to be missing after merging
@@ -185,6 +184,20 @@ export class TempusDominus {
             ...config
         }
 
+        if (config.display.inputFormat === undefined) {
+            const components = config.display.components;
+            config.display.inputFormat = {
+                year: components.year ? 'numeric' : undefined,
+                month: components.month ? '2-digit' : undefined,
+                day: components.date ? '2-digit' : undefined,
+                hour: components.hours ? components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
+                minute: components.minutes ? '2-digit' : undefined,
+                second: components.seconds ? '2-digit' : undefined,
+                hour12: !components.useTwentyfourHour
+            };
+
+        }
+
         return config
     }
 
@@ -223,9 +236,59 @@ export class TempusDominus {
         const evt = new CustomEvent(event, args);
         this.element.dispatchEvent(evt);
 
-
-        //this.element.trigger(event); //todo jquery
         this._notifyChangeEventContext = void 0;
+    }
+
+    private initializeInput() {
+        if (this.element.tagName == 'INPUT') {
+            this._input = this.element as HTMLInputElement;
+        } else {
+            let query = this.element.dataset.targetInput;
+            if (query == undefined || query == 'nearest') {
+                this._input = this.element.querySelector('input');
+            } else {
+                this._input = this.element.querySelector(query);
+            }
+        }
+
+        this._input?.addEventListener('change', (ev) => {
+            let parsedDate = this.dateTypeCheck(this._input.value);
+            console.log(parsedDate);
+
+            if (parsedDate) {
+                this.dates._setValue(parsedDate);
+            }
+            else {
+                this.notifyEvent(Namespace.Events.ERROR, {
+                    reason: Namespace.ErrorMessages.failedToParseInput,
+                    date: parsedDate
+                });
+            }
+        });
+    }
+
+    private initializeToggle() {
+        let query = this.element.dataset.targetToggle;
+        if (query == 'nearest') {
+            query = '[data-toggle="datetimepicker"]';
+        }
+        this._toggle = query == undefined ? this.element : this.element.querySelector(query);
+        this._toggle.addEventListener('click', () => this.display.toggle());
+    }
+
+    private dateTypeCheck(d: any): DateTime | null {
+        if (d.constructor.name === 'DateTime') return d;
+        if (d.constructor.name === 'Date') {
+            return DateTime.convert(d);
+        }
+        if (typeof d === typeof '') {
+            const dateTime = new DateTime(d);
+            if (JSON.stringify(dateTime) === 'null') {
+                return null;
+            }
+            return dateTime;
+        }
+        return null;
     }
 
     private handlePromptTimeIfNeeded(e) {

@@ -1,109 +1,6 @@
 import {DateTime, Unit} from './datetime';
-
-interface Options {
-    restrictions: {
-        minDate: DateTime;
-        maxDate: DateTime;
-        enabledDates: DateTime[];
-        disabledDates: DateTime[];
-        enabledHours: number[];
-        disabledHours: number[];
-        disabledTimeIntervals: DateTime[];
-        daysOfWeekDisabled: number[];
-    };
-    display: {
-        toolbarPlacement: 'top' | 'bottom' | 'default';
-        widgetPositioning: { horizontal: string; vertical: string };
-        components: {
-            date: boolean;
-            century: boolean;
-            hours: boolean;
-            seconds: boolean;
-            month: boolean;
-            year: boolean;
-            minutes: boolean;
-            decades: boolean;
-            useTwentyfourHour: boolean;
-        };
-        buttons: { today: boolean; close: boolean; clear: boolean };
-        calendarWeeks: boolean;
-        icons: {
-            date: string;
-            next: string;
-            previous: string;
-            today: string;
-            clear: string;
-            time: string;
-            up: string;
-            type: 'icons' | 'sprites';
-            down: string;
-            close: string;
-        };
-        viewMode: 'times' | 'days';
-        collapse: boolean;
-        sideBySide: boolean;
-    };
-    stepping: number;
-    useCurrent: boolean;
-    defaultDate: boolean;
-    localization: {
-        nextMonth: string;
-        pickHour: string;
-        incrementSecond: string;
-        nextDecade: string;
-        selectDecade: string;
-        dayViewHeaderFormat: string;
-        decrementHour: string;
-        selectDate: string;
-        incrementHour: string;
-        previousCentury: string;
-        decrementSecond: string;
-        today: string;
-        previousMonth: string;
-        selectYear: string;
-        pickSecond: string;
-        nextCentury: string;
-        close: string;
-        incrementMinute: string;
-        selectTime: string;
-        clear: string;
-        togglePeriod: string;
-        selectMonth: string;
-        decrementMinute: string;
-        pickMinute: string;
-        nextYear: string;
-        previousYear: string;
-        previousDecade: string;
-    };
-    readonly: boolean;
-    ignoreReadonly: boolean;
-    keepOpen: boolean;
-    focusOnShow: boolean;
-    inline: boolean;
-    keepInvalid: boolean;
-    keyBinds: {
-        'control down': () => boolean;
-        pageDown: () => boolean;
-        'control up': () => boolean;
-        right: () => boolean;
-        pageUp: () => boolean;
-        down: () => boolean;
-        delete: () => boolean;
-        t: () => boolean;
-        left: () => boolean;
-        up: () => boolean;
-        enter: () => boolean;
-        'control space': () => boolean;
-        escape: () => boolean;
-    };
-    debug: boolean;
-    allowInputToggle: boolean;
-    viewDate: DateTime;
-    allowMultidate: boolean;
-    multidateSeparator: string;
-    promptTimeOnDateChange: boolean;
-    promptTimeOnDateChangeTransitionDelay: number;
-}
+import Namespace from './namespace';
+import Options from './options';
 
 const DefaultOptions: Options = {
     restrictions: {
@@ -154,6 +51,7 @@ const DefaultOptions: Options = {
             seconds: false,
             useTwentyfourHour: false,
         },
+        inputFormat: undefined
     },
     stepping: 1,
     useCurrent: true,
@@ -327,127 +225,10 @@ const DefaultOptions: Options = {
     allowInputToggle: false,
     viewDate: new DateTime(),
     allowMultidate: false,
-    multidateSeparator: ', ',
+    multidateSeparator: '; ',
     promptTimeOnDateChange: false,
     promptTimeOnDateChangeTransitionDelay: 200,
 };
-
-//this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-const NAME = 'tempus-dominus';
-const VERSION = '6.0.0-alpha1';
-const DATA_KEY = 'td';
-const DATA_API_KEY = '.data-api';
-
-class Events {
-    KEY = `.${DATA_KEY}`;
-    CHANGE = `change${this.KEY}`;
-    UPDATE = `update${this.KEY}`;
-    ERROR = `error${this.KEY}`;
-    SHOW = `show${this.KEY}`;
-    HIDE = `hide${this.KEY}`;
-    BLUR = `blur${this.KEY}`;
-    KEYUP = `keyup${this.KEY}`;
-    KEYDOWN = `keydown${this.KEY}`;
-    FOCUS = `focus${this.KEY}`;
-    CLICK_DATA_API = `click${this.KEY}${DATA_API_KEY}`;
-    clickAction = `click${this.KEY}.action`;
-}
-
-class Css {
-    widget = `${NAME}-widget`;
-    switch = 'picker-switch';
-    // todo the next several classes are to represent states of the picker that would
-    // make it wider then usual and it seems like this could be cleaned up.
-    widgetCalendarWeeks = `${this.widget}-with-calendar-weeks`;
-    useTwentyfour = 'useTwentyfour';
-    wider = 'wider';
-    sideBySide = 'timepicker-sbs';
-
-    previous = 'previous';
-    next = 'next';
-    disabled = 'disabled';
-    old = 'old';
-    new = 'new';
-    active = 'active';
-    separator = 'separator';
-    //#region date container
-    dateContainer = 'date-container';
-    decadesContainer = `${this.dateContainer}-decades`;
-    decade = 'decade';
-    yearsContainer = `${this.dateContainer}-years`;
-    year = 'year';
-    monthsContainer = `${this.dateContainer}-months`;
-    month = 'month';
-    daysContainer = `${this.dateContainer}-days`;
-    day = 'day';
-    calendarWeeks = 'cw';
-    dayOfTheWeek = 'dow';
-    today = 'today';
-    weekend = 'weekend';
-    //#endregion
-
-    //#region time container
-
-    timeContainer = 'time-container';
-    clockContainer = `${this.timeContainer}-clock`;
-    hourContainer = `${this.timeContainer}-hour`;
-    minuteContainer = `${this.timeContainer}-minute`;
-    secondContainer = `${this.timeContainer}-second`;
-
-    hour = 'hour';
-    minute = 'minute';
-    second = 'second';
-
-    //#endregion
-
-    //#region collapse
-
-    show = 'show';
-    collapsing = 'td-collapsing';
-    collapse = 'td-collapse';
-
-    //#endregion
-}
-
-class ErrorMessages {
-    //#region out to console
-    unexpectedOption(optionName: string) {
-        return `TD: Unexpected option: ${optionName} does not match a known option.`;
-    }
-
-    typeMismatch(optionName: string, badType: string, expectedType: string) {
-        return `TD: Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
-    }
-
-    dateString = 'TD: Using a string for date options is not recommended unless you specify an ISO string.';
-
-    numbersOutOfRage(optionName: string, lower: number, upper: number) {
-        return `'TD: ${optionName} expected an array of number between ${lower} and ${upper}.'`
-    }
-
-    failedToParseDate(optionName: string, date: any) {
-        return `TD: Could not correctly parse "${date}" to a date for option ${optionName}.`
-    }
-
-    //#endregion
-
-    //#region used with notify.error
-    failedToSetInvalidDate = 'Failed to set invalid date';
-    //#endregion
-}
-
-class Namespace {
-    static NAME = NAME;
-    static VERSION = VERSION;
-    static DATA_KEY = DATA_KEY;
-    static DATA_API_KEY = DATA_API_KEY;
-
-    static Events = new Events();
-
-    static Css = new Css();
-
-    static ErrorMessages = new ErrorMessages();
-}
 
 const DatePickerModes = [
     {
@@ -472,4 +253,4 @@ const DatePickerModes = [
     },
 ];
 
-export {DefaultOptions, DatePickerModes, Namespace, Options};
+export { DefaultOptions, DatePickerModes, Namespace };
