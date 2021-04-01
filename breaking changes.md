@@ -1,6 +1,5 @@
 # General
 
-* picker no longer set text field - this might be restored.
 * picker returns a `DateTime` which is an extended javascript `Date` object.
 * picker no longer uses jQuery, momentjs, or bootstrap
 

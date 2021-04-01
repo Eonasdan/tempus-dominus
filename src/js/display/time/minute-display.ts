@@ -1,7 +1,7 @@
-import {TempusDominus} from '../../tempus-dominus';
-import {Unit} from '../../datetime';
-import {Namespace} from '../../conts';
-import {ActionTypes} from '../../actions';
+import { TempusDominus } from '../../tempus-dominus';
+import { Unit } from '../../datetime';
+import { ActionTypes } from '../../actions';
+import Namespace from '../../namespace';
 
 export default class MinuteDisplay {
     private context: TempusDominus;
@@ -12,14 +12,14 @@ export default class MinuteDisplay {
 
     get picker(): HTMLElement {
         const container = document.createElement('div');
-        container.classList.add(Namespace.Css.minuteContainer );
+        container.classList.add(Namespace.Css.minuteContainer);
 
         const table = document.createElement('table');
         table.classList.add('table', 'table-sm'); //todo bootstrap
         const tableBody = document.createElement('tbody');
         let row = document.createElement('tr');
         let step = this.context.options.stepping === 1 ? 5 : this.context.options.stepping;
-        for (let i = 0; i <= 60/step ; i++) {
+        for (let i = 0; i <= 60 / step; i++) {
             if (i !== 0 && i % 4 === 0) {
                 tableBody.appendChild(row);
                 row = document.createElement('tr');

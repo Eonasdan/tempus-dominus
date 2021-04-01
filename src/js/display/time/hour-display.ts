@@ -1,7 +1,7 @@
-import {TempusDominus} from '../../tempus-dominus';
-import {Unit} from '../../datetime';
-import {Namespace} from '../../conts';
-import {ActionTypes} from '../../actions';
+import { TempusDominus } from '../../tempus-dominus';
+import { Unit } from '../../datetime';
+import { ActionTypes } from '../../actions';
+import Namespace from '../../namespace';
 
 export default class HourDisplay {
     private context: TempusDominus;
@@ -12,13 +12,13 @@ export default class HourDisplay {
 
     get picker(): HTMLElement {
         const container = document.createElement('div');
-        container.classList.add(Namespace.Css.hourContainer );
+        container.classList.add(Namespace.Css.hourContainer);
 
         const table = document.createElement('table');
         table.classList.add('table', 'table-sm'); //todo bootstrap
         const tableBody = document.createElement('tbody');
         let row = document.createElement('tr');
-        for (let i = 0; i <= (this.context.options.display.components.useTwentyfourHour ? 24 : 12) ; i++) {
+        for (let i = 0; i <= (this.context.options.display.components.useTwentyfourHour ? 24 : 12); i++) {
             if (i !== 0 && i % 4 === 0) {
                 tableBody.appendChild(row);
                 row = document.createElement('tr');

@@ -364,6 +364,110 @@
         }
     }
 
+    class ErrorMessages {
+        constructor() {
+            this.dateString = 'TD: Using a string for date options is not recommended unless you specify an ISO string.';
+            //#endregion
+            //#region used with notify.error
+            this.failedToSetInvalidDate = 'Failed to set invalid date';
+            this.failedToParseInput = 'Failed parse input field';
+            //#endregion
+        }
+        //#region out to console
+        unexpectedOption(optionName) {
+            return `TD: Unexpected option: ${optionName} does not match a known option.`;
+        }
+        typeMismatch(optionName, badType, expectedType) {
+            return `TD: Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
+        }
+        numbersOutOfRage(optionName, lower, upper) {
+            return `'TD: ${optionName} expected an array of number between ${lower} and ${upper}.'`;
+        }
+        failedToParseDate(optionName, date) {
+            return `TD: Could not correctly parse "${date}" to a date for option ${optionName}.`;
+        }
+    }
+
+    //this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
+    const NAME = 'tempus-dominus';
+    const VERSION = '6.0.0-alpha1';
+    const DATA_KEY = 'td';
+    const DATA_API_KEY = '.data-api';
+    class Events {
+        constructor() {
+            this.KEY = `.${DATA_KEY}`;
+            this.CHANGE = `change${this.KEY}`;
+            this.UPDATE = `update${this.KEY}`;
+            this.ERROR = `error${this.KEY}`;
+            this.SHOW = `show${this.KEY}`;
+            this.HIDE = `hide${this.KEY}`;
+            this.BLUR = `blur${this.KEY}`;
+            this.KEYUP = `keyup${this.KEY}`;
+            this.KEYDOWN = `keydown${this.KEY}`;
+            this.FOCUS = `focus${this.KEY}`;
+            this.CLICK_DATA_API = `click${this.KEY}${DATA_API_KEY}`;
+            this.clickAction = `click${this.KEY}.action`;
+        }
+    }
+    class Css {
+        constructor() {
+            this.widget = `${NAME}-widget`;
+            this.switch = 'picker-switch';
+            // todo the next several classes are to represent states of the picker that would
+            // make it wider then usual and it seems like this could be cleaned up.
+            this.widgetCalendarWeeks = `${this.widget}-with-calendar-weeks`;
+            this.useTwentyfour = 'useTwentyfour';
+            this.wider = 'wider';
+            this.sideBySide = 'timepicker-sbs';
+            this.previous = 'previous';
+            this.next = 'next';
+            this.disabled = 'disabled';
+            this.old = 'old';
+            this.new = 'new';
+            this.active = 'active';
+            this.separator = 'separator';
+            //#region date container
+            this.dateContainer = 'date-container';
+            this.decadesContainer = `${this.dateContainer}-decades`;
+            this.decade = 'decade';
+            this.yearsContainer = `${this.dateContainer}-years`;
+            this.year = 'year';
+            this.monthsContainer = `${this.dateContainer}-months`;
+            this.month = 'month';
+            this.daysContainer = `${this.dateContainer}-days`;
+            this.day = 'day';
+            this.calendarWeeks = 'cw';
+            this.dayOfTheWeek = 'dow';
+            this.today = 'today';
+            this.weekend = 'weekend';
+            //#endregion
+            //#region time container
+            this.timeContainer = 'time-container';
+            this.clockContainer = `${this.timeContainer}-clock`;
+            this.hourContainer = `${this.timeContainer}-hour`;
+            this.minuteContainer = `${this.timeContainer}-minute`;
+            this.secondContainer = `${this.timeContainer}-second`;
+            this.hour = 'hour';
+            this.minute = 'minute';
+            this.second = 'second';
+            //#endregion
+            //#region collapse
+            this.show = 'show';
+            this.collapsing = 'td-collapsing';
+            this.collapse = 'td-collapse';
+            //#endregion
+        }
+    }
+    class Namespace {
+    }
+    Namespace.NAME = NAME;
+    Namespace.VERSION = VERSION;
+    Namespace.DATA_KEY = DATA_KEY;
+    Namespace.DATA_API_KEY = DATA_API_KEY;
+    Namespace.Events = new Events();
+    Namespace.Css = new Css();
+    Namespace.ErrorMessages = new ErrorMessages();
+
     const DefaultOptions = {
         restrictions: {
             minDate: undefined,
@@ -413,6 +517,7 @@
                 seconds: false,
                 useTwentyfourHour: false,
             },
+            inputFormat: undefined
         },
         stepping: 1,
         useCurrent: true,
@@ -590,111 +695,10 @@
         allowInputToggle: false,
         viewDate: new DateTime(),
         allowMultidate: false,
-        multidateSeparator: ', ',
+        multidateSeparator: '; ',
         promptTimeOnDateChange: false,
         promptTimeOnDateChangeTransitionDelay: 200,
     };
-    //this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-    const NAME = 'tempus-dominus';
-    const VERSION = '6.0.0-alpha1';
-    const DATA_KEY = 'td';
-    const DATA_API_KEY = '.data-api';
-    class Events {
-        constructor() {
-            this.KEY = `.${DATA_KEY}`;
-            this.CHANGE = `change${this.KEY}`;
-            this.UPDATE = `update${this.KEY}`;
-            this.ERROR = `error${this.KEY}`;
-            this.SHOW = `show${this.KEY}`;
-            this.HIDE = `hide${this.KEY}`;
-            this.BLUR = `blur${this.KEY}`;
-            this.KEYUP = `keyup${this.KEY}`;
-            this.KEYDOWN = `keydown${this.KEY}`;
-            this.FOCUS = `focus${this.KEY}`;
-            this.CLICK_DATA_API = `click${this.KEY}${DATA_API_KEY}`;
-            this.clickAction = `click${this.KEY}.action`;
-        }
-    }
-    class Css {
-        constructor() {
-            this.widget = `${NAME}-widget`;
-            this.switch = 'picker-switch';
-            // todo the next several classes are to represent states of the picker that would
-            // make it wider then usual and it seems like this could be cleaned up.
-            this.widgetCalendarWeeks = `${this.widget}-with-calendar-weeks`;
-            this.useTwentyfour = 'useTwentyfour';
-            this.wider = 'wider';
-            this.sideBySide = 'timepicker-sbs';
-            this.previous = 'previous';
-            this.next = 'next';
-            this.disabled = 'disabled';
-            this.old = 'old';
-            this.new = 'new';
-            this.active = 'active';
-            this.separator = 'separator';
-            //#region date container
-            this.dateContainer = 'date-container';
-            this.decadesContainer = `${this.dateContainer}-decades`;
-            this.decade = 'decade';
-            this.yearsContainer = `${this.dateContainer}-years`;
-            this.year = 'year';
-            this.monthsContainer = `${this.dateContainer}-months`;
-            this.month = 'month';
-            this.daysContainer = `${this.dateContainer}-days`;
-            this.day = 'day';
-            this.calendarWeeks = 'cw';
-            this.dayOfTheWeek = 'dow';
-            this.today = 'today';
-            this.weekend = 'weekend';
-            //#endregion
-            //#region time container
-            this.timeContainer = 'time-container';
-            this.clockContainer = `${this.timeContainer}-clock`;
-            this.hourContainer = `${this.timeContainer}-hour`;
-            this.minuteContainer = `${this.timeContainer}-minute`;
-            this.secondContainer = `${this.timeContainer}-second`;
-            this.hour = 'hour';
-            this.minute = 'minute';
-            this.second = 'second';
-            //#endregion
-            //#region collapse
-            this.show = 'show';
-            this.collapsing = 'td-collapsing';
-            this.collapse = 'td-collapse';
-            //#endregion
-        }
-    }
-    class ErrorMessages {
-        constructor() {
-            this.dateString = 'TD: Using a string for date options is not recommended unless you specify an ISO string.';
-            //#endregion
-            //#region used with notify.error
-            this.failedToSetInvalidDate = 'Failed to set invalid date';
-            //#endregion
-        }
-        //#region out to console
-        unexpectedOption(optionName) {
-            return `TD: Unexpected option: ${optionName} does not match a known option.`;
-        }
-        typeMismatch(optionName, badType, expectedType) {
-            return `TD: Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
-        }
-        numbersOutOfRage(optionName, lower, upper) {
-            return `'TD: ${optionName} expected an array of number between ${lower} and ${upper}.'`;
-        }
-        failedToParseDate(optionName, date) {
-            return `TD: Could not correctly parse "${date}" to a date for option ${optionName}.`;
-        }
-    }
-    class Namespace {
-    }
-    Namespace.NAME = NAME;
-    Namespace.VERSION = VERSION;
-    Namespace.DATA_KEY = DATA_KEY;
-    Namespace.DATA_API_KEY = DATA_API_KEY;
-    Namespace.Events = new Events();
-    Namespace.Css = new Css();
-    Namespace.ErrorMessages = new ErrorMessages();
     const DatePickerModes = [
         {
             CLASS_NAME: Namespace.Css.daysContainer,
@@ -868,7 +872,7 @@
                     else {
                         this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
                     }
-                    if (!this.context.display._hasTime() && !this.context.options.keepOpen &&
+                    if (!this.context.display._hasTime && !this.context.options.keepOpen &&
                         !this.context.options.inline && !this.context.options.allowMultidate) {
                         this.context.display.hide();
                     }
@@ -877,7 +881,7 @@
                     let hour = +currentTarget.getAttribute('data-value');
                     lastPicked.hours = hour;
                     this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                    if (!this.context.options.display.components.useTwentyfourHour &&
+                    if (this.context.options.display.components.useTwentyfourHour &&
                         !this.context.options.display.components.minutes && !this.context.options.keepOpen && !this.context.options.inline) {
                         this.context.display.hide();
                     }
@@ -888,7 +892,7 @@
                 case ActionTypes.selectMinute:
                     lastPicked.minutes = +currentTarget.innerText;
                     this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                    if (!this.context.options.display.components.useTwentyfourHour &&
+                    if (this.context.options.display.components.useTwentyfourHour &&
                         !this.context.options.display.components.seconds && !this.context.options.keepOpen && !this.context.options.inline) {
                         this.context.display.hide();
                     }
@@ -899,7 +903,7 @@
                 case ActionTypes.selectSecond:
                     lastPicked.seconds = +currentTarget.innerText;
                     this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                    if (!this.context.options.display.components.useTwentyfourHour && !this.context.options.keepOpen &&
+                    if (this.context.options.display.components.useTwentyfourHour && !this.context.options.keepOpen &&
                         !this.context.options.inline) {
                         this.context.display.hide();
                     }
@@ -1332,6 +1336,16 @@
             if (this.context.validation.isValid(target)) {
                 this._dates[index] = target;
                 this.context.viewDate = target.clone;
+                if (this.context._input) {
+                    let newValue = target.format(this.context.options.display.inputFormat);
+                    if (this.context.options.allowMultidate) {
+                        newValue = this._dates
+                            .map(d => d.format(this.context.options.display.inputFormat))
+                            .join(this.context.options.multidateSeparator);
+                    }
+                    if (this.context._input.value != newValue)
+                        this.context._input.value = newValue;
+                }
                 this.context.unset = false;
                 this.context.display.update('all');
                 this.context.notifyEvent(Namespace.Events.CHANGE, {
@@ -1341,7 +1355,7 @@
                     isValid: true,
                 });
                 //todo remove this
-                console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2)); //todo remove
+                console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2));
                 return;
             }
             if (this.context.options.keepInvalid) {
@@ -1753,6 +1767,7 @@
 
     class Display {
         constructor(context) {
+            this.isVisible = false;
             this.context = context;
             this.dateDisplay = new DateDisplay(context);
             this.monthDisplay = new MonthDisplay(context);
@@ -1803,40 +1818,49 @@
                     this.decadeDisplay.update();
                     break;
                 case 'all':
-                    this.update('clock');
-                    this.update('calendar');
+                    if (this._hasTime) {
+                        this.update('clock');
+                    }
+                    if (this._hasDate) {
+                        this.update('calendar');
+                    }
             }
         }
         show() {
-            if (this.context.options.useCurrent) {
-                //todo in the td4 branch a pr changed this to allow granularity
-                this.context.dates._setValue(new DateTime());
-            }
-            this._buildWidget();
-            this._showMode();
-            document.body.appendChild(this.widget);
-            this.widget.querySelectorAll('[data-action]')
-                .forEach(element => element.addEventListener('click', (e) => {
-                this.context.action.do(e);
-            }));
-            this.popperInstance = core.createPopper(this.context.element, this.widget, {
-                modifiers: [
-                    {
-                        name: 'offset',
-                        options: {
-                            offset: [0, 8],
+            if (this.widget == undefined) {
+                if (this.context.options.useCurrent) {
+                    //todo in the td4 branch a pr changed this to allow granularity
+                    this.context.dates._setValue(new DateTime());
+                }
+                this._buildWidget();
+                if (this._hasDate) {
+                    this._showMode();
+                }
+                document.body.appendChild(this.widget);
+                if (this.context.options.display.viewMode == 'times') {
+                    this.context.action.do({ currentTarget: this.widget.querySelector(`.${Namespace.Css.timeContainer}`) }, ActionTypes.showClock);
+                }
+                this.widget.querySelectorAll('[data-action]')
+                    .forEach(element => element.addEventListener('click', (e) => {
+                    this.context.action.do(e);
+                }));
+                this.popperInstance = core.createPopper(this.context.element, this.widget, {
+                    modifiers: [
+                        {
+                            name: 'offset',
+                            options: {
+                                offset: [0, 8]
+                            },
                         },
-                    },
-                ],
-            });
-            /*window.addEventListener('resize', () => this._place());
-            this._place();*/
+                        { name: 'eventListeners', enabled: true }
+                    ],
+                    placement: 'top'
+                });
+            }
             this.widget.classList.add(Namespace.Css.show);
-            this.popperInstance.setOptions({
-                modifiers: [{ name: 'eventListeners', enabled: true }],
-            });
             this.popperInstance.update();
             this.context.notifyEvent(Namespace.Events.SHOW);
+            this.isVisible = true;
         }
         _showMode(direction) {
             if (!this.widget) {
@@ -1870,24 +1894,19 @@
         }
         hide() {
             this.widget.classList.remove(Namespace.Css.show);
-            this.popperInstance.setOptions({
-                modifiers: [{ name: 'eventListeners', enabled: false }],
-            });
-            document.getElementsByClassName(Namespace.Css.widget)[0].remove();
-            this._widget = undefined;
             this.context.notifyEvent(Namespace.Events.HIDE, {
                 date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
             });
+            this.isVisible = false;
         }
         toggle() {
-            return this.widget ? this.hide() : this.show();
+            return this.isVisible ? this.hide() : this.show();
         }
         _place() {
         }
         _buildWidget() {
             const template = document.createElement('div');
             template.classList.add(Namespace.Css.widget);
-            //template.classList.add('dropdown-menu'); //todo bootstrap
             if (this.context.options.display.calendarWeeks)
                 template.classList.add(Namespace.Css.widgetCalendarWeeks);
             const dateView = document.createElement('div');
@@ -1911,7 +1930,7 @@
             if (this.context.options.display.components.seconds && !this.context.options.display.components.useTwentyfourHour) {
                 template.classList.add(Namespace.Css.wider);
             }
-            if (this.context.options.display.sideBySide && this._hasDate() && this._hasTime()) {
+            if (this.context.options.display.sideBySide && this._hasDate && this._hasTime) {
                 template.classList.add(Namespace.Css.sideBySide);
                 if (this.context.options.display.toolbarPlacement === 'top') {
                     template.appendChild(toolbar);
@@ -1928,12 +1947,11 @@
                 this._widget = template;
                 return;
             }
-            //const content = document.createElement('div');
             if (this.context.options.display.toolbarPlacement === 'top') {
                 template.appendChild(toolbar);
             }
-            if (this._hasDate()) {
-                if (this.context.options.display.collapse && this._hasTime()) {
+            if (this._hasDate) {
+                if (this.context.options.display.collapse && this._hasTime) {
                     dateView.classList.add(Namespace.Css.collapse);
                     if (this.context.options.display.viewMode !== 'times')
                         dateView.classList.add(Namespace.Css.show);
@@ -1943,8 +1961,8 @@
             if (this.context.options.display.toolbarPlacement === 'default') {
                 template.appendChild(toolbar);
             }
-            if (this._hasTime()) {
-                if (this.context.options.display.collapse && this._hasDate()) {
+            if (this._hasTime) {
+                if (this.context.options.display.collapse && this._hasDate) {
                     timeView.classList.add(Namespace.Css.collapse);
                     if (this.context.options.display.viewMode === 'times')
                         timeView.classList.add(Namespace.Css.show);
@@ -1954,18 +1972,16 @@
             if (this.context.options.display.toolbarPlacement === 'bottom') {
                 template.appendChild(toolbar);
             }
-            //template.appendChild(template);
-            //<div class="arrow" data-popper-arrow></div>
             const arrow = document.createElement('div');
             arrow.classList.add('arrow');
             arrow.setAttribute('data-popper-arrow', '');
             template.appendChild(arrow);
             this._widget = template;
         }
-        _hasTime() {
+        get _hasTime() {
             return this.context.options.display.components.hours || this.context.options.display.components.minutes || this.context.options.display.components.seconds;
         }
-        _hasDate() {
+        get _hasDate() {
             return this.context.options.display.components.year || this.context.options.display.components.month || this.context.options.display.components.date;
         }
         get _toolbar() {
@@ -1979,7 +1995,7 @@
                 td.appendChild(div);
                 tbody.appendChild(td);
             }
-            if (!this.context.options.display.sideBySide && this.context.options.display.collapse && this._hasDate() && this._hasTime()) {
+            if (!this.context.options.display.sideBySide && this.context.options.display.collapse && this._hasDate && this._hasTime) {
                 let title, icon;
                 if (this.context.options.display.viewMode === 'times') {
                     title = this.context.options.localization.selectDate;
@@ -2140,7 +2156,8 @@
             this.dates = new Dates(this);
             this.action = new Actions(this);
             this.initializeViewMode();
-            element.addEventListener('click', () => this.display.toggle());
+            this.initializeInput();
+            this.initializeToggle();
         }
         // noinspection JSUnusedGlobalSymbols
         /**
@@ -2163,11 +2180,10 @@
                 for (let i = 0; i < value.length; i++) {
                     let d = value[i];
                     const dateTime = dateConversion(d, optionName);
-                    if (dateTime !== undefined) {
-                        value[i] = dateTime;
-                        continue;
+                    if (!dateTime) {
+                        throw Namespace.ErrorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
                     }
-                    throw Namespace.ErrorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
+                    value[i] = dateTime;
                 }
             };
             const numberArray = (optionName, value, providedType) => {
@@ -2179,20 +2195,14 @@
                 return;
             };
             const dateConversion = (d, optionName) => {
-                if (d.constructor.name === 'DateTime')
-                    return d;
-                if (d.constructor.name === 'Date') {
-                    return DateTime.convert(d);
-                }
                 if (typeof d === typeof '') {
-                    const dateTime = new DateTime(d);
-                    if (JSON.stringify(dateTime) === 'null') {
-                        throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
-                    }
                     console.warn(Namespace.ErrorMessages.dateString);
-                    return dateTime;
                 }
-                return undefined;
+                const converted = this.dateTypeCheck(d);
+                if (!converted) {
+                    throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
+                }
+                return converted;
             };
             //the spread operator caused sub keys to be missing after merging
             //this is to fix that issue by using spread on the child objects first
@@ -2278,6 +2288,18 @@
             };
             spread(config, mergeTo);
             config = Object.assign(Object.assign({}, mergeTo), config);
+            if (config.display.inputFormat === undefined) {
+                const components = config.display.components;
+                config.display.inputFormat = {
+                    year: components.year ? 'numeric' : undefined,
+                    month: components.month ? '2-digit' : undefined,
+                    day: components.date ? '2-digit' : undefined,
+                    hour: components.hours ? components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
+                    minute: components.minutes ? '2-digit' : undefined,
+                    second: components.seconds ? '2-digit' : undefined,
+                    hour12: !components.useTwentyfourHour
+                };
+            }
             return config;
         }
         initializeViewMode() {
@@ -2309,8 +2331,58 @@
             }
             const evt = new CustomEvent(event, args);
             this.element.dispatchEvent(evt);
-            //this.element.trigger(event); //todo jquery
             this._notifyChangeEventContext = void 0;
+        }
+        initializeInput() {
+            var _a;
+            if (this.element.tagName == 'INPUT') {
+                this._input = this.element;
+            }
+            else {
+                let query = this.element.dataset.targetInput;
+                if (query == undefined || query == 'nearest') {
+                    this._input = this.element.querySelector('input');
+                }
+                else {
+                    this._input = this.element.querySelector(query);
+                }
+            }
+            (_a = this._input) === null || _a === void 0 ? void 0 : _a.addEventListener('change', (ev) => {
+                let parsedDate = this.dateTypeCheck(this._input.value);
+                console.log(parsedDate);
+                if (parsedDate) {
+                    this.dates._setValue(parsedDate);
+                }
+                else {
+                    this.notifyEvent(Namespace.Events.ERROR, {
+                        reason: Namespace.ErrorMessages.failedToParseInput,
+                        date: parsedDate
+                    });
+                }
+            });
+        }
+        initializeToggle() {
+            let query = this.element.dataset.targetToggle;
+            if (query == 'nearest') {
+                query = '[data-toggle="datetimepicker"]';
+            }
+            this._toggle = query == undefined ? this.element : this.element.querySelector(query);
+            this._toggle.addEventListener('click', () => this.display.toggle());
+        }
+        dateTypeCheck(d) {
+            if (d.constructor.name === 'DateTime')
+                return d;
+            if (d.constructor.name === 'Date') {
+                return DateTime.convert(d);
+            }
+            if (typeof d === typeof '') {
+                const dateTime = new DateTime(d);
+                if (JSON.stringify(dateTime) === 'null') {
+                    return null;
+                }
+                return dateTime;
+            }
+            return null;
         }
         handlePromptTimeIfNeeded(e) {
             if (this.options.promptTimeOnDateChange) {

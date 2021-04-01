@@ -1,0 +1,108 @@
+import {DateTime} from './datetime';
+import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
+
+export default interface Options {
+    restrictions: {
+        minDate: DateTime;
+        maxDate: DateTime;
+        enabledDates: DateTime[];
+        disabledDates: DateTime[];
+        enabledHours: number[];
+        disabledHours: number[];
+        disabledTimeIntervals: DateTime[];
+        daysOfWeekDisabled: number[];
+    };
+    display: {
+        toolbarPlacement: 'top' | 'bottom' | 'default';
+        widgetPositioning: { horizontal: string; vertical: string };
+        components: {
+            date: boolean;
+            century: boolean;
+            hours: boolean;
+            seconds: boolean;
+            month: boolean;
+            year: boolean;
+            minutes: boolean;
+            decades: boolean;
+            useTwentyfourHour: boolean;
+        };
+        buttons: { today: boolean; close: boolean; clear: boolean };
+        calendarWeeks: boolean;
+        icons: {
+            date: string;
+            next: string;
+            previous: string;
+            today: string;
+            clear: string;
+            time: string;
+            up: string;
+            type: 'icons' | 'sprites';
+            down: string;
+            close: string;
+        };
+        viewMode: 'times' | 'days';
+        collapse: boolean;
+        sideBySide: boolean;
+        inputFormat: DateTimeFormatOptions;
+    };
+    stepping: number;
+    useCurrent: boolean;
+    defaultDate: boolean;
+    localization: {
+        nextMonth: string;
+        pickHour: string;
+        incrementSecond: string;
+        nextDecade: string;
+        selectDecade: string;
+        dayViewHeaderFormat: 'numeric' | '2-digit' | 'long' | 'short' | 'narrow';
+        decrementHour: string;
+        selectDate: string;
+        incrementHour: string;
+        previousCentury: string;
+        decrementSecond: string;
+        today: string;
+        previousMonth: string;
+        selectYear: string;
+        pickSecond: string;
+        nextCentury: string;
+        close: string;
+        incrementMinute: string;
+        selectTime: string;
+        clear: string;
+        togglePeriod: string;
+        selectMonth: string;
+        decrementMinute: string;
+        pickMinute: string;
+        nextYear: string;
+        previousYear: string;
+        previousDecade: string;
+    };
+    readonly: boolean;
+    ignoreReadonly: boolean;
+    keepOpen: boolean;
+    focusOnShow: boolean;
+    inline: boolean;
+    keepInvalid: boolean;
+    keyBinds: {
+        'control down': () => boolean;
+        pageDown: () => boolean;
+        'control up': () => boolean;
+        right: () => boolean;
+        pageUp: () => boolean;
+        down: () => boolean;
+        delete: () => boolean;
+        t: () => boolean;
+        left: () => boolean;
+        up: () => boolean;
+        enter: () => boolean;
+        'control space': () => boolean;
+        escape: () => boolean;
+    };
+    debug: boolean;
+    allowInputToggle: boolean;
+    viewDate: DateTime;
+    allowMultidate: boolean;
+    multidateSeparator: string;
+    promptTimeOnDateChange: boolean;
+    promptTimeOnDateChangeTransitionDelay: number;
+}
