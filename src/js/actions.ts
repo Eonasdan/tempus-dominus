@@ -1,7 +1,8 @@
-import { DatePickerModes, Namespace } from './conts.js';
+import { DatePickerModes} from './conts.js';
 import { DateTime, Unit } from './datetime';
 import { TempusDominus } from './tempus-dominus';
 import Collapse from './display/collapse';
+import Namespace from './namespace';;
 
 export default class Actions {
     private context: TempusDominus;

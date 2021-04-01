@@ -148,18 +148,6 @@
         format(template, locale = this.locale) {
             return new Intl.DateTimeFormat(locale, template).format(this);
         }
-        formatWithOptions(options) {
-            let components = options.display.components;
-            return this.format({
-                year: components.date ? 'numeric' : undefined,
-                month: components.date ? '2-digit' : undefined,
-                day: components.date ? '2-digit' : undefined,
-                hour: components.hours ? components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
-                minute: components.minutes ? '2-digit' : undefined,
-                second: components.seconds ? '2-digit' : undefined,
-                hour12: !components.useTwentyfourHour
-            });
-        }
         /**
          * Return true if {@link compare} is before this date
          * @param compare The Date/DateTime to compare
@@ -376,6 +364,110 @@
         }
     }
 
+    class ErrorMessages {
+        constructor() {
+            this.dateString = 'TD: Using a string for date options is not recommended unless you specify an ISO string.';
+            //#endregion
+            //#region used with notify.error
+            this.failedToSetInvalidDate = 'Failed to set invalid date';
+            this.failedToParseInput = 'Failed parse input field';
+            //#endregion
+        }
+        //#region out to console
+        unexpectedOption(optionName) {
+            return `TD: Unexpected option: ${optionName} does not match a known option.`;
+        }
+        typeMismatch(optionName, badType, expectedType) {
+            return `TD: Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
+        }
+        numbersOutOfRage(optionName, lower, upper) {
+            return `'TD: ${optionName} expected an array of number between ${lower} and ${upper}.'`;
+        }
+        failedToParseDate(optionName, date) {
+            return `TD: Could not correctly parse "${date}" to a date for option ${optionName}.`;
+        }
+    }
+
+    //this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
+    const NAME = 'tempus-dominus';
+    const VERSION = '6.0.0-alpha1';
+    const DATA_KEY = 'td';
+    const DATA_API_KEY = '.data-api';
+    class Events {
+        constructor() {
+            this.KEY = `.${DATA_KEY}`;
+            this.CHANGE = `change${this.KEY}`;
+            this.UPDATE = `update${this.KEY}`;
+            this.ERROR = `error${this.KEY}`;
+            this.SHOW = `show${this.KEY}`;
+            this.HIDE = `hide${this.KEY}`;
+            this.BLUR = `blur${this.KEY}`;
+            this.KEYUP = `keyup${this.KEY}`;
+            this.KEYDOWN = `keydown${this.KEY}`;
+            this.FOCUS = `focus${this.KEY}`;
+            this.CLICK_DATA_API = `click${this.KEY}${DATA_API_KEY}`;
+            this.clickAction = `click${this.KEY}.action`;
+        }
+    }
+    class Css {
+        constructor() {
+            this.widget = `${NAME}-widget`;
+            this.switch = 'picker-switch';
+            // todo the next several classes are to represent states of the picker that would
+            // make it wider then usual and it seems like this could be cleaned up.
+            this.widgetCalendarWeeks = `${this.widget}-with-calendar-weeks`;
+            this.useTwentyfour = 'useTwentyfour';
+            this.wider = 'wider';
+            this.sideBySide = 'timepicker-sbs';
+            this.previous = 'previous';
+            this.next = 'next';
+            this.disabled = 'disabled';
+            this.old = 'old';
+            this.new = 'new';
+            this.active = 'active';
+            this.separator = 'separator';
+            //#region date container
+            this.dateContainer = 'date-container';
+            this.decadesContainer = `${this.dateContainer}-decades`;
+            this.decade = 'decade';
+            this.yearsContainer = `${this.dateContainer}-years`;
+            this.year = 'year';
+            this.monthsContainer = `${this.dateContainer}-months`;
+            this.month = 'month';
+            this.daysContainer = `${this.dateContainer}-days`;
+            this.day = 'day';
+            this.calendarWeeks = 'cw';
+            this.dayOfTheWeek = 'dow';
+            this.today = 'today';
+            this.weekend = 'weekend';
+            //#endregion
+            //#region time container
+            this.timeContainer = 'time-container';
+            this.clockContainer = `${this.timeContainer}-clock`;
+            this.hourContainer = `${this.timeContainer}-hour`;
+            this.minuteContainer = `${this.timeContainer}-minute`;
+            this.secondContainer = `${this.timeContainer}-second`;
+            this.hour = 'hour';
+            this.minute = 'minute';
+            this.second = 'second';
+            //#endregion
+            //#region collapse
+            this.show = 'show';
+            this.collapsing = 'td-collapsing';
+            this.collapse = 'td-collapse';
+            //#endregion
+        }
+    }
+    class Namespace {
+    }
+    Namespace.NAME = NAME;
+    Namespace.VERSION = VERSION;
+    Namespace.DATA_KEY = DATA_KEY;
+    Namespace.DATA_API_KEY = DATA_API_KEY;
+    Namespace.Events = new Events();
+    Namespace.Css = new Css();
+    Namespace.ErrorMessages = new ErrorMessages();
+
     const DefaultOptions = {
         restrictions: {
             minDate: undefined,
@@ -425,6 +517,7 @@
                 seconds: false,
                 useTwentyfourHour: false,
             },
+            inputFormat: undefined
         },
         stepping: 1,
         useCurrent: true,
@@ -602,111 +695,10 @@
         allowInputToggle: false,
         viewDate: new DateTime(),
         allowMultidate: false,
-        multidateSeparator: ', ',
+        multidateSeparator: '; ',
         promptTimeOnDateChange: false,
         promptTimeOnDateChangeTransitionDelay: 200,
     };
-    //this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-    const NAME = 'tempus-dominus';
-    const VERSION = '6.0.0-alpha1';
-    const DATA_KEY = 'td';
-    const DATA_API_KEY = '.data-api';
-    class Events {
-        constructor() {
-            this.KEY = `.${DATA_KEY}`;
-            this.CHANGE = `change${this.KEY}`;
-            this.UPDATE = `update${this.KEY}`;
-            this.ERROR = `error${this.KEY}`;
-            this.SHOW = `show${this.KEY}`;
-            this.HIDE = `hide${this.KEY}`;
-            this.BLUR = `blur${this.KEY}`;
-            this.KEYUP = `keyup${this.KEY}`;
-            this.KEYDOWN = `keydown${this.KEY}`;
-            this.FOCUS = `focus${this.KEY}`;
-            this.CLICK_DATA_API = `click${this.KEY}${DATA_API_KEY}`;
-            this.clickAction = `click${this.KEY}.action`;
-        }
-    }
-    class Css {
-        constructor() {
-            this.widget = `${NAME}-widget`;
-            this.switch = 'picker-switch';
-            // todo the next several classes are to represent states of the picker that would
-            // make it wider then usual and it seems like this could be cleaned up.
-            this.widgetCalendarWeeks = `${this.widget}-with-calendar-weeks`;
-            this.useTwentyfour = 'useTwentyfour';
-            this.wider = 'wider';
-            this.sideBySide = 'timepicker-sbs';
-            this.previous = 'previous';
-            this.next = 'next';
-            this.disabled = 'disabled';
-            this.old = 'old';
-            this.new = 'new';
-            this.active = 'active';
-            this.separator = 'separator';
-            //#region date container
-            this.dateContainer = 'date-container';
-            this.decadesContainer = `${this.dateContainer}-decades`;
-            this.decade = 'decade';
-            this.yearsContainer = `${this.dateContainer}-years`;
-            this.year = 'year';
-            this.monthsContainer = `${this.dateContainer}-months`;
-            this.month = 'month';
-            this.daysContainer = `${this.dateContainer}-days`;
-            this.day = 'day';
-            this.calendarWeeks = 'cw';
-            this.dayOfTheWeek = 'dow';
-            this.today = 'today';
-            this.weekend = 'weekend';
-            //#endregion
-            //#region time container
-            this.timeContainer = 'time-container';
-            this.clockContainer = `${this.timeContainer}-clock`;
-            this.hourContainer = `${this.timeContainer}-hour`;
-            this.minuteContainer = `${this.timeContainer}-minute`;
-            this.secondContainer = `${this.timeContainer}-second`;
-            this.hour = 'hour';
-            this.minute = 'minute';
-            this.second = 'second';
-            //#endregion
-            //#region collapse
-            this.show = 'show';
-            this.collapsing = 'td-collapsing';
-            this.collapse = 'td-collapse';
-            //#endregion
-        }
-    }
-    class ErrorMessages {
-        constructor() {
-            this.dateString = 'TD: Using a string for date options is not recommended unless you specify an ISO string.';
-            //#endregion
-            //#region used with notify.error
-            this.failedToSetInvalidDate = 'Failed to set invalid date';
-            //#endregion
-        }
-        //#region out to console
-        unexpectedOption(optionName) {
-            return `TD: Unexpected option: ${optionName} does not match a known option.`;
-        }
-        typeMismatch(optionName, badType, expectedType) {
-            return `TD: Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
-        }
-        numbersOutOfRage(optionName, lower, upper) {
-            return `'TD: ${optionName} expected an array of number between ${lower} and ${upper}.'`;
-        }
-        failedToParseDate(optionName, date) {
-            return `TD: Could not correctly parse "${date}" to a date for option ${optionName}.`;
-        }
-    }
-    class Namespace {
-    }
-    Namespace.NAME = NAME;
-    Namespace.VERSION = VERSION;
-    Namespace.DATA_KEY = DATA_KEY;
-    Namespace.DATA_API_KEY = DATA_API_KEY;
-    Namespace.Events = new Events();
-    Namespace.Css = new Css();
-    Namespace.ErrorMessages = new ErrorMessages();
     const DatePickerModes = [
         {
             CLASS_NAME: Namespace.Css.daysContainer,
@@ -1344,9 +1336,15 @@
             if (this.context.validation.isValid(target)) {
                 this._dates[index] = target;
                 this.context.viewDate = target.clone;
-                //TODO: format to the proper string
-                if (this.context._input && this.context._input.value != target.toString()) {
-                    this.context._input.value = this.context.viewDate.formatWithOptions(this.context.options);
+                if (this.context._input) {
+                    let newValue = target.format(this.context.options.display.inputFormat);
+                    if (this.context.options.allowMultidate) {
+                        newValue = this._dates
+                            .map(d => d.format(this.context.options.display.inputFormat))
+                            .join(this.context.options.multidateSeparator);
+                    }
+                    if (this.context._input.value != newValue)
+                        this.context._input.value = newValue;
                 }
                 this.context.unset = false;
                 this.context.display.update('all');
@@ -1357,7 +1355,7 @@
                     isValid: true,
                 });
                 //todo remove this
-                console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2)); //todo remove
+                console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2));
                 return;
             }
             if (this.context.options.keepInvalid) {
@@ -2182,11 +2180,10 @@
                 for (let i = 0; i < value.length; i++) {
                     let d = value[i];
                     const dateTime = dateConversion(d, optionName);
-                    if (dateTime !== undefined) {
-                        value[i] = dateTime;
-                        continue;
+                    if (!dateTime) {
+                        throw Namespace.ErrorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
                     }
-                    throw Namespace.ErrorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
+                    value[i] = dateTime;
                 }
             };
             const numberArray = (optionName, value, providedType) => {
@@ -2198,20 +2195,14 @@
                 return;
             };
             const dateConversion = (d, optionName) => {
-                if (d.constructor.name === 'DateTime')
-                    return d;
-                if (d.constructor.name === 'Date') {
-                    return DateTime.convert(d);
-                }
                 if (typeof d === typeof '') {
-                    const dateTime = new DateTime(d);
-                    if (JSON.stringify(dateTime) === 'null') {
-                        throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
-                    }
                     console.warn(Namespace.ErrorMessages.dateString);
-                    return dateTime;
                 }
-                return undefined;
+                const converted = this.dateTypeCheck(d);
+                if (!converted) {
+                    throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
+                }
+                return converted;
             };
             //the spread operator caused sub keys to be missing after merging
             //this is to fix that issue by using spread on the child objects first
@@ -2297,6 +2288,18 @@
             };
             spread(config, mergeTo);
             config = Object.assign(Object.assign({}, mergeTo), config);
+            if (config.display.inputFormat === undefined) {
+                const components = config.display.components;
+                config.display.inputFormat = {
+                    year: components.year ? 'numeric' : undefined,
+                    month: components.month ? '2-digit' : undefined,
+                    day: components.date ? '2-digit' : undefined,
+                    hour: components.hours ? components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
+                    minute: components.minutes ? '2-digit' : undefined,
+                    second: components.seconds ? '2-digit' : undefined,
+                    hour12: !components.useTwentyfourHour
+                };
+            }
             return config;
         }
         initializeViewMode() {
@@ -2328,7 +2331,6 @@
             }
             const evt = new CustomEvent(event, args);
             this.element.dispatchEvent(evt);
-            //this.element.trigger(event); //todo jquery
             this._notifyChangeEventContext = void 0;
         }
         initializeInput() {
@@ -2346,38 +2348,17 @@
                 }
             }
             (_a = this._input) === null || _a === void 0 ? void 0 : _a.addEventListener('change', (ev) => {
-                let strValue = this._input.value;
-                //03/27/2021, 20:13:56
-                let valArray = strValue.split(/\D/).filter(x => x.length).map(x => parseInt(x));
-                let valIndex = 0;
-                let targetDate = this.viewDate.clone;
-                if (this.display._hasDate) {
-                    targetDate.month = valArray[valIndex++] - 1;
-                    targetDate.date = valArray[valIndex++];
-                    targetDate.year = valArray[valIndex++];
+                let parsedDate = this.dateTypeCheck(this._input.value);
+                console.log(parsedDate);
+                if (parsedDate) {
+                    this.dates._setValue(parsedDate);
                 }
-                if (this.options.display.components.hours) {
-                    let twentyFourModifier = 0;
-                    if (!this.options.display.components.useTwentyfourHour) {
-                        if (strValue.includes('PM')) {
-                            twentyFourModifier = 12;
-                        }
-                        else if (valArray[valIndex] == 12) {
-                            twentyFourModifier = -12;
-                        }
-                    }
-                    else if (valArray[valIndex] == 24) {
-                        twentyFourModifier = -24;
-                    }
-                    targetDate.hours = valArray[valIndex++] + twentyFourModifier;
+                else {
+                    this.notifyEvent(Namespace.Events.ERROR, {
+                        reason: Namespace.ErrorMessages.failedToParseInput,
+                        date: parsedDate
+                    });
                 }
-                if (this.options.display.components.minutes) {
-                    targetDate.minutes = valArray[valIndex++];
-                }
-                if (this.options.display.components.seconds) {
-                    targetDate.seconds = valArray[valIndex];
-                }
-                this.dates._setValue(targetDate);
             });
         }
         initializeToggle() {
@@ -2387,6 +2368,21 @@
             }
             this._toggle = query == undefined ? this.element : this.element.querySelector(query);
             this._toggle.addEventListener('click', () => this.display.toggle());
+        }
+        dateTypeCheck(d) {
+            if (d.constructor.name === 'DateTime')
+                return d;
+            if (d.constructor.name === 'Date') {
+                return DateTime.convert(d);
+            }
+            if (typeof d === typeof '') {
+                const dateTime = new DateTime(d);
+                if (JSON.stringify(dateTime) === 'null') {
+                    return null;
+                }
+                return dateTime;
+            }
+            return null;
         }
         handlePromptTimeIfNeeded(e) {
             if (this.options.promptTimeOnDateChange) {

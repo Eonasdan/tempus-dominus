@@ -1,5 +1,3 @@
-import { Options } from "./conts";
-
 export enum Unit {
     seconds = 'seconds',
     minutes = 'minutes',
@@ -148,19 +146,6 @@ export class DateTime extends Date {
      */
     format(template: DateTimeFormatOptions, locale = this.locale): string {
         return new Intl.DateTimeFormat(locale, template).format(this);
-    }
-
-    formatWithOptions(options: Options) {
-        let components = options.display.components;
-        return this.format({
-            year: components.date ? 'numeric' : undefined,
-            month: components.date ? '2-digit' : undefined,
-            day: components.date ? '2-digit' : undefined,
-            hour: components.hours ? components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
-            minute: components.minutes ? '2-digit' : undefined,
-            second: components.seconds ? '2-digit' : undefined,
-            hour12: !components.useTwentyfourHour
-        });
     }
 
     /**

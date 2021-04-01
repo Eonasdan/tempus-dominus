@@ -7,10 +7,11 @@ import HourDisplay from './time/hour-display';
 import MinuteDisplay from './time/minute-display';
 import SecondDisplay from './time/second-display';
 import { DateTime, Unit } from '../datetime';
-import { DatePickerModes, Namespace } from '../conts';
+import { DatePickerModes} from '../conts';
 import { TempusDominus } from '../tempus-dominus';
 import { ActionTypes } from '../actions';
 import { createPopper } from '@popperjs/core';
+import Namespace from '../namespace';
 
 
 export default class Display {

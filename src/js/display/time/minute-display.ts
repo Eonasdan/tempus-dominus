@@ -1,7 +1,7 @@
 import { TempusDominus } from '../../tempus-dominus';
 import { Unit } from '../../datetime';
-import { Namespace } from '../../conts';
 import { ActionTypes } from '../../actions';
+import Namespace from '../../namespace';
 
 export default class MinuteDisplay {
     private context: TempusDominus;

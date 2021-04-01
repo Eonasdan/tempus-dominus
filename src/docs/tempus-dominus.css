@@ -73,7 +73,7 @@
   transition: height 0.35s ease;
 }
 .tempus-dominus-widget.tempus-dominus-widget-with-calendar-weeks {
-  width: 16rem;
+  width: 21rem;
 }
 @media (min-width: 576px) {
   .tempus-dominus-widget.timepicker-sbs {
@@ -132,9 +132,6 @@
 .tempus-dominus-widget.float-right:after {
   left: auto;
   right: 7px;
-}
-.tempus-dominus-widget.wider {
-  width: 16rem;
 }
 .tempus-dominus-widget div[data-action]:active {
   box-shadow: none;
