@@ -6,11 +6,11 @@ import TimeDisplay from './time/time-display';
 import HourDisplay from './time/hour-display';
 import MinuteDisplay from './time/minute-display';
 import SecondDisplay from './time/second-display';
-import { DateTime, Unit } from '../datetime';
-import { DatePickerModes} from '../conts';
-import { TempusDominus } from '../tempus-dominus';
-import { ActionTypes } from '../actions';
-import { createPopper } from '@popperjs/core';
+import {DateTime, Unit} from '../datetime';
+import {DatePickerModes} from '../conts';
+import {TempusDominus} from '../tempus-dominus';
+import {ActionTypes} from '../actions';
+import {createPopper} from '@popperjs/core';
 import Namespace from '../namespace';
 
 
@@ -104,7 +104,7 @@ export default class Display {
             document.body.appendChild(this.widget);
 
             if (this.context.options.display.viewMode == 'times') {
-                this.context.action.do({ currentTarget: this.widget.querySelector(`.${Namespace.Css.timeContainer}`) }, ActionTypes.showClock);
+                this.context.action.do({currentTarget: this.widget.querySelector(`.${Namespace.Css.timeContainer}`)}, ActionTypes.showClock);
             }
 
             this.widget.querySelectorAll('[data-action]')
@@ -121,7 +121,7 @@ export default class Display {
                             offset: [0, 8]
                         },
                     },
-                    { name: 'eventListeners', enabled: true }
+                    {name: 'eventListeners', enabled: true}
                 ],
                 placement: 'top'
             });
@@ -131,6 +131,7 @@ export default class Display {
         this.popperInstance.update();
         this.context.notifyEvent(Namespace.Events.SHOW);
         this.isVisible = true;
+        document.addEventListener('click', this.documentClickEvent);
     }
 
     _showMode(direction?: number): void {
@@ -173,13 +174,12 @@ export default class Display {
             date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
         });
         this.isVisible = false;
+
+        document.removeEventListener('click', this.documentClickEvent);
     }
 
     toggle() {
         return this.isVisible ? this.hide() : this.show();
-    }
-
-    _place(): void {
     }
 
     _buildWidget(): HTMLElement {
@@ -237,6 +237,7 @@ export default class Display {
         if (this.context.options.display.toolbarPlacement === 'top') {
             template.appendChild(toolbar);
         }
+
         if (this._hasDate) {
             if (this.context.options.display.collapse && this._hasTime) {
                 dateView.classList.add(Namespace.Css.collapse);
@@ -244,9 +245,11 @@ export default class Display {
             }
             template.appendChild(dateView);
         }
+
         if (this.context.options.display.toolbarPlacement === 'default') {
             template.appendChild(toolbar);
         }
+
         if (this._hasTime) {
             if (this.context.options.display.collapse && this._hasDate) {
                 timeView.classList.add(Namespace.Css.collapse);
@@ -254,6 +257,7 @@ export default class Display {
             }
             template.appendChild(timeView);
         }
+
         if (this.context.options.display.toolbarPlacement === 'bottom') {
             template.appendChild(toolbar);
         }
@@ -267,11 +271,15 @@ export default class Display {
     }
 
     get _hasTime(): boolean {
-        return this.context.options.display.components.hours || this.context.options.display.components.minutes || this.context.options.display.components.seconds;
+        return this.context.options.display.components.hours ||
+            this.context.options.display.components.minutes ||
+            this.context.options.display.components.seconds;
     }
 
     get _hasDate(): boolean {
-        return this.context.options.display.components.year || this.context.options.display.components.month || this.context.options.display.components.date;
+        return this.context.options.display.components.year ||
+            this.context.options.display.components.month ||
+            this.context.options.display.components.date;
     }
 
     get _toolbar(): HTMLTableElement {
@@ -370,5 +378,14 @@ export default class Display {
         const icon = document.createElement('i');
         DOMTokenList.prototype.add.apply(icon.classList, i.split(' '));
         return icon;
+    }
+
+    private documentClickEvent = (e) => {
+        if (this.isVisible &&
+            !e.composedPath().includes(this.widget) && // click inside the widget
+            !e.composedPath()?.includes(this.context.element) && // click on the element
+            (!this.context.options.keepOpen || !this.context.options.debug)) {
+            this.hide();
+        }
     }
 }

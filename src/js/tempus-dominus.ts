@@ -24,6 +24,9 @@ export class TempusDominus {
     private _currentPromptTimeTimeout: any;
 
     constructor(element: HTMLElement, options: Options) {
+        if (!element) {
+            throw Namespace.ErrorMessages.mustProvideElement;
+        }
         this.options = this.initializeOptions(options, DefaultOptions);
         this.element = element;
         this.viewDate = new DateTime();
@@ -53,6 +56,48 @@ export class TempusDominus {
             this.options = this.initializeOptions(options, DefaultOptions);
         else
             this.options = this.initializeOptions(options, this.options);
+    }
+
+    notifyEvent(event: string, args?) {
+        console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
+        if (event === Namespace.Events.CHANGE) {
+            this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
+            this._notifyChangeEventContext++;
+            if (
+                (args.date && args.oldDate && args.date.isSame(args.oldDate))
+                ||
+                (!args.isClear && !args.date && !args.oldDate)
+                ||
+                (this._notifyChangeEventContext > 1)
+            ) {
+                this._notifyChangeEventContext = undefined;
+                return;
+            }
+            this.handlePromptTimeIfNeeded(args);
+        }
+
+        const evt = new CustomEvent(event, args);
+        this.element.dispatchEvent(evt);
+
+        this._notifyChangeEventContext = void 0;
+    }
+
+    /**
+     *
+     * @param {Unit} unit
+     * @private
+     */
+    viewUpdate(unit: Unit) {
+        this.notifyEvent(Namespace.Events.UPDATE, {
+            change: unit,
+            viewDate: this.viewDate.clone
+        });
+    }
+
+    dispose() {
+        //doc off
+        //event off
+        //clear data-
     }
 
     private initializeOptions(config: Options, mergeTo: Options): Options {
@@ -215,30 +260,6 @@ export class TempusDominus {
         this.currentViewMode = Math.max(this.minViewModeNumber, this.currentViewMode);
     }
 
-    notifyEvent(event: string, args?) {
-        console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
-        if (event === Namespace.Events.CHANGE) {
-            this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
-            this._notifyChangeEventContext++;
-            if (
-                (args.date && args.oldDate && args.date.isSame(args.oldDate))
-                ||
-                (!args.isClear && !args.date && !args.oldDate)
-                ||
-                (this._notifyChangeEventContext > 1)
-            ) {
-                this._notifyChangeEventContext = undefined;
-                return;
-            }
-            this.handlePromptTimeIfNeeded(args);
-        }
-
-        const evt = new CustomEvent(event, args);
-        this.element.dispatchEvent(evt);
-
-        this._notifyChangeEventContext = void 0;
-    }
-
     private initializeInput() {
         if (this.element.tagName == 'INPUT') {
             this._input = this.element as HTMLInputElement;
@@ -313,17 +334,5 @@ export class TempusDominus {
                 }
             }, this.options.promptTimeOnDateChangeTransitionDelay);
         }
-    }
-
-    /**
-     *
-     * @param {Unit} unit
-     * @private
-     */
-    viewUpdate(unit: Unit) {
-        this.notifyEvent(Namespace.Events.UPDATE, {
-            change: unit,
-            viewDate: this.viewDate.clone
-        });
     }
 }

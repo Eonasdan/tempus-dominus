@@ -366,7 +366,9 @@
 
     class ErrorMessages {
         constructor() {
-            this.dateString = 'TD: Using a string for date options is not recommended unless you specify an ISO string.';
+            this.base = 'TD:';
+            this.dateString = `${this.base} Using a string for date options is not recommended unless you specify an ISO string.`;
+            this.mustProvideElement = `${this.base} No element was provided.`;
             //#endregion
             //#region used with notify.error
             this.failedToSetInvalidDate = 'Failed to set invalid date';
@@ -375,16 +377,16 @@
         }
         //#region out to console
         unexpectedOption(optionName) {
-            return `TD: Unexpected option: ${optionName} does not match a known option.`;
+            return `${this.base} Unexpected option: ${optionName} does not match a known option.`;
         }
         typeMismatch(optionName, badType, expectedType) {
-            return `TD: Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
+            return `${this.base} Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
         }
         numbersOutOfRage(optionName, lower, upper) {
-            return `'TD: ${optionName} expected an array of number between ${lower} and ${upper}.'`;
+            return `${this.base} ${optionName} expected an array of number between ${lower} and ${upper}.`;
         }
         failedToParseDate(optionName, date) {
-            return `TD: Could not correctly parse "${date}" to a date for option ${optionName}.`;
+            return `${this.base} Could not correctly parse "${date}" to a date for option ${optionName}.`;
         }
     }
 
@@ -1768,6 +1770,15 @@
     class Display {
         constructor(context) {
             this.isVisible = false;
+            this.documentClickEvent = (e) => {
+                var _a;
+                if (this.isVisible &&
+                    !e.composedPath().includes(this.widget) && // click inside the widget
+                    !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this.context.element)) && //click on the element
+                    (!this.context.options.keepOpen || !this.context.options.debug)) {
+                    this.hide();
+                }
+            };
             this.context = context;
             this.dateDisplay = new DateDisplay(context);
             this.monthDisplay = new MonthDisplay(context);
@@ -1861,6 +1872,7 @@
             this.popperInstance.update();
             this.context.notifyEvent(Namespace.Events.SHOW);
             this.isVisible = true;
+            document.addEventListener('click', this.documentClickEvent);
         }
         _showMode(direction) {
             if (!this.widget) {
@@ -1898,11 +1910,10 @@
                 date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
             });
             this.isVisible = false;
+            document.removeEventListener('click', this.documentClickEvent);
         }
         toggle() {
             return this.isVisible ? this.hide() : this.show();
-        }
-        _place() {
         }
         _buildWidget() {
             const template = document.createElement('div');
@@ -1979,10 +1990,14 @@
             this._widget = template;
         }
         get _hasTime() {
-            return this.context.options.display.components.hours || this.context.options.display.components.minutes || this.context.options.display.components.seconds;
+            return this.context.options.display.components.hours ||
+                this.context.options.display.components.minutes ||
+                this.context.options.display.components.seconds;
         }
         get _hasDate() {
-            return this.context.options.display.components.year || this.context.options.display.components.month || this.context.options.display.components.date;
+            return this.context.options.display.components.year ||
+                this.context.options.display.components.month ||
+                this.context.options.display.components.date;
         }
         get _toolbar() {
             const tbody = document.createElement('tbody');
@@ -2145,6 +2160,9 @@
 
     class TempusDominus {
         constructor(element, options) {
+            if (!element) {
+                throw Namespace.ErrorMessages.mustProvideElement;
+            }
             this.options = this.initializeOptions(options, DefaultOptions);
             this.element = element;
             this.viewDate = new DateTime();
@@ -2171,6 +2189,41 @@
                 this.options = this.initializeOptions(options, DefaultOptions);
             else
                 this.options = this.initializeOptions(options, this.options);
+        }
+        notifyEvent(event, args) {
+            console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
+            if (event === Namespace.Events.CHANGE) {
+                this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
+                this._notifyChangeEventContext++;
+                if ((args.date && args.oldDate && args.date.isSame(args.oldDate))
+                    ||
+                        (!args.isClear && !args.date && !args.oldDate)
+                    ||
+                        (this._notifyChangeEventContext > 1)) {
+                    this._notifyChangeEventContext = undefined;
+                    return;
+                }
+                this.handlePromptTimeIfNeeded(args);
+            }
+            const evt = new CustomEvent(event, args);
+            this.element.dispatchEvent(evt);
+            this._notifyChangeEventContext = void 0;
+        }
+        /**
+         *
+         * @param {Unit} unit
+         * @private
+         */
+        viewUpdate(unit) {
+            this.notifyEvent(Namespace.Events.UPDATE, {
+                change: unit,
+                viewDate: this.viewDate.clone
+            });
+        }
+        dispose() {
+            //doc off
+            //event off
+            //clear data-
         }
         initializeOptions(config, mergeTo) {
             const dateArray = (optionName, value, providedType) => {
@@ -2314,25 +2367,6 @@
             }
             this.currentViewMode = Math.max(this.minViewModeNumber, this.currentViewMode);
         }
-        notifyEvent(event, args) {
-            console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
-            if (event === Namespace.Events.CHANGE) {
-                this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
-                this._notifyChangeEventContext++;
-                if ((args.date && args.oldDate && args.date.isSame(args.oldDate))
-                    ||
-                        (!args.isClear && !args.date && !args.oldDate)
-                    ||
-                        (this._notifyChangeEventContext > 1)) {
-                    this._notifyChangeEventContext = undefined;
-                    return;
-                }
-                this.handlePromptTimeIfNeeded(args);
-            }
-            const evt = new CustomEvent(event, args);
-            this.element.dispatchEvent(evt);
-            this._notifyChangeEventContext = void 0;
-        }
         initializeInput() {
             var _a;
             if (this.element.tagName == 'INPUT') {
@@ -2404,17 +2438,6 @@
                     }
                 }, this.options.promptTimeOnDateChangeTransitionDelay);
             }
-        }
-        /**
-         *
-         * @param {Unit} unit
-         * @private
-         */
-        viewUpdate(unit) {
-            this.notifyEvent(Namespace.Events.UPDATE, {
-                change: unit,
-                viewDate: this.viewDate.clone
-            });
         }
     }
 
