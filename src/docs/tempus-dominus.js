@@ -1774,7 +1774,7 @@
                 var _a;
                 if (this.isVisible &&
                     !e.composedPath().includes(this.widget) && // click inside the widget
-                    !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this.context.element)) && //click on the element
+                    !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this.context.element)) && // click on the element
                     (!this.context.options.keepOpen || !this.context.options.debug)) {
                     this.hide();
                 }
@@ -2193,6 +2193,25 @@
         notifyEvent(event, args) {
             console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
             if (event === Namespace.Events.CHANGE) {
+                this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
+                this._notifyChangeEventContext++;
+                if ((args.date && args.oldDate && args.date.isSame(args.oldDate))
+                    ||
+                        (!args.isClear && !args.date && !args.oldDate)
+                    ||
+                        (this._notifyChangeEventContext > 1)) {
+                    this._notifyChangeEventContext = undefined;
+                    return;
+                }
+                this.handlePromptTimeIfNeeded(args);
+            }
+            const evt = new CustomEvent(event, args);
+            this.element.dispatchEvent(evt);
+            this._notifyChangeEventContext = void 0;
+        }
+        notifyEvent2(event) {
+            console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
+            if (event instanceof ChangeEvent) {
                 this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
                 this._notifyChangeEventContext++;
                 if ((args.date && args.oldDate && args.date.isSame(args.oldDate))

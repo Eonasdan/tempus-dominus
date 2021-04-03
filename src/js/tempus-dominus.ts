@@ -6,6 +6,7 @@ import {DefaultOptions} from './conts';
 import {DateTime, Unit} from './datetime';
 import Namespace from './namespace';
 import Options from './options';
+import {BaseEvent, ChangeEvent, ViewUpdateEvent} from './event-types';
 
 export class TempusDominus {
     options: Options;
@@ -82,6 +83,30 @@ export class TempusDominus {
         this._notifyChangeEventContext = void 0;
     }
 
+    notifyEvent2(event: BaseEvent) {
+        console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
+        if (event instanceof ChangeEvent) {
+            this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
+            this._notifyChangeEventContext++;
+            if (
+                (args.date && args.oldDate && args.date.isSame(args.oldDate))
+                ||
+                (!args.isClear && !args.date && !args.oldDate)
+                ||
+                (this._notifyChangeEventContext > 1)
+            ) {
+                this._notifyChangeEventContext = undefined;
+                return;
+            }
+            this.handlePromptTimeIfNeeded(args);
+        }
+
+        const evt = new CustomEvent(event, args);
+        this.element.dispatchEvent(evt);
+
+        this._notifyChangeEventContext = void 0;
+    }
+
     /**
      *
      * @param {Unit} unit
@@ -91,7 +116,7 @@ export class TempusDominus {
         this.notifyEvent(Namespace.Events.UPDATE, {
             change: unit,
             viewDate: this.viewDate.clone
-        });
+        } as ViewUpdateEvent);
     }
 
     dispose() {
