@@ -1320,7 +1320,8 @@
                 else {
                     this._dates.splice(index, 1);
                 }
-                this.context.notifyEvent(Namespace.Events.CHANGE, {
+                this.context.notifyEvent({
+                    name: Namespace.Events.CHANGE,
                     date: undefined,
                     oldDate,
                     isClear,
@@ -1350,7 +1351,8 @@
                 }
                 this.context.unset = false;
                 this.context.display.update('all');
-                this.context.notifyEvent(Namespace.Events.CHANGE, {
+                this.context.notifyEvent({
+                    name: Namespace.Events.CHANGE,
                     date: target,
                     oldDate,
                     isClear,
@@ -1363,14 +1365,16 @@
             if (this.context.options.keepInvalid) {
                 this._dates[index] = target;
                 this.context.viewDate = target.clone;
-                this.context.notifyEvent(Namespace.Events.CHANGE, {
+                this.context.notifyEvent({
+                    name: Namespace.Events.CHANGE,
                     date: target,
                     oldDate,
                     isClear,
                     isValid: false,
                 });
             }
-            this.context.notifyEvent(Namespace.Events.ERROR, {
+            this.context.notifyEvent({
+                name: Namespace.Events.ERROR,
                 reason: Namespace.ErrorMessages.failedToSetInvalidDate,
                 date: target,
                 oldDate
@@ -1870,7 +1874,7 @@
             }
             this.widget.classList.add(Namespace.Css.show);
             this.popperInstance.update();
-            this.context.notifyEvent(Namespace.Events.SHOW);
+            this.context.notifyEvent({ name: Namespace.Events.SHOW });
             this.isVisible = true;
             document.addEventListener('click', this.documentClickEvent);
         }
@@ -1906,7 +1910,8 @@
         }
         hide() {
             this.widget.classList.remove(Namespace.Css.show);
-            this.context.notifyEvent(Namespace.Events.HIDE, {
+            this.context.notifyEvent({
+                name: Namespace.Events.HIDE,
                 date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
             });
             this.isVisible = false;
@@ -2190,41 +2195,23 @@
             else
                 this.options = this.initializeOptions(options, this.options);
         }
-        notifyEvent(event, args) {
-            console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
-            if (event === Namespace.Events.CHANGE) {
+        notifyEvent(event) {
+            console.log(`notify: ${event.name}`, JSON.stringify(event, null, 2));
+            if (event) {
+                const { date, oldDate, isClear } = event;
                 this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
                 this._notifyChangeEventContext++;
-                if ((args.date && args.oldDate && args.date.isSame(args.oldDate))
+                if ((date && oldDate && date.isSame(oldDate))
                     ||
-                        (!args.isClear && !args.date && !args.oldDate)
+                        (!isClear && !date && !oldDate)
                     ||
                         (this._notifyChangeEventContext > 1)) {
                     this._notifyChangeEventContext = undefined;
                     return;
                 }
-                this.handlePromptTimeIfNeeded(args);
+                this.handlePromptTimeIfNeeded(event);
             }
-            const evt = new CustomEvent(event, args);
-            this.element.dispatchEvent(evt);
-            this._notifyChangeEventContext = void 0;
-        }
-        notifyEvent2(event) {
-            console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
-            if (event instanceof ChangeEvent) {
-                this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
-                this._notifyChangeEventContext++;
-                if ((args.date && args.oldDate && args.date.isSame(args.oldDate))
-                    ||
-                        (!args.isClear && !args.date && !args.oldDate)
-                    ||
-                        (this._notifyChangeEventContext > 1)) {
-                    this._notifyChangeEventContext = undefined;
-                    return;
-                }
-                this.handlePromptTimeIfNeeded(args);
-            }
-            const evt = new CustomEvent(event, args);
+            const evt = new CustomEvent(event.name, event);
             this.element.dispatchEvent(evt);
             this._notifyChangeEventContext = void 0;
         }
@@ -2234,7 +2221,8 @@
          * @private
          */
         viewUpdate(unit) {
-            this.notifyEvent(Namespace.Events.UPDATE, {
+            this.notifyEvent({
+                name: Namespace.Events.UPDATE,
                 change: unit,
                 viewDate: this.viewDate.clone
             });
@@ -2400,16 +2388,17 @@
                     this._input = this.element.querySelector(query);
                 }
             }
-            (_a = this._input) === null || _a === void 0 ? void 0 : _a.addEventListener('change', (ev) => {
+            (_a = this._input) === null || _a === void 0 ? void 0 : _a.addEventListener('change', () => {
                 let parsedDate = this.dateTypeCheck(this._input.value);
                 console.log(parsedDate);
                 if (parsedDate) {
                     this.dates._setValue(parsedDate);
                 }
                 else {
-                    this.notifyEvent(Namespace.Events.ERROR, {
+                    this.notifyEvent({
+                        name: Namespace.Events.ERROR,
                         reason: Namespace.ErrorMessages.failedToParseInput,
-                        date: parsedDate
+                        date: parsedDate,
                     });
                 }
             });
@@ -2446,7 +2435,7 @@
                 }
                 else if (e.oldDate &&
                     e.date &&
-                    e.data.isSame(e.oldDate)) {
+                    e.date.isSame(e.oldDate)) {
                     // Date didn't change (time did) or date changed because time did.
                     return;
                 }

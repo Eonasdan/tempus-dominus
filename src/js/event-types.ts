@@ -1,10 +1,10 @@
 import {DateTime, Unit} from './datetime';
 
 interface BaseEvent {
-    event: string;
+    name: string;
 }
 
-interface ErrorEvent extends BaseEvent {
+interface FailEvent extends BaseEvent {
     reason: string;
     date: DateTime;
     oldDate: DateTime;
@@ -15,7 +15,7 @@ interface HideEvent extends BaseEvent  {
 }
 
 interface ChangeEvent extends BaseEvent  {
-    date: DateTime;
+    date: DateTime | undefined;
     oldDate: DateTime;
     isClear: boolean;
     isValid: boolean;
@@ -26,4 +26,4 @@ interface ViewUpdateEvent extends BaseEvent  {
     viewDate: DateTime;
 }
 
-export { BaseEvent, ErrorEvent, HideEvent, ChangeEvent, ViewUpdateEvent}
+export { BaseEvent, FailEvent, HideEvent, ChangeEvent, ViewUpdateEvent}

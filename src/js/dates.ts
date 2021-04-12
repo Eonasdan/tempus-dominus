@@ -1,6 +1,7 @@
 import { TempusDominus } from './tempus-dominus';
 import { DateTime, Unit } from './datetime';
 import Namespace from './namespace';
+import {ChangeEvent, FailEvent} from './event-types';
 
 export default class Dates {
 
@@ -81,12 +82,13 @@ export default class Dates {
             } else {
                 this._dates.splice(index, 1);
             }
-            this.context.notifyEvent(Namespace.Events.CHANGE, {
+            this.context.notifyEvent({
+                name:Namespace.Events.CHANGE,
                 date: undefined,
                 oldDate,
                 isClear,
                 isValid: true,
-            });
+            } as ChangeEvent);
 
             this.context.display.update('all');
             return;
@@ -117,12 +119,13 @@ export default class Dates {
 
             this.context.unset = false;
             this.context.display.update('all');
-            this.context.notifyEvent(Namespace.Events.CHANGE, {
+            this.context.notifyEvent( {
+                name: Namespace.Events.CHANGE,
                 date: target,
                 oldDate,
                 isClear,
                 isValid: true,
-            });
+            } as ChangeEvent);
             //todo remove this
             console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2));
             return;
@@ -131,18 +134,20 @@ export default class Dates {
         if (this.context.options.keepInvalid) {
             this._dates[index] = target;
             this.context.viewDate = target.clone;
-            this.context.notifyEvent(Namespace.Events.CHANGE,{
+            this.context.notifyEvent({
+                name:Namespace.Events.CHANGE,
                 date: target,
                 oldDate,
                 isClear,
                 isValid: false,
-            });
+            } as ChangeEvent);
         }
-        this.context.notifyEvent(Namespace.Events.ERROR, {
+        this.context.notifyEvent({
+            name:Namespace.Events.ERROR,
             reason: Namespace.ErrorMessages.failedToSetInvalidDate,
             date: target,
             oldDate
-        });
+        } as FailEvent);
     }
 
     static getFormatByUnit(unit: Unit): object {

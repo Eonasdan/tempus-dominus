@@ -6,7 +6,7 @@ import {DefaultOptions} from './conts';
 import {DateTime, Unit} from './datetime';
 import Namespace from './namespace';
 import Options from './options';
-import {BaseEvent, ChangeEvent, ViewUpdateEvent} from './event-types';
+import {BaseEvent, ChangeEvent, ViewUpdateEvent, FailEvent} from './event-types';
 
 export class TempusDominus {
     options: Options;
@@ -59,49 +59,26 @@ export class TempusDominus {
             this.options = this.initializeOptions(options, this.options);
     }
 
-    notifyEvent(event: string, args?) {
-        console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
-        if (event === Namespace.Events.CHANGE) {
+    notifyEvent(event: BaseEvent) {
+        console.log(`notify: ${event.name}`, JSON.stringify(event, null, 2));
+        if (event as ChangeEvent) {
+            const { date, oldDate, isClear} = event as ChangeEvent;
             this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
             this._notifyChangeEventContext++;
             if (
-                (args.date && args.oldDate && args.date.isSame(args.oldDate))
+                (date && oldDate && date.isSame(oldDate))
                 ||
-                (!args.isClear && !args.date && !args.oldDate)
+                (!isClear && !date && !oldDate)
                 ||
                 (this._notifyChangeEventContext > 1)
             ) {
                 this._notifyChangeEventContext = undefined;
                 return;
             }
-            this.handlePromptTimeIfNeeded(args);
+            this.handlePromptTimeIfNeeded(event as ChangeEvent);
         }
 
-        const evt = new CustomEvent(event, args);
-        this.element.dispatchEvent(evt);
-
-        this._notifyChangeEventContext = void 0;
-    }
-
-    notifyEvent2(event: BaseEvent) {
-        console.log(`notify: ${event}`, JSON.stringify(args, null, 2));
-        if (event instanceof ChangeEvent) {
-            this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
-            this._notifyChangeEventContext++;
-            if (
-                (args.date && args.oldDate && args.date.isSame(args.oldDate))
-                ||
-                (!args.isClear && !args.date && !args.oldDate)
-                ||
-                (this._notifyChangeEventContext > 1)
-            ) {
-                this._notifyChangeEventContext = undefined;
-                return;
-            }
-            this.handlePromptTimeIfNeeded(args);
-        }
-
-        const evt = new CustomEvent(event, args);
+        const evt = new CustomEvent(event.name, event as any);
         this.element.dispatchEvent(evt);
 
         this._notifyChangeEventContext = void 0;
@@ -113,7 +90,8 @@ export class TempusDominus {
      * @private
      */
     viewUpdate(unit: Unit) {
-        this.notifyEvent(Namespace.Events.UPDATE, {
+        this.notifyEvent( {
+            name:Namespace.Events.UPDATE,
             change: unit,
             viewDate: this.viewDate.clone
         } as ViewUpdateEvent);
@@ -297,7 +275,7 @@ export class TempusDominus {
             }
         }
 
-        this._input?.addEventListener('change', (ev) => {
+        this._input?.addEventListener('change', () => {
             let parsedDate = this.dateTypeCheck(this._input.value);
             console.log(parsedDate);
 
@@ -305,10 +283,11 @@ export class TempusDominus {
                 this.dates._setValue(parsedDate);
             }
             else {
-                this.notifyEvent(Namespace.Events.ERROR, {
+                this.notifyEvent( {
+                    name:Namespace.Events.ERROR,
                     reason: Namespace.ErrorMessages.failedToParseInput,
-                    date: parsedDate
-                });
+                    date: parsedDate,
+                } as FailEvent);
             }
         });
     }
@@ -337,7 +316,7 @@ export class TempusDominus {
         return null;
     }
 
-    private handlePromptTimeIfNeeded(e) {
+    private handlePromptTimeIfNeeded(e: ChangeEvent) {
         if (this.options.promptTimeOnDateChange) {
             if (!e.oldDate && this.options.useCurrent) {
                 // First time ever. If useCurrent option is set to true (default), do nothing
@@ -346,7 +325,7 @@ export class TempusDominus {
             } else if (
                 e.oldDate &&
                 e.date &&
-                e.data.isSame(e.oldDate)
+                e.date.isSame(e.oldDate)
             ) {
                 // Date didn't change (time did) or date changed because time did.
                 return;

@@ -12,6 +12,7 @@ import {TempusDominus} from '../tempus-dominus';
 import {ActionTypes} from '../actions';
 import {createPopper} from '@popperjs/core';
 import Namespace from '../namespace';
+import {HideEvent} from '../event-types';
 
 
 export default class Display {
@@ -129,7 +130,7 @@ export default class Display {
 
         this.widget.classList.add(Namespace.Css.show);
         this.popperInstance.update();
-        this.context.notifyEvent(Namespace.Events.SHOW);
+        this.context.notifyEvent({name:Namespace.Events.SHOW});
         this.isVisible = true;
         document.addEventListener('click', this.documentClickEvent);
     }
@@ -170,9 +171,10 @@ export default class Display {
     hide(): void {
         this.widget.classList.remove(Namespace.Css.show);
 
-        this.context.notifyEvent(Namespace.Events.HIDE, {
+        this.context.notifyEvent( {
+            name:Namespace.Events.HIDE,
             date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
-        });
+        } as HideEvent);
         this.isVisible = false;
 
         document.removeEventListener('click', this.documentClickEvent);
