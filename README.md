@@ -5,6 +5,7 @@
 The typescript code is not in it's final form. I have a task to go through and cleanup naming etc.
 
 ## Building
+
 run `npm i` to install needed packages.
 
 ## Running
@@ -12,6 +13,7 @@ run `npm i` to install needed packages.
 You can run `npm start` which will start a browser-sync server. Navigate to `http://localhost:3000/src/docs/min.html` for the test screen. Note that 3000 is the default port, yours might be different.
 
 ## Watchers
+
 Browser-sync will watch for html, css, and js changes. There are two other watchers:
 
 Run `npm run sass-watch` to watch changes in `/src/sass/*.scss`

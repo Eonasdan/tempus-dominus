@@ -149,7 +149,9 @@ look at how bootstrap loops through their vars to make a --root section
 .tempus-dominus-widget div[data-action]:active {
   box-shadow: none;
 }
-.tempus-dominus-widget .timepicker-hour, .tempus-dominus-widget .timepicker-minute, .tempus-dominus-widget .timepicker-second {
+.tempus-dominus-widget .timepicker-hour,
+.tempus-dominus-widget .timepicker-minute,
+.tempus-dominus-widget .timepicker-second {
   width: 54px;
   font-weight: bold;
   font-size: 1.2em;
@@ -271,18 +273,36 @@ look at how bootstrap loops through their vars to make a --root section
 .tempus-dominus-widget .time-container {
   margin-bottom: 0.5rem;
 }
-.tempus-dominus-widget.tempus-dominus-widget-readonly table td.day, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.minute, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.second,
-.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementSeconds],
-.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementSeconds],
-.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showHours], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showMinutes], .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showSeconds],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.day,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.minute,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.second,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementHours],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementMinutes],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementSeconds],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementHours],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementMinutes],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementSeconds],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showHours],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showMinutes],
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showSeconds],
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=togglePeriod] {
   pointer-events: none;
   cursor: default;
 }
-.tempus-dominus-widget.tempus-dominus-widget-readonly table td.day:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.minute:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td.second:hover,
-.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementHours]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementMinutes]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementSeconds]:hover,
-.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementHours]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementMinutes]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementSeconds]:hover,
-.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showHours]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showMinutes]:hover, .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showSeconds]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.day:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.minute:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td.second:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementHours]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementMinutes]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=incrementSeconds]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementHours]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementMinutes]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=decrementSeconds]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showHours]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showMinutes]:hover,
+.tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=showSeconds]:hover,
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=togglePeriod]:hover {
   background: none;
 }

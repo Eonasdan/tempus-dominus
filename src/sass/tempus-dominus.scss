@@ -1,7 +1,7 @@
 $bs-datetimepicker-timepicker-font-size: 1.2em !default;
 $bs-datetimepicker-active-bg: #0d6efd !default;
 $bs-datetimepicker-active-color: #fff !default;
-$bs-datetimepicker-border-radius: .25rem !default;
+$bs-datetimepicker-border-radius: 0.25rem !default;
 $bs-datetimepicker-btn-hover-bg: #e9ecef !default;
 $bs-datetimepicker-disabled-color: #6c757d !default;
 $bs-datetimepicker-alternate-color: #6c757d !default;
@@ -42,11 +42,11 @@ look at how bootstrap loops through their vars to make a --root section
   }
 
   .arrow::before {
-      visibility: visible;
-      content: '';
-      transform: rotate(45deg);
-      border-style: solid;
-      border-width: 1px;
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+    border-style: solid;
+    border-width: 1px;
   }
 }
 
@@ -86,7 +86,7 @@ look at how bootstrap loops through their vars to make a --root section
   width: 19rem;
   border-radius: 4px;
   display: none;
-  background-color:white;
+  background-color: white;
   border: 1px solid black;
 
   [data-action]::after {
@@ -128,7 +128,8 @@ look at how bootstrap loops through their vars to make a --root section
     }
   }
 
-  &:before, &:after {
+  &:before,
+  &:after {
     content: '';
     display: inline-block;
     position: absolute;
@@ -188,7 +189,9 @@ look at how bootstrap loops through their vars to make a --root section
     box-shadow: none;
   }
 
-  .timepicker-hour, .timepicker-minute, .timepicker-second {
+  .timepicker-hour,
+  .timepicker-minute,
+  .timepicker-second {
     width: 54px;
     font-weight: bold;
     font-size: $bs-datetimepicker-timepicker-font-size;
@@ -199,7 +202,7 @@ look at how bootstrap loops through their vars to make a --root section
     padding: 6px;
   }
 
-  .btn[data-action="togglePeriod"] {
+  .btn[data-action='togglePeriod'] {
     text-align: center;
     width: 38px;
     height: 38px;
@@ -268,7 +271,7 @@ look at how bootstrap loops through their vars to make a --root section
         text-align: center;
         outline: none;
         cursor: pointer;
-        padding: .3rem;
+        padding: 0.3rem;
 
         div {
           width: 20px;
@@ -305,7 +308,7 @@ look at how bootstrap loops through their vars to make a --root section
           }
 
           &.cw {
-            font-size: .8em;
+            font-size: 0.8em;
             height: 20px;
             line-height: 20px;
             color: $bs-datetimepicker-alternate-color;
@@ -342,16 +345,25 @@ look at how bootstrap loops through their vars to make a --root section
     }
   }
 
-  .time-container{
+  .time-container {
     margin-bottom: 0.5rem;
   }
 
   &.tempus-dominus-widget-readonly {
-    table td.day, table td.hour, table td.minute, table td.second,
-    table td [data-action="incrementHours"], table td [data-action="incrementMinutes"], table td [data-action="incrementSeconds"],
-    table td [data-action="decrementHours"], table td [data-action="decrementMinutes"], table td [data-action="decrementSeconds"],
-    table td [data-action="showHours"], table td [data-action="showMinutes"], table td [data-action="showSeconds"],
-    table td [data-action="togglePeriod"] {
+    table td.day,
+    table td.hour,
+    table td.minute,
+    table td.second,
+    table td [data-action='incrementHours'],
+    table td [data-action='incrementMinutes'],
+    table td [data-action='incrementSeconds'],
+    table td [data-action='decrementHours'],
+    table td [data-action='decrementMinutes'],
+    table td [data-action='decrementSeconds'],
+    table td [data-action='showHours'],
+    table td [data-action='showMinutes'],
+    table td [data-action='showSeconds'],
+    table td [data-action='togglePeriod'] {
       pointer-events: none;
       cursor: default;
 
