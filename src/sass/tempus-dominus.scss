@@ -184,10 +184,6 @@ look at how bootstrap loops through their vars to make a --root section
     }
   }
 
-  /*div[data-action] {
-    padding: 6px 0;
-  }*/
-
   div[data-action]:active {
     box-shadow: none;
   }
@@ -266,9 +262,6 @@ look at how bootstrap loops through their vars to make a --root section
       }
 
       & td {
-        //height: 20px;
-        //line-height: 20px;
-        //width: 20px;
         position: relative;
         height: 0;
         line-height: 0;

@@ -82,7 +82,7 @@ export default class Dates {
             } else {
                 this._dates.splice(index, 1);
             }
-            this.context.notifyEvent({
+            this.context._notifyEvent({
                 name:Namespace.Events.CHANGE,
                 date: undefined,
                 oldDate,
@@ -106,20 +106,20 @@ export default class Dates {
             this._dates[index] = target;
             this.context.viewDate = target.clone;
 
-            if (this.context._input) {
+            if (this.context.input) {
                 let newValue = target.format(this.context.options.display.inputFormat);
                 if (this.context.options.allowMultidate) {
                     newValue = this._dates
                         .map(d => d.format(this.context.options.display.inputFormat))
                         .join(this.context.options.multidateSeparator);
                 }
-                if (this.context._input.value != newValue)
-                    this.context._input.value = newValue;
+                if (this.context.input.value != newValue)
+                    this.context.input.value = newValue;
             }
 
             this.context.unset = false;
             this.context.display.update('all');
-            this.context.notifyEvent( {
+            this.context._notifyEvent( {
                 name: Namespace.Events.CHANGE,
                 date: target,
                 oldDate,
@@ -134,7 +134,7 @@ export default class Dates {
         if (this.context.options.keepInvalid) {
             this._dates[index] = target;
             this.context.viewDate = target.clone;
-            this.context.notifyEvent({
+            this.context._notifyEvent({
                 name:Namespace.Events.CHANGE,
                 date: target,
                 oldDate,
@@ -142,7 +142,7 @@ export default class Dates {
                 isValid: false,
             } as ChangeEvent);
         }
-        this.context.notifyEvent({
+        this.context._notifyEvent({
             name:Namespace.Events.ERROR,
             reason: Namespace.ErrorMessages.failedToSetInvalidDate,
             date: target,

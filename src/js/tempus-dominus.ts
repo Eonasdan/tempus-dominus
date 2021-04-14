@@ -10,10 +10,9 @@ import {BaseEvent, ChangeEvent, ViewUpdateEvent, FailEvent} from './event-types'
 
 export class TempusDominus {
     options: Options;
-    element: any;
+    element: HTMLElement;
     viewDate: DateTime;
-    _input: HTMLInputElement;
-    _toggle: HTMLElement;
+    input: HTMLInputElement;
     currentViewMode: number;
     unset: boolean;
     minViewModeNumber: number;
@@ -21,14 +20,16 @@ export class TempusDominus {
     validation: Validation;
     dates: Dates;
     action: Actions;
-    _notifyChangeEventContext: number;
+
+    private _notifyChangeEventContext: number;
+    private _toggle: HTMLElement;
     private _currentPromptTimeTimeout: any;
 
     constructor(element: HTMLElement, options: Options) {
         if (!element) {
             throw Namespace.ErrorMessages.mustProvideElement;
         }
-        this.options = this.initializeOptions(options, DefaultOptions);
+        this.options = this._initializeOptions(options, DefaultOptions);
         this.element = element;
         this.viewDate = new DateTime();
         this.currentViewMode = null;
@@ -40,9 +41,9 @@ export class TempusDominus {
         this.dates = new Dates(this);
         this.action = new Actions(this);
 
-        this.initializeViewMode();
-        this.initializeInput();
-        this.initializeToggle();
+        this._initializeViewMode();
+        this._initializeInput();
+        this._initializeToggle();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -54,12 +55,12 @@ export class TempusDominus {
      */
     updateOptions(options, reset = false): void {
         if (reset)
-            this.options = this.initializeOptions(options, DefaultOptions);
+            this.options = this._initializeOptions(options, DefaultOptions);
         else
-            this.options = this.initializeOptions(options, this.options);
+            this.options = this._initializeOptions(options, this.options);
     }
 
-    notifyEvent(event: BaseEvent) {
+    _notifyEvent(event: BaseEvent) {
         console.log(`notify: ${event.name}`, JSON.stringify(event, null, 2));
         if (event as ChangeEvent) {
             const { date, oldDate, isClear} = event as ChangeEvent;
@@ -75,7 +76,7 @@ export class TempusDominus {
                 this._notifyChangeEventContext = undefined;
                 return;
             }
-            this.handlePromptTimeIfNeeded(event as ChangeEvent);
+            this._handlePromptTimeIfNeeded(event as ChangeEvent);
         }
 
         const evt = new CustomEvent(event.name, event as any);
@@ -89,8 +90,8 @@ export class TempusDominus {
      * @param {Unit} unit
      * @private
      */
-    viewUpdate(unit: Unit) {
-        this.notifyEvent( {
+    _viewUpdate(unit: Unit) {
+        this._notifyEvent( {
             name:Namespace.Events.UPDATE,
             change: unit,
             viewDate: this.viewDate.clone
@@ -103,7 +104,7 @@ export class TempusDominus {
         //clear data-
     }
 
-    private initializeOptions(config: Options, mergeTo: Options): Options {
+    private _initializeOptions(config: Options, mergeTo: Options): Options {
         const dateArray = (optionName: string, value, providedType: string) => {
             if (!Array.isArray(value)) {
                 throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
@@ -129,7 +130,7 @@ export class TempusDominus {
                 console.warn(Namespace.ErrorMessages.dateString);
             }
 
-            const converted = this.dateTypeCheck(d);
+            const converted = TempusDominus._dateTypeCheck(d);
 
             if (!converted) {
                 throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
@@ -249,7 +250,7 @@ export class TempusDominus {
         return config
     }
 
-    private initializeViewMode() {
+    private _initializeViewMode() {
         if (this.options.display.components.year) {
             this.minViewModeNumber = 2;
         }
@@ -263,27 +264,27 @@ export class TempusDominus {
         this.currentViewMode = Math.max(this.minViewModeNumber, this.currentViewMode);
     }
 
-    private initializeInput() {
+    private _initializeInput() {
         if (this.element.tagName == 'INPUT') {
-            this._input = this.element as HTMLInputElement;
+            this.input = this.element as HTMLInputElement;
         } else {
             let query = this.element.dataset.targetInput;
             if (query == undefined || query == 'nearest') {
-                this._input = this.element.querySelector('input');
+                this.input = this.element.querySelector('input');
             } else {
-                this._input = this.element.querySelector(query);
+                this.input = this.element.querySelector(query);
             }
         }
 
-        this._input?.addEventListener('change', () => {
-            let parsedDate = this.dateTypeCheck(this._input.value);
+        this.input?.addEventListener('change', () => {
+            let parsedDate = TempusDominus._dateTypeCheck(this.input.value);
             console.log(parsedDate);
 
             if (parsedDate) {
                 this.dates._setValue(parsedDate);
             }
             else {
-                this.notifyEvent( {
+                this._notifyEvent( {
                     name:Namespace.Events.ERROR,
                     reason: Namespace.ErrorMessages.failedToParseInput,
                     date: parsedDate,
@@ -292,7 +293,7 @@ export class TempusDominus {
         });
     }
 
-    private initializeToggle() {
+    private _initializeToggle() {
         let query = this.element.dataset.targetToggle;
         if (query == 'nearest') {
             query = '[data-toggle="datetimepicker"]';
@@ -301,7 +302,7 @@ export class TempusDominus {
         this._toggle.addEventListener('click', () => this.display.toggle());
     }
 
-    private dateTypeCheck(d: any): DateTime | null {
+    private static _dateTypeCheck(d: any): DateTime | null {
         if (d.constructor.name === 'DateTime') return d;
         if (d.constructor.name === 'Date') {
             return DateTime.convert(d);
@@ -316,7 +317,7 @@ export class TempusDominus {
         return null;
     }
 
-    private handlePromptTimeIfNeeded(e: ChangeEvent) {
+    private _handlePromptTimeIfNeeded(e: ChangeEvent) {
         if (this.options.promptTimeOnDateChange) {
             if (!e.oldDate && this.options.useCurrent) {
                 // First time ever. If useCurrent option is set to true (default), do nothing

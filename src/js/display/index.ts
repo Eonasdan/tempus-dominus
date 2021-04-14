@@ -130,7 +130,7 @@ export default class Display {
 
         this.widget.classList.add(Namespace.Css.show);
         this.popperInstance.update();
-        this.context.notifyEvent({name:Namespace.Events.SHOW});
+        this.context._notifyEvent({name:Namespace.Events.SHOW});
         this.isVisible = true;
         document.addEventListener('click', this.documentClickEvent);
     }
@@ -171,7 +171,7 @@ export default class Display {
     hide(): void {
         this.widget.classList.remove(Namespace.Css.show);
 
-        this.context.notifyEvent( {
+        this.context._notifyEvent( {
             name:Namespace.Events.HIDE,
             date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
         } as HideEvent);

@@ -39,7 +39,7 @@ export default class Actions {
                 else
                     this.context.viewDate.manipulate(NAV_STEP * -1, NAV_FUNCTION);
                 this.context.display.update('calendar');
-                this.context.viewUpdate(NAV_FUNCTION);
+                this.context._viewUpdate(NAV_FUNCTION);
                 break;
             case ActionTypes.pickerSwitch:
                 this.context.display._showMode(1);
@@ -51,15 +51,15 @@ export default class Actions {
                 switch (action) {
                     case ActionTypes.selectMonth:
                         this.context.viewDate.month = value;
-                        this.context.viewUpdate(Unit.month);
+                        this.context._viewUpdate(Unit.month);
                         break;
                     case ActionTypes.selectYear:
                         this.context.viewDate.year = value;
-                        this.context.viewUpdate(Unit.year);
+                        this.context._viewUpdate(Unit.year);
                         break;
                     case ActionTypes.selectDecade:
                         this.context.viewDate.year = value;
-                        this.context.viewUpdate(Unit.year);
+                        this.context._viewUpdate(Unit.year);
                         break;
                 }
 

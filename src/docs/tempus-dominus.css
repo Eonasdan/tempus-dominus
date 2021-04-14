@@ -70,9 +70,6 @@ look at how bootstrap loops through their vars to make a --root section
   display: none;
   background-color: white;
   border: 1px solid black;
-  /*div[data-action] {
-    padding: 6px 0;
-  }*/
 }
 .tempus-dominus-widget [data-action]::after {
   content: attr(title);

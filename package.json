@@ -9,7 +9,8 @@
     "sass-watch": "sass ./src/sass/tempus-dominus.scss ./src/docs/tempus-dominus.css --watch",
     "rollup": "rollup -c ./build/rollup.config.js",
     "rollup-watch": "rollup -c ./build/rollup.config.js -w",
-    "build:declarations": "npx typescript ./src/js/**/*.ts --declaration --emitDeclarationOnly --outDir types"
+    "build:declarations": "npx typescript ./src/js/**/*.ts --declaration --emitDeclarationOnly --outDir types",
+    "prettier": "prettier --write ."
   },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
@@ -24,6 +25,7 @@
     "@rollup/plugin-typescript": "^8.1.0",
     "@types/node": "^14.14.22",
     "browser-sync": "^2.26.14",
+    "prettier": "^2.2.1",
     "rollup": "^2.38.0",
     "sass": "^1.32.7",
     "snowpack": "^3.0.13",

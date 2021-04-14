@@ -819,7 +819,7 @@
                     else
                         this.context.viewDate.manipulate(NAV_STEP * -1, NAV_FUNCTION);
                     this.context.display.update('calendar');
-                    this.context.viewUpdate(NAV_FUNCTION);
+                    this.context._viewUpdate(NAV_FUNCTION);
                     break;
                 case ActionTypes.pickerSwitch:
                     this.context.display._showMode(1);
@@ -831,15 +831,15 @@
                     switch (action) {
                         case ActionTypes.selectMonth:
                             this.context.viewDate.month = value;
-                            this.context.viewUpdate(Unit.month);
+                            this.context._viewUpdate(Unit.month);
                             break;
                         case ActionTypes.selectYear:
                             this.context.viewDate.year = value;
-                            this.context.viewUpdate(Unit.year);
+                            this.context._viewUpdate(Unit.year);
                             break;
                         case ActionTypes.selectDecade:
                             this.context.viewDate.year = value;
-                            this.context.viewUpdate(Unit.year);
+                            this.context._viewUpdate(Unit.year);
                             break;
                     }
                     if (this.context.currentViewMode === this.context.minViewModeNumber) {
@@ -1320,7 +1320,7 @@
                 else {
                     this._dates.splice(index, 1);
                 }
-                this.context.notifyEvent({
+                this.context._notifyEvent({
                     name: Namespace.Events.CHANGE,
                     date: undefined,
                     oldDate,
@@ -1339,19 +1339,19 @@
             if (this.context.validation.isValid(target)) {
                 this._dates[index] = target;
                 this.context.viewDate = target.clone;
-                if (this.context._input) {
+                if (this.context.input) {
                     let newValue = target.format(this.context.options.display.inputFormat);
                     if (this.context.options.allowMultidate) {
                         newValue = this._dates
                             .map(d => d.format(this.context.options.display.inputFormat))
                             .join(this.context.options.multidateSeparator);
                     }
-                    if (this.context._input.value != newValue)
-                        this.context._input.value = newValue;
+                    if (this.context.input.value != newValue)
+                        this.context.input.value = newValue;
                 }
                 this.context.unset = false;
                 this.context.display.update('all');
-                this.context.notifyEvent({
+                this.context._notifyEvent({
                     name: Namespace.Events.CHANGE,
                     date: target,
                     oldDate,
@@ -1365,7 +1365,7 @@
             if (this.context.options.keepInvalid) {
                 this._dates[index] = target;
                 this.context.viewDate = target.clone;
-                this.context.notifyEvent({
+                this.context._notifyEvent({
                     name: Namespace.Events.CHANGE,
                     date: target,
                     oldDate,
@@ -1373,7 +1373,7 @@
                     isValid: false,
                 });
             }
-            this.context.notifyEvent({
+            this.context._notifyEvent({
                 name: Namespace.Events.ERROR,
                 reason: Namespace.ErrorMessages.failedToSetInvalidDate,
                 date: target,
@@ -1874,7 +1874,7 @@
             }
             this.widget.classList.add(Namespace.Css.show);
             this.popperInstance.update();
-            this.context.notifyEvent({ name: Namespace.Events.SHOW });
+            this.context._notifyEvent({ name: Namespace.Events.SHOW });
             this.isVisible = true;
             document.addEventListener('click', this.documentClickEvent);
         }
@@ -1910,7 +1910,7 @@
         }
         hide() {
             this.widget.classList.remove(Namespace.Css.show);
-            this.context.notifyEvent({
+            this.context._notifyEvent({
                 name: Namespace.Events.HIDE,
                 date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
             });
@@ -2095,41 +2095,42 @@
 
     class Validation {
         constructor(context) {
-            this.context = context;
+            this._context = context;
         }
         /**
-         *
+         * Checks to see if the target date is valid based on the rules provided in the options.
+         * Granularity can be provide to chek portions of the date instead of the whole.
          * @param targetDate
          * @param granularity
          */
         isValid(targetDate, granularity) {
             if (granularity === Unit.date) {
-                if (this.context.options.restrictions.disabledDates && this._isInDisabledDates(targetDate)) {
+                if (this._context.options.restrictions.disabledDates && this._isInDisabledDates(targetDate)) {
                     return false;
                 }
-                if (this.context.options.restrictions.enabledDates && !this._isInEnabledDates(targetDate)) {
+                if (this._context.options.restrictions.enabledDates && !this._isInEnabledDates(targetDate)) {
                     return false;
                 }
-                if (this.context.options.restrictions.daysOfWeekDisabled && this.context.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
+                if (this._context.options.restrictions.daysOfWeekDisabled && this._context.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
                     return false;
                 }
             }
-            if (this.context.options.restrictions.minDate && targetDate.isBefore(this.context.options.restrictions.minDate, granularity)) {
+            if (this._context.options.restrictions.minDate && targetDate.isBefore(this._context.options.restrictions.minDate, granularity)) {
                 return false;
             }
-            if (this.context.options.restrictions.maxDate && targetDate.isAfter(this.context.options.restrictions.maxDate, granularity)) {
+            if (this._context.options.restrictions.maxDate && targetDate.isAfter(this._context.options.restrictions.maxDate, granularity)) {
                 return false;
             }
             if (granularity === Unit.hours || granularity === Unit.minutes || granularity === Unit.seconds) {
-                if (this.context.options.restrictions.disabledHours && this._isInDisabledHours(targetDate)) {
+                if (this._context.options.restrictions.disabledHours && this._isInDisabledHours(targetDate)) {
                     return false;
                 }
-                if (this.context.options.restrictions.enabledHours && !this._isInEnabledHours(targetDate)) {
+                if (this._context.options.restrictions.enabledHours && !this._isInEnabledHours(targetDate)) {
                     return false;
                 }
-                if (this.context.options.restrictions.disabledTimeIntervals) {
-                    for (let i = 0; i < this.context.options.restrictions.disabledTimeIntervals.length; i++) {
-                        if (targetDate.isBetween(this.context.options.restrictions.disabledTimeIntervals[i], this.context.options.restrictions.disabledTimeIntervals[i + 1]))
+                if (this._context.options.restrictions.disabledTimeIntervals) {
+                    for (let i = 0; i < this._context.options.restrictions.disabledTimeIntervals.length; i++) {
+                        if (targetDate.isBetween(this._context.options.restrictions.disabledTimeIntervals[i], this._context.options.restrictions.disabledTimeIntervals[i + 1]))
                             return false;
                         i++;
                     }
@@ -2138,28 +2139,28 @@
             return true;
         }
         _isInDisabledDates(testDate) {
-            if (!this.context.options.restrictions.disabledDates || this.context.options.restrictions.disabledDates.length === 0)
+            if (!this._context.options.restrictions.disabledDates || this._context.options.restrictions.disabledDates.length === 0)
                 return false;
             const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-            return this.context.options.restrictions.disabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
+            return this._context.options.restrictions.disabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
         }
         _isInEnabledDates(testDate) {
-            if (!this.context.options.restrictions.enabledDates || this.context.options.restrictions.enabledDates.length === 0)
+            if (!this._context.options.restrictions.enabledDates || this._context.options.restrictions.enabledDates.length === 0)
                 return true;
             const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-            return this.context.options.restrictions.enabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
+            return this._context.options.restrictions.enabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
         }
         _isInDisabledHours(testDate) {
-            if (!this.context.options.restrictions.disabledHours || this.context.options.restrictions.disabledHours.length === 0)
+            if (!this._context.options.restrictions.disabledHours || this._context.options.restrictions.disabledHours.length === 0)
                 return false;
             const formattedDate = testDate.hours;
-            return this.context.options.restrictions.disabledHours.find(x => x === formattedDate);
+            return this._context.options.restrictions.disabledHours.find(x => x === formattedDate);
         }
         _isInEnabledHours(testDate) {
-            if (!this.context.options.restrictions.enabledHours || this.context.options.restrictions.enabledHours.length === 0)
+            if (!this._context.options.restrictions.enabledHours || this._context.options.restrictions.enabledHours.length === 0)
                 return true;
             const formattedDate = testDate.hours;
-            return this.context.options.restrictions.enabledHours.find(x => x === formattedDate);
+            return this._context.options.restrictions.enabledHours.find(x => x === formattedDate);
         }
     }
 
@@ -2168,7 +2169,7 @@
             if (!element) {
                 throw Namespace.ErrorMessages.mustProvideElement;
             }
-            this.options = this.initializeOptions(options, DefaultOptions);
+            this.options = this._initializeOptions(options, DefaultOptions);
             this.element = element;
             this.viewDate = new DateTime();
             this.currentViewMode = null;
@@ -2178,9 +2179,9 @@
             this.validation = new Validation(this);
             this.dates = new Dates(this);
             this.action = new Actions(this);
-            this.initializeViewMode();
-            this.initializeInput();
-            this.initializeToggle();
+            this._initializeViewMode();
+            this._initializeInput();
+            this._initializeToggle();
         }
         // noinspection JSUnusedGlobalSymbols
         /**
@@ -2191,11 +2192,11 @@
          */
         updateOptions(options, reset = false) {
             if (reset)
-                this.options = this.initializeOptions(options, DefaultOptions);
+                this.options = this._initializeOptions(options, DefaultOptions);
             else
-                this.options = this.initializeOptions(options, this.options);
+                this.options = this._initializeOptions(options, this.options);
         }
-        notifyEvent(event) {
+        _notifyEvent(event) {
             console.log(`notify: ${event.name}`, JSON.stringify(event, null, 2));
             if (event) {
                 const { date, oldDate, isClear } = event;
@@ -2209,7 +2210,7 @@
                     this._notifyChangeEventContext = undefined;
                     return;
                 }
-                this.handlePromptTimeIfNeeded(event);
+                this._handlePromptTimeIfNeeded(event);
             }
             const evt = new CustomEvent(event.name, event);
             this.element.dispatchEvent(evt);
@@ -2220,8 +2221,8 @@
          * @param {Unit} unit
          * @private
          */
-        viewUpdate(unit) {
-            this.notifyEvent({
+        _viewUpdate(unit) {
+            this._notifyEvent({
                 name: Namespace.Events.UPDATE,
                 change: unit,
                 viewDate: this.viewDate.clone
@@ -2232,7 +2233,7 @@
             //event off
             //clear data-
         }
-        initializeOptions(config, mergeTo) {
+        _initializeOptions(config, mergeTo) {
             const dateArray = (optionName, value, providedType) => {
                 if (!Array.isArray(value)) {
                     throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
@@ -2258,7 +2259,7 @@
                 if (typeof d === typeof '') {
                     console.warn(Namespace.ErrorMessages.dateString);
                 }
-                const converted = this.dateTypeCheck(d);
+                const converted = TempusDominus._dateTypeCheck(d);
                 if (!converted) {
                     throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
                 }
@@ -2362,7 +2363,7 @@
             }
             return config;
         }
-        initializeViewMode() {
+        _initializeViewMode() {
             if (this.options.display.components.year) {
                 this.minViewModeNumber = 2;
             }
@@ -2374,28 +2375,28 @@
             }
             this.currentViewMode = Math.max(this.minViewModeNumber, this.currentViewMode);
         }
-        initializeInput() {
+        _initializeInput() {
             var _a;
             if (this.element.tagName == 'INPUT') {
-                this._input = this.element;
+                this.input = this.element;
             }
             else {
                 let query = this.element.dataset.targetInput;
                 if (query == undefined || query == 'nearest') {
-                    this._input = this.element.querySelector('input');
+                    this.input = this.element.querySelector('input');
                 }
                 else {
-                    this._input = this.element.querySelector(query);
+                    this.input = this.element.querySelector(query);
                 }
             }
-            (_a = this._input) === null || _a === void 0 ? void 0 : _a.addEventListener('change', () => {
-                let parsedDate = this.dateTypeCheck(this._input.value);
+            (_a = this.input) === null || _a === void 0 ? void 0 : _a.addEventListener('change', () => {
+                let parsedDate = TempusDominus._dateTypeCheck(this.input.value);
                 console.log(parsedDate);
                 if (parsedDate) {
                     this.dates._setValue(parsedDate);
                 }
                 else {
-                    this.notifyEvent({
+                    this._notifyEvent({
                         name: Namespace.Events.ERROR,
                         reason: Namespace.ErrorMessages.failedToParseInput,
                         date: parsedDate,
@@ -2403,7 +2404,7 @@
                 }
             });
         }
-        initializeToggle() {
+        _initializeToggle() {
             let query = this.element.dataset.targetToggle;
             if (query == 'nearest') {
                 query = '[data-toggle="datetimepicker"]';
@@ -2411,7 +2412,7 @@
             this._toggle = query == undefined ? this.element : this.element.querySelector(query);
             this._toggle.addEventListener('click', () => this.display.toggle());
         }
-        dateTypeCheck(d) {
+        static _dateTypeCheck(d) {
             if (d.constructor.name === 'DateTime')
                 return d;
             if (d.constructor.name === 'Date') {
@@ -2426,7 +2427,7 @@
             }
             return null;
         }
-        handlePromptTimeIfNeeded(e) {
+        _handlePromptTimeIfNeeded(e) {
             if (this.options.promptTimeOnDateChange) {
                 if (!e.oldDate && this.options.useCurrent) {
                     // First time ever. If useCurrent option is set to true (default), do nothing
