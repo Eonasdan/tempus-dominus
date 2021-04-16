@@ -83,12 +83,11 @@ export default class Validation {
         ) {
           if (
             targetDate.isBetween(
-              this._context.options.restrictions.disabledTimeIntervals[i],
-              this._context.options.restrictions.disabledTimeIntervals[i + 1]
+              this._context.options.restrictions.disabledTimeIntervals[i].from,
+              this._context.options.restrictions.disabledTimeIntervals[i].to
             )
           )
             return false;
-          i++;
         }
       }
     }
@@ -96,6 +95,12 @@ export default class Validation {
     return true;
   }
 
+  /**
+   * Checks to see if the disabledDates option is in use and returns true (meaning invalid)
+   * if the @{link testDate} is with in the array. Granularity is by date.
+   * @param testDate
+   * @private
+   */
   private _isInDisabledDates(testDate: DateTime) {
     if (
       !this._context.options.restrictions.disabledDates ||
@@ -108,6 +113,12 @@ export default class Validation {
       .find((x) => x === formattedDate);
   }
 
+  /**
+   * Checks to see if the enabledDates option is in use and returns true (meaning valid)
+   * if the @{link testDate} is with in the array. Granularity is by date.
+   * @param testDate
+   * @private
+   */
   private _isInEnabledDates(testDate: DateTime) {
     if (
       !this._context.options.restrictions.enabledDates ||
@@ -120,6 +131,12 @@ export default class Validation {
       .find((x) => x === formattedDate);
   }
 
+  /**
+   * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
+   * if the @{link testDate} is with in the array. Granularity is by hours.
+   * @param testDate
+   * @private
+   */
   private _isInDisabledHours(testDate: DateTime) {
     if (
       !this._context.options.restrictions.disabledHours ||
@@ -132,6 +149,12 @@ export default class Validation {
     );
   }
 
+  /**
+   * Checks to see if the enabledHours option is in use and returns true (meaning valid)
+   * if the @{link testDate} is with in the array. Granularity is by hours.
+   * @param testDate
+   * @private
+   */
   private _isInEnabledHours(testDate: DateTime) {
     if (
       !this._context.options.restrictions.enabledHours ||

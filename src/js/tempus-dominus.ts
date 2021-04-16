@@ -53,7 +53,7 @@ export class TempusDominus {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   *
+   * Update the picker options. If @{link reset} is provide @{link options} will be merged with DefaultOptions instead.
    * @param options
    * @param reset
    * @public
@@ -234,11 +234,29 @@ export class TempusDominus {
             dateArray('restrictions.disabledDates', value, providedType);
             break;
           case 'disabledTimeIntervals':
-            dateArray(
-              'restrictions.disabledTimeIntervals',
-              value,
-              providedType
-            );
+            if (!Array.isArray(value)) {
+              throw Namespace.ErrorMessages.typeMismatch(
+                key,
+                providedType,
+                'array of { from: DateTime|Date, to: DateTime|Date }'
+              );
+            }
+            const valueObject = value as { from: any; to: any }[];
+            for (let i = 0; i < valueObject.length; i++) {
+              Object.keys(valueObject[i]).forEach((vk) => {
+                const subOptionName = `${key}[${i}].${vk}`;
+                let d = valueObject[i][vk];
+                const dateTime = dateConversion(d, subOptionName);
+                if (!dateTime) {
+                  throw Namespace.ErrorMessages.typeMismatch(
+                    subOptionName,
+                    typeof d,
+                    'DateTime or Date'
+                  );
+                }
+                valueObject[i][vk] = dateTime;
+              });
+            }
             break;
           default:
             if (providedType !== defaultType) {

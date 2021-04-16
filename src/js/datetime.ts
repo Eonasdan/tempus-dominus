@@ -221,7 +221,7 @@ export class DateTime extends Date {
     unit?: Unit,
     inclusivity: '()' | '[]' | '(]' | '[)' = '()'
   ): boolean {
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (unit && this[unit] === undefined) throw `Unit '${unit}' is not valid`;
     const leftInclusivity = inclusivity[0] === '(';
     const rightInclusivity = inclusivity[1] === ')';
 

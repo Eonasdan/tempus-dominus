@@ -86,7 +86,7 @@
             <button id="clearLog" type="button" class="btn btn-primary m-3">
               Clear Log
             </button>
-            <div id="log" style="max-height: 90vh; overflow-y: scroll"></div>
+            <div id="log"></div>
           </div>
         </div>
       </div>
@@ -95,9 +95,16 @@
       label {
         color: white;
       }
+      #log {
+        max-height: 90vh;
+        overflow-y: scroll;
+      }
     </style>
     <script src="tempus-dominus.js"></script>
     <script>
+      const now = new Date();
+      const twoHours = new Date();
+      twoHours.setHours(now.getHours() + 2);
       let options = {
         display: {
           //viewMode: 'times',
@@ -121,71 +128,79 @@
         allowMultidate: true,
       };
 
-      var dt = new tempusdominus.TempusDominus(
-        document.getElementById('popcorn'),
-        {
-          restrictions: {
-            //minDate: 'cheese',
-            //maxDate: '11/22/2013 00:53',
-            //maxDate: new Date(2021, 2 - 1, 10),
-            disabledDates: [
-              //moment("12/25/2013").toDate(),
-              new Date(2021, 2 - 1, 10),
-              //'11/22/2013 00:53',
-              //'cheese'
-            ],
-            enabledDates: null,
-          },
-          allowMultidate: true,
-        }
-      );
+      try {
+        var dt = new tempusdominus.TempusDominus(
+          document.getElementById('popcorn'),
+          {
+            restrictions: {
+              //minDate: 'cheese',
+              //maxDate: '11/22/2013 00:53',
+              //maxDate: new Date(2021, 2 - 1, 10),
+              disabledDates: [
+                //moment("12/25/2013").toDate(),
+                new Date(2021, 2 - 1, 10),
+                //'11/22/2013 00:53',
+                //'cheese'
+              ],
+              enabledDates: null,
+              disabledTimeIntervals: [{ from: now, to: twoHours }],
+            },
+            allowMultidate: false,
+          }
+        );
 
-      var dt2 = new tempusdominus.TempusDominus(
-        document.getElementById('datetimepicker1'),
-        options
-      );
+        var dt2 = new tempusdominus.TempusDominus(
+          document.getElementById('datetimepicker1'),
+          options
+        );
 
-      /*dt.updateOptions({
-        restrictions : {
-            maxDate: '11/22/2013 00:53',
-        }
-    });*/
-
-      const log = document.getElementById('log');
+        /*dt.updateOptions({
+    restrictions : {
+        maxDate: '11/22/2013 00:53',
+    }
+});*/
+      } catch (e) {
+        logger('error', e);
+        console.log(e);
+      }
 
       document.getElementById('clearLog').addEventListener('click', () => {
-        log.innerHTML = '';
+        document.getElementById('log').innerHTML = '';
       });
 
+      function logger(verb, ...arguments) {
+        const msg = document.createElement('div');
+        msg.classList.add('alert');
+        switch (verb) {
+          case 'log':
+            msg.classList.add('alert-light');
+            break;
+          case 'debug':
+            msg.classList.add('alert-secondary');
+            break;
+          case 'info':
+            msg.classList.add('alert-info');
+            break;
+          case 'warn':
+            msg.classList.add('alert-warning');
+            break;
+          case 'error':
+            msg.classList.add('alert-danger');
+            break;
+        }
+        const pre = document.createElement('pre');
+        pre.innerHTML = arguments.join(' ');
+        msg.appendChild(pre);
+        document.getElementById('log').appendChild(msg);
+      }
+
       ['log', 'debug', 'info', 'warn', 'error'].forEach(function (verb) {
-        console[verb] = (function (method, verb, log) {
+        console[verb] = (function (method, verb) {
           return function () {
             method.apply(console, arguments);
-            const msg = document.createElement('div');
-            msg.classList.add('alert');
-            switch (verb) {
-              case 'log':
-                msg.classList.add('alert-light');
-                break;
-              case 'debug':
-                msg.classList.add('alert-secondary');
-                break;
-              case 'info':
-                msg.classList.add('alert-info');
-                break;
-              case 'warn':
-                msg.classList.add('alert-warning');
-                break;
-              case 'error':
-                msg.classList.add('alert-error');
-                break;
-            }
-            const pre = document.createElement('pre');
-            pre.innerHTML = Array.prototype.slice.call(arguments).join(' ');
-            msg.appendChild(pre);
-            log.appendChild(msg);
+            logger(verb, Array.prototype.slice.call(arguments));
           };
-        })(console[verb], verb, log);
+        })(console[verb], verb);
       });
 
       [

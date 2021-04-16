@@ -9,7 +9,7 @@ export default interface Options {
     disabledDates: DateTime[];
     enabledHours: number[];
     disabledHours: number[];
-    disabledTimeIntervals: DateTime[];
+    disabledTimeIntervals: { from: DateTime; to: DateTime }[];
     daysOfWeekDisabled: number[];
   };
   display: {

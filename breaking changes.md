@@ -18,6 +18,7 @@
 - removed `useStrict`
 - removed `timeZone`
 - removed `format`
+  - added `display.inputFormat` that takes `DateTimeFormatOptions`;
 - removed `extraFormats`
 - removed `widgetParent`
 
@@ -34,6 +35,7 @@
   - disabledTimeIntervals
 
 - moved the following to `display`
+
   - sideBySide
   - calendarWeeks
   - viewMode
@@ -42,6 +44,8 @@
   - widgetPositioning
   - icons
   - collapse
+
+- `disabledTimeIntervals` is now an array of `{ from: DateTime, to: DateTime } `
 
 ## Styles
 

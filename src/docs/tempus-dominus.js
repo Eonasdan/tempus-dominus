@@ -159,7 +159,7 @@
                 return this < compare;
             if (this[unit] === undefined)
                 throw `Unit '${unit}' is not valid`;
-            return this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf();
+            return (this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf());
         }
         /**
          * Return true if {@link compare} is after this date
@@ -172,7 +172,7 @@
                 return this > compare;
             if (this[unit] === undefined)
                 throw `Unit '${unit}' is not valid`;
-            return this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf();
+            return (this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf());
         }
         /**
          * Return true if {@link compare} is same this date
@@ -197,14 +197,22 @@
          * If the inclusivity parameter is used, both indicators must be passed.
          */
         isBetween(left, right, unit, inclusivity = '()') {
-            if (this[unit] === undefined)
+            if (unit && this[unit] === undefined)
                 throw `Unit '${unit}' is not valid`;
             const leftInclusivity = inclusivity[0] === '(';
             const rightInclusivity = inclusivity[1] === ')';
-            return (((leftInclusivity ? this.isAfter(left, unit) : !this.isBefore(left, unit)) &&
-                (rightInclusivity ? this.isBefore(right, unit) : !this.isAfter(right, unit))) ||
-                ((leftInclusivity ? this.isBefore(left, unit) : !this.isAfter(left, unit)) &&
-                    (rightInclusivity ? this.isAfter(right, unit) : !this.isBefore(right, unit))));
+            return (((leftInclusivity
+                ? this.isAfter(left, unit)
+                : !this.isBefore(left, unit)) &&
+                (rightInclusivity
+                    ? this.isBefore(right, unit)
+                    : !this.isAfter(right, unit))) ||
+                ((leftInclusivity
+                    ? this.isBefore(left, unit)
+                    : !this.isAfter(left, unit)) &&
+                    (rightInclusivity
+                        ? this.isAfter(right, unit)
+                        : !this.isBefore(right, unit))));
         }
         /**
          * Returns flattened object of the date. Does not include literals
@@ -213,7 +221,10 @@
          */
         parts(locale = this.locale, template = { dateStyle: 'full', timeStyle: 'long' }) {
             const parts = {};
-            new Intl.DateTimeFormat(locale, template).formatToParts(this).filter(x => x.type !== 'literal').forEach(x => parts[x.type] = x.value);
+            new Intl.DateTimeFormat(locale, template)
+                .formatToParts(this)
+                .filter((x) => x.type !== 'literal')
+                .forEach((x) => (parts[x.type] = x.value));
             return parts;
         }
         /**
@@ -232,7 +243,7 @@
          * Returns two digit hours
          */
         get secondsFormatted() {
-            return this.seconds < 10 ? (`0${this.seconds}`) : `${this.seconds}`;
+            return this.seconds < 10 ? `0${this.seconds}` : `${this.seconds}`;
         }
         /**
          * Shortcut to Date.getMinutes()
@@ -250,7 +261,7 @@
          * Returns two digit hours
          */
         get minutesFormatted() {
-            return this.minutes < 10 ? (`0${this.minutes}`) : `${this.minutes}`;
+            return this.minutes < 10 ? `0${this.minutes}` : `${this.minutes}`;
         }
         /**
          * Shortcut to Date.getHours()
@@ -268,7 +279,7 @@
          * Returns two digit hours
          */
         get hoursFormatted() {
-            return this.hours < 10 ? (`0${this.hours}`) : `${this.hours}`;
+            return this.hours < 10 ? `0${this.hours}` : `${this.hours}`;
         }
         /**
          * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
@@ -279,7 +290,7 @@
                 hour = hour - 12;
             if (hour === 0)
                 hour = 12;
-            return hour < 10 ? (`0${hour}`) : `${hour}`;
+            return hour < 10 ? `0${hour}` : `${hour}`;
         }
         /**
          * Get the meridiem of the date. E.g. AM or PM.
@@ -291,10 +302,10 @@
             var _a;
             const dayPeriod = (_a = new Intl.DateTimeFormat(locale, {
                 hour: 'numeric',
-                dayPeriod: 'narrow'
+                dayPeriod: 'narrow',
             })
                 .formatToParts(this)
-                .find(p => p.type === 'dayPeriod')) === null || _a === void 0 ? void 0 : _a.value;
+                .find((p) => p.type === 'dayPeriod')) === null || _a === void 0 ? void 0 : _a.value;
             return dayPeriod ? dayPeriod : this.getHours() <= 12 ? 'AM' : 'PM';
         }
         /**
@@ -313,7 +324,7 @@
          * Return two digit date
          */
         get dateFormatted() {
-            return this.date < 10 ? (`0${this.date}`) : `${this.date}`;
+            return this.date < 10 ? `0${this.date}` : `${this.date}`;
         }
         // https://github.com/you-dont-need/You-Dont-Need-Momentjs#week-of-year
         /**
@@ -324,7 +335,7 @@
             const firstDayOfWeek = 1; // monday as the first day (0 = sunday)
             const startOfYear = new Date(this.year, 0, 1);
             startOfYear.setDate(startOfYear.getDate() + (firstDayOfWeek - (startOfYear.getDay() % 7)));
-            return Math.round((this.valueOf() - startOfYear.valueOf()) / MILLISECONDS_IN_WEEK) + 1;
+            return (Math.round((this.valueOf() - startOfYear.valueOf()) / MILLISECONDS_IN_WEEK) + 1);
         }
         /**
          * Shortcut to Date.getDay()
@@ -348,7 +359,7 @@
          * Return two digit, human expected month. E.g. January = 1, December = 12
          */
         get monthFormatted() {
-            return this.month + 1 < 10 ? (`0${this.month}`) : `${this.month}`;
+            return this.month + 1 < 10 ? `0${this.month}` : `${this.month}`;
         }
         /**
          * Shortcut to Date.getFullYear()
@@ -519,7 +530,7 @@
                 seconds: false,
                 useTwentyfourHour: false,
             },
-            inputFormat: undefined
+            inputFormat: undefined,
         },
         stepping: 1,
         useCurrent: true,
@@ -726,7 +737,7 @@
 
     class Collapse {
         constructor() {
-            this.getTransitionDurationFromElement = element => {
+            this.getTransitionDurationFromElement = (element) => {
                 if (!element) {
                     return 0;
                 }
@@ -780,7 +791,7 @@
                 this.timeOut = null;
             };
             target.style.height = `${target.getBoundingClientRect()['height']}px`;
-            const reflow = element => element.offsetHeight;
+            const reflow = (element) => element.offsetHeight;
             reflow(target);
             target.classList.remove(Namespace.Css.collapse, Namespace.Css.show);
             target.classList.add(Namespace.Css.collapsing);
@@ -799,14 +810,15 @@
             if (currentTarget.classList.contains(Namespace.Css.disabled))
                 return false;
             action = action || currentTarget.dataset.action;
-            const lastPicked = (this.context.dates.lastPicked || this.context.viewDate).clone;
+            const lastPicked = (this.context.dates.lastPicked || this.context.viewDate)
+                .clone;
             console.log('action', action);
             const modifyTime = (unit, value = 1) => {
                 const newDate = lastPicked.manipulate(value, unit);
                 if (this.context.validation.isValid(newDate, unit)) {
                     /*if (this.context.dates.lastPickedIndex < 0) {
-                        this.date(newDate);
-                    }*/
+                                this.date(newDate);
+                            }*/
                     this.context.dates._setValue(newDate, this.context.dates.lastPickedIndex);
                 }
             };
@@ -874,8 +886,10 @@
                     else {
                         this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
                     }
-                    if (!this.context.display._hasTime && !this.context.options.keepOpen &&
-                        !this.context.options.inline && !this.context.options.allowMultidate) {
+                    if (!this.context.display._hasTime &&
+                        !this.context.options.keepOpen &&
+                        !this.context.options.inline &&
+                        !this.context.options.allowMultidate) {
                         this.context.display.hide();
                     }
                     break;
@@ -884,7 +898,9 @@
                     lastPicked.hours = hour;
                     this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
                     if (this.context.options.display.components.useTwentyfourHour &&
-                        !this.context.options.display.components.minutes && !this.context.options.keepOpen && !this.context.options.inline) {
+                        !this.context.options.display.components.minutes &&
+                        !this.context.options.keepOpen &&
+                        !this.context.options.inline) {
                         this.context.display.hide();
                     }
                     else {
@@ -895,7 +911,9 @@
                     lastPicked.minutes = +currentTarget.innerText;
                     this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
                     if (this.context.options.display.components.useTwentyfourHour &&
-                        !this.context.options.display.components.seconds && !this.context.options.keepOpen && !this.context.options.inline) {
+                        !this.context.options.display.components.seconds &&
+                        !this.context.options.keepOpen &&
+                        !this.context.options.inline) {
                         this.context.display.hide();
                     }
                     else {
@@ -905,7 +923,8 @@
                 case ActionTypes.selectSecond:
                     lastPicked.seconds = +currentTarget.innerText;
                     this.context.dates._setValue(lastPicked, this.context.dates.lastPickedIndex);
-                    if (this.context.options.display.components.useTwentyfourHour && !this.context.options.keepOpen &&
+                    if (this.context.options.display.components.useTwentyfourHour &&
+                        !this.context.options.keepOpen &&
                         !this.context.options.inline) {
                         this.context.display.hide();
                     }
@@ -938,7 +957,8 @@
                     this.context.display.widget
                         .querySelectorAll(`.${Namespace.Css.dateContainer}, .${Namespace.Css.timeContainer}`)
                         .forEach((e) => this.collapse.toggle(e));
-                    if (currentTarget.getAttribute('title') === this.context.options.localization.selectDate) {
+                    if (currentTarget.getAttribute('title') ===
+                        this.context.options.localization.selectDate) {
                         currentTarget.setAttribute('title', this.context.options.localization.selectTime);
                         currentTarget.innerHTML = this.context.display.iconTag(this.context.options.display.icons.time).outerHTML;
                         this.context.display.update('calendar');
@@ -954,8 +974,9 @@
                 case ActionTypes.showHours:
                 case ActionTypes.showMinutes:
                 case ActionTypes.showSeconds:
-                    this.context.display.widget.querySelectorAll(`.${Namespace.Css.timeContainer} > div`)
-                        .forEach((e) => e.style.display = 'none');
+                    this.context.display.widget
+                        .querySelectorAll(`.${Namespace.Css.timeContainer} > div`)
+                        .forEach((e) => (e.style.display = 'none'));
                     let classToUse = '';
                     switch (action) {
                         case ActionTypes.showClock:
@@ -975,7 +996,7 @@
                             this.context.display.update(Unit.seconds);
                             break;
                     }
-                    this.context.display.widget.getElementsByClassName(classToUse)[0].style.display = 'block';
+                    (this.context.display.widget.getElementsByClassName(classToUse)[0]).style.display = 'block';
                     break;
                 case ActionTypes.clear:
                     this.context.dates._setValue(null);
@@ -1032,9 +1053,13 @@
             table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-            previous.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.previousMonth);
+            previous
+                .getElementsByTagName('div')[0]
+                .setAttribute('title', this.context.options.localization.previousMonth);
             switcher.setAttribute('title', this.context.options.localization.selectMonth);
-            next.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.nextMonth);
+            next
+                .getElementsByTagName('div')[0]
+                .setAttribute('title', this.context.options.localization.nextMonth);
             table.appendChild(headTemplate);
             const tableBody = document.createElement('tbody');
             tableBody.appendChild(this._daysOfTheWeek());
@@ -1071,18 +1096,28 @@
         }
         update() {
             const container = this.context.display.widget.getElementsByClassName(Namespace.Css.daysContainer)[0];
-            const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
-            switcher.innerText = this.context.viewDate.format({ month: this.context.options.localization.dayViewHeaderFormat });
-            this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.month), Unit.month) ?
-                previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
-            this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.month), Unit.month) ?
-                next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+            const [previous, switcher, next] = container
+                .getElementsByTagName('thead')[0]
+                .getElementsByTagName('th');
+            switcher.innerText = this.context.viewDate.format({
+                month: this.context.options.localization.dayViewHeaderFormat,
+            });
+            this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.month), Unit.month)
+                ? previous.classList.remove(Namespace.Css.disabled)
+                : previous.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.month), Unit.month)
+                ? next.classList.remove(Namespace.Css.disabled)
+                : next.classList.add(Namespace.Css.disabled);
             this.grid(container.querySelectorAll('tbody td div'));
         }
         grid(nodeList) {
-            let innerDate = this.context.viewDate.clone.startOf(Unit.month).startOf('weekDay').manipulate(12, Unit.hours);
+            let innerDate = this.context.viewDate.clone
+                .startOf(Unit.month)
+                .startOf('weekDay')
+                .manipulate(12, Unit.hours);
             nodeList.forEach((containerClone, index) => {
-                if (this.context.options.display.calendarWeeks && containerClone.classList.contains(Namespace.Css.calendarWeeks)) {
+                if (this.context.options.display.calendarWeeks &&
+                    containerClone.classList.contains(Namespace.Css.calendarWeeks)) {
                     containerClone.innerText = `${innerDate.week}`;
                     return;
                 }
@@ -1094,7 +1129,8 @@
                 if (innerDate.isAfter(this.context.viewDate, Unit.month)) {
                     classes.push(Namespace.Css.new);
                 }
-                if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.date)) {
+                if (!this.context.unset &&
+                    this.context.dates.isPicked(innerDate, Unit.date)) {
                     classes.push(Namespace.Css.active);
                 }
                 if (!this.context.validation.isValid(innerDate, Unit.date)) {
@@ -1117,7 +1153,9 @@
          * Generates an html row that contains the days of the week.
          */
         _daysOfTheWeek() {
-            let innerDate = this.context.viewDate.clone.startOf('weekDay').startOf(Unit.date);
+            let innerDate = this.context.viewDate.clone
+                .startOf('weekDay')
+                .startOf(Unit.date);
             const row = document.createElement('tr');
             if (this.context.options.display.calendarWeeks) {
                 const th = document.createElement('th');
@@ -1149,10 +1187,14 @@
             table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-            previous.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.previousYear);
+            previous
+                .getElementsByTagName('div')[0]
+                .setAttribute('title', this.context.options.localization.previousYear);
             switcher.setAttribute('title', this.context.options.localization.selectYear);
             switcher.setAttribute('colspan', '1');
-            next.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.nextYear);
+            next
+                .getElementsByTagName('div')[0]
+                .setAttribute('title', this.context.options.localization.nextYear);
             table.appendChild(headTemplate);
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
@@ -1173,12 +1215,16 @@
         }
         update() {
             const container = this.context.display.widget.getElementsByClassName(Namespace.Css.monthsContainer)[0];
-            const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
+            const [previous, switcher, next] = container
+                .getElementsByTagName('thead')[0]
+                .getElementsByTagName('th');
             switcher.innerText = this.context.viewDate.format({ year: 'numeric' });
-            this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.year), Unit.year) ?
-                previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
-            this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.year), Unit.year) ?
-                next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.year), Unit.year)
+                ? previous.classList.remove(Namespace.Css.disabled)
+                : previous.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.year), Unit.year)
+                ? next.classList.remove(Namespace.Css.disabled)
+                : next.classList.add(Namespace.Css.disabled);
             this.grid(container.querySelectorAll('tbody td div'));
         }
         grid(nodeList) {
@@ -1186,7 +1232,8 @@
             nodeList.forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.Css.month);
-                if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.month)) {
+                if (!this.context.unset &&
+                    this.context.dates.isPicked(innerDate, Unit.month)) {
                     classes.push(Namespace.Css.active);
                 }
                 if (!this.context.validation.isValid(innerDate, Unit.month)) {
@@ -1214,10 +1261,14 @@
             table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-            previous.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.previousDecade);
+            previous
+                .getElementsByTagName('div')[0]
+                .setAttribute('title', this.context.options.localization.previousDecade);
             switcher.setAttribute('title', this.context.options.localization.selectDecade);
             switcher.setAttribute('colspan', '1');
-            next.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.nextDecade);
+            next
+                .getElementsByTagName('div')[0]
+                .setAttribute('title', this.context.options.localization.nextDecade);
             table.appendChild(headTemplate);
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
@@ -1238,18 +1289,27 @@
         }
         update() {
             const container = this.context.display.widget.getElementsByClassName(Namespace.Css.yearsContainer)[0];
-            const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
+            const [previous, switcher, next] = container
+                .getElementsByTagName('thead')[0]
+                .getElementsByTagName('th');
             switcher.innerText = `${this._startYear.year}-${this._endYear.year}`;
-            this.context.validation.isValid(this._startYear, Unit.year) ? previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
-            this.context.validation.isValid(this._endYear, Unit.year) ? next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this._startYear, Unit.year)
+                ? previous.classList.remove(Namespace.Css.disabled)
+                : previous.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this._endYear, Unit.year)
+                ? next.classList.remove(Namespace.Css.disabled)
+                : next.classList.add(Namespace.Css.disabled);
             this.grid(container.querySelectorAll('tbody td div'));
         }
         grid(nodeList) {
-            let innerDate = this.context.viewDate.clone.startOf(Unit.year).manipulate(-1, Unit.year);
+            let innerDate = this.context.viewDate.clone
+                .startOf(Unit.year)
+                .manipulate(-1, Unit.year);
             nodeList.forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.Css.year);
-                if (!this.context.unset && this.context.dates.isPicked(innerDate, Unit.year)) {
+                if (!this.context.unset &&
+                    this.context.dates.isPicked(innerDate, Unit.year)) {
                     classes.push(Namespace.Css.active);
                 }
                 if (!this.context.validation.isValid(innerDate, Unit.year)) {
@@ -1289,31 +1349,35 @@
          */
         isPicked(innerDate, unit) {
             if (!unit)
-                return this._dates.find(x => x === innerDate) !== undefined;
+                return this._dates.find((x) => x === innerDate) !== undefined;
             const format = Dates.getFormatByUnit(unit);
             let innerDateFormatted = innerDate.format(format);
-            return this._dates.map(x => x.format(format)).find(x => x === innerDateFormatted) !== undefined;
+            return (this._dates
+                .map((x) => x.format(format))
+                .find((x) => x === innerDateFormatted) !== undefined);
         }
         pickedIndex(innerDate, unit) {
             if (!unit)
                 return this._dates.indexOf(innerDate);
             const format = Dates.getFormatByUnit(unit);
             let innerDateFormatted = innerDate.format(format);
-            return this._dates.map(x => x.format(format)).indexOf(innerDateFormatted);
+            return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
         }
         static getStartEndYear(factor, year) {
             const step = factor / 10, startYear = Math.floor(year / factor) * factor, endYear = startYear + step * 9, focusValue = Math.floor(year / step) * step;
             return [startYear, endYear, focusValue];
         }
         _setValue(target, index) {
-            const noIndex = (typeof index === 'undefined'), isClear = !target && noIndex;
+            const noIndex = typeof index === 'undefined', isClear = !target && noIndex;
             let oldDate = this.context.unset ? null : this._dates[index];
             if (!oldDate && !this.context.unset && noIndex && isClear) {
                 oldDate = this.lastPicked;
             }
             // case of calling setValue(null or false)
             if (!target) {
-                if (!this.context.options.allowMultidate || this._dates.length === 1 || isClear) {
+                if (!this.context.options.allowMultidate ||
+                    this._dates.length === 1 ||
+                    isClear) {
                     this.context.unset = true;
                     this._dates = [];
                 }
@@ -1333,7 +1397,9 @@
             index = 0;
             target = target.clone;
             if (this.context.options.stepping !== 1) {
-                target.minutes = Math.round(target.minutes / this.context.options.stepping) * this.context.options.stepping;
+                target.minutes =
+                    Math.round(target.minutes / this.context.options.stepping) *
+                        this.context.options.stepping;
                 target.seconds = 0;
             }
             if (this.context.validation.isValid(target)) {
@@ -1343,7 +1409,7 @@
                     let newValue = target.format(this.context.options.display.inputFormat);
                     if (this.context.options.allowMultidate) {
                         newValue = this._dates
-                            .map(d => d.format(this.context.options.display.inputFormat))
+                            .map((d) => d.format(this.context.options.display.inputFormat))
                             .join(this.context.options.multidateSeparator);
                     }
                     if (this.context.input.value != newValue)
@@ -1359,7 +1425,7 @@
                     isValid: true,
                 });
                 //todo remove this
-                console.log(JSON.stringify(this._dates.map(d => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2));
+                console.log(JSON.stringify(this._dates.map((d) => d.format({ dateStyle: 'full', timeStyle: 'long' })), null, 2));
                 return;
             }
             if (this.context.options.keepInvalid) {
@@ -1377,7 +1443,7 @@
                 name: Namespace.Events.ERROR,
                 reason: Namespace.ErrorMessages.failedToSetInvalidDate,
                 date: target,
-                oldDate
+                oldDate,
             });
         }
         static getFormatByUnit(unit) {
@@ -1387,7 +1453,7 @@
                 case 'month':
                     return {
                         month: 'numeric',
-                        year: 'numeric'
+                        year: 'numeric',
                     };
                 case 'year':
                     return { year: 'numeric' };
@@ -1406,11 +1472,15 @@
             table.classList.add('table', 'table-sm'); //todo bootstrap
             const headTemplate = this.context.display.headTemplate;
             const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-            previous.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.previousCentury);
+            previous
+                .getElementsByTagName('div')[0]
+                .setAttribute('title', this.context.options.localization.previousCentury);
             switcher.setAttribute('title', '');
             switcher.removeAttribute('data-action');
             switcher.setAttribute('colspan', '1');
-            next.getElementsByTagName('div')[0].setAttribute('title', this.context.options.localization.nextCentury);
+            next
+                .getElementsByTagName('div')[0]
+                .setAttribute('title', this.context.options.localization.nextCentury);
             table.appendChild(headTemplate);
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
@@ -1436,14 +1506,20 @@
             this._endDecade = this.context.viewDate.clone.startOf(Unit.year);
             this._endDecade.year = end;
             const container = this.context.display.widget.getElementsByClassName(Namespace.Css.decadesContainer)[0];
-            const [previous, switcher, next] = container.getElementsByTagName('thead')[0].getElementsByTagName('th');
+            const [previous, switcher, next] = container
+                .getElementsByTagName('thead')[0]
+                .getElementsByTagName('th');
             switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
-            this.context.validation.isValid(this._startDecade, Unit.year) ? previous.classList.remove(Namespace.Css.disabled) : previous.classList.add(Namespace.Css.disabled);
-            this.context.validation.isValid(this._endDecade, Unit.year) ? next.classList.remove(Namespace.Css.disabled) : next.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this._startDecade, Unit.year)
+                ? previous.classList.remove(Namespace.Css.disabled)
+                : previous.classList.add(Namespace.Css.disabled);
+            this.context.validation.isValid(this._endDecade, Unit.year)
+                ? next.classList.remove(Namespace.Css.disabled)
+                : next.classList.add(Namespace.Css.disabled);
             this.grid(container.querySelectorAll('tbody td div'));
         }
         grid(nodeList) {
-            const pickedYears = this.context.dates.picked.map(x => x.year);
+            const pickedYears = this.context.dates.picked.map((x) => x.year);
             nodeList.forEach((containerClone, index) => {
                 if (index === 0) {
                     containerClone.classList.add(Namespace.Css.old);
@@ -1461,12 +1537,14 @@
                 classes.push(Namespace.Css.decade);
                 const startDecadeYear = this._startDecade.year;
                 const endDecadeYear = this._startDecade.year + 9;
-                if (!this.context.unset && pickedYears.filter(x => x >= startDecadeYear && x <= endDecadeYear).length > 0) {
+                if (!this.context.unset &&
+                    pickedYears.filter((x) => x >= startDecadeYear && x <= endDecadeYear)
+                        .length > 0) {
                     classes.push(Namespace.Css.active);
                 }
                 /* if (!this.context.validation.isValid(innerDate, 'y')) { //todo between
-                     classes.push('disabled');
-                 }*/
+                           classes.push('disabled');
+                       }*/
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${this._startDecade.year + 6}`);
@@ -1488,14 +1566,15 @@
             container.classList.add(Namespace.Css.clockContainer);
             const table = document.createElement('table');
             const tableBody = document.createElement('tbody');
-            this._grid().forEach(row => tableBody.appendChild(row));
+            this._grid().forEach((row) => tableBody.appendChild(row));
             table.appendChild(tableBody);
             container.appendChild(table);
             return container;
         }
         update() {
             const timesDiv = this.context.display.widget.getElementsByClassName(Namespace.Css.timeContainer)[0];
-            const lastPicked = (this.context.dates.lastPicked || this.context.viewDate).clone;
+            const lastPicked = (this.context.dates.lastPicked || this.context.viewDate)
+                .clone;
             if (!this.context.options.display.components.useTwentyfourHour) {
                 const toggle = timesDiv.querySelector(`[data-action=${ActionTypes.togglePeriod}]`);
                 toggle.innerText = lastPicked.meridiem();
@@ -1506,32 +1585,47 @@
                     toggle.classList.remove(Namespace.Css.disabled);
                 }
             }
-            timesDiv.querySelectorAll('.disabled').forEach(element => element.classList.remove(Namespace.Css.disabled));
+            timesDiv
+                .querySelectorAll('.disabled')
+                .forEach((element) => element.classList.remove(Namespace.Css.disabled));
             if (this.context.options.display.components.hours) {
                 if (!this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
-                    timesDiv.querySelector(`[data-action=${ActionTypes.incrementHours}]`).classList.add(Namespace.Css.disabled);
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.incrementHours}]`)
+                        .classList.add(Namespace.Css.disabled);
                 }
                 if (!this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
-                    timesDiv.querySelector(`[data-action=${ActionTypes.decrementHours}]`).classList.add(Namespace.Css.disabled);
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.decrementHours}]`)
+                        .classList.add(Namespace.Css.disabled);
                 }
-                timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText =
-                    this.context.options.display.components.useTwentyfourHour ? lastPicked.hoursFormatted : lastPicked.twelveHoursFormatted;
+                timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = this.context.options.display.components.useTwentyfourHour
+                    ? lastPicked.hoursFormatted
+                    : lastPicked.twelveHoursFormatted;
             }
             if (this.context.options.display.components.minutes) {
                 if (!this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
-                    timesDiv.querySelector(`[data-action=${ActionTypes.incrementMinutes}]`).classList.add(Namespace.Css.disabled);
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.incrementMinutes}]`)
+                        .classList.add(Namespace.Css.disabled);
                 }
                 if (!this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
-                    timesDiv.querySelector(`[data-action=${ActionTypes.decrementMinutes}]`).classList.add(Namespace.Css.disabled);
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.decrementMinutes}]`)
+                        .classList.add(Namespace.Css.disabled);
                 }
                 timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
             }
             if (this.context.options.display.components.seconds) {
                 if (!this.context.validation.isValid(this.context.viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
-                    timesDiv.querySelector(`[data-action=${ActionTypes.incrementSeconds}]`).classList.add(Namespace.Css.disabled);
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.incrementSeconds}]`)
+                        .classList.add(Namespace.Css.disabled);
                 }
                 if (!this.context.validation.isValid(this.context.viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
-                    timesDiv.querySelector(`[data-action=${ActionTypes.decrementSeconds}]`).classList.add(Namespace.Css.disabled);
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.decrementSeconds}]`)
+                        .classList.add(Namespace.Css.disabled);
                 }
                 timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
             }
@@ -1648,7 +1742,8 @@
             table.classList.add('table', 'table-sm'); //todo bootstrap
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
-            for (let i = 0; i <= (this.context.options.display.components.useTwentyfourHour ? 24 : 12); i++) {
+            for (let i = 0; i <=
+                (this.context.options.display.components.useTwentyfourHour ? 24 : 12); i++) {
                 if (i !== 0 && i % 4 === 0) {
                     tableBody.appendChild(row);
                     row = document.createElement('tr');
@@ -1666,7 +1761,9 @@
         update() {
             const container = this.context.display.widget.getElementsByClassName(Namespace.Css.hourContainer)[0];
             let innerDate = this.context.viewDate.clone.startOf(Unit.date);
-            container.querySelectorAll('tbody td div').forEach((containerClone, index) => {
+            container
+                .querySelectorAll('tbody td div')
+                .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.Css.hour);
                 if (!this.context.validation.isValid(innerDate, Unit.hours)) {
@@ -1675,7 +1772,10 @@
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.hours}`);
-                containerClone.innerText = this.context.options.display.components.useTwentyfourHour ? innerDate.hoursFormatted : innerDate.twelveHoursFormatted;
+                containerClone.innerText = this.context.options.display.components
+                    .useTwentyfourHour
+                    ? innerDate.hoursFormatted
+                    : innerDate.twelveHoursFormatted;
                 innerDate.manipulate(1, Unit.hours);
             });
         }
@@ -1712,7 +1812,9 @@
             const container = this.context.display.widget.getElementsByClassName(Namespace.Css.minuteContainer)[0];
             let innerDate = this.context.viewDate.clone.startOf(Unit.hours);
             let step = this.context.options.stepping === 1 ? 5 : this.context.options.stepping;
-            container.querySelectorAll('tbody td div').forEach((containerClone, index) => {
+            container
+                .querySelectorAll('tbody td div')
+                .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.Css.minute);
                 if (!this.context.validation.isValid(innerDate, Unit.minutes)) {
@@ -1756,7 +1858,9 @@
         update() {
             const container = this.context.display.widget.getElementsByClassName(Namespace.Css.secondContainer)[0];
             let innerDate = this.context.viewDate.clone.startOf(Unit.minutes);
-            container.querySelectorAll('tbody td div').forEach((containerClone, index) => {
+            container
+                .querySelectorAll('tbody td div')
+                .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.Css.second);
                 if (!this.context.validation.isValid(innerDate, Unit.seconds)) {
@@ -1853,10 +1957,11 @@
                 }
                 document.body.appendChild(this.widget);
                 if (this.context.options.display.viewMode == 'times') {
-                    this.context.action.do({ currentTarget: this.widget.querySelector(`.${Namespace.Css.timeContainer}`) }, ActionTypes.showClock);
+                    this.context.action.do({
+                        currentTarget: this.widget.querySelector(`.${Namespace.Css.timeContainer}`),
+                    }, ActionTypes.showClock);
                 }
-                this.widget.querySelectorAll('[data-action]')
-                    .forEach(element => element.addEventListener('click', (e) => {
+                this.widget.querySelectorAll('[data-action]').forEach((element) => element.addEventListener('click', (e) => {
                     this.context.action.do(e);
                 }));
                 this.popperInstance = core.createPopper(this.context.element, this.widget, {
@@ -1864,12 +1969,12 @@
                         {
                             name: 'offset',
                             options: {
-                                offset: [0, 8]
+                                offset: [0, 8],
                             },
                         },
-                        { name: 'eventListeners', enabled: true }
+                        { name: 'eventListeners', enabled: true },
                     ],
-                    placement: 'top'
+                    placement: 'top',
                 });
             }
             this.widget.classList.add(Namespace.Css.show);
@@ -1888,8 +1993,9 @@
                     return;
                 this.context.currentViewMode = max;
             }
-            this.widget.querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`)
-                .forEach((e) => e.style.display = 'none');
+            this.widget
+                .querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`)
+                .forEach((e) => (e.style.display = 'none'));
             const datePickerMode = DatePickerModes[this.context.currentViewMode];
             let picker = this.widget.querySelector(`.${datePickerMode.CLASS_NAME}`);
             switch (datePickerMode.CLASS_NAME) {
@@ -1912,7 +2018,11 @@
             this.widget.classList.remove(Namespace.Css.show);
             this.context._notifyEvent({
                 name: Namespace.Events.HIDE,
-                date: this.context.unset ? null : (this.context.dates.lastPicked ? this.context.dates.lastPicked.clone : void 0)
+                date: this.context.unset
+                    ? null
+                    : this.context.dates.lastPicked
+                        ? this.context.dates.lastPicked.clone
+                        : void 0,
             });
             this.isVisible = false;
             document.removeEventListener('click', this.documentClickEvent);
@@ -1943,10 +2053,13 @@
             if (this.context.options.display.components.useTwentyfourHour) {
                 template.classList.add(Namespace.Css.useTwentyfour);
             }
-            if (this.context.options.display.components.seconds && !this.context.options.display.components.useTwentyfourHour) {
+            if (this.context.options.display.components.seconds &&
+                !this.context.options.display.components.useTwentyfourHour) {
                 template.classList.add(Namespace.Css.wider);
             }
-            if (this.context.options.display.sideBySide && this._hasDate && this._hasTime) {
+            if (this.context.options.display.sideBySide &&
+                this._hasDate &&
+                this._hasTime) {
                 template.classList.add(Namespace.Css.sideBySide);
                 if (this.context.options.display.toolbarPlacement === 'top') {
                     template.appendChild(toolbar);
@@ -1957,7 +2070,8 @@
                 timeView.classList.add('col-md-6');
                 row.appendChild(dateView);
                 row.appendChild(timeView);
-                if (this.context.options.display.toolbarPlacement === 'bottom' || this.context.options.display.toolbarPlacement === 'default') {
+                if (this.context.options.display.toolbarPlacement === 'bottom' ||
+                    this.context.options.display.toolbarPlacement === 'default') {
                     template.appendChild(toolbar);
                 }
                 this._widget = template;
@@ -1995,14 +2109,14 @@
             this._widget = template;
         }
         get _hasTime() {
-            return this.context.options.display.components.hours ||
+            return (this.context.options.display.components.hours ||
                 this.context.options.display.components.minutes ||
-                this.context.options.display.components.seconds;
+                this.context.options.display.components.seconds);
         }
         get _hasDate() {
-            return this.context.options.display.components.year ||
+            return (this.context.options.display.components.year ||
                 this.context.options.display.components.month ||
-                this.context.options.display.components.date;
+                this.context.options.display.components.date);
         }
         get _toolbar() {
             const tbody = document.createElement('tbody');
@@ -2015,7 +2129,10 @@
                 td.appendChild(div);
                 tbody.appendChild(td);
             }
-            if (!this.context.options.display.sideBySide && this.context.options.display.collapse && this._hasDate && this._hasTime) {
+            if (!this.context.options.display.sideBySide &&
+                this.context.options.display.collapse &&
+                this._hasDate &&
+                this._hasTime) {
                 let title, icon;
                 if (this.context.options.display.viewMode === 'times') {
                     title = this.context.options.localization.selectDate;
@@ -2105,62 +2222,102 @@
          */
         isValid(targetDate, granularity) {
             if (granularity === Unit.date) {
-                if (this._context.options.restrictions.disabledDates && this._isInDisabledDates(targetDate)) {
+                if (this._context.options.restrictions.disabledDates &&
+                    this._isInDisabledDates(targetDate)) {
                     return false;
                 }
-                if (this._context.options.restrictions.enabledDates && !this._isInEnabledDates(targetDate)) {
+                if (this._context.options.restrictions.enabledDates &&
+                    !this._isInEnabledDates(targetDate)) {
                     return false;
                 }
-                if (this._context.options.restrictions.daysOfWeekDisabled && this._context.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
+                if (this._context.options.restrictions.daysOfWeekDisabled &&
+                    this._context.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
                     return false;
                 }
             }
-            if (this._context.options.restrictions.minDate && targetDate.isBefore(this._context.options.restrictions.minDate, granularity)) {
+            if (this._context.options.restrictions.minDate &&
+                targetDate.isBefore(this._context.options.restrictions.minDate, granularity)) {
                 return false;
             }
-            if (this._context.options.restrictions.maxDate && targetDate.isAfter(this._context.options.restrictions.maxDate, granularity)) {
+            if (this._context.options.restrictions.maxDate &&
+                targetDate.isAfter(this._context.options.restrictions.maxDate, granularity)) {
                 return false;
             }
-            if (granularity === Unit.hours || granularity === Unit.minutes || granularity === Unit.seconds) {
-                if (this._context.options.restrictions.disabledHours && this._isInDisabledHours(targetDate)) {
+            if (granularity === Unit.hours ||
+                granularity === Unit.minutes ||
+                granularity === Unit.seconds) {
+                if (this._context.options.restrictions.disabledHours &&
+                    this._isInDisabledHours(targetDate)) {
                     return false;
                 }
-                if (this._context.options.restrictions.enabledHours && !this._isInEnabledHours(targetDate)) {
+                if (this._context.options.restrictions.enabledHours &&
+                    !this._isInEnabledHours(targetDate)) {
                     return false;
                 }
                 if (this._context.options.restrictions.disabledTimeIntervals) {
                     for (let i = 0; i < this._context.options.restrictions.disabledTimeIntervals.length; i++) {
-                        if (targetDate.isBetween(this._context.options.restrictions.disabledTimeIntervals[i], this._context.options.restrictions.disabledTimeIntervals[i + 1]))
+                        if (targetDate.isBetween(this._context.options.restrictions.disabledTimeIntervals[i].from, this._context.options.restrictions.disabledTimeIntervals[i].to))
                             return false;
-                        i++;
                     }
                 }
             }
             return true;
         }
+        /**
+         * Checks to see if the disabledDates option is in use and returns true (meaning invalid)
+         * if the @{link testDate} is with in the array. Granularity is by date.
+         * @param testDate
+         * @private
+         */
         _isInDisabledDates(testDate) {
-            if (!this._context.options.restrictions.disabledDates || this._context.options.restrictions.disabledDates.length === 0)
+            if (!this._context.options.restrictions.disabledDates ||
+                this._context.options.restrictions.disabledDates.length === 0)
                 return false;
             const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-            return this._context.options.restrictions.disabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
+            return this._context.options.restrictions.disabledDates
+                .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
+                .find((x) => x === formattedDate);
         }
+        /**
+         * Checks to see if the enabledDates option is in use and returns true (meaning valid)
+         * if the @{link testDate} is with in the array. Granularity is by date.
+         * @param testDate
+         * @private
+         */
         _isInEnabledDates(testDate) {
-            if (!this._context.options.restrictions.enabledDates || this._context.options.restrictions.enabledDates.length === 0)
+            if (!this._context.options.restrictions.enabledDates ||
+                this._context.options.restrictions.enabledDates.length === 0)
                 return true;
             const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-            return this._context.options.restrictions.enabledDates.map(x => x.format(Dates.getFormatByUnit(Unit.date))).find(x => x === formattedDate);
+            return this._context.options.restrictions.enabledDates
+                .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
+                .find((x) => x === formattedDate);
         }
+        /**
+         * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
+         * if the @{link testDate} is with in the array. Granularity is by hours.
+         * @param testDate
+         * @private
+         */
         _isInDisabledHours(testDate) {
-            if (!this._context.options.restrictions.disabledHours || this._context.options.restrictions.disabledHours.length === 0)
+            if (!this._context.options.restrictions.disabledHours ||
+                this._context.options.restrictions.disabledHours.length === 0)
                 return false;
             const formattedDate = testDate.hours;
-            return this._context.options.restrictions.disabledHours.find(x => x === formattedDate);
+            return this._context.options.restrictions.disabledHours.find((x) => x === formattedDate);
         }
+        /**
+         * Checks to see if the enabledHours option is in use and returns true (meaning valid)
+         * if the @{link testDate} is with in the array. Granularity is by hours.
+         * @param testDate
+         * @private
+         */
         _isInEnabledHours(testDate) {
-            if (!this._context.options.restrictions.enabledHours || this._context.options.restrictions.enabledHours.length === 0)
+            if (!this._context.options.restrictions.enabledHours ||
+                this._context.options.restrictions.enabledHours.length === 0)
                 return true;
             const formattedDate = testDate.hours;
-            return this._context.options.restrictions.enabledHours.find(x => x === formattedDate);
+            return this._context.options.restrictions.enabledHours.find((x) => x === formattedDate);
         }
     }
 
@@ -2185,7 +2342,7 @@
         }
         // noinspection JSUnusedGlobalSymbols
         /**
-         *
+         * Update the picker options. If @{link reset} is provide @{link options} will be merged with DefaultOptions instead.
          * @param options
          * @param reset
          * @public
@@ -2202,11 +2359,9 @@
                 const { date, oldDate, isClear } = event;
                 this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
                 this._notifyChangeEventContext++;
-                if ((date && oldDate && date.isSame(oldDate))
-                    ||
-                        (!isClear && !date && !oldDate)
-                    ||
-                        (this._notifyChangeEventContext > 1)) {
+                if ((date && oldDate && date.isSame(oldDate)) ||
+                    (!isClear && !date && !oldDate) ||
+                    this._notifyChangeEventContext > 1) {
                     this._notifyChangeEventContext = undefined;
                     return;
                 }
@@ -2225,7 +2380,7 @@
             this._notifyEvent({
                 name: Namespace.Events.UPDATE,
                 change: unit,
-                viewDate: this.viewDate.clone
+                viewDate: this.viewDate.clone,
             });
         }
         dispose() {
@@ -2251,7 +2406,7 @@
                 if (!Array.isArray(value)) {
                     throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of numbers');
                 }
-                if (value.find(x => typeof x !== typeof 0))
+                if (value.find((x) => typeof x !== typeof 0))
                     console.log('throw an error');
                 return;
             };
@@ -2269,7 +2424,7 @@
             //this is to fix that issue by using spread on the child objects first
             let path = '';
             const spread = (provided, defaultOption) => {
-                Object.keys(provided).forEach(key => {
+                Object.keys(provided).forEach((key) => {
                     let providedType = typeof provided[key];
                     if (providedType === undefined)
                         return;
@@ -2305,17 +2460,17 @@
                         }
                         case 'disabledHours':
                             numberArray('restrictions.disabledHours', value, providedType);
-                            if (value.filter(x => x < 0 || x > 23))
+                            if (value.filter((x) => x < 0 || x > 23))
                                 throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.disabledHours', 0, 23);
                             break;
                         case 'enabledHours':
                             numberArray('restrictions.enabledHours', value, providedType);
-                            if (value.filter(x => x < 0 || x > 23))
+                            if (value.filter((x) => x < 0 || x > 23))
                                 throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.enabledHours', 0, 23);
                             break;
                         case 'daysOfWeekDisabled':
                             numberArray('restrictions.daysOfWeekDisabled', value, providedType);
-                            if (value.filter(x => x < 0 || x > 6))
+                            if (value.filter((x) => x < 0 || x > 6))
                                 throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.daysOfWeekDisabled', 0, 6);
                             break;
                         case 'enabledDates':
@@ -2325,7 +2480,21 @@
                             dateArray('restrictions.disabledDates', value, providedType);
                             break;
                         case 'disabledTimeIntervals':
-                            dateArray('restrictions.disabledTimeIntervals', value, providedType);
+                            if (!Array.isArray(value)) {
+                                throw Namespace.ErrorMessages.typeMismatch(key, providedType, 'array of { from: DateTime|Date, to: DateTime|Date }');
+                            }
+                            const valueObject = value;
+                            for (let i = 0; i < valueObject.length; i++) {
+                                Object.keys(valueObject[i]).forEach((vk) => {
+                                    const subOptionName = `${key}[${i}].${vk}`;
+                                    let d = valueObject[i][vk];
+                                    const dateTime = dateConversion(d, subOptionName);
+                                    if (!dateTime) {
+                                        throw Namespace.ErrorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
+                                    }
+                                    valueObject[i][vk] = dateTime;
+                                });
+                            }
                             break;
                         default:
                             if (providedType !== defaultType) {
@@ -2355,10 +2524,14 @@
                     year: components.year ? 'numeric' : undefined,
                     month: components.month ? '2-digit' : undefined,
                     day: components.date ? '2-digit' : undefined,
-                    hour: components.hours ? components.useTwentyfourHour ? '2-digit' : 'numeric' : undefined,
+                    hour: components.hours
+                        ? components.useTwentyfourHour
+                            ? '2-digit'
+                            : 'numeric'
+                        : undefined,
                     minute: components.minutes ? '2-digit' : undefined,
                     second: components.seconds ? '2-digit' : undefined,
-                    hour12: !components.useTwentyfourHour
+                    hour12: !components.useTwentyfourHour,
                 };
             }
             return config;
@@ -2409,7 +2582,8 @@
             if (query == 'nearest') {
                 query = '[data-toggle="datetimepicker"]';
             }
-            this._toggle = query == undefined ? this.element : this.element.querySelector(query);
+            this._toggle =
+                query == undefined ? this.element : this.element.querySelector(query);
             this._toggle.addEventListener('click', () => this.display.toggle());
         }
         static _dateTypeCheck(d) {
@@ -2434,16 +2608,16 @@
                     // because the first date is selected automatically.
                     return;
                 }
-                else if (e.oldDate &&
-                    e.date &&
-                    e.date.isSame(e.oldDate)) {
+                else if (e.oldDate && e.date && e.date.isSame(e.oldDate)) {
                     // Date didn't change (time did) or date changed because time did.
                     return;
                 }
                 clearTimeout(this._currentPromptTimeTimeout);
                 this._currentPromptTimeTimeout = setTimeout(() => {
                     if (this.display.widget) {
-                        this.display.widget.querySelector(`[data-action="${ActionTypes.togglePicker}"]`)[0].click();
+                        this.display.widget
+                            .querySelector(`[data-action="${ActionTypes.togglePicker}"]`)[0]
+                            .click();
                     }
                 }, this.options.promptTimeOnDateChangeTransitionDelay);
             }
