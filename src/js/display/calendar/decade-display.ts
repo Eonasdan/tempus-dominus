@@ -4,33 +4,42 @@ import { DateTime, Unit } from '../../datetime';
 import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
 
+/**
+ * Creates and updates the grid for `seconds`
+ */
 export default class DecadeDisplay {
-  private context: TempusDominus;
+  private _context: TempusDominus;
   private _startDecade: DateTime;
   private _endDecade: DateTime;
 
   constructor(context: TempusDominus) {
-    this.context = context;
+    this._context = context;
   }
 
-  get picker() {
+  /**
+   * Build the container html for the display
+   * @private
+   */
+  get _picker() {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.decadesContainer);
 
     const table = document.createElement('table');
-    table.classList.add('table', 'table-sm'); //todo bootstrap
-    const headTemplate = this.context.display.headTemplate;
+    const headTemplate = this._context.display._headTemplate;
     const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
     previous
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this.context.options.localization.previousCentury);
+      .setAttribute(
+        'title',
+        this._context.options.localization.previousCentury
+      );
     switcher.setAttribute('title', '');
     switcher.removeAttribute('data-action');
     switcher.setAttribute('colspan', '1');
     next
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this.context.options.localization.nextCentury);
+      .setAttribute('title', this._context.options.localization.nextCentury);
 
     table.appendChild(headTemplate);
 
@@ -53,14 +62,21 @@ export default class DecadeDisplay {
     return container;
   }
 
-  update() {
-    const [start, end] = Dates.getStartEndYear(100, this.context.viewDate.year);
-    this._startDecade = this.context.viewDate.clone.startOf(Unit.year);
+  /**
+   * Populates the grid and updates enabled states
+   * @private
+   */
+  _update() {
+    const [start, end] = Dates.getStartEndYear(
+      100,
+      this._context.viewDate.year
+    );
+    this._startDecade = this._context.viewDate.clone.startOf(Unit.year);
     this._startDecade.year = start;
-    this._endDecade = this.context.viewDate.clone.startOf(Unit.year);
+    this._endDecade = this._context.viewDate.clone.startOf(Unit.year);
     this._endDecade.year = end;
 
-    const container = this.context.display.widget.getElementsByClassName(
+    const container = this._context.display.widget.getElementsByClassName(
       Namespace.Css.decadesContainer
     )[0];
     const [previous, switcher, next] = container
@@ -69,19 +85,16 @@ export default class DecadeDisplay {
 
     switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
 
-    this.context.validation.isValid(this._startDecade, Unit.year)
+    this._context.validation.isValid(this._startDecade, Unit.year)
       ? previous.classList.remove(Namespace.Css.disabled)
       : previous.classList.add(Namespace.Css.disabled);
-    this.context.validation.isValid(this._endDecade, Unit.year)
+    this._context.validation.isValid(this._endDecade, Unit.year)
       ? next.classList.remove(Namespace.Css.disabled)
       : next.classList.add(Namespace.Css.disabled);
 
-    this.grid(container.querySelectorAll('tbody td div'));
-  }
+    const pickedYears = this._context.dates.picked.map((x) => x.year);
 
-  private grid(nodeList: NodeList) {
-    const pickedYears = this.context.dates.picked.map((x) => x.year);
-
+    const nodeList = container.querySelectorAll('tbody td div');
     nodeList.forEach((containerClone: HTMLElement, index) => {
       if (index === 0) {
         containerClone.classList.add(Namespace.Css.old);
@@ -104,7 +117,7 @@ export default class DecadeDisplay {
       const endDecadeYear = this._startDecade.year + 9;
 
       if (
-        !this.context.unset &&
+        !this._context.unset &&
         pickedYears.filter((x) => x >= startDecadeYear && x <= endDecadeYear)
           .length > 0
       ) {

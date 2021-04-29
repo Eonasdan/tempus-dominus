@@ -14,87 +14,105 @@ import { createPopper } from '@popperjs/core';
 import Namespace from '../namespace';
 import { HideEvent } from '../event-types';
 
+/**
+ * Main class for all things display related.
+ */
 export default class Display {
-  private context: TempusDominus;
-  private dateDisplay: DateDisplay;
-  private monthDisplay: MonthDisplay;
-  private yearDisplay: YearDisplay;
-  private decadeDisplay: DecadeDisplay;
-  private timeDisplay: TimeDisplay;
+  private _context: TempusDominus;
+  private _dateDisplay: DateDisplay;
+  private _monthDisplay: MonthDisplay;
+  private _yearDisplay: YearDisplay;
+  private _decadeDisplay: DecadeDisplay;
+  private _timeDisplay: TimeDisplay;
   private _widget: HTMLElement;
-  private hourDisplay: HourDisplay;
-  private minuteDisplay: MinuteDisplay;
-  private secondDisplay: SecondDisplay;
-  private popperInstance: any;
-  private isVisible: boolean = false;
+  private _hourDisplay: HourDisplay;
+  private _minuteDisplay: MinuteDisplay;
+  private _secondDisplay: SecondDisplay;
+  private _popperInstance: any;
+  private _isVisible: boolean = false;
 
   constructor(context: TempusDominus) {
-    this.context = context;
-    this.dateDisplay = new DateDisplay(context);
-    this.monthDisplay = new MonthDisplay(context);
-    this.yearDisplay = new YearDisplay(context);
-    this.decadeDisplay = new DecadeDisplay(context);
-    this.timeDisplay = new TimeDisplay(context);
-    this.hourDisplay = new HourDisplay(context);
-    this.minuteDisplay = new MinuteDisplay(context);
-    this.secondDisplay = new SecondDisplay(context);
+    this._context = context;
+    this._dateDisplay = new DateDisplay(context);
+    this._monthDisplay = new MonthDisplay(context);
+    this._yearDisplay = new YearDisplay(context);
+    this._decadeDisplay = new DecadeDisplay(context);
+    this._timeDisplay = new TimeDisplay(context);
+    this._hourDisplay = new HourDisplay(context);
+    this._minuteDisplay = new MinuteDisplay(context);
+    this._secondDisplay = new SecondDisplay(context);
 
     this._widget = undefined;
   }
 
-  get widget(): HTMLElement {
+  /**
+   * Returns the widget body or undefined
+   * @private
+   */
+  get widget(): HTMLElement | undefined {
     return this._widget;
   }
 
-  update(unit: Unit | 'clock' | 'calendar' | 'all'): void {
+  /**
+   * Updates the table for a particular unit. Used when an option as changed or
+   * whenever the class list might need to be refreshed.
+   * @param unit
+   * @private
+   */
+  _update(unit: Unit | 'clock' | 'calendar' | 'all'): void {
     if (!this._widget) return;
     //todo do I want some kind of error catching or other guards here?
     switch (unit) {
       case Unit.seconds:
-        this.secondDisplay.update();
+        this._secondDisplay._update();
         break;
       case Unit.minutes:
-        this.minuteDisplay.update();
+        this._minuteDisplay._update();
         break;
       case Unit.hours:
-        this.hourDisplay.update();
+        this._hourDisplay._update();
         break;
       case Unit.date:
-        this.dateDisplay.update();
+        this._dateDisplay._update();
         break;
       case Unit.month:
-        this.monthDisplay.update();
+        this._monthDisplay._update();
         break;
       case Unit.year:
-        this.yearDisplay.update();
+        this._yearDisplay._update();
         break;
       case 'clock':
-        this.timeDisplay.update();
-        this.update(Unit.hours);
-        this.update(Unit.minutes);
-        this.update(Unit.seconds);
+        this._timeDisplay._update();
+        this._update(Unit.hours);
+        this._update(Unit.minutes);
+        this._update(Unit.seconds);
         break;
       case 'calendar':
-        this.update(Unit.date);
-        this.update(Unit.year);
-        this.update(Unit.month);
-        this.decadeDisplay.update();
+        this._update(Unit.date);
+        this._update(Unit.year);
+        this._update(Unit.month);
+        this._decadeDisplay._update();
         break;
       case 'all':
         if (this._hasTime) {
-          this.update('clock');
+          this._update('clock');
         }
         if (this._hasDate) {
-          this.update('calendar');
+          this._update('calendar');
         }
     }
   }
 
+  /**
+   * Shows the picker and creates a Popper instance if needed.
+   * Add document click event to hide when clicking outside the picker.
+   * @fires Events#show
+   */
   show(): void {
     if (this.widget == undefined) {
-      if (this.context.options.useCurrent) {
+      if (this._context.options.useCurrent) {
         //todo in the td4 branch a pr changed this to allow granularity
-        this.context.dates._setValue(new DateTime());
+        this._context.dates._setValue(new DateTime());
       }
       this._buildWidget();
       if (this._hasDate) {
@@ -103,8 +121,8 @@ export default class Display {
 
       document.body.appendChild(this.widget);
 
-      if (this.context.options.display.viewMode == 'times') {
-        this.context.action.do(
+      if (this._context.options.display.viewMode == 'clock') {
+        this._context.action.do(
           {
             currentTarget: this.widget.querySelector(
               `.${Namespace.Css.timeContainer}`
@@ -114,13 +132,15 @@ export default class Display {
         );
       }
 
-      this.widget.querySelectorAll('[data-action]').forEach((element) =>
-        element.addEventListener('click', (e) => {
-          this.context.action.do(e);
-        })
-      );
+      this.widget
+        .querySelectorAll('[data-action]')
+        .forEach((element) =>
+          element.addEventListener('click', this._actionsClickEvent)
+        );
 
-      this.popperInstance = createPopper(this.context.element, this.widget, {
+      //todo probably should append the widget straight to the element instead of the body for inline
+      //if (!this.context.options.display.inline) {
+      this._popperInstance = createPopper(this._context.element, this.widget, {
         modifiers: [
           {
             name: 'offset',
@@ -130,28 +150,44 @@ export default class Display {
           },
           { name: 'eventListeners', enabled: true },
         ],
-        placement: 'top',
+        placement: 'auto',
       });
+      //}
+
+      // show the clock when using sideBySide
+      if (this._context.options.display.sideBySide) {
+        this._timeDisplay._update();
+        (this.widget.getElementsByClassName(
+          Namespace.Css.clockContainer
+        )[0] as HTMLElement).style.display = 'block';
+      }
     }
 
     this.widget.classList.add(Namespace.Css.show);
-    this.popperInstance.update();
-    this.context._notifyEvent({ name: Namespace.Events.SHOW });
-    this.isVisible = true;
-    document.addEventListener('click', this.documentClickEvent);
+    if (!this._context.options.display.inline) {
+      this._popperInstance.update();
+      document.addEventListener('click', this._documentClickEvent);
+    }
+    this._context._triggerEvent({ name: Namespace.Events.show });
+    this._isVisible = true;
   }
 
+  /**
+   * Changes the calendar view mode. E.g. month <-> year
+   * @param direction -/+ number to move currentViewMode
+   * @private
+   */
   _showMode(direction?: number): void {
     if (!this.widget) {
       return;
     }
     if (direction) {
       const max = Math.max(
-        this.context.minViewModeNumber,
-        Math.min(3, this.context.currentViewMode + direction)
+        this._context.minViewModeNumber,
+        Math.min(3, this._context.currentViewMode + direction)
       );
-      if (this.context.currentViewMode == max) return;
-      this.context.currentViewMode = max;
+      if (this._context.currentViewMode == max) return;
+      this._context.currentViewMode = max;
     }
     this.widget
       .querySelectorAll(
@@ -159,104 +195,119 @@ export default class Display {
       )
       .forEach((e: HTMLElement) => (e.style.display = 'none'));
 
-    const datePickerMode = DatePickerModes[this.context.currentViewMode];
+    const datePickerMode = DatePickerModes[this._context.currentViewMode];
     let picker: HTMLElement = this.widget.querySelector(
       `.${datePickerMode.CLASS_NAME}`
     );
 
     switch (datePickerMode.CLASS_NAME) {
       case Namespace.Css.decadesContainer:
-        this.decadeDisplay.update();
+        this._decadeDisplay._update();
         break;
       case Namespace.Css.yearsContainer:
-        this.yearDisplay.update();
+        this._yearDisplay._update();
         break;
       case Namespace.Css.monthsContainer:
-        this.monthDisplay.update();
+        this._monthDisplay._update();
         break;
       case Namespace.Css.daysContainer:
-        this.dateDisplay.update();
+        this._dateDisplay._update();
         break;
     }
 
     picker.style.display = 'block';
   }
 
+  /**
+   * Hides the picker if needed.
+   * Remove document click event to hide when clicking outside the picker.
+   * @fires Events#hide
+   */
   hide(): void {
     this.widget.classList.remove(Namespace.Css.show);
 
-    this.context._notifyEvent({
-      name: Namespace.Events.HIDE,
-      date: this.context.unset
-        ? null
-        : this.context.dates.lastPicked
-        ? this.context.dates.lastPicked.clone
-        : void 0,
-    } as HideEvent);
-    this.isVisible = false;
+    if (this._isVisible) {
+      this._context._triggerEvent({
+        name: Namespace.Events.hide,
+        date: this._context.unset
+          ? null
+          : this._context.dates.lastPicked
+          ? this._context.dates.lastPicked.clone
+          : void 0,
+      } as HideEvent);
+      this._isVisible = false;
+    }
 
-    document.removeEventListener('click', this.documentClickEvent);
+    document.removeEventListener('click', this._documentClickEvent);
   }
 
+  /**
+   * Toggles the picker's open state. Fires a show/hide event depending.
+   */
   toggle() {
-    return this.isVisible ? this.hide() : this.show();
+    return this._isVisible ? this.hide() : this.show();
   }
 
-  _buildWidget(): HTMLElement {
+  /**
+   * Removes document and data-action click listener and reset the widget
+   * @private
+   */
+  _dispose() {
+    document.removeEventListener('click', this._documentClickEvent);
+    this.widget
+      .querySelectorAll('[data-action]')
+      .forEach((element) =>
+        element.removeEventListener('click', this._actionsClickEvent)
+      );
+    this._widget = undefined;
+  }
+
+  /**
+   * Builds the widgets html template.
+   * @private
+   */
+  private _buildWidget(): HTMLElement {
     const template = document.createElement('div');
     template.classList.add(Namespace.Css.widget);
-    if (this.context.options.display.calendarWeeks)
-      template.classList.add(Namespace.Css.widgetCalendarWeeks);
 
     const dateView = document.createElement('div');
     dateView.classList.add(Namespace.Css.dateContainer);
-    dateView.appendChild(this.decadeDisplay.picker);
-    dateView.appendChild(this.yearDisplay.picker);
-    dateView.appendChild(this.monthDisplay.picker);
-    dateView.appendChild(this.dateDisplay.picker);
+    dateView.appendChild(this._decadeDisplay._picker);
+    dateView.appendChild(this._yearDisplay._picker);
+    dateView.appendChild(this._monthDisplay._picker);
+    dateView.appendChild(this._dateDisplay._picker);
 
     const timeView = document.createElement('div');
     timeView.classList.add(Namespace.Css.timeContainer);
-    timeView.appendChild(this.timeDisplay.picker);
-    timeView.appendChild(this.hourDisplay.picker);
-    timeView.appendChild(this.minuteDisplay.picker);
-    timeView.appendChild(this.secondDisplay.picker);
+    timeView.appendChild(this._timeDisplay._picker);
+    timeView.appendChild(this._hourDisplay._picker);
+    timeView.appendChild(this._minuteDisplay._picker);
+    timeView.appendChild(this._secondDisplay._picker);
 
     const toolbar = document.createElement('div');
     toolbar.classList.add(Namespace.Css.switch);
     toolbar.appendChild(this._toolbar);
 
-    if (this.context.options.display.components.useTwentyfourHour) {
-      template.classList.add(Namespace.Css.useTwentyfour);
-    }
-
     if (
-      this.context.options.display.components.seconds &&
-      !this.context.options.display.components.useTwentyfourHour
-    ) {
-      template.classList.add(Namespace.Css.wider);
-    }
-
-    if (
-      this.context.options.display.sideBySide &&
+      this._context.options.display.sideBySide &&
       this._hasDate &&
       this._hasTime
     ) {
       template.classList.add(Namespace.Css.sideBySide);
-      if (this.context.options.display.toolbarPlacement === 'top') {
+      if (this._context.options.display.toolbarPlacement === 'top') {
         template.appendChild(toolbar);
       }
       const row = document.createElement('div');
-      row.classList.add('row'); //todo bootstrap
-      dateView.classList.add('col-md-6');
-      timeView.classList.add('col-md-6');
+      row.classList.add('td-row');
+      dateView.classList.add('td-half');
+      timeView.classList.add('td-half');
 
       row.appendChild(dateView);
       row.appendChild(timeView);
-
+      template.appendChild(row);
       if (
-        this.context.options.display.toolbarPlacement === 'bottom' ||
-        this.context.options.display.toolbarPlacement === 'default'
+        this._context.options.display.toolbarPlacement === 'bottom' ||
+        this._context.options.display.toolbarPlacement === 'default'
       ) {
         template.appendChild(toolbar);
       }
@@ -264,33 +315,33 @@ export default class Display {
       return;
     }
 
-    if (this.context.options.display.toolbarPlacement === 'top') {
+    if (this._context.options.display.toolbarPlacement === 'top') {
       template.appendChild(toolbar);
     }
 
     if (this._hasDate) {
-      if (this.context.options.display.collapse && this._hasTime) {
+      if (this._context.options.display.collapse && this._hasTime) {
         dateView.classList.add(Namespace.Css.collapse);
-        if (this.context.options.display.viewMode !== 'times')
+        if (this._context.options.display.viewMode !== 'clock')
           dateView.classList.add(Namespace.Css.show);
       }
       template.appendChild(dateView);
     }
 
-    if (this.context.options.display.toolbarPlacement === 'default') {
+    if (this._context.options.display.toolbarPlacement === 'default') {
       template.appendChild(toolbar);
     }
 
     if (this._hasTime) {
-      if (this.context.options.display.collapse && this._hasDate) {
+      if (this._context.options.display.collapse && this._hasDate) {
         timeView.classList.add(Namespace.Css.collapse);
-        if (this.context.options.display.viewMode === 'times')
+        if (this._context.options.display.viewMode === 'clock')
           timeView.classList.add(Namespace.Css.show);
       }
       template.appendChild(timeView);
     }
 
-    if (this.context.options.display.toolbarPlacement === 'bottom') {
+    if (this._context.options.display.toolbarPlacement === 'bottom') {
       template.appendChild(toolbar);
     }
 
@@ -302,48 +353,57 @@ export default class Display {
     this._widget = template;
   }
 
+  /**
+   * Returns true if the hours, minutes, or seconds component is turned on
+   */
   get _hasTime(): boolean {
     return (
-      this.context.options.display.components.hours ||
-      this.context.options.display.components.minutes ||
-      this.context.options.display.components.seconds
+      this._context.options.display.components.hours ||
+      this._context.options.display.components.minutes ||
+      this._context.options.display.components.seconds
     );
   }
-
+  /**
+   * Returns true if the year, month, or date component is turned on
+   */
   get _hasDate(): boolean {
     return (
-      this.context.options.display.components.year ||
-      this.context.options.display.components.month ||
-      this.context.options.display.components.date
+      this._context.options.display.components.year ||
+      this._context.options.display.components.month ||
+      this._context.options.display.components.date
     );
   }
 
+  /**
+   * Get the toolbar html based on options like buttons.today
+   * @private
+   */
   get _toolbar(): HTMLTableElement {
     const tbody = document.createElement('tbody');
 
-    if (this.context.options.display.buttons.today) {
+    if (this._context.options.display.buttons.today) {
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.today);
-      div.setAttribute('title', this.context.options.localization.today);
+      div.setAttribute('title', this._context.options.localization.today);
 
-      div.appendChild(this.iconTag(this.context.options.display.icons.today));
+      div.appendChild(this._iconTag(this._context.options.display.icons.today));
       td.appendChild(div);
       tbody.appendChild(td);
     }
     if (
-      !this.context.options.display.sideBySide &&
-      this.context.options.display.collapse &&
+      !this._context.options.display.sideBySide &&
+      this._context.options.display.collapse &&
       this._hasDate &&
       this._hasTime
     ) {
       let title, icon;
-      if (this.context.options.display.viewMode === 'times') {
-        title = this.context.options.localization.selectDate;
-        icon = this.context.options.display.icons.date;
+      if (this._context.options.display.viewMode === 'clock') {
+        title = this._context.options.localization.selectDate;
+        icon = this._context.options.display.icons.date;
       } else {
-        title = this.context.options.localization.selectTime;
-        icon = this.context.options.display.icons.time;
+        title = this._context.options.localization.selectTime;
+        icon = this._context.options.display.icons.time;
       }
 
       const td = document.createElement('td');
@@ -351,27 +411,27 @@ export default class Display {
       div.setAttribute('data-action', ActionTypes.togglePicker);
       div.setAttribute('title', title);
 
-      div.appendChild(this.iconTag(icon));
+      div.appendChild(this._iconTag(icon));
       td.appendChild(div);
       tbody.appendChild(td);
     }
-    if (this.context.options.display.buttons.clear) {
+    if (this._context.options.display.buttons.clear) {
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.clear);
-      div.setAttribute('title', this.context.options.localization.clear);
+      div.setAttribute('title', this._context.options.localization.clear);
 
-      div.appendChild(this.iconTag(this.context.options.display.icons.clear));
+      div.appendChild(this._iconTag(this._context.options.display.icons.clear));
       td.appendChild(div);
       tbody.appendChild(td);
     }
-    if (this.context.options.display.buttons.close) {
+    if (this._context.options.display.buttons.close) {
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.close);
-      div.setAttribute('title', this.context.options.localization.close);
+      div.setAttribute('title', this._context.options.localization.close);
 
-      div.appendChild(this.iconTag(this.context.options.display.icons.close));
+      div.appendChild(this._iconTag(this._context.options.display.icons.close));
       td.appendChild(div);
       tbody.appendChild(td);
     }
@@ -382,15 +442,18 @@ export default class Display {
   }
 
   /***
-   *
+   * Builds the base header template with next and previous icons
+   * @private
    */
-  get headTemplate(): HTMLElement {
+  get _headTemplate(): HTMLElement {
     let div = document.createElement('div');
     const headTemplate = document.createElement('thead');
     const previous = document.createElement('th');
     previous.classList.add(Namespace.Css.previous);
     previous.setAttribute('data-action', ActionTypes.previous);
-    div.appendChild(this.iconTag(this.context.options.display.icons.previous));
+    div.appendChild(
+      this._iconTag(this._context.options.display.icons.previous)
+    );
     previous.appendChild(div);
     headTemplate.appendChild(previous);
 
@@ -399,7 +462,7 @@ export default class Display {
     switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
     switcher.setAttribute(
       'colspan',
-      this.context.options.display.calendarWeeks ? '6' : '5'
+      this._context.options.display.calendarWeeks ? '6' : '5'
     );
     headTemplate.appendChild(switcher);
 
@@ -407,31 +470,51 @@ export default class Display {
     next.classList.add(Namespace.Css.next);
     next.setAttribute('data-action', ActionTypes.next);
     div = document.createElement('div');
-    div.appendChild(this.iconTag(this.context.options.display.icons.next));
+    div.appendChild(this._iconTag(this._context.options.display.icons.next));
     next.appendChild(div);
     headTemplate.appendChild(next);
     return <HTMLElement>headTemplate.cloneNode(true);
   }
 
-  iconTag(i: string): HTMLElement {
-    if (this.context.options.display.icons.type === 'sprites') {
+  /**
+   * Builds an icon tag as either an `<i>`
+   * or with icons.type is `sprites` then an svg tag instead
+   * @param iconClass
+   * @private
+   */
+  _iconTag(iconClass: string): HTMLElement {
+    if (this._context.options.display.icons.type === 'sprites') {
       const svg = document.createElement('svg');
-      svg.innerHTML = `<use xlink:href="${i}"></use>`;
+      svg.innerHTML = `<use xlink:href='${iconClass}'></use>`;
       return svg;
     }
     const icon = document.createElement('i');
-    DOMTokenList.prototype.add.apply(icon.classList, i.split(' '));
+    DOMTokenList.prototype.add.apply(icon.classList, iconClass.split(' '));
     return icon;
   }
 
-  private documentClickEvent = (e) => {
+  /**
+   * A document click event to hide the widget if click is outside
+   * @private
+   * @param e MouseEvent
+   */
+  private _documentClickEvent = (e: MouseEvent) => {
     if (
-      this.isVisible &&
+      this._isVisible &&
       !e.composedPath().includes(this.widget) && // click inside the widget
-      !e.composedPath()?.includes(this.context.element) && // click on the element
-      (!this.context.options.keepOpen || !this.context.options.debug)
+      !e.composedPath()?.includes(this._context.element) && // click on the element
+      (!this._context.options.keepOpen || !this._context.options.debug)
     ) {
       this.hide();
     }
+  };
+
+  /**
+   * Click event for any action like selecting a date
+   * @param e MouseEvent
+   * @private
+   */
+  private _actionsClickEvent = (e: MouseEvent) => {
+    this._context.action.do(e);
   };
 }

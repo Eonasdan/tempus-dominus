@@ -3,37 +3,43 @@ import { DateTime, Unit } from '../../datetime';
 import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
 
+/**
+ * Creates and updates the grid for `year`
+ */
 export default class YearDisplay {
-  private context: TempusDominus;
-  private _startYear: DateTime;
-  private _endYear: DateTime;
+  private _context: TempusDominus;
+  private readonly _startYear: DateTime;
+  private readonly _endYear: DateTime;
 
   constructor(context: TempusDominus) {
-    this.context = context;
-    this._startYear = this.context.viewDate.clone.manipulate(-1, Unit.year);
-    this._endYear = this.context.viewDate.clone.manipulate(10, Unit.year);
+    this._context = context;
+    this._startYear = this._context.viewDate.clone.manipulate(-1, Unit.year);
+    this._endYear = this._context.viewDate.clone.manipulate(10, Unit.year);
   }
 
-  get picker(): HTMLElement {
+  /**
+   * Build the container html for the display
+   * @private
+   */
+  get _picker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.yearsContainer);
 
     const table = document.createElement('table');
-    table.classList.add('table', 'table-sm'); //todo bootstrap
-    const headTemplate = this.context.display.headTemplate;
+    const headTemplate = this._context.display._headTemplate;
     const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
     previous
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this.context.options.localization.previousDecade);
+      .setAttribute('title', this._context.options.localization.previousDecade);
     switcher.setAttribute(
       'title',
-      this.context.options.localization.selectDecade
+      this._context.options.localization.selectDecade
     );
     switcher.setAttribute('colspan', '1');
     next
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this.context.options.localization.nextDecade);
+      .setAttribute('title', this._context.options.localization.nextDecade);
 
     table.appendChild(headTemplate);
 
@@ -57,8 +63,12 @@ export default class YearDisplay {
     return container;
   }
 
-  update() {
-    const container = this.context.display.widget.getElementsByClassName(
+  /**
+   * Populates the grid and updates enabled states
+   * @private
+   */
+  _update() {
+    const container = this._context.display.widget.getElementsByClassName(
       Namespace.Css.yearsContainer
     )[0];
     const [previous, switcher, next] = container
@@ -67,40 +77,38 @@ export default class YearDisplay {
 
     switcher.innerText = `${this._startYear.year}-${this._endYear.year}`;
 
-    this.context.validation.isValid(this._startYear, Unit.year)
+    this._context.validation.isValid(this._startYear, Unit.year)
       ? previous.classList.remove(Namespace.Css.disabled)
       : previous.classList.add(Namespace.Css.disabled);
-    this.context.validation.isValid(this._endYear, Unit.year)
+    this._context.validation.isValid(this._endYear, Unit.year)
       ? next.classList.remove(Namespace.Css.disabled)
       : next.classList.add(Namespace.Css.disabled);
 
-    this.grid(container.querySelectorAll('tbody td div'));
-  }
-
-  private grid(nodeList: NodeList) {
-    let innerDate = this.context.viewDate.clone
+    let innerDate = this._context.viewDate.clone
       .startOf(Unit.year)
       .manipulate(-1, Unit.year);
 
-    nodeList.forEach((containerClone: HTMLElement, index) => {
-      let classes = [];
-      classes.push(Namespace.Css.year);
+    container
+      .querySelectorAll('tbody td div')
+      .forEach((containerClone: HTMLElement, index) => {
+        let classes = [];
+        classes.push(Namespace.Css.year);
 
-      if (
-        !this.context.unset &&
-        this.context.dates.isPicked(innerDate, Unit.year)
-      ) {
-        classes.push(Namespace.Css.active);
-      }
-      if (!this.context.validation.isValid(innerDate, Unit.year)) {
-        classes.push(Namespace.Css.disabled);
-      }
+        if (
+          !this._context.unset &&
+          this._context.dates.isPicked(innerDate, Unit.year)
+        ) {
+          classes.push(Namespace.Css.active);
+        }
+        if (!this._context.validation.isValid(innerDate, Unit.year)) {
+          classes.push(Namespace.Css.disabled);
+        }
 
-      containerClone.classList.remove(...containerClone.classList);
-      containerClone.classList.add(...classes);
-      containerClone.innerText = `${innerDate.year}`;
+        containerClone.classList.remove(...containerClone.classList);
+        containerClone.classList.add(...classes);
+        containerClone.innerText = `${innerDate.year}`;
 
-      innerDate.manipulate(1, Unit.year);
-    });
+        innerDate.manipulate(1, Unit.year);
+      });
   }
 }

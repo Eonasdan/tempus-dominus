@@ -1,5 +1,5 @@
 /*
-look at how bootstrap loops through their vars to make a --root section
+todo look at how bootstrap loops through their vars to make a --root section
  */
 .visually-hidden, .tempus-dominus-widget [data-action]::after {
   position: absolute !important;
@@ -13,10 +13,22 @@ look at how bootstrap loops through their vars to make a --root section
   border: 0 !important;
 }
 
+.tempus-dominus-widget {
+  list-style: none;
+  margin: 2px 0;
+  padding: 4px;
+  width: 19rem;
+  border-radius: 4px;
+  display: none;
+  background-color: white;
+  border: 1px solid black;
+}
 .tempus-dominus-widget [data-action] {
   cursor: pointer;
 }
-
+.tempus-dominus-widget [data-action]::after {
+  content: attr(title);
+}
 .tempus-dominus-widget .arrow,
 .tempus-dominus-widget .arrow::before {
   visibility: hidden;
@@ -32,47 +44,29 @@ look at how bootstrap loops through their vars to make a --root section
   border-style: solid;
   border-width: 1px;
 }
-
 .tempus-dominus-widget[data-popper-placement^=top] > .arrow {
   bottom: -4px;
 }
 .tempus-dominus-widget[data-popper-placement^=top] > .arrow::before {
   border-color: transparent black black transparent;
 }
-
 .tempus-dominus-widget[data-popper-placement^=bottom] > .arrow {
   top: -4px;
 }
 .tempus-dominus-widget[data-popper-placement^=bottom] > .arrow::before {
   border-color: black transparent transparent black;
 }
-
 .tempus-dominus-widget[data-popper-placement^=left] > .arrow {
   right: -4px;
 }
 .tempus-dominus-widget[data-popper-placement^=left] > .arrow::before {
   border-color: black black transparent transparent;
 }
-
 .tempus-dominus-widget[data-popper-placement^=right] > .arrow {
   left: -4px;
 }
 .tempus-dominus-widget[data-popper-placement^=right] > .arrow::before {
   border-color: transparent transparent black black;
-}
-
-.tempus-dominus-widget {
-  list-style: none;
-  margin: 2px 0;
-  padding: 4px;
-  width: 19rem;
-  border-radius: 4px;
-  display: none;
-  background-color: white;
-  border: 1px solid black;
-}
-.tempus-dominus-widget [data-action]::after {
-  content: attr(title);
 }
 .tempus-dominus-widget.show {
   display: block;
@@ -84,9 +78,6 @@ look at how bootstrap loops through their vars to make a --root section
   height: 0;
   overflow: hidden;
   transition: height 0.35s ease;
-}
-.tempus-dominus-widget.tempus-dominus-widget-with-calendar-weeks {
-  width: 21rem;
 }
 @media (min-width: 576px) {
   .tempus-dominus-widget.timepicker-sbs {
@@ -102,6 +93,13 @@ look at how bootstrap loops through their vars to make a --root section
   .tempus-dominus-widget.timepicker-sbs {
     width: 38em;
   }
+}
+.tempus-dominus-widget.timepicker-sbs .td-row {
+  display: flex;
+}
+.tempus-dominus-widget.timepicker-sbs .td-row .td-half {
+  flex: 0 0 auto;
+  width: 50%;
 }
 .tempus-dominus-widget:before, .tempus-dominus-widget:after {
   content: "";
@@ -266,12 +264,27 @@ look at how bootstrap loops through their vars to make a --root section
   bottom: 4px;
   right: 4px;
 }
-.tempus-dominus-widget.useTwentyfour td.hour {
-  height: 27px;
-  line-height: 27px;
-}
 .tempus-dominus-widget .time-container {
   margin-bottom: 0.5rem;
+}
+.tempus-dominus-widget button {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td.day,
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td.hour,

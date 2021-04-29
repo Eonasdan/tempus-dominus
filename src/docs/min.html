@@ -81,6 +81,12 @@
                 </span>
               </div>
             </div>
+            <div class="row mt-5">
+              <label for="startTimeInputId" class="form-label text-light">
+                Inline
+              </label>
+              <div class="input-group" id="datetimepicker3"></div>
+            </div>
           </div>
           <div class="col-6">
             <button id="clearLog" type="button" class="btn btn-primary m-3">
@@ -145,7 +151,15 @@
               enabledDates: null,
               disabledTimeIntervals: [{ from: now, to: twoHours }],
             },
+            display: {
+              components: {
+                useTwentyfourHour: false,
+                seconds: false,
+              },
+              sideBySide: false,
+            },
             allowMultidate: false,
+            promptTimeOnDateChange: true,
           }
         );
 
@@ -159,6 +173,15 @@
         maxDate: '11/22/2013 00:53',
     }
 });*/
+
+        /*var dt3 = new tempusdominus.TempusDominus(
+          document.getElementById('datetimepicker3'),
+          {
+            display: {
+              inline: true
+            }
+          }
+        );*/
       } catch (e) {
         logger('error', e);
         console.log(e);

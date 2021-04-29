@@ -3,25 +3,31 @@ import { Unit } from '../../datetime';
 import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
 
+/**
+ * Creates and updates the grid for `hours`
+ */
 export default class HourDisplay {
-  private context: TempusDominus;
+  private _context: TempusDominus;
 
   constructor(context: TempusDominus) {
-    this.context = context;
+    this._context = context;
   }
 
-  get picker(): HTMLElement {
+  /**
+   * Build the container html for the display
+   * @private
+   */
+  get _picker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.hourContainer);
 
     const table = document.createElement('table');
-    table.classList.add('table', 'table-sm'); //todo bootstrap
     const tableBody = document.createElement('tbody');
     let row = document.createElement('tr');
     for (
       let i = 0;
       i <=
-      (this.context.options.display.components.useTwentyfourHour ? 24 : 12);
+      (this._context.options.display.components.useTwentyfourHour ? 24 : 12);
       i++
     ) {
       if (i !== 0 && i % 4 === 0) {
@@ -41,11 +47,15 @@ export default class HourDisplay {
     return container;
   }
 
-  update(): void {
-    const container = this.context.display.widget.getElementsByClassName(
+  /**
+   * Populates the grid and updates enabled states
+   * @private
+   */
+  _update(): void {
+    const container = this._context.display.widget.getElementsByClassName(
       Namespace.Css.hourContainer
     )[0];
-    let innerDate = this.context.viewDate.clone.startOf(Unit.date);
+    let innerDate = this._context.viewDate.clone.startOf(Unit.date);
 
     container
       .querySelectorAll('tbody td div')
@@ -53,14 +63,14 @@ export default class HourDisplay {
         let classes = [];
         classes.push(Namespace.Css.hour);
 
-        if (!this.context.validation.isValid(innerDate, Unit.hours)) {
+        if (!this._context.validation.isValid(innerDate, Unit.hours)) {
           classes.push(Namespace.Css.disabled);
         }
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${innerDate.hours}`);
-        containerClone.innerText = this.context.options.display.components
+        containerClone.innerText = this._context.options.display.components
           .useTwentyfourHour
           ? innerDate.hoursFormatted
           : innerDate.twelveHoursFormatted;

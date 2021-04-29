@@ -4,32 +4,45 @@ import { TempusDominus } from './tempus-dominus';
 import Collapse from './display/collapse';
 import Namespace from './namespace';
 
+/**
+ *
+ */
 export default class Actions {
-  private context: TempusDominus;
+  private _context: TempusDominus;
   private collapse: Collapse;
 
   constructor(context: TempusDominus) {
-    this.context = context;
+    this._context = context;
     this.collapse = new Collapse();
   }
 
-  do(e, action?) {
+  /**
+   * Performs the selected `action`. See ActionTypes
+   * @param e This is normally a click event
+   * @param action If not provided, then look for a [data-action]
+   */
+  do(e: any, action?: ActionTypes) {
     const currentTarget = e.currentTarget;
     if (currentTarget.classList.contains(Namespace.Css.disabled)) return false;
     action = action || currentTarget.dataset.action;
-    const lastPicked = (this.context.dates.lastPicked || this.context.viewDate)
-      .clone;
-    console.log('action', action);
+    const lastPicked = (
+      this._context.dates.lastPicked || this._context.viewDate
+    ).clone;
 
-    const modifyTime = (unit: Unit, value = 1) => {
+    /**
+     * Common function to manipulate {@link lastPicked} by `unit`
+     * @param unit
+     * @param value Value to change by
+     */
+    const manipulateAndSet = (unit: Unit, value = 1) => {
       const newDate = lastPicked.manipulate(value, unit);
-      if (this.context.validation.isValid(newDate, unit)) {
+      if (this._context.validation.isValid(newDate, unit)) {
         /*if (this.context.dates.lastPickedIndex < 0) {
                     this.date(newDate);
                 }*/
-        this.context.dates._setValue(
+        this._context.dates._setValue(
           newDate,
-          this.context.dates.lastPickedIndex
+          this._context.dates.lastPickedIndex
         );
       }
     };
@@ -38,16 +51,16 @@ export default class Actions {
       case ActionTypes.next:
       case ActionTypes.previous:
         const { NAV_FUNCTION, NAV_STEP } = DatePickerModes[
-          this.context.currentViewMode
+          this._context.currentViewMode
         ];
         if (action === ActionTypes.next)
-          this.context.viewDate.manipulate(NAV_STEP, NAV_FUNCTION);
-        else this.context.viewDate.manipulate(NAV_STEP * -1, NAV_FUNCTION);
-        this.context.display.update('calendar');
-        this.context._viewUpdate(NAV_FUNCTION);
+          this._context.viewDate.manipulate(NAV_STEP, NAV_FUNCTION);
+        else this._context.viewDate.manipulate(NAV_STEP * -1, NAV_FUNCTION);
+        this._context.display._update('calendar');
+        this._context._viewUpdate(NAV_FUNCTION);
         break;
       case ActionTypes.pickerSwitch:
-        this.context.display._showMode(1);
+        this._context.display._showMode(1);
         break;
       case ActionTypes.selectMonth:
       case ActionTypes.selectYear:
@@ -55,33 +68,33 @@ export default class Actions {
         const value = +currentTarget.getAttribute('data-value');
         switch (action) {
           case ActionTypes.selectMonth:
-            this.context.viewDate.month = value;
-            this.context._viewUpdate(Unit.month);
+            this._context.viewDate.month = value;
+            this._context._viewUpdate(Unit.month);
             break;
           case ActionTypes.selectYear:
-            this.context.viewDate.year = value;
-            this.context._viewUpdate(Unit.year);
+            this._context.viewDate.year = value;
+            this._context._viewUpdate(Unit.year);
             break;
           case ActionTypes.selectDecade:
-            this.context.viewDate.year = value;
-            this.context._viewUpdate(Unit.year);
+            this._context.viewDate.year = value;
+            this._context._viewUpdate(Unit.year);
             break;
         }
 
-        if (this.context.currentViewMode === this.context.minViewModeNumber) {
-          this.context.dates._setValue(
-            this.context.viewDate,
-            this.context.dates.lastPickedIndex
+        if (this._context.currentViewMode === this._context.minViewModeNumber) {
+          this._context.dates._setValue(
+            this._context.viewDate,
+            this._context.dates.lastPickedIndex
           );
-          if (!this.context.options.inline) {
-            this.context.display.hide();
+          if (!this._context.options.display.inline) {
+            this._context.display.hide();
           }
         } else {
-          this.context.display._showMode(-1);
+          this._context.display._showMode(-1);
         }
         break;
       case ActionTypes.selectDay:
-        const day = this.context.viewDate.clone;
+        const day = this._context.viewDate.clone;
         if (currentTarget.classList.contains(Namespace.Css.old)) {
           day.manipulate(-1, Unit.month);
         }
@@ -91,180 +104,187 @@ export default class Actions {
 
         day.date = +currentTarget.innerText;
         let index = 0;
-        if (this.context.options.allowMultidate) {
-          index = this.context.dates.pickedIndex(day, Unit.date);
+        if (this._context.options.allowMultidate) {
+          index = this._context.dates.pickedIndex(day, Unit.date);
           if (index !== -1) {
-            this.context.dates._setValue(null, index); //deselect multidate
+            this._context.dates._setValue(null, index); //deselect multi-date
           } else {
-            this.context.dates._setValue(
+            this._context.dates._setValue(
               day,
-              this.context.dates.lastPickedIndex + 1
+              this._context.dates.lastPickedIndex + 1
             );
           }
         } else {
-          this.context.dates._setValue(day, this.context.dates.lastPickedIndex);
+          this._context.dates._setValue(
+            day,
+            this._context.dates.lastPickedIndex
+          );
         }
 
         if (
-          !this.context.display._hasTime &&
-          !this.context.options.keepOpen &&
-          !this.context.options.inline &&
-          !this.context.options.allowMultidate
+          !this._context.display._hasTime &&
+          !this._context.options.keepOpen &&
+          !this._context.options.display.inline &&
+          !this._context.options.allowMultidate
         ) {
-          this.context.display.hide();
+          this._context.display.hide();
         }
         break;
       case ActionTypes.selectHour:
         let hour = +currentTarget.getAttribute('data-value');
         lastPicked.hours = hour;
-        this.context.dates._setValue(
+        this._context.dates._setValue(
           lastPicked,
-          this.context.dates.lastPickedIndex
+          this._context.dates.lastPickedIndex
         );
         if (
-          this.context.options.display.components.useTwentyfourHour &&
-          !this.context.options.display.components.minutes &&
-          !this.context.options.keepOpen &&
-          !this.context.options.inline
+          this._context.options.display.components.useTwentyfourHour &&
+          !this._context.options.display.components.minutes &&
+          !this._context.options.keepOpen &&
+          !this._context.options.display.inline
         ) {
-          this.context.display.hide();
+          this._context.display.hide();
         } else {
           this.do(e, ActionTypes.showClock);
         }
         break;
       case ActionTypes.selectMinute:
         lastPicked.minutes = +currentTarget.innerText;
-        this.context.dates._setValue(
+        this._context.dates._setValue(
           lastPicked,
-          this.context.dates.lastPickedIndex
+          this._context.dates.lastPickedIndex
         );
         if (
-          this.context.options.display.components.useTwentyfourHour &&
-          !this.context.options.display.components.seconds &&
-          !this.context.options.keepOpen &&
-          !this.context.options.inline
+          this._context.options.display.components.useTwentyfourHour &&
+          !this._context.options.display.components.seconds &&
+          !this._context.options.keepOpen &&
+          !this._context.options.display.inline
         ) {
-          this.context.display.hide();
+          this._context.display.hide();
         } else {
           this.do(e, ActionTypes.showClock);
         }
         break;
       case ActionTypes.selectSecond:
         lastPicked.seconds = +currentTarget.innerText;
-        this.context.dates._setValue(
+        this._context.dates._setValue(
           lastPicked,
-          this.context.dates.lastPickedIndex
+          this._context.dates.lastPickedIndex
         );
         if (
-          this.context.options.display.components.useTwentyfourHour &&
-          !this.context.options.keepOpen &&
-          !this.context.options.inline
+          this._context.options.display.components.useTwentyfourHour &&
+          !this._context.options.keepOpen &&
+          !this._context.options.display.inline
         ) {
-          this.context.display.hide();
+          this._context.display.hide();
         } else {
           this.do(e, ActionTypes.showClock);
         }
         break;
       case ActionTypes.incrementHours:
-        modifyTime(Unit.hours);
+        manipulateAndSet(Unit.hours);
         break;
       case ActionTypes.incrementMinutes:
-        modifyTime(Unit.minutes, this.context.options.stepping);
+        manipulateAndSet(Unit.minutes, this._context.options.stepping);
         break;
       case ActionTypes.incrementSeconds:
-        modifyTime(Unit.seconds);
+        manipulateAndSet(Unit.seconds);
         break;
       case ActionTypes.decrementHours:
-        modifyTime(Unit.hours, -1);
+        manipulateAndSet(Unit.hours, -1);
         break;
       case ActionTypes.decrementMinutes:
-        modifyTime(Unit.minutes, this.context.options.stepping * -1);
+        manipulateAndSet(Unit.minutes, this._context.options.stepping * -1);
         break;
       case ActionTypes.decrementSeconds:
-        modifyTime(Unit.seconds, -1);
+        manipulateAndSet(Unit.seconds, -1);
         break;
       case ActionTypes.togglePeriod:
-        modifyTime(
+        manipulateAndSet(
           Unit.hours,
-          this.context.dates.lastPicked.hours >= 12 ? -12 : 12
+          this._context.dates.lastPicked.hours >= 12 ? -12 : 12
         );
         break;
       case ActionTypes.togglePicker:
-        this.context.display.widget
+        this._context.display.widget
           .querySelectorAll(
             `.${Namespace.Css.dateContainer}, .${Namespace.Css.timeContainer}`
           )
-          .forEach((e: HTMLElement) => this.collapse.toggle(e));
+          .forEach((htmlElement: HTMLElement) =>
+            this.collapse.toggle(htmlElement)
+          );
 
         if (
           currentTarget.getAttribute('title') ===
-          this.context.options.localization.selectDate
+          this._context.options.localization.selectDate
         ) {
           currentTarget.setAttribute(
             'title',
-            this.context.options.localization.selectTime
+            this._context.options.localization.selectTime
           );
-          currentTarget.innerHTML = this.context.display.iconTag(
-            this.context.options.display.icons.time
+          currentTarget.innerHTML = this._context.display._iconTag(
+            this._context.options.display.icons.time
           ).outerHTML;
-          this.context.display.update('calendar');
+          this._context.display._update('calendar');
         } else {
           currentTarget.setAttribute(
             'title',
-            this.context.options.localization.selectDate
+            this._context.options.localization.selectDate
           );
-          currentTarget.innerHTML = this.context.display.iconTag(
-            this.context.options.display.icons.date
+          currentTarget.innerHTML = this._context.display._iconTag(
+            this._context.options.display.icons.date
           ).outerHTML;
           this.do(e, ActionTypes.showClock);
-          this.context.display.update('clock');
+          this._context.display._update('clock');
         }
         break;
       case ActionTypes.showClock:
       case ActionTypes.showHours:
       case ActionTypes.showMinutes:
       case ActionTypes.showSeconds:
-        this.context.display.widget
+        this._context.display.widget
           .querySelectorAll(`.${Namespace.Css.timeContainer} > div`)
-          .forEach((e: HTMLElement) => (e.style.display = 'none'));
+          .forEach(
+            (htmlElement: HTMLElement) => (htmlElement.style.display = 'none')
+          );
 
         let classToUse = '';
         switch (action) {
           case ActionTypes.showClock:
             classToUse = Namespace.Css.clockContainer;
-            this.context.display.update('clock');
+            this._context.display._update('clock');
             break;
           case ActionTypes.showHours:
             classToUse = Namespace.Css.hourContainer;
-            this.context.display.update(Unit.hours);
+            this._context.display._update(Unit.hours);
             break;
           case ActionTypes.showMinutes:
             classToUse = Namespace.Css.minuteContainer;
-            this.context.display.update(Unit.minutes);
+            this._context.display._update(Unit.minutes);
             break;
           case ActionTypes.showSeconds:
             classToUse = Namespace.Css.secondContainer;
-            this.context.display.update(Unit.seconds);
+            this._context.display._update(Unit.seconds);
             break;
         }
 
         (<HTMLElement>(
-          this.context.display.widget.getElementsByClassName(classToUse)[0]
+          this._context.display.widget.getElementsByClassName(classToUse)[0]
         )).style.display = 'block';
         break;
       case ActionTypes.clear:
-        this.context.dates._setValue(null);
+        this._context.dates._setValue(null);
         break;
       case ActionTypes.close:
-        this.context.display.hide();
+        this._context.display.hide();
         break;
       case ActionTypes.today:
         const today = new DateTime();
-        this.context.viewDate = today;
-        if (this.context.validation.isValid(today, Unit.date))
-          this.context.dates._setValue(
+        this._context.viewDate = today;
+        if (this._context.validation.isValid(today, Unit.date))
+          this._context.dates._setValue(
             today,
-            this.context.dates.lastPickedIndex
+            this._context.dates.lastPickedIndex
           );
         break;
     }

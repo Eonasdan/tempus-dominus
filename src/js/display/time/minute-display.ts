@@ -3,23 +3,29 @@ import { Unit } from '../../datetime';
 import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
 
+/**
+ * Creates and updates the grid for `minutes`
+ */
 export default class MinuteDisplay {
-  private context: TempusDominus;
+  private _context: TempusDominus;
 
   constructor(context: TempusDominus) {
-    this.context = context;
+    this._context = context;
   }
 
-  get picker(): HTMLElement {
+  /**
+   * Build the container html for the display
+   * @private
+   */
+  get _picker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.minuteContainer);
 
     const table = document.createElement('table');
-    table.classList.add('table', 'table-sm'); //todo bootstrap
     const tableBody = document.createElement('tbody');
     let row = document.createElement('tr');
     let step =
-      this.context.options.stepping === 1 ? 5 : this.context.options.stepping;
+      this._context.options.stepping === 1 ? 5 : this._context.options.stepping;
     for (let i = 0; i <= 60 / step; i++) {
       if (i !== 0 && i % 4 === 0) {
         tableBody.appendChild(row);
@@ -38,13 +44,17 @@ export default class MinuteDisplay {
     return container;
   }
 
-  update(): void {
-    const container = this.context.display.widget.getElementsByClassName(
+  /**
+   * Populates the grid and updates enabled states
+   * @private
+   */
+  _update(): void {
+    const container = this._context.display.widget.getElementsByClassName(
       Namespace.Css.minuteContainer
     )[0];
-    let innerDate = this.context.viewDate.clone.startOf(Unit.hours);
+    let innerDate = this._context.viewDate.clone.startOf(Unit.hours);
     let step =
-      this.context.options.stepping === 1 ? 5 : this.context.options.stepping;
+      this._context.options.stepping === 1 ? 5 : this._context.options.stepping;
 
     container
       .querySelectorAll('tbody td div')
@@ -52,7 +62,7 @@ export default class MinuteDisplay {
         let classes = [];
         classes.push(Namespace.Css.minute);
 
-        if (!this.context.validation.isValid(innerDate, Unit.minutes)) {
+        if (!this._context.validation.isValid(innerDate, Unit.minutes)) {
           classes.push(Namespace.Css.disabled);
         }
 

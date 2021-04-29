@@ -11,7 +11,7 @@ $bs-datetimepicker-primary-border-color: white !default;
 $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
 
 /*
-look at how bootstrap loops through their vars to make a --root section
+todo look at how bootstrap loops through their vars to make a --root section
  */
 
 .visually-hidden {
@@ -26,12 +26,26 @@ look at how bootstrap loops through their vars to make a --root section
   border: 0 !important;
 }
 
-.tempus-dominus-widget [data-action] {
-  cursor: pointer;
-}
-
-//popper
 .tempus-dominus-widget {
+  list-style: none;
+  margin: 2px 0;
+  padding: 4px;
+  width: 19rem;
+  border-radius: 4px;
+  display: none;
+  background-color: white;
+  border: 1px solid black;
+
+  [data-action] {
+    cursor: pointer;
+
+    &::after {
+      @extend .visually-hidden;
+      content: attr(title);
+    }
+  }
+
+  //popper
   .arrow,
   .arrow::before {
     visibility: hidden;
@@ -48,51 +62,40 @@ look at how bootstrap loops through their vars to make a --root section
     border-style: solid;
     border-width: 1px;
   }
-}
 
-.tempus-dominus-widget[data-popper-placement^='top'] > .arrow {
-  bottom: -4px;
-  &::before {
-    border-color: transparent black black transparent;
+  &[data-popper-placement^='top'] > .arrow {
+    bottom: -4px;
+
+    &::before {
+      border-color: transparent black black transparent;
+    }
   }
-}
 
-.tempus-dominus-widget[data-popper-placement^='bottom'] > .arrow {
-  top: -4px;
-  &::before {
-    border-color: black transparent transparent black;
+  &[data-popper-placement^='bottom'] > .arrow {
+    top: -4px;
+
+    &::before {
+      border-color: black transparent transparent black;
+    }
   }
-}
 
-.tempus-dominus-widget[data-popper-placement^='left'] > .arrow {
-  right: -4px;
-  &::before {
-    border-color: black black transparent transparent;
+  &[data-popper-placement^='left'] > .arrow {
+    right: -4px;
+
+    &::before {
+      border-color: black black transparent transparent;
+    }
   }
-}
 
-.tempus-dominus-widget[data-popper-placement^='right'] > .arrow {
-  left: -4px;
-  &::before {
-    border-color: transparent transparent black black;
+  &[data-popper-placement^='right'] > .arrow {
+    left: -4px;
+
+    &::before {
+      border-color: transparent transparent black black;
+    }
   }
-}
-//end popper
 
-.tempus-dominus-widget {
-  list-style: none;
-  margin: 2px 0;
-  padding: 4px;
-  width: 19rem;
-  border-radius: 4px;
-  display: none;
-  background-color: white;
-  border: 1px solid black;
-
-  [data-action]::after {
-    @extend .visually-hidden;
-    content: attr(title);
-  }
+  //end popper
 
   &.show {
     display: block;
@@ -110,10 +113,6 @@ look at how bootstrap loops through their vars to make a --root section
     transition: height 0.35s ease;
   }
 
-  &.tempus-dominus-widget-with-calendar-weeks {
-    width: 21rem;
-  }
-
   &.timepicker-sbs {
     @media (min-width: 576px) {
       width: 38em;
@@ -125,6 +124,15 @@ look at how bootstrap loops through their vars to make a --root section
 
     @media (min-width: 992px) {
       width: 38em;
+    }
+
+    .td-row {
+      display: flex;
+
+      .td-half {
+        flex: 0 0 auto;
+        width: 50%;
+      }
     }
   }
 
@@ -338,15 +346,29 @@ look at how bootstrap loops through their vars to make a --root section
     }
   }
 
-  &.useTwentyfour {
-    td.hour {
-      height: 27px;
-      line-height: 27px;
-    }
-  }
-
   .time-container {
     margin-bottom: 0.5rem;
+  }
+
+  button {
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+      border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
 
   &.tempus-dominus-widget-readonly {

@@ -6,29 +6,35 @@ const VERSION = '6.0.0-alpha1';
 const DATA_KEY = 'td';
 const DATA_API_KEY = '.data-api';
 
+/**
+ * Events
+ */
 class Events {
-  KEY = `.${DATA_KEY}`;
-  CHANGE = `change${this.KEY}`;
-  UPDATE = `update${this.KEY}`;
-  ERROR = `error${this.KEY}`;
-  SHOW = `show${this.KEY}`;
-  HIDE = `hide${this.KEY}`;
-  BLUR = `blur${this.KEY}`;
-  KEYUP = `keyup${this.KEY}`;
-  KEYDOWN = `keydown${this.KEY}`;
-  FOCUS = `focus${this.KEY}`;
-  CLICK_DATA_API = `click${this.KEY}${DATA_API_KEY}`;
-  clickAction = `click${this.KEY}.action`;
+  key = `.${DATA_KEY}`;
+  change = `change${this.key}`;
+  update = `update${this.key}`;
+  error = `error${this.key}`;
+  /**
+   * Show event
+   * @event Events#show
+   */
+  show = `show${this.key}`;
+  /**
+   * Hide event
+   * @event Events#hide
+   */
+  hide = `hide${this.key}`;
+  blur = `blur${this.key}`;
+  keyup = `keyup${this.key}`;
+  keydown = `keydown${this.key}`;
+  focus = `focus${this.key}`;
+  clickDataApi = `click${this.key}${DATA_API_KEY}`;
+  clickAction = `click${this.key}.action`;
 }
 
 class Css {
   widget = `${NAME}-widget`;
   switch = 'picker-switch';
-  // todo the next several classes are to represent states of the picker that would
-  // make it wider then usual and it seems like this could be cleaned up.
-  widgetCalendarWeeks = `${this.widget}-with-calendar-weeks`;
-  useTwentyfour = 'useTwentyfour';
-  wider = 'wider';
   sideBySide = 'timepicker-sbs';
 
   previous = 'previous';

@@ -29,16 +29,12 @@ const DefaultOptions: Options = {
     collapse: true,
     sideBySide: false,
     calendarWeeks: false,
-    viewMode: 'days',
+    viewMode: 'calendar',
     toolbarPlacement: 'default',
     buttons: {
       today: false,
       clear: false,
       close: false,
-    },
-    widgetPositioning: {
-      horizontal: 'auto',
-      vertical: 'auto',
     },
     components: {
       century: true,
@@ -52,6 +48,7 @@ const DefaultOptions: Options = {
       useTwentyfourHour: false,
     },
     inputFormat: undefined,
+    inline: false,
   },
   stepping: 1,
   useCurrent: true,
@@ -90,7 +87,6 @@ const DefaultOptions: Options = {
   ignoreReadonly: false,
   keepOpen: false,
   focusOnShow: true,
-  inline: false,
   keepInvalid: false,
   keyBinds: {
     //todo plugin //todo jquery //todo moment

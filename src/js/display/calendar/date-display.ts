@@ -3,50 +3,59 @@ import { DateTime, Unit } from '../../datetime';
 import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
 
+/**
+ * Creates and updates the grid for `date`
+ */
 export default class DateDisplay {
-  private context: TempusDominus;
+  private _context: TempusDominus;
 
   constructor(context: TempusDominus) {
-    this.context = context;
+    this._context = context;
   }
 
-  get picker(): HTMLElement {
+  /**
+   * Build the container html for the display
+   * @private
+   */
+  get _picker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.daysContainer);
 
     const table = document.createElement('table');
-    table.classList.add('table', 'table-sm'); //todo bootstrap
-    const headTemplate = this.context.display.headTemplate;
+    const headTemplate = this._context.display._headTemplate;
     const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
     previous
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this.context.options.localization.previousMonth);
+      .setAttribute('title', this._context.options.localization.previousMonth);
     switcher.setAttribute(
       'title',
-      this.context.options.localization.selectMonth
+      this._context.options.localization.selectMonth
     );
     next
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this.context.options.localization.nextMonth);
+      .setAttribute('title', this._context.options.localization.nextMonth);
 
     table.appendChild(headTemplate);
     const tableBody = document.createElement('tbody');
     tableBody.appendChild(this._daysOfTheWeek());
+
     let row = document.createElement('tr');
-    if (this.context.options.display.calendarWeeks) {
+
+    if (this._context.options.display.calendarWeeks) {
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
       td.appendChild(div);
       row.appendChild(td);
     }
+
     for (let i = 0; i <= 42; i++) {
       if (i !== 0 && i % 7 === 0) {
         tableBody.appendChild(row);
         row = document.createElement('tr');
 
-        if (this.context.options.display.calendarWeeks) {
+        if (this._context.options.display.calendarWeeks) {
           const td = document.createElement('td');
           const div = document.createElement('div');
           div.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
@@ -54,6 +63,7 @@ export default class DateDisplay {
           row.appendChild(td);
         }
       }
+
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectDay);
@@ -68,97 +78,100 @@ export default class DateDisplay {
     return container;
   }
 
-  update(): void {
-    const container = this.context.display.widget.getElementsByClassName(
+  /**
+   * Populates the grid and updates enabled states
+   * @private
+   */
+  _update(): void {
+    const container = this._context.display.widget.getElementsByClassName(
       Namespace.Css.daysContainer
     )[0];
     const [previous, switcher, next] = container
       .getElementsByTagName('thead')[0]
       .getElementsByTagName('th');
 
-    switcher.innerText = this.context.viewDate.format({
-      month: this.context.options.localization.dayViewHeaderFormat,
+    switcher.innerText = this._context.viewDate.format({
+      month: this._context.options.localization.dayViewHeaderFormat,
     });
 
-    this.context.validation.isValid(
-      this.context.viewDate.clone.manipulate(-1, Unit.month),
+    this._context.validation.isValid(
+      this._context.viewDate.clone.manipulate(-1, Unit.month),
       Unit.month
     )
       ? previous.classList.remove(Namespace.Css.disabled)
       : previous.classList.add(Namespace.Css.disabled);
 
-    this.context.validation.isValid(
-      this.context.viewDate.clone.manipulate(1, Unit.month),
+    this._context.validation.isValid(
+      this._context.viewDate.clone.manipulate(1, Unit.month),
       Unit.month
     )
       ? next.classList.remove(Namespace.Css.disabled)
       : next.classList.add(Namespace.Css.disabled);
 
-    this.grid(container.querySelectorAll('tbody td div'));
-  }
-
-  private grid(nodeList: NodeList) {
-    let innerDate = this.context.viewDate.clone
+    let innerDate = this._context.viewDate.clone
       .startOf(Unit.month)
       .startOf('weekDay')
       .manipulate(12, Unit.hours);
 
-    nodeList.forEach((containerClone: HTMLElement, index) => {
-      if (
-        this.context.options.display.calendarWeeks &&
-        containerClone.classList.contains(Namespace.Css.calendarWeeks)
-      ) {
-        containerClone.innerText = `${innerDate.week}`;
-        return;
-      }
+    container
+      .querySelectorAll('tbody td div')
+      .forEach((containerClone: HTMLElement, index) => {
+        if (
+          this._context.options.display.calendarWeeks &&
+          containerClone.classList.contains(Namespace.Css.calendarWeeks)
+        ) {
+          containerClone.innerText = `${innerDate.week}`;
+          return;
+        }
 
-      let classes = [];
-      classes.push(Namespace.Css.day);
+        let classes = [];
+        classes.push(Namespace.Css.day);
 
-      if (innerDate.isBefore(this.context.viewDate, Unit.month)) {
-        classes.push(Namespace.Css.old);
-      }
-      if (innerDate.isAfter(this.context.viewDate, Unit.month)) {
-        classes.push(Namespace.Css.new);
-      }
+        if (innerDate.isBefore(this._context.viewDate, Unit.month)) {
+          classes.push(Namespace.Css.old);
+        }
+        if (innerDate.isAfter(this._context.viewDate, Unit.month)) {
+          classes.push(Namespace.Css.new);
+        }
 
-      if (
-        !this.context.unset &&
-        this.context.dates.isPicked(innerDate, Unit.date)
-      ) {
-        classes.push(Namespace.Css.active);
-      }
-      if (!this.context.validation.isValid(innerDate, Unit.date)) {
-        classes.push(Namespace.Css.disabled);
-      }
-      if (innerDate.isSame(new DateTime(), Unit.date)) {
-        classes.push(Namespace.Css.today);
-      }
-      if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
-        classes.push(Namespace.Css.weekend);
-      }
+        if (
+          !this._context.unset &&
+          this._context.dates.isPicked(innerDate, Unit.date)
+        ) {
+          classes.push(Namespace.Css.active);
+        }
+        if (!this._context.validation.isValid(innerDate, Unit.date)) {
+          classes.push(Namespace.Css.disabled);
+        }
+        if (innerDate.isSame(new DateTime(), Unit.date)) {
+          classes.push(Namespace.Css.today);
+        }
+        if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
+          classes.push(Namespace.Css.weekend);
+        }
 
-      containerClone.classList.remove(...containerClone.classList);
-      containerClone.classList.add(...classes);
-      containerClone.setAttribute(
-        'data-value',
-        `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`
-      );
-      containerClone.innerText = `${innerDate.date}`;
-      innerDate.manipulate(1, Unit.date);
-    });
+        containerClone.classList.remove(...containerClone.classList);
+        containerClone.classList.add(...classes);
+        containerClone.setAttribute(
+          'data-value',
+          `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`
+        );
+        containerClone.innerText = `${innerDate.date}`;
+        innerDate.manipulate(1, Unit.date);
+      });
   }
 
   /***
    * Generates an html row that contains the days of the week.
+   * @private
    */
-  _daysOfTheWeek(): HTMLTableRowElement {
-    let innerDate = this.context.viewDate.clone
+  private _daysOfTheWeek(): HTMLTableRowElement {
+    let innerDate = this._context.viewDate.clone
       .startOf('weekDay')
       .startOf(Unit.date);
     const row = document.createElement('tr');
 
-    if (this.context.options.display.calendarWeeks) {
+    if (this._context.options.display.calendarWeeks) {
       const th = document.createElement('th');
       th.classList.add(Namespace.Css.calendarWeeks);
       th.innerText = '#';

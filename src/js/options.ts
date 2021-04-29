@@ -14,7 +14,6 @@ export default interface Options {
   };
   display: {
     toolbarPlacement: 'top' | 'bottom' | 'default';
-    widgetPositioning: { horizontal: string; vertical: string };
     components: {
       date: boolean;
       century: boolean;
@@ -40,10 +39,11 @@ export default interface Options {
       down: string;
       close: string;
     };
-    viewMode: 'times' | 'days';
+    viewMode: 'clock' | 'calendar';
     collapse: boolean;
     sideBySide: boolean;
     inputFormat: DateTimeFormatOptions;
+    inline: boolean;
   };
   stepping: number;
   useCurrent: boolean;
@@ -81,7 +81,6 @@ export default interface Options {
   ignoreReadonly: boolean;
   keepOpen: boolean;
   focusOnShow: boolean;
-  inline: boolean;
   keepInvalid: boolean;
   keyBinds: {
     'control down': () => boolean;

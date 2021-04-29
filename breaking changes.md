@@ -2,16 +2,17 @@
 
 - picker returns a `DateTime` which is an extended javascript `Date` object.
 - picker no longer uses jQuery, momentjs, or bootstrap
+- events now have interfaces
 
 # Configuration
 
 - renamed `tooltip` to `localization`
-- renamed `tooltip.prevMonth` to `localization.previousMonth`
-- renamed `tooltip.prevYear` to `localization.previousYear`
-- renamed `tooltip.prevDecade` to `localization.previousDecade`
-- renamed `tooltip.prevCentury` to `localization.previousCentury`
-- moved `dayViewHeaderFormat` to `localization.dayViewHeaderFormat`
 
+  - renamed `tooltip.prevMonth` to `localization.previousMonth`
+  - renamed `tooltip.prevYear` to `localization.previousYear`
+  - renamed `tooltip.prevDecade` to `localization.previousDecade`
+  - renamed `tooltip.prevCentury` to `localization.previousCentury`
+  - moved `dayViewHeaderFormat` to `localization.dayViewHeaderFormat`
   - `dayViewHeaderFormat` now takes a javascript `intl` month option, e.g. `long` (default)
 
 - removed `locale`
@@ -21,6 +22,8 @@
   - added `display.inputFormat` that takes `DateTimeFormatOptions`;
 - removed `extraFormats`
 - removed `widgetParent`
+- removed `widgetPositioning`
+- changed `viewMode` from `'times' | 'days'` to `'clock' | 'calendar'`
 
 - moved the following to `restrictions`
 
@@ -44,6 +47,7 @@
   - widgetPositioning
   - icons
   - collapse
+  - inline
 
 - `disabledTimeIntervals` is now an array of `{ from: DateTime, to: DateTime } `
 

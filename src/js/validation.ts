@@ -2,6 +2,9 @@ import { TempusDominus } from './tempus-dominus';
 import { DateTime, Unit } from './datetime';
 import Dates from './dates';
 
+/**
+ * Main class for date validation rules based on the options provided.
+ */
 export default class Validation {
   private _context: TempusDominus;
 
@@ -97,7 +100,7 @@ export default class Validation {
 
   /**
    * Checks to see if the disabledDates option is in use and returns true (meaning invalid)
-   * if the @{link testDate} is with in the array. Granularity is by date.
+   * if the `testDate` is with in the array. Granularity is by date.
    * @param testDate
    * @private
    */
@@ -115,7 +118,7 @@ export default class Validation {
 
   /**
    * Checks to see if the enabledDates option is in use and returns true (meaning valid)
-   * if the @{link testDate} is with in the array. Granularity is by date.
+   * if the `testDate` is with in the array. Granularity is by date.
    * @param testDate
    * @private
    */
@@ -133,7 +136,7 @@ export default class Validation {
 
   /**
    * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
-   * if the @{link testDate} is with in the array. Granularity is by hours.
+   * if the `testDate` is with in the array. Granularity is by hours.
    * @param testDate
    * @private
    */
@@ -151,7 +154,7 @@ export default class Validation {
 
   /**
    * Checks to see if the enabledHours option is in use and returns true (meaning valid)
-   * if the @{link testDate} is with in the array. Granularity is by hours.
+   * if the `testDate` is with in the array. Granularity is by hours.
    * @param testDate
    * @private
    */

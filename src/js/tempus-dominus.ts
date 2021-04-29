@@ -13,6 +13,9 @@ import {
   FailEvent,
 } from './event-types';
 
+/**
+ * Main date picker entry point
+ */
 export class TempusDominus {
   options: Options;
   element: HTMLElement;
@@ -26,7 +29,7 @@ export class TempusDominus {
   dates: Dates;
   action: Actions;
 
-  private _notifyChangeEventContext: number;
+  private _notifyChangeEventContext = 0;
   private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: any;
 
@@ -49,11 +52,13 @@ export class TempusDominus {
     this._initializeViewMode();
     this._initializeInput();
     this._initializeToggle();
+
+    if (this.options.display.inline) this.display.show();
   }
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Update the picker options. If @{link reset} is provide @{link options} will be merged with DefaultOptions instead.
+   * Update the picker options. If `reset` is provide `options` will be merged with DefaultOptions instead.
    * @param options
    * @param reset
    * @public
@@ -63,50 +68,80 @@ export class TempusDominus {
     else this.options = this._initializeOptions(options, this.options);
   }
 
-  _notifyEvent(event: BaseEvent) {
+  /**
+   * Triggers an event like ChangeEvent when the picker has updated the value
+   * of a selected date.
+   * @param event Accepts a BaseEvent object.
+   * @private
+   */
+  _triggerEvent(event: BaseEvent) {
     console.log(`notify: ${event.name}`, JSON.stringify(event, null, 2));
     if (event as ChangeEvent) {
       const { date, oldDate, isClear } = event as ChangeEvent;
-      this._notifyChangeEventContext = this._notifyChangeEventContext || 0;
+      // this was to prevent a max call stack error
+      // https://github.com/tempusdominus/core/commit/15a280507f5277b31b0b3319ab1edc7c19a000fb
+      // todo see if this is still needed or if there's a cleaner way
       this._notifyChangeEventContext++;
       if (
         (date && oldDate && date.isSame(oldDate)) ||
         (!isClear && !date && !oldDate) ||
         this._notifyChangeEventContext > 1
       ) {
-        this._notifyChangeEventContext = undefined;
+        this._notifyChangeEventContext = 0;
         return;
       }
       this._handlePromptTimeIfNeeded(event as ChangeEvent);
     }
 
-    const evt = new CustomEvent(event.name, event as any);
-    this.element.dispatchEvent(evt);
+    this.element.dispatchEvent(new CustomEvent(event.name, event as any));
 
-    this._notifyChangeEventContext = void 0;
+    this._notifyChangeEventContext = 0;
   }
 
   /**
-   *
+   * Fires a ViewUpdate event when, for example, the month view is changed.
    * @param {Unit} unit
    * @private
    */
   _viewUpdate(unit: Unit) {
-    this._notifyEvent({
-      name: Namespace.Events.UPDATE,
+    this._triggerEvent({
+      name: Namespace.Events.update,
       change: unit,
       viewDate: this.viewDate.clone,
     } as ViewUpdateEvent);
   }
 
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Hides the picker and removes event listeners
+   */
   dispose() {
-    //doc off
-    //event off
+    this.display.hide();
+    // this will clear the document click event listener
+    this.display._dispose();
+    this.input?.removeEventListener('change', this._inputChangeEvent);
+    this._toggle.removeEventListener('click', this._toggleClickEvent);
     //clear data-
   }
 
+  /**
+   * Merges two Option objects together and validates options type
+   * @param config new Options
+   * @param mergeTo Options to merge into
+   * @private
+   */
   private _initializeOptions(config: Options, mergeTo: Options): Options {
-    const dateArray = (optionName: string, value, providedType: string) => {
+    /**
+     * Type checks that `value` is an array of Date or DateTime
+     * @param optionName Provides text to error messages e.g. disabledDates
+     * @param value Option value
+     * @param providedType Used to provide text to error messages
+     */
+    const typeCheckDateArray = (
+      optionName: string,
+      value,
+      providedType: string
+    ) => {
       if (!Array.isArray(value)) {
         throw Namespace.ErrorMessages.typeMismatch(
           optionName,
@@ -127,7 +162,18 @@ export class TempusDominus {
         value[i] = dateTime;
       }
     };
-    const numberArray = (optionName: string, value, providedType: string) => {
+
+    /**
+     * Type checks that `value` is an array of numbers
+     * @param optionName Provides text to error messages e.g. disabledDates
+     * @param value Option value
+     * @param providedType Used to provide text to error messages
+     */
+    const typeCheckNumberArray = (
+      optionName: string,
+      value,
+      providedType: string
+    ) => {
       if (!Array.isArray(value)) {
         throw Namespace.ErrorMessages.typeMismatch(
           optionName,
@@ -139,6 +185,12 @@ export class TempusDominus {
         console.log('throw an error');
       return;
     };
+
+    /**
+     * Attempts to convert `d` to a DateTime object
+     * @param d value to convert
+     * @param optionName Provides text to error messages e.g. disabledDates
+     */
     const dateConversion = (d: any, optionName: string) => {
       if (typeof d === typeof '') {
         console.warn(Namespace.ErrorMessages.dateString);
@@ -152,9 +204,14 @@ export class TempusDominus {
       return converted;
     };
 
-    //the spread operator caused sub keys to be missing after merging
-    //this is to fix that issue by using spread on the child objects first
     let path = '';
+    /**
+     * The spread operator caused sub keys to be missing after merging.
+     * This is to fix that issue by using spread on the child objects first.
+     * Also handles complex options like disabledDates
+     * @param provided An option from new config
+     * @param defaultOption Default option to compare types against
+     */
     const spread = (provided, defaultOption) => {
       Object.keys(provided).forEach((key) => {
         let providedType = typeof provided[key];
@@ -201,7 +258,11 @@ export class TempusDominus {
             );
           }
           case 'disabledHours':
-            numberArray('restrictions.disabledHours', value, providedType);
+            typeCheckNumberArray(
+              'restrictions.disabledHours',
+              value,
+              providedType
+            );
             if (value.filter((x) => x < 0 || x > 23))
               throw Namespace.ErrorMessages.numbersOutOfRage(
                 'restrictions.disabledHours',
@@ -210,7 +271,11 @@ export class TempusDominus {
               );
             break;
           case 'enabledHours':
-            numberArray('restrictions.enabledHours', value, providedType);
+            typeCheckNumberArray(
+              'restrictions.enabledHours',
+              value,
+              providedType
+            );
             if (value.filter((x) => x < 0 || x > 23))
               throw Namespace.ErrorMessages.numbersOutOfRage(
                 'restrictions.enabledHours',
@@ -219,7 +284,11 @@ export class TempusDominus {
               );
             break;
           case 'daysOfWeekDisabled':
-            numberArray('restrictions.daysOfWeekDisabled', value, providedType);
+            typeCheckNumberArray(
+              'restrictions.daysOfWeekDisabled',
+              value,
+              providedType
+            );
             if (value.filter((x) => x < 0 || x > 6))
               throw Namespace.ErrorMessages.numbersOutOfRage(
                 'restrictions.daysOfWeekDisabled',
@@ -228,10 +297,18 @@ export class TempusDominus {
               );
             break;
           case 'enabledDates':
-            dateArray('restrictions.enabledDates', value, providedType);
+            typeCheckDateArray(
+              'restrictions.enabledDates',
+              value,
+              providedType
+            );
             break;
           case 'disabledDates':
-            dateArray('restrictions.disabledDates', value, providedType);
+            typeCheckDateArray(
+              'restrictions.disabledDates',
+              value,
+              providedType
+            );
             break;
           case 'disabledTimeIntervals':
             if (!Array.isArray(value)) {
@@ -292,6 +369,7 @@ export class TempusDominus {
       ...config,
     };
 
+    //defaults the input format based on the components enabled
     if (config.display.inputFormat === undefined) {
       const components = config.display.components;
       config.display.inputFormat = {
@@ -312,6 +390,11 @@ export class TempusDominus {
     return config;
   }
 
+  /**
+   * Sets the minimum view allowed by the picker. For example the case of only
+   * allowing year and month to be selected but not date.
+   * @private
+   */
   private _initializeViewMode() {
     if (this.options.display.components.year) {
       this.minViewModeNumber = 2;
@@ -329,6 +412,11 @@ export class TempusDominus {
     );
   }
 
+  /**
+   * Checks if an input field is being used, attempts to locate one and sets an
+   * event listener if found.
+   * @private
+   */
   private _initializeInput() {
     if (this.element.tagName == 'INPUT') {
       this.input = this.element as HTMLInputElement;
@@ -341,22 +429,13 @@ export class TempusDominus {
       }
     }
 
-    this.input?.addEventListener('change', () => {
-      let parsedDate = TempusDominus._dateTypeCheck(this.input.value);
-      console.log(parsedDate);
-
-      if (parsedDate) {
-        this.dates._setValue(parsedDate);
-      } else {
-        this._notifyEvent({
-          name: Namespace.Events.ERROR,
-          reason: Namespace.ErrorMessages.failedToParseInput,
-          date: parsedDate,
-        } as FailEvent);
-      }
-    });
+    this.input?.addEventListener('change', this._inputChangeEvent);
   }
 
+  /**
+   * Attempts to locate a toggle for the picker and sets an event listener
+   * @private
+   */
   private _initializeToggle() {
     let query = this.element.dataset.targetToggle;
     if (query == 'nearest') {
@@ -364,9 +443,14 @@ export class TempusDominus {
     }
     this._toggle =
       query == undefined ? this.element : this.element.querySelector(query);
-    this._toggle.addEventListener('click', () => this.display.toggle());
+    this._toggle.addEventListener('click', this._toggleClickEvent);
   }
 
+  /**
+   * Attempts to prove `d` is a DateTime or Date or can be converted into one.
+   * @param d If a string will attempt creating a date from it.
+   * @private
+   */
   private static _dateTypeCheck(d: any): DateTime | null {
     if (d.constructor.name === 'DateTime') return d;
     if (d.constructor.name === 'Date') {
@@ -382,25 +466,76 @@ export class TempusDominus {
     return null;
   }
 
+  /**
+   * If the option is enabled this will render the clock view after a date pick.
+   * @param e change event
+   * @private
+   */
   private _handlePromptTimeIfNeeded(e: ChangeEvent) {
-    if (this.options.promptTimeOnDateChange) {
-      if (!e.oldDate && this.options.useCurrent) {
-        // First time ever. If useCurrent option is set to true (default), do nothing
-        // because the first date is selected automatically.
-        return;
-      } else if (e.oldDate && e.date && e.date.isSame(e.oldDate)) {
-        // Date didn't change (time did) or date changed because time did.
-        return;
-      }
+    if (
+      // options is disabled
+      !this.options.promptTimeOnDateChange ||
+      this.options.display.inline ||
+      this.options.display.sideBySide ||
+      // time is disabled
+      !this.display._hasTime ||
+      // clock component is already showing
+      this.display.widget
+        ?.getElementsByClassName(Namespace.Css.show)[0]
+        .classList.contains(Namespace.Css.timeContainer)
+    )
+      return;
 
-      clearTimeout(this._currentPromptTimeTimeout);
-      this._currentPromptTimeTimeout = setTimeout(() => {
-        if (this.display.widget) {
-          this.display.widget
-            .querySelector(`[data-action="${ActionTypes.togglePicker}"]`)[0]
-            .click();
-        }
-      }, this.options.promptTimeOnDateChangeTransitionDelay);
+    // First time ever. If useCurrent option is set to true (default), do nothing
+    // because the first date is selected automatically.
+    // or date didn't change (time did) or date changed because time did.
+    if (
+      (!e.oldDate && this.options.useCurrent) ||
+      (e.oldDate && e.date?.isSame(e.oldDate))
+    ) {
+      return;
     }
+
+    clearTimeout(this._currentPromptTimeTimeout);
+    this._currentPromptTimeTimeout = setTimeout(() => {
+      if (this.display.widget) {
+        this.action.do(
+          {
+            currentTarget: this.display.widget.querySelector(
+              `.${Namespace.Css.switch} div`
+            ),
+          },
+          ActionTypes.togglePicker
+        );
+      }
+    }, this.options.promptTimeOnDateChangeTransitionDelay);
   }
+
+  /**
+   * Event for when the input field changes. This is a class level method so there's
+   * something for the remove listener function.
+   * @private
+   */
+  private _inputChangeEvent = () => {
+    let parsedDate = TempusDominus._dateTypeCheck(this.input.value);
+
+    if (parsedDate) {
+      this.dates._setValue(parsedDate);
+    } else {
+      this._triggerEvent({
+        name: Namespace.Events.error,
+        reason: Namespace.ErrorMessages.failedToParseInput,
+        date: parsedDate,
+      } as FailEvent);
+    }
+  };
+
+  /**
+   * Event for when the toggle is clicked. This is a class level method so there's
+   * something for the remove listener function.
+   * @private
+   */
+  private _toggleClickEvent = () => {
+    this.display.toggle();
+  };
 }

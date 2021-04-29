@@ -3,19 +3,25 @@ import { Unit } from '../../datetime';
 import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
 
+/**
+ * Creates and updates the grid for `seconds`
+ */
 export default class secondDisplay {
-  private context: TempusDominus;
+  private _context: TempusDominus;
 
   constructor(context: TempusDominus) {
-    this.context = context;
+    this._context = context;
   }
 
-  get picker(): HTMLElement {
+  /**
+   * Build the container html for the display
+   * @private
+   */
+  get _picker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.secondContainer);
 
     const table = document.createElement('table');
-    table.classList.add('table', 'table-sm'); //todo bootstrap
     const tableBody = document.createElement('tbody');
     let row = document.createElement('tr');
     for (let i = 0; i <= 12; i++) {
@@ -36,11 +42,15 @@ export default class secondDisplay {
     return container;
   }
 
-  update(): void {
-    const container = this.context.display.widget.getElementsByClassName(
+  /**
+   * Populates the grid and updates enabled states
+   * @private
+   */
+  _update(): void {
+    const container = this._context.display.widget.getElementsByClassName(
       Namespace.Css.secondContainer
     )[0];
-    let innerDate = this.context.viewDate.clone.startOf(Unit.minutes);
+    let innerDate = this._context.viewDate.clone.startOf(Unit.minutes);
 
     container
       .querySelectorAll('tbody td div')
@@ -48,7 +58,7 @@ export default class secondDisplay {
         let classes = [];
         classes.push(Namespace.Css.second);
 
-        if (!this.context.validation.isValid(innerDate, Unit.seconds)) {
+        if (!this._context.validation.isValid(innerDate, Unit.seconds)) {
           classes.push(Namespace.Css.disabled);
         }
 

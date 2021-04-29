@@ -368,7 +368,7 @@ const TempusDominus = (($) => {
         );
       }
       const lastPickedDate = this._getLastPickedDate();
-      this._notifyEvent({
+      this._triggerEvent({
         type: EVENT_HIDE,
         date: this.unset
           ? null
@@ -472,7 +472,7 @@ const TempusDominus = (($) => {
         this.input.focus();
       }
 
-      this._notifyEvent({
+      this._triggerEvent({
         type: EVENT_SHOW,
       });
     }
