@@ -75,7 +75,6 @@ export class TempusDominus {
    * @private
    */
   _triggerEvent(event: BaseEvent) {
-    console.log(`notify: ${event.name}`, JSON.stringify(event, null, 2));
     if (event as ChangeEvent) {
       const { date, oldDate, isClear } = event as ChangeEvent;
       // this was to prevent a max call stack error
@@ -174,15 +173,13 @@ export class TempusDominus {
       value,
       providedType: string
     ) => {
-      if (!Array.isArray(value)) {
+      if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
         throw Namespace.ErrorMessages.typeMismatch(
           optionName,
           providedType,
           'array of numbers'
         );
       }
-      if (value.find((x) => typeof x !== typeof 0))
-        console.log('throw an error');
       return;
     };
 
@@ -263,7 +260,7 @@ export class TempusDominus {
               value,
               providedType
             );
-            if (value.filter((x) => x < 0 || x > 23))
+            if (value.filter((x) => x < 0 || x > 24))
               throw Namespace.ErrorMessages.numbersOutOfRage(
                 'restrictions.disabledHours',
                 0,
@@ -276,7 +273,7 @@ export class TempusDominus {
               value,
               providedType
             );
-            if (value.filter((x) => x < 0 || x > 23))
+            if (value.filter((x) => x < 0 || x > 24))
               throw Namespace.ErrorMessages.numbersOutOfRage(
                 'restrictions.enabledHours',
                 0,

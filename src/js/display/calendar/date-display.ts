@@ -67,7 +67,6 @@ export default class DateDisplay {
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectDay);
-      //td.setAttribute('data-action', ActionTypes.selectDay);
       td.appendChild(div);
       row.appendChild(td);
     }

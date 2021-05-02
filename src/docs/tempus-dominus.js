@@ -1125,7 +1125,6 @@
                 const td = document.createElement('td');
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.selectDay);
-                //td.setAttribute('data-action', ActionTypes.selectDay);
                 td.appendChild(div);
                 row.appendChild(td);
             }
@@ -2625,7 +2624,6 @@
          * @private
          */
         _triggerEvent(event) {
-            console.log(`notify: ${event.name}`, JSON.stringify(event, null, 2));
             if (event) {
                 const { date, oldDate, isClear } = event;
                 // this was to prevent a max call stack error
@@ -2701,11 +2699,9 @@
              * @param providedType Used to provide text to error messages
              */
             const typeCheckNumberArray = (optionName, value, providedType) => {
-                if (!Array.isArray(value)) {
+                if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
                     throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of numbers');
                 }
-                if (value.find((x) => typeof x !== typeof 0))
-                    console.log('throw an error');
                 return;
             };
             /**
@@ -2768,12 +2764,12 @@
                         }
                         case 'disabledHours':
                             typeCheckNumberArray('restrictions.disabledHours', value, providedType);
-                            if (value.filter((x) => x < 0 || x > 23))
+                            if (value.filter((x) => x < 0 || x > 24))
                                 throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.disabledHours', 0, 23);
                             break;
                         case 'enabledHours':
                             typeCheckNumberArray('restrictions.enabledHours', value, providedType);
-                            if (value.filter((x) => x < 0 || x > 23))
+                            if (value.filter((x) => x < 0 || x > 24))
                                 throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.enabledHours', 0, 23);
                             break;
                         case 'daysOfWeekDisabled':
