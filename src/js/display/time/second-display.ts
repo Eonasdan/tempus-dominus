@@ -47,7 +47,7 @@ export default class secondDisplay {
    * @private
    */
   _update(): void {
-    const container = this._context.display.widget.getElementsByClassName(
+    const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.secondContainer
     )[0];
     let innerDate = this._context.viewDate.clone.startOf(Unit.minutes);
@@ -58,7 +58,7 @@ export default class secondDisplay {
         let classes = [];
         classes.push(Namespace.Css.second);
 
-        if (!this._context.validation.isValid(innerDate, Unit.seconds)) {
+        if (!this._context._validation.isValid(innerDate, Unit.seconds)) {
           classes.push(Namespace.Css.disabled);
         }
 

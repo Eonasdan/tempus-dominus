@@ -43,24 +43,32 @@ todo look at how bootstrap loops through their vars to make a --root section
       @extend .visually-hidden;
       content: attr(title);
     }
+
+    &.disabled,
+    &.disabled:hover {
+      background: none;
+      color: $bs-datetimepicker-disabled-color;
+      cursor: not-allowed;
+    }
   }
 
   //popper
-  .arrow,
-  .arrow::before {
-    visibility: hidden;
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: inherit;
-  }
+  .arrow {
+    &::before {
+      visibility: hidden;
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: inherit;
+    }
 
-  .arrow::before {
-    visibility: visible;
-    content: '';
-    transform: rotate(45deg);
-    border-style: solid;
-    border-width: 1px;
+    &::before {
+      visibility: visible;
+      content: '';
+      transform: rotate(45deg);
+      border-style: solid;
+      border-width: 1px;
+    }
   }
 
   &[data-popper-placement^='top'] > .arrow {
@@ -93,6 +101,10 @@ todo look at how bootstrap loops through their vars to make a --root section
     &::before {
       border-color: transparent transparent black black;
     }
+  }
+
+  &.inline > .arrow {
+    display: none;
   }
 
   //end popper
@@ -278,7 +290,6 @@ todo look at how bootstrap loops through their vars to make a --root section
         line-height: 0;
         text-align: center;
         outline: none;
-        cursor: pointer;
         padding: 0.3rem;
 
         div {

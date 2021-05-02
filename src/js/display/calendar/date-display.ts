@@ -22,7 +22,7 @@ export default class DateDisplay {
     container.classList.add(Namespace.Css.daysContainer);
 
     const table = document.createElement('table');
-    const headTemplate = this._context.display._headTemplate;
+    const headTemplate = this._context._display._headTemplate;
     const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
     previous
@@ -45,7 +45,7 @@ export default class DateDisplay {
     if (this._context.options.display.calendarWeeks) {
       const td = document.createElement('td');
       const div = document.createElement('div');
-      div.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+      div.classList.add(Namespace.Css.calendarWeeks);
       td.appendChild(div);
       row.appendChild(td);
     }
@@ -58,7 +58,7 @@ export default class DateDisplay {
         if (this._context.options.display.calendarWeeks) {
           const td = document.createElement('td');
           const div = document.createElement('div');
-          div.classList.add(Namespace.Css.calendarWeeks); //todo this option needs to be watched and the grid rebuilt if changed
+          div.classList.add(Namespace.Css.calendarWeeks);
           td.appendChild(div);
           row.appendChild(td);
         }
@@ -82,7 +82,7 @@ export default class DateDisplay {
    * @private
    */
   _update(): void {
-    const container = this._context.display.widget.getElementsByClassName(
+    const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.daysContainer
     )[0];
     const [previous, switcher, next] = container
@@ -93,14 +93,14 @@ export default class DateDisplay {
       month: this._context.options.localization.dayViewHeaderFormat,
     });
 
-    this._context.validation.isValid(
+    this._context._validation.isValid(
       this._context.viewDate.clone.manipulate(-1, Unit.month),
       Unit.month
     )
       ? previous.classList.remove(Namespace.Css.disabled)
       : previous.classList.add(Namespace.Css.disabled);
 
-    this._context.validation.isValid(
+    this._context._validation.isValid(
       this._context.viewDate.clone.manipulate(1, Unit.month),
       Unit.month
     )
@@ -134,12 +134,12 @@ export default class DateDisplay {
         }
 
         if (
-          !this._context.unset &&
+          !this._context._unset &&
           this._context.dates.isPicked(innerDate, Unit.date)
         ) {
           classes.push(Namespace.Css.active);
         }
-        if (!this._context.validation.isValid(innerDate, Unit.date)) {
+        if (!this._context._validation.isValid(innerDate, Unit.date)) {
           classes.push(Namespace.Css.disabled);
         }
         if (innerDate.isSame(new DateTime(), Unit.date)) {

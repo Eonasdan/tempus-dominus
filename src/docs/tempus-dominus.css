@@ -29,7 +29,11 @@ todo look at how bootstrap loops through their vars to make a --root section
 .tempus-dominus-widget [data-action]::after {
   content: attr(title);
 }
-.tempus-dominus-widget .arrow,
+.tempus-dominus-widget [data-action].disabled, .tempus-dominus-widget [data-action].disabled:hover {
+  background: none;
+  color: #6c757d;
+  cursor: not-allowed;
+}
 .tempus-dominus-widget .arrow::before {
   visibility: hidden;
   position: absolute;
@@ -67,6 +71,9 @@ todo look at how bootstrap loops through their vars to make a --root section
 }
 .tempus-dominus-widget[data-popper-placement^=right] > .arrow::before {
   border-color: transparent transparent black black;
+}
+.tempus-dominus-widget.inline > .arrow {
+  display: none;
 }
 .tempus-dominus-widget.show {
   display: block;
@@ -213,7 +220,6 @@ todo look at how bootstrap loops through their vars to make a --root section
   line-height: 0;
   text-align: center;
   outline: none;
-  cursor: pointer;
   padding: 0.3rem;
 }
 .tempus-dominus-widget table tr td div {

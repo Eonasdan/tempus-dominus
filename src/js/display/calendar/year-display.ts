@@ -26,7 +26,7 @@ export default class YearDisplay {
     container.classList.add(Namespace.Css.yearsContainer);
 
     const table = document.createElement('table');
-    const headTemplate = this._context.display._headTemplate;
+    const headTemplate = this._context._display._headTemplate;
     const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
     previous
@@ -68,7 +68,7 @@ export default class YearDisplay {
    * @private
    */
   _update() {
-    const container = this._context.display.widget.getElementsByClassName(
+    const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.yearsContainer
     )[0];
     const [previous, switcher, next] = container
@@ -77,10 +77,10 @@ export default class YearDisplay {
 
     switcher.innerText = `${this._startYear.year}-${this._endYear.year}`;
 
-    this._context.validation.isValid(this._startYear, Unit.year)
+    this._context._validation.isValid(this._startYear, Unit.year)
       ? previous.classList.remove(Namespace.Css.disabled)
       : previous.classList.add(Namespace.Css.disabled);
-    this._context.validation.isValid(this._endYear, Unit.year)
+    this._context._validation.isValid(this._endYear, Unit.year)
       ? next.classList.remove(Namespace.Css.disabled)
       : next.classList.add(Namespace.Css.disabled);
 
@@ -95,12 +95,12 @@ export default class YearDisplay {
         classes.push(Namespace.Css.year);
 
         if (
-          !this._context.unset &&
+          !this._context._unset &&
           this._context.dates.isPicked(innerDate, Unit.year)
         ) {
           classes.push(Namespace.Css.active);
         }
-        if (!this._context.validation.isValid(innerDate, Unit.year)) {
+        if (!this._context._validation.isValid(innerDate, Unit.year)) {
           classes.push(Namespace.Css.disabled);
         }
 

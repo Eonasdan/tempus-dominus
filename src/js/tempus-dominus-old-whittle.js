@@ -281,7 +281,7 @@ const TempusDominus = (($) => {
     date(newDate, index) {
       index = index || 0;
       if (arguments.length === 0) {
-        if (this.unset) {
+        if (this._unset) {
           return null;
         }
         if (this.options.allowMultidate) {
@@ -356,12 +356,12 @@ const TempusDominus = (($) => {
       this.widget = false;
 
       if (
-        this.input !== undefined &&
-        this.input.val() !== undefined &&
-        this.input.val().trim().length !== 0
+        this._input !== undefined &&
+        this._input.val() !== undefined &&
+        this._input.val().trim().length !== 0
       ) {
         this._setValue(
-          this._parseInputDate(this.input.val().trim(), {
+          this._parseInputDate(this._input.val().trim(), {
             isPickerShow: false,
           }),
           0
@@ -370,15 +370,15 @@ const TempusDominus = (($) => {
       const lastPickedDate = this._getLastPickedDate();
       this._triggerEvent({
         type: EVENT_HIDE,
-        date: this.unset
+        date: this._unset
           ? null
           : lastPickedDate
           ? lastPickedDate.clone()
           : void 0,
       });
 
-      if (this.input !== undefined) {
-        this.input.blur();
+      if (this._input !== undefined) {
+        this._input.blur();
       }
 
       this.viewDate = lastPickedDate
@@ -408,20 +408,20 @@ const TempusDominus = (($) => {
         },
       };
 
-      if (this.input !== undefined) {
+      if (this._input !== undefined) {
         if (
-          this.input.prop('disabled') ||
-          (!this.options.ignoreReadonly && this.input.prop('readonly')) ||
+          this._input.prop('disabled') ||
+          (!this.options.ignoreReadonly && this._input.prop('readonly')) ||
           this.widget
         ) {
           return;
         }
         if (
-          this.input.val() !== undefined &&
-          this.input.val().trim().length !== 0
+          this._input.val() !== undefined &&
+          this._input.val().trim().length !== 0
         ) {
           this._setValue(
-            this._parseInputDate(this.input.val().trim(), {
+            this._parseInputDate(this._input.val().trim(), {
               isPickerShow: true,
             }),
             0
@@ -433,7 +433,7 @@ const TempusDominus = (($) => {
         shouldUseCurrentIfUnset = true;
       }
 
-      if (shouldUseCurrentIfUnset && this.unset && this.options.useCurrent) {
+      if (shouldUseCurrentIfUnset && this._unset && this.options.useCurrent) {
         currentMoment = this.getMoment();
         if (typeof this.options.useCurrent === 'string') {
           currentMoment = useCurrentGranularity[this.options.useCurrent](
@@ -465,11 +465,11 @@ const TempusDominus = (($) => {
       this._place();
       this.widget.show();
       if (
-        this.input !== undefined &&
+        this._input !== undefined &&
         this.options.focusOnShow &&
-        !this.input.is(':focus')
+        !this._input.is(':focus')
       ) {
-        this.input.focus();
+        this._input.focus();
       }
 
       this._triggerEvent({
@@ -481,8 +481,8 @@ const TempusDominus = (($) => {
       //todo jquery
       this.hide();
       //todo doc off?
-      this.element.removeData(DATA_KEY);
-      this.element.removeData('date');
+      this._element.removeData(DATA_KEY);
+      this._element.removeData('date');
     }
 
     //#endregion

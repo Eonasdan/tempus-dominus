@@ -52,7 +52,7 @@ export default class HourDisplay {
    * @private
    */
   _update(): void {
-    const container = this._context.display.widget.getElementsByClassName(
+    const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.hourContainer
     )[0];
     let innerDate = this._context.viewDate.clone.startOf(Unit.date);
@@ -63,7 +63,7 @@ export default class HourDisplay {
         let classes = [];
         classes.push(Namespace.Css.hour);
 
-        if (!this._context.validation.isValid(innerDate, Unit.hours)) {
+        if (!this._context._validation.isValid(innerDate, Unit.hours)) {
           classes.push(Namespace.Css.disabled);
         }
 

@@ -25,7 +25,7 @@ export default class DecadeDisplay {
     container.classList.add(Namespace.Css.decadesContainer);
 
     const table = document.createElement('table');
-    const headTemplate = this._context.display._headTemplate;
+    const headTemplate = this._context._display._headTemplate;
     const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
     previous
@@ -76,7 +76,7 @@ export default class DecadeDisplay {
     this._endDecade = this._context.viewDate.clone.startOf(Unit.year);
     this._endDecade.year = end;
 
-    const container = this._context.display.widget.getElementsByClassName(
+    const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.decadesContainer
     )[0];
     const [previous, switcher, next] = container
@@ -85,10 +85,10 @@ export default class DecadeDisplay {
 
     switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
 
-    this._context.validation.isValid(this._startDecade, Unit.year)
+    this._context._validation.isValid(this._startDecade, Unit.year)
       ? previous.classList.remove(Namespace.Css.disabled)
       : previous.classList.add(Namespace.Css.disabled);
-    this._context.validation.isValid(this._endDecade, Unit.year)
+    this._context._validation.isValid(this._endDecade, Unit.year)
       ? next.classList.remove(Namespace.Css.disabled)
       : next.classList.add(Namespace.Css.disabled);
 
@@ -117,15 +117,12 @@ export default class DecadeDisplay {
       const endDecadeYear = this._startDecade.year + 9;
 
       if (
-        !this._context.unset &&
+        !this._context._unset &&
         pickedYears.filter((x) => x >= startDecadeYear && x <= endDecadeYear)
           .length > 0
       ) {
         classes.push(Namespace.Css.active);
       }
-      /* if (!this.context.validation.isValid(innerDate, 'y')) { //todo between
-                 classes.push('disabled');
-             }*/
 
       containerClone.classList.remove(...containerClone.classList);
       containerClone.classList.add(...classes);

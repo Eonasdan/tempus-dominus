@@ -60,7 +60,7 @@ export default class Display {
    * @private
    */
   _update(unit: Unit | 'clock' | 'calendar' | 'all'): void {
-    if (!this._widget) return;
+    if (!this.widget) return;
     //todo do I want some kind of error catching or other guards here?
     switch (unit) {
       case Unit.seconds:
@@ -119,10 +119,31 @@ export default class Display {
         this._showMode();
       }
 
-      document.body.appendChild(this.widget);
+      if (!this._context.options.display.inline) {
+        document.body.appendChild(this.widget);
+
+        this._popperInstance = createPopper(
+          this._context._element,
+          this.widget,
+          {
+            modifiers: [
+              {
+                name: 'offset',
+                options: {
+                  offset: [0, 8],
+                },
+              },
+              { name: 'eventListeners', enabled: true },
+            ],
+            placement: 'auto',
+          }
+        );
+      } else {
+        this._context._element.appendChild(this.widget);
+      }
 
       if (this._context.options.display.viewMode == 'clock') {
-        this._context.action.do(
+        this._context._action.do(
           {
             currentTarget: this.widget.querySelector(
               `.${Namespace.Css.timeContainer}`
@@ -137,22 +158,6 @@ export default class Display {
         .forEach((element) =>
           element.addEventListener('click', this._actionsClickEvent)
         );
-
-      //todo probably should append the widget straight to the element instead of the body for inline
-      //if (!this.context.options.display.inline) {
-      this._popperInstance = createPopper(this._context.element, this.widget, {
-        modifiers: [
-          {
-            name: 'offset',
-            options: {
-              offset: [0, 8],
-            },
-          },
-          { name: 'eventListeners', enabled: true },
-        ],
-        placement: 'auto',
-      });
-      //}
 
       // show the clock when using sideBySide
       if (this._context.options.display.sideBySide) {
@@ -183,7 +188,7 @@ export default class Display {
     }
     if (direction) {
       const max = Math.max(
-        this._context.minViewModeNumber,
+        this._context._minViewModeNumber,
         Math.min(3, this._context.currentViewMode + direction)
       );
       if (this._context.currentViewMode == max) return;
@@ -229,7 +234,7 @@ export default class Display {
     if (this._isVisible) {
       this._context._triggerEvent({
         name: Namespace.Events.hide,
-        date: this._context.unset
+        date: this._context._unset
           ? null
           : this._context.dates.lastPicked
           ? this._context.dates.lastPicked.clone
@@ -254,11 +259,13 @@ export default class Display {
    */
   _dispose() {
     document.removeEventListener('click', this._documentClickEvent);
+    if (!this.widget) return;
     this.widget
       .querySelectorAll('[data-action]')
       .forEach((element) =>
         element.removeEventListener('click', this._actionsClickEvent)
       );
+    this.widget.parentNode.removeChild(this.widget);
     this._widget = undefined;
   }
 
@@ -287,6 +294,10 @@ export default class Display {
     const toolbar = document.createElement('div');
     toolbar.classList.add(Namespace.Css.switch);
     toolbar.appendChild(this._toolbar);
+
+    if (this._context.options.display.inline) {
+      template.classList.add(Namespace.Css.inline);
+    }
 
     if (
       this._context.options.display.sideBySide &&
@@ -363,6 +374,7 @@ export default class Display {
       this._context.options.display.components.seconds
     );
   }
+
   /**
    * Returns true if the year, month, or date component is turned on
    */
@@ -502,7 +514,7 @@ export default class Display {
     if (
       this._isVisible &&
       !e.composedPath().includes(this.widget) && // click inside the widget
-      !e.composedPath()?.includes(this._context.element) && // click on the element
+      !e.composedPath()?.includes(this._context._element) && // click on the element
       (!this._context.options.keepOpen || !this._context.options.debug)
     ) {
       this.hide();
@@ -515,6 +527,20 @@ export default class Display {
    * @private
    */
   private _actionsClickEvent = (e: MouseEvent) => {
-    this._context.action.do(e);
+    this._context._action.do(e);
   };
+
+  /**
+   * Cases the widget to get rebuilt on next show. If the picker is already open
+   * then hide and reshow it.
+   * @private
+   */
+  _rebuild() {
+    const wasVisible = this._isVisible;
+    if (wasVisible) this.hide();
+    this._dispose();
+    if (wasVisible) {
+      this.show();
+    }
+  }
 }

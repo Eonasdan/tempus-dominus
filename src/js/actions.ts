@@ -36,7 +36,7 @@ export default class Actions {
      */
     const manipulateAndSet = (unit: Unit, value = 1) => {
       const newDate = lastPicked.manipulate(value, unit);
-      if (this._context.validation.isValid(newDate, unit)) {
+      if (this._context._validation.isValid(newDate, unit)) {
         /*if (this.context.dates.lastPickedIndex < 0) {
                     this.date(newDate);
                 }*/
@@ -56,11 +56,11 @@ export default class Actions {
         if (action === ActionTypes.next)
           this._context.viewDate.manipulate(NAV_STEP, NAV_FUNCTION);
         else this._context.viewDate.manipulate(NAV_STEP * -1, NAV_FUNCTION);
-        this._context.display._update('calendar');
+        this._context._display._update('calendar');
         this._context._viewUpdate(NAV_FUNCTION);
         break;
       case ActionTypes.pickerSwitch:
-        this._context.display._showMode(1);
+        this._context._display._showMode(1);
         break;
       case ActionTypes.selectMonth:
       case ActionTypes.selectYear:
@@ -81,16 +81,18 @@ export default class Actions {
             break;
         }
 
-        if (this._context.currentViewMode === this._context.minViewModeNumber) {
+        if (
+          this._context.currentViewMode === this._context._minViewModeNumber
+        ) {
           this._context.dates._setValue(
             this._context.viewDate,
             this._context.dates.lastPickedIndex
           );
           if (!this._context.options.display.inline) {
-            this._context.display.hide();
+            this._context._display.hide();
           }
         } else {
-          this._context.display._showMode(-1);
+          this._context._display._showMode(-1);
         }
         break;
       case ActionTypes.selectDay:
@@ -122,12 +124,12 @@ export default class Actions {
         }
 
         if (
-          !this._context.display._hasTime &&
+          !this._context._display._hasTime &&
           !this._context.options.keepOpen &&
           !this._context.options.display.inline &&
           !this._context.options.allowMultidate
         ) {
-          this._context.display.hide();
+          this._context._display.hide();
         }
         break;
       case ActionTypes.selectHour:
@@ -143,7 +145,7 @@ export default class Actions {
           !this._context.options.keepOpen &&
           !this._context.options.display.inline
         ) {
-          this._context.display.hide();
+          this._context._display.hide();
         } else {
           this.do(e, ActionTypes.showClock);
         }
@@ -160,7 +162,7 @@ export default class Actions {
           !this._context.options.keepOpen &&
           !this._context.options.display.inline
         ) {
-          this._context.display.hide();
+          this._context._display.hide();
         } else {
           this.do(e, ActionTypes.showClock);
         }
@@ -176,7 +178,7 @@ export default class Actions {
           !this._context.options.keepOpen &&
           !this._context.options.display.inline
         ) {
-          this._context.display.hide();
+          this._context._display.hide();
         } else {
           this.do(e, ActionTypes.showClock);
         }
@@ -206,7 +208,7 @@ export default class Actions {
         );
         break;
       case ActionTypes.togglePicker:
-        this._context.display.widget
+        this._context._display.widget
           .querySelectorAll(
             `.${Namespace.Css.dateContainer}, .${Namespace.Css.timeContainer}`
           )
@@ -222,27 +224,27 @@ export default class Actions {
             'title',
             this._context.options.localization.selectTime
           );
-          currentTarget.innerHTML = this._context.display._iconTag(
+          currentTarget.innerHTML = this._context._display._iconTag(
             this._context.options.display.icons.time
           ).outerHTML;
-          this._context.display._update('calendar');
+          this._context._display._update('calendar');
         } else {
           currentTarget.setAttribute(
             'title',
             this._context.options.localization.selectDate
           );
-          currentTarget.innerHTML = this._context.display._iconTag(
+          currentTarget.innerHTML = this._context._display._iconTag(
             this._context.options.display.icons.date
           ).outerHTML;
           this.do(e, ActionTypes.showClock);
-          this._context.display._update('clock');
+          this._context._display._update('clock');
         }
         break;
       case ActionTypes.showClock:
       case ActionTypes.showHours:
       case ActionTypes.showMinutes:
       case ActionTypes.showSeconds:
-        this._context.display.widget
+        this._context._display.widget
           .querySelectorAll(`.${Namespace.Css.timeContainer} > div`)
           .forEach(
             (htmlElement: HTMLElement) => (htmlElement.style.display = 'none')
@@ -252,36 +254,36 @@ export default class Actions {
         switch (action) {
           case ActionTypes.showClock:
             classToUse = Namespace.Css.clockContainer;
-            this._context.display._update('clock');
+            this._context._display._update('clock');
             break;
           case ActionTypes.showHours:
             classToUse = Namespace.Css.hourContainer;
-            this._context.display._update(Unit.hours);
+            this._context._display._update(Unit.hours);
             break;
           case ActionTypes.showMinutes:
             classToUse = Namespace.Css.minuteContainer;
-            this._context.display._update(Unit.minutes);
+            this._context._display._update(Unit.minutes);
             break;
           case ActionTypes.showSeconds:
             classToUse = Namespace.Css.secondContainer;
-            this._context.display._update(Unit.seconds);
+            this._context._display._update(Unit.seconds);
             break;
         }
 
         (<HTMLElement>(
-          this._context.display.widget.getElementsByClassName(classToUse)[0]
+          this._context._display.widget.getElementsByClassName(classToUse)[0]
         )).style.display = 'block';
         break;
       case ActionTypes.clear:
         this._context.dates._setValue(null);
         break;
       case ActionTypes.close:
-        this._context.display.hide();
+        this._context._display.hide();
         break;
       case ActionTypes.today:
         const today = new DateTime();
         this._context.viewDate = today;
-        if (this._context.validation.isValid(today, Unit.date))
+        if (this._context._validation.isValid(today, Unit.date))
           this._context.dates._setValue(
             today,
             this._context.dates.lastPickedIndex

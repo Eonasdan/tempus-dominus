@@ -18,16 +18,16 @@ import {
  */
 export class TempusDominus {
   options: Options;
-  element: HTMLElement;
+  _element: HTMLElement;
   viewDate: DateTime;
-  input: HTMLInputElement;
+  _input: HTMLInputElement;
   currentViewMode: number;
-  unset: boolean;
-  minViewModeNumber: number;
-  display: Display;
-  validation: Validation;
+  _unset: boolean;
+  _minViewModeNumber: number;
+  _display: Display;
+  _validation: Validation;
   dates: Dates;
-  action: Actions;
+  _action: Actions;
 
   private _notifyChangeEventContext = 0;
   private _toggle: HTMLElement;
@@ -38,22 +38,22 @@ export class TempusDominus {
       throw Namespace.ErrorMessages.mustProvideElement;
     }
     this.options = this._initializeOptions(options, DefaultOptions);
-    this.element = element;
+    this._element = element;
     this.viewDate = new DateTime();
     this.currentViewMode = null;
-    this.unset = true;
-    this.minViewModeNumber = 0;
+    this._unset = true;
+    this._minViewModeNumber = 0;
 
-    this.display = new Display(this);
-    this.validation = new Validation(this);
+    this._display = new Display(this);
+    this._validation = new Validation(this);
     this.dates = new Dates(this);
-    this.action = new Actions(this);
+    this._action = new Actions(this);
 
     this._initializeViewMode();
     this._initializeInput();
     this._initializeToggle();
 
-    if (this.options.display.inline) this.display.show();
+    if (this.options.display.inline) this._display.show();
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -66,6 +66,7 @@ export class TempusDominus {
   updateOptions(options, reset = false): void {
     if (reset) this.options = this._initializeOptions(options, DefaultOptions);
     else this.options = this._initializeOptions(options, this.options);
+    this._display._rebuild();
   }
 
   /**
@@ -92,7 +93,7 @@ export class TempusDominus {
       this._handlePromptTimeIfNeeded(event as ChangeEvent);
     }
 
-    this.element.dispatchEvent(new CustomEvent(event.name, event as any));
+    this._element.dispatchEvent(new CustomEvent(event.name, event as any));
 
     this._notifyChangeEventContext = 0;
   }
@@ -115,10 +116,10 @@ export class TempusDominus {
    * Hides the picker and removes event listeners
    */
   dispose() {
-    this.display.hide();
+    this._display.hide();
     // this will clear the document click event listener
-    this.display._dispose();
-    this.input?.removeEventListener('change', this._inputChangeEvent);
+    this._display._dispose();
+    this._input?.removeEventListener('change', this._inputChangeEvent);
     this._toggle.removeEventListener('click', this._toggleClickEvent);
     //clear data-
   }
@@ -394,17 +395,17 @@ export class TempusDominus {
    */
   private _initializeViewMode() {
     if (this.options.display.components.year) {
-      this.minViewModeNumber = 2;
+      this._minViewModeNumber = 2;
     }
     if (this.options.display.components.month) {
-      this.minViewModeNumber = 1;
+      this._minViewModeNumber = 1;
     }
     if (this.options.display.components.date) {
-      this.minViewModeNumber = 0;
+      this._minViewModeNumber = 0;
     }
 
     this.currentViewMode = Math.max(
-      this.minViewModeNumber,
+      this._minViewModeNumber,
       this.currentViewMode
     );
   }
@@ -415,18 +416,18 @@ export class TempusDominus {
    * @private
    */
   private _initializeInput() {
-    if (this.element.tagName == 'INPUT') {
-      this.input = this.element as HTMLInputElement;
+    if (this._element.tagName == 'INPUT') {
+      this._input = this._element as HTMLInputElement;
     } else {
-      let query = this.element.dataset.targetInput;
+      let query = this._element.dataset.targetInput;
       if (query == undefined || query == 'nearest') {
-        this.input = this.element.querySelector('input');
+        this._input = this._element.querySelector('input');
       } else {
-        this.input = this.element.querySelector(query);
+        this._input = this._element.querySelector(query);
       }
     }
 
-    this.input?.addEventListener('change', this._inputChangeEvent);
+    this._input?.addEventListener('change', this._inputChangeEvent);
   }
 
   /**
@@ -434,12 +435,13 @@ export class TempusDominus {
    * @private
    */
   private _initializeToggle() {
-    let query = this.element.dataset.targetToggle;
+    if (this.options.display.inline) return;
+    let query = this._element.dataset.targetToggle;
     if (query == 'nearest') {
       query = '[data-toggle="datetimepicker"]';
     }
     this._toggle =
-      query == undefined ? this.element : this.element.querySelector(query);
+      query == undefined ? this._element : this._element.querySelector(query);
     this._toggle.addEventListener('click', this._toggleClickEvent);
   }
 
@@ -475,9 +477,9 @@ export class TempusDominus {
       this.options.display.inline ||
       this.options.display.sideBySide ||
       // time is disabled
-      !this.display._hasTime ||
+      !this._display._hasTime ||
       // clock component is already showing
-      this.display.widget
+      this._display.widget
         ?.getElementsByClassName(Namespace.Css.show)[0]
         .classList.contains(Namespace.Css.timeContainer)
     )
@@ -495,10 +497,10 @@ export class TempusDominus {
 
     clearTimeout(this._currentPromptTimeTimeout);
     this._currentPromptTimeTimeout = setTimeout(() => {
-      if (this.display.widget) {
-        this.action.do(
+      if (this._display.widget) {
+        this._action.do(
           {
-            currentTarget: this.display.widget.querySelector(
+            currentTarget: this._display.widget.querySelector(
               `.${Namespace.Css.switch} div`
             ),
           },
@@ -514,7 +516,7 @@ export class TempusDominus {
    * @private
    */
   private _inputChangeEvent = () => {
-    let parsedDate = TempusDominus._dateTypeCheck(this.input.value);
+    let parsedDate = TempusDominus._dateTypeCheck(this._input.value);
 
     if (parsedDate) {
       this.dates._setValue(parsedDate);
@@ -533,6 +535,6 @@ export class TempusDominus {
    * @private
    */
   private _toggleClickEvent = () => {
-    this.display.toggle();
+    this._display.toggle();
   };
 }

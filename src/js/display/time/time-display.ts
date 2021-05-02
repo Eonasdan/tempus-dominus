@@ -35,7 +35,7 @@ export default class TimeDisplay {
    * @private
    */
   _update(): void {
-    const timesDiv = this._context.display.widget.getElementsByClassName(
+    const timesDiv = this._context._display.widget.getElementsByClassName(
       Namespace.Css.clockContainer
     )[0];
     const lastPicked = (
@@ -50,7 +50,7 @@ export default class TimeDisplay {
       toggle.innerText = lastPicked.meridiem();
 
       if (
-        !this._context.validation.isValid(
+        !this._context._validation.isValid(
           lastPicked.clone.manipulate(
             lastPicked.hours >= 12 ? -12 : 12,
             Unit.hours
@@ -69,7 +69,7 @@ export default class TimeDisplay {
 
     if (this._context.options.display.components.hours) {
       if (
-        !this._context.validation.isValid(
+        !this._context._validation.isValid(
           this._context.viewDate.clone.manipulate(1, Unit.hours),
           Unit.hours
         )
@@ -80,7 +80,7 @@ export default class TimeDisplay {
       }
 
       if (
-        !this._context.validation.isValid(
+        !this._context._validation.isValid(
           this._context.viewDate.clone.manipulate(-1, Unit.hours),
           Unit.hours
         )
@@ -98,7 +98,7 @@ export default class TimeDisplay {
 
     if (this._context.options.display.components.minutes) {
       if (
-        !this._context.validation.isValid(
+        !this._context._validation.isValid(
           this._context.viewDate.clone.manipulate(1, Unit.minutes),
           Unit.minutes
         )
@@ -109,7 +109,7 @@ export default class TimeDisplay {
       }
 
       if (
-        !this._context.validation.isValid(
+        !this._context._validation.isValid(
           this._context.viewDate.clone.manipulate(-1, Unit.minutes),
           Unit.minutes
         )
@@ -125,7 +125,7 @@ export default class TimeDisplay {
 
     if (this._context.options.display.components.seconds) {
       if (
-        !this._context.validation.isValid(
+        !this._context._validation.isValid(
           this._context.viewDate.clone.manipulate(1, Unit.seconds),
           Unit.seconds
         )
@@ -136,7 +136,7 @@ export default class TimeDisplay {
       }
 
       if (
-        !this._context.validation.isValid(
+        !this._context._validation.isValid(
           this._context.viewDate.clone.manipulate(-1, Unit.seconds),
           Unit.seconds
         )
@@ -162,10 +162,10 @@ export default class TimeDisplay {
       topRow = document.createElement('tr'),
       middleRow = document.createElement('tr'),
       bottomRow = document.createElement('tr'),
-      upIcon = this._context.display._iconTag(
+      upIcon = this._context._display._iconTag(
         this._context.options.display.icons.up
       ),
-      downIcon = this._context.display._iconTag(
+      downIcon = this._context._display._iconTag(
         this._context.options.display.icons.down
       ),
       actionDiv = document.createElement('div');

@@ -81,6 +81,7 @@ class Css {
   collapse = 'td-collapse';
 
   //#endregion
+  inline = 'inline';
 }
 
 export default class Namespace {

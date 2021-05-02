@@ -22,7 +22,7 @@ export default class MonthDisplay {
     container.classList.add(Namespace.Css.monthsContainer);
 
     const table = document.createElement('table');
-    const headTemplate = this._context.display._headTemplate;
+    const headTemplate = this._context._display._headTemplate;
     const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
 
     previous
@@ -63,7 +63,7 @@ export default class MonthDisplay {
    * @private
    */
   _update(): void {
-    const container = this._context.display.widget.getElementsByClassName(
+    const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.monthsContainer
     )[0];
     const [previous, switcher, next] = container
@@ -72,14 +72,14 @@ export default class MonthDisplay {
 
     switcher.innerText = this._context.viewDate.format({ year: 'numeric' });
 
-    this._context.validation.isValid(
+    this._context._validation.isValid(
       this._context.viewDate.clone.manipulate(-1, Unit.year),
       Unit.year
     )
       ? previous.classList.remove(Namespace.Css.disabled)
       : previous.classList.add(Namespace.Css.disabled);
 
-    this._context.validation.isValid(
+    this._context._validation.isValid(
       this._context.viewDate.clone.manipulate(1, Unit.year),
       Unit.year
     )
@@ -95,12 +95,12 @@ export default class MonthDisplay {
         classes.push(Namespace.Css.month);
 
         if (
-          !this._context.unset &&
+          !this._context._unset &&
           this._context.dates.isPicked(innerDate, Unit.month)
         ) {
           classes.push(Namespace.Css.active);
         }
-        if (!this._context.validation.isValid(innerDate, Unit.month)) {
+        if (!this._context._validation.isValid(innerDate, Unit.month)) {
           classes.push(Namespace.Css.disabled);
         }
 

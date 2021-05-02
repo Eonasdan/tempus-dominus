@@ -49,7 +49,7 @@ export default class MinuteDisplay {
    * @private
    */
   _update(): void {
-    const container = this._context.display.widget.getElementsByClassName(
+    const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.minuteContainer
     )[0];
     let innerDate = this._context.viewDate.clone.startOf(Unit.hours);
@@ -62,7 +62,7 @@ export default class MinuteDisplay {
         let classes = [];
         classes.push(Namespace.Css.minute);
 
-        if (!this._context.validation.isValid(innerDate, Unit.minutes)) {
+        if (!this._context._validation.isValid(innerDate, Unit.minutes)) {
           classes.push(Namespace.Css.disabled);
         }
 

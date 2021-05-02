@@ -107,8 +107,8 @@ export default class Dates {
   _setValue(target?: DateTime, index?: number): void {
     const noIndex = typeof index === 'undefined',
       isClear = !target && noIndex;
-    let oldDate = this.context.unset ? null : this._dates[index];
-    if (!oldDate && !this.context.unset && noIndex && isClear) {
+    let oldDate = this.context._unset ? null : this._dates[index];
+    if (!oldDate && !this.context._unset && noIndex && isClear) {
       oldDate = this.lastPicked;
     }
 
@@ -119,7 +119,7 @@ export default class Dates {
         this._dates.length === 1 ||
         isClear
       ) {
-        this.context.unset = true;
+        this.context._unset = true;
         this._dates = [];
       } else {
         this._dates.splice(index, 1);
@@ -132,7 +132,7 @@ export default class Dates {
         isValid: true,
       } as ChangeEvent);
 
-      this.context.display._update('all');
+      this.context._display._update('all');
       return;
     }
 
@@ -147,23 +147,23 @@ export default class Dates {
       target.seconds = 0;
     }
 
-    if (this.context.validation.isValid(target)) {
+    if (this.context._validation.isValid(target)) {
       this._dates[index] = target;
       this.context.viewDate = target.clone;
 
-      if (this.context.input) {
+      if (this.context._input) {
         let newValue = target.format(this.context.options.display.inputFormat);
         if (this.context.options.allowMultidate) {
           newValue = this._dates
             .map((d) => d.format(this.context.options.display.inputFormat))
             .join(this.context.options.multidateSeparator);
         }
-        if (this.context.input.value != newValue)
-          this.context.input.value = newValue;
+        if (this.context._input.value != newValue)
+          this.context._input.value = newValue;
       }
 
-      this.context.unset = false;
-      this.context.display._update('all');
+      this.context._unset = false;
+      this.context._display._update('all');
       this.context._triggerEvent({
         name: Namespace.Events.change,
         date: target,
