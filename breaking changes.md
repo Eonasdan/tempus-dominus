@@ -50,6 +50,7 @@
   - inline
 
 - `disabledTimeIntervals` is now an array of `{ from: DateTime, to: DateTime } `
+- removed check for `dateOptions` on the element data set. jQuery hid allowing an object by looping through the properties 
 
 ## Styles
 

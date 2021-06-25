@@ -48,8 +48,8 @@
             <label class='form-label'>No input</label>
             <br />
             <span
-              id='popcorn'
-              class='text-light'
+              id='datetimepicker1'
+              class='text-light log-event'
               style='display: inline-block'
             >
                   <i class='far fa-calendar fa-9x'></i>
@@ -58,24 +58,51 @@
         </div>
         <div class='row mt-5'>
           <label for='startTimeInputId' class='form-label text-light'>
-            Test
+            Input
           </label>
           <div
-            class='input-group'
-            id='datetimepicker1'
-            data-target-input='nearest'
-            data-target-toggle='nearest'
+            class='input-group log-event'
+            id='datetimepicker2'
+            data-td-target-input='nearest'
+            data-td-target-toggle='nearest'
           >
             <input
               id='startTimeInputId'
               type='text'
               class='form-control'
-              data-target='#datetimepicker1'
+              data-td-target='#datetimepicker2'
             />
             <span
               class='input-group-text'
-              data-target='#datetimepicker1'
-              data-toggle='datetimepicker'
+              data-td-target='#datetimepicker2'
+              data-td-toggle='datetimepicker'
+            >
+                  <span class='far fa-calendar'></span>
+                </span>
+          </div>
+        </div>
+        <div class='row mt-5'>
+          <label for='startTimeInputId' class='form-label text-light'>
+            From Data Options
+          </label>
+          <div
+            class='input-group log-event'
+            id='datetimepicker3'
+            data-td-target-input='nearest'
+            data-td-target-toggle='nearest'
+            data-td-allowMultidate='true'
+            data-td-display_components_seconds='true'
+          >
+            <input
+              id='startTimeInputId2'
+              type='text'
+              class='form-control'
+              data-td-target='#datetimepicker3'
+            />
+            <span
+              class='input-group-text'
+              data-td-target='#datetimepicker3'
+              data-td-toggle='datetimepicker'
             >
                   <span class='far fa-calendar'></span>
                 </span>
@@ -85,7 +112,7 @@
           <label for='startTimeInputId' class='form-label text-light'>
             Inline
           </label>
-          <div class='input-group' id='datetimepicker3'></div>
+          <div class='log-event' id='datetimepicker4'></div>
         </div>
       </div>
       <div class='col-6'>
@@ -136,8 +163,8 @@
   };
 
   try {
-    var dt = new tempusdominus.TempusDominus(
-      document.getElementById('popcorn'),
+   /* var dt = new tempusdominus.TempusDominus(
+      document.getElementById('datetimepicker1'),
       {
         restrictions: {
           //minDate: 'cheese',
@@ -166,11 +193,11 @@
     );
 
     var dt2 = new tempusdominus.TempusDominus(
-      document.getElementById('datetimepicker1'),
+      document.getElementById('datetimepicker2'),
       options
     );
 
-    /*dt._display.show();
+    /!*dt._display.show();
     setTimeout(function () {
       logger('log', 'ran update');
       dt.updateOptions({
@@ -178,17 +205,21 @@
           maxDate: new Date(2021, 5 - 1, 10)
         }
       });
-    }, 5 * 1000);*/
+    }, 5 * 1000);*!/
 
-
+*/
     var dt3 = new tempusdominus.TempusDominus(
-      document.getElementById('datetimepicker3'),
+      document.getElementById('datetimepicker3')
+    );
+
+   /* var dt4 = new tempusdominus.TempusDominus(
+      document.getElementById('datetimepicker4'),
       {
         display: {
           inline: true
         }
       }
-    );
+    );*/
   } catch (e) {
     logger('error', e);
     console.log(e);
@@ -245,9 +276,9 @@
     'focus',
     'click'
   ].forEach((e) => {
-    document.getElementById('popcorn').addEventListener(e, () => {
-      console.log('event:', e);
-    });
+    document.querySelectorAll('log-event').forEach(element => element.addEventListener(e, () => {
+      console.log(`${element.getAttribute('id')} event:`, e);
+    }));
   });
 </script>
 </body>

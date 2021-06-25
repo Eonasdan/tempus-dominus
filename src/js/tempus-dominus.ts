@@ -5,7 +5,7 @@ import Actions, { ActionTypes } from './actions';
 import { DefaultOptions } from './conts';
 import { DateTime, Unit } from './datetime';
 import Namespace from './namespace';
-import Options from './options';
+import Options, { OptionConverter } from './options';
 import {
   BaseEvent,
   ChangeEvent,
@@ -37,8 +37,8 @@ export class TempusDominus {
     if (!element) {
       throw Namespace.ErrorMessages.mustProvideElement;
     }
-    this.options = this._initializeOptions(options, DefaultOptions);
     this._element = element;
+    this.options = this._initializeOptions(options, DefaultOptions);
     this.viewDate = new DateTime();
     this.currentViewMode = null;
     this._unset = true;
@@ -131,241 +131,8 @@ export class TempusDominus {
    * @private
    */
   private _initializeOptions(config: Options, mergeTo: Options): Options {
-    /**
-     * Type checks that `value` is an array of Date or DateTime
-     * @param optionName Provides text to error messages e.g. disabledDates
-     * @param value Option value
-     * @param providedType Used to provide text to error messages
-     */
-    const typeCheckDateArray = (
-      optionName: string,
-      value,
-      providedType: string
-    ) => {
-      if (!Array.isArray(value)) {
-        throw Namespace.ErrorMessages.typeMismatch(
-          optionName,
-          providedType,
-          'array of DateTime or Date'
-        );
-      }
-      for (let i = 0; i < value.length; i++) {
-        let d = value[i];
-        const dateTime = dateConversion(d, optionName);
-        if (!dateTime) {
-          throw Namespace.ErrorMessages.typeMismatch(
-            optionName,
-            typeof d,
-            'DateTime or Date'
-          );
-        }
-        value[i] = dateTime;
-      }
-    };
-
-    /**
-     * Type checks that `value` is an array of numbers
-     * @param optionName Provides text to error messages e.g. disabledDates
-     * @param value Option value
-     * @param providedType Used to provide text to error messages
-     */
-    const typeCheckNumberArray = (
-      optionName: string,
-      value,
-      providedType: string
-    ) => {
-      if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
-        throw Namespace.ErrorMessages.typeMismatch(
-          optionName,
-          providedType,
-          'array of numbers'
-        );
-      }
-      return;
-    };
-
-    /**
-     * Attempts to convert `d` to a DateTime object
-     * @param d value to convert
-     * @param optionName Provides text to error messages e.g. disabledDates
-     */
-    const dateConversion = (d: any, optionName: string) => {
-      if (typeof d === typeof '') {
-        console.warn(Namespace.ErrorMessages.dateString);
-      }
-
-      const converted = TempusDominus._dateTypeCheck(d);
-
-      if (!converted) {
-        throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
-      }
-      return converted;
-    };
-
-    let path = '';
-    /**
-     * The spread operator caused sub keys to be missing after merging.
-     * This is to fix that issue by using spread on the child objects first.
-     * Also handles complex options like disabledDates
-     * @param provided An option from new config
-     * @param defaultOption Default option to compare types against
-     */
-    const spread = (provided, defaultOption) => {
-      Object.keys(provided).forEach((key) => {
-        let providedType = typeof provided[key];
-        if (providedType === undefined) return;
-        path += `.${key}`;
-        let defaultType = typeof defaultOption[key];
-        let value = provided[key];
-        if (!value) return; //todo not sure if null checking here is right
-        switch (key) {
-          case 'viewDate': {
-            const dateTime = dateConversion(value, 'viewDate');
-            if (dateTime !== undefined) {
-              provided[key] = dateTime;
-              break;
-            }
-            throw Namespace.ErrorMessages.typeMismatch(
-              'viewDate',
-              providedType,
-              'DateTime or Date'
-            );
-          }
-          case 'minDate': {
-            const dateTime = dateConversion(value, 'restrictions.minDate');
-            if (dateTime !== undefined) {
-              provided[key] = dateTime;
-              break;
-            }
-            throw Namespace.ErrorMessages.typeMismatch(
-              'restrictions.minDate',
-              providedType,
-              'DateTime or Date'
-            );
-          }
-          case 'maxDate': {
-            const dateTime = dateConversion(value, 'restrictions.maxDate');
-            if (dateTime !== undefined) {
-              provided[key] = dateTime;
-              break;
-            }
-            throw Namespace.ErrorMessages.typeMismatch(
-              'restrictions.maxDate',
-              providedType,
-              'DateTime or Date'
-            );
-          }
-          case 'disabledHours':
-            typeCheckNumberArray(
-              'restrictions.disabledHours',
-              value,
-              providedType
-            );
-            if (value.filter((x) => x < 0 || x > 24))
-              throw Namespace.ErrorMessages.numbersOutOfRage(
-                'restrictions.disabledHours',
-                0,
-                23
-              );
-            break;
-          case 'enabledHours':
-            typeCheckNumberArray(
-              'restrictions.enabledHours',
-              value,
-              providedType
-            );
-            if (value.filter((x) => x < 0 || x > 24))
-              throw Namespace.ErrorMessages.numbersOutOfRage(
-                'restrictions.enabledHours',
-                0,
-                23
-              );
-            break;
-          case 'daysOfWeekDisabled':
-            typeCheckNumberArray(
-              'restrictions.daysOfWeekDisabled',
-              value,
-              providedType
-            );
-            if (value.filter((x) => x < 0 || x > 6))
-              throw Namespace.ErrorMessages.numbersOutOfRage(
-                'restrictions.daysOfWeekDisabled',
-                0,
-                6
-              );
-            break;
-          case 'enabledDates':
-            typeCheckDateArray(
-              'restrictions.enabledDates',
-              value,
-              providedType
-            );
-            break;
-          case 'disabledDates':
-            typeCheckDateArray(
-              'restrictions.disabledDates',
-              value,
-              providedType
-            );
-            break;
-          case 'disabledTimeIntervals':
-            if (!Array.isArray(value)) {
-              throw Namespace.ErrorMessages.typeMismatch(
-                key,
-                providedType,
-                'array of { from: DateTime|Date, to: DateTime|Date }'
-              );
-            }
-            const valueObject = value as { from: any; to: any }[];
-            for (let i = 0; i < valueObject.length; i++) {
-              Object.keys(valueObject[i]).forEach((vk) => {
-                const subOptionName = `${key}[${i}].${vk}`;
-                let d = valueObject[i][vk];
-                const dateTime = dateConversion(d, subOptionName);
-                if (!dateTime) {
-                  throw Namespace.ErrorMessages.typeMismatch(
-                    subOptionName,
-                    typeof d,
-                    'DateTime or Date'
-                  );
-                }
-                valueObject[i][vk] = dateTime;
-              });
-            }
-            break;
-          default:
-            if (providedType !== defaultType) {
-              if (defaultType === typeof undefined)
-                throw Namespace.ErrorMessages.unexpectedOption(
-                  path.substring(1)
-                );
-              throw Namespace.ErrorMessages.typeMismatch(
-                path.substring(1),
-                providedType,
-                defaultType
-              );
-            }
-            break;
-        }
-
-        if (typeof defaultOption[key] !== 'object') {
-          path = path.substring(0, path.lastIndexOf(`.${key}`));
-          return;
-        }
-        if (!Array.isArray(provided[key]) && provided[key] != null) {
-          spread(provided[key], defaultOption[key]);
-          path = path.substring(0, path.lastIndexOf(`.${key}`));
-          provided[key] = { ...defaultOption[key], ...provided[key] };
-        }
-        path = path.substring(0, path.lastIndexOf(`.${key}`));
-      });
-    };
-    spread(config, mergeTo);
-
-    config = {
-      ...mergeTo,
-      ...config,
-    };
+    config = OptionConverter._mergeOptions(config, mergeTo);
+    config = OptionConverter._dataToOptions(this._element, config);
 
     //defaults the input format based on the components enabled
     if (config.display.inputFormat === undefined) {
@@ -419,7 +186,7 @@ export class TempusDominus {
     if (this._element.tagName == 'INPUT') {
       this._input = this._element as HTMLInputElement;
     } else {
-      let query = this._element.dataset.targetInput;
+      let query = this._element.dataset.tdTargetInput;
       if (query == undefined || query == 'nearest') {
         this._input = this._element.querySelector('input');
       } else {
@@ -436,33 +203,13 @@ export class TempusDominus {
    */
   private _initializeToggle() {
     if (this.options.display.inline) return;
-    let query = this._element.dataset.targetToggle;
+    let query = this._element.dataset.tdtargetToggle;
     if (query == 'nearest') {
       query = '[data-toggle="datetimepicker"]';
     }
     this._toggle =
       query == undefined ? this._element : this._element.querySelector(query);
     this._toggle.addEventListener('click', this._toggleClickEvent);
-  }
-
-  /**
-   * Attempts to prove `d` is a DateTime or Date or can be converted into one.
-   * @param d If a string will attempt creating a date from it.
-   * @private
-   */
-  private static _dateTypeCheck(d: any): DateTime | null {
-    if (d.constructor.name === 'DateTime') return d;
-    if (d.constructor.name === 'Date') {
-      return DateTime.convert(d);
-    }
-    if (typeof d === typeof '') {
-      const dateTime = new DateTime(d);
-      if (JSON.stringify(dateTime) === 'null') {
-        return null;
-      }
-      return dateTime;
-    }
-    return null;
   }
 
   /**
@@ -516,7 +263,7 @@ export class TempusDominus {
    * @private
    */
   private _inputChangeEvent = () => {
-    let parsedDate = TempusDominus._dateTypeCheck(this._input.value);
+    let parsedDate = OptionConverter._dateTypeCheck(this._input.value);
 
     if (parsedDate) {
       this.dates._setValue(parsedDate);

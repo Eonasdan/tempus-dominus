@@ -4,7 +4,6 @@ import { ErrorMessages } from './errorMessages';
 const NAME = 'tempus-dominus';
 const VERSION = '6.0.0-alpha1';
 const DATA_KEY = 'td';
-const DATA_API_KEY = '.data-api';
 
 /**
  * Events
@@ -28,8 +27,6 @@ class Events {
   keyup = `keyup${this.key}`;
   keydown = `keydown${this.key}`;
   focus = `focus${this.key}`;
-  clickDataApi = `click${this.key}${DATA_API_KEY}`;
-  clickAction = `click${this.key}.action`;
 }
 
 class Css {
@@ -88,7 +85,6 @@ export default class Namespace {
   static NAME = NAME;
   static VERSION = VERSION;
   static DATA_KEY = DATA_KEY;
-  static DATA_API_KEY = DATA_API_KEY;
 
   static Events = new Events();
 
