@@ -16,7 +16,7 @@ import {
 /**
  * Main date picker entry point
  */
-export class TempusDominus {
+class TempusDominus {
   options: Options;
   _element: HTMLElement;
   viewDate: DateTime;
@@ -29,6 +29,7 @@ export class TempusDominus {
   dates: Dates;
   _action: Actions;
 
+  private _isDisabled = false;
   private _notifyChangeEventContext = 0;
   private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: any;
@@ -67,6 +68,58 @@ export class TempusDominus {
     if (reset) this.options = this._initializeOptions(options, DefaultOptions);
     else this.options = this._initializeOptions(options, this.options);
     this._display._rebuild();
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Toggles the picker open or closed. If the picker is disabled, nothing will happen.
+   * @public
+   */
+  toggle(): void {
+    if (this._isDisabled) return;
+    this._display.toggle();
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Shows the picker unless the picker is disabled.
+   * @public
+   */
+  show(): void {
+    if (this._isDisabled) return;
+    this._display.show();
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Hides the picker unless the picker is disabled.
+   * @public
+   */
+  hide(): void {
+    this._display.hide();
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Disables the picker and the target input field.
+   * @public
+   */
+  disable(): void {
+    this._isDisabled = true;
+    // todo this might be undesired. If a dev disables the input field to
+    // only allow using the picker, this will break that.
+    this._input?.setAttribute('disabled', 'disabled');
+    this._display.hide();
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Enables the picker and the target input field.
+   * @public
+   */
+  enable(): void {
+    this._isDisabled = false;
+    this._input?.removeAttribute('disabled');
   }
 
   /**
@@ -113,13 +166,16 @@ export class TempusDominus {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Hides the picker and removes event listeners
+   * Hides the picker and removes event listenersf
    */
   dispose() {
     this._display.hide();
     // this will clear the document click event listener
     this._display._dispose();
     this._input?.removeEventListener('change', this._inputChangeEvent);
+    if (this.options.allowInputToggle) {
+      this._input?.removeEventListener('click', this._toggleClickEvent);
+    }
     this._toggle.removeEventListener('click', this._toggleClickEvent);
     //clear data-
   }
@@ -195,6 +251,9 @@ export class TempusDominus {
     }
 
     this._input?.addEventListener('change', this._inputChangeEvent);
+    if (this.options.allowInputToggle) {
+      this._input?.addEventListener('click', this._toggleClickEvent);
+    }
   }
 
   /**
@@ -203,9 +262,9 @@ export class TempusDominus {
    */
   private _initializeToggle() {
     if (this.options.display.inline) return;
-    let query = this._element.dataset.tdtargetToggle;
+    let query = this._element.dataset.tdTargetToggle;
     if (query == 'nearest') {
-      query = '[data-toggle="datetimepicker"]';
+      query = '[data-td-toggle="datetimepicker"]';
     }
     this._toggle =
       query == undefined ? this._element : this._element.querySelector(query);
@@ -282,6 +341,8 @@ export class TempusDominus {
    * @private
    */
   private _toggleClickEvent = () => {
-    this._display.toggle();
+    this.toggle();
   };
 }
+
+export { TempusDominus, Namespace, DefaultOptions };

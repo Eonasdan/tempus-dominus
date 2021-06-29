@@ -54,7 +54,6 @@ const DefaultOptions: Options = {
   useCurrent: true,
   defaultDate: false,
   localization: {
-    //todo plugin
     today: 'Go to today',
     clear: 'Clear selection',
     close: 'Close the picker',
@@ -89,132 +88,44 @@ const DefaultOptions: Options = {
   focusOnShow: true,
   keepInvalid: false,
   keyBinds: {
-    //todo plugin //todo jquery //todo moment
-    up: function () {
-      if (!this.widget) {
-        return false;
-      }
-      const d = this._dates[0] || this.getMoment();
-      if (this.widget.find('.datepicker').is(':visible')) {
-        this.date(d.clone().subtract(7, 'd'));
-      } else {
-        this.date(d.clone().add(this.stepping(), 'm'));
-      }
-      return true;
+    'control down': () => {
+      return false;
     },
-    down: function () {
-      if (!this.widget) {
-        this.show();
-        return false;
-      }
-      const d = this._dates[0] || this.getMoment();
-      if (this.widget.find('.datepicker').is(':visible')) {
-        this.date(d.clone().add(7, 'd'));
-      } else {
-        this.date(d.clone().subtract(this.stepping(), 'm'));
-      }
-      return true;
+    pageDown: () => {
+      return false;
     },
-    'control up': function () {
-      if (!this.widget) {
-        return false;
-      }
-      const d = this._dates[0] || this.getMoment();
-      if (this.widget.find('.datepicker').is(':visible')) {
-        this.date(d.clone().subtract(1, 'y'));
-      } else {
-        this.date(d.clone().add(1, 'h'));
-      }
-      return true;
+    'control up': () => {
+      return false;
     },
-    'control down': function () {
-      if (!this.widget) {
-        return false;
-      }
-      const d = this._dates[0] || this.getMoment();
-      if (this.widget.find('.datepicker').is(':visible')) {
-        this.date(d.clone().add(1, 'y'));
-      } else {
-        this.date(d.clone().subtract(1, 'h'));
-      }
-      return true;
+    right: () => {
+      return false;
     },
-    left: function () {
-      if (!this.widget) {
-        return false;
-      }
-      const d = this._dates[0] || this.getMoment();
-      if (this.widget.find('.datepicker').is(':visible')) {
-        this.date(d.clone().subtract(1, 'd'));
-      }
-      return true;
+    pageUp: () => {
+      return false;
     },
-    right: function () {
-      if (!this.widget) {
-        return false;
-      }
-      const d = this._dates[0] || this.getMoment();
-      if (this.widget.find('.datepicker').is(':visible')) {
-        this.date(d.clone().add(1, 'd'));
-      }
-      return true;
+    down: () => {
+      return false;
     },
-    pageUp: function () {
-      if (!this.widget) {
-        return false;
-      }
-      const d = this._dates[0] || this.getMoment();
-      if (this.widget.find('.datepicker').is(':visible')) {
-        this.date(d.clone().subtract(1, 'M'));
-      }
-      return true;
+    delete: () => {
+      return false;
     },
-    pageDown: function () {
-      if (!this.widget) {
-        return false;
-      }
-      const d = this._dates[0] || this.getMoment();
-      if (this.widget.find('.datepicker').is(':visible')) {
-        this.date(d.clone().add(1, 'M'));
-      }
-      return true;
+    t: () => {
+      return false;
     },
-    enter: function () {
-      if (!this.widget) {
-        return false;
-      }
-      this.hide();
-      return true;
+    left: () => {
+      return false;
     },
-    escape: function () {
-      if (!this.widget) {
-        return false;
-      }
-      this.hide();
-      return true;
+    up: () => {
+      return false;
     },
-    'control space': function () {
-      if (!this.widget) {
-        return false;
-      }
-      if (this.widget.find('.timepicker').is(':visible')) {
-        this.widget.find('.btn[data-action="togglePeriod"]').click();
-      }
-      return true;
+    enter: () => {
+      return false;
     },
-    t: function () {
-      if (!this.widget) {
-        return false;
-      }
-      this.date(this.getMoment());
-      return true;
+    'control space': () => {
+      return false;
     },
-    delete: function () {
-      if (!this.widget) {
-        return false;
-      }
-      this.clear();
-      return true;
+    escape: () => {
+      return false;
     },
   },
   debug: false,

@@ -536,7 +536,6 @@
         useCurrent: true,
         defaultDate: false,
         localization: {
-            //todo plugin
             today: 'Go to today',
             clear: 'Clear selection',
             close: 'Close the picker',
@@ -571,136 +570,44 @@
         focusOnShow: true,
         keepInvalid: false,
         keyBinds: {
-            //todo plugin //todo jquery //todo moment
-            up: function () {
-                if (!this.widget) {
-                    return false;
-                }
-                const d = this._dates[0] || this.getMoment();
-                if (this.widget.find('.datepicker').is(':visible')) {
-                    this.date(d.clone().subtract(7, 'd'));
-                }
-                else {
-                    this.date(d.clone().add(this.stepping(), 'm'));
-                }
-                return true;
+            'control down': () => {
+                return false;
             },
-            down: function () {
-                if (!this.widget) {
-                    this.show();
-                    return false;
-                }
-                const d = this._dates[0] || this.getMoment();
-                if (this.widget.find('.datepicker').is(':visible')) {
-                    this.date(d.clone().add(7, 'd'));
-                }
-                else {
-                    this.date(d.clone().subtract(this.stepping(), 'm'));
-                }
-                return true;
+            pageDown: () => {
+                return false;
             },
-            'control up': function () {
-                if (!this.widget) {
-                    return false;
-                }
-                const d = this._dates[0] || this.getMoment();
-                if (this.widget.find('.datepicker').is(':visible')) {
-                    this.date(d.clone().subtract(1, 'y'));
-                }
-                else {
-                    this.date(d.clone().add(1, 'h'));
-                }
-                return true;
+            'control up': () => {
+                return false;
             },
-            'control down': function () {
-                if (!this.widget) {
-                    return false;
-                }
-                const d = this._dates[0] || this.getMoment();
-                if (this.widget.find('.datepicker').is(':visible')) {
-                    this.date(d.clone().add(1, 'y'));
-                }
-                else {
-                    this.date(d.clone().subtract(1, 'h'));
-                }
-                return true;
+            right: () => {
+                return false;
             },
-            left: function () {
-                if (!this.widget) {
-                    return false;
-                }
-                const d = this._dates[0] || this.getMoment();
-                if (this.widget.find('.datepicker').is(':visible')) {
-                    this.date(d.clone().subtract(1, 'd'));
-                }
-                return true;
+            pageUp: () => {
+                return false;
             },
-            right: function () {
-                if (!this.widget) {
-                    return false;
-                }
-                const d = this._dates[0] || this.getMoment();
-                if (this.widget.find('.datepicker').is(':visible')) {
-                    this.date(d.clone().add(1, 'd'));
-                }
-                return true;
+            down: () => {
+                return false;
             },
-            pageUp: function () {
-                if (!this.widget) {
-                    return false;
-                }
-                const d = this._dates[0] || this.getMoment();
-                if (this.widget.find('.datepicker').is(':visible')) {
-                    this.date(d.clone().subtract(1, 'M'));
-                }
-                return true;
+            delete: () => {
+                return false;
             },
-            pageDown: function () {
-                if (!this.widget) {
-                    return false;
-                }
-                const d = this._dates[0] || this.getMoment();
-                if (this.widget.find('.datepicker').is(':visible')) {
-                    this.date(d.clone().add(1, 'M'));
-                }
-                return true;
+            t: () => {
+                return false;
             },
-            enter: function () {
-                if (!this.widget) {
-                    return false;
-                }
-                this.hide();
-                return true;
+            left: () => {
+                return false;
             },
-            escape: function () {
-                if (!this.widget) {
-                    return false;
-                }
-                this.hide();
-                return true;
+            up: () => {
+                return false;
             },
-            'control space': function () {
-                if (!this.widget) {
-                    return false;
-                }
-                if (this.widget.find('.timepicker').is(':visible')) {
-                    this.widget.find('.btn[data-action="togglePeriod"]').click();
-                }
-                return true;
+            enter: () => {
+                return false;
             },
-            t: function () {
-                if (!this.widget) {
-                    return false;
-                }
-                this.date(this.getMoment());
-                return true;
+            'control space': () => {
+                return false;
             },
-            delete: function () {
-                if (!this.widget) {
-                    return false;
-                }
-                this.clear();
-                return true;
+            escape: () => {
+                return false;
             },
         },
         debug: false,
@@ -2820,6 +2727,7 @@
      */
     class TempusDominus {
         constructor(element, options) {
+            this._isDisabled = false;
             this._notifyChangeEventContext = 0;
             /**
              * Event for when the input field changes. This is a class level method so there's
@@ -2845,7 +2753,7 @@
              * @private
              */
             this._toggleClickEvent = () => {
-                this._display.toggle();
+                this.toggle();
             };
             if (!element) {
                 throw Namespace.ErrorMessages.mustProvideElement;
@@ -2879,6 +2787,57 @@
             else
                 this.options = this._initializeOptions(options, this.options);
             this._display._rebuild();
+        }
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         * Toggles the picker open or closed. If the picker is disabled, nothing will happen.
+         * @public
+         */
+        toggle() {
+            if (this._isDisabled)
+                return;
+            this._display.toggle();
+        }
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         * Shows the picker unless the picker is disabled.
+         * @public
+         */
+        show() {
+            if (this._isDisabled)
+                return;
+            this._display.show();
+        }
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         * Hides the picker unless the picker is disabled.
+         * @public
+         */
+        hide() {
+            this._display.hide();
+        }
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         * Disables the picker and the target input field.
+         * @public
+         */
+        disable() {
+            var _a;
+            this._isDisabled = true;
+            // todo this might be undesired. If a dev disables the input field to
+            // only allow using the picker, this will break that.
+            (_a = this._input) === null || _a === void 0 ? void 0 : _a.setAttribute('disabled', 'disabled');
+            this._display.hide();
+        }
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         * Enables the picker and the target input field.
+         * @public
+         */
+        enable() {
+            var _a;
+            this._isDisabled = false;
+            (_a = this._input) === null || _a === void 0 ? void 0 : _a.removeAttribute('disabled');
         }
         /**
          * Triggers an event like ChangeEvent when the picker has updated the value
@@ -2918,14 +2877,17 @@
         }
         // noinspection JSUnusedGlobalSymbols
         /**
-         * Hides the picker and removes event listeners
+         * Hides the picker and removes event listenersf
          */
         dispose() {
-            var _a;
+            var _a, _b;
             this._display.hide();
             // this will clear the document click event listener
             this._display._dispose();
             (_a = this._input) === null || _a === void 0 ? void 0 : _a.removeEventListener('change', this._inputChangeEvent);
+            if (this.options.allowInputToggle) {
+                (_b = this._input) === null || _b === void 0 ? void 0 : _b.removeEventListener('click', this._toggleClickEvent);
+            }
             this._toggle.removeEventListener('click', this._toggleClickEvent);
             //clear data-
         }
@@ -2980,7 +2942,7 @@
          * @private
          */
         _initializeInput() {
-            var _a;
+            var _a, _b;
             if (this._element.tagName == 'INPUT') {
                 this._input = this._element;
             }
@@ -2994,6 +2956,9 @@
                 }
             }
             (_a = this._input) === null || _a === void 0 ? void 0 : _a.addEventListener('change', this._inputChangeEvent);
+            if (this.options.allowInputToggle) {
+                (_b = this._input) === null || _b === void 0 ? void 0 : _b.addEventListener('click', this._toggleClickEvent);
+            }
         }
         /**
          * Attempts to locate a toggle for the picker and sets an event listener
@@ -3002,9 +2967,9 @@
         _initializeToggle() {
             if (this.options.display.inline)
                 return;
-            let query = this._element.dataset.tdtargetToggle;
+            let query = this._element.dataset.tdTargetToggle;
             if (query == 'nearest') {
-                query = '[data-toggle="datetimepicker"]';
+                query = '[data-td-toggle="datetimepicker"]';
             }
             this._toggle =
                 query == undefined ? this._element : this._element.querySelector(query);
@@ -3045,6 +3010,8 @@
         }
     }
 
+    exports.DefaultOptions = DefaultOptions;
+    exports.Namespace = Namespace;
     exports.TempusDominus = TempusDominus;
 
     Object.defineProperty(exports, '__esModule', { value: true });
