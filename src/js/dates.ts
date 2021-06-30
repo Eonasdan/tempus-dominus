@@ -4,7 +4,7 @@ import Namespace from './namespace';
 import { ChangeEvent, FailEvent } from './event-types';
 
 export default class Dates {
-  _dates: DateTime[] = [];
+  private _dates: DateTime[] = [];
 
   private context: TempusDominus;
 

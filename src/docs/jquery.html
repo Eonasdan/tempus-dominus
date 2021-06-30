@@ -202,16 +202,6 @@
           inline: true
         }
       });
-
-      dt._display.show();
-      setTimeout(function () {
-        logger('log', 'ran update');
-        dt.updateOptions({
-          restrictions: {
-            maxDate: new Date(2021, 5 - 1, 10)
-          }
-        });
-      }, 5 * 1000);
     });
 
   } catch (e) {
