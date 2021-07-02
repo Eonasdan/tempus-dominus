@@ -2988,10 +2988,9 @@
                 this.options.display.inline ||
                 this.options.display.sideBySide ||
                 // time is disabled
-                !this._display._hasTime ||
-                (
-                // clock component is already showing
-                (_a = this._display.widget) === null || _a === void 0 ? void 0 : _a.getElementsByClassName(Namespace.Css.show)[0].classList.contains(Namespace.Css.timeContainer)))
+                !this._display._hasTime || ((_a = 
+            // clock component is already showing
+            this._display.widget) === null || _a === void 0 ? void 0 : _a.getElementsByClassName(Namespace.Css.show)[0].classList.contains(Namespace.Css.timeContainer)))
                 return;
             // First time ever. If useCurrent option is set to true (default), do nothing
             // because the first date is selected automatically.
