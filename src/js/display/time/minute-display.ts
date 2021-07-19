@@ -25,7 +25,9 @@ export default class MinuteDisplay {
     const tableBody = document.createElement('tbody');
     let row = document.createElement('tr');
     let step =
-      this._context.options.stepping === 1 ? 5 : this._context.options.stepping;
+      this._context._options.stepping === 1
+        ? 5
+        : this._context._options.stepping;
     for (let i = 0; i <= 60 / step; i++) {
       if (i !== 0 && i % 4 === 0) {
         tableBody.appendChild(row);
@@ -52,9 +54,11 @@ export default class MinuteDisplay {
     const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.minuteContainer
     )[0];
-    let innerDate = this._context.viewDate.clone.startOf(Unit.hours);
+    let innerDate = this._context._viewDate.clone.startOf(Unit.hours);
     let step =
-      this._context.options.stepping === 1 ? 5 : this._context.options.stepping;
+      this._context._options.stepping === 1
+        ? 5
+        : this._context._options.stepping;
 
     container
       .querySelectorAll('tbody td div')

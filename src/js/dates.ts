@@ -79,6 +79,18 @@ export default class Dates {
     return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
   }
 
+  clear() {
+    this.context._unset = true;
+    this.context._triggerEvent({
+      type: Namespace.Events.change,
+      date: undefined,
+      oldDate: this.lastPicked,
+      isClear: true,
+      isValid: true,
+    } as ChangeEvent);
+    this._dates = [];
+  }
+
   /**
    * Find the "book end" years given a `year` and a `factor`
    * @param factor e.g. 100 for decades
@@ -112,10 +124,23 @@ export default class Dates {
       oldDate = this.lastPicked;
     }
 
+    const updateInput = () => {
+      if (!this.context._input) return;
+
+      let newValue = target?.format(this.context._options.display.inputFormat);
+      if (this.context._options.multipleDates) {
+        newValue = this._dates
+          .map((d) => d.format(this.context._options.display.inputFormat))
+          .join(this.context._options.multipleDatesSeparator);
+      }
+      if (this.context._input.value != newValue)
+        this.context._input.value = newValue;
+    };
+
     // case of calling setValue(null)
     if (!target) {
       if (
-        !this.context.options.allowMultidate ||
+        !this.context._options.multipleDates ||
         this._dates.length === 1 ||
         isClear
       ) {
@@ -125,47 +150,39 @@ export default class Dates {
         this._dates.splice(index, 1);
       }
       this.context._triggerEvent({
-        name: Namespace.Events.change,
+        type: Namespace.Events.change,
         date: undefined,
         oldDate,
         isClear,
         isValid: true,
       } as ChangeEvent);
 
+      updateInput();
       this.context._display._update('all');
       return;
     }
 
-    index = 0;
+    index = index || 0;
     target = target.clone;
 
     // minute stepping is being used, force the minute to the closest value
-    if (this.context.options.stepping !== 1) {
+    if (this.context._options.stepping !== 1) {
       target.minutes =
-        Math.round(target.minutes / this.context.options.stepping) *
-        this.context.options.stepping;
+        Math.round(target.minutes / this.context._options.stepping) *
+        this.context._options.stepping;
       target.seconds = 0;
     }
 
     if (this.context._validation.isValid(target)) {
       this._dates[index] = target;
-      this.context.viewDate = target.clone;
+      this.context._viewDate = target.clone;
 
-      if (this.context._input) {
-        let newValue = target.format(this.context.options.display.inputFormat);
-        if (this.context.options.allowMultidate) {
-          newValue = this._dates
-            .map((d) => d.format(this.context.options.display.inputFormat))
-            .join(this.context.options.multidateSeparator);
-        }
-        if (this.context._input.value != newValue)
-          this.context._input.value = newValue;
-      }
+      updateInput();
 
       this.context._unset = false;
       this.context._display._update('all');
       this.context._triggerEvent({
-        name: Namespace.Events.change,
+        type: Namespace.Events.change,
         date: target,
         oldDate,
         isClear,
@@ -174,11 +191,11 @@ export default class Dates {
       return;
     }
 
-    if (this.context.options.keepInvalid) {
+    if (this.context._options.keepInvalid) {
       this._dates[index] = target;
-      this.context.viewDate = target.clone;
+      this.context._viewDate = target.clone;
       this.context._triggerEvent({
-        name: Namespace.Events.change,
+        type: Namespace.Events.change,
         date: target,
         oldDate,
         isClear,
@@ -186,7 +203,7 @@ export default class Dates {
       } as ChangeEvent);
     }
     this.context._triggerEvent({
-      name: Namespace.Events.error,
+      type: Namespace.Events.error,
       reason: Namespace.ErrorMessages.failedToSetInvalidDate,
       date: target,
       oldDate,

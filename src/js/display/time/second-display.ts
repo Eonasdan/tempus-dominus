@@ -50,7 +50,7 @@ export default class secondDisplay {
     const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.secondContainer
     )[0];
-    let innerDate = this._context.viewDate.clone.startOf(Unit.minutes);
+    let innerDate = this._context._viewDate.clone.startOf(Unit.minutes);
 
     container
       .querySelectorAll('tbody td div')

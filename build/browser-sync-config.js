@@ -13,7 +13,7 @@ const fs = require('fs');
  */
 module.exports = {
   ui: false,
-  files: ['src/docs/**.*', 'src/js/**/*.js'],
+  files: ['docs/**.*'],
   watchEvents: ['change'],
   watch: false,
   ignore: ['build'],
@@ -21,7 +21,7 @@ module.exports = {
   watchOptions: {
     ignoreInitial: true,
   },
-  server: true,
+  server: "docs",
   https: {
     key: 'C:\\projects\\https\\localhost.key',
     cert: 'C:\\projects\\https\\localhost.crt',

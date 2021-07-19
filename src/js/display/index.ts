@@ -29,7 +29,7 @@ export default class Display {
   private _minuteDisplay: MinuteDisplay;
   private _secondDisplay: SecondDisplay;
   private _popperInstance: any;
-  private _isVisible: boolean = false;
+  private _isVisible = false;
 
   constructor(context: TempusDominus) {
     this._context = context;
@@ -51,6 +51,13 @@ export default class Display {
    */
   get widget(): HTMLElement | undefined {
     return this._widget;
+  }
+
+  /**
+   * Returns this visible state of the picker (shown)
+   */
+  get isVisible() {
+    return this._isVisible;
   }
 
   /**
@@ -110,16 +117,26 @@ export default class Display {
    */
   show(): void {
     if (this.widget == undefined) {
-      if (this._context.options.useCurrent) {
+      if (this._context._options.useCurrent) {
         //todo in the td4 branch a pr changed this to allow granularity
-        this._context.dates._setValue(new DateTime());
+        const date = new DateTime().setLocale(
+          this._context._options.localization.locale
+        );
+        if (this._context._options.keepInvalid) {
+          let tries = 0;
+          while (!this._context._validation.isValid(date)) {
+            date.manipulate(1, Unit.date);
+            if (tries > 31) break;
+          }
+        }
+        this._context.dates._setValue(date);
       }
       this._buildWidget();
       if (this._hasDate) {
         this._showMode();
       }
 
-      if (!this._context.options.display.inline) {
+      if (!this._context._options.display.inline) {
         document.body.appendChild(this.widget);
 
         this._popperInstance = createPopper(
@@ -142,7 +159,7 @@ export default class Display {
         this._context._element.appendChild(this.widget);
       }
 
-      if (this._context.options.display.viewMode == 'clock') {
+      if (this._context._options.display.viewMode == 'clock') {
         this._context._action.do(
           {
             currentTarget: this.widget.querySelector(
@@ -160,20 +177,22 @@ export default class Display {
         );
 
       // show the clock when using sideBySide
-      if (this._context.options.display.sideBySide) {
+      if (this._context._options.display.sideBySide) {
         this._timeDisplay._update();
-        (this.widget.getElementsByClassName(
-          Namespace.Css.clockContainer
-        )[0] as HTMLElement).style.display = 'block';
+        (
+          this.widget.getElementsByClassName(
+            Namespace.Css.clockContainer
+          )[0] as HTMLElement
+        ).style.display = 'block';
       }
     }
 
     this.widget.classList.add(Namespace.Css.show);
-    if (!this._context.options.display.inline) {
+    if (!this._context._options.display.inline) {
       this._popperInstance.update();
       document.addEventListener('click', this._documentClickEvent);
     }
-    this._context._triggerEvent({ name: Namespace.Events.show });
+    this._context._triggerEvent({ type: Namespace.Events.show });
     this._isVisible = true;
   }
 
@@ -189,10 +208,10 @@ export default class Display {
     if (direction) {
       const max = Math.max(
         this._context._minViewModeNumber,
-        Math.min(3, this._context.currentViewMode + direction)
+        Math.min(3, this._context._currentViewMode + direction)
       );
-      if (this._context.currentViewMode == max) return;
-      this._context.currentViewMode = max;
+      if (this._context._currentViewMode == max) return;
+      this._context._currentViewMode = max;
     }
     this.widget
       .querySelectorAll(
@@ -200,12 +219,12 @@ export default class Display {
       )
       .forEach((e: HTMLElement) => (e.style.display = 'none'));
 
-    const datePickerMode = DatePickerModes[this._context.currentViewMode];
+    const datePickerMode = DatePickerModes[this._context._currentViewMode];
     let picker: HTMLElement = this.widget.querySelector(
-      `.${datePickerMode.CLASS_NAME}`
+      `.${datePickerMode.className}`
     );
 
-    switch (datePickerMode.CLASS_NAME) {
+    switch (datePickerMode.className) {
       case Namespace.Css.decadesContainer:
         this._decadeDisplay._update();
         break;
@@ -233,7 +252,7 @@ export default class Display {
 
     if (this._isVisible) {
       this._context._triggerEvent({
-        name: Namespace.Events.hide,
+        type: Namespace.Events.hide,
         date: this._context._unset
           ? null
           : this._context.dates.lastPicked
@@ -295,17 +314,17 @@ export default class Display {
     toolbar.classList.add(Namespace.Css.switch);
     toolbar.appendChild(this._toolbar);
 
-    if (this._context.options.display.inline) {
+    if (this._context._options.display.inline) {
       template.classList.add(Namespace.Css.inline);
     }
 
     if (
-      this._context.options.display.sideBySide &&
+      this._context._options.display.sideBySide &&
       this._hasDate &&
       this._hasTime
     ) {
       template.classList.add(Namespace.Css.sideBySide);
-      if (this._context.options.display.toolbarPlacement === 'top') {
+      if (this._context._options.display.toolbarPlacement === 'top') {
         template.appendChild(toolbar);
       }
       const row = document.createElement('div');
@@ -317,8 +336,8 @@ export default class Display {
       row.appendChild(timeView);
       template.appendChild(row);
       if (
-        this._context.options.display.toolbarPlacement === 'bottom' ||
-        this._context.options.display.toolbarPlacement === 'default'
+        this._context._options.display.toolbarPlacement === 'bottom' ||
+        this._context._options.display.toolbarPlacement === 'default'
       ) {
         template.appendChild(toolbar);
       }
@@ -326,33 +345,33 @@ export default class Display {
       return;
     }
 
-    if (this._context.options.display.toolbarPlacement === 'top') {
+    if (this._context._options.display.toolbarPlacement === 'top') {
       template.appendChild(toolbar);
     }
 
     if (this._hasDate) {
-      if (this._context.options.display.collapse && this._hasTime) {
+      if (this._context._options.display.collapse && this._hasTime) {
         dateView.classList.add(Namespace.Css.collapse);
-        if (this._context.options.display.viewMode !== 'clock')
+        if (this._context._options.display.viewMode !== 'clock')
           dateView.classList.add(Namespace.Css.show);
       }
       template.appendChild(dateView);
     }
 
-    if (this._context.options.display.toolbarPlacement === 'default') {
+    if (this._context._options.display.toolbarPlacement === 'default') {
       template.appendChild(toolbar);
     }
 
     if (this._hasTime) {
-      if (this._context.options.display.collapse && this._hasDate) {
+      if (this._context._options.display.collapse && this._hasDate) {
         timeView.classList.add(Namespace.Css.collapse);
-        if (this._context.options.display.viewMode === 'clock')
+        if (this._context._options.display.viewMode === 'clock')
           timeView.classList.add(Namespace.Css.show);
       }
       template.appendChild(timeView);
     }
 
-    if (this._context.options.display.toolbarPlacement === 'bottom') {
+    if (this._context._options.display.toolbarPlacement === 'bottom') {
       template.appendChild(toolbar);
     }
 
@@ -369,9 +388,10 @@ export default class Display {
    */
   get _hasTime(): boolean {
     return (
-      this._context.options.display.components.hours ||
-      this._context.options.display.components.minutes ||
-      this._context.options.display.components.seconds
+      this._context._options.display.components.clock &&
+      (this._context._options.display.components.hours ||
+        this._context._options.display.components.minutes ||
+        this._context._options.display.components.seconds)
     );
   }
 
@@ -380,9 +400,10 @@ export default class Display {
    */
   get _hasDate(): boolean {
     return (
-      this._context.options.display.components.year ||
-      this._context.options.display.components.month ||
-      this._context.options.display.components.date
+      this._context._options.display.components.calendar &&
+      (this._context._options.display.components.year ||
+        this._context._options.display.components.month ||
+        this._context._options.display.components.date)
     );
   }
 
@@ -393,29 +414,31 @@ export default class Display {
   get _toolbar(): HTMLTableElement {
     const tbody = document.createElement('tbody');
 
-    if (this._context.options.display.buttons.today) {
+    if (this._context._options.display.buttons.today) {
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.today);
-      div.setAttribute('title', this._context.options.localization.today);
+      div.setAttribute('title', this._context._options.localization.today);
 
-      div.appendChild(this._iconTag(this._context.options.display.icons.today));
+      div.appendChild(
+        this._iconTag(this._context._options.display.icons.today)
+      );
       td.appendChild(div);
       tbody.appendChild(td);
     }
     if (
-      !this._context.options.display.sideBySide &&
-      this._context.options.display.collapse &&
+      !this._context._options.display.sideBySide &&
+      this._context._options.display.collapse &&
       this._hasDate &&
       this._hasTime
     ) {
       let title, icon;
-      if (this._context.options.display.viewMode === 'clock') {
-        title = this._context.options.localization.selectDate;
-        icon = this._context.options.display.icons.date;
+      if (this._context._options.display.viewMode === 'clock') {
+        title = this._context._options.localization.selectDate;
+        icon = this._context._options.display.icons.date;
       } else {
-        title = this._context.options.localization.selectTime;
-        icon = this._context.options.display.icons.time;
+        title = this._context._options.localization.selectTime;
+        icon = this._context._options.display.icons.time;
       }
 
       const td = document.createElement('td');
@@ -427,23 +450,27 @@ export default class Display {
       td.appendChild(div);
       tbody.appendChild(td);
     }
-    if (this._context.options.display.buttons.clear) {
+    if (this._context._options.display.buttons.clear) {
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.clear);
-      div.setAttribute('title', this._context.options.localization.clear);
+      div.setAttribute('title', this._context._options.localization.clear);
 
-      div.appendChild(this._iconTag(this._context.options.display.icons.clear));
+      div.appendChild(
+        this._iconTag(this._context._options.display.icons.clear)
+      );
       td.appendChild(div);
       tbody.appendChild(td);
     }
-    if (this._context.options.display.buttons.close) {
+    if (this._context._options.display.buttons.close) {
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.close);
-      div.setAttribute('title', this._context.options.localization.close);
+      div.setAttribute('title', this._context._options.localization.close);
 
-      div.appendChild(this._iconTag(this._context.options.display.icons.close));
+      div.appendChild(
+        this._iconTag(this._context._options.display.icons.close)
+      );
       td.appendChild(div);
       tbody.appendChild(td);
     }
@@ -464,7 +491,7 @@ export default class Display {
     previous.classList.add(Namespace.Css.previous);
     previous.setAttribute('data-action', ActionTypes.previous);
     div.appendChild(
-      this._iconTag(this._context.options.display.icons.previous)
+      this._iconTag(this._context._options.display.icons.previous)
     );
     previous.appendChild(div);
     headTemplate.appendChild(previous);
@@ -474,7 +501,7 @@ export default class Display {
     switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
     switcher.setAttribute(
       'colspan',
-      this._context.options.display.calendarWeeks ? '6' : '5'
+      this._context._options.display.calendarWeeks ? '6' : '5'
     );
     headTemplate.appendChild(switcher);
 
@@ -482,7 +509,7 @@ export default class Display {
     next.classList.add(Namespace.Css.next);
     next.setAttribute('data-action', ActionTypes.next);
     div = document.createElement('div');
-    div.appendChild(this._iconTag(this._context.options.display.icons.next));
+    div.appendChild(this._iconTag(this._context._options.display.icons.next));
     next.appendChild(div);
     headTemplate.appendChild(next);
     return <HTMLElement>headTemplate.cloneNode(true);
@@ -495,7 +522,7 @@ export default class Display {
    * @private
    */
   _iconTag(iconClass: string): HTMLElement {
-    if (this._context.options.display.icons.type === 'sprites') {
+    if (this._context._options.display.icons.type === 'sprites') {
       const svg = document.createElement('svg');
       svg.innerHTML = `<use xlink:href='${iconClass}'></use>`;
       return svg;
@@ -515,7 +542,7 @@ export default class Display {
       this._isVisible &&
       !e.composedPath().includes(this.widget) && // click inside the widget
       !e.composedPath()?.includes(this._context._element) && // click on the element
-      (!this._context.options.keepOpen || !this._context.options.debug)
+      (!this._context._options.keepOpen || !this._context._options.debug)
     ) {
       this.hide();
     }
@@ -531,7 +558,7 @@ export default class Display {
   };
 
   /**
-   * Cases the widget to get rebuilt on next show. If the picker is already open
+   * Causes the widget to get rebuilt on next show. If the picker is already open
    * then hide and reshow it.
    * @private
    */

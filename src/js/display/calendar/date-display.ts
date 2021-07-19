@@ -27,14 +27,14 @@ export default class DateDisplay {
 
     previous
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context.options.localization.previousMonth);
+      .setAttribute('title', this._context._options.localization.previousMonth);
     switcher.setAttribute(
       'title',
-      this._context.options.localization.selectMonth
+      this._context._options.localization.selectMonth
     );
     next
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context.options.localization.nextMonth);
+      .setAttribute('title', this._context._options.localization.nextMonth);
 
     table.appendChild(headTemplate);
     const tableBody = document.createElement('tbody');
@@ -42,7 +42,7 @@ export default class DateDisplay {
 
     let row = document.createElement('tr');
 
-    if (this._context.options.display.calendarWeeks) {
+    if (this._context._options.display.calendarWeeks) {
       const td = document.createElement('td');
       const div = document.createElement('div');
       div.classList.add(Namespace.Css.calendarWeeks);
@@ -55,7 +55,7 @@ export default class DateDisplay {
         tableBody.appendChild(row);
         row = document.createElement('tr');
 
-        if (this._context.options.display.calendarWeeks) {
+        if (this._context._options.display.calendarWeeks) {
           const td = document.createElement('td');
           const div = document.createElement('div');
           div.classList.add(Namespace.Css.calendarWeeks);
@@ -89,25 +89,25 @@ export default class DateDisplay {
       .getElementsByTagName('thead')[0]
       .getElementsByTagName('th');
 
-    switcher.innerText = this._context.viewDate.format({
-      month: this._context.options.localization.dayViewHeaderFormat,
+    switcher.innerText = this._context._viewDate.format({
+      month: this._context._options.localization.dayViewHeaderFormat,
     });
 
     this._context._validation.isValid(
-      this._context.viewDate.clone.manipulate(-1, Unit.month),
+      this._context._viewDate.clone.manipulate(-1, Unit.month),
       Unit.month
     )
       ? previous.classList.remove(Namespace.Css.disabled)
       : previous.classList.add(Namespace.Css.disabled);
 
     this._context._validation.isValid(
-      this._context.viewDate.clone.manipulate(1, Unit.month),
+      this._context._viewDate.clone.manipulate(1, Unit.month),
       Unit.month
     )
       ? next.classList.remove(Namespace.Css.disabled)
       : next.classList.add(Namespace.Css.disabled);
 
-    let innerDate = this._context.viewDate.clone
+    let innerDate = this._context._viewDate.clone
       .startOf(Unit.month)
       .startOf('weekDay')
       .manipulate(12, Unit.hours);
@@ -116,7 +116,7 @@ export default class DateDisplay {
       .querySelectorAll('tbody td div')
       .forEach((containerClone: HTMLElement, index) => {
         if (
-          this._context.options.display.calendarWeeks &&
+          this._context._options.display.calendarWeeks &&
           containerClone.classList.contains(Namespace.Css.calendarWeeks)
         ) {
           containerClone.innerText = `${innerDate.week}`;
@@ -126,10 +126,10 @@ export default class DateDisplay {
         let classes = [];
         classes.push(Namespace.Css.day);
 
-        if (innerDate.isBefore(this._context.viewDate, Unit.month)) {
+        if (innerDate.isBefore(this._context._viewDate, Unit.month)) {
           classes.push(Namespace.Css.old);
         }
-        if (innerDate.isAfter(this._context.viewDate, Unit.month)) {
+        if (innerDate.isAfter(this._context._viewDate, Unit.month)) {
           classes.push(Namespace.Css.new);
         }
 
@@ -165,12 +165,12 @@ export default class DateDisplay {
    * @private
    */
   private _daysOfTheWeek(): HTMLTableRowElement {
-    let innerDate = this._context.viewDate.clone
+    let innerDate = this._context._viewDate.clone
       .startOf('weekDay')
       .startOf(Unit.date);
     const row = document.createElement('tr');
 
-    if (this._context.options.display.calendarWeeks) {
+    if (this._context._options.display.calendarWeeks) {
       const th = document.createElement('th');
       th.classList.add(Namespace.Css.calendarWeeks);
       th.innerText = '#';

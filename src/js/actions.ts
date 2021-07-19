@@ -26,7 +26,7 @@ export default class Actions {
     if (currentTarget.classList.contains(Namespace.Css.disabled)) return false;
     action = action || currentTarget.dataset.action;
     const lastPicked = (
-      this._context.dates.lastPicked || this._context.viewDate
+      this._context.dates.lastPicked || this._context._viewDate
     ).clone;
 
     /**
@@ -50,17 +50,18 @@ export default class Actions {
     switch (action) {
       case ActionTypes.next:
       case ActionTypes.previous:
-        const { NAV_FUNCTION, NAV_STEP } = DatePickerModes[
-          this._context.currentViewMode
-        ];
+        const { unit, step } = DatePickerModes[this._context._currentViewMode];
         if (action === ActionTypes.next)
-          this._context.viewDate.manipulate(NAV_STEP, NAV_FUNCTION);
-        else this._context.viewDate.manipulate(NAV_STEP * -1, NAV_FUNCTION);
+          this._context._viewDate.manipulate(step, unit);
+        else this._context._viewDate.manipulate(step * -1, unit);
         this._context._display._update('calendar');
-        this._context._viewUpdate(NAV_FUNCTION);
+        this._context._viewUpdate(unit);
         break;
       case ActionTypes.pickerSwitch:
         this._context._display._showMode(1);
+        this._context._viewUpdate(
+          DatePickerModes[this._context._currentViewMode].unit
+        );
         break;
       case ActionTypes.selectMonth:
       case ActionTypes.selectYear:
@@ -68,27 +69,27 @@ export default class Actions {
         const value = +currentTarget.getAttribute('data-value');
         switch (action) {
           case ActionTypes.selectMonth:
-            this._context.viewDate.month = value;
+            this._context._viewDate.month = value;
             this._context._viewUpdate(Unit.month);
             break;
           case ActionTypes.selectYear:
-            this._context.viewDate.year = value;
+            this._context._viewDate.year = value;
             this._context._viewUpdate(Unit.year);
             break;
           case ActionTypes.selectDecade:
-            this._context.viewDate.year = value;
+            this._context._viewDate.year = value;
             this._context._viewUpdate(Unit.year);
             break;
         }
 
         if (
-          this._context.currentViewMode === this._context._minViewModeNumber
+          this._context._currentViewMode === this._context._minViewModeNumber
         ) {
           this._context.dates._setValue(
-            this._context.viewDate,
+            this._context._viewDate,
             this._context.dates.lastPickedIndex
           );
-          if (!this._context.options.display.inline) {
+          if (!this._context._options.display.inline) {
             this._context._display.hide();
           }
         } else {
@@ -96,7 +97,7 @@ export default class Actions {
         }
         break;
       case ActionTypes.selectDay:
-        const day = this._context.viewDate.clone;
+        const day = this._context._viewDate.clone;
         if (currentTarget.classList.contains(Namespace.Css.old)) {
           day.manipulate(-1, Unit.month);
         }
@@ -106,7 +107,7 @@ export default class Actions {
 
         day.date = +currentTarget.innerText;
         let index = 0;
-        if (this._context.options.allowMultidate) {
+        if (this._context._options.multipleDates) {
           index = this._context.dates.pickedIndex(day, Unit.date);
           if (index !== -1) {
             this._context.dates._setValue(null, index); //deselect multi-date
@@ -125,9 +126,9 @@ export default class Actions {
 
         if (
           !this._context._display._hasTime &&
-          !this._context.options.keepOpen &&
-          !this._context.options.display.inline &&
-          !this._context.options.allowMultidate
+          !this._context._options.keepOpen &&
+          !this._context._options.display.inline &&
+          !this._context._options.multipleDates
         ) {
           this._context._display.hide();
         }
@@ -140,10 +141,10 @@ export default class Actions {
           this._context.dates.lastPickedIndex
         );
         if (
-          this._context.options.display.components.useTwentyfourHour &&
-          !this._context.options.display.components.minutes &&
-          !this._context.options.keepOpen &&
-          !this._context.options.display.inline
+          this._context._options.display.components.useTwentyfourHour &&
+          !this._context._options.display.components.minutes &&
+          !this._context._options.keepOpen &&
+          !this._context._options.display.inline
         ) {
           this._context._display.hide();
         } else {
@@ -157,10 +158,10 @@ export default class Actions {
           this._context.dates.lastPickedIndex
         );
         if (
-          this._context.options.display.components.useTwentyfourHour &&
-          !this._context.options.display.components.seconds &&
-          !this._context.options.keepOpen &&
-          !this._context.options.display.inline
+          this._context._options.display.components.useTwentyfourHour &&
+          !this._context._options.display.components.seconds &&
+          !this._context._options.keepOpen &&
+          !this._context._options.display.inline
         ) {
           this._context._display.hide();
         } else {
@@ -174,9 +175,9 @@ export default class Actions {
           this._context.dates.lastPickedIndex
         );
         if (
-          this._context.options.display.components.useTwentyfourHour &&
-          !this._context.options.keepOpen &&
-          !this._context.options.display.inline
+          this._context._options.display.components.useTwentyfourHour &&
+          !this._context._options.keepOpen &&
+          !this._context._options.display.inline
         ) {
           this._context._display.hide();
         } else {
@@ -187,7 +188,7 @@ export default class Actions {
         manipulateAndSet(Unit.hours);
         break;
       case ActionTypes.incrementMinutes:
-        manipulateAndSet(Unit.minutes, this._context.options.stepping);
+        manipulateAndSet(Unit.minutes, this._context._options.stepping);
         break;
       case ActionTypes.incrementSeconds:
         manipulateAndSet(Unit.seconds);
@@ -196,7 +197,7 @@ export default class Actions {
         manipulateAndSet(Unit.hours, -1);
         break;
       case ActionTypes.decrementMinutes:
-        manipulateAndSet(Unit.minutes, this._context.options.stepping * -1);
+        manipulateAndSet(Unit.minutes, this._context._options.stepping * -1);
         break;
       case ActionTypes.decrementSeconds:
         manipulateAndSet(Unit.seconds, -1);
@@ -218,23 +219,23 @@ export default class Actions {
 
         if (
           currentTarget.getAttribute('title') ===
-          this._context.options.localization.selectDate
+          this._context._options.localization.selectDate
         ) {
           currentTarget.setAttribute(
             'title',
-            this._context.options.localization.selectTime
+            this._context._options.localization.selectTime
           );
           currentTarget.innerHTML = this._context._display._iconTag(
-            this._context.options.display.icons.time
+            this._context._options.display.icons.time
           ).outerHTML;
           this._context._display._update('calendar');
         } else {
           currentTarget.setAttribute(
             'title',
-            this._context.options.localization.selectDate
+            this._context._options.localization.selectDate
           );
           currentTarget.innerHTML = this._context._display._iconTag(
-            this._context.options.display.icons.date
+            this._context._options.display.icons.date
           ).outerHTML;
           this.do(e, ActionTypes.showClock);
           this._context._display._update('clock');
@@ -281,8 +282,10 @@ export default class Actions {
         this._context._display.hide();
         break;
       case ActionTypes.today:
-        const today = new DateTime();
-        this._context.viewDate = today;
+        const today = new DateTime().setLocale(
+          this._context._options.localization.locale
+        );
+        this._context._viewDate = today;
         if (this._context._validation.isValid(today, Unit.date))
           this._context.dates._setValue(
             today,

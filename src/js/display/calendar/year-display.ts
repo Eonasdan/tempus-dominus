@@ -13,8 +13,8 @@ export default class YearDisplay {
 
   constructor(context: TempusDominus) {
     this._context = context;
-    this._startYear = this._context.viewDate.clone.manipulate(-1, Unit.year);
-    this._endYear = this._context.viewDate.clone.manipulate(10, Unit.year);
+    this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
+    this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
   }
 
   /**
@@ -31,15 +31,18 @@ export default class YearDisplay {
 
     previous
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context.options.localization.previousDecade);
+      .setAttribute(
+        'title',
+        this._context._options.localization.previousDecade
+      );
     switcher.setAttribute(
       'title',
-      this._context.options.localization.selectDecade
+      this._context._options.localization.selectDecade
     );
     switcher.setAttribute('colspan', '1');
     next
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context.options.localization.nextDecade);
+      .setAttribute('title', this._context._options.localization.nextDecade);
 
     table.appendChild(headTemplate);
 
@@ -84,7 +87,7 @@ export default class YearDisplay {
       ? next.classList.remove(Namespace.Css.disabled)
       : next.classList.add(Namespace.Css.disabled);
 
-    let innerDate = this._context.viewDate.clone
+    let innerDate = this._context._viewDate.clone
       .startOf(Unit.year)
       .manipulate(-1, Unit.year);
 

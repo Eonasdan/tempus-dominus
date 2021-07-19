@@ -15,7 +15,7 @@
   - moved `dayViewHeaderFormat` to `localization.dayViewHeaderFormat`
   - `dayViewHeaderFormat` now takes a javascript `intl` month option, e.g. `long` (default)
 
-- removed `locale`
+- moved `locale` to `localization`
 - removed `useStrict`
 - removed `timeZone`
 - removed `format`
@@ -24,6 +24,7 @@
 - removed `widgetParent`
 - removed `widgetPositioning`
 - changed `viewMode` from `'times' | 'days'` to `'clock' | 'calendar'`
+- renamed `allowMultidate` and `multidateSeparator` to `multipleDates` and `multipleDatesSeparator`
 
 - moved the following to `restrictions`
 

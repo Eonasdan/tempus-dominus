@@ -1,7 +1,7 @@
 import { DateTime, Unit } from './datetime';
 
 interface BaseEvent {
-  name: string;
+  type: string;
 }
 
 /**

@@ -2,7 +2,7 @@ import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
 import Actions, { ActionTypes } from './actions';
-import { DefaultOptions } from './conts';
+import { DatePickerModes, DefaultOptions } from './conts';
 import { DateTime, Unit } from './datetime';
 import Namespace from './namespace';
 import Options, { OptionConverter } from './options';
@@ -14,19 +14,21 @@ import {
 } from './event-types';
 
 /**
- * Main date picker entry point
+ * A robust and powerful date/time picker component.
  */
 class TempusDominus {
-  options: Options;
+  dates: Dates;
+
+  _options: Options;
+  _viewDate = new DateTime();
+  _currentViewMode = 0;
+  _subscribers: { [key: string]: ((event: any) => {})[] } = {};
   _element: HTMLElement;
-  viewDate: DateTime;
   _input: HTMLInputElement;
-  currentViewMode: number;
   _unset: boolean;
-  _minViewModeNumber: number;
+  _minViewModeNumber = 0;
   _display: Display;
   _validation: Validation;
-  dates: Dates;
   _action: Actions;
 
   private _isDisabled = false;
@@ -34,27 +36,28 @@ class TempusDominus {
   private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: any;
 
-  constructor(element: HTMLElement, options: Options) {
+  constructor(element: HTMLElement, options: Options = {} as Options) {
     if (!element) {
       throw Namespace.ErrorMessages.mustProvideElement;
     }
     this._element = element;
-    this.options = this._initializeOptions(options, DefaultOptions);
-    this.viewDate = new DateTime();
-    this.currentViewMode = null;
+    this._options = this._initializeOptions(options, DefaultOptions, true);
+    this._viewDate.setLocale(this._options.localization.locale);
     this._unset = true;
-    this._minViewModeNumber = 0;
 
     this._display = new Display(this);
     this._validation = new Validation(this);
     this.dates = new Dates(this);
     this._action = new Actions(this);
 
-    this._initializeViewMode();
     this._initializeInput();
     this._initializeToggle();
 
-    if (this.options.display.inline) this._display.show();
+    if (this._options.display.inline) this._display.show();
+  }
+
+  get viewDate() {
+    return this._viewDate;
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -65,8 +68,8 @@ class TempusDominus {
    * @public
    */
   updateOptions(options, reset = false): void {
-    if (reset) this.options = this._initializeOptions(options, DefaultOptions);
-    else this.options = this._initializeOptions(options, this.options);
+    if (reset) this._options = this._initializeOptions(options, DefaultOptions);
+    else this._options = this._initializeOptions(options, this._options);
     this._display._rebuild();
   }
 
@@ -122,6 +125,15 @@ class TempusDominus {
     this._input?.removeAttribute('disabled');
   }
 
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Clears all the selected dates
+   * @public
+   */
+  clear(): void {
+    this.dates.clear();
+  }
+
   /**
    * Triggers an event like ChangeEvent when the picker has updated the value
    * of a selected date.
@@ -129,7 +141,8 @@ class TempusDominus {
    * @private
    */
   _triggerEvent(event: BaseEvent) {
-    if (event as ChangeEvent) {
+    // checking hasOwnProperty because the BasicEvent also falls through here otherwise
+    if ((event as ChangeEvent) && event.hasOwnProperty('date')) {
       const { date, oldDate, isClear } = event as ChangeEvent;
       // this was to prevent a max call stack error
       // https://github.com/tempusdominus/core/commit/15a280507f5277b31b0b3319ab1edc7c19a000fb
@@ -146,9 +159,57 @@ class TempusDominus {
       this._handlePromptTimeIfNeeded(event as ChangeEvent);
     }
 
-    this._element.dispatchEvent(new CustomEvent(event.name, event as any));
+    this._element.dispatchEvent(
+      new CustomEvent(event.type, { detail: event as any })
+    );
+
+    if ((window as any).jQuery) {
+      const $ = (window as any).jQuery;
+      $(this._element).trigger(event);
+    }
+
+    const publish = () => {
+      // return if event is not subscribed
+      if (!Array.isArray(this._subscribers[event.type])) {
+        return;
+      }
+
+      // Trigger callback for each subscriber
+      this._subscribers[event.type].forEach((callback) => {
+        callback(event);
+      });
+    };
+
+    publish();
 
     this._notifyChangeEventContext = 0;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Allows for a direct subscription to picker events, without having to use addEventListener on the element.
+   * @param eventType See Namespace.Events
+   * @param callback Function to call when event is triggered
+   * @public
+   */
+  subscribe(eventType: string, callback: (event: any) => {}) {
+    if (!Array.isArray(this._subscribers[eventType])) {
+      this._subscribers[eventType] = [];
+    }
+
+    this._subscribers[eventType].push(callback);
+
+    return {
+      unsubscribe: this._unsubscribe.bind(
+        this,
+        eventType,
+        this._subscribers[eventType].length - 1
+      ),
+    };
+  }
+
+  private _unsubscribe(eventName, index) {
+    this._subscribers[eventName].splice(index, 1);
   }
 
   /**
@@ -158,79 +219,103 @@ class TempusDominus {
    */
   _viewUpdate(unit: Unit) {
     this._triggerEvent({
-      name: Namespace.Events.update,
+      type: Namespace.Events.update,
       change: unit,
-      viewDate: this.viewDate.clone,
+      viewDate: this._viewDate.clone,
     } as ViewUpdateEvent);
   }
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Hides the picker and removes event listenersf
+   * Hides the picker and removes event listeners
    */
   dispose() {
     this._display.hide();
     // this will clear the document click event listener
     this._display._dispose();
     this._input?.removeEventListener('change', this._inputChangeEvent);
-    if (this.options.allowInputToggle) {
+    if (this._options.allowInputToggle) {
       this._input?.removeEventListener('click', this._toggleClickEvent);
     }
     this._toggle.removeEventListener('click', this._toggleClickEvent);
-    //clear data-
+    this._subscribers = {};
   }
 
   /**
    * Merges two Option objects together and validates options type
    * @param config new Options
    * @param mergeTo Options to merge into
+   * @param includeDataset When true, the elements data-td attributes will be included in the
    * @private
    */
-  private _initializeOptions(config: Options, mergeTo: Options): Options {
+  private _initializeOptions(
+    config: Options,
+    mergeTo: Options,
+    includeDataset = false
+  ): Options {
     config = OptionConverter._mergeOptions(config, mergeTo);
-    config = OptionConverter._dataToOptions(this._element, config);
+    if (includeDataset)
+      config = OptionConverter._dataToOptions(this._element, config);
 
-    //defaults the input format based on the components enabled
+    config.viewDate = config.viewDate.setLocale(config.localization.locale);
+
+    if (!this._viewDate.isSame(config.viewDate)) {
+      this._viewDate = config.viewDate;
+    }
+
+    /**
+     * Sets the minimum view allowed by the picker. For example the case of only
+     * allowing year and month to be selected but not date.
+     */
+    if (config.display.components.year) {
+      this._minViewModeNumber = 2;
+    }
+    if (config.display.components.month) {
+      this._minViewModeNumber = 1;
+    }
+    if (config.display.components.date) {
+      this._minViewModeNumber = 0;
+    }
+
+    this._currentViewMode = Math.max(
+      this._minViewModeNumber,
+      this._currentViewMode
+    );
+
+    // Update view mode if needed
+    if (
+      DatePickerModes[this._currentViewMode].name !== config.display.viewMode
+    ) {
+      this._currentViewMode = Math.max(
+        DatePickerModes.findIndex((x) => x.name === config.display.viewMode),
+        this._minViewModeNumber
+      );
+    }
+
+    // defaults the input format based on the components enabled
     if (config.display.inputFormat === undefined) {
       const components = config.display.components;
       config.display.inputFormat = {
-        year: components.year ? 'numeric' : undefined,
-        month: components.month ? '2-digit' : undefined,
-        day: components.date ? '2-digit' : undefined,
-        hour: components.hours
-          ? components.useTwentyfourHour
-            ? '2-digit'
-            : 'numeric'
-          : undefined,
-        minute: components.minutes ? '2-digit' : undefined,
-        second: components.seconds ? '2-digit' : undefined,
+        year: components.calendar && components.year ? 'numeric' : undefined,
+        month: components.calendar && components.month ? '2-digit' : undefined,
+        day: components.calendar && components.date ? '2-digit' : undefined,
+        hour:
+          components.clock && components.hours
+            ? components.useTwentyfourHour
+              ? '2-digit'
+              : 'numeric'
+            : undefined,
+        minute: components.clock && components.minutes ? '2-digit' : undefined,
+        second: components.clock && components.seconds ? '2-digit' : undefined,
         hour12: !components.useTwentyfourHour,
       };
     }
 
+    if (this._display?.isVisible) {
+      this._display._update('all');
+    }
+
     return config;
-  }
-
-  /**
-   * Sets the minimum view allowed by the picker. For example the case of only
-   * allowing year and month to be selected but not date.
-   * @private
-   */
-  private _initializeViewMode() {
-    if (this.options.display.components.year) {
-      this._minViewModeNumber = 2;
-    }
-    if (this.options.display.components.month) {
-      this._minViewModeNumber = 1;
-    }
-    if (this.options.display.components.date) {
-      this._minViewModeNumber = 0;
-    }
-
-    this.currentViewMode = Math.max(
-      this._minViewModeNumber,
-      this.currentViewMode
-    );
   }
 
   /**
@@ -251,7 +336,7 @@ class TempusDominus {
     }
 
     this._input?.addEventListener('change', this._inputChangeEvent);
-    if (this.options.allowInputToggle) {
+    if (this._options.allowInputToggle) {
       this._input?.addEventListener('click', this._toggleClickEvent);
     }
   }
@@ -261,7 +346,7 @@ class TempusDominus {
    * @private
    */
   private _initializeToggle() {
-    if (this.options.display.inline) return;
+    if (this._options.display.inline) return;
     let query = this._element.dataset.tdTargetToggle;
     if (query == 'nearest') {
       query = '[data-td-toggle="datetimepicker"]';
@@ -279,9 +364,9 @@ class TempusDominus {
   private _handlePromptTimeIfNeeded(e: ChangeEvent) {
     if (
       // options is disabled
-      !this.options.promptTimeOnDateChange ||
-      this.options.display.inline ||
-      this.options.display.sideBySide ||
+      !this._options.promptTimeOnDateChange ||
+      this._options.display.inline ||
+      this._options.display.sideBySide ||
       // time is disabled
       !this._display._hasTime ||
       // clock component is already showing
@@ -295,7 +380,7 @@ class TempusDominus {
     // because the first date is selected automatically.
     // or date didn't change (time did) or date changed because time did.
     if (
-      (!e.oldDate && this.options.useCurrent) ||
+      (!e.oldDate && this._options.useCurrent) ||
       (e.oldDate && e.date?.isSame(e.oldDate))
     ) {
       return;
@@ -313,7 +398,7 @@ class TempusDominus {
           ActionTypes.togglePicker
         );
       }
-    }, this.options.promptTimeOnDateChangeTransitionDelay);
+    }, this._options.promptTimeOnDateChangeTransitionDelay);
   }
 
   /**
@@ -328,7 +413,7 @@ class TempusDominus {
       this.dates._setValue(parsedDate);
     } else {
       this._triggerEvent({
-        name: Namespace.Events.error,
+        type: Namespace.Events.error,
         reason: Namespace.ErrorMessages.failedToParseInput,
         date: parsedDate,
       } as FailEvent);
@@ -345,4 +430,4 @@ class TempusDominus {
   };
 }
 
-export { TempusDominus, Namespace, DefaultOptions };
+export { TempusDominus, Namespace, DefaultOptions, DateTime };

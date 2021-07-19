@@ -27,7 +27,7 @@ export default class HourDisplay {
     for (
       let i = 0;
       i <=
-      (this._context.options.display.components.useTwentyfourHour ? 24 : 12);
+      (this._context._options.display.components.useTwentyfourHour ? 24 : 12);
       i++
     ) {
       if (i !== 0 && i % 4 === 0) {
@@ -55,7 +55,7 @@ export default class HourDisplay {
     const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.hourContainer
     )[0];
-    let innerDate = this._context.viewDate.clone.startOf(Unit.date);
+    let innerDate = this._context._viewDate.clone.startOf(Unit.date);
 
     container
       .querySelectorAll('tbody td div')
@@ -70,7 +70,7 @@ export default class HourDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${innerDate.hours}`);
-        containerClone.innerText = this._context.options.display.components
+        containerClone.innerText = this._context._options.display.components
           .useTwentyfourHour
           ? innerDate.hoursFormatted
           : innerDate.twelveHoursFormatted;

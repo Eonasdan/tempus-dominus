@@ -7,6 +7,22 @@ export class ErrorMessages {
     return `${this.base} Unexpected option: ${optionName} does not match a known option.`;
   }
 
+  unexpectedOptions(optionName: string[]) {
+    return `${this.base}: ${optionName.join(', ')}`;
+  }
+
+  unexpectedOptionString(
+    optionName: string,
+    badValue: string,
+    validOptions: string[]
+  ) {
+    return `${
+      this.base
+    } Unexpected option value: ${optionName} does not except a value of "${badValue}". Valid values are: ${validOptions.join(
+      ', '
+    )}`;
+  }
+
   typeMismatch(optionName: string, badType: string, expectedType: string) {
     return `${this.base} Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
   }

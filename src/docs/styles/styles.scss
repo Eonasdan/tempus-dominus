@@ -1,0 +1,13 @@
+@use "../../../node_modules/bootstrap/scss/bootstrap.scss";
+@use "docs.css";
+@import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900";
+
+.show-code {
+  cursor: pointer;
+}
+
+.tab-content > .active {
+  min-height: 35vh;
+  max-height: 35vh;
+  overflow-y: auto;
+}

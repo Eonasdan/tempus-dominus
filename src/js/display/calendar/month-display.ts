@@ -27,15 +27,15 @@ export default class MonthDisplay {
 
     previous
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context.options.localization.previousYear);
+      .setAttribute('title', this._context._options.localization.previousYear);
     switcher.setAttribute(
       'title',
-      this._context.options.localization.selectYear
+      this._context._options.localization.selectYear
     );
     switcher.setAttribute('colspan', '1');
     next
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context.options.localization.nextYear);
+      .setAttribute('title', this._context._options.localization.nextYear);
 
     table.appendChild(headTemplate);
     const tableBody = document.createElement('tbody');
@@ -70,23 +70,23 @@ export default class MonthDisplay {
       .getElementsByTagName('thead')[0]
       .getElementsByTagName('th');
 
-    switcher.innerText = this._context.viewDate.format({ year: 'numeric' });
+    switcher.innerText = this._context._viewDate.format({ year: 'numeric' });
 
     this._context._validation.isValid(
-      this._context.viewDate.clone.manipulate(-1, Unit.year),
+      this._context._viewDate.clone.manipulate(-1, Unit.year),
       Unit.year
     )
       ? previous.classList.remove(Namespace.Css.disabled)
       : previous.classList.add(Namespace.Css.disabled);
 
     this._context._validation.isValid(
-      this._context.viewDate.clone.manipulate(1, Unit.year),
+      this._context._viewDate.clone.manipulate(1, Unit.year),
       Unit.year
     )
       ? next.classList.remove(Namespace.Css.disabled)
       : next.classList.add(Namespace.Css.disabled);
 
-    let innerDate = this._context.viewDate.clone.startOf(Unit.year);
+    let innerDate = this._context._viewDate.clone.startOf(Unit.year);
 
     container
       .querySelectorAll('tbody td div')

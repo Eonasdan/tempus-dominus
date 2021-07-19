@@ -32,14 +32,14 @@ export default class DecadeDisplay {
       .getElementsByTagName('div')[0]
       .setAttribute(
         'title',
-        this._context.options.localization.previousCentury
+        this._context._options.localization.previousCentury
       );
     switcher.setAttribute('title', '');
     switcher.removeAttribute('data-action');
     switcher.setAttribute('colspan', '1');
     next
       .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context.options.localization.nextCentury);
+      .setAttribute('title', this._context._options.localization.nextCentury);
 
     table.appendChild(headTemplate);
 
@@ -69,11 +69,11 @@ export default class DecadeDisplay {
   _update() {
     const [start, end] = Dates.getStartEndYear(
       100,
-      this._context.viewDate.year
+      this._context._viewDate.year
     );
-    this._startDecade = this._context.viewDate.clone.startOf(Unit.year);
+    this._startDecade = this._context._viewDate.clone.startOf(Unit.year);
     this._startDecade.year = start;
-    this._endDecade = this._context.viewDate.clone.startOf(Unit.year);
+    this._endDecade = this._context._viewDate.clone.startOf(Unit.year);
     this._endDecade.year = end;
 
     const container = this._context._display.widget.getElementsByClassName(

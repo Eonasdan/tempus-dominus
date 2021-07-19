@@ -19,42 +19,40 @@ export default class Validation {
    * @param granularity
    */
   isValid(targetDate: DateTime, granularity?: Unit): boolean {
-    if (granularity === Unit.date) {
-      if (
-        this._context.options.restrictions.disabledDates &&
-        this._isInDisabledDates(targetDate)
-      ) {
-        return false;
-      }
-      if (
-        this._context.options.restrictions.enabledDates &&
-        !this._isInEnabledDates(targetDate)
-      ) {
-        return false;
-      }
-      if (
-        this._context.options.restrictions.daysOfWeekDisabled &&
-        this._context.options.restrictions.daysOfWeekDisabled.indexOf(
-          targetDate.weekDay
-        ) !== -1
-      ) {
-        return false;
-      }
+    if (
+      this._context._options.restrictions.disabledDates.length > 0 &&
+      this._isInDisabledDates(targetDate)
+    ) {
+      return false;
+    }
+    if (
+      this._context._options.restrictions.enabledDates.length > 0 &&
+      !this._isInEnabledDates(targetDate)
+    ) {
+      return false;
+    }
+    if (
+      this._context._options.restrictions.daysOfWeekDisabled?.length > 0 &&
+      this._context._options.restrictions.daysOfWeekDisabled.indexOf(
+        targetDate.weekDay
+      ) !== -1
+    ) {
+      return false;
     }
 
     if (
-      this._context.options.restrictions.minDate &&
+      this._context._options.restrictions.minDate &&
       targetDate.isBefore(
-        this._context.options.restrictions.minDate,
+        this._context._options.restrictions.minDate,
         granularity
       )
     ) {
       return false;
     }
     if (
-      this._context.options.restrictions.maxDate &&
+      this._context._options.restrictions.maxDate &&
       targetDate.isAfter(
-        this._context.options.restrictions.maxDate,
+        this._context._options.restrictions.maxDate,
         granularity
       )
     ) {
@@ -67,27 +65,29 @@ export default class Validation {
       granularity === Unit.seconds
     ) {
       if (
-        this._context.options.restrictions.disabledHours &&
+        this._context._options.restrictions.disabledHours.length > 0 &&
         this._isInDisabledHours(targetDate)
       ) {
         return false;
       }
       if (
-        this._context.options.restrictions.enabledHours &&
+        this._context._options.restrictions.enabledHours.length > 0 &&
         !this._isInEnabledHours(targetDate)
       ) {
         return false;
       }
-      if (this._context.options.restrictions.disabledTimeIntervals) {
+      if (
+        this._context._options.restrictions.disabledTimeIntervals.length > 0
+      ) {
         for (
           let i = 0;
-          i < this._context.options.restrictions.disabledTimeIntervals.length;
+          i < this._context._options.restrictions.disabledTimeIntervals.length;
           i++
         ) {
           if (
             targetDate.isBetween(
-              this._context.options.restrictions.disabledTimeIntervals[i].from,
-              this._context.options.restrictions.disabledTimeIntervals[i].to
+              this._context._options.restrictions.disabledTimeIntervals[i].from,
+              this._context._options.restrictions.disabledTimeIntervals[i].to
             )
           )
             return false;
@@ -106,12 +106,12 @@ export default class Validation {
    */
   private _isInDisabledDates(testDate: DateTime) {
     if (
-      !this._context.options.restrictions.disabledDates ||
-      this._context.options.restrictions.disabledDates.length === 0
+      !this._context._options.restrictions.disabledDates ||
+      this._context._options.restrictions.disabledDates.length === 0
     )
       return false;
     const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-    return this._context.options.restrictions.disabledDates
+    return this._context._options.restrictions.disabledDates
       .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
       .find((x) => x === formattedDate);
   }
@@ -124,12 +124,12 @@ export default class Validation {
    */
   private _isInEnabledDates(testDate: DateTime) {
     if (
-      !this._context.options.restrictions.enabledDates ||
-      this._context.options.restrictions.enabledDates.length === 0
+      !this._context._options.restrictions.enabledDates ||
+      this._context._options.restrictions.enabledDates.length === 0
     )
       return true;
     const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-    return this._context.options.restrictions.enabledDates
+    return this._context._options.restrictions.enabledDates
       .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
       .find((x) => x === formattedDate);
   }
@@ -142,12 +142,12 @@ export default class Validation {
    */
   private _isInDisabledHours(testDate: DateTime) {
     if (
-      !this._context.options.restrictions.disabledHours ||
-      this._context.options.restrictions.disabledHours.length === 0
+      !this._context._options.restrictions.disabledHours ||
+      this._context._options.restrictions.disabledHours.length === 0
     )
       return false;
     const formattedDate = testDate.hours;
-    return this._context.options.restrictions.disabledHours.find(
+    return this._context._options.restrictions.disabledHours.find(
       (x) => x === formattedDate
     );
   }
@@ -160,12 +160,12 @@ export default class Validation {
    */
   private _isInEnabledHours(testDate: DateTime) {
     if (
-      !this._context.options.restrictions.enabledHours ||
-      this._context.options.restrictions.enabledHours.length === 0
+      !this._context._options.restrictions.enabledHours ||
+      this._context._options.restrictions.enabledHours.length === 0
     )
       return true;
     const formattedDate = testDate.hours;
-    return this._context.options.restrictions.enabledHours.find(
+    return this._context._options.restrictions.enabledHours.find(
       (x) => x === formattedDate
     );
   }

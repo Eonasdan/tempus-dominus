@@ -276,7 +276,7 @@
     'focus',
     'click'
   ].forEach((e) => {
-    document.querySelectorAll('log-event').forEach(element => element.addEventListener(e, () => {
+    document.querySelectorAll('.log-event').forEach(element => element.addEventListener(e, () => {
       console.log(`${element.getAttribute('id')} event:`, e);
     }));
   });

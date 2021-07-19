@@ -37,6 +37,8 @@ const DefaultOptions: Options = {
       close: false,
     },
     components: {
+      calendar: true,
+      clock: true,
       century: true,
       decades: true,
       year: true,
@@ -81,6 +83,7 @@ const DefaultOptions: Options = {
     selectTime: 'Select Time',
     selectDate: 'Select Date',
     dayViewHeaderFormat: 'long',
+    locale: 'default',
   },
   readonly: false,
   ignoreReadonly: false,
@@ -131,32 +134,41 @@ const DefaultOptions: Options = {
   debug: false,
   allowInputToggle: false,
   viewDate: new DateTime(),
-  allowMultidate: false,
-  multidateSeparator: '; ',
+  multipleDates: false,
+  multipleDatesSeparator: '; ',
   promptTimeOnDateChange: false,
   promptTimeOnDateChangeTransitionDelay: 200,
 };
 
-const DatePickerModes = [
+const DatePickerModes: {
+  name: string;
+  className: string;
+  unit: Unit;
+  step: number;
+}[] = [
   {
-    CLASS_NAME: Namespace.Css.daysContainer,
-    NAV_FUNCTION: Unit.month,
-    NAV_STEP: 1,
+    name: 'calendar',
+    className: Namespace.Css.daysContainer,
+    unit: Unit.month,
+    step: 1,
   },
   {
-    CLASS_NAME: Namespace.Css.monthsContainer,
-    NAV_FUNCTION: Unit.year,
-    NAV_STEP: 1,
+    name: 'months',
+    className: Namespace.Css.monthsContainer,
+    unit: Unit.year,
+    step: 1,
   },
   {
-    CLASS_NAME: Namespace.Css.yearsContainer,
-    NAV_FUNCTION: Unit.year,
-    NAV_STEP: 10,
+    name: 'years',
+    className: Namespace.Css.yearsContainer,
+    unit: Unit.year,
+    step: 10,
   },
   {
-    CLASS_NAME: Namespace.Css.decadesContainer,
-    NAV_FUNCTION: Unit.year,
-    NAV_STEP: 100,
+    name: 'decades',
+    className: Namespace.Css.decadesContainer,
+    unit: Unit.year,
+    step: 100,
   },
 ];
 
