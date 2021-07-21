@@ -262,15 +262,15 @@ class Build {
         },
       };*/
 
-      newPageDocument.title = pageMeta.title;
+      newPageDocument.title = pageMeta.title + ' - Tempus Dominus';
 
       this.setMetaContent(newPageDocument, 'metaTitle', pageMeta.title);
       //this.setStructuredData(structuredData, 'headline', pageMeta.title);
-      /*this.setInnerHtml(
-        loopDocument.getElementsByClassName('post-title')[0],
+      this.setInnerHtml(
+        newPageDocument.getElementsByClassName('title')[0],
         pageMeta.title
       );
-      loopDocument.getElementsByClassName(
+      /*loopDocument.getElementsByClassName(
         'post-link'
       )[0].href = `/${siteConfig.output}/${pageMeta.file}`;*/
 

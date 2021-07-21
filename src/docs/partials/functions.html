@@ -1,0 +1,75 @@
+<page-body>
+  <h2></h2>
+
+
+  <h2 id='destroy'>destroy</h2>
+  <p>Destroys the widget and removes all attached event listeners</p>
+  <hr />
+  <h2 id='toggle'>toggle</h2>
+  <p>Shows or hides the widget</p>
+  <h3 id='emits'>Emits</h3>
+  <ul>
+    <li>
+      <p><code>hide.datetimepicker</code> - if the widget is hidden after the toggle call</p>
+    </li>
+    <li>
+      <p><code>show.datetimepicker</code> - if the widget is show after the toggle call</p>
+    </li>
+    <li>
+      <p><code>change.datetimepicker</code> - if the widget is opened for the first time and the input element is
+        empty and <code>options.useCurrent != false</code></p>
+    </li>
+  </ul>
+  <hr />
+  <h2 id='show'>show</h2>
+  <p>Shows the widget</p>
+  <h3 id='emits_1'>Emits</h3>
+  <ul>
+    <li>
+      <p><code>show.datetimepicker</code> - if the widget was hidden before that call</p>
+    </li>
+    <li>
+      <p><code>change.datetimepicker</code> - if the widget is opened for the first time and the
+        <code>useCurrent</code> is set to true or to a granularity value and the input element the component is
+        attached to has an empty value</p>
+    </li>
+  </ul>
+  <hr />
+  <h2 id='hide'>hide</h2>
+  <p>Hides the widget</p>
+  <h3 id='emits_2'>Emits</h3>
+  <ul>
+    <li><code>hide.datetimepicker</code> - if the widget was visible before that call</li>
+  </ul>
+  <hr />
+  <h2 id='disable'>disable</h2>
+  <p>Disables the input element, the component is attached to, by adding a <code>disabled="true"</code> attribute to
+    it. If the widget was visible before that call it is hidden.</p>
+  <h3 id='emits_3'>Emits</h3>
+  <ul>
+    <li><code>hide.datetimepicker</code> - if the widget was visible before that call</li>
+  </ul>
+  <hr />
+  <h2 id='enable'>enable</h2>
+  <p>Enables the input element, the component is attached to, by removing <code>disabled</code> attribute from it.
+  </p>
+  <hr />
+  <h2 id='clear'>clear</h2>
+  <p>Clears the date picker by setting the value to <code>null</code></p>
+  <hr />
+  <h2 id='viewdate'>viewDate</h2>
+  <h3 id='viewdate_1'>viewDate</h3>
+  <p>Returns a <code>moment</code> variable with the currently set <code>options.viewDate</code> option.</p>
+  <h3 id='viewdateviewdate'>viewDate(viewDate)</h3>
+  <p>Takes a <code>string, moment or Date</code> value.</p>
+  <p>This will change the <code>viewDate</code> without changing or setting the selected date.</p>
+</page-body>
+
+<page-meta>
+  <title>Functions</title>
+  <post-date>07/08/2021</post-date>
+  <update-date>07/08/2021</update-date>
+  <excerpt>How to use Tempus Dominus datetime picker
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>
