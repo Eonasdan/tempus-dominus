@@ -5,11 +5,10 @@ import { ChangeEvent, FailEvent } from './event-types';
 
 export default class Dates {
   private _dates: DateTime[] = [];
-
-  private context: TempusDominus;
+  private _context: TempusDominus;
 
   constructor(context: TempusDominus) {
-    this.context = context;
+    this._context = context;
   }
 
   /**
@@ -79,9 +78,12 @@ export default class Dates {
     return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
   }
 
+  /**
+   * Clears all selected dates.
+   */
   clear() {
-    this.context._unset = true;
-    this.context._triggerEvent({
+    this._context._unset = true;
+    this._context._triggerEvent({
       type: Namespace.Events.change,
       date: undefined,
       oldDate: this.lastPicked,
@@ -119,37 +121,37 @@ export default class Dates {
   _setValue(target?: DateTime, index?: number): void {
     const noIndex = typeof index === 'undefined',
       isClear = !target && noIndex;
-    let oldDate = this.context._unset ? null : this._dates[index];
-    if (!oldDate && !this.context._unset && noIndex && isClear) {
+    let oldDate = this._context._unset ? null : this._dates[index];
+    if (!oldDate && !this._context._unset && noIndex && isClear) {
       oldDate = this.lastPicked;
     }
 
     const updateInput = () => {
-      if (!this.context._input) return;
+      if (!this._context._input) return;
 
-      let newValue = target?.format(this.context._options.display.inputFormat);
-      if (this.context._options.multipleDates) {
+      let newValue = target?.format(this._context._options.display.inputFormat);
+      if (this._context._options.multipleDates) {
         newValue = this._dates
-          .map((d) => d.format(this.context._options.display.inputFormat))
-          .join(this.context._options.multipleDatesSeparator);
+          .map((d) => d.format(this._context._options.display.inputFormat))
+          .join(this._context._options.multipleDatesSeparator);
       }
-      if (this.context._input.value != newValue)
-        this.context._input.value = newValue;
+      if (this._context._input.value != newValue)
+        this._context._input.value = newValue;
     };
 
     // case of calling setValue(null)
     if (!target) {
       if (
-        !this.context._options.multipleDates ||
+        !this._context._options.multipleDates ||
         this._dates.length === 1 ||
         isClear
       ) {
-        this.context._unset = true;
+        this._context._unset = true;
         this._dates = [];
       } else {
         this._dates.splice(index, 1);
       }
-      this.context._triggerEvent({
+      this._context._triggerEvent({
         type: Namespace.Events.change,
         date: undefined,
         oldDate,
@@ -158,7 +160,7 @@ export default class Dates {
       } as ChangeEvent);
 
       updateInput();
-      this.context._display._update('all');
+      this._context._display._update('all');
       return;
     }
 
@@ -166,22 +168,22 @@ export default class Dates {
     target = target.clone;
 
     // minute stepping is being used, force the minute to the closest value
-    if (this.context._options.stepping !== 1) {
+    if (this._context._options.stepping !== 1) {
       target.minutes =
-        Math.round(target.minutes / this.context._options.stepping) *
-        this.context._options.stepping;
+        Math.round(target.minutes / this._context._options.stepping) *
+        this._context._options.stepping;
       target.seconds = 0;
     }
 
-    if (this.context._validation.isValid(target)) {
+    if (this._context._validation.isValid(target)) {
       this._dates[index] = target;
-      this.context._viewDate = target.clone;
+      this._context._viewDate = target.clone;
 
       updateInput();
 
-      this.context._unset = false;
-      this.context._display._update('all');
-      this.context._triggerEvent({
+      this._context._unset = false;
+      this._context._display._update('all');
+      this._context._triggerEvent({
         type: Namespace.Events.change,
         date: target,
         oldDate,
@@ -191,10 +193,10 @@ export default class Dates {
       return;
     }
 
-    if (this.context._options.keepInvalid) {
+    if (this._context._options.keepInvalid) {
       this._dates[index] = target;
-      this.context._viewDate = target.clone;
-      this.context._triggerEvent({
+      this._context._viewDate = target.clone;
+      this._context._triggerEvent({
         type: Namespace.Events.change,
         date: target,
         oldDate,
@@ -202,7 +204,7 @@ export default class Dates {
         isValid: false,
       } as ChangeEvent);
     }
-    this.context._triggerEvent({
+    this._context._triggerEvent({
       type: Namespace.Events.error,
       reason: Namespace.ErrorMessages.failedToSetInvalidDate,
       date: target,

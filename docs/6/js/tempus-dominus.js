@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@popperjs/core')) :
     typeof define === 'function' && define.amd ? define(['exports', '@popperjs/core'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusdominus = {}, global.Popper));
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusDominus = {}, global.Popper));
 }(this, (function (exports, core) { 'use strict';
 
     var Unit;
@@ -380,6 +380,7 @@
             this.base = 'TD:';
             this.dateString = `${this.base} Using a string for date options is not recommended unless you specify an ISO string.`;
             this.mustProvideElement = `${this.base} No element was provided.`;
+            this.subscribeMismatch = `${this.base} The subscribed events does not match the number of callbacks`;
             //#endregion
             //#region used with notify.error
             this.failedToSetInvalidDate = 'Failed to set invalid date';
@@ -408,15 +409,13 @@
     }
 
     //this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-    const NAME = 'tempus-dominus';
-    const VERSION = '6.0.0-alpha1';
-    const DATA_KEY = 'td';
+    const NAME = 'tempus-dominus', version = '6.0.0-alpha1', dataKey = 'td';
     /**
      * Events
      */
     class Events {
         constructor() {
-            this.key = `.${DATA_KEY}`;
+            this.key = `.${dataKey}`;
             this.change = `change${this.key}`;
             this.update = `update${this.key}`;
             this.error = `error${this.key}`;
@@ -484,8 +483,9 @@
     class Namespace {
     }
     Namespace.NAME = NAME;
-    Namespace.VERSION = VERSION;
-    Namespace.DATA_KEY = DATA_KEY;
+    // noinspection JSUnusedGlobalSymbols
+    Namespace.version = version;
+    Namespace.dataKey = dataKey;
     Namespace.Events = new Events();
     Namespace.Css = new Css();
     Namespace.ErrorMessages = new ErrorMessages();
@@ -1304,7 +1304,7 @@
     class Dates {
         constructor(context) {
             this._dates = [];
-            this.context = context;
+            this._context = context;
         }
         /**
          * Returns the array of selected dates
@@ -1362,9 +1362,12 @@
             let innerDateFormatted = targetDate.format(format);
             return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
         }
+        /**
+         * Clears all selected dates.
+         */
         clear() {
-            this.context._unset = true;
-            this.context._triggerEvent({
+            this._context._unset = true;
+            this._context._triggerEvent({
                 type: Namespace.Events.change,
                 date: undefined,
                 oldDate: this.lastPicked,
@@ -1393,34 +1396,34 @@
          */
         _setValue(target, index) {
             const noIndex = typeof index === 'undefined', isClear = !target && noIndex;
-            let oldDate = this.context._unset ? null : this._dates[index];
-            if (!oldDate && !this.context._unset && noIndex && isClear) {
+            let oldDate = this._context._unset ? null : this._dates[index];
+            if (!oldDate && !this._context._unset && noIndex && isClear) {
                 oldDate = this.lastPicked;
             }
             const updateInput = () => {
-                if (!this.context._input)
+                if (!this._context._input)
                     return;
-                let newValue = target === null || target === void 0 ? void 0 : target.format(this.context._options.display.inputFormat);
-                if (this.context._options.multipleDates) {
+                let newValue = target === null || target === void 0 ? void 0 : target.format(this._context._options.display.inputFormat);
+                if (this._context._options.multipleDates) {
                     newValue = this._dates
-                        .map((d) => d.format(this.context._options.display.inputFormat))
-                        .join(this.context._options.multipleDatesSeparator);
+                        .map((d) => d.format(this._context._options.display.inputFormat))
+                        .join(this._context._options.multipleDatesSeparator);
                 }
-                if (this.context._input.value != newValue)
-                    this.context._input.value = newValue;
+                if (this._context._input.value != newValue)
+                    this._context._input.value = newValue;
             };
             // case of calling setValue(null)
             if (!target) {
-                if (!this.context._options.multipleDates ||
+                if (!this._context._options.multipleDates ||
                     this._dates.length === 1 ||
                     isClear) {
-                    this.context._unset = true;
+                    this._context._unset = true;
                     this._dates = [];
                 }
                 else {
                     this._dates.splice(index, 1);
                 }
-                this.context._triggerEvent({
+                this._context._triggerEvent({
                     type: Namespace.Events.change,
                     date: undefined,
                     oldDate,
@@ -1428,25 +1431,25 @@
                     isValid: true,
                 });
                 updateInput();
-                this.context._display._update('all');
+                this._context._display._update('all');
                 return;
             }
             index = index || 0;
             target = target.clone;
             // minute stepping is being used, force the minute to the closest value
-            if (this.context._options.stepping !== 1) {
+            if (this._context._options.stepping !== 1) {
                 target.minutes =
-                    Math.round(target.minutes / this.context._options.stepping) *
-                        this.context._options.stepping;
+                    Math.round(target.minutes / this._context._options.stepping) *
+                        this._context._options.stepping;
                 target.seconds = 0;
             }
-            if (this.context._validation.isValid(target)) {
+            if (this._context._validation.isValid(target)) {
                 this._dates[index] = target;
-                this.context._viewDate = target.clone;
+                this._context._viewDate = target.clone;
                 updateInput();
-                this.context._unset = false;
-                this.context._display._update('all');
-                this.context._triggerEvent({
+                this._context._unset = false;
+                this._context._display._update('all');
+                this._context._triggerEvent({
                     type: Namespace.Events.change,
                     date: target,
                     oldDate,
@@ -1455,10 +1458,10 @@
                 });
                 return;
             }
-            if (this.context._options.keepInvalid) {
+            if (this._context._options.keepInvalid) {
                 this._dates[index] = target;
-                this.context._viewDate = target.clone;
-                this.context._triggerEvent({
+                this._context._viewDate = target.clone;
+                this._context._triggerEvent({
                     type: Namespace.Events.change,
                     date: target,
                     oldDate,
@@ -1466,7 +1469,7 @@
                     isValid: false,
                 });
             }
-            this.context._triggerEvent({
+            this._context._triggerEvent({
                 type: Namespace.Events.error,
                 reason: Namespace.ErrorMessages.failedToSetInvalidDate,
                 date: target,
@@ -2088,7 +2091,7 @@
                             {
                                 name: 'offset',
                                 options: {
-                                    offset: [0, 8],
+                                    offset: [2, 8],
                                 },
                             },
                             { name: 'eventListeners', enabled: true },
@@ -2736,7 +2739,7 @@
             };
             const optionsLower = objectToNormalized(options);
             Object.keys(eData)
-                .filter((x) => x.startsWith(Namespace.DATA_KEY))
+                .filter((x) => x.startsWith(Namespace.dataKey))
                 .map((x) => x.substring(2))
                 .forEach((key) => {
                 let keyOption = optionsLower[key.toLowerCase()];
@@ -2840,12 +2843,12 @@
      */
     class TempusDominus {
         constructor(element, options = {}) {
-            this._viewDate = new DateTime();
             this._currentViewMode = 0;
             this._subscribers = {};
             this._minViewModeNumber = 0;
             this._isDisabled = false;
             this._notifyChangeEventContext = 0;
+            this._viewDate = new DateTime();
             /**
              * Event for when the input field changes. This is a class level method so there's
              * something for the remove listener function.
@@ -2964,6 +2967,59 @@
         clear() {
             this.dates.clear();
         }
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         * Allows for a direct subscription to picker events, without having to use addEventListener on the element.
+         * @param eventTypes See Namespace.Events
+         * @param callbacks Function to call when event is triggered
+         * @public
+         */
+        subscribe(eventTypes, callbacks) {
+            if (typeof eventTypes === 'string') {
+                eventTypes = [eventTypes];
+            }
+            let callBackArray = [];
+            if (!Array.isArray(callbacks)) {
+                callBackArray = [callbacks];
+            }
+            else {
+                callBackArray = callbacks;
+            }
+            if (eventTypes.length !== callBackArray.length) {
+                throw Namespace.ErrorMessages.subscribeMismatch;
+            }
+            const returnArray = [];
+            for (let i = 0; i < eventTypes.length; i++) {
+                const eventType = eventTypes[i];
+                if (!Array.isArray(this._subscribers[eventType])) {
+                    this._subscribers[eventType] = [];
+                }
+                this._subscribers[eventType].push(callBackArray[i]);
+                returnArray.push({
+                    unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1),
+                });
+                if (eventTypes.length === 1) {
+                    return returnArray[0];
+                }
+            }
+            return returnArray;
+        }
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         * Hides the picker and removes event listeners
+         */
+        dispose() {
+            var _a, _b;
+            this._display.hide();
+            // this will clear the document click event listener
+            this._display._dispose();
+            (_a = this._input) === null || _a === void 0 ? void 0 : _a.removeEventListener('change', this._inputChangeEvent);
+            if (this._options.allowInputToggle) {
+                (_b = this._input) === null || _b === void 0 ? void 0 : _b.removeEventListener('click', this._toggleClickEvent);
+            }
+            this._toggle.removeEventListener('click', this._toggleClickEvent);
+            this._subscribers = {};
+        }
         /**
          * Triggers an event like ChangeEvent when the picker has updated the value
          * of a selected date.
@@ -3004,25 +3060,6 @@
             publish();
             this._notifyChangeEventContext = 0;
         }
-        // noinspection JSUnusedGlobalSymbols
-        /**
-         * Allows for a direct subscription to picker events, without having to use addEventListener on the element.
-         * @param eventType See Namespace.Events
-         * @param callback Function to call when event is triggered
-         * @public
-         */
-        subscribe(eventType, callback) {
-            if (!Array.isArray(this._subscribers[eventType])) {
-                this._subscribers[eventType] = [];
-            }
-            this._subscribers[eventType].push(callback);
-            return {
-                unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1),
-            };
-        }
-        _unsubscribe(eventName, index) {
-            this._subscribers[eventName].splice(index, 1);
-        }
         /**
          * Fires a ViewUpdate event when, for example, the month view is changed.
          * @param {Unit} unit
@@ -3035,21 +3072,8 @@
                 viewDate: this._viewDate.clone,
             });
         }
-        // noinspection JSUnusedGlobalSymbols
-        /**
-         * Hides the picker and removes event listeners
-         */
-        dispose() {
-            var _a, _b;
-            this._display.hide();
-            // this will clear the document click event listener
-            this._display._dispose();
-            (_a = this._input) === null || _a === void 0 ? void 0 : _a.removeEventListener('change', this._inputChangeEvent);
-            if (this._options.allowInputToggle) {
-                (_b = this._input) === null || _b === void 0 ? void 0 : _b.removeEventListener('click', this._toggleClickEvent);
-            }
-            this._toggle.removeEventListener('click', this._toggleClickEvent);
-            this._subscribers = {};
+        _unsubscribe(eventName, index) {
+            this._subscribers[eventName].splice(index, 1);
         }
         /**
          * Merges two Option objects together and validates options type

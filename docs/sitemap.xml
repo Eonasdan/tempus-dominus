@@ -1,12 +1,24 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'>
 <url>
 <loc>https://getdatepicker.com</loc>
-<lastmod>2021-07-21T23:44:17.986Z</lastmod>
+<lastmod>2021-07-26T15:22:08.386Z</lastmod>
 <priority>1.00</priority>
 </url>
 <url>
 <loc>https://getdatepicker.com/docs/6/change-log.html</loc>
 <lastmod>2021-07-20T04:00:00.000Z</lastmod>
+<priority>0.80</priority>
+</url><url>
+<loc>https://getdatepicker.com/docs/6/datetime.html</loc>
+<lastmod>2021-07-08T04:00:00.000Z</lastmod>
+<priority>0.80</priority>
+</url><url>
+<loc>https://getdatepicker.com/docs/6/examples-jquery.html</loc>
+<lastmod>2021-07-08T04:00:00.000Z</lastmod>
+<priority>0.80</priority>
+</url><url>
+<loc>https://getdatepicker.com/docs/6/examples.html</loc>
+<lastmod>2021-07-08T04:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url><url>
 <loc>https://getdatepicker.com/docs/6/functions.html</loc>
@@ -17,7 +29,7 @@
 <lastmod>2021-07-08T04:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url><url>
-<loc>https://getdatepicker.com/docs/6/usage.html</loc>
+<loc>https://getdatepicker.com/docs/6/namespace.html</loc>
 <lastmod>2021-07-08T04:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url>

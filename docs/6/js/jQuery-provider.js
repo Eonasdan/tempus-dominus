@@ -1,55 +1,25 @@
+///<reference src="js/tempus-dominus"/>
 /*global $ */
 
-//window.tempusdominus.Namespace.Events
-
-tempusdominus.jQueryInterface = function (option, argument) {
-  const _jQueryHandleThis = (me, option, argument) => {
-    let data = $(me).data(tempusdominus.Namespace.DATA_KEY);
-    if (typeof option === 'object') {
-      // noinspection TypeScriptValidateJSTypes
-      $.jQuery.extend({}, tempusdominus.DefaultOptions, option);
-    }
-
-    if (!data) {
-      data = new tempusdominus.TempusDominus($(me)[0], option);
-      $(me).data(tempusdominus.Namespace.DATA_KEY, data);
-    }
-
-    if (typeof option === 'string') {
-      if (data[option] === undefined) {
-        throw new Error(`No method named "${option}"`);
-      }
-      if (argument === undefined) {
-        return data[option]();
-      } else {
-        if (option === 'date') {
-          data.isDateUpdateThroughDateOptionFromClientCode = true;
-        }
-        const ret = data[option](argument);
-        data.isDateUpdateThroughDateOptionFromClientCode = false;
-        return ret;
-      }
-    }
-  };
-
+tempusDominus.jQueryInterface = function (option, argument) {
   if (this.length === 1) {
-    return tempusdominus.jQueryHandleThis(this, option, argument);
+    return tempusDominus.jQueryHandleThis(this, option, argument);
   }
   // "this" is jquery here
   return this.each(function () {
-    tempusdominus.jQueryHandleThis(this, option, argument);
+    tempusDominus.jQueryHandleThis(this, option, argument);
   });
 };
 
-tempusdominus.jQueryHandleThis = function (me, option, argument) {
-  let data = $(me).data(tempusdominus.Namespace.DATA_KEY);
+tempusDominus.jQueryHandleThis = function (me, option, argument) {
+  let data = $(me).data(tempusDominus.Namespace.dataKey);
   if (typeof option === 'object') {
-    $.extend({}, tempusdominus.DefaultOptions, option);
+    $.extend({}, tempusDominus.DefaultOptions, option);
   }
 
   if (!data) {
-    data = new tempusdominus.TempusDominus($(me)[0], option);
-    $(me).data(tempusdominus.Namespace.DATA_KEY, data);
+    data = new tempusDominus.TempusDominus($(me)[0], option);
+    $(me).data(tempusDominus.Namespace.dataKey, data);
   }
 
   if (typeof option === 'string') {
@@ -69,7 +39,7 @@ tempusdominus.jQueryHandleThis = function (me, option, argument) {
   }
 };
 
-tempusdominus.getSelectorFromElement = function ($element) {
+tempusDominus.getSelectorFromElement = function ($element) {
   let selector = $element.data('target'),
     $selector;
 
@@ -82,7 +52,7 @@ tempusdominus.getSelectorFromElement = function ($element) {
     return $element;
   }
 
-  if (!$selector.data(tempusdominus.Namespace.DATA_KEY)) {
+  if (!$selector.data(tempusDominus.Namespace.dataKey)) {
     $.extend({}, $selector.data(), $(this).data());
   }
 
@@ -96,12 +66,12 @@ tempusdominus.getSelectorFromElement = function ($element) {
  */
 $(document)
   .on(
-    `click${tempusdominus.Namespace.Events.key}.data-api`,
-    `[data-toggle="${tempusdominus.Namespace.DATA_KEY}"]`,
+    `click${tempusDominus.Namespace.Events.key}.data-api`,
+    `[data-toggle="${tempusDominus.Namespace.dataKey}"]`,
     function () {
       const $originalTarget = $(this),
-        $target = tempusdominus.getSelectorFromElement($originalTarget),
-        config = $target.data(tempusdominus.Namespace.DATA_KEY);
+        $target = tempusDominus.getSelectorFromElement($originalTarget),
+        config = $target.data(tempusDominus.Namespace.dataKey);
       if ($target.length === 0) {
         return;
       }
@@ -111,68 +81,68 @@ $(document)
       ) {
         return;
       }
-      tempusdominus.jQueryInterface.call($target, 'toggle');
+      tempusDominus.jQueryInterface.call($target, 'toggle');
     }
   )
   .on(
-    tempusdominus.Namespace.Events.change,
-    `.${tempusdominus.Namespace.NAME}-input`,
+    tempusDominus.Namespace.Events.change,
+    `.${tempusDominus.Namespace.NAME}-input`,
     function (event) {
-      const $target = tempusdominus.getSelectorFromElement($(this));
+      const $target = tempusDominus.getSelectorFromElement($(this));
       if ($target.length === 0 || event.isInit) {
         return;
       }
-      tempusdominus.jQueryInterface.call($target, '_change', event);
+      tempusDominus.jQueryInterface.call($target, '_change', event);
     }
   )
   .on(
-    tempusdominus.Namespace.Events.blur,
-    `.${tempusdominus.Namespace.NAME}-input`,
+    tempusDominus.Namespace.Events.blur,
+    `.${tempusDominus.Namespace.NAME}-input`,
     function (event) {
-      const $target = tempusdominus.getSelectorFromElement($(this)),
-        config = $target.data(tempusdominus.Namespace.DATA_KEY);
+      const $target = tempusDominus.getSelectorFromElement($(this)),
+        config = $target.data(tempusDominus.Namespace.dataKey);
       if ($target.length === 0) {
         return;
       }
       if (config._options.debug || window.debug) {
         return;
       }
-      tempusdominus.jQueryInterface.call($target, 'hide', event);
+      tempusDominus.jQueryInterface.call($target, 'hide', event);
     }
   )
-  /*.on(tempusdominus.Namespace.Events.keydown, `.${tempusdominus.Namespace.NAME}-input`, function (event) {
-    const $target = tempusdominus.getSelectorFromElement($(this));
+  /*.on(tempusDominus.Namespace.Events.keydown, `.${tempusDominus.Namespace.NAME}-input`, function (event) {
+    const $target = tempusDominus.getSelectorFromElement($(this));
     if ($target.length === 0) {
       return;
     }
-    tempusdominus.jQueryInterface.call($target, '_keydown', event);
+    tempusDominus.jQueryInterface.call($target, '_keydown', event);
   })
-  .on(tempusdominus.Namespace.Events.keyup, `.${tempusdominus.Namespace.NAME}-input`, function (event) {
-    const $target = tempusdominus.getSelectorFromElement($(this));
+  .on(tempusDominus.Namespace.Events.keyup, `.${tempusDominus.Namespace.NAME}-input`, function (event) {
+    const $target = tempusDominus.getSelectorFromElement($(this));
     if ($target.length === 0) {
       return;
     }
-    tempusdominus.jQueryInterface.call($target, '_keyup', event);
+    tempusDominus.jQueryInterface.call($target, '_keyup', event);
   })*/
   .on(
-    tempusdominus.Namespace.Events.focus,
-    `.${tempusdominus.Namespace.NAME}-input`,
+    tempusDominus.Namespace.Events.focus,
+    `.${tempusDominus.Namespace.NAME}-input`,
     function (event) {
-      const $target = tempusdominus.getSelectorFromElement($(this)),
-        config = $target.data(tempusdominus.Namespace.DATA_KEY);
+      const $target = tempusDominus.getSelectorFromElement($(this)),
+        config = $target.data(tempusDominus.Namespace.dataKey);
       if ($target.length === 0) {
         return;
       }
       if (!config._options.allowInputToggle) {
         return;
       }
-      tempusdominus.jQueryInterface.call($target, 'show', event);
+      tempusDominus.jQueryInterface.call($target, 'show', event);
     }
   );
-const name = tempusdominus.Namespace.NAME.replace('-', '');
-$.fn[name] = tempusdominus.jQueryInterface;
-$.fn[name].Constructor = tempusdominus.TempusDominus;
+const name = 'tempusDominus';
+$.fn[name] = tempusDominus.jQueryInterface;
+$.fn[name].Constructor = tempusDominus.TempusDominus;
 $.fn[name].noConflict = function () {
   $.fn[name] = $.fn[name];
-  return tempusdominus.jQueryInterface;
+  return tempusDominus.jQueryInterface;
 };

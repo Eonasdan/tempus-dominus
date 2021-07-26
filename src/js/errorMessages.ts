@@ -39,6 +39,8 @@ export class ErrorMessages {
 
   mustProvideElement = `${this.base} No element was provided.`;
 
+  subscribeMismatch = `${this.base} The subscribed events does not match the number of callbacks`;
+
   //#endregion
 
   //#region used with notify.error

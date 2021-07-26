@@ -20,7 +20,6 @@ class TempusDominus {
   dates: Dates;
 
   _options: Options;
-  _viewDate = new DateTime();
   _currentViewMode = 0;
   _subscribers: { [key: string]: ((event: any) => {})[] } = {};
   _element: HTMLElement;
@@ -30,7 +29,6 @@ class TempusDominus {
   _display: Display;
   _validation: Validation;
   _action: Actions;
-
   private _isDisabled = false;
   private _notifyChangeEventContext = 0;
   private _toggle: HTMLElement;
@@ -55,6 +53,8 @@ class TempusDominus {
 
     if (this._options.display.inline) this._display.show();
   }
+
+  _viewDate = new DateTime();
 
   get viewDate() {
     return this._viewDate;
@@ -134,6 +134,73 @@ class TempusDominus {
     this.dates.clear();
   }
 
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Allows for a direct subscription to picker events, without having to use addEventListener on the element.
+   * @param eventTypes See Namespace.Events
+   * @param callbacks Function to call when event is triggered
+   * @public
+   */
+  subscribe(
+    eventTypes: string | string[],
+    callbacks: (event: any) => {} | ((event: any) => {})[]
+  ): { unsubscribe: void }[] {
+    if (typeof eventTypes === 'string') {
+      eventTypes = [eventTypes];
+    }
+    let callBackArray = [];
+    if (!Array.isArray(callbacks)) {
+      callBackArray = [callbacks];
+    } else {
+      callBackArray = callbacks;
+    }
+
+    if (eventTypes.length !== callBackArray.length) {
+      throw Namespace.ErrorMessages.subscribeMismatch;
+    }
+
+    const returnArray = [];
+
+    for (let i = 0; i < eventTypes.length; i++) {
+      const eventType = eventTypes[i];
+      if (!Array.isArray(this._subscribers[eventType])) {
+        this._subscribers[eventType] = [];
+      }
+
+      this._subscribers[eventType].push(callBackArray[i]);
+
+      returnArray.push({
+        unsubscribe: this._unsubscribe.bind(
+          this,
+          eventType,
+          this._subscribers[eventType].length - 1
+        ),
+      });
+
+      if (eventTypes.length === 1) {
+        return returnArray[0];
+      }
+    }
+
+    return returnArray;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Hides the picker and removes event listeners
+   */
+  dispose() {
+    this._display.hide();
+    // this will clear the document click event listener
+    this._display._dispose();
+    this._input?.removeEventListener('change', this._inputChangeEvent);
+    if (this._options.allowInputToggle) {
+      this._input?.removeEventListener('click', this._toggleClickEvent);
+    }
+    this._toggle.removeEventListener('click', this._toggleClickEvent);
+    this._subscribers = {};
+  }
+
   /**
    * Triggers an event like ChangeEvent when the picker has updated the value
    * of a selected date.
@@ -185,33 +252,6 @@ class TempusDominus {
     this._notifyChangeEventContext = 0;
   }
 
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * Allows for a direct subscription to picker events, without having to use addEventListener on the element.
-   * @param eventType See Namespace.Events
-   * @param callback Function to call when event is triggered
-   * @public
-   */
-  subscribe(eventType: string, callback: (event: any) => {}) {
-    if (!Array.isArray(this._subscribers[eventType])) {
-      this._subscribers[eventType] = [];
-    }
-
-    this._subscribers[eventType].push(callback);
-
-    return {
-      unsubscribe: this._unsubscribe.bind(
-        this,
-        eventType,
-        this._subscribers[eventType].length - 1
-      ),
-    };
-  }
-
-  private _unsubscribe(eventName, index) {
-    this._subscribers[eventName].splice(index, 1);
-  }
-
   /**
    * Fires a ViewUpdate event when, for example, the month view is changed.
    * @param {Unit} unit
@@ -225,20 +265,8 @@ class TempusDominus {
     } as ViewUpdateEvent);
   }
 
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * Hides the picker and removes event listeners
-   */
-  dispose() {
-    this._display.hide();
-    // this will clear the document click event listener
-    this._display._dispose();
-    this._input?.removeEventListener('change', this._inputChangeEvent);
-    if (this._options.allowInputToggle) {
-      this._input?.removeEventListener('click', this._toggleClickEvent);
-    }
-    this._toggle.removeEventListener('click', this._toggleClickEvent);
-    this._subscribers = {};
+  private _unsubscribe(eventName, index) {
+    this._subscribers[eventName].splice(index, 1);
   }
 
   /**

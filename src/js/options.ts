@@ -412,7 +412,7 @@ export class OptionConverter {
     const optionsLower = objectToNormalized(options);
 
     Object.keys(eData)
-      .filter((x) => x.startsWith(Namespace.DATA_KEY))
+      .filter((x) => x.startsWith(Namespace.dataKey))
       .map((x) => x.substring(2))
       .forEach((key) => {
         let keyOption = optionsLower[key.toLowerCase()];

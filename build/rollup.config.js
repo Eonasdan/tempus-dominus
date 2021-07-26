@@ -5,7 +5,7 @@ export default {
   output: {
     dir: 'dist/js',
     format: 'umd',
-    name: 'tempusdominus',
+    name: 'tempusDominus',
     sourcemap: true,
     globals: {
       '@popperjs/core': 'Popper',

@@ -1,15 +1,14 @@
 import { ErrorMessages } from './errorMessages';
-
 //this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-const NAME = 'tempus-dominus';
-const VERSION = '6.0.0-alpha1';
-const DATA_KEY = 'td';
+const NAME = 'tempus-dominus',
+  version = '6.0.0-alpha1',
+  dataKey = 'td';
 
 /**
  * Events
  */
 class Events {
-  key = `.${DATA_KEY}`;
+  key = `.${dataKey}`;
   change = `change${this.key}`;
   update = `update${this.key}`;
   error = `error${this.key}`;
@@ -83,8 +82,9 @@ class Css {
 
 export default class Namespace {
   static NAME = NAME;
-  static VERSION = VERSION;
-  static DATA_KEY = DATA_KEY;
+  // noinspection JSUnusedGlobalSymbols
+  static version = version;
+  static dataKey = dataKey;
 
   static Events = new Events();
 

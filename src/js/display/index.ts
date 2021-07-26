@@ -147,7 +147,7 @@ export default class Display {
               {
                 name: 'offset',
                 options: {
-                  offset: [0, 8],
+                  offset: [2, 8],
                 },
               },
               { name: 'eventListeners', enabled: true },
