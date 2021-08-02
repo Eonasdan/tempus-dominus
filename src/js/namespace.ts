@@ -50,7 +50,6 @@ class Events {
 }
 
 class Css {
-
   /**
    * The outer element for the widget.
    */
