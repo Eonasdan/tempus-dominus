@@ -408,7 +408,7 @@
         }
     }
 
-    //this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
+    // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
     const NAME = 'tempus-dominus', version = '6.0.0-alpha1', dataKey = 'td';
     /**
      * Events
@@ -416,8 +416,20 @@
     class Events {
         constructor() {
             this.key = `.${dataKey}`;
+            /**
+             * Change event. Fired when the user selects a date.
+             * See also EventTypes.ChangeEvent
+             */
             this.change = `change${this.key}`;
+            /**
+             * Emit when the view changes for example from month view to the year view.
+             * See also EventTypes.ViewUpdateEvent
+             */
             this.update = `update${this.key}`;
+            /**
+             * Emits when a selected date or value from the input field fails to meet the provided validation rules.
+             * See also EventTypes.FailEvent
+             */
             this.error = `error${this.key}`;
             /**
              * Show event
@@ -429,54 +441,164 @@
              * @event Events#hide
              */
             this.hide = `hide${this.key}`;
+            // blur and focus are used in the jQuery provider but are otherwise unused.
+            // keyup/down will be used later for keybinding options
             this.blur = `blur${this.key}`;
+            this.focus = `focus${this.key}`;
             this.keyup = `keyup${this.key}`;
             this.keydown = `keydown${this.key}`;
-            this.focus = `focus${this.key}`;
         }
     }
     class Css {
         constructor() {
+            /**
+             * The outer element for the widget.
+             */
             this.widget = `${NAME}-widget`;
+            /**
+             * element for the action to change the calendar view. E.g. month -> year.
+             */
             this.switch = 'picker-switch';
+            /**
+             * Applied to the widget element when the side by side option is in use.
+             */
             this.sideBySide = 'timepicker-sbs';
+            /**
+             * element for the action to change the calendar view, e.g. August -> July
+             */
             this.previous = 'previous';
+            /**
+             * element for the action to change the calendar view, e.g. August -> September
+             */
             this.next = 'next';
+            /**
+             * Applied to any action that would violate any restriction options. ALso applied
+             * to an input field if the disabled function is called.
+             */
             this.disabled = 'disabled';
+            /**
+             * Applied to any date that is less than requested view,
+             * e.g. the last day of the previous month.
+             */
             this.old = 'old';
+            /**
+             * Applied to any date that is greater than of requested view,
+             * e.g. the last day of the previous month.
+             */
             this.new = 'new';
+            /**
+             * Applied to any date that is currently selected.
+             */
             this.active = 'active';
-            this.separator = 'separator';
-            //#region date container
+            //#region date element
+            /**
+             * The outer most element for the calendar view.
+             */
             this.dateContainer = 'date-container';
+            /**
+             * The outer most element for the decades view.
+             */
             this.decadesContainer = `${this.dateContainer}-decades`;
+            /**
+             * Applied to elements within the decades container, e.g. 2020, 2030
+             */
             this.decade = 'decade';
+            /**
+             * The outer most element for the years view.
+             */
             this.yearsContainer = `${this.dateContainer}-years`;
+            /**
+             * Applied to elements within the years container, e.g. 2021, 2021
+             */
             this.year = 'year';
+            /**
+             * The outer most element for the
+             */
             this.monthsContainer = `${this.dateContainer}-months`;
+            /**
+             *
+             */
             this.month = 'month';
+            /**
+             * The outer most element for the
+             */
             this.daysContainer = `${this.dateContainer}-days`;
+            /**
+             *
+             */
             this.day = 'day';
+            /**
+             *
+             */
             this.calendarWeeks = 'cw';
+            /**
+             *
+             */
             this.dayOfTheWeek = 'dow';
+            /**
+             *
+             */
             this.today = 'today';
+            /**
+             *
+             */
             this.weekend = 'weekend';
             //#endregion
-            //#region time container
+            //#region time element
+            /**
+             * The outer most element for the
+             */
             this.timeContainer = 'time-container';
+            /**
+             *
+             */
+            this.separator = 'separator';
+            /**
+             * The outer most element for the
+             */
             this.clockContainer = `${this.timeContainer}-clock`;
+            /**
+             * The outer most element for the
+             */
             this.hourContainer = `${this.timeContainer}-hour`;
+            /**
+             * The outer most element for the
+             */
             this.minuteContainer = `${this.timeContainer}-minute`;
+            /**
+             * The outer most element for the
+             */
             this.secondContainer = `${this.timeContainer}-second`;
+            /**
+             *
+             */
             this.hour = 'hour';
+            /**
+             *
+             */
             this.minute = 'minute';
+            /**
+             *
+             */
             this.second = 'second';
             //#endregion
             //#region collapse
+            /**
+             *
+             */
             this.show = 'show';
+            /**
+             *
+             */
             this.collapsing = 'td-collapsing';
+            /**
+             *
+             */
             this.collapse = 'td-collapse';
             //#endregion
+            /**
+             *
+             */
             this.inline = 'inline';
         }
     }

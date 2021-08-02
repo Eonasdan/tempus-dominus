@@ -17,11 +17,82 @@
   </section>
   <section>
     <h2>Events</h2>
-    <p>A class that provides Event namespaces such as <code>change.td</code></p>
+    <p>
+      These events may provide additional details. For native javascript you can
+      get this data via <code>e.details.*</code>. For jQuery the details are directly in the event, e.g.
+      <code>e.date</code>
+    </p>
+    <p>
+      Each of these events inherit from the <code>BaseEvent</code> interface.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface BaseEvent {
+  type: string; //e.g. change.td
+}
+    </code>
+  </pre>
+    <h3>change.td</h3>
+    <p>
+      Emit when the date selection is changed.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface ChangeEvent extends BaseEvent {
+  date: DateTime | undefined;
+  oldDate: DateTime;
+  isClear: boolean;
+  isValid: boolean;
+}
+    </code>
+  </pre>
+    <h3>update.td</h3>
+    <p>
+      Emits when the view changes for example from month view to the year view.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface ViewUpdateEvent extends BaseEvent {
+  change: Unit;
+  viewDate: DateTime;
+}
+    </code>
+  </pre>
+    <h3>error.td</h3>
+    <p>
+      Emits when a selected date or value from the input field fails to meet the provided validation rules.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface FailEvent extends BaseEvent {
+  reason: string;
+  date: DateTime;
+  oldDate: DateTime;
+}
+    </code>
+  </pre>
+    <h3>show.td</h3>
+    <p>
+      Emits when then picker widget is displayed.
+    </p>
+    <h3>hide.td</h3>
+    <p>
+      Emits when the picker widget is hidden.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface HideEvent extends BaseEvent {
+  date: DateTime;
+}
+    </code>
+  </pre>
   </section>
   <section>
     <h2>Css</h2>
-    <p>A class that provides CSS namespaces for the widget</p>
+    <p>
+      To ensure consitence, the picker makes use of typed css classes. You can use this class
+      to
+    </p>
   </section>
   <section>
     <h2>ErrorMessages</h2>
