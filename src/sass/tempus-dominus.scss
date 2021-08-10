@@ -1,14 +1,14 @@
-$bs-datetimepicker-timepicker-font-size: 1.2em !default;
-$bs-datetimepicker-active-bg: #0d6efd !default;
-$bs-datetimepicker-active-color: #fff !default;
-$bs-datetimepicker-border-radius: 0.25rem !default;
-$bs-datetimepicker-btn-hover-bg: #e9ecef !default;
-$bs-datetimepicker-disabled-color: #6c757d !default;
-$bs-datetimepicker-alternate-color: #6c757d !default;
-$bs-datetimepicker-secondary-border-color: #ccc !default;
-$bs-datetimepicker-secondary-border-color-rgba: rgba(0, 0, 0, 0.2) !default;
-$bs-datetimepicker-primary-border-color: white !default;
-$bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
+$td-timepicker-font-size: 1.2em !default;
+$td-active-bg: #0d6efd !default;
+$td-active-color: #fff !default;
+$td-border-radius: 0.25rem !default;
+$td-btn-hover-bg: #e9ecef !default;
+$td-disabled-color: #6c757d !default;
+$td-alternate-color: #6c757d !default;
+$td-secondary-border-color: #ccc !default;
+$td-secondary-border-color-rgba: rgba(0, 0, 0, 0.2) !default;
+$td-primary-border-color: white !default;
+$td-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
 
 /*
 todo look at how bootstrap loops through their vars to make a --root section
@@ -46,7 +46,7 @@ todo look at how bootstrap loops through their vars to make a --root section
     &.disabled,
     &.disabled:hover {
       background: none;
-      color: $bs-datetimepicker-disabled-color;
+      color: $td-disabled-color;
       cursor: not-allowed;
     }
   }
@@ -158,8 +158,8 @@ todo look at how bootstrap loops through their vars to make a --root section
     &:before {
       border-left: 7px solid transparent;
       border-right: 7px solid transparent;
-      border-bottom: 7px solid $bs-datetimepicker-secondary-border-color;
-      border-bottom-color: $bs-datetimepicker-secondary-border-color-rgba;
+      border-bottom: 7px solid $td-secondary-border-color;
+      border-bottom-color: $td-secondary-border-color-rgba;
       top: -7px;
       left: 7px;
     }
@@ -167,7 +167,7 @@ todo look at how bootstrap loops through their vars to make a --root section
     &:after {
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
-      border-bottom: 6px solid $bs-datetimepicker-primary-border-color;
+      border-bottom: 6px solid $td-primary-border-color;
       top: -6px;
       left: 8px;
     }
@@ -177,8 +177,8 @@ todo look at how bootstrap loops through their vars to make a --root section
     &:before {
       border-left: 7px solid transparent;
       border-right: 7px solid transparent;
-      border-top: 7px solid $bs-datetimepicker-secondary-border-color;
-      border-top-color: $bs-datetimepicker-secondary-border-color-rgba;
+      border-top: 7px solid $td-secondary-border-color;
+      border-top-color: $td-secondary-border-color-rgba;
       bottom: -7px;
       left: 6px;
     }
@@ -186,7 +186,7 @@ todo look at how bootstrap loops through their vars to make a --root section
     &:after {
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
-      border-top: 6px solid $bs-datetimepicker-primary-border-color;
+      border-top: 6px solid $td-primary-border-color;
       bottom: -6px;
       left: 7px;
     }
@@ -213,7 +213,7 @@ todo look at how bootstrap loops through their vars to make a --root section
   .timepicker-second {
     width: 54px;
     font-weight: bold;
-    font-size: $bs-datetimepicker-timepicker-font-size;
+    font-size: $td-timepicker-font-size;
     margin: 0;
   }
 
@@ -257,7 +257,7 @@ todo look at how bootstrap loops through their vars to make a --root section
       & td,
       & th {
         text-align: center;
-        border-radius: $bs-datetimepicker-border-radius;
+        border-radius: $td-border-radius;
       }
 
       & th {
@@ -272,14 +272,14 @@ todo look at how bootstrap loops through their vars to make a --root section
         &.disabled,
         &.disabled:hover {
           background: none;
-          color: $bs-datetimepicker-disabled-color;
+          color: $td-disabled-color;
           cursor: not-allowed;
         }
       }
 
       & thead tr:first-child th {
         &:hover {
-          background: $bs-datetimepicker-btn-hover-bg;
+          background: $td-btn-hover-bg;
         }
       }
 
@@ -297,16 +297,16 @@ todo look at how bootstrap loops through their vars to make a --root section
           line-height: 20px;
           margin-top: 2px;
           margin-bottom: 2px;
-          border-radius: $bs-datetimepicker-border-radius;
+          border-radius: $td-border-radius;
 
           &:hover {
-            background: $bs-datetimepicker-btn-hover-bg;
+            background: $td-btn-hover-bg;
           }
 
           &.active {
-            background-color: $bs-datetimepicker-active-bg;
-            color: $bs-datetimepicker-active-color;
-            text-shadow: $bs-datetimepicker-text-shadow;
+            background-color: $td-active-bg;
+            color: $td-active-color;
+            text-shadow: $td-text-shadow;
           }
 
           &.active.today:before {
@@ -315,13 +315,13 @@ todo look at how bootstrap loops through their vars to make a --root section
 
           &.old,
           &.new {
-            color: $bs-datetimepicker-alternate-color;
+            color: $td-alternate-color;
           }
 
           &.disabled,
           &.disabled:hover {
             background: none;
-            color: $bs-datetimepicker-disabled-color;
+            color: $td-disabled-color;
             cursor: not-allowed;
           }
 
@@ -329,7 +329,7 @@ todo look at how bootstrap loops through their vars to make a --root section
             font-size: 0.8em;
             height: 20px;
             line-height: 20px;
-            color: $bs-datetimepicker-alternate-color;
+            color: $td-alternate-color;
             cursor: default;
           }
 
@@ -344,8 +344,8 @@ todo look at how bootstrap loops through their vars to make a --root section
               display: inline-block;
               border: solid transparent;
               border-width: 0 0 7px 7px;
-              border-bottom-color: $bs-datetimepicker-active-bg;
-              border-top-color: $bs-datetimepicker-secondary-border-color-rgba;
+              border-bottom-color: $td-active-bg;
+              border-top-color: $td-secondary-border-color-rgba;
               position: absolute;
               bottom: 4px;
               right: 4px;
