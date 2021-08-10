@@ -8,6 +8,7 @@ const cleanCSS = require('clean-css');
 const { minify } = require('terser');
 const sass = require('sass');
 const chokidar = require('chokidar');
+const rootDirectory = '.\\src\\docs\\partials';
 
 class PageMeta {
   file;
@@ -55,6 +56,24 @@ class PageMeta {
   }
 }
 
+class FileInformation {
+  file;
+  isDirectory;
+  fullPath;
+  extension;
+  relativePath;
+
+  constructor(file, fullPath, isDirectory, extension) {
+    this.relativePath = fullPath
+      .replace(rootDirectory.replace('.\\', ''), '')
+      .substring(1);
+    this.file = file;
+    this.fullPath = fullPath;
+    this.isDirectory = isDirectory;
+    this.extension = extension;
+  }
+}
+
 class Build {
   shellTemplate = '';
   pageTemplate = '';
@@ -89,6 +108,33 @@ class Build {
 
   loadTemplate(template) {
     return fs.readFileSync(`./src/docs/templates/${template}.html`, 'utf8');
+  }
+
+  directoryWalk(directory) {
+    let files = [];
+    fs.readdirSync(directory)
+      .map((x) => {
+        const fullPath = path.join(directory, x);
+
+        return new FileInformation(
+          x,
+          fullPath,
+          fs.statSync(fullPath).isDirectory(),
+          path.extname(x).toLowerCase()
+        );
+      })
+      .filter(
+        (x) => path.extname(x.file).toLowerCase() === '.html' || x.isDirectory
+      )
+      .forEach((x) => {
+        if (x.isDirectory) {
+          files = [...files, ...this.directoryWalk(x.fullPath)];
+        } else {
+          files.push(x);
+        }
+      });
+
+    return files;
   }
 
   getSearchBody(html) {
@@ -198,145 +244,160 @@ class Build {
     //remove old stuff
     this.removeDirectory(`./${siteConfig.output}`, false);
 
-    const pages = fs
+    /*  const pages = fs
       .readdirSync('./src/docs/partials')
       .filter((file) => path.extname(file).toLowerCase() === '.html');
-
-    pages.forEach((file) => {
-      const fullyQualifiedUrl = `${siteConfig.root}/${siteConfig.output}/${file}`;
+*/
+    const pageMarch = (pages) => {
+      pages.forEach((fileInformation) => {
+        /*
+         const fullyQualifiedUrl = `${siteConfig.root}/${siteConfig.output}/${file}`;
       const fullPath = `./src/docs/partials/${file}`;
-      const newPageDocument = new JSDOM(this.pageTemplate).window.document;
-      const postDocument = new JSDOM(fs.readFileSync(fullPath, 'utf8')).window
-        .document;
-      const article = postDocument.querySelector('page-body');
-      if (!article) {
-        console.error(`failed to read body for ${fullPath}`);
-        return;
-      }
+         */
+        const fullyQualifiedUrl = `$${siteConfig.root}/${siteConfig.output}/${fileInformation.relativePath}`;
+        const fullPath = fileInformation.fullPath;
+        const newPageDocument = new JSDOM(this.pageTemplate).window.document;
+        const postDocument = new JSDOM(fs.readFileSync(fullPath, 'utf8')).window
+          .document;
+        const article = postDocument.querySelector('page-body');
+        if (!article) {
+          console.error(`failed to read body for ${fullPath}`);
+          return;
+        }
 
-      const fileModified = fs.statSync(fullPath).mtime;
+        const fileModified = fs.statSync(fullPath).mtime;
 
-      let pageMeta = new PageMeta(
-        file,
-        file.replace(path.extname(file), ''),
-        this.getSearchBody(article),
-        fileModified,
-        fileModified
-      );
+        let pageMeta = new PageMeta(
+          fileInformation.file,
+          fileInformation.file.replace(fileInformation.extension, ''),
+          this.getSearchBody(article),
+          fileModified,
+          fileModified
+        );
 
-      pageMeta.parse(postDocument.querySelector('page-meta'));
+        pageMeta.parse(postDocument.querySelector('page-meta'));
 
-      /*const postTagsDiv = postDocument.createElement('div');
-      postTagsDiv.classList.add('post-tags', 'mt-30');
-      const postTagsUl = postDocument.createElement('ul');
+        /*const postTagsDiv = postDocument.createElement('div');
+        postTagsDiv.classList.add('post-tags', 'mt-30');
+        const postTagsUl = postDocument.createElement('ul');
 
-      pageMeta.tags
-        ?.split(',')
-        .map((tag) => tag.trim())
-        .forEach((tag) => {
-          const li = postDocument.createElement('li');
-          const a = postDocument.createElement('a');
-          a.setAttribute('href', `/?search=tag:${tag}`);
-          a.innerHTML = tag;
-          li.appendChild(a);
-          postTagsUl.appendChild(li);
-        });
+        pageMeta.tags
+          ?.split(',')
+          .map((tag) => tag.trim())
+          .forEach((tag) => {
+            const li = postDocument.createElement('li');
+            const a = postDocument.createElement('a');
+            a.setAttribute('href', `/?search=tag:${tag}`);
+            a.innerHTML = tag;
+            li.appendChild(a);
+            postTagsUl.appendChild(li);
+          });
 
-      postTagsDiv.appendChild(postTagsUl);
-      article.appendChild(postTagsDiv);*/
+        postTagsDiv.appendChild(postTagsUl);
+        article.appendChild(postTagsDiv);*/
 
-      //const loopDocument = new JSDOM(this.postLoopTemplate).window.document;
-      newPageDocument.getElementById('mainContent').innerHTML =
-        article.innerHTML;
+        //const loopDocument = new JSDOM(this.postLoopTemplate).window.document;
+        newPageDocument.getElementById('mainContent').innerHTML =
+          article.innerHTML;
 
-      const publishDate = new Date(pageMeta.postDate).toISOString();
+        const publishDate = new Date(pageMeta.postDate).toISOString();
 
-      // create structured data
-      /*const structuredData = {
-        '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
-        author: {
-          '@type': 'Person',
-          name: pageMeta.author.name,
-          url: pageMeta.author.url,
-        },
-      };*/
+        // create structured data
+        /*const structuredData = {
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          author: {
+            '@type': 'Person',
+            name: pageMeta.author.name,
+            url: pageMeta.author.url,
+          },
+        };*/
 
-      newPageDocument.title = pageMeta.title + ' - Tempus Dominus';
+        newPageDocument.title = pageMeta.title + ' - Tempus Dominus';
 
-      this.setMetaContent(newPageDocument, 'metaTitle', pageMeta.title);
-      //this.setStructuredData(structuredData, 'headline', pageMeta.title);
-      this.setInnerHtml(
-        newPageDocument.getElementsByClassName('title')[0],
-        pageMeta.title
-      );
-      /*loopDocument.getElementsByClassName(
-        'post-link'
-      )[0].href = `/${siteConfig.output}/${pageMeta.file}`;*/
+        this.setMetaContent(newPageDocument, 'metaTitle', pageMeta.title);
+        //this.setStructuredData(structuredData, 'headline', pageMeta.title);
+        this.setInnerHtml(
+          newPageDocument.getElementsByClassName('title')[0],
+          pageMeta.title
+        );
+        /*loopDocument.getElementsByClassName(
+          'post-link'
+        )[0].href = `/${siteConfig.output}/${pageMeta.file}`;*/
 
-      this.setMetaContent(newPageDocument, 'metaDescription', pageMeta.excerpt);
-      this.setMetaContent(newPageDocument, 'metaUrl', fullyQualifiedUrl);
-      /* this.setStructuredData(
-        structuredData,
-        'mainEntityOfPage',
-        fullyQualifiedUrl
-      );*/
+        this.setMetaContent(
+          newPageDocument,
+          'metaDescription',
+          pageMeta.excerpt
+        );
+        this.setMetaContent(newPageDocument, 'metaUrl', fullyQualifiedUrl);
+        /* this.setStructuredData(
+          structuredData,
+          'mainEntityOfPage',
+          fullyQualifiedUrl
+        );*/
 
-      this.setMetaContent(newPageDocument, 'metaPublishedTime', publishDate);
-      //this.setStructuredData(structuredData, 'datePublished', publishDate);
-      /*this.setInnerHtml(
-        loopDocument.getElementsByClassName('post-date')[0],
-        pageMeta.postDate
-      );*/
+        this.setMetaContent(newPageDocument, 'metaPublishedTime', publishDate);
+        //this.setStructuredData(structuredData, 'datePublished', publishDate);
+        /*this.setInnerHtml(
+          loopDocument.getElementsByClassName('post-date')[0],
+          pageMeta.postDate
+        );*/
 
-      if (!pageMeta.updateDate) pageMeta.updateDate = pageMeta.postDate;
-      const updateDate = new Date(pageMeta.updateDate).toISOString();
-      this.setMetaContent(newPageDocument, 'metaModifiedTime', updateDate);
-      //this.setStructuredData(structuredData, 'dateModified', updateDate);
+        if (!pageMeta.updateDate) pageMeta.updateDate = pageMeta.postDate;
+        const updateDate = new Date(pageMeta.updateDate).toISOString();
+        this.setMetaContent(newPageDocument, 'metaModifiedTime', updateDate);
+        //this.setStructuredData(structuredData, 'dateModified', updateDate);
 
-      this.setMetaContent(newPageDocument, 'metaTag', pageMeta.tags);
-      /*this.setStructuredData(
-        structuredData,
-        'keywords',
-        pageMeta.tags.split(', ')
-      );*/
-      /* this.setInnerHtml(
-        loopDocument.getElementsByClassName('post-excerpt')[0],
-        pageMeta.excerpt
-      );*/
+        this.setMetaContent(newPageDocument, 'metaTag', pageMeta.tags);
+        /*this.setStructuredData(
+          structuredData,
+          'keywords',
+          pageMeta.tags.split(', ')
+        );*/
+        /* this.setInnerHtml(
+          loopDocument.getElementsByClassName('post-excerpt')[0],
+          pageMeta.excerpt
+        );*/
 
-      this.pagesMeta.push(pageMeta);
+        this.pagesMeta.push(pageMeta);
 
-      // push structured data to body
-      /*const structuredDataTag = newPageDocument.createElement('script');
-      structuredDataTag.type = 'application/ld+json';
-      structuredDataTag.innerHTML = JSON.stringify(structuredData, null, 2);*/
-      /*newPageDocument
-        .getElementsByTagName('body')[0]
-        .appendChild(structuredDataTag);*/
+        // push structured data to body
+        /*const structuredDataTag = newPageDocument.createElement('script');
+        structuredDataTag.type = 'application/ld+json';
+        structuredDataTag.innerHTML = JSON.stringify(structuredData, null, 2);*/
+        /*newPageDocument
+          .getElementsByTagName('body')[0]
+          .appendChild(structuredDataTag);*/
 
-      const completeHtml = this.createRootHtml(
-        newPageDocument.documentElement.innerHTML
-      );
-      fs.writeFileSync(`./${siteConfig.output}/${file}`, completeHtml);
+        const completeHtml = this.createRootHtml(
+          newPageDocument.documentElement.innerHTML
+        );
+        this.writeFileAndEnsurePathExists(
+          `./${siteConfig.output}/${fileInformation.relativePath}`,
+          completeHtml
+        );
 
-      //update pure css
-      dropCss({
-        css: this.css,
-        html: completeHtml,
-      }).sels.forEach((sel) => this.cssWhitelist.add(sel));
+        //update pure css
+        dropCss({
+          css: this.css,
+          html: completeHtml,
+        }).sels.forEach((sel) => this.cssWhitelist.add(sel));
 
-      //add to homepage html
+        //add to homepage html
 
-      /*this.homePageHtml +=
-        loopDocument.getElementsByTagName('body')[0].innerHTML;*/
+        /*this.homePageHtml +=
+          loopDocument.getElementsByTagName('body')[0].innerHTML;*/
 
-      this.siteMap += `<url>
+        this.siteMap += `<url>
 <loc>${fullyQualifiedUrl}</loc>
 <lastmod>${new Date(pageMeta.updateDate).toISOString()}</lastmod>
 <priority>0.80</priority>
 </url>`;
-    });
+      });
+    };
+
+    pageMarch(this.directoryWalk(rootDirectory));
 
     this.pagesMeta = this.pagesMeta.sort((a, b) => {
       return +new Date(a.postDate) > +new Date(b.postDate) ? -1 : 0;
@@ -425,9 +486,11 @@ ${this.siteMap}
       }).sels.forEach((sel) => this.cssWhitelist.add(sel));
     };
 
-    fs.readdirSync('./src/docs/partials')
+    /* fs.readdirSync('./src/docs/partials')
       .filter((file) => path.extname(file).toLowerCase() === '.html')
-      .map((file) => `./src/docs/partials/${file}`)
+      .map((file) => `./src/docs/partials/${file}`)*/
+    this.directoryWalk(rootDirectory)
+      .map((x) => x.fullPath)
       .forEach(gatherCss);
 
     fs.readdirSync('./src/docs/templates')
@@ -555,33 +618,39 @@ if (process.argv.slice(2)[0] === '--watch') {
 
   const handleChange = (event, path) => {
     log(`${event}: ${path}`);
-    if (path.startsWith('dist')) {
-      builder.updateDist();
-    }
-    if (path.startsWith('src\\docs\\partials')) {
-      //reading the file stats seems to trigger this twice, so if the same file changed in less then a second, ignore
-      if (
-        lastChange === formatter.format(new Date()) &&
-        lastChangeFile === path
-      ) {
-        log(`Skipping duplicate trigger`);
-        return;
+    try {
+      if (path.startsWith('dist')) {
+        builder.updateDist();
       }
-      builder.updatePages();
+      if (path.startsWith('src\\docs\\partials')) {
+        //reading the file stats seems to trigger this twice, so if the same file changed in less then a second, ignore
+        if (
+          lastChange === formatter.format(new Date()) &&
+          lastChangeFile === path
+        ) {
+          log(`Skipping duplicate trigger`);
+          return;
+        }
+        builder.updatePages();
+      }
+      if (path.startsWith('src\\docs\\styles')) {
+        builder.updateCss();
+      }
+      if (path.startsWith('src\\docs\\templates')) {
+        builder.updateAll();
+      }
+      if (path.startsWith('src\\docs\\js')) {
+        builder.minifyJs().then();
+      }
+      log('\x1b[32m Update successful');
+      lastChange = formatter.format(new Date());
+      lastChangeFile = path;
+      console.log('');
+    } catch (e) {
+      log('Something went wrong');
+      console.log(e);
+      console.log('');
     }
-    if (path.startsWith('src\\docs\\styles')) {
-      builder.updateCss();
-    }
-    if (path.startsWith('src\\docs\\templates')) {
-      builder.updateAll();
-    }
-    if (path.startsWith('src\\docs\\js')) {
-      builder.minifyJs().then();
-    }
-    log('\x1b[32m Update successful');
-    lastChange = formatter.format(new Date());
-    lastChangeFile = path;
-    console.log('');
   };
 
   watcher

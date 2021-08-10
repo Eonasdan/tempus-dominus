@@ -156,7 +156,7 @@
          */
         isBefore(compare, unit) {
             if (!unit)
-                return this < compare;
+                return this.valueOf() < compare.valueOf();
             if (this[unit] === undefined)
                 throw `Unit '${unit}' is not valid`;
             return (this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf());
@@ -169,7 +169,7 @@
          */
         isAfter(compare, unit) {
             if (!unit)
-                return this > compare;
+                return this.valueOf() > compare.valueOf();
             if (this[unit] === undefined)
                 throw `Unit '${unit}' is not valid`;
             return (this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf());
@@ -299,14 +299,15 @@
          * @param locale
          */
         meridiem(locale = this.locale) {
-            var _a;
-            const dayPeriod = (_a = new Intl.DateTimeFormat(locale, {
-                hour: 'numeric',
-                dayPeriod: 'narrow',
-            })
-                .formatToParts(this)
-                .find((p) => p.type === 'dayPeriod')) === null || _a === void 0 ? void 0 : _a.value;
-            return dayPeriod ? dayPeriod : this.getHours() <= 12 ? 'AM' : 'PM';
+            /*
+            for some reason this stopped returning "AM/PM" and returned "in the morning"
+            const dayPeriod = new Intl.DateTimeFormat(locale, {
+              hour: 'numeric',
+              dayPeriod: 'narrow',
+            } as any)
+              .formatToParts(this)
+              .find((p) => p.type === 'dayPeriod')?.value;*/
+            return this.hours <= 12 ? 'AM' : 'PM';
         }
         /**
          * Shortcut to Date.getDate()
@@ -375,36 +376,124 @@
         }
     }
 
+    class TdError extends Error {
+    }
     class ErrorMessages {
         constructor() {
             this.base = 'TD:';
-            this.dateString = `${this.base} Using a string for date options is not recommended unless you specify an ISO string.`;
-            this.mustProvideElement = `${this.base} No element was provided.`;
-            this.subscribeMismatch = `${this.base} The subscribed events does not match the number of callbacks`;
             //#endregion
             //#region used with notify.error
+            /**
+             * Used with an Error Event type if the user selects a date that
+             * fails restriction validation.
+             */
             this.failedToSetInvalidDate = 'Failed to set invalid date';
+            /**
+             * Used with an Error Event type when a user changes the value of the
+             * input field directly, and does not provide a valid date.
+             */
             this.failedToParseInput = 'Failed parse input field';
             //#endregion
         }
         //#region out to console
+        /**
+         * Throws an error indicating that a key in the options object is invalid.
+         * @param optionName
+         */
         unexpectedOption(optionName) {
-            return `${this.base} Unexpected option: ${optionName} does not match a known option.`;
+            const error = new TdError(`${this.base} Unexpected option: ${optionName} does not match a known option.`);
+            error.code = 1;
+            throw error;
         }
+        /**
+         * Throws an error indicating that one more keys in the options object is invalid.
+         * @param optionName
+         */
         unexpectedOptions(optionName) {
-            return `${this.base}: ${optionName.join(', ')}`;
+            const error = new TdError(`${this.base}: ${optionName.join(', ')}`);
+            error.code = 1;
+            throw error;
         }
-        unexpectedOptionString(optionName, badValue, validOptions) {
-            return `${this.base} Unexpected option value: ${optionName} does not except a value of "${badValue}". Valid values are: ${validOptions.join(', ')}`;
+        /**
+         * Throws an error when an option is provide an unsupported value.
+         * For example a value of 'cheese' for toolbarPlacement which only supports
+         * 'top', 'bottom', 'default'.
+         * @param optionName
+         * @param badValue
+         * @param validOptions
+         */
+        unexpectedOptionValue(optionName, badValue, validOptions) {
+            const error = new TdError(`${this.base} Unexpected option value: ${optionName} does not accept a value of "${badValue}". Valid values are: ${validOptions.join(', ')}`);
+            error.code = 2;
+            throw error;
         }
+        /**
+         * Throws an error when an option value is the wrong type.
+         * For example a string value was provided to multipleDates which only
+         * supports true or false.
+         * @param optionName
+         * @param badType
+         * @param expectedType
+         */
         typeMismatch(optionName, badType, expectedType) {
-            return `${this.base} Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`;
+            const error = new TdError(`${this.base} Mismatch types: ${optionName} has a type of ${badType} instead of the required ${expectedType}`);
+            error.code = 3;
+            throw error;
         }
+        /**
+         * Throws an error when an option value is  outside of the expected range.
+         * For example restrictions.daysOfWeekDisabled excepts a value between 0 and 6.
+         * @param optionName
+         * @param lower
+         * @param upper
+         */
         numbersOutOfRage(optionName, lower, upper) {
-            return `${this.base} ${optionName} expected an array of number between ${lower} and ${upper}.`;
+            const error = new TdError(`${this.base} ${optionName} expected an array of number between ${lower} and ${upper}.`);
+            error.code = 4;
+            throw error;
         }
+        /**
+         * Throws an error when a value for a date options couldn't be parsed. Either
+         * the option was an invalide string or an invalid Date object.
+         * @param optionName
+         * @param date
+         */
         failedToParseDate(optionName, date) {
-            return `${this.base} Could not correctly parse "${date}" to a date for option ${optionName}.`;
+            const error = new TdError(`${this.base} Could not correctly parse "${date}" to a date for option ${optionName}.`);
+            error.code = 5;
+            throw error;
+        }
+        /**
+         * Throws when an element to attach to was not provided in the constructor.
+         */
+        mustProvideElement() {
+            const error = new TdError(`${this.base} No element was provided.`);
+            error.code = 6;
+            throw error;
+        }
+        /**
+         * Throws if providing an array for the events to subscribe method doesn't have
+         * the same number of callbacks. E.g., subscribe([1,2], [1])
+         */
+        subscribeMismatch() {
+            const error = new TdError(`${this.base} The subscribed events does not match the number of callbacks`);
+            error.code = 7;
+            throw error;
+        }
+        /**
+         * Throws if the configuration has conflicting rules e.g. minDate is after maxDate
+         */
+        conflictingConfiguration(message) {
+            const error = new TdError(`${this.base} A configuration value conflicts with another rule. ${message}`);
+            error.code = 8;
+            throw error;
+        }
+        /**
+         * Logs a warning if a date option value is provided as a string, instead of
+         * a date/datetime object.
+         */
+        dateString() {
+            console.warn(`${this.base} Using a string for date options is not recommended unless you specify an ISO string.`);
         }
     }
 
@@ -456,7 +545,7 @@
              */
             this.widget = `${NAME}-widget`;
             /**
-             * element for the action to change the calendar view. E.g. month -> year.
+             * The element for the action to change the calendar view. E.g. month -> year.
              */
             this.switch = 'picker-switch';
             /**
@@ -464,11 +553,11 @@
              */
             this.sideBySide = 'timepicker-sbs';
             /**
-             * element for the action to change the calendar view, e.g. August -> July
+             * The element for the action to change the calendar view, e.g. August -> July
              */
             this.previous = 'previous';
             /**
-             * element for the action to change the calendar view, e.g. August -> September
+             * The element for the action to change the calendar view, e.g. August -> September
              */
             this.next = 'next';
             /**
@@ -512,92 +601,94 @@
              */
             this.year = 'year';
             /**
-             * The outer most element for the
+             * The outer most element for the month view.
              */
             this.monthsContainer = `${this.dateContainer}-months`;
             /**
-             *
+             * Applied to elements within the month container, e.g. January, February
              */
             this.month = 'month';
             /**
-             * The outer most element for the
+             * The outer most element for the calendar view.
              */
             this.daysContainer = `${this.dateContainer}-days`;
             /**
-             *
+             * Applied to elements within the day container, e.g. 1, 2..31
              */
             this.day = 'day';
             /**
-             *
+             * If display.calendarWeeks is enabled, a column displaying the week of year
+             * is shown. This class is applied to each cell in that column.
              */
             this.calendarWeeks = 'cw';
             /**
-             *
+             * Applied to the first row of the calendar view, e.g. Sunday, Monday
              */
             this.dayOfTheWeek = 'dow';
             /**
-             *
+             * Applied to the current date on the calendar view.
              */
             this.today = 'today';
             /**
-             *
+             * Applied to the locale's weekend dates on the calendar view, e.g. Sunday, Saturday
              */
             this.weekend = 'weekend';
             //#endregion
             //#region time element
             /**
-             * The outer most element for the
+             * The outer most element for all time related elements.
              */
             this.timeContainer = 'time-container';
             /**
-             *
+             * Applied the separator columns between time elements, e.g. hour *:* minute *:* second
              */
             this.separator = 'separator';
             /**
-             * The outer most element for the
+             * The outer most element for the clock view.
              */
             this.clockContainer = `${this.timeContainer}-clock`;
             /**
-             * The outer most element for the
+             * The outer most element for the hours selection view.
              */
             this.hourContainer = `${this.timeContainer}-hour`;
             /**
-             * The outer most element for the
+             * The outer most element for the minutes selection view.
              */
             this.minuteContainer = `${this.timeContainer}-minute`;
             /**
-             * The outer most element for the
+             * The outer most element for the seconds selection view.
              */
             this.secondContainer = `${this.timeContainer}-second`;
             /**
-             *
+             * Applied to each element in the hours selection view.
              */
             this.hour = 'hour';
             /**
-             *
+             * Applied to each element in the minutes selection view.
              */
             this.minute = 'minute';
             /**
-             *
+             * Applied to each element in the seconds selection view.
              */
             this.second = 'second';
             //#endregion
             //#region collapse
             /**
-             *
+             * Applied the element of the current view mode, e.g. calendar or clock.
              */
             this.show = 'show';
             /**
-             *
+             * Applied to the currently showing view mode during a transition
+             * between calendar and clock views
              */
             this.collapsing = 'td-collapsing';
             /**
-             *
+             * Applied to the currently hidden view mode.
              */
             this.collapse = 'td-collapse';
             //#endregion
             /**
-             *
+             * Applied to the widget when the option display.inline is enabled.
              */
             this.inline = 'inline';
         }
@@ -636,7 +727,6 @@
                 clear: 'fas fa-trash',
                 close: 'fas fa-times',
             },
-            collapse: true,
             sideBySide: false,
             calendarWeeks: false,
             viewMode: 'calendar',
@@ -648,12 +738,12 @@
             },
             components: {
                 calendar: true,
-                clock: true,
-                century: true,
-                decades: true,
-                year: true,
-                month: true,
                 date: true,
+                month: true,
+                year: true,
+                decades: true,
+                century: true,
+                clock: true,
                 hours: true,
                 minutes: true,
                 seconds: false,
@@ -2372,7 +2462,7 @@
                 template.appendChild(toolbar);
             }
             if (this._hasDate) {
-                if (this._context._options.display.collapse && this._hasTime) {
+                if (this._hasTime) {
                     dateView.classList.add(Namespace.Css.collapse);
                     if (this._context._options.display.viewMode !== 'clock')
                         dateView.classList.add(Namespace.Css.show);
@@ -2383,7 +2473,7 @@
                 template.appendChild(toolbar);
             }
             if (this._hasTime) {
-                if (this._context._options.display.collapse && this._hasDate) {
+                if (this._hasDate) {
                     timeView.classList.add(Namespace.Css.collapse);
                     if (this._context._options.display.viewMode === 'clock')
                         timeView.classList.add(Namespace.Css.show);
@@ -2433,7 +2523,6 @@
                 tbody.appendChild(td);
             }
             if (!this._context._options.display.sideBySide &&
-                this._context._options.display.collapse &&
                 this._hasDate &&
                 this._hasTime) {
                 let title, icon;
@@ -2658,7 +2747,7 @@
                         if (dateTime !== undefined) {
                             return dateTime;
                         }
-                        throw Namespace.ErrorMessages.typeMismatch('viewDate', providedType, 'DateTime or Date');
+                        Namespace.ErrorMessages.typeMismatch('viewDate', providedType, 'DateTime or Date');
                     }
                     case 'minDate': {
                         if (value === undefined) {
@@ -2668,7 +2757,7 @@
                         if (dateTime !== undefined) {
                             return dateTime;
                         }
-                        throw Namespace.ErrorMessages.typeMismatch('restrictions.minDate', providedType, 'DateTime or Date');
+                        Namespace.ErrorMessages.typeMismatch('restrictions.minDate', providedType, 'DateTime or Date');
                     }
                     case 'maxDate': {
                         if (value === undefined) {
@@ -2678,7 +2767,7 @@
                         if (dateTime !== undefined) {
                             return dateTime;
                         }
-                        throw Namespace.ErrorMessages.typeMismatch('restrictions.maxDate', providedType, 'DateTime or Date');
+                        Namespace.ErrorMessages.typeMismatch('restrictions.maxDate', providedType, 'DateTime or Date');
                     }
                     case 'disabledHours':
                         if (value === undefined) {
@@ -2686,7 +2775,7 @@
                         }
                         this._typeCheckNumberArray('restrictions.disabledHours', value, providedType);
                         if (value.filter((x) => x < 0 || x > 24).length > 0)
-                            throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.disabledHours', 0, 23);
+                            Namespace.ErrorMessages.numbersOutOfRage('restrictions.disabledHours', 0, 23);
                         return value;
                     case 'enabledHours':
                         if (value === undefined) {
@@ -2694,7 +2783,7 @@
                         }
                         this._typeCheckNumberArray('restrictions.enabledHours', value, providedType);
                         if (value.filter((x) => x < 0 || x > 24).length > 0)
-                            throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.enabledHours', 0, 23);
+                            Namespace.ErrorMessages.numbersOutOfRage('restrictions.enabledHours', 0, 23);
                         return value;
                     case 'daysOfWeekDisabled':
                         if (value === undefined) {
@@ -2702,7 +2791,7 @@
                         }
                         this._typeCheckNumberArray('restrictions.daysOfWeekDisabled', value, providedType);
                         if (value.filter((x) => x < 0 || x > 6).length > 0)
-                            throw Namespace.ErrorMessages.numbersOutOfRage('restrictions.daysOfWeekDisabled', 0, 6);
+                            Namespace.ErrorMessages.numbersOutOfRage('restrictions.daysOfWeekDisabled', 0, 6);
                         return value;
                     case 'enabledDates':
                         if (value === undefined) {
@@ -2721,7 +2810,7 @@
                             return [];
                         }
                         if (!Array.isArray(value)) {
-                            throw Namespace.ErrorMessages.typeMismatch(key, providedType, 'array of { from: DateTime|Date, to: DateTime|Date }');
+                            Namespace.ErrorMessages.typeMismatch(key, providedType, 'array of { from: DateTime|Date, to: DateTime|Date }');
                         }
                         const valueObject = value;
                         for (let i = 0; i < valueObject.length; i++) {
@@ -2730,7 +2819,7 @@
                                 let d = valueObject[i][vk];
                                 const dateTime = this._dateConversion(d, subOptionName);
                                 if (!dateTime) {
-                                    throw Namespace.ErrorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
+                                    Namespace.ErrorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
                                 }
                                 valueObject[i][vk] = dateTime;
                             });
@@ -2754,7 +2843,7 @@
                         };
                         const keyOptions = optionValues[key];
                         if (!keyOptions.includes(value))
-                            throw Namespace.ErrorMessages.unexpectedOptionString(path.substring(1), value, keyOptions);
+                            Namespace.ErrorMessages.unexpectedOptionValue(path.substring(1), value, keyOptions);
                         return value;
                     case 'inputFormat':
                         return value;
@@ -2771,7 +2860,7 @@
                             case 'function':
                                 return value;
                             default:
-                                throw Namespace.ErrorMessages.typeMismatch(path.substring(1), providedType, defaultType);
+                                Namespace.ErrorMessages.typeMismatch(path.substring(1), providedType, defaultType);
                         }
                 }
             };
@@ -2794,7 +2883,7 @@
                             error += `Did you mean "${didYouMean}"?`;
                         return error;
                     });
-                    throw Namespace.ErrorMessages.unexpectedOptions(errors);
+                    Namespace.ErrorMessages.unexpectedOptions(errors);
                 }
                 Object.keys(mergeOption).forEach((key) => {
                     const defaultOptionValue = mergeOption[key];
@@ -2912,13 +3001,13 @@
          */
         static _typeCheckDateArray(optionName, value, providedType) {
             if (!Array.isArray(value)) {
-                throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
+                Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
             }
             for (let i = 0; i < value.length; i++) {
                 let d = value[i];
                 const dateTime = this._dateConversion(d, optionName);
                 if (!dateTime) {
-                    throw Namespace.ErrorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
+                    Namespace.ErrorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
                 }
                 value[i] = dateTime;
             }
@@ -2931,7 +3020,7 @@
          */
         static _typeCheckNumberArray(optionName, value, providedType) {
             if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
-                throw Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of numbers');
+                Namespace.ErrorMessages.typeMismatch(optionName, providedType, 'array of numbers');
             }
             return;
         }
@@ -2942,11 +3031,11 @@
          */
         static _dateConversion(d, optionName) {
             if (typeof d === typeof '') {
-                console.warn(Namespace.ErrorMessages.dateString);
+                Namespace.ErrorMessages.dateString();
             }
             const converted = this._dateTypeCheck(d);
             if (!converted) {
-                throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
+                Namespace.ErrorMessages.failedToParseDate(optionName, d);
             }
             return converted;
         }
@@ -2957,6 +3046,21 @@
                     ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
                     : pre.join('.');
             return deepKeys(DefaultOptions);
+        }
+        /**
+         * Some options conflict like min/max date. Verify that these kinds of options
+         * are set correctly.
+         * @param config
+         */
+        static _validateConflcits(config) {
+            if (config.restrictions.minDate && config.restrictions.maxDate) {
+                if (config.restrictions.minDate.isAfter(config.restrictions.maxDate)) {
+                    Namespace.ErrorMessages.conflictingConfiguration('minDate is after maxDate');
+                }
+                if (config.restrictions.maxDate.isBefore(config.restrictions.minDate)) {
+                    Namespace.ErrorMessages.conflictingConfiguration('maxDate is before minDate');
+                }
+            }
         }
     }
 
@@ -2998,7 +3102,7 @@
                 this.toggle();
             };
             if (!element) {
-                throw Namespace.ErrorMessages.mustProvideElement;
+                Namespace.ErrorMessages.mustProvideElement;
             }
             this._element = element;
             this._options = this._initializeOptions(options, DefaultOptions, true);
@@ -3108,7 +3212,7 @@
                 callBackArray = callbacks;
             }
             if (eventTypes.length !== callBackArray.length) {
-                throw Namespace.ErrorMessages.subscribeMismatch;
+                Namespace.ErrorMessages.subscribeMismatch;
             }
             const returnArray = [];
             for (let i = 0; i < eventTypes.length; i++) {
@@ -3209,6 +3313,7 @@
             config = OptionConverter._mergeOptions(config, mergeTo);
             if (includeDataset)
                 config = OptionConverter._dataToOptions(this._element, config);
+            OptionConverter._validateConflcits(config);
             config.viewDate = config.viewDate.setLocale(config.localization.locale);
             if (!this._viewDate.isSame(config.viewDate)) {
                 this._viewDate = config.viewDate;

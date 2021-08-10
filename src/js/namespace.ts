@@ -1,4 +1,4 @@
-import { ErrorMessages } from './errorMessages';
+import { ErrorMessages } from './errors';
 // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
 const NAME = 'tempus-dominus',
   version = '6.0.0-alpha1',
@@ -56,7 +56,7 @@ class Css {
   widget = `${NAME}-widget`;
 
   /**
-   * element for the action to change the calendar view. E.g. month -> year.
+   * The element for the action to change the calendar view. E.g. month -> year.
    */
   switch = 'picker-switch';
 
@@ -66,13 +66,12 @@ class Css {
   sideBySide = 'timepicker-sbs';
 
   /**
-   * element for the action to change the calendar view, e.g. August -> July
+   * The element for the action to change the calendar view, e.g. August -> July
    */
-
   previous = 'previous';
 
   /**
-   * element for the action to change the calendar view, e.g. August -> September
+   * The element for the action to change the calendar view, e.g. August -> September
    */
   next = 'next';
 
@@ -127,90 +126,92 @@ class Css {
   year = 'year';
 
   /**
-   * The outer most element for the
+   * The outer most element for the month view.
    */
   monthsContainer = `${this.dateContainer}-months`;
 
   /**
-   *
+   * Applied to elements within the month container, e.g. January, February
    */
   month = 'month';
 
   /**
-   * The outer most element for the
+   * The outer most element for the calendar view.
    */
   daysContainer = `${this.dateContainer}-days`;
 
   /**
-   *
+   * Applied to elements within the day container, e.g. 1, 2..31
    */
   day = 'day';
 
   /**
-   *
+   * If display.calendarWeeks is enabled, a column displaying the week of year
+   * is shown. This class is applied to each cell in that column.
    */
   calendarWeeks = 'cw';
 
   /**
-   *
+   * Applied to the first row of the calendar view, e.g. Sunday, Monday
    */
   dayOfTheWeek = 'dow';
 
   /**
-   *
+   * Applied to the current date on the calendar view.
    */
   today = 'today';
 
   /**
-   *
+   * Applied to the locale's weekend dates on the calendar view, e.g. Sunday, Saturday
    */
   weekend = 'weekend';
+
   //#endregion
 
   //#region time element
 
   /**
-   * The outer most element for the
+   * The outer most element for all time related elements.
    */
   timeContainer = 'time-container';
 
   /**
-   *
+   * Applied the separator columns between time elements, e.g. hour *:* minute *:* second
    */
   separator = 'separator';
 
   /**
-   * The outer most element for the
+   * The outer most element for the clock view.
    */
   clockContainer = `${this.timeContainer}-clock`;
 
   /**
-   * The outer most element for the
+   * The outer most element for the hours selection view.
    */
   hourContainer = `${this.timeContainer}-hour`;
 
   /**
-   * The outer most element for the
+   * The outer most element for the minutes selection view.
    */
   minuteContainer = `${this.timeContainer}-minute`;
 
   /**
-   * The outer most element for the
+   * The outer most element for the seconds selection view.
    */
   secondContainer = `${this.timeContainer}-second`;
 
   /**
-   *
+   * Applied to each element in the hours selection view.
    */
   hour = 'hour';
 
   /**
-   *
+   * Applied to each element in the minutes selection view.
    */
   minute = 'minute';
 
   /**
-   *
+   * Applied to each element in the seconds selection view.
    */
   second = 'second';
 
@@ -219,24 +220,25 @@ class Css {
   //#region collapse
 
   /**
-   *
+   * Applied the element of the current view mode, e.g. calendar or clock.
    */
   show = 'show';
 
   /**
-   *
+   * Applied to the currently showing view mode during a transition
+   * between calendar and clock views
    */
   collapsing = 'td-collapsing';
 
   /**
-   *
+   * Applied to the currently hidden view mode.
    */
   collapse = 'td-collapse';
 
   //#endregion
 
   /**
-   *
+   * Applied to the widget when the option display.inline is enabled.
    */
   inline = 'inline';
 }

@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-  <title>Functions - Tempus Dominus</title>
+  <title>Events - Tempus Dominus</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -15,14 +15,14 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 
-  <meta name="title" content="Functions">
+  <meta name="title" content="Events">
   <meta name="description" content="How to use Tempus Dominus datetime picker
   ">
 
   
   <meta property="og:type" content="article">
-  <meta property="og:url" content="$https://getdatepicker.com/docs/6/functions.html">
-  <meta property="og:title" content="Functions">
+  <meta property="og:url" content="$https://getdatepicker.com/docs/6/namespace\events.html">
+  <meta property="og:title" content="Events">
   <meta property="og:description" content="How to use Tempus Dominus datetime picker
   ">
   <meta class="metaImage" property="og:image" content="">
@@ -37,8 +37,8 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:site" content="@eonasdan">
   <meta property="twitter:creator" content="@eonasdan">
-  <meta property="twitter:url" content="$https://getdatepicker.com/docs/6/functions.html">
-  <meta property="twitter:title" content="Functions">
+  <meta property="twitter:url" content="$https://getdatepicker.com/docs/6/namespace\events.html">
+  <meta property="twitter:title" content="Events">
   <meta property="twitter:description" content="How to use Tempus Dominus datetime picker
   ">
   <meta class="metaImage" property="twitter:image" content="">
@@ -410,228 +410,75 @@
 <main class="bd-main order-1">
     <div class="bd-intro ps-lg-4">
         <div class="d-md-flex align-items-center justify-content-between">
-            <h1 class="bd-title title" id="content">Functions</h1>
+            <h1 class="bd-title title" id="content">Events</h1>
         </div>
     </div>
     <div id="mainContent" class="bd-content ps-lg-4">
   <section>
-    For the sake of the following documentation, assume there's a picker setup like this:
-    <pre>  <code class="language-javascript">
-const picker = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'));
-  </code>
-</pre>
-
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-6">
-          <label for="datetimepicker1Input" class="form-label">Simple picker</label>
-          <div class="input-group" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
-            <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1">
-            <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
-               <span class="fas fa-calendar"></span>
-             </span>
-          </div>
-        </div>
-        <script type="text/javascript">
-          const picker = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'));
-        </script>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2 id="dates">Dates
-      <a class="anchorjs-link" aria-label="Anchor" href="#dates"><i class="fas fa-anchor"></i></a>
-    </h2>
-    <div class="row">
-      <div class="col offset-1">
-        <h3 id="viewDate">Getting the View Date
-          <a class="anchorjs-link" aria-label="Anchor" href="#viewDate"><i class="fas fa-anchor"></i></a>
-        </h3>
-        <p>
-          <code>picker.viewDate</code> returns the pickers current view date.
-        </p>
-        <h4 id="picker.dates">picker.dates
-          <a class="anchorjs-link" aria-label="Anchor" href="#picker.dates"><i class="fas fa-anchor"></i></a>
-        </h4>
-        <p>
-          There are a number of function here that allow for retrieving the selected dates or adding to them.
-        </p>
-        <div class="col offset-1">
-          <h5 id="picked">picked
-            <a class="anchorjs-link" aria-label="Anchor" href="#picked"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns an array of <code>DateTime</code> of the selected date(s).
-          </p>
-          <h5 id="lastPicked">lastPicked
-            <a class="anchorjs-link" aria-label="Anchor" href="#lastPicked"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns the last picked <code>DateTime</code> of the selected date(s).
-          </p>
-          <h5 id="lastPickedIndex">lastPickedIndex
-            <a class="anchorjs-link" aria-label="Anchor" href="#lastPickedIndex"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns the length of picked dates -1 or 0 if none are selected.
-          </p>
-          <h5 id="datesAdd">add(DateTime)
-            <a class="anchorjs-link" aria-label="Anchor" href="#datesAdd"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Adds a new DateTime to selected dates array. Use this function with caution. It will not automatically
-            refresh
-            the
-            widget or do any validation.
-          </p>
-          <h5 id="isPicked">isPicked(DateTime, Unit?)
-            <a class="anchorjs-link" aria-label="Anchor" href="#isPicked"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns true if the target date is part of the selected dates array. If unit is provided then a granularity
-            to
-            that unit will be used.
-          </p>
-          <h5 id="pickedIndex">pickedIndex(DateTime, Unit?)
-            <a class="anchorjs-link" aria-label="Anchor" href="#pickedIndex"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns the index at which target date is in the array. This is used for updating or removing a date when
-            multi-date is used. If unit is provided then a granularity to that unit will be used.
-          </p>
-          <h5 id="dateClear">clear
-            <a class="anchorjs-link" aria-label="Anchor" href="#dateClear"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Clears all selected dates.
-          </p>
-          <p>
-            <strong>Emits</strong> <code>Namespace.Events.change</code> with the last picked date.
-          </p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <section>
-    <h2 id="updateOptions">updateOptions(object, boolean?)
-      <a class="anchorjs-link" aria-label="Anchor" href="#updateOptions"><i class="fas fa-anchor"></i></a>
-    </h2>
     <p>
-      In previous version there was a function to read/write to each of the provided options. This made it easy to use
-      but made the code bulky and harder to maintain. <code>updateOptions</code> replaces those functions and takes an
-      object of new options. This allows for multiple options to be set at the same time and works the same way as when
-      setting up the picker.
+      These events may provide additional details. For native javascript you can
+      get this data via <code>e.details.*</code>. For jQuery the details are directly in the event, e.g.
+      <code>e.date</code>
     </p>
     <p>
-      If the optional <code>reset</code> flag is provided then new options will be merged with the default values.
+      Each of these events inherit from the <code>BaseEvent</code> interface.
     </p>
-  </section>
-
-  <section>
-    <h2 id="display">Display
-      <a class="anchorjs-link" aria-label="Anchor" href="#display"><i class="fas fa-anchor"></i></a>
-    </h2>
-    <div class="row">
-      <div class="col offset-1">
-        <h3 id="toggle">toggle</h3>
-        <p>Shows or hides the widget</p>
-        <h4 id="emits">Emits</h4>
-        <ul>
-          <li>
-            <p><code>Namespace.Events.hide</code> - if the widget is hidden after the toggle call</p>
-          </li>
-          <li>
-            <p><code>Namespace.Events.show</code> - if the widget is show after the toggle call</p>
-          </li>
-          <li>
-            <p><code>Namespace.Events.change</code> - if the widget is opened for the first time and the input element
-              is
-              empty and <code>options.useCurrent != false</code></p>
-          </li>
-        </ul>
-
-        <h3 id="show">show
-          <a class="anchorjs-link" aria-label="Anchor" href="#show"><i class="fas fa-anchor"></i></a></h3>
-        <p>Shows the widget</p>
-        <h4>Emits</h4>
-        <ul>
-          <li>
-            <p><code>Namespace.Events.show</code> - if the widget was hidden before that call</p>
-          </li>
-          <li>
-            <p><code>Namespace.Events.change</code> - if the widget is opened for the first time and the
-              <code>useCurrent</code> is set to true or to a granularity value and the input element the component is
-              attached to has an empty value</p>
-          </li>
-        </ul>
-        <h3 id="hide">hide
-          <a class="anchorjs-link" aria-label="Anchor" href="#hide"><i class="fas fa-anchor"></i></a></h3>
-        <p>Hides the widget</p>
-        <h4>Emits</h4>
-        <ul>
-          <li><code>Namespace.Events.hide</code> - if the widget was visible before that call</li>
-        </ul>
-      </div>
-  </div></section>
-  <section>
-    <h2 id="dispose">dispose
-      <a class="anchorjs-link" aria-label="Anchor" href="#dispose"><i class="fas fa-anchor"></i></a></h2>
-    <p>Destroys the widget and removes all attached event listeners. If the picker is open it will be hidden and the
-      event fired.</p>
-  </section>
-  <section>
-    <h2 id="disable">disable
-      <a class="anchorjs-link" aria-label="Anchor" href="#disable"><i class="fas fa-anchor"></i></a></h2>
-    <p>Disables the input element and the component is attached to, by adding a <code>disabled="true"</code> attribute
-      to
-      it. If the widget was visible before that call it is hidden.</p>
-    <h3>Emits</h3>
-    <ul>
-      <li><code>Namespace.Events.hide</code> - if the widget was visible before this call</li>
-    </ul>
-  </section>
-  <section>
-    <h2 id="enable">enable
-      <a class="anchorjs-link" aria-label="Anchor" href="#enable"><i class="fas fa-anchor"></i></a></h2>
-    <p>Enables the input element and the component is attached to, by removing <code>disabled</code> attribute from it.
-    </p>
-  </section>
-  <section>
-    <h2 id="clear">clear
-      <a class="anchorjs-link" aria-label="Anchor" href="#clear"><i class="fas fa-anchor"></i></a></h2>
-    <p>Clears all selected dates. This is a short cut to <code>picker.dates.clear()</code></p>
-  </section>
-  <section>
-    <h2 id="subscribe">subscribe(event | events[], callback | callbacks[])
-      <a class="anchorjs-link" aria-label="Anchor" href="#subscribe"><i class="fas fa-anchor"></i></a></h2>
+    <pre>    <code class="language-javascript">
+interface BaseEvent {
+  type: string; //e.g. change.td
+}
+    </code>
+  </pre>
+    <h2 id="change">change.td <a class="anchorjs-link" aria-label="Anchor" href="#change"><i class="fas fa-anchor"></i></a></h2>
     <p>
-      Instead of adding event listeners to the pickers element, you can use the subscribe method. You can provide a
-      single event to listen for or an array of events. When providing an array the number of callbacks must be the
-      same as the number of events.
+      Emit when the date selection is changed.
     </p>
+    <pre>    <code class="language-javascript">
+interface ChangeEvent extends BaseEvent {
+  date: DateTime | undefined;
+  oldDate: DateTime;
+  isClear: boolean;
+  isValid: boolean;
+}
+    </code>
+  </pre>
+    <h2 id="update">update.td <a class="anchorjs-link" aria-label="Anchor" href="#update"><i class="fas fa-anchor"></i></a></h2>
     <p>
-      The subscribe method returns an unsubscribe method or an array of methods if multiple events are provided. Calling
-      unsubscribe remove the callback from the event listeners. Unsubscribing will not prevent
-      <code>addEventListener()</code> from working.
+      Emits when the view changes for example from month view to the year view.
     </p>
-    <pre>      <code class="language-javascript">
-const subscription = picker.subscribe(tempusdominus.Namespace.Events.change, (e) =&gt; {
-  console.log(e);
-});
-
-// event listener can be unsubscribed to:
-subscription.unsubscribe();
-
-//you can also provide multiple events:
-const subscriptions = picker.subscribe(
-        [tempusdominus.Namespace.Events.show,tempusdominus.Namespace.Events.hide],
-        [(e)=&gt; console.log(e), (e) =&gt; console.log(e)]
-)
-      </code>
-    </pre>
+    <pre>    <code class="language-javascript">
+interface ViewUpdateEvent extends BaseEvent {
+  change: Unit;
+  viewDate: DateTime;
+}
+    </code>
+  </pre>
+    <h2 id="error">error.td <a class="anchorjs-link" aria-label="Anchor" href="#error"><i class="fas fa-anchor"></i></a></h2>
+    <p>
+      Emits when a selected date or value from the input field fails to meet the provided validation rules.
+    </p>
+    <pre>    <code class="language-javascript">
+interface FailEvent extends BaseEvent {
+  reason: string;
+  date: DateTime;
+  oldDate: DateTime;
+}
+    </code>
+  </pre>
+    <h2 id="show">show.td <a class="anchorjs-link" aria-label="Anchor" href="#show"><i class="fas fa-anchor"></i></a></h2>
+    <p>
+      Emits when then picker widget is displayed.
+    </p>
+    <h2 id="hide">hide.td <a class="anchorjs-link" aria-label="Anchor" href="#hide"><i class="fas fa-anchor"></i></a></h2>
+    <p>
+      Emits when the picker widget is hidden.
+    </p>
+    <pre>    <code class="language-javascript">
+interface HideEvent extends BaseEvent {
+  date: DateTime;
+}
+    </code>
+  </pre>
   </section>
 </div>
 </main></div>

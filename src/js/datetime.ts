@@ -170,8 +170,8 @@ export class DateTime extends Date {
    * @param unit If provided, uses {@link startOf} for
    * comparision.
    */
-  isBefore(compare: DateTime, unit: Unit): boolean {
-    if (!unit) return this < compare;
+  isBefore(compare: DateTime, unit?: Unit): boolean {
+    if (!unit) return this.valueOf() < compare.valueOf();
     if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
     return (
       this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf()
@@ -184,8 +184,8 @@ export class DateTime extends Date {
    * @param unit If provided, uses {@link startOf} for
    * comparision.
    */
-  isAfter(compare: DateTime, unit: Unit): boolean {
-    if (!unit) return this > compare;
+  isAfter(compare: DateTime, unit?: Unit): boolean {
+    if (!unit) return this.valueOf() > compare.valueOf();
     if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
     return (
       this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf()
@@ -338,13 +338,15 @@ export class DateTime extends Date {
    * @param locale
    */
   meridiem(locale: string = this.locale): string {
+    /*
+    for some reason this stopped returning "AM/PM" and returned "in the morning"
     const dayPeriod = new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
       dayPeriod: 'narrow',
     } as any)
       .formatToParts(this)
-      .find((p) => p.type === 'dayPeriod')?.value;
-    return dayPeriod ? dayPeriod : this.getHours() <= 12 ? 'AM' : 'PM';
+      .find((p) => p.type === 'dayPeriod')?.value;*/
+    return this.hours <= 12 ? 'AM' : 'PM';
   }
 
   /**

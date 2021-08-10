@@ -350,7 +350,7 @@ export default class Display {
     }
 
     if (this._hasDate) {
-      if (this._context._options.display.collapse && this._hasTime) {
+      if (this._hasTime) {
         dateView.classList.add(Namespace.Css.collapse);
         if (this._context._options.display.viewMode !== 'clock')
           dateView.classList.add(Namespace.Css.show);
@@ -363,7 +363,7 @@ export default class Display {
     }
 
     if (this._hasTime) {
-      if (this._context._options.display.collapse && this._hasDate) {
+      if (this._hasDate) {
         timeView.classList.add(Namespace.Css.collapse);
         if (this._context._options.display.viewMode === 'clock')
           timeView.classList.add(Namespace.Css.show);
@@ -428,7 +428,6 @@ export default class Display {
     }
     if (
       !this._context._options.display.sideBySide &&
-      this._context._options.display.collapse &&
       this._hasDate &&
       this._hasTime
     ) {

@@ -18,15 +18,15 @@ export default interface Options {
     toolbarPlacement: 'top' | 'bottom' | 'default';
     components: {
       calendar: boolean;
-      clock: boolean;
       date: boolean;
-      century: boolean;
-      hours: boolean;
-      seconds: boolean;
       month: boolean;
       year: boolean;
-      minutes: boolean;
       decades: boolean;
+      century: boolean;
+      clock: boolean;
+      hours: boolean;
+      minutes: boolean;
+      seconds: boolean;
       useTwentyfourHour: boolean;
     };
     buttons: { today: boolean; close: boolean; clear: boolean };
@@ -44,7 +44,6 @@ export default interface Options {
       close: string;
     };
     viewMode: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
-    collapse: boolean;
     sideBySide: boolean;
     inputFormat: DateTimeFormatOptions;
     inline: boolean;
@@ -123,7 +122,7 @@ export class OptionConverter {
           if (dateTime !== undefined) {
             return dateTime;
           }
-          throw Namespace.ErrorMessages.typeMismatch(
+          Namespace.ErrorMessages.typeMismatch(
             'viewDate',
             providedType,
             'DateTime or Date'
@@ -137,7 +136,7 @@ export class OptionConverter {
           if (dateTime !== undefined) {
             return dateTime;
           }
-          throw Namespace.ErrorMessages.typeMismatch(
+          Namespace.ErrorMessages.typeMismatch(
             'restrictions.minDate',
             providedType,
             'DateTime or Date'
@@ -151,7 +150,7 @@ export class OptionConverter {
           if (dateTime !== undefined) {
             return dateTime;
           }
-          throw Namespace.ErrorMessages.typeMismatch(
+          Namespace.ErrorMessages.typeMismatch(
             'restrictions.maxDate',
             providedType,
             'DateTime or Date'
@@ -167,7 +166,7 @@ export class OptionConverter {
             providedType
           );
           if (value.filter((x) => x < 0 || x > 24).length > 0)
-            throw Namespace.ErrorMessages.numbersOutOfRage(
+            Namespace.ErrorMessages.numbersOutOfRage(
               'restrictions.disabledHours',
               0,
               23
@@ -183,7 +182,7 @@ export class OptionConverter {
             providedType
           );
           if (value.filter((x) => x < 0 || x > 24).length > 0)
-            throw Namespace.ErrorMessages.numbersOutOfRage(
+            Namespace.ErrorMessages.numbersOutOfRage(
               'restrictions.enabledHours',
               0,
               23
@@ -199,7 +198,7 @@ export class OptionConverter {
             providedType
           );
           if (value.filter((x) => x < 0 || x > 6).length > 0)
-            throw Namespace.ErrorMessages.numbersOutOfRage(
+            Namespace.ErrorMessages.numbersOutOfRage(
               'restrictions.daysOfWeekDisabled',
               0,
               6
@@ -230,7 +229,7 @@ export class OptionConverter {
             return [];
           }
           if (!Array.isArray(value)) {
-            throw Namespace.ErrorMessages.typeMismatch(
+            Namespace.ErrorMessages.typeMismatch(
               key,
               providedType,
               'array of { from: DateTime|Date, to: DateTime|Date }'
@@ -243,7 +242,7 @@ export class OptionConverter {
               let d = valueObject[i][vk];
               const dateTime = this._dateConversion(d, subOptionName);
               if (!dateTime) {
-                throw Namespace.ErrorMessages.typeMismatch(
+                Namespace.ErrorMessages.typeMismatch(
                   subOptionName,
                   typeof d,
                   'DateTime or Date'
@@ -271,7 +270,7 @@ export class OptionConverter {
           };
           const keyOptions = optionValues[key];
           if (!keyOptions.includes(value))
-            throw Namespace.ErrorMessages.unexpectedOptionString(
+            Namespace.ErrorMessages.unexpectedOptionValue(
               path.substring(1),
               value,
               keyOptions
@@ -293,7 +292,7 @@ export class OptionConverter {
             case 'function':
               return value;
             default:
-              throw Namespace.ErrorMessages.typeMismatch(
+              Namespace.ErrorMessages.typeMismatch(
                 path.substring(1),
                 providedType,
                 defaultType
@@ -323,7 +322,7 @@ export class OptionConverter {
           if (didYouMean) error += `Did you mean "${didYouMean}"?`;
           return error;
         });
-        throw Namespace.ErrorMessages.unexpectedOptions(errors);
+        Namespace.ErrorMessages.unexpectedOptions(errors);
       }
       Object.keys(mergeOption).forEach((key) => {
         const defaultOptionValue = mergeOption[key];
@@ -473,7 +472,7 @@ export class OptionConverter {
    */
   static _typeCheckDateArray(optionName: string, value, providedType: string) {
     if (!Array.isArray(value)) {
-      throw Namespace.ErrorMessages.typeMismatch(
+      Namespace.ErrorMessages.typeMismatch(
         optionName,
         providedType,
         'array of DateTime or Date'
@@ -483,7 +482,7 @@ export class OptionConverter {
       let d = value[i];
       const dateTime = this._dateConversion(d, optionName);
       if (!dateTime) {
-        throw Namespace.ErrorMessages.typeMismatch(
+        Namespace.ErrorMessages.typeMismatch(
           optionName,
           typeof d,
           'DateTime or Date'
@@ -505,7 +504,7 @@ export class OptionConverter {
     providedType: string
   ) {
     if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
-      throw Namespace.ErrorMessages.typeMismatch(
+      Namespace.ErrorMessages.typeMismatch(
         optionName,
         providedType,
         'array of numbers'
@@ -521,13 +520,13 @@ export class OptionConverter {
    */
   static _dateConversion(d: any, optionName: string) {
     if (typeof d === typeof '') {
-      console.warn(Namespace.ErrorMessages.dateString);
+      Namespace.ErrorMessages.dateString();
     }
 
     const converted = this._dateTypeCheck(d);
 
     if (!converted) {
-      throw Namespace.ErrorMessages.failedToParseDate(optionName, d);
+      Namespace.ErrorMessages.failedToParseDate(optionName, d);
     }
     return converted;
   }
@@ -541,5 +540,26 @@ export class OptionConverter {
         : pre.join('.');
 
     return deepKeys(DefaultOptions);
+  }
+
+  /**
+   * Some options conflict like min/max date. Verify that these kinds of options
+   * are set correctly.
+   * @param config
+   */
+  static _validateConflcits(config: Options) {
+    if (config.restrictions.minDate && config.restrictions.maxDate) {
+      if (config.restrictions.minDate.isAfter(config.restrictions.maxDate)) {
+        Namespace.ErrorMessages.conflictingConfiguration(
+          'minDate is after maxDate'
+        );
+      }
+
+      if (config.restrictions.maxDate.isBefore(config.restrictions.minDate)) {
+        Namespace.ErrorMessages.conflictingConfiguration(
+          'maxDate is before minDate'
+        );
+      }
+    }
   }
 }

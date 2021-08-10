@@ -36,7 +36,7 @@ class TempusDominus {
 
   constructor(element: HTMLElement, options: Options = {} as Options) {
     if (!element) {
-      throw Namespace.ErrorMessages.mustProvideElement;
+      Namespace.ErrorMessages.mustProvideElement;
     }
     this._element = element;
     this._options = this._initializeOptions(options, DefaultOptions, true);
@@ -156,7 +156,7 @@ class TempusDominus {
     }
 
     if (eventTypes.length !== callBackArray.length) {
-      throw Namespace.ErrorMessages.subscribeMismatch;
+      Namespace.ErrorMessages.subscribeMismatch;
     }
 
     const returnArray = [];
@@ -284,6 +284,8 @@ class TempusDominus {
     config = OptionConverter._mergeOptions(config, mergeTo);
     if (includeDataset)
       config = OptionConverter._dataToOptions(this._element, config);
+
+    OptionConverter._validateConflcits(config);
 
     config.viewDate = config.viewDate.setLocale(config.localization.locale);
 

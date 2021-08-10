@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-  <title>Functions - Tempus Dominus</title>
+  <title>Options - Tempus Dominus</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -15,14 +15,14 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 
-  <meta name="title" content="Functions">
+  <meta name="title" content="Options">
   <meta name="description" content="How to use Tempus Dominus datetime picker
   ">
 
   
   <meta property="og:type" content="article">
-  <meta property="og:url" content="$https://getdatepicker.com/docs/6/functions.html">
-  <meta property="og:title" content="Functions">
+  <meta property="og:url" content="$https://getdatepicker.com/docs/6/options.html">
+  <meta property="og:title" content="Options">
   <meta property="og:description" content="How to use Tempus Dominus datetime picker
   ">
   <meta class="metaImage" property="og:image" content="">
@@ -37,8 +37,8 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:site" content="@eonasdan">
   <meta property="twitter:creator" content="@eonasdan">
-  <meta property="twitter:url" content="$https://getdatepicker.com/docs/6/functions.html">
-  <meta property="twitter:title" content="Functions">
+  <meta property="twitter:url" content="$https://getdatepicker.com/docs/6/options.html">
+  <meta property="twitter:title" content="Options">
   <meta property="twitter:description" content="How to use Tempus Dominus datetime picker
   ">
   <meta class="metaImage" property="twitter:image" content="">
@@ -410,229 +410,712 @@
 <main class="bd-main order-1">
     <div class="bd-intro ps-lg-4">
         <div class="d-md-flex align-items-center justify-content-between">
-            <h1 class="bd-title title" id="content">Functions</h1>
+            <h1 class="bd-title title" id="content">Options</h1>
         </div>
     </div>
     <div id="mainContent" class="bd-content ps-lg-4">
-  <section>
-    For the sake of the following documentation, assume there's a picker setup like this:
-    <pre>  <code class="language-javascript">
-const picker = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'));
-  </code>
-</pre>
+  <p>
+    Options can be provided during the inital setup through the constructor <code>new tempusDominus.TempusDominus(...,
+    options);</code>. Take a look at the examples for more information.
+  </p>
+  <p>
+    Options can be updated through the <a href="functions.html#updateOptions"><code>updateOptions</code> function</a>.
+  </p>
+  <p>
+    All options will throw <a href="namespace/errors.html#typeMismatch">typeMismatch</a> if the
+    provided type
+    does not match the expected type, e.g. a string instead of a boolean.
+  </p>
+  <div class="alert alert-info">
+    While most of the date options accept string values it wil throw a warning. JavaScript's Date objects will be
+    converted
+    to the pickers <a href="datetime.html">DateTime object</a>.
+  </div>
 
+  <section>
     <div class="container">
       <div class="row">
-        <div class="col-sm-6">
-          <label for="datetimepicker1Input" class="form-label">Simple picker</label>
-          <div class="input-group" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
-            <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1">
-            <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
-               <span class="fas fa-calendar"></span>
-             </span>
-          </div>
+        <div class="col">
+          <h2 id="restrictions">restrictions<a class="anchorjs-link" aria-label="Anchor" href="#restrictions"><i class="fas fa-anchor"></i></a></h2>
         </div>
-        <script type="text/javascript">
-          const picker = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'));
-        </script>
+      </div>
+      <div class="row">
+        <div class="col offset-1">
+          <div>
+            <h3 id="restrictionsMinDate">minDate
+              <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsMinDate"><i class="fas fa-anchor"></i></a>
+            </h3>
+            <p>
+              <strong>Accepts:</strong> string, Date, DateTime | <strong>Defaults:</strong> undefined<br>
+              Prevents the user from selecting a date/time before this value. Set to <code>undefined</code> to remove
+              the
+              restriction.
+            </p>
+            <p>
+              Throws <a href="namespace/errors.html#conflictingConfiguration">conflictingConfiguration</a> if value is
+              after maxDate.
+            </p>
+          </div>
+          <div>
+            <h3 id="restrictionsMaxDate">maxDate <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsMaxDate"><i class="fas fa-anchor"></i></a></h3>
+            <p>
+              <strong>Accepts: string, Date, DateTime</strong><br>
+              Prevents the user from selecting a date/time after this value. Set to <code>undefined</code> to remove the
+              restriction.
+            </p>
+            <p>
+              Throws <a href="namespace/errors.html#conflictingConfiguration">conflictingConfiguration</a> if value is
+              after maxDate.
+            </p>
+          </div>
+          <h3 id="restrictionsEnabledDates">enabledDates/disabledDates
+            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsEnabledDates"><i class="fas fa-anchor"></i></a>
+          </h3>
+          <div>
+            <strong>Accepts an array of string, Date, DateTime</strong><br>
+            <div class="alert alert-warning">
+              Use one or the other, don't provide both enabledDates and disabledDates.
+            </div>
+          </div>
+          <div class="row">
+            <div class="col offset-1">
+              <h4>enabledDates</h4>
+              <p>
+                Allows the user to select only from the provided days. Setting this takes precedence over
+                options.minDate,
+                options.maxDate configuration.
+              </p>
+              <h4>disabledDates</h4>
+              <p>
+                Disallows the user to select any of the provided days. Setting this takes precedence over
+                options.minDate,
+                options.maxDate configuration.
+              </p>
+            </div>
+          </div>
+          <h3 id="restrictionsEnabledHours">enabledDates/disabledDates
+            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsEnabledHours"><i class="fas fa-anchor"></i></a>
+          </h3>
+          <div>
+            <strong>Accepts an array of number from 0-24</strong><br>
+            <div class="alert alert-warning">
+              Use one or the other, don't provide both enabledHours and disabledHours.
+            </div>
+            <p>
+              Throws <a href="namespace/errors.html#numbersOutOfRage">numbersOutOfRage</a> any value is not between 0-23
+            </p>
+          </div>
+          <div class="row">
+            <div class="col offset-1">
+              <h4>enabledHours</h4>
+              <p>
+                Allows the user to select only from the provided hours.
+              </p>
+              <h4>disabledHours</h4>
+              <p>
+                Disallows the user to select any of the provided hours.
+              </p>
+            </div>
+          </div>
+
+          <h3 id="restrictionsDisabledTimeIntervals">disabledTimeIntervals
+            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsDisabledTimeIntervals"><i class="fas fa-anchor"></i></a>
+          </h3>
+          <p>
+            <strong>Accepts an array of an object with from: DateTime, to: DateTime</strong><br>
+            Disables time selection between the given DateTimes.
+          </p>
+          <pre><code class="language-javascript">
+const later = new tempusDominus.DateTime();
+later.hours = 8;
+new tempusDominus.TempusDominus(..., {
+  restrictions: {
+    disabledTimeIntervals: [ { from: new tempusDominus.DateTime().startOf('date'), to: later}]
+  }
+});
+</code>
+          </pre>
+          <h3 id="restrictionsDaysOfWeekDisabled">daysOfWeekDisabled
+            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsDaysOfWeekDisabled"><i class="fas fa-anchor"></i></a>
+          </h3>
+          <p>
+            <strong>Accepts: array of numbers from 0-6</strong><br>
+            Disallow the user to select weekdays that exist in this array. This has lower priority over the
+            options.minDate, options.maxDate, options.disabledDates and options.enabledDates configuration settings.
+          </p>
+          <p>
+            Throws <a href="namespace/errors.html#numbersOutOfRage">numbersOutOfRage</a> any value is not between 0-6.
+          </p>
+        </div>
       </div>
     </div>
   </section>
-
   <section>
-    <h2 id="dates">Dates
-      <a class="anchorjs-link" aria-label="Anchor" href="#dates"><i class="fas fa-anchor"></i></a>
+    <h2 id="display">display<a class="anchorjs-link" aria-label="Anchor" href="#display"><i class="fas fa-anchor"></i></a>
     </h2>
+
     <div class="row">
       <div class="col offset-1">
-        <h3 id="viewDate">Getting the View Date
-          <a class="anchorjs-link" aria-label="Anchor" href="#viewDate"><i class="fas fa-anchor"></i></a>
+        <h3 id="displayToolbarPlacement">toolbarPlacement<a class="anchorjs-link" aria-label="Anchor" href="#displayToolbarPlacement"><i class="fas fa-anchor"></i></a></h3>
+        <div>
+          <p>
+            <strong>Accepts a string value. Valid values are 'default', 'top' and 'bottom'.</strong><br>
+            Changes the placement of the toolbar where the today, clear, component switch icon are located.
+          </p><p>
+          </p><p>
+            Throws <a href="namespace/errors.html#unexpectedOptionValue">unexpectedOptionValue</a> any value is not one
+            of the accepted values.
+          </p>
+        </div>
+
+        <h3 id="displayComponents">components<a class="anchorjs-link" aria-label="Anchor" href="#displayComponents"><i class="fas fa-anchor"></i></a></h3>
+
+        <div class="col offset-1">
+          <h4 id="displayComponentsCalendar">calendar<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsCalendar"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+            A convenience flag that can enable or disable all of the calendar components like date, month, year,
+            decades, century.
+            This flag must be true for any of the calendar components to be visible, even if those options are true.
+          </p><p>
+
+          </p><h4 id="displayComponentsDate">date<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsDate"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayComponentsMonth">month<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsMonth"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayComponentsYear">year<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsYear"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayComponentsDecades">decades<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsDecades"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayComponentsCentury">century<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsCentury"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayComponentsClock">clock<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsClock"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayComponentsHours">hours<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsHours"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayComponentsMinutes">minutes<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsMinutes"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayComponentsSeconds">seconds<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsSeconds"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayComponentsUseTwentyfourHour">useTwentyfourHour<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsUseTwentyfourHour"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+        </p></div>
+        <h3 id="displayButtons">buttons<a class="anchorjs-link" aria-label="Anchor" href="#displayButtons"><i class="fas fa-anchor"></i></a>
+        </h3>
+        <div class="col offset-1">
+          <h4 id="displayButtonsToday">today<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsToday"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayButtonsClose">close<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsClose"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayButtonsClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsClear"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts: true|false</strong><br>
+
+          </p><p>
+
+        </p></div>
+        <h3 id="displayCalendarWeeks">calendarWeeks<a class="anchorjs-link" aria-label="Anchor" href="#displayCalendarWeeks"><i class="fas fa-anchor"></i></a></h3>
+        <p>
+          <strong>Accepts: true|false</strong><br>
+
+        </p><p>
+
+        </p><h3 id="displayIcons">icons<a class="anchorjs-link" aria-label="Anchor" href="#displayIcons"><i class="fas fa-anchor"></i></a>
+        </h3>
+        <div class="col offset-1">
+          <h4 id="displayIconsDate">date<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsDate"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts:string</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayIconsNext">next<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsNext"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts:string</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayIconsPrevious">previous<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsPrevious"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts:string</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayIconsToday">today<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsToday"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts:string</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayIconsClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsClear"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts:string</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayIconsTime">time<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsTime"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts:string</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayIconsUp">up<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsUp"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts:string</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayIconsType">type<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsType"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts either </strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayIconsDown">down<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsDown"><i class="fas fa-anchor"></i></a></h4>
+          <p>
+            <strong>Accepts:string</strong><br>
+
+          </p><p>
+
+          </p><h4 id="displayIconsClose">close<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsClose"><i class="fas fa-anchor"></i></a>
+          </h4>
+          <p>
+            <strong>Accepts:string</strong><br>
+
+          </p><p>
+        </p></div>
+        <h3 id="displayViewMode">viewMode<a class="anchorjs-link" aria-label="Anchor" href="#displayViewMode"><i class="fas fa-anchor"></i></a></h3>
+        <p>
+          <strong>Accepts </strong><br>
+
+        </p><p>
+
+        </p><h3 id="displaySideBySide">sideBySide<a class="anchorjs-link" aria-label="Anchor" href="#displaySideBySide"><i class="fas fa-anchor"></i></a></h3>
+        <p>
+          <strong>Accepts </strong><br>
+
+        </p><p>
+
+        </p><h3 id="displayInputFormat">inputFormat<a class="anchorjs-link" aria-label="Anchor" href="#displayInputFormat"><i class="fas fa-anchor"></i></a></h3>
+        <p>
+          <strong>Accepts </strong><br>
+
+        </p><p>
+
+        </p><h3 id="displayInline">inline<a class="anchorjs-link" aria-label="Anchor" href="#displayInline"><i class="fas fa-anchor"></i></a>
         </h3>
         <p>
-          <code>picker.viewDate</code> returns the pickers current view date.
-        </p>
-        <h4 id="picker.dates">picker.dates
-          <a class="anchorjs-link" aria-label="Anchor" href="#picker.dates"><i class="fas fa-anchor"></i></a>
-        </h4>
-        <p>
-          There are a number of function here that allow for retrieving the selected dates or adding to them.
-        </p>
-        <div class="col offset-1">
-          <h5 id="picked">picked
-            <a class="anchorjs-link" aria-label="Anchor" href="#picked"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns an array of <code>DateTime</code> of the selected date(s).
-          </p>
-          <h5 id="lastPicked">lastPicked
-            <a class="anchorjs-link" aria-label="Anchor" href="#lastPicked"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns the last picked <code>DateTime</code> of the selected date(s).
-          </p>
-          <h5 id="lastPickedIndex">lastPickedIndex
-            <a class="anchorjs-link" aria-label="Anchor" href="#lastPickedIndex"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns the length of picked dates -1 or 0 if none are selected.
-          </p>
-          <h5 id="datesAdd">add(DateTime)
-            <a class="anchorjs-link" aria-label="Anchor" href="#datesAdd"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Adds a new DateTime to selected dates array. Use this function with caution. It will not automatically
-            refresh
-            the
-            widget or do any validation.
-          </p>
-          <h5 id="isPicked">isPicked(DateTime, Unit?)
-            <a class="anchorjs-link" aria-label="Anchor" href="#isPicked"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns true if the target date is part of the selected dates array. If unit is provided then a granularity
-            to
-            that unit will be used.
-          </p>
-          <h5 id="pickedIndex">pickedIndex(DateTime, Unit?)
-            <a class="anchorjs-link" aria-label="Anchor" href="#pickedIndex"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Returns the index at which target date is in the array. This is used for updating or removing a date when
-            multi-date is used. If unit is provided then a granularity to that unit will be used.
-          </p>
-          <h5 id="dateClear">clear
-            <a class="anchorjs-link" aria-label="Anchor" href="#dateClear"><i class="fas fa-anchor"></i></a>
-          </h5>
-          <p>
-            Clears all selected dates.
-          </p>
-          <p>
-            <strong>Emits</strong> <code>Namespace.Events.change</code> with the last picked date.
-          </p>
-        </div>
-      </div>
+          <strong>Accepts </strong><br>
+
+        </p><p>
+      </p></div>
     </div>
-
   </section>
+  <h2 id="stepping">stepping<a class="anchorjs-link" aria-label="Anchor" href="#stepping"><i class="fas fa-anchor"></i></a>
+  </h2>
+  <p>
+
+  </p>
+
+  <h2 id="useCurrent">useCurrent<a class="anchorjs-link" aria-label="Anchor" href="#useCurrent"><i class="fas fa-anchor"></i></a></h2>
+  <p>
+
+  </p>
+
+  <h2 id="defaultDate">defaultDate<a class="anchorjs-link" aria-label="Anchor" href="#defaultDate"><i class="fas fa-anchor"></i></a></h2>
+  <p>
+
+  </p>
 
   <section>
-    <h2 id="updateOptions">updateOptions(object, boolean?)
-      <a class="anchorjs-link" aria-label="Anchor" href="#updateOptions"><i class="fas fa-anchor"></i></a>
-    </h2>
+    <h2 id="localization">localization<a class="anchorjs-link" aria-label="Anchor" href="#localization"><i class="fas fa-anchor"></i></a></h2>
+
+    <h3 id="localizationNextMonth">nextMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextMonth"><i class="fas fa-anchor"></i></a></h3>
     <p>
-      In previous version there was a function to read/write to each of the provided options. This made it easy to use
-      but made the code bulky and harder to maintain. <code>updateOptions</code> replaces those functions and takes an
-      object of new options. This allows for multiple options to be set at the same time and works the same way as when
-      setting up the picker.
-    </p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationPickHour">pickHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickHour"><i class="fas fa-anchor"></i></a></h3>
     <p>
-      If the optional <code>reset</code> flag is provided then new options will be merged with the default values.
-    </p>
-  </section>
+      <strong>Accepts </strong><br>
 
-  <section>
-    <h2 id="display">Display
-      <a class="anchorjs-link" aria-label="Anchor" href="#display"><i class="fas fa-anchor"></i></a>
-    </h2>
-    <div class="row">
-      <div class="col offset-1">
-        <h3 id="toggle">toggle</h3>
-        <p>Shows or hides the widget</p>
-        <h4 id="emits">Emits</h4>
-        <ul>
-          <li>
-            <p><code>Namespace.Events.hide</code> - if the widget is hidden after the toggle call</p>
-          </li>
-          <li>
-            <p><code>Namespace.Events.show</code> - if the widget is show after the toggle call</p>
-          </li>
-          <li>
-            <p><code>Namespace.Events.change</code> - if the widget is opened for the first time and the input element
-              is
-              empty and <code>options.useCurrent != false</code></p>
-          </li>
-        </ul>
+    </p><p>
 
-        <h3 id="show">show
-          <a class="anchorjs-link" aria-label="Anchor" href="#show"><i class="fas fa-anchor"></i></a></h3>
-        <p>Shows the widget</p>
-        <h4>Emits</h4>
-        <ul>
-          <li>
-            <p><code>Namespace.Events.show</code> - if the widget was hidden before that call</p>
-          </li>
-          <li>
-            <p><code>Namespace.Events.change</code> - if the widget is opened for the first time and the
-              <code>useCurrent</code> is set to true or to a granularity value and the input element the component is
-              attached to has an empty value</p>
-          </li>
-        </ul>
-        <h3 id="hide">hide
-          <a class="anchorjs-link" aria-label="Anchor" href="#hide"><i class="fas fa-anchor"></i></a></h3>
-        <p>Hides the widget</p>
-        <h4>Emits</h4>
-        <ul>
-          <li><code>Namespace.Events.hide</code> - if the widget was visible before that call</li>
-        </ul>
-      </div>
-  </div></section>
-  <section>
-    <h2 id="dispose">dispose
-      <a class="anchorjs-link" aria-label="Anchor" href="#dispose"><i class="fas fa-anchor"></i></a></h2>
-    <p>Destroys the widget and removes all attached event listeners. If the picker is open it will be hidden and the
-      event fired.</p>
-  </section>
-  <section>
-    <h2 id="disable">disable
-      <a class="anchorjs-link" aria-label="Anchor" href="#disable"><i class="fas fa-anchor"></i></a></h2>
-    <p>Disables the input element and the component is attached to, by adding a <code>disabled="true"</code> attribute
-      to
-      it. If the widget was visible before that call it is hidden.</p>
-    <h3>Emits</h3>
-    <ul>
-      <li><code>Namespace.Events.hide</code> - if the widget was visible before this call</li>
-    </ul>
-  </section>
-  <section>
-    <h2 id="enable">enable
-      <a class="anchorjs-link" aria-label="Anchor" href="#enable"><i class="fas fa-anchor"></i></a></h2>
-    <p>Enables the input element and the component is attached to, by removing <code>disabled</code> attribute from it.
-    </p>
-  </section>
-  <section>
-    <h2 id="clear">clear
-      <a class="anchorjs-link" aria-label="Anchor" href="#clear"><i class="fas fa-anchor"></i></a></h2>
-    <p>Clears all selected dates. This is a short cut to <code>picker.dates.clear()</code></p>
-  </section>
-  <section>
-    <h2 id="subscribe">subscribe(event | events[], callback | callbacks[])
-      <a class="anchorjs-link" aria-label="Anchor" href="#subscribe"><i class="fas fa-anchor"></i></a></h2>
+    </p><h3 id="localizationIncrementSecond">incrementSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementSecond"><i class="fas fa-anchor"></i></a></h3>
     <p>
-      Instead of adding event listeners to the pickers element, you can use the subscribe method. You can provide a
-      single event to listen for or an array of events. When providing an array the number of callbacks must be the
-      same as the number of events.
-    </p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationNextDecade">nextDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextDecade"><i class="fas fa-anchor"></i></a></h3>
     <p>
-      The subscribe method returns an unsubscribe method or an array of methods if multiple events are provided. Calling
-      unsubscribe remove the callback from the event listeners. Unsubscribing will not prevent
-      <code>addEventListener()</code> from working.
-    </p>
-    <pre>      <code class="language-javascript">
-const subscription = picker.subscribe(tempusdominus.Namespace.Events.change, (e) =&gt; {
-  console.log(e);
-});
+      <strong>Accepts </strong><br>
 
-// event listener can be unsubscribed to:
-subscription.unsubscribe();
+    </p><p>
 
-//you can also provide multiple events:
-const subscriptions = picker.subscribe(
-        [tempusdominus.Namespace.Events.show,tempusdominus.Namespace.Events.hide],
-        [(e)=&gt; console.log(e), (e) =&gt; console.log(e)]
-)
-      </code>
-    </pre>
-  </section>
+    </p><h3 id="localizationSelectDecade">selectDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectDecade"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationDayViewHeaderFormat">dayViewHeaderFormat<a class="anchorjs-link" aria-label="Anchor" href="#localizationDayViewHeaderFormat"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationDecrementHour">decrementHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementHour"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationSelectDate">selectDate<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectDate"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationIncrementHour">incrementHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementHour"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationPreviousCentury">previousCentury<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousCentury"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationDecrementSecond">decrementSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementSecond"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationToday">today<a class="anchorjs-link" aria-label="Anchor" href="#localizationToday"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationPreviousMonth">previousMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousMonth"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationSelectYear">selectYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectYear"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationPickSecond">pickSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickSecond"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationNextCentury">nextCentury<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextCentury"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationClose">close<a class="anchorjs-link" aria-label="Anchor" href="#localizationClose"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationIncrementMinute">incrementMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementMinute"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationSelectTime">selectTime<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectTime"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#localizationClear"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationTogglePeriod">togglePeriod<a class="anchorjs-link" aria-label="Anchor" href="#localizationTogglePeriod"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationSelectMonth">selectMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectMonth"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationDecrementMinute">decrementMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementMinute"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationPickMinute">pickMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickMinute"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationNextYear">nextYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextYear"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationPreviousYear">previousYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousYear"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationPreviousDecade">previousDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousDecade"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="localizationLocale">locale<a class="anchorjs-link" aria-label="Anchor" href="#localizationLocale"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+  </p></section>
+  <h2 id="readonly">readonly<a class="anchorjs-link" aria-label="Anchor" href="#readonly"><i class="fas fa-anchor"></i></a>
+  </h2>
+  <p>
+
+  </p>
+
+  <h2 id="ignoreReadonly">ignoreReadonly<a class="anchorjs-link" aria-label="Anchor" href="#ignoreReadonly"><i class="fas fa-anchor"></i></a></h2>
+  <p>
+
+  </p>
+
+  <h2 id="keepOpen">keepOpen<a class="anchorjs-link" aria-label="Anchor" href="#keepOpen"><i class="fas fa-anchor"></i></a>
+  </h2>
+  <p>
+
+  </p>
+
+  <h2 id="focusOnShow">focusOnShow<a class="anchorjs-link" aria-label="Anchor" href="#focusOnShow"><i class="fas fa-anchor"></i></a></h2>
+  <p>
+
+  </p>
+
+  <h2 id="keepInvalid">keepInvalid<a class="anchorjs-link" aria-label="Anchor" href="#keepInvalid"><i class="fas fa-anchor"></i></a></h2>
+  <p>
+
+  </p>
+
+  <section>
+    <h2 id="keyBinds">keyBinds<a class="anchorjs-link" aria-label="Anchor" href="#keyBinds"><i class="fas fa-anchor"></i></a></h2>
+
+    <h3 id="keyBindsControlDown">'control down'<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsControlDown"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsPageDown">pageDown<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsPageDown"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsControlUp">'control up'<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsControlUp"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsRight">right<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsRight"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsPageUp">pageUp<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsPageUp"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsDown">down<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsDown"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsDelete">delete<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsDelete"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsT">t<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsT"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsLeft">left<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsLeft"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsUp">up<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsUp"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsEnter">enter<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsEnter"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsControlSpace">'control space'<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsControlSpace"><i class="fas fa-anchor"></i></a></h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+    </p><h3 id="keyBindsEscape">escape<a class="anchorjs-link" aria-label="Anchor" href="#keyBindsEscape"><i class="fas fa-anchor"></i></a>
+    </h3>
+    <p>
+      <strong>Accepts </strong><br>
+
+    </p><p>
+
+  </p></section>
+  <h2 id="debug">debug<a class="anchorjs-link" aria-label="Anchor" href="#debug"><i class="fas fa-anchor"></i></a></h2>
+  <p>
+
+  </p>
+
+  <h2 id="allowInputToggle">allowInputToggle<a class="anchorjs-link" aria-label="Anchor" href="#allowInputToggle"><i class="fas fa-anchor"></i></a></h2>
+  <p>
+
+  </p>
+
+  <h2 id="viewDate">viewDate<a class="anchorjs-link" aria-label="Anchor" href="#viewDate"><i class="fas fa-anchor"></i></a>
+  </h2>
+  <p>
+
+  </p>
+
+  <h2 id="multipleDates">multipleDates<a class="anchorjs-link" aria-label="Anchor" href="#multipleDates"><i class="fas fa-anchor"></i></a></h2>
+  <p>
+
+  </p>
+
+  <h2 id="multipleDatesSeparator">multipleDatesSeparator<a class="anchorjs-link" aria-label="Anchor" href="#multipleDatesSeparator"><i class="fas fa-anchor"></i></a>
+  </h2>
+  <p>
+
+  </p>
+
+  <h2 id="promptTimeOnDateChange">promptTimeOnDateChange<a class="anchorjs-link" aria-label="Anchor" href="#promptTimeOnDateChange"><i class="fas fa-anchor"></i></a>
+  </h2>
+  <p>
+
+  </p>
+
+  <h2 id="promptTimeOnDateChangeTransitionDelay">promptTimeOnDateChangeTransitionDelay<a class="anchorjs-link" aria-label="Anchor" href="#promptTimeOnDateChangeTransitionDelay"><i class="fas fa-anchor"></i></a></h2>
+  <p>
+
+  </p>
+
+
 </div>
 </main></div>
 

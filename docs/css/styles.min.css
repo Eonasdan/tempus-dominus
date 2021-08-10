@@ -12743,6 +12743,7 @@ textarea.form-control-lg {
 }
 
 .anchorjs-link {
+  font-size: 1.4rem;
   font-weight: 400;
   color: rgba(13, 110, 253, 0.5);
   transition: color 0.15s ease-in-out;

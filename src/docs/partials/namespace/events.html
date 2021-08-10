@@ -1,23 +1,6 @@
 <page-body>
   <section>
     <p>
-      Tempus Dominus uses and exposes a Namespace class for consistancy and easy reference.
-    </p>
-    <p>
-      These values are provide via <code>tempusDominus.Namespace</code>
-    </p>
-  </section>
-  <section>
-    <h2>NAME</h2>
-    <p>Returns <code>tempus-dominus</code></p>
-    <h2>version</h2>
-    <p>Returns the current version of the picker</p>
-    <h2>dataKey</h2>
-    <p>Returns <code>td</code>. This is used as a suffix for events e.g. <code>change.td</code></p>
-  </section>
-  <section>
-    <h2>Events</h2>
-    <p>
       These events may provide additional details. For native javascript you can
       get this data via <code>e.details.*</code>. For jQuery the details are directly in the event, e.g.
       <code>e.date</code>
@@ -32,7 +15,8 @@ interface BaseEvent {
 }
     </code>
   </pre>
-    <h3>change.td</h3>
+    <h2 id="change">change.td <a class='anchorjs-link ' aria-label='Anchor' href='#change'><i
+      class='fas fa-anchor'></i></a></h2>
     <p>
       Emit when the date selection is changed.
     </p>
@@ -46,7 +30,8 @@ interface ChangeEvent extends BaseEvent {
 }
     </code>
   </pre>
-    <h3>update.td</h3>
+    <h2 id="update">update.td <a class='anchorjs-link ' aria-label='Anchor' href='#update'><i
+      class='fas fa-anchor'></i></a></h2>
     <p>
       Emits when the view changes for example from month view to the year view.
     </p>
@@ -58,7 +43,8 @@ interface ViewUpdateEvent extends BaseEvent {
 }
     </code>
   </pre>
-    <h3>error.td</h3>
+    <h2 id="error">error.td <a class='anchorjs-link ' aria-label='Anchor' href='#error'><i
+      class='fas fa-anchor'></i></a></h2>
     <p>
       Emits when a selected date or value from the input field fails to meet the provided validation rules.
     </p>
@@ -71,11 +57,13 @@ interface FailEvent extends BaseEvent {
 }
     </code>
   </pre>
-    <h3>show.td</h3>
+    <h2 id="show">show.td <a class='anchorjs-link ' aria-label='Anchor' href='#show'><i
+      class='fas fa-anchor'></i></a></h2>
     <p>
       Emits when then picker widget is displayed.
     </p>
-    <h3>hide.td</h3>
+    <h2 id="hide">hide.td <a class='anchorjs-link ' aria-label='Anchor' href='#hide'><i
+      class='fas fa-anchor'></i></a></h2>
     <p>
       Emits when the picker widget is hidden.
     </p>
@@ -87,21 +75,10 @@ interface HideEvent extends BaseEvent {
     </code>
   </pre>
   </section>
-  <section>
-    <h2>Css</h2>
-    <p>
-      To ensure consitence, the picker makes use of typed css classes. You can use this class
-      to
-    </p>
-  </section>
-  <section>
-    <h2>ErrorMessages</h2>
-    <p>A class that provides Error Messages namespaces such as <code>change.td</code></p>
-  </section>
 </page-body>
 
 <page-meta>
-  <title>Namespace</title>
+  <title>Events</title>
   <post-date>07/08/2021</post-date>
   <update-date>07/08/2021</update-date>
   <excerpt>How to use Tempus Dominus datetime picker
