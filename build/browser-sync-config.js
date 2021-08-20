@@ -15,7 +15,7 @@ module.exports = {
   ui: false,
   files: ['docs/**.*'],
   watchEvents: ['change'],
-  watch: false,
+  watch: true,
   ignore: ['build'],
   single: false,
   watchOptions: {

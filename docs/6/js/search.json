@@ -36,6 +36,15 @@
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
+    "file": "test.html",
+    "title": "Examples",
+    "body": "inline new tempusdominus tempusdominus(document.getelementbyid('inlinepicker display true",
+    "postDate": "07/08/2021",
+    "updateDate": "07/08/2021",
+    "excerpt": "How to use Tempus Dominus datetime picker\n  ",
+    "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
+  },
+  {
     "file": "functions.html",
     "title": "Functions",
     "body": "for the sake of following documentation assume there's a picker setup like this const new tempusdominus tempusdominus(document.getelementbyid('datetimepicker simple tempusdominus.tempusdominus(document.getelementbyid('datetimepicker dates getting view date picker.viewdate returns pickers current picker.dates there are number function here that allow retrieving selected or adding to them picked an array datetime date(s lastpicked last lastpickedindex length if none add(datetime adds use with caution it will not automatically refresh widget do any validation ispicked(datetime unit true target is part provided then granularity be used pickedindex(datetime index at which in updating removing when multi-date clear clears all emits namespace.events.change updateoptions(object boolean previous version was read/write each options made easy but code bulky and harder maintain updateoptions replaces those functions takes object allows multiple set same time works way as setting up optional reset flag merged default values display toggle shows hides namespace.events.hide hidden after call namespace.events.show show opened first input element empty options.usecurrent false before usecurrent value component attached has hide visible dispose destroys removes event listeners open fired disable disables by disabled=\"true attribute enable enables disabled from short cut picker.dates.clear subscribe(event events callback callbacks instead you can subscribe method provide single listen providing must unsubscribe methods calling remove unsubscribing prevent addeventlistener working subscription picker.subscribe(tempusdominus.namespace.events.change e console.log(e listener unsubscribed subscription.unsubscribe also subscriptions picker.subscribe tempusdominus.namespace.events.show,tempusdominus.namespace.events.hide",

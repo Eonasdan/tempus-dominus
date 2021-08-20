@@ -485,7 +485,8 @@ export default class Display {
    */
   get _headTemplate(): HTMLElement {
     let div = document.createElement('div');
-    const headTemplate = document.createElement('thead');
+    const thead = document.createElement('thead');
+    const rowElement = document.createElement('tr');
     const previous = document.createElement('th');
     previous.classList.add(Namespace.Css.previous);
     previous.setAttribute('data-action', ActionTypes.previous);
@@ -493,7 +494,7 @@ export default class Display {
       this._iconTag(this._context._options.display.icons.previous)
     );
     previous.appendChild(div);
-    headTemplate.appendChild(previous);
+    rowElement.appendChild(previous);
 
     const switcher = document.createElement('th');
     switcher.classList.add(Namespace.Css.switch);
@@ -502,7 +503,7 @@ export default class Display {
       'colspan',
       this._context._options.display.calendarWeeks ? '6' : '5'
     );
-    headTemplate.appendChild(switcher);
+    rowElement.appendChild(switcher);
 
     const next = document.createElement('th');
     next.classList.add(Namespace.Css.next);
@@ -510,8 +511,9 @@ export default class Display {
     div = document.createElement('div');
     div.appendChild(this._iconTag(this._context._options.display.icons.next));
     next.appendChild(div);
-    headTemplate.appendChild(next);
-    return <HTMLElement>headTemplate.cloneNode(true);
+    rowElement.appendChild(next);
+    thead.appendChild(rowElement);
+    return <HTMLElement>thead.cloneNode(true);
   }
 
   /**

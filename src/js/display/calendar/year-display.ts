@@ -109,6 +109,7 @@ export default class YearDisplay {
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
+        containerClone.setAttribute('data-value', `${innerDate.year}`);
         containerClone.innerText = `${innerDate.year}`;
 
         innerDate.manipulate(1, Unit.year);

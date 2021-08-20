@@ -32,7 +32,7 @@ export default class MonthDisplay {
       'title',
       this._context._options.localization.selectYear
     );
-    switcher.setAttribute('colspan', '1');
+    switcher.setAttribute('colspan', '2');
     next
       .getElementsByTagName('div')[0]
       .setAttribute('title', this._context._options.localization.nextYear);
@@ -41,7 +41,7 @@ export default class MonthDisplay {
     const tableBody = document.createElement('tbody');
     let row = document.createElement('tr');
     for (let i = 0; i <= 12; i++) {
-      if (i !== 0 && i % 3 === 0) {
+      if (i !== 0 && i % 4 === 0) {
         tableBody.appendChild(row);
         row = document.createElement('tr');
       }
@@ -107,7 +107,7 @@ export default class MonthDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${index}`);
-        containerClone.innerText = `${innerDate.format({ month: 'long' })}`;
+        containerClone.innerText = `${innerDate.format({ month: 'short' })}`;
         innerDate.manipulate(1, Unit.month);
       });
   }

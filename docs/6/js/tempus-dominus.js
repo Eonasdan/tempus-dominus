@@ -1369,7 +1369,7 @@
                 .getElementsByTagName('div')[0]
                 .setAttribute('title', this._context._options.localization.previousYear);
             switcher.setAttribute('title', this._context._options.localization.selectYear);
-            switcher.setAttribute('colspan', '1');
+            switcher.setAttribute('colspan', '2');
             next
                 .getElementsByTagName('div')[0]
                 .setAttribute('title', this._context._options.localization.nextYear);
@@ -1377,7 +1377,7 @@
             const tableBody = document.createElement('tbody');
             let row = document.createElement('tr');
             for (let i = 0; i <= 12; i++) {
-                if (i !== 0 && i % 3 === 0) {
+                if (i !== 0 && i % 4 === 0) {
                     tableBody.appendChild(row);
                     row = document.createElement('tr');
                 }
@@ -1423,7 +1423,7 @@
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${index}`);
-                containerClone.innerText = `${innerDate.format({ month: 'long' })}`;
+                containerClone.innerText = `${innerDate.format({ month: 'short' })}`;
                 innerDate.manipulate(1, Unit.month);
             });
         }
@@ -1507,6 +1507,7 @@
                 }
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${innerDate.year}`);
                 containerClone.innerText = `${innerDate.year}`;
                 innerDate.manipulate(1, Unit.year);
             });
@@ -1778,7 +1779,10 @@
                 if (index === 0) {
                     containerClone.classList.add(Namespace.Css.old);
                     if (this._startDecade.year - 10 < 0) {
-                        containerClone.innerText = '&nbsp;';
+                        containerClone.textContent = ' ';
+                        previous.classList.add(Namespace.Css.disabled);
+                        containerClone.classList.add(Namespace.Css.disabled);
+                        containerClone.setAttribute('data-value', ``);
                         return;
                     }
                     else {
@@ -2570,26 +2574,28 @@
          */
         get _headTemplate() {
             let div = document.createElement('div');
-            const headTemplate = document.createElement('thead');
+            const thead = document.createElement('thead');
+            const rowElement = document.createElement('tr');
             const previous = document.createElement('th');
             previous.classList.add(Namespace.Css.previous);
             previous.setAttribute('data-action', ActionTypes.previous);
             div.appendChild(this._iconTag(this._context._options.display.icons.previous));
             previous.appendChild(div);
-            headTemplate.appendChild(previous);
+            rowElement.appendChild(previous);
             const switcher = document.createElement('th');
             switcher.classList.add(Namespace.Css.switch);
             switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
             switcher.setAttribute('colspan', this._context._options.display.calendarWeeks ? '6' : '5');
-            headTemplate.appendChild(switcher);
+            rowElement.appendChild(switcher);
             const next = document.createElement('th');
             next.classList.add(Namespace.Css.next);
             next.setAttribute('data-action', ActionTypes.next);
             div = document.createElement('div');
             div.appendChild(this._iconTag(this._context._options.display.icons.next));
             next.appendChild(div);
-            headTemplate.appendChild(next);
-            return headTemplate.cloneNode(true);
+            rowElement.appendChild(next);
+            thead.appendChild(rowElement);
+            return thead.cloneNode(true);
         }
         /**
          * Builds an icon tag as either an `<i>`

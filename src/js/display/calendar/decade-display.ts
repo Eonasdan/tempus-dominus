@@ -99,7 +99,13 @@ export default class DecadeDisplay {
       if (index === 0) {
         containerClone.classList.add(Namespace.Css.old);
         if (this._startDecade.year - 10 < 0) {
-          containerClone.innerText = '&nbsp;';
+          containerClone.textContent = ' ';
+          previous.classList.add(Namespace.Css.disabled);
+          containerClone.classList.add(Namespace.Css.disabled);
+          containerClone.setAttribute(
+            'data-value',
+            ``
+          );
           return;
         } else {
           containerClone.innerText = `${this._startDecade.year - 10}`;

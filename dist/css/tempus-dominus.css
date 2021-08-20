@@ -194,8 +194,9 @@ todo look at how bootstrap loops through their vars to make a --root section
   border-width: 0;
 }
 .tempus-dominus-widget table tr td, .tempus-dominus-widget table tr th {
+  padding: 0.3rem;
   text-align: center;
-  border-radius: 0.25rem;
+  border-radius: 999px;
 }
 .tempus-dominus-widget table tr th {
   height: 20px;
@@ -210,6 +211,12 @@ todo look at how bootstrap loops through their vars to make a --root section
   color: #6c757d;
   cursor: not-allowed;
 }
+.tempus-dominus-widget table tr th.previous {
+  text-align: start;
+}
+.tempus-dominus-widget table tr th.next {
+  text-align: end;
+}
 .tempus-dominus-widget table tr thead tr:first-child th:hover {
   background: #e9ecef;
 }
@@ -222,12 +229,18 @@ todo look at how bootstrap loops through their vars to make a --root section
   padding: 0.3rem;
 }
 .tempus-dominus-widget table tr td div {
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  width: 90%;
+  height: 90%;
+  padding: 5px 5px;
+  line-height: 1;
   margin-top: 2px;
   margin-bottom: 2px;
-  border-radius: 0.25rem;
+  border-radius: 999px;
+  top: 5%;
+  left: 5%;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 .tempus-dominus-widget table tr td div:hover {
   background: #e9ecef;

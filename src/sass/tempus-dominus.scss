@@ -1,7 +1,7 @@
 $td-timepicker-font-size: 1.2em !default;
 $td-active-bg: #0d6efd !default;
 $td-active-color: #fff !default;
-$td-border-radius: 0.25rem !default;
+$td-border-radius: 999px !default;
 $td-btn-hover-bg: #e9ecef !default;
 $td-disabled-color: #6c757d !default;
 $td-alternate-color: #6c757d !default;
@@ -256,6 +256,7 @@ todo look at how bootstrap loops through their vars to make a --root section
 
       & td,
       & th {
+        padding: .3rem;
         text-align: center;
         border-radius: $td-border-radius;
       }
@@ -275,6 +276,14 @@ todo look at how bootstrap loops through their vars to make a --root section
           color: $td-disabled-color;
           cursor: not-allowed;
         }
+
+        &.previous {
+          text-align: start;
+        }
+
+        &.next {
+          text-align: end;
+        }
       }
 
       & thead tr:first-child th {
@@ -292,12 +301,18 @@ todo look at how bootstrap loops through their vars to make a --root section
         padding: 0.3rem;
 
         div {
-          width: 20px;
-          height: 20px;
-          line-height: 20px;
+          width: 90%;
+          height: 90%;
+          padding: 5px 5px;
+          line-height: 1;
           margin-top: 2px;
           margin-bottom: 2px;
           border-radius: $td-border-radius;
+          top: 5%;
+          left: 5%;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
 
           &:hover {
             background: $td-btn-hover-bg;
