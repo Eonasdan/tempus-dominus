@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>v6</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+    />
+
+    <link href="tempus-dominus.css" rel="stylesheet" />
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"
+      integrity="sha512-g2PN+aYR0KupTVwea5Ppqw4bxWLLypWdd+h7E0ydT8zF+/Y2Qpk8Y1SnzVw6ZCVJPrgB/91s3VfhVhP7Y4+ucw=="
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+      integrity="sha512-RXf+QSDCUQs5uwRKaDoXt55jygZZm2V++WUZduaU/Ui/9EGp3f/2KZVahFZBKGH0s774sd3HmrhUy+SgOFQLVQ=="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="bg-dark">
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <div class="row">
+              <div class="col-12">
+                <label class="form-label">No input</label>
+                <br />
+                <span
+                  id="popcorn"
+                  class="text-light"
+                  style="display: inline-block"
+                >
+                  <i class="far fa-calendar fa-9x"></i>
+                </span>
+              </div>
+            </div>
+            <div class="row mt-5">
+              <label for="startTimeInputId" class="form-label">Test</label>
+              <div
+                class="input-group"
+                id="datetimepicker1"
+                data-target-input="nearest"
+                data-target-toggle="nearest"
+              >
+                <input
+                  id="startTimeInputId"
+                  type="text"
+                  class="form-control"
+                  data-target="#datetimepicker1"
+                />
+                <span
+                  class="input-group-text"
+                  data-target="#datetimepicker1"
+                  data-toggle="datetimepicker"
+                >
+                  <span class="far fa-calendar"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <button id="clearLog" type="button" class="btn btn-primary m-3">
+              Clear Log
+            </button>
+            <div id="log" style="max-height: 90vh; overflow-y: scroll"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <style>
+      /* these styles are here to keep the pickers off the edge of the screen */
+      .container {
+        width: 100%;
+        padding-right: 0.75rem;
+        padding-left: 0.75rem;
+        margin-right: auto;
+        margin-left: auto;
+        max-width: 80vh;
+      }
+      .row {
+        --bs-gutter-x: 1.5rem;
+        --bs-gutter-y: 0;
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: calc(var(--bs-gutter-y) * -1);
+        margin-right: calc(var(--bs-gutter-x) / -2);
+        margin-left: calc(var(--bs-gutter-x) / -2);
+      }
+      .col-6 {
+        flex: 0 0 auto;
+        width: 50%;
+      }
+      .mt-5 {
+        margin-top: 3rem !important;
+      }
+    </style>
+    <script src="tempus-dominus.js"></script>
+    <script>
+      let options = {
+        display: {
+          //viewMode: 'times',
+          // components: {
+          //     date: false,
+          //     century: false,
+          //     hours: true,
+          //     seconds: false,
+          //     month: false,
+          //     year: false,
+          //     minutes: true,
+          //     decades: false,
+          //     useTwentyfourHour: false
+          // },
+          components: {
+            useTwentyfourHour: false,
+            seconds: true,
+          },
+          //toolbarPlacement: 'top'
+        },
+        allowMultidate: true,
+      };
+
+      var dt = new tempusDominus.TempusDominus(
+        document.getElementById('popcorn'),
+        {
+          restrictions: {
+            //minDate: 'cheese',
+            //maxDate: '11/22/2013 00:53',
+            //maxDate: new Date(2021, 2 - 1, 10),
+            disabledDates: [
+              //moment("12/25/2013").toDate(),
+              new Date(2021, 2 - 1, 10),
+              //'11/22/2013 00:53',
+              //'cheese'
+            ],
+            enabledDates: null,
+          },
+          allowMultidate: true,
+        }
+      );
+
+      var dt2 = new tempusDominus.TempusDominus(
+        document.getElementById('datetimepicker1'),
+        options
+      );
+
+      /*dt.updateOptions({
+        restrictions : {
+            maxDate: '11/22/2013 00:53',
+        }
+    });*/
+
+      const log = document.getElementById('log');
+
+      document.getElementById('clearLog').addEventListener('click', () => {
+        log.innerHTML = '';
+      });
+
+      ['log', 'debug', 'info', 'warn', 'error'].forEach(function (verb) {
+        console[verb] = (function (method, verb, log) {
+          return function () {
+            method.apply(console, arguments);
+            const msg = document.createElement('div');
+            msg.classList.add('alert');
+            switch (verb) {
+              case 'log':
+                msg.classList.add('alert-light');
+                break;
+              case 'debug':
+                msg.classList.add('alert-secondary');
+                break;
+              case 'info':
+                msg.classList.add('alert-info');
+                break;
+              case 'warn':
+                msg.classList.add('alert-warning');
+                break;
+              case 'error':
+                msg.classList.add('alert-error');
+                break;
+            }
+            const pre = document.createElement('pre');
+            pre.innerHTML = Array.prototype.slice.call(arguments).join(' ');
+            msg.appendChild(pre);
+            log.appendChild(msg);
+          };
+        })(console[verb], verb, log);
+      });
+
+      [
+        'change',
+        'update',
+        'error',
+        'show',
+        'hide',
+        'blur',
+        'keyup',
+        'keydown',
+        'focus',
+        'click',
+      ].forEach((e) => {
+        document.getElementById('popcorn').addEventListener(e, () => {
+          console.log('event:', e);
+        });
+      });
+    </script>
+  </body>
+</html>

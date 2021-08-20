@@ -98,6 +98,7 @@ class Build {
     this.updateHomepage();
     this.minifyJs().then();
     this.updateDist();
+    this.copyAssets();
   }
 
   reset() {
@@ -110,7 +111,7 @@ class Build {
     return fs.readFileSync(`./src/docs/templates/${template}.html`, 'utf8');
   }
 
-  directoryWalk(directory) {
+  directoryWalk(directory, extension = '.html') {
     let files = [];
     fs.readdirSync(directory)
       .map((x) => {
@@ -124,7 +125,7 @@ class Build {
         );
       })
       .filter(
-        (x) => path.extname(x.file).toLowerCase() === '.html' || x.isDirectory
+        (x) => path.extname(x.file).toLowerCase() === extension || x.isDirectory
       )
       .forEach((x) => {
         if (x.isDirectory) {
@@ -254,7 +255,7 @@ class Build {
          const fullyQualifiedUrl = `${siteConfig.root}/${siteConfig.output}/${file}`;
       const fullPath = `./src/docs/partials/${file}`;
          */
-        const fullyQualifiedUrl = `$${siteConfig.root}/${siteConfig.output}/${fileInformation.relativePath}`;
+        const fullyQualifiedUrl = `${siteConfig.root}/${siteConfig.output}/${fileInformation.relativePath}`;
         const fullPath = fileInformation.fullPath;
         const newPageDocument = new JSDOM(this.pageTemplate).window.document;
         const postDocument = new JSDOM(fs.readFileSync(fullPath, 'utf8')).window
@@ -412,6 +413,7 @@ class Build {
     this.updateHomepage();
     this.cleanCss();
     this.updateDist();
+    this.copyAssets();
   }
 
   updateHomepage() {
@@ -568,6 +570,32 @@ ${this.siteMap}
     this.copyDirectory('./dist/js', `./${siteConfig.output}/js`);
     this.copyDirectory('./dist/css', `./${siteConfig.output}/css`);
   }
+
+  /**
+   * This is to copy files that don't belong to another process like images
+   * and unthemed paged
+   */
+  copyAssets() {
+    [
+      {
+        source: './src/docs/assets/no-styles.html',
+        destination: './docs/6/examples/no-styles.html',
+      },
+    ].forEach((file) => {
+      fs.mkdirSync(path.dirname(file.destination), { recursive: true });
+      fs.copyFileSync(file.source, file.destination);
+    });
+
+    fs.mkdirSync('./docs/6/images', { recursive: true });
+    this.directoryWalk('./src/docs/assets', '.png').forEach(
+      (fileInformation) => {
+        fs.copyFileSync(
+          fileInformation.fullPath,
+          `./docs/6/images/${fileInformation.file}`
+        );
+      }
+    );
+  }
 }
 
 const formatter = new Intl.DateTimeFormat(undefined, {
@@ -621,6 +649,9 @@ if (process.argv.slice(2)[0] === '--watch') {
     try {
       if (path.startsWith('dist')) {
         builder.updateDist();
+      }
+      if (path.startsWith('src\\docs\\assets')) {
+        this.copyAssets();
       }
       if (path.startsWith('src\\docs\\partials')) {
         //reading the file stats seems to trigger this twice, so if the same file changed in less then a second, ignore

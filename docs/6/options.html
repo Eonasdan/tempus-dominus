@@ -21,7 +21,7 @@
 
   
   <meta property="og:type" content="article">
-  <meta property="og:url" content="$https://getdatepicker.com/docs/6/options.html">
+  <meta property="og:url" content="https://getdatepicker.com/docs/6/options.html">
   <meta property="og:title" content="Options">
   <meta property="og:description" content="How to use Tempus Dominus datetime picker
   ">
@@ -37,7 +37,7 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:site" content="@eonasdan">
   <meta property="twitter:creator" content="@eonasdan">
-  <meta property="twitter:url" content="$https://getdatepicker.com/docs/6/options.html">
+  <meta property="twitter:url" content="https://getdatepicker.com/docs/6/options.html">
   <meta property="twitter:title" content="Options">
   <meta property="twitter:description" content="How to use Tempus Dominus datetime picker
   ">
@@ -582,13 +582,16 @@ new tempusDominus.TempusDominus(..., {
           </p><h4 id="displayComponentsDate">date<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsDate"><i class="fas fa-anchor"></i></a></h4>
           <p>
             <strong>Accepts: true|false</strong><br>
-
+            <img src="images/calendar-view.png" class="img-fluid img-thumbnail d-block" alt="Date View">
+            Turns on or off the date view. If option is false the user would only be able to select month and year
+            for instance.
           </p><p>
 
           </p><h4 id="displayComponentsMonth">month<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsMonth"><i class="fas fa-anchor"></i></a>
           </h4>
           <p>
             <strong>Accepts: true|false</strong><br>
+          Turns on or off the month selection view.
 
           </p><p>
 
@@ -616,7 +619,9 @@ new tempusDominus.TempusDominus(..., {
           </h4>
           <p>
             <strong>Accepts: true|false</strong><br>
-
+            A convenience flag that can enable or disable all of the calendar components like date, month, year,
+            decades, century.
+            This flag must be true for any of the calendar components to be visible, even if those options are true.
           </p><p>
 
           </p><h4 id="displayComponentsHours">hours<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsHours"><i class="fas fa-anchor"></i></a>

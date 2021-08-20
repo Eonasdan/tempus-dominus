@@ -282,6 +282,61 @@ todo look at how bootstrap loops through their vars to make a --root section
   bottom: 4px;
   right: 4px;
 }
+.tempus-dominus-widget .monthGrid div, .tempus-dominus-widget .dayGrid div {
+  width: 90%;
+  height: 90%;
+  padding: 5px 5px;
+  line-height: 1;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-radius: 999px;
+  top: 5%;
+  left: 5%;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  display: grid;
+}
+.tempus-dominus-widget .monthGrid div:hover, .tempus-dominus-widget .dayGrid div:hover {
+  background: #e9ecef;
+}
+.tempus-dominus-widget .monthGrid div.active, .tempus-dominus-widget .dayGrid div.active {
+  background-color: #0d6efd;
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.tempus-dominus-widget .monthGrid div.active.today:before, .tempus-dominus-widget .dayGrid div.active.today:before {
+  border-bottom-color: #fff;
+}
+.tempus-dominus-widget .monthGrid div.old, .tempus-dominus-widget .monthGrid div.new, .tempus-dominus-widget .dayGrid div.old, .tempus-dominus-widget .dayGrid div.new {
+  color: #6c757d;
+}
+.tempus-dominus-widget .monthGrid div.disabled, .tempus-dominus-widget .monthGrid div.disabled:hover, .tempus-dominus-widget .dayGrid div.disabled, .tempus-dominus-widget .dayGrid div.disabled:hover {
+  background: none;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+.tempus-dominus-widget .monthGrid div.cw, .tempus-dominus-widget .dayGrid div.cw {
+  font-size: 0.8em;
+  height: 20px;
+  line-height: 20px;
+  color: #6c757d;
+  cursor: default;
+}
+.tempus-dominus-widget .monthGrid div.today, .tempus-dominus-widget .dayGrid div.today {
+  position: relative;
+}
+.tempus-dominus-widget .monthGrid div.today:before, .tempus-dominus-widget .dayGrid div.today:before {
+  content: "";
+  display: inline-block;
+  border: solid transparent;
+  border-width: 0 0 7px 7px;
+  border-bottom-color: #0d6efd;
+  border-top-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+}
 .tempus-dominus-widget .time-container {
   margin-bottom: 0.5rem;
 }

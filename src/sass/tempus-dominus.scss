@@ -371,6 +371,77 @@ todo look at how bootstrap loops through their vars to make a --root section
     }
   }
 
+  .monthGrid, .dayGrid {
+    div {
+      width: 90%;
+      height: 90%;
+      padding: 5px 5px;
+      line-height: 1;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      border-radius: $td-border-radius;
+      top: 5%;
+      left: 5%;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      display: grid;
+
+      &:hover {
+        background: $td-btn-hover-bg;
+      }
+
+      &.active {
+        background-color: $td-active-bg;
+        color: $td-active-color;
+        text-shadow: $td-text-shadow;
+      }
+
+      &.active.today:before {
+        border-bottom-color: #fff;
+      }
+
+      &.old,
+      &.new {
+        color: $td-alternate-color;
+      }
+
+      &.disabled,
+      &.disabled:hover {
+        background: none;
+        color: $td-disabled-color;
+        cursor: not-allowed;
+      }
+
+      &.cw {
+        font-size: 0.8em;
+        height: 20px;
+        line-height: 20px;
+        color: $td-alternate-color;
+        cursor: default;
+      }
+
+      &.day {
+      }
+
+      &.today {
+        position: relative;
+
+        &:before {
+          content: '';
+          display: inline-block;
+          border: solid transparent;
+          border-width: 0 0 7px 7px;
+          border-bottom-color: $td-active-bg;
+          border-top-color: $td-secondary-border-color-rgba;
+          position: absolute;
+          bottom: 4px;
+          right: 4px;
+        }
+      }
+    }
+  }
+
   .time-container {
     margin-bottom: 0.5rem;
   }
