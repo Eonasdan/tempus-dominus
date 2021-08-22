@@ -21,39 +21,11 @@ export default class MonthDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.monthsContainer);
 
-    const table = document.createElement('table');
-    const headTemplate = this._context._display._headTemplate;
-    const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-
-    previous
-      .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context._options.localization.previousYear);
-    switcher.setAttribute(
-      'title',
-      this._context._options.localization.selectYear
-    );
-    switcher.setAttribute('colspan', '2');
-    next
-      .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context._options.localization.nextYear);
-
-    table.appendChild(headTemplate);
-    const tableBody = document.createElement('tbody');
-    let row = document.createElement('tr');
-    for (let i = 0; i <= 12; i++) {
-      if (i !== 0 && i % 4 === 0) {
-        tableBody.appendChild(row);
-        row = document.createElement('tr');
-      }
-      const td = document.createElement('td');
+    for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectMonth);
-      td.appendChild(div);
-      row.appendChild(td);
+      container.appendChild(div);
     }
-
-    table.appendChild(tableBody);
-    container.appendChild(table);
 
     return container;
   }
@@ -66,9 +38,9 @@ export default class MonthDisplay {
     const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.monthsContainer
     )[0];
-    const [previous, switcher, next] = container
-      .getElementsByTagName('thead')[0]
-      .getElementsByTagName('th');
+    const [previous, switcher, next] = container.parentElement
+      .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+      .getElementsByTagName('div');
 
     switcher.innerText = this._context._viewDate.format({ year: 'numeric' });
 
@@ -89,7 +61,7 @@ export default class MonthDisplay {
     let innerDate = this._context._viewDate.clone.startOf(Unit.year);
 
     container
-      .querySelectorAll('tbody td div')
+      .querySelectorAll(`[data-action="${ActionTypes.selectMonth}"]`)
       .forEach((containerClone: HTMLElement, index) => {
         let classes = [];
         classes.push(Namespace.Css.month);

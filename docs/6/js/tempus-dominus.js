@@ -545,9 +545,21 @@
              */
             this.widget = `${NAME}-widget`;
             /**
+             * Hold the previous, next and switcher divs
+             */
+            this.calendarHeader = 'calendar-header';
+            /**
              * The element for the action to change the calendar view. E.g. month -> year.
              */
             this.switch = 'picker-switch';
+            /**
+             * The elements for all of the toolbar options
+             */
+            this.toolbar = 'toolbar';
+            /**
+             * Disables the hover and rounding affect.
+             */
+            this.noHighlight = 'no-highlight';
             /**
              * Applied to the widget element when the side by side option is in use.
              */
@@ -992,7 +1004,7 @@
                         this._context._viewDate.manipulate(step, unit);
                     else
                         this._context._viewDate.manipulate(step * -1, unit);
-                    this._context._display._update('calendar');
+                    this._context._display._showMode();
                     this._context._viewUpdate(unit);
                     break;
                 case ActionTypes.pickerSwitch:
@@ -1124,7 +1136,7 @@
                         this._context._options.localization.selectDate) {
                         currentTarget.setAttribute('title', this._context._options.localization.selectTime);
                         currentTarget.innerHTML = this._context._display._iconTag(this._context._options.display.icons.time).outerHTML;
-                        this._context._display._update('calendar');
+                        this._context._display._showMode();
                     }
                     else {
                         currentTarget.setAttribute('title', this._context._options.localization.selectDate);
@@ -1159,7 +1171,7 @@
                             this._context._display._update(Unit.seconds);
                             break;
                     }
-                    (this._context._display.widget.getElementsByClassName(classToUse)[0]).style.display = 'block';
+                    (this._context._display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
                     break;
                 case ActionTypes.clear:
                     this._context.dates._setValue(null);
@@ -1219,47 +1231,24 @@
         get _picker() {
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.daysContainer);
-            const table = document.createElement('table');
-            const headTemplate = this._context._display._headTemplate;
-            const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-            previous
-                .getElementsByTagName('div')[0]
-                .setAttribute('title', this._context._options.localization.previousMonth);
-            switcher.setAttribute('title', this._context._options.localization.selectMonth);
-            next
-                .getElementsByTagName('div')[0]
-                .setAttribute('title', this._context._options.localization.nextMonth);
-            table.appendChild(headTemplate);
-            const tableBody = document.createElement('tbody');
-            tableBody.appendChild(this._daysOfTheWeek());
-            let row = document.createElement('tr');
+            container.append(...this._daysOfTheWeek());
             if (this._context._options.display.calendarWeeks) {
-                const td = document.createElement('td');
                 const div = document.createElement('div');
-                div.classList.add(Namespace.Css.calendarWeeks);
-                td.appendChild(div);
-                row.appendChild(td);
+                div.classList.add(Namespace.Css.calendarWeeks, Namespace.Css.noHighlight);
+                container.appendChild(div);
             }
-            for (let i = 0; i <= 42; i++) {
+            for (let i = 0; i < 42; i++) {
                 if (i !== 0 && i % 7 === 0) {
-                    tableBody.appendChild(row);
-                    row = document.createElement('tr');
                     if (this._context._options.display.calendarWeeks) {
-                        const td = document.createElement('td');
                         const div = document.createElement('div');
-                        div.classList.add(Namespace.Css.calendarWeeks);
-                        td.appendChild(div);
-                        row.appendChild(td);
+                        div.classList.add(Namespace.Css.calendarWeeks, Namespace.Css.noHighlight);
+                        container.appendChild(div);
                     }
                 }
-                const td = document.createElement('td');
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.selectDay);
-                td.appendChild(div);
-                row.appendChild(td);
+                container.appendChild(div);
             }
-            table.appendChild(tableBody);
-            container.appendChild(table);
             return container;
         }
         /**
@@ -1268,9 +1257,9 @@
          */
         _update() {
             const container = this._context._display.widget.getElementsByClassName(Namespace.Css.daysContainer)[0];
-            const [previous, switcher, next] = container
-                .getElementsByTagName('thead')[0]
-                .getElementsByTagName('th');
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+                .getElementsByTagName('div');
             switcher.innerText = this._context._viewDate.format({
                 month: this._context._options.localization.dayViewHeaderFormat,
             });
@@ -1285,10 +1274,12 @@
                 .startOf('weekDay')
                 .manipulate(12, Unit.hours);
             container
-                .querySelectorAll('tbody td div')
+                .querySelectorAll(`[data-action="${ActionTypes.selectDay}"], .${Namespace.Css.calendarWeeks}`)
                 .forEach((containerClone, index) => {
                 if (this._context._options.display.calendarWeeks &&
                     containerClone.classList.contains(Namespace.Css.calendarWeeks)) {
+                    if (containerClone.innerText === '#')
+                        return;
                     containerClone.innerText = `${innerDate.week}`;
                     return;
                 }
@@ -1328,21 +1319,20 @@
             let innerDate = this._context._viewDate.clone
                 .startOf('weekDay')
                 .startOf(Unit.date);
-            const row = document.createElement('tr');
+            const row = [];
+            document.createElement('div');
             if (this._context._options.display.calendarWeeks) {
-                const th = document.createElement('th');
-                th.classList.add(Namespace.Css.calendarWeeks);
-                th.innerText = '#';
-                row.appendChild(th);
+                const htmlDivElement = document.createElement('div');
+                htmlDivElement.classList.add(Namespace.Css.calendarWeeks, Namespace.Css.noHighlight);
+                htmlDivElement.innerText = '#';
+                row.push(htmlDivElement);
             }
-            let i = 0;
-            while (i < 7) {
-                const th = document.createElement('th');
-                th.classList.add(Namespace.Css.dayOfTheWeek);
-                th.innerText = innerDate.format({ weekday: 'short' });
+            for (let i = 0; i < 7; i++) {
+                const htmlDivElement = document.createElement('div');
+                htmlDivElement.classList.add(Namespace.Css.dayOfTheWeek);
+                htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
                 innerDate.manipulate(1, Unit.date);
-                row.appendChild(th);
-                i++;
+                row.push(htmlDivElement);
             }
             return row;
         }
@@ -1362,33 +1352,11 @@
         get _picker() {
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.monthsContainer);
-            const table = document.createElement('table');
-            const headTemplate = this._context._display._headTemplate;
-            const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-            previous
-                .getElementsByTagName('div')[0]
-                .setAttribute('title', this._context._options.localization.previousYear);
-            switcher.setAttribute('title', this._context._options.localization.selectYear);
-            switcher.setAttribute('colspan', '2');
-            next
-                .getElementsByTagName('div')[0]
-                .setAttribute('title', this._context._options.localization.nextYear);
-            table.appendChild(headTemplate);
-            const tableBody = document.createElement('tbody');
-            let row = document.createElement('tr');
-            for (let i = 0; i <= 12; i++) {
-                if (i !== 0 && i % 4 === 0) {
-                    tableBody.appendChild(row);
-                    row = document.createElement('tr');
-                }
-                const td = document.createElement('td');
+            for (let i = 0; i < 12; i++) {
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.selectMonth);
-                td.appendChild(div);
-                row.appendChild(td);
+                container.appendChild(div);
             }
-            table.appendChild(tableBody);
-            container.appendChild(table);
             return container;
         }
         /**
@@ -1397,9 +1365,9 @@
          */
         _update() {
             const container = this._context._display.widget.getElementsByClassName(Namespace.Css.monthsContainer)[0];
-            const [previous, switcher, next] = container
-                .getElementsByTagName('thead')[0]
-                .getElementsByTagName('th');
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+                .getElementsByTagName('div');
             switcher.innerText = this._context._viewDate.format({ year: 'numeric' });
             this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.year), Unit.year)
                 ? previous.classList.remove(Namespace.Css.disabled)
@@ -1409,7 +1377,7 @@
                 : next.classList.add(Namespace.Css.disabled);
             let innerDate = this._context._viewDate.clone.startOf(Unit.year);
             container
-                .querySelectorAll('tbody td div')
+                .querySelectorAll(`[data-action="${ActionTypes.selectMonth}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.Css.month);
@@ -1425,91 +1393,6 @@
                 containerClone.setAttribute('data-value', `${index}`);
                 containerClone.innerText = `${innerDate.format({ month: 'short' })}`;
                 innerDate.manipulate(1, Unit.month);
-            });
-        }
-    }
-
-    /**
-     * Creates and updates the grid for `year`
-     */
-    class YearDisplay {
-        constructor(context) {
-            this._context = context;
-            this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
-            this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
-        }
-        /**
-         * Build the container html for the display
-         * @private
-         */
-        get _picker() {
-            const container = document.createElement('div');
-            container.classList.add(Namespace.Css.yearsContainer);
-            const table = document.createElement('table');
-            const headTemplate = this._context._display._headTemplate;
-            const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-            previous
-                .getElementsByTagName('div')[0]
-                .setAttribute('title', this._context._options.localization.previousDecade);
-            switcher.setAttribute('title', this._context._options.localization.selectDecade);
-            switcher.setAttribute('colspan', '1');
-            next
-                .getElementsByTagName('div')[0]
-                .setAttribute('title', this._context._options.localization.nextDecade);
-            table.appendChild(headTemplate);
-            const tableBody = document.createElement('tbody');
-            let row = document.createElement('tr');
-            for (let i = 0; i <= 12; i++) {
-                if (i !== 0 && i % 3 === 0) {
-                    tableBody.appendChild(row);
-                    row = document.createElement('tr');
-                }
-                const td = document.createElement('td');
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.selectYear);
-                td.appendChild(div);
-                row.appendChild(td);
-            }
-            table.appendChild(tableBody);
-            container.appendChild(table);
-            return container;
-        }
-        /**
-         * Populates the grid and updates enabled states
-         * @private
-         */
-        _update() {
-            const container = this._context._display.widget.getElementsByClassName(Namespace.Css.yearsContainer)[0];
-            const [previous, switcher, next] = container
-                .getElementsByTagName('thead')[0]
-                .getElementsByTagName('th');
-            switcher.innerText = `${this._startYear.year}-${this._endYear.year}`;
-            this._context._validation.isValid(this._startYear, Unit.year)
-                ? previous.classList.remove(Namespace.Css.disabled)
-                : previous.classList.add(Namespace.Css.disabled);
-            this._context._validation.isValid(this._endYear, Unit.year)
-                ? next.classList.remove(Namespace.Css.disabled)
-                : next.classList.add(Namespace.Css.disabled);
-            let innerDate = this._context._viewDate.clone
-                .startOf(Unit.year)
-                .manipulate(-1, Unit.year);
-            container
-                .querySelectorAll('tbody td div')
-                .forEach((containerClone, index) => {
-                let classes = [];
-                classes.push(Namespace.Css.year);
-                if (!this._context._unset &&
-                    this._context.dates.isPicked(innerDate, Unit.year)) {
-                    classes.push(Namespace.Css.active);
-                }
-                if (!this._context._validation.isValid(innerDate, Unit.year)) {
-                    classes.push(Namespace.Css.disabled);
-                }
-                containerClone.classList.remove(...containerClone.classList);
-                containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${innerDate.year}`);
-                containerClone.innerText = `${innerDate.year}`;
-                innerDate.manipulate(1, Unit.year);
             });
         }
     }
@@ -1709,6 +1592,70 @@
     }
 
     /**
+     * Creates and updates the grid for `year`
+     */
+    class YearDisplay {
+        constructor(context) {
+            this._context = context;
+        }
+        /**
+         * Build the container html for the display
+         * @private
+         */
+        get _picker() {
+            const container = document.createElement('div');
+            container.classList.add(Namespace.Css.yearsContainer);
+            for (let i = 0; i < 12; i++) {
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.selectYear);
+                container.appendChild(div);
+            }
+            return container;
+        }
+        /**
+         * Populates the grid and updates enabled states
+         * @private
+         */
+        _update() {
+            Dates.getStartEndYear(100, this._context._viewDate.year);
+            this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
+            this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
+            const container = this._context._display.widget.getElementsByClassName(Namespace.Css.yearsContainer)[0];
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+                .getElementsByTagName('div');
+            switcher.innerText = `${this._startYear.year}-${this._endYear.year}`;
+            this._context._validation.isValid(this._startYear, Unit.year)
+                ? previous.classList.remove(Namespace.Css.disabled)
+                : previous.classList.add(Namespace.Css.disabled);
+            this._context._validation.isValid(this._endYear, Unit.year)
+                ? next.classList.remove(Namespace.Css.disabled)
+                : next.classList.add(Namespace.Css.disabled);
+            let innerDate = this._context._viewDate.clone
+                .startOf(Unit.year)
+                .manipulate(-1, Unit.year);
+            container
+                .querySelectorAll(`[data-action="${ActionTypes.selectYear}"]`)
+                .forEach((containerClone, index) => {
+                let classes = [];
+                classes.push(Namespace.Css.year);
+                if (!this._context._unset &&
+                    this._context.dates.isPicked(innerDate, Unit.year)) {
+                    classes.push(Namespace.Css.active);
+                }
+                if (!this._context._validation.isValid(innerDate, Unit.year)) {
+                    classes.push(Namespace.Css.disabled);
+                }
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${innerDate.year}`);
+                containerClone.innerText = `${innerDate.year}`;
+                innerDate.manipulate(1, Unit.year);
+            });
+        }
+    }
+
+    /**
      * Creates and updates the grid for `seconds`
      */
     class DecadeDisplay {
@@ -1722,34 +1669,11 @@
         get _picker() {
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.decadesContainer);
-            const table = document.createElement('table');
-            const headTemplate = this._context._display._headTemplate;
-            const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-            previous
-                .getElementsByTagName('div')[0]
-                .setAttribute('title', this._context._options.localization.previousCentury);
-            switcher.setAttribute('title', '');
-            switcher.removeAttribute('data-action');
-            switcher.setAttribute('colspan', '1');
-            next
-                .getElementsByTagName('div')[0]
-                .setAttribute('title', this._context._options.localization.nextCentury);
-            table.appendChild(headTemplate);
-            const tableBody = document.createElement('tbody');
-            let row = document.createElement('tr');
-            for (let i = 0; i <= 12; i++) {
-                if (i !== 0 && i % 3 === 0) {
-                    tableBody.appendChild(row);
-                    row = document.createElement('tr');
-                }
-                const td = document.createElement('td');
+            for (let i = 0; i < 12; i++) {
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.selectDecade);
-                td.appendChild(div);
-                row.appendChild(td);
+                container.appendChild(div);
             }
-            table.appendChild(tableBody);
-            container.appendChild(table);
             return container;
         }
         /**
@@ -1763,9 +1687,9 @@
             this._endDecade = this._context._viewDate.clone.startOf(Unit.year);
             this._endDecade.year = end;
             const container = this._context._display.widget.getElementsByClassName(Namespace.Css.decadesContainer)[0];
-            const [previous, switcher, next] = container
-                .getElementsByTagName('thead')[0]
-                .getElementsByTagName('th');
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+                .getElementsByTagName('div');
             switcher.innerText = `${this._startDecade.year}-${this._endDecade.year}`;
             this._context._validation.isValid(this._startDecade, Unit.year)
                 ? previous.classList.remove(Namespace.Css.disabled)
@@ -1774,8 +1698,9 @@
                 ? next.classList.remove(Namespace.Css.disabled)
                 : next.classList.add(Namespace.Css.disabled);
             const pickedYears = this._context.dates.picked.map((x) => x.year);
-            const nodeList = container.querySelectorAll('tbody td div');
-            nodeList.forEach((containerClone, index) => {
+            container
+                .querySelectorAll(`[data-action="${ActionTypes.selectDecade}"]`)
+                .forEach((containerClone, index) => {
                 if (index === 0) {
                     containerClone.classList.add(Namespace.Css.old);
                     if (this._startDecade.year - 10 < 0) {
@@ -1804,9 +1729,6 @@
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${this._startDecade.year + 6}`);
                 containerClone.innerText = `${this._startDecade.year}`;
-                if (nodeList.length === index + 1) {
-                    containerClone.classList.add(Namespace.Css.old);
-                }
                 this._startDecade.manipulate(10, Unit.year);
             });
         }
@@ -1826,11 +1748,7 @@
         get _picker() {
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.clockContainer);
-            const table = document.createElement('table');
-            const tableBody = document.createElement('tbody');
-            this._grid().forEach((row) => tableBody.appendChild(row));
-            table.appendChild(tableBody);
-            container.appendChild(table);
+            container.append(...this._grid());
             return container;
         }
         /**
@@ -1841,20 +1759,12 @@
         _update() {
             const timesDiv = this._context._display.widget.getElementsByClassName(Namespace.Css.clockContainer)[0];
             const lastPicked = (this._context.dates.lastPicked || this._context._viewDate).clone;
-            if (!this._context._options.display.components.useTwentyfourHour) {
-                const toggle = timesDiv.querySelector(`[data-action=${ActionTypes.togglePeriod}]`);
-                toggle.innerText = lastPicked.meridiem();
-                if (!this._context._validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
-                    toggle.classList.add(Namespace.Css.disabled);
-                }
-                else {
-                    toggle.classList.remove(Namespace.Css.disabled);
-                }
-            }
+            let columns = 0;
             timesDiv
                 .querySelectorAll('.disabled')
                 .forEach((element) => element.classList.remove(Namespace.Css.disabled));
             if (this._context._options.display.components.hours) {
+                columns++;
                 if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes.incrementHours}]`)
@@ -1870,6 +1780,7 @@
                     : lastPicked.twelveHoursFormatted;
             }
             if (this._context._options.display.components.minutes) {
+                columns++;
                 if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes.incrementMinutes}]`)
@@ -1883,6 +1794,7 @@
                 timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
             }
             if (this._context._options.display.components.seconds) {
+                columns++;
                 if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes.incrementSeconds}]`)
@@ -1895,107 +1807,109 @@
                 }
                 timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
             }
+            if (!this._context._options.display.components.useTwentyfourHour) {
+                columns++;
+                const toggle = timesDiv.querySelector(`[data-action=${ActionTypes.togglePeriod}]`);
+                toggle.innerText = lastPicked.meridiem();
+                if (!this._context._validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
+                    toggle.classList.add(Namespace.Css.disabled);
+                }
+                else {
+                    toggle.classList.remove(Namespace.Css.disabled);
+                }
+            }
+            timesDiv.classList.add(`clock-columns-${columns}`);
         }
         /**
          * Creates the table for the clock display depending on what options are selected.
          * @private
          */
         _grid() {
-            const rows = [], separator = document.createElement('td'), separatorColon = separator.cloneNode(true), topRow = document.createElement('tr'), middleRow = document.createElement('tr'), bottomRow = document.createElement('tr'), upIcon = this._context._display._iconTag(this._context._options.display.icons.up), downIcon = this._context._display._iconTag(this._context._options.display.icons.down), actionDiv = document.createElement('div');
-            separator.classList.add(Namespace.Css.separator);
+            const top = [], middle = [], bottom = [], separator = document.createElement('div'), upIcon = this._context._display._iconTag(this._context._options.display.icons.up), downIcon = this._context._display._iconTag(this._context._options.display.icons.down);
+            separator.classList.add(Namespace.Css.separator, Namespace.Css.noHighlight);
+            const separatorColon = separator.cloneNode(true);
             separatorColon.innerHTML = ':';
+            const getSeparator = (colon = false) => {
+                return colon
+                    ? separatorColon.cloneNode(true)
+                    : separator.cloneNode(true);
+            };
             if (this._context._options.display.components.hours) {
-                let td = document.createElement('td');
-                let actionLinkClone = actionDiv.cloneNode(true);
-                actionLinkClone.setAttribute('title', this._context._options.localization.incrementHour);
-                actionLinkClone.setAttribute('data-action', ActionTypes.incrementHours);
-                actionLinkClone.appendChild(upIcon.cloneNode(true));
-                td.appendChild(actionLinkClone);
-                topRow.appendChild(td);
-                td = document.createElement('td');
-                const div = document.createElement('div');
-                div.setAttribute('title', this._context._options.localization.pickHour);
-                div.setAttribute('data-action', ActionTypes.showHours);
-                div.setAttribute('data-time-component', Unit.hours);
-                td.appendChild(div);
-                middleRow.appendChild(td);
-                td = document.createElement('td');
-                actionLinkClone = actionDiv.cloneNode(true);
-                actionLinkClone.setAttribute('title', this._context._options.localization.decrementHour);
-                actionLinkClone.setAttribute('data-action', ActionTypes.decrementHours);
-                actionLinkClone.appendChild(downIcon.cloneNode(true));
-                td.appendChild(actionLinkClone);
-                bottomRow.appendChild(td);
+                let divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.incrementHour);
+                divElement.setAttribute('data-action', ActionTypes.incrementHours);
+                divElement.appendChild(upIcon.cloneNode(true));
+                top.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.pickHour);
+                divElement.setAttribute('data-action', ActionTypes.showHours);
+                divElement.setAttribute('data-time-component', Unit.hours);
+                middle.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.decrementHour);
+                divElement.setAttribute('data-action', ActionTypes.decrementHours);
+                divElement.appendChild(downIcon.cloneNode(true));
+                bottom.push(divElement);
             }
             if (this._context._options.display.components.minutes) {
                 if (this._context._options.display.components.hours) {
-                    topRow.appendChild(separator.cloneNode(true));
-                    middleRow.appendChild(separatorColon.cloneNode(true));
-                    bottomRow.appendChild(separator.cloneNode(true));
+                    top.push(getSeparator());
+                    middle.push(getSeparator(true));
+                    bottom.push(getSeparator());
                 }
-                let td = document.createElement('td');
-                let actionLinkClone = actionDiv.cloneNode(true);
-                actionLinkClone.setAttribute('title', this._context._options.localization.incrementMinute);
-                actionLinkClone.setAttribute('data-action', ActionTypes.incrementMinutes);
-                actionLinkClone.appendChild(upIcon.cloneNode(true));
-                td.appendChild(actionLinkClone);
-                topRow.appendChild(td);
-                td = document.createElement('td');
-                const div = document.createElement('div');
-                div.setAttribute('title', this._context._options.localization.pickMinute);
-                div.setAttribute('data-action', ActionTypes.showMinutes);
-                div.setAttribute('data-time-component', Unit.minutes);
-                td.appendChild(div);
-                middleRow.appendChild(td);
-                td = document.createElement('td');
-                actionLinkClone = actionDiv.cloneNode(true);
-                actionLinkClone.setAttribute('title', this._context._options.localization.decrementMinute);
-                actionLinkClone.setAttribute('data-action', ActionTypes.decrementMinutes);
-                actionLinkClone.appendChild(downIcon.cloneNode(true));
-                td.appendChild(actionLinkClone);
-                bottomRow.appendChild(td);
+                let divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.incrementMinute);
+                divElement.setAttribute('data-action', ActionTypes.incrementMinutes);
+                divElement.appendChild(upIcon.cloneNode(true));
+                top.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.pickMinute);
+                divElement.setAttribute('data-action', ActionTypes.showMinutes);
+                divElement.setAttribute('data-time-component', Unit.minutes);
+                middle.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.decrementMinute);
+                divElement.setAttribute('data-action', ActionTypes.decrementMinutes);
+                divElement.appendChild(downIcon.cloneNode(true));
+                bottom.push(divElement);
             }
             if (this._context._options.display.components.seconds) {
                 if (this._context._options.display.components.minutes) {
-                    topRow.appendChild(separator.cloneNode(true));
-                    middleRow.appendChild(separatorColon.cloneNode(true));
-                    bottomRow.appendChild(separator.cloneNode(true));
+                    top.push(getSeparator());
+                    middle.push(getSeparator(true));
+                    bottom.push(getSeparator());
                 }
-                let td = document.createElement('td');
-                let actionLinkClone = actionDiv.cloneNode(true);
-                actionLinkClone.setAttribute('title', this._context._options.localization.incrementSecond);
-                actionLinkClone.setAttribute('data-action', ActionTypes.incrementSeconds);
-                actionLinkClone.appendChild(upIcon.cloneNode(true));
-                td.appendChild(actionLinkClone);
-                topRow.appendChild(td);
-                td = document.createElement('td');
-                const div = document.createElement('div');
-                div.setAttribute('title', this._context._options.localization.pickSecond);
-                div.setAttribute('data-action', ActionTypes.showSeconds);
-                div.setAttribute('data-time-component', Unit.seconds);
-                td.appendChild(div);
-                middleRow.appendChild(td);
-                td = document.createElement('td');
-                actionLinkClone = actionDiv.cloneNode(true);
-                actionLinkClone.setAttribute('title', this._context._options.localization.decrementSecond);
-                actionLinkClone.setAttribute('data-action', ActionTypes.decrementSeconds);
-                actionLinkClone.appendChild(downIcon.cloneNode(true));
-                td.appendChild(actionLinkClone);
-                bottomRow.appendChild(td);
+                let divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.incrementSecond);
+                divElement.setAttribute('data-action', ActionTypes.incrementSeconds);
+                divElement.appendChild(upIcon.cloneNode(true));
+                top.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.pickSecond);
+                divElement.setAttribute('data-action', ActionTypes.showSeconds);
+                divElement.setAttribute('data-time-component', Unit.seconds);
+                middle.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.decrementSecond);
+                divElement.setAttribute('data-action', ActionTypes.decrementSeconds);
+                divElement.appendChild(downIcon.cloneNode(true));
+                bottom.push(divElement);
             }
             if (!this._context._options.display.components.useTwentyfourHour) {
-                topRow.appendChild(separator.cloneNode(true));
-                let td = document.createElement('td');
+                let divElement = getSeparator();
+                top.push(divElement);
                 let button = document.createElement('button');
                 button.setAttribute('title', this._context._options.localization.togglePeriod);
                 button.setAttribute('data-action', ActionTypes.togglePeriod);
                 button.setAttribute('tabindex', '-1');
-                td.appendChild(button);
-                middleRow.appendChild(td);
-                bottomRow.appendChild(separator.cloneNode(true));
+                divElement = document.createElement('div');
+                divElement.classList.add(Namespace.Css.noHighlight);
+                divElement.appendChild(button);
+                middle.push(divElement);
+                divElement = getSeparator();
+                bottom.push(divElement);
             }
-            rows.push(topRow, middleRow, bottomRow);
-            return rows;
+            return [...top, ...middle, ...bottom];
         }
     }
 
@@ -2013,23 +1927,12 @@
         get _picker() {
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.hourContainer);
-            const table = document.createElement('table');
-            const tableBody = document.createElement('tbody');
-            let row = document.createElement('tr');
-            for (let i = 0; i <=
+            for (let i = 0; i <
                 (this._context._options.display.components.useTwentyfourHour ? 24 : 12); i++) {
-                if (i !== 0 && i % 4 === 0) {
-                    tableBody.appendChild(row);
-                    row = document.createElement('tr');
-                }
-                const td = document.createElement('td');
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.selectHour);
-                td.appendChild(div);
-                row.appendChild(td);
+                container.appendChild(div);
             }
-            table.appendChild(tableBody);
-            container.appendChild(table);
             return container;
         }
         /**
@@ -2040,7 +1943,7 @@
             const container = this._context._display.widget.getElementsByClassName(Namespace.Css.hourContainer)[0];
             let innerDate = this._context._viewDate.clone.startOf(Unit.date);
             container
-                .querySelectorAll('tbody td div')
+                .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.Css.hour);
@@ -2073,25 +1976,14 @@
         get _picker() {
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.minuteContainer);
-            const table = document.createElement('table');
-            const tableBody = document.createElement('tbody');
-            let row = document.createElement('tr');
             let step = this._context._options.stepping === 1
                 ? 5
                 : this._context._options.stepping;
-            for (let i = 0; i <= 60 / step; i++) {
-                if (i !== 0 && i % 4 === 0) {
-                    tableBody.appendChild(row);
-                    row = document.createElement('tr');
-                }
-                const td = document.createElement('td');
+            for (let i = 0; i < 60 / step; i++) {
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.selectMinute);
-                td.appendChild(div);
-                row.appendChild(td);
+                container.appendChild(div);
             }
-            table.appendChild(tableBody);
-            container.appendChild(table);
             return container;
         }
         /**
@@ -2105,7 +1997,7 @@
                 ? 5
                 : this._context._options.stepping;
             container
-                .querySelectorAll('tbody td div')
+                .querySelectorAll(`[data-action="${ActionTypes.selectMinute}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.Css.minute);
@@ -2135,22 +2027,11 @@
         get _picker() {
             const container = document.createElement('div');
             container.classList.add(Namespace.Css.secondContainer);
-            const table = document.createElement('table');
-            const tableBody = document.createElement('tbody');
-            let row = document.createElement('tr');
-            for (let i = 0; i <= 12; i++) {
-                if (i !== 0 && i % 4 === 0) {
-                    tableBody.appendChild(row);
-                    row = document.createElement('tr');
-                }
-                const td = document.createElement('td');
+            for (let i = 0; i < 12; i++) {
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.selectSecond);
-                td.appendChild(div);
-                row.appendChild(td);
+                container.appendChild(div);
             }
-            table.appendChild(tableBody);
-            container.appendChild(table);
             return container;
         }
         /**
@@ -2161,7 +2042,7 @@
             const container = this._context._display.widget.getElementsByClassName(Namespace.Css.secondContainer)[0];
             let innerDate = this._context._viewDate.clone.startOf(Unit.minutes);
             container
-                .querySelectorAll('tbody td div')
+                .querySelectorAll(`[data-action="${ActionTypes.selectSecond}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.Css.second);
@@ -2329,7 +2210,7 @@
                 // show the clock when using sideBySide
                 if (this._context._options.display.sideBySide) {
                     this._timeDisplay._update();
-                    this.widget.getElementsByClassName(Namespace.Css.clockContainer)[0].style.display = 'block';
+                    this.widget.getElementsByClassName(Namespace.Css.clockContainer)[0].style.display = 'grid';
                 }
             }
             this.widget.classList.add(Namespace.Css.show);
@@ -2356,25 +2237,40 @@
                 this._context._currentViewMode = max;
             }
             this.widget
-                .querySelectorAll(`.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`)
+                .querySelectorAll(`.${Namespace.Css.dateContainer} > div:not(.${Namespace.Css.calendarHeader}), .${Namespace.Css.timeContainer} > div`)
                 .forEach((e) => (e.style.display = 'none'));
             const datePickerMode = DatePickerModes[this._context._currentViewMode];
             let picker = this.widget.querySelector(`.${datePickerMode.className}`);
+            const [previous, switcher, next] = this._context._display.widget
+                .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+                .getElementsByTagName('div');
             switch (datePickerMode.className) {
                 case Namespace.Css.decadesContainer:
+                    previous.setAttribute('title', this._context._options.localization.previousCentury);
+                    switcher.setAttribute('title', '');
+                    next.setAttribute('title', this._context._options.localization.nextCentury);
                     this._decadeDisplay._update();
                     break;
                 case Namespace.Css.yearsContainer:
+                    previous.setAttribute('title', this._context._options.localization.previousDecade);
+                    switcher.setAttribute('title', this._context._options.localization.selectDecade);
+                    next.setAttribute('title', this._context._options.localization.nextDecade);
                     this._yearDisplay._update();
                     break;
                 case Namespace.Css.monthsContainer:
+                    previous.setAttribute('title', this._context._options.localization.previousYear);
+                    switcher.setAttribute('title', this._context._options.localization.selectYear);
+                    next.setAttribute('title', this._context._options.localization.nextYear);
                     this._monthDisplay._update();
                     break;
                 case Namespace.Css.daysContainer:
+                    previous.setAttribute('title', this._context._options.localization.previousMonth);
+                    switcher.setAttribute('title', this._context._options.localization.selectMonth);
+                    next.setAttribute('title', this._context._options.localization.nextMonth);
                     this._dateDisplay._update();
                     break;
             }
-            picker.style.display = 'block';
+            picker.style.display = 'grid';
         }
         /**
          * Hides the picker if needed.
@@ -2425,10 +2321,7 @@
             template.classList.add(Namespace.Css.widget);
             const dateView = document.createElement('div');
             dateView.classList.add(Namespace.Css.dateContainer);
-            dateView.appendChild(this._decadeDisplay._picker);
-            dateView.appendChild(this._yearDisplay._picker);
-            dateView.appendChild(this._monthDisplay._picker);
-            dateView.appendChild(this._dateDisplay._picker);
+            dateView.append(this._headTemplate, this._decadeDisplay._picker, this._yearDisplay._picker, this._monthDisplay._picker, this._dateDisplay._picker);
             const timeView = document.createElement('div');
             timeView.classList.add(Namespace.Css.timeContainer);
             timeView.appendChild(this._timeDisplay._picker);
@@ -2436,10 +2329,13 @@
             timeView.appendChild(this._minuteDisplay._picker);
             timeView.appendChild(this._secondDisplay._picker);
             const toolbar = document.createElement('div');
-            toolbar.classList.add(Namespace.Css.switch);
-            toolbar.appendChild(this._toolbar);
+            toolbar.classList.add(Namespace.Css.toolbar);
+            toolbar.append(...this._toolbar);
             if (this._context._options.display.inline) {
                 template.classList.add(Namespace.Css.inline);
+            }
+            if (this._context._options.display.calendarWeeks) {
+                template.classList.add('calendarWeeks');
             }
             if (this._context._options.display.sideBySide &&
                 this._hasDate &&
@@ -2516,15 +2412,13 @@
          * @private
          */
         get _toolbar() {
-            const tbody = document.createElement('tbody');
+            const toolbar = [];
             if (this._context._options.display.buttons.today) {
-                const td = document.createElement('td');
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.today);
                 div.setAttribute('title', this._context._options.localization.today);
                 div.appendChild(this._iconTag(this._context._options.display.icons.today));
-                td.appendChild(div);
-                tbody.appendChild(td);
+                toolbar.push(div);
             }
             if (!this._context._options.display.sideBySide &&
                 this._hasDate &&
@@ -2538,64 +2432,48 @@
                     title = this._context._options.localization.selectTime;
                     icon = this._context._options.display.icons.time;
                 }
-                const td = document.createElement('td');
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.togglePicker);
                 div.setAttribute('title', title);
                 div.appendChild(this._iconTag(icon));
-                td.appendChild(div);
-                tbody.appendChild(td);
+                toolbar.push(div);
             }
             if (this._context._options.display.buttons.clear) {
-                const td = document.createElement('td');
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.clear);
                 div.setAttribute('title', this._context._options.localization.clear);
                 div.appendChild(this._iconTag(this._context._options.display.icons.clear));
-                td.appendChild(div);
-                tbody.appendChild(td);
+                toolbar.push(div);
             }
             if (this._context._options.display.buttons.close) {
-                const td = document.createElement('td');
                 const div = document.createElement('div');
                 div.setAttribute('data-action', ActionTypes.close);
                 div.setAttribute('title', this._context._options.localization.close);
                 div.appendChild(this._iconTag(this._context._options.display.icons.close));
-                td.appendChild(div);
-                tbody.appendChild(td);
+                toolbar.push(div);
             }
-            const table = document.createElement('table');
-            table.appendChild(tbody);
-            return table;
+            return toolbar;
         }
         /***
          * Builds the base header template with next and previous icons
          * @private
          */
         get _headTemplate() {
-            let div = document.createElement('div');
-            const thead = document.createElement('thead');
-            const rowElement = document.createElement('tr');
-            const previous = document.createElement('th');
+            const calendarHeader = document.createElement('div');
+            calendarHeader.classList.add(Namespace.Css.calendarHeader);
+            const previous = document.createElement('div');
             previous.classList.add(Namespace.Css.previous);
             previous.setAttribute('data-action', ActionTypes.previous);
-            div.appendChild(this._iconTag(this._context._options.display.icons.previous));
-            previous.appendChild(div);
-            rowElement.appendChild(previous);
-            const switcher = document.createElement('th');
+            previous.appendChild(this._iconTag(this._context._options.display.icons.previous));
+            const switcher = document.createElement('div');
             switcher.classList.add(Namespace.Css.switch);
             switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
-            switcher.setAttribute('colspan', this._context._options.display.calendarWeeks ? '6' : '5');
-            rowElement.appendChild(switcher);
-            const next = document.createElement('th');
+            const next = document.createElement('div');
             next.classList.add(Namespace.Css.next);
             next.setAttribute('data-action', ActionTypes.next);
-            div = document.createElement('div');
-            div.appendChild(this._iconTag(this._context._options.display.icons.next));
-            next.appendChild(div);
-            rowElement.appendChild(next);
-            thead.appendChild(rowElement);
-            return thead.cloneNode(true);
+            next.appendChild(this._iconTag(this._context._options.display.icons.next));
+            calendarHeader.append(previous, switcher, next);
+            return calendarHeader;
         }
         /**
          * Builds an icon tag as either an `<i>`

@@ -2,19 +2,18 @@ import { TempusDominus } from '../../tempus-dominus';
 import { DateTime, Unit } from '../../datetime';
 import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
+import Dates from '../../dates';
 
 /**
  * Creates and updates the grid for `year`
  */
 export default class YearDisplay {
   private _context: TempusDominus;
-  private readonly _startYear: DateTime;
-  private readonly _endYear: DateTime;
+  private _startYear: DateTime;
+  private _endYear: DateTime;
 
   constructor(context: TempusDominus) {
     this._context = context;
-    this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
-    this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
   }
 
   /**
@@ -25,43 +24,11 @@ export default class YearDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.yearsContainer);
 
-    const table = document.createElement('table');
-    const headTemplate = this._context._display._headTemplate;
-    const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-
-    previous
-      .getElementsByTagName('div')[0]
-      .setAttribute(
-        'title',
-        this._context._options.localization.previousDecade
-      );
-    switcher.setAttribute(
-      'title',
-      this._context._options.localization.selectDecade
-    );
-    switcher.setAttribute('colspan', '1');
-    next
-      .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context._options.localization.nextDecade);
-
-    table.appendChild(headTemplate);
-
-    const tableBody = document.createElement('tbody');
-    let row = document.createElement('tr');
-    for (let i = 0; i <= 12; i++) {
-      if (i !== 0 && i % 3 === 0) {
-        tableBody.appendChild(row);
-        row = document.createElement('tr');
-      }
-      const td = document.createElement('td');
+    for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectYear);
-      td.appendChild(div);
-      row.appendChild(td);
+      container.appendChild(div);
     }
-
-    table.appendChild(tableBody);
-    container.appendChild(table);
 
     return container;
   }
@@ -71,12 +38,19 @@ export default class YearDisplay {
    * @private
    */
   _update() {
+    const [start, end] = Dates.getStartEndYear(
+      100,
+      this._context._viewDate.year
+    );
+    this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
+    this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
+
     const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.yearsContainer
     )[0];
-    const [previous, switcher, next] = container
-      .getElementsByTagName('thead')[0]
-      .getElementsByTagName('th');
+    const [previous, switcher, next] = container.parentElement
+      .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+      .getElementsByTagName('div');
 
     switcher.innerText = `${this._startYear.year}-${this._endYear.year}`;
 
@@ -92,7 +66,7 @@ export default class YearDisplay {
       .manipulate(-1, Unit.year);
 
     container
-      .querySelectorAll('tbody td div')
+      .querySelectorAll(`[data-action="${ActionTypes.selectYear}"]`)
       .forEach((containerClone: HTMLElement, index) => {
         let classes = [];
         classes.push(Namespace.Css.year);

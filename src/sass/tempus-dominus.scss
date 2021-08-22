@@ -35,6 +35,14 @@ todo look at how bootstrap loops through their vars to make a --root section
   background-color: white;
   border: 1px solid black;
 
+  &.calendarWeeks {
+    width: 21rem;
+
+    &  .date-container-days {
+      grid-auto-columns: 12.5%;
+    }
+  }
+
   [data-action] {
     cursor: pointer;
 
@@ -66,7 +74,7 @@ todo look at how bootstrap loops through their vars to make a --root section
       content: '';
       transform: rotate(45deg);
       border-style: solid;
-      border-width: 1px;
+      border-width: 5px;
     }
   }
 
@@ -227,165 +235,117 @@ todo look at how bootstrap loops through their vars to make a --root section
     height: 38px;
   }
 
-  .picker-switch {
-    text-align: center;
+  .calendar-header {
+    display: grid;
+    grid-template-areas: "a a a";
+    margin-bottom: 10px;
+    font-weight: bold;
 
-    td {
-      padding: 0;
-      margin: 0;
-      height: auto;
-      width: auto;
-      line-height: inherit;
-
-      div {
-        line-height: 2.5;
-        height: 2.5em;
-        width: 100%;
-      }
+    & .next {
+      text-align: right;
+      padding-right: 10px;
+    }
+    & .previous {
+      text-align: left;
+      padding-left: 10px;
+    }
+    & .picker-switch {
+      text-align: center;
     }
   }
 
-  table {
-    width: 100%;
-    margin: 0;
+  .toolbar {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-rows: 40px;
 
-    & tr {
-      border-color: inherit;
-      border-style: solid;
-      border-width: 0;
-
-      & td,
-      & th {
-        padding: .3rem;
-        text-align: center;
-        border-radius: $td-border-radius;
-      }
-
-      & th {
-        height: 20px;
-        line-height: 20px;
-        width: 20px;
-
-        &.picker-switch {
-          width: 145px;
-        }
-
-        &.disabled,
-        &.disabled:hover {
-          background: none;
-          color: $td-disabled-color;
-          cursor: not-allowed;
-        }
-
-        &.previous {
-          text-align: start;
-        }
-
-        &.next {
-          text-align: end;
-        }
-      }
-
-      & thead tr:first-child th {
-        &:hover {
-          background: $td-btn-hover-bg;
-        }
-      }
-
-      & td {
-        position: relative;
-        height: 0;
-        line-height: 0;
-        text-align: center;
-        outline: none;
-        padding: 0.3rem;
-
-        div {
-          width: 90%;
-          height: 90%;
-          padding: 5px 5px;
-          line-height: 1;
-          margin-top: 2px;
-          margin-bottom: 2px;
-          border-radius: $td-border-radius;
-          top: 5%;
-          left: 5%;
-          align-items: center;
-          justify-content: center;
-          box-sizing: border-box;
-
-          &:hover {
-            background: $td-btn-hover-bg;
-          }
-
-          &.active {
-            background-color: $td-active-bg;
-            color: $td-active-color;
-            text-shadow: $td-text-shadow;
-          }
-
-          &.active.today:before {
-            border-bottom-color: #fff;
-          }
-
-          &.old,
-          &.new {
-            color: $td-alternate-color;
-          }
-
-          &.disabled,
-          &.disabled:hover {
-            background: none;
-            color: $td-disabled-color;
-            cursor: not-allowed;
-          }
-
-          &.cw {
-            font-size: 0.8em;
-            height: 20px;
-            line-height: 20px;
-            color: $td-alternate-color;
-            cursor: default;
-          }
-
-          &.day {
-          }
-
-          &.today {
-            position: relative;
-
-            &:before {
-              content: '';
-              display: inline-block;
-              border: solid transparent;
-              border-width: 0 0 7px 7px;
-              border-bottom-color: $td-active-bg;
-              border-top-color: $td-secondary-border-color-rgba;
-              position: absolute;
-              bottom: 4px;
-              right: 4px;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .monthGrid, .dayGrid {
-    div {
-      width: 90%;
-      height: 90%;
-      padding: 5px 5px;
-      line-height: 1;
-      margin-top: 2px;
-      margin-bottom: 2px;
+    & div {
       border-radius: $td-border-radius;
-      top: 5%;
-      left: 5%;
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      display: grid;
+      display: flex;
+
+      &:hover {
+        background: $td-btn-hover-bg;
+      }
+    }
+  }
+
+  .date-container-days {
+    display: grid;
+    grid-template-areas: "a a a a a a a";
+    grid-auto-rows: 40px;
+    grid-auto-columns: 14.5%;
+
+    & .cw {
+      width: 90%;
+      height: 90%;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      font-size: 0.8em;
+      line-height: 20px;
+      color: $td-alternate-color;
+      cursor: default;
+    }
+  }
+
+  &.calendarWeeks .date-container-days {
+    grid-template-areas: "a a a a a a a a";
+  }
+
+  .date-container-decades, .date-container-years, .date-container-months {
+    display: grid;
+    grid-template-areas: "a a a";
+    grid-auto-rows: 40px;
+  }
+
+  .time-container-hour, .time-container-minute, .time-container-second {
+    display: grid;
+    grid-template-areas: "a a a a";
+    grid-auto-rows: 40px;
+  }
+
+  .time-container-clock {
+    display: grid;
+    grid-auto-rows: 40px;
+
+    &.clock-columns-1 {
+      grid-template-areas: "a";
+    }
+
+    &.clock-columns-2 {
+      grid-template-areas: "a a a";
+    }
+
+    &.clock-columns-3 {
+      grid-template-areas: "a a a a";
+    }
+
+    &.clock-columns-4 {
+      grid-template-areas: "a a a a a a";
+    }
+
+    & .no-highlight {
+      width: 90%;
+      height: 90%;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+    }
+  }
+
+  .date-container-decades, .date-container-years, .date-container-months, .date-container-days,
+  .time-container-clock, .time-container-hour, .time-container-minute, .time-container-second {
+    div:not(.no-highlight) {
+      width: 90%;
+      height: 90%;
+      border-radius: $td-border-radius;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      display: flex;
 
       &:hover {
         background: $td-btn-hover-bg;
@@ -411,14 +371,6 @@ todo look at how bootstrap loops through their vars to make a --root section
         background: none;
         color: $td-disabled-color;
         cursor: not-allowed;
-      }
-
-      &.cw {
-        font-size: 0.8em;
-        height: 20px;
-        line-height: 20px;
-        color: $td-alternate-color;
-        cursor: default;
       }
 
       &.day {

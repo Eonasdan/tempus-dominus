@@ -419,7 +419,7 @@
       Version 6 removes the need for an input field, Bootstrap, jQuery and MomemntJs.
     </p>
     <p>
-      If you still need jQuery, check out the <a href="examples-jquery.html">jQuery examples</a>.
+      If you still need jQuery, check out the <a href="jquery.html">jQuery examples</a>.
     </p>
   </section>
   <section>
@@ -562,7 +562,15 @@
       </div>
     </div>
     <script type="text/javascript">
-      new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+      const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
+        display: {
+          calendarWeeks: true,
+          components: {
+            //seconds: true,
+            //useTwentyfourHour: true
+          }
+        }
+      });
     </script>
   </section>
 

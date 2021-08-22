@@ -21,28 +21,16 @@ export default class HourDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.hourContainer);
 
-    const table = document.createElement('table');
-    const tableBody = document.createElement('tbody');
-    let row = document.createElement('tr');
     for (
       let i = 0;
-      i <=
+      i <
       (this._context._options.display.components.useTwentyfourHour ? 24 : 12);
       i++
     ) {
-      if (i !== 0 && i % 4 === 0) {
-        tableBody.appendChild(row);
-        row = document.createElement('tr');
-      }
-      const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectHour);
-      td.appendChild(div);
-      row.appendChild(td);
+      container.appendChild(div);
     }
-
-    table.appendChild(tableBody);
-    container.appendChild(table);
 
     return container;
   }
@@ -58,7 +46,7 @@ export default class HourDisplay {
     let innerDate = this._context._viewDate.clone.startOf(Unit.date);
 
     container
-      .querySelectorAll('tbody td div')
+      .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
       .forEach((containerClone: HTMLElement, index) => {
         let classes = [];
         classes.push(Namespace.Css.hour);

@@ -41,7 +41,8 @@
     "terser": "^5.4.0",
     "tslib": "^2.3.0",
     "typescript": "^4.3.5",
-    "concurrently": "^6.2.0"
+    "concurrently": "^6.2.0",
+    "@digitak/esrun": "^1.2.6"
   },
   "homepage": "https://getdatepicker.com/",
   "keywords": [

@@ -20,11 +20,7 @@ export default class TimeDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.clockContainer);
 
-    const table = document.createElement('table');
-    const tableBody = document.createElement('tbody');
-    this._grid().forEach((row) => tableBody.appendChild(row));
-    table.appendChild(tableBody);
-    container.appendChild(table);
+    container.append(...this._grid());
 
     return container;
   }
@@ -42,32 +38,14 @@ export default class TimeDisplay {
       this._context.dates.lastPicked || this._context._viewDate
     ).clone;
 
-    if (!this._context._options.display.components.useTwentyfourHour) {
-      const toggle = timesDiv.querySelector<HTMLElement>(
-        `[data-action=${ActionTypes.togglePeriod}]`
-      );
-
-      toggle.innerText = lastPicked.meridiem();
-
-      if (
-        !this._context._validation.isValid(
-          lastPicked.clone.manipulate(
-            lastPicked.hours >= 12 ? -12 : 12,
-            Unit.hours
-          )
-        )
-      ) {
-        toggle.classList.add(Namespace.Css.disabled);
-      } else {
-        toggle.classList.remove(Namespace.Css.disabled);
-      }
-    }
+    let columns = 0;
 
     timesDiv
       .querySelectorAll('.disabled')
       .forEach((element) => element.classList.remove(Namespace.Css.disabled));
 
     if (this._context._options.display.components.hours) {
+      columns++;
       if (
         !this._context._validation.isValid(
           this._context._viewDate.clone.manipulate(1, Unit.hours),
@@ -97,6 +75,7 @@ export default class TimeDisplay {
     }
 
     if (this._context._options.display.components.minutes) {
+      columns++;
       if (
         !this._context._validation.isValid(
           this._context._viewDate.clone.manipulate(1, Unit.minutes),
@@ -124,6 +103,7 @@ export default class TimeDisplay {
     }
 
     if (this._context._options.display.components.seconds) {
+      columns++;
       if (
         !this._context._validation.isValid(
           this._context._viewDate.clone.manipulate(1, Unit.seconds),
@@ -149,6 +129,30 @@ export default class TimeDisplay {
         `[data-time-component=${Unit.seconds}]`
       ).innerText = lastPicked.secondsFormatted;
     }
+
+    if (!this._context._options.display.components.useTwentyfourHour) {
+      columns++;
+      const toggle = timesDiv.querySelector<HTMLElement>(
+        `[data-action=${ActionTypes.togglePeriod}]`
+      );
+
+      toggle.innerText = lastPicked.meridiem();
+
+      if (
+        !this._context._validation.isValid(
+          lastPicked.clone.manipulate(
+            lastPicked.hours >= 12 ? -12 : 12,
+            Unit.hours
+          )
+        )
+      ) {
+        toggle.classList.add(Namespace.Css.disabled);
+      } else {
+        toggle.classList.remove(Namespace.Css.disabled);
+      }
+    }
+
+    timesDiv.classList.add(`clock-columns-${columns}`);
   }
 
   /**
@@ -156,135 +160,129 @@ export default class TimeDisplay {
    * @private
    */
   private _grid(): HTMLElement[] {
-    const rows = [],
-      separator = document.createElement('td'),
-      separatorColon = <HTMLElement>separator.cloneNode(true),
-      topRow = document.createElement('tr'),
-      middleRow = document.createElement('tr'),
-      bottomRow = document.createElement('tr'),
+    const
+      top = [],
+      middle = [],
+      bottom = [],
+      separator = document.createElement('div'),
       upIcon = this._context._display._iconTag(
         this._context._options.display.icons.up
       ),
       downIcon = this._context._display._iconTag(
         this._context._options.display.icons.down
-      ),
-      actionDiv = document.createElement('div');
+      );
 
-    separator.classList.add(Namespace.Css.separator);
+    separator.classList.add(Namespace.Css.separator, Namespace.Css.noHighlight);
+    const separatorColon = <HTMLElement>separator.cloneNode(true);
     separatorColon.innerHTML = ':';
 
+    const getSeparator = (colon = false): HTMLElement => {
+      return colon
+        ? <HTMLElement>separatorColon.cloneNode(true)
+        : <HTMLElement>separator.cloneNode(true);
+    };
+
     if (this._context._options.display.components.hours) {
-      let td = document.createElement('td');
-      let actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
-      actionLinkClone.setAttribute(
+      let divElement = document.createElement('div');
+      divElement.setAttribute(
         'title',
         this._context._options.localization.incrementHour
       );
-      actionLinkClone.setAttribute('data-action', ActionTypes.incrementHours);
-      actionLinkClone.appendChild(upIcon.cloneNode(true));
-      td.appendChild(actionLinkClone);
-      topRow.appendChild(td);
+      divElement.setAttribute('data-action', ActionTypes.incrementHours);
+      divElement.appendChild(upIcon.cloneNode(true));
+      top.push(divElement);
 
-      td = document.createElement('td');
-      const div = document.createElement('div');
-      div.setAttribute('title', this._context._options.localization.pickHour);
-      div.setAttribute('data-action', ActionTypes.showHours);
-      div.setAttribute('data-time-component', Unit.hours);
-      td.appendChild(div);
-      middleRow.appendChild(td);
+      divElement = document.createElement('div');
+      divElement.setAttribute(
+        'title',
+        this._context._options.localization.pickHour
+      );
+      divElement.setAttribute('data-action', ActionTypes.showHours);
+      divElement.setAttribute('data-time-component', Unit.hours);
+      middle.push(divElement);
 
-      td = document.createElement('td');
-      actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
-      actionLinkClone.setAttribute(
+      divElement = document.createElement('div');
+      divElement.setAttribute(
         'title',
         this._context._options.localization.decrementHour
       );
-      actionLinkClone.setAttribute('data-action', ActionTypes.decrementHours);
-      actionLinkClone.appendChild(downIcon.cloneNode(true));
-      td.appendChild(actionLinkClone);
-      bottomRow.appendChild(td);
+      divElement.setAttribute('data-action', ActionTypes.decrementHours);
+      divElement.appendChild(downIcon.cloneNode(true));
+      bottom.push(divElement);
     }
 
     if (this._context._options.display.components.minutes) {
       if (this._context._options.display.components.hours) {
-        topRow.appendChild(separator.cloneNode(true));
-        middleRow.appendChild(separatorColon.cloneNode(true));
-        bottomRow.appendChild(separator.cloneNode(true));
+        top.push(getSeparator());
+        middle.push(getSeparator(true));
+        bottom.push(getSeparator());
       }
-
-      let td = document.createElement('td');
-      let actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
-      actionLinkClone.setAttribute(
+      let divElement = document.createElement('div');
+      divElement.setAttribute(
         'title',
         this._context._options.localization.incrementMinute
       );
-      actionLinkClone.setAttribute('data-action', ActionTypes.incrementMinutes);
-      actionLinkClone.appendChild(upIcon.cloneNode(true));
-      td.appendChild(actionLinkClone);
-      topRow.appendChild(td);
+      divElement.setAttribute('data-action', ActionTypes.incrementMinutes);
+      divElement.appendChild(upIcon.cloneNode(true));
+      top.push(divElement);
 
-      td = document.createElement('td');
-      const div = document.createElement('div');
-      div.setAttribute('title', this._context._options.localization.pickMinute);
-      div.setAttribute('data-action', ActionTypes.showMinutes);
-      div.setAttribute('data-time-component', Unit.minutes);
-      td.appendChild(div);
-      middleRow.appendChild(td);
+      divElement = document.createElement('div');
+      divElement.setAttribute(
+        'title',
+        this._context._options.localization.pickMinute
+      );
+      divElement.setAttribute('data-action', ActionTypes.showMinutes);
+      divElement.setAttribute('data-time-component', Unit.minutes);
+      middle.push(divElement);
 
-      td = document.createElement('td');
-      actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
-      actionLinkClone.setAttribute(
+      divElement = document.createElement('div');
+      divElement.setAttribute(
         'title',
         this._context._options.localization.decrementMinute
       );
-      actionLinkClone.setAttribute('data-action', ActionTypes.decrementMinutes);
-      actionLinkClone.appendChild(downIcon.cloneNode(true));
-      td.appendChild(actionLinkClone);
-      bottomRow.appendChild(td);
+      divElement.setAttribute('data-action', ActionTypes.decrementMinutes);
+      divElement.appendChild(downIcon.cloneNode(true));
+      bottom.push(divElement);
     }
 
     if (this._context._options.display.components.seconds) {
       if (this._context._options.display.components.minutes) {
-        topRow.appendChild(separator.cloneNode(true));
-        middleRow.appendChild(separatorColon.cloneNode(true));
-        bottomRow.appendChild(separator.cloneNode(true));
+        top.push(getSeparator());
+        middle.push(getSeparator(true));
+        bottom.push(getSeparator());
       }
-
-      let td = document.createElement('td');
-      let actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
-      actionLinkClone.setAttribute(
+      let divElement = document.createElement('div');
+      divElement.setAttribute(
         'title',
         this._context._options.localization.incrementSecond
       );
-      actionLinkClone.setAttribute('data-action', ActionTypes.incrementSeconds);
-      actionLinkClone.appendChild(upIcon.cloneNode(true));
-      td.appendChild(actionLinkClone);
-      topRow.appendChild(td);
+      divElement.setAttribute('data-action', ActionTypes.incrementSeconds);
+      divElement.appendChild(upIcon.cloneNode(true));
+      top.push(divElement);
 
-      td = document.createElement('td');
-      const div = document.createElement('div');
-      div.setAttribute('title', this._context._options.localization.pickSecond);
-      div.setAttribute('data-action', ActionTypes.showSeconds);
-      div.setAttribute('data-time-component', Unit.seconds);
-      td.appendChild(div);
-      middleRow.appendChild(td);
+      divElement = document.createElement('div');
+      divElement.setAttribute(
+        'title',
+        this._context._options.localization.pickSecond
+      );
+      divElement.setAttribute('data-action', ActionTypes.showSeconds);
+      divElement.setAttribute('data-time-component', Unit.seconds);
+      middle.push(divElement);
 
-      td = document.createElement('td');
-      actionLinkClone = <HTMLElement>actionDiv.cloneNode(true);
-      actionLinkClone.setAttribute(
+      divElement = document.createElement('div');
+      divElement.setAttribute(
         'title',
         this._context._options.localization.decrementSecond
       );
-      actionLinkClone.setAttribute('data-action', ActionTypes.decrementSeconds);
-      actionLinkClone.appendChild(downIcon.cloneNode(true));
-      td.appendChild(actionLinkClone);
-      bottomRow.appendChild(td);
+      divElement.setAttribute('data-action', ActionTypes.decrementSeconds);
+      divElement.appendChild(downIcon.cloneNode(true));
+      bottom.push(divElement);
     }
 
     if (!this._context._options.display.components.useTwentyfourHour) {
-      topRow.appendChild(separator.cloneNode(true));
+      let divElement = getSeparator();
+      top.push(divElement);
 
-      let td = document.createElement('td');
       let button = document.createElement('button');
       button.setAttribute(
         'title',
@@ -292,14 +290,16 @@ export default class TimeDisplay {
       );
       button.setAttribute('data-action', ActionTypes.togglePeriod);
       button.setAttribute('tabindex', '-1');
-      td.appendChild(button);
-      middleRow.appendChild(td);
 
-      bottomRow.appendChild(separator.cloneNode(true));
+      divElement = document.createElement('div');
+      divElement.classList.add(Namespace.Css.noHighlight);
+      divElement.appendChild(button);
+      middle.push(divElement);
+
+      divElement = getSeparator();
+      bottom.push(divElement);
     }
 
-    rows.push(topRow, middleRow, bottomRow);
-
-    return rows;
+    return [...top, ...middle, ...bottom];
   }
 }

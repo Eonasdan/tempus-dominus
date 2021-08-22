@@ -183,7 +183,7 @@ export default class Display {
           this.widget.getElementsByClassName(
             Namespace.Css.clockContainer
           )[0] as HTMLElement
-        ).style.display = 'block';
+        ).style.display = 'grid';
       }
     }
 
@@ -213,9 +213,10 @@ export default class Display {
       if (this._context._currentViewMode == max) return;
       this._context._currentViewMode = max;
     }
+
     this.widget
       .querySelectorAll(
-        `.${Namespace.Css.dateContainer} > div, .${Namespace.Css.timeContainer} > div`
+        `.${Namespace.Css.dateContainer} > div:not(.${Namespace.Css.calendarHeader}), .${Namespace.Css.timeContainer} > div`
       )
       .forEach((e: HTMLElement) => (e.style.display = 'none'));
 
@@ -224,22 +225,71 @@ export default class Display {
       `.${datePickerMode.className}`
     );
 
+    const [previous, switcher, next] = this._context._display.widget
+      .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+      .getElementsByTagName('div');
+
     switch (datePickerMode.className) {
       case Namespace.Css.decadesContainer:
+        previous.setAttribute(
+          'title',
+          this._context._options.localization.previousCentury
+        );
+        switcher.setAttribute('title', '');
+        next.setAttribute(
+          'title',
+          this._context._options.localization.nextCentury
+        );
         this._decadeDisplay._update();
         break;
       case Namespace.Css.yearsContainer:
+        previous.setAttribute(
+          'title',
+          this._context._options.localization.previousDecade
+        );
+        switcher.setAttribute(
+          'title',
+          this._context._options.localization.selectDecade
+        );
+        next.setAttribute(
+          'title',
+          this._context._options.localization.nextDecade
+        );
         this._yearDisplay._update();
         break;
       case Namespace.Css.monthsContainer:
+        previous.setAttribute(
+          'title',
+          this._context._options.localization.previousYear
+        );
+        switcher.setAttribute(
+          'title',
+          this._context._options.localization.selectYear
+        );
+        next.setAttribute(
+          'title',
+          this._context._options.localization.nextYear
+        );
         this._monthDisplay._update();
         break;
       case Namespace.Css.daysContainer:
+        previous.setAttribute(
+          'title',
+          this._context._options.localization.previousMonth
+        );
+        switcher.setAttribute(
+          'title',
+          this._context._options.localization.selectMonth
+        );
+        next.setAttribute(
+          'title',
+          this._context._options.localization.nextMonth
+        );
         this._dateDisplay._update();
         break;
     }
 
-    picker.style.display = 'block';
+    picker.style.display = 'grid';
   }
 
   /**
@@ -298,10 +348,13 @@ export default class Display {
 
     const dateView = document.createElement('div');
     dateView.classList.add(Namespace.Css.dateContainer);
-    dateView.appendChild(this._decadeDisplay._picker);
-    dateView.appendChild(this._yearDisplay._picker);
-    dateView.appendChild(this._monthDisplay._picker);
-    dateView.appendChild(this._dateDisplay._picker);
+    dateView.append(
+      this._headTemplate,
+      this._decadeDisplay._picker,
+      this._yearDisplay._picker,
+      this._monthDisplay._picker,
+      this._dateDisplay._picker
+    );
 
     const timeView = document.createElement('div');
     timeView.classList.add(Namespace.Css.timeContainer);
@@ -311,11 +364,15 @@ export default class Display {
     timeView.appendChild(this._secondDisplay._picker);
 
     const toolbar = document.createElement('div');
-    toolbar.classList.add(Namespace.Css.switch);
-    toolbar.appendChild(this._toolbar);
+    toolbar.classList.add(Namespace.Css.toolbar);
+    toolbar.append(...this._toolbar);
 
     if (this._context._options.display.inline) {
       template.classList.add(Namespace.Css.inline);
+    }
+
+    if (this._context._options.display.calendarWeeks) {
+      template.classList.add('calendarWeeks');
     }
 
     if (
@@ -411,11 +468,10 @@ export default class Display {
    * Get the toolbar html based on options like buttons.today
    * @private
    */
-  get _toolbar(): HTMLTableElement {
-    const tbody = document.createElement('tbody');
+  get _toolbar(): HTMLElement[] {
+    const toolbar = [];
 
     if (this._context._options.display.buttons.today) {
-      const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.today);
       div.setAttribute('title', this._context._options.localization.today);
@@ -423,8 +479,7 @@ export default class Display {
       div.appendChild(
         this._iconTag(this._context._options.display.icons.today)
       );
-      td.appendChild(div);
-      tbody.appendChild(td);
+      toolbar.push(div);
     }
     if (
       !this._context._options.display.sideBySide &&
@@ -440,17 +495,14 @@ export default class Display {
         icon = this._context._options.display.icons.time;
       }
 
-      const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.togglePicker);
       div.setAttribute('title', title);
 
       div.appendChild(this._iconTag(icon));
-      td.appendChild(div);
-      tbody.appendChild(td);
+      toolbar.push(div);
     }
     if (this._context._options.display.buttons.clear) {
-      const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.clear);
       div.setAttribute('title', this._context._options.localization.clear);
@@ -458,11 +510,9 @@ export default class Display {
       div.appendChild(
         this._iconTag(this._context._options.display.icons.clear)
       );
-      td.appendChild(div);
-      tbody.appendChild(td);
+      toolbar.push(div);
     }
     if (this._context._options.display.buttons.close) {
-      const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.close);
       div.setAttribute('title', this._context._options.localization.close);
@@ -470,13 +520,10 @@ export default class Display {
       div.appendChild(
         this._iconTag(this._context._options.display.icons.close)
       );
-      td.appendChild(div);
-      tbody.appendChild(td);
+      toolbar.push(div);
     }
-    const table = document.createElement('table');
-    table.appendChild(tbody);
 
-    return table;
+    return toolbar;
   }
 
   /***
@@ -484,36 +531,27 @@ export default class Display {
    * @private
    */
   get _headTemplate(): HTMLElement {
-    let div = document.createElement('div');
-    const thead = document.createElement('thead');
-    const rowElement = document.createElement('tr');
-    const previous = document.createElement('th');
+    const calendarHeader = document.createElement('div');
+    calendarHeader.classList.add(Namespace.Css.calendarHeader);
+
+    const previous = document.createElement('div');
     previous.classList.add(Namespace.Css.previous);
     previous.setAttribute('data-action', ActionTypes.previous);
-    div.appendChild(
+    previous.appendChild(
       this._iconTag(this._context._options.display.icons.previous)
     );
-    previous.appendChild(div);
-    rowElement.appendChild(previous);
 
-    const switcher = document.createElement('th');
+    const switcher = document.createElement('div');
     switcher.classList.add(Namespace.Css.switch);
     switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
-    switcher.setAttribute(
-      'colspan',
-      this._context._options.display.calendarWeeks ? '6' : '5'
-    );
-    rowElement.appendChild(switcher);
 
-    const next = document.createElement('th');
+    const next = document.createElement('div');
     next.classList.add(Namespace.Css.next);
     next.setAttribute('data-action', ActionTypes.next);
-    div = document.createElement('div');
-    div.appendChild(this._iconTag(this._context._options.display.icons.next));
-    next.appendChild(div);
-    rowElement.appendChild(next);
-    thead.appendChild(rowElement);
-    return <HTMLElement>thead.cloneNode(true);
+    next.appendChild(this._iconTag(this._context._options.display.icons.next));
+
+    calendarHeader.append(previous, switcher, next);
+    return calendarHeader;
   }
 
   /**

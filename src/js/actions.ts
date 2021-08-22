@@ -54,7 +54,7 @@ export default class Actions {
         if (action === ActionTypes.next)
           this._context._viewDate.manipulate(step, unit);
         else this._context._viewDate.manipulate(step * -1, unit);
-        this._context._display._update('calendar');
+        this._context._display._showMode();
         this._context._viewUpdate(unit);
         break;
       case ActionTypes.pickerSwitch:
@@ -228,7 +228,8 @@ export default class Actions {
           currentTarget.innerHTML = this._context._display._iconTag(
             this._context._options.display.icons.time
           ).outerHTML;
-          this._context._display._update('calendar');
+
+          this._context._display._showMode();
         } else {
           currentTarget.setAttribute(
             'title',
@@ -273,7 +274,7 @@ export default class Actions {
 
         (<HTMLElement>(
           this._context._display.widget.getElementsByClassName(classToUse)[0]
-        )).style.display = 'block';
+        )).style.display = 'grid';
         break;
       case ActionTypes.clear:
         this._context.dates._setValue(null);

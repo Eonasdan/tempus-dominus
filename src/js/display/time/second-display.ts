@@ -21,23 +21,11 @@ export default class secondDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.secondContainer);
 
-    const table = document.createElement('table');
-    const tableBody = document.createElement('tbody');
-    let row = document.createElement('tr');
-    for (let i = 0; i <= 12; i++) {
-      if (i !== 0 && i % 4 === 0) {
-        tableBody.appendChild(row);
-        row = document.createElement('tr');
-      }
-      const td = document.createElement('td');
+    for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectSecond);
-      td.appendChild(div);
-      row.appendChild(td);
+      container.appendChild(div);
     }
-
-    table.appendChild(tableBody);
-    container.appendChild(table);
 
     return container;
   }
@@ -53,7 +41,7 @@ export default class secondDisplay {
     let innerDate = this._context._viewDate.clone.startOf(Unit.minutes);
 
     container
-      .querySelectorAll('tbody td div')
+      .querySelectorAll(`[data-action="${ActionTypes.selectSecond}"]`)
       .forEach((containerClone: HTMLElement, index) => {
         let classes = [];
         classes.push(Namespace.Css.second);

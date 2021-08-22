@@ -21,27 +21,15 @@ export default class MinuteDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.minuteContainer);
 
-    const table = document.createElement('table');
-    const tableBody = document.createElement('tbody');
-    let row = document.createElement('tr');
     let step =
       this._context._options.stepping === 1
         ? 5
         : this._context._options.stepping;
-    for (let i = 0; i <= 60 / step; i++) {
-      if (i !== 0 && i % 4 === 0) {
-        tableBody.appendChild(row);
-        row = document.createElement('tr');
-      }
-      const td = document.createElement('td');
+    for (let i = 0; i < 60 / step; i++) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectMinute);
-      td.appendChild(div);
-      row.appendChild(td);
+      container.appendChild(div);
     }
-
-    table.appendChild(tableBody);
-    container.appendChild(table);
 
     return container;
   }
@@ -61,7 +49,7 @@ export default class MinuteDisplay {
         : this._context._options.stepping;
 
     container
-      .querySelectorAll('tbody td div')
+      .querySelectorAll(`[data-action="${ActionTypes.selectMinute}"]`)
       .forEach((containerClone: HTMLElement, index) => {
         let classes = [];
         classes.push(Namespace.Css.minute);

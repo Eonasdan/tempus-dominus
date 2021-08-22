@@ -21,58 +21,30 @@ export default class DateDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.Css.daysContainer);
 
-    const table = document.createElement('table');
-    const headTemplate = this._context._display._headTemplate;
-    const [previous, switcher, next] = headTemplate.getElementsByTagName('th');
-
-    previous
-      .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context._options.localization.previousMonth);
-    switcher.setAttribute(
-      'title',
-      this._context._options.localization.selectMonth
-    );
-    next
-      .getElementsByTagName('div')[0]
-      .setAttribute('title', this._context._options.localization.nextMonth);
-
-    table.appendChild(headTemplate);
-    const tableBody = document.createElement('tbody');
-    tableBody.appendChild(this._daysOfTheWeek());
-
-    let row = document.createElement('tr');
+    container.append(...this._daysOfTheWeek());
 
     if (this._context._options.display.calendarWeeks) {
-      const td = document.createElement('td');
       const div = document.createElement('div');
-      div.classList.add(Namespace.Css.calendarWeeks);
-      td.appendChild(div);
-      row.appendChild(td);
+      div.classList.add(Namespace.Css.calendarWeeks, Namespace.Css.noHighlight);
+      container.appendChild(div);
     }
 
-    for (let i = 0; i <= 42; i++) {
+    for (let i = 0; i < 42; i++) {
       if (i !== 0 && i % 7 === 0) {
-        tableBody.appendChild(row);
-        row = document.createElement('tr');
-
         if (this._context._options.display.calendarWeeks) {
-          const td = document.createElement('td');
           const div = document.createElement('div');
-          div.classList.add(Namespace.Css.calendarWeeks);
-          td.appendChild(div);
-          row.appendChild(td);
+          div.classList.add(
+            Namespace.Css.calendarWeeks,
+            Namespace.Css.noHighlight
+          );
+          container.appendChild(div);
         }
       }
 
-      const td = document.createElement('td');
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectDay);
-      td.appendChild(div);
-      row.appendChild(td);
+      container.appendChild(div);
     }
-
-    table.appendChild(tableBody);
-    container.appendChild(table);
 
     return container;
   }
@@ -85,9 +57,9 @@ export default class DateDisplay {
     const container = this._context._display.widget.getElementsByClassName(
       Namespace.Css.daysContainer
     )[0];
-    const [previous, switcher, next] = container
-      .getElementsByTagName('thead')[0]
-      .getElementsByTagName('th');
+    const [previous, switcher, next] = container.parentElement
+      .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+      .getElementsByTagName('div');
 
     switcher.innerText = this._context._viewDate.format({
       month: this._context._options.localization.dayViewHeaderFormat,
@@ -113,12 +85,15 @@ export default class DateDisplay {
       .manipulate(12, Unit.hours);
 
     container
-      .querySelectorAll('tbody td div')
+      .querySelectorAll(
+        `[data-action="${ActionTypes.selectDay}"], .${Namespace.Css.calendarWeeks}`
+      )
       .forEach((containerClone: HTMLElement, index) => {
         if (
           this._context._options.display.calendarWeeks &&
           containerClone.classList.contains(Namespace.Css.calendarWeeks)
         ) {
+          if (containerClone.innerText === '#') return;
           containerClone.innerText = `${innerDate.week}`;
           return;
         }
@@ -164,27 +139,29 @@ export default class DateDisplay {
    * Generates an html row that contains the days of the week.
    * @private
    */
-  private _daysOfTheWeek(): HTMLTableRowElement {
+  private _daysOfTheWeek(): HTMLElement[] {
     let innerDate = this._context._viewDate.clone
       .startOf('weekDay')
       .startOf(Unit.date);
-    const row = document.createElement('tr');
+    const row = [];
+    document.createElement('div');
 
     if (this._context._options.display.calendarWeeks) {
-      const th = document.createElement('th');
-      th.classList.add(Namespace.Css.calendarWeeks);
-      th.innerText = '#';
-      row.appendChild(th);
+      const htmlDivElement = document.createElement('div');
+      htmlDivElement.classList.add(
+        Namespace.Css.calendarWeeks,
+        Namespace.Css.noHighlight
+      );
+      htmlDivElement.innerText = '#';
+      row.push(htmlDivElement);
     }
 
-    let i = 0;
-    while (i < 7) {
-      const th = document.createElement('th');
-      th.classList.add(Namespace.Css.dayOfTheWeek);
-      th.innerText = innerDate.format({ weekday: 'short' });
+    for (let i = 0; i < 7; i++) {
+      const htmlDivElement = document.createElement('div');
+      htmlDivElement.classList.add(Namespace.Css.dayOfTheWeek);
+      htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
       innerDate.manipulate(1, Unit.date);
-      row.appendChild(th);
-      i++;
+      row.push(htmlDivElement);
     }
 
     return row;

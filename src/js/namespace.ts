@@ -56,9 +56,24 @@ class Css {
   widget = `${NAME}-widget`;
 
   /**
+   * Hold the previous, next and switcher divs
+   */
+  calendarHeader = 'calendar-header';
+
+  /**
    * The element for the action to change the calendar view. E.g. month -> year.
    */
   switch = 'picker-switch';
+
+  /**
+   * The elements for all of the toolbar options
+   */
+  toolbar = 'toolbar';
+
+  /**
+   * Disables the hover and rounding affect.
+   */
+  noHighlight = 'no-highlight';
 
   /**
    * Applied to the widget element when the side by side option is in use.
