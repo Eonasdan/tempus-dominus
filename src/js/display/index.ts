@@ -99,6 +99,7 @@ export default class Display {
         this._update(Unit.year);
         this._update(Unit.month);
         this._decadeDisplay._update();
+        this._context._display._showMode();
         break;
       case 'all':
         if (this._hasTime) {
@@ -117,20 +118,33 @@ export default class Display {
    */
   show(): void {
     if (this.widget == undefined) {
-      if (this._context._options.useCurrent) {
+      if (
+        this._context._options.useCurrent &&
+        !this._context._options.defaultDate
+      ) {
         //todo in the td4 branch a pr changed this to allow granularity
         const date = new DateTime().setLocale(
           this._context._options.localization.locale
         );
-        if (this._context._options.keepInvalid) {
+        if (!this._context._options.keepInvalid) {
           let tries = 0;
+          let direction = 1;
+          if (this._context._options.restrictions.maxDate?.isBefore(date)) {
+            direction = -1;
+          }
           while (!this._context._validation.isValid(date)) {
-            date.manipulate(1, Unit.date);
+            date.manipulate(direction, Unit.date);
             if (tries > 31) break;
+            tries++;
           }
         }
         this._context.dates._setValue(date);
       }
+
+      if (this._context._options.defaultDate) {
+        this._context.dates._setValue(this._context._options.defaultDate);
+      }
+
       this._buildWidget();
       if (this._hasDate) {
         this._showMode();
@@ -392,10 +406,7 @@ export default class Display {
       row.appendChild(dateView);
       row.appendChild(timeView);
       template.appendChild(row);
-      if (
-        this._context._options.display.toolbarPlacement === 'bottom' ||
-        this._context._options.display.toolbarPlacement === 'default'
-      ) {
+      if (this._context._options.display.toolbarPlacement === 'bottom') {
         template.appendChild(toolbar);
       }
       this._widget = template;
@@ -413,10 +424,6 @@ export default class Display {
           dateView.classList.add(Namespace.Css.show);
       }
       template.appendChild(dateView);
-    }
-
-    if (this._context._options.display.toolbarPlacement === 'default') {
-      template.appendChild(toolbar);
     }
 
     if (this._hasTime) {
@@ -581,7 +588,9 @@ export default class Display {
       this._isVisible &&
       !e.composedPath().includes(this.widget) && // click inside the widget
       !e.composedPath()?.includes(this._context._element) && // click on the element
-      (!this._context._options.keepOpen || !this._context._options.debug)
+      (!this._context._options.display.keepOpen ||
+        !this._context._options.debug ||
+        !(window as any).debug)
     ) {
       this.hide();
     }

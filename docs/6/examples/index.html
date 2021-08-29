@@ -563,13 +563,18 @@
     </div>
     <script type="text/javascript">
       const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
+        /*restrictions: {
+          maxDate: new tempusDominus.DateTime().manipulate(-1, 'date').startOf('date')
+        },
         display: {
-          calendarWeeks: true,
           components: {
-            //seconds: true,
-            //useTwentyfourHour: true
-          }
-        }
+            clock: false
+          },
+          keepOpen: true
+        },*/
+        //allowInputToggle: true,
+        multipleDates: true,
+
       });
     </script>
   </section>
@@ -782,7 +787,6 @@
    display: {
      viewMode: 'clock',
      components: {
-       century: false,
        decades: false,
        year: false,
        month: false,
@@ -822,7 +826,6 @@
         display: {
           viewMode: 'clock',
           components: {
-            century: false,
             decades: false,
             year: false,
             month: false,
@@ -891,7 +894,6 @@
    display: {
      viewMode: 'clock',
      components: {
-       century: true,
        decades: true,
        year: true,
        month: true,
@@ -932,7 +934,6 @@
           components: {
             date: true,
             decades: true,
-            century: true,
             month: true,
             year: true,
             hours: false,

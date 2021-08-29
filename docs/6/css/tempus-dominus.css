@@ -113,49 +113,6 @@ todo look at how bootstrap loops through their vars to make a --root section
   flex: 0 0 auto;
   width: 50%;
 }
-.tempus-dominus-widget:before, .tempus-dominus-widget:after {
-  content: "";
-  display: inline-block;
-  position: absolute;
-}
-.tempus-dominus-widget.bottom:before {
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 7px solid #ccc;
-  border-bottom-color: rgba(0, 0, 0, 0.2);
-  top: -7px;
-  left: 7px;
-}
-.tempus-dominus-widget.bottom:after {
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid white;
-  top: -6px;
-  left: 8px;
-}
-.tempus-dominus-widget.top:before {
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-top: 7px solid #ccc;
-  border-top-color: rgba(0, 0, 0, 0.2);
-  bottom: -7px;
-  left: 6px;
-}
-.tempus-dominus-widget.top:after {
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid white;
-  bottom: -6px;
-  left: 7px;
-}
-.tempus-dominus-widget.float-right:before {
-  left: auto;
-  right: 6px;
-}
-.tempus-dominus-widget.float-right:after {
-  left: auto;
-  right: 7px;
-}
 .tempus-dominus-widget div[data-action]:active {
   box-shadow: none;
 }

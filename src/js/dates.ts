@@ -129,7 +129,8 @@ export default class Dates {
     const updateInput = () => {
       if (!this._context._input) return;
 
-      let newValue = target?.format(this._context._options.display.inputFormat);
+      let newValue =
+        target?.format(this._context._options.display.inputFormat) || '';
       if (this._context._options.multipleDates) {
         newValue = this._dates
           .map((d) => d.format(this._context._options.display.inputFormat))
@@ -196,6 +197,9 @@ export default class Dates {
     if (this._context._options.keepInvalid) {
       this._dates[index] = target;
       this._context._viewDate = target.clone;
+
+      updateInput();
+
       this._context._triggerEvent({
         type: Namespace.Events.change,
         date: target,

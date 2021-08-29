@@ -29,7 +29,8 @@ const DefaultOptions: Options = {
     sideBySide: false,
     calendarWeeks: false,
     viewMode: 'calendar',
-    toolbarPlacement: 'default',
+    toolbarPlacement: 'bottom',
+    keepOpen: false,
     buttons: {
       today: false,
       clear: false,
@@ -41,7 +42,6 @@ const DefaultOptions: Options = {
       month: true,
       year: true,
       decades: true,
-      century: true,
       clock: true,
       hours: true,
       minutes: true,
@@ -53,7 +53,7 @@ const DefaultOptions: Options = {
   },
   stepping: 1,
   useCurrent: true,
-  defaultDate: false,
+  defaultDate: undefined,
   localization: {
     today: 'Go to today',
     clear: 'Clear selection',
@@ -84,52 +84,7 @@ const DefaultOptions: Options = {
     dayViewHeaderFormat: 'long',
     locale: 'default',
   },
-  readonly: false,
-  ignoreReadonly: false,
-  keepOpen: false,
-  focusOnShow: true,
   keepInvalid: false,
-  keyBinds: {
-    'control down': () => {
-      return false;
-    },
-    pageDown: () => {
-      return false;
-    },
-    'control up': () => {
-      return false;
-    },
-    right: () => {
-      return false;
-    },
-    pageUp: () => {
-      return false;
-    },
-    down: () => {
-      return false;
-    },
-    delete: () => {
-      return false;
-    },
-    t: () => {
-      return false;
-    },
-    left: () => {
-      return false;
-    },
-    up: () => {
-      return false;
-    },
-    enter: () => {
-      return false;
-    },
-    'control space': () => {
-      return false;
-    },
-    escape: () => {
-      return false;
-    },
-  },
   debug: false,
   allowInputToggle: false,
   viewDate: new DateTime(),

@@ -15,14 +15,13 @@ export default interface Options {
     daysOfWeekDisabled: number[];
   };
   display: {
-    toolbarPlacement: 'top' | 'bottom' | 'default';
+    toolbarPlacement: 'top' | 'bottom';
     components: {
       calendar: boolean;
       date: boolean;
       month: boolean;
       year: boolean;
       decades: boolean;
-      century: boolean;
       clock: boolean;
       hours: boolean;
       minutes: boolean;
@@ -47,10 +46,11 @@ export default interface Options {
     sideBySide: boolean;
     inputFormat: DateTimeFormatOptions;
     inline: boolean;
+    keepOpen: boolean;
   };
   stepping: number;
   useCurrent: boolean;
-  defaultDate: boolean;
+  defaultDate: DateTime;
   localization: {
     nextMonth: string;
     pickHour: string;
@@ -81,26 +81,7 @@ export default interface Options {
     previousDecade: string;
     locale: string;
   };
-  readonly: boolean;
-  ignoreReadonly: boolean;
-  keepOpen: boolean;
-  focusOnShow: boolean;
   keepInvalid: boolean;
-  keyBinds: {
-    'control down': () => boolean;
-    pageDown: () => boolean;
-    'control up': () => boolean;
-    right: () => boolean;
-    pageUp: () => boolean;
-    down: () => boolean;
-    delete: () => boolean;
-    t: () => boolean;
-    left: () => boolean;
-    up: () => boolean;
-    enter: () => boolean;
-    'control space': () => boolean;
-    escape: () => boolean;
-  };
   debug: boolean;
   allowInputToggle: boolean;
   viewDate: DateTime;

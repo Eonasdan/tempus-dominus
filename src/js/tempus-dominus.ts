@@ -223,7 +223,7 @@ class TempusDominus {
         this._notifyChangeEventContext = 0;
         return;
       }
-      this._handlePromptTimeIfNeeded(event as ChangeEvent);
+      this._handleAfterChangeEvent(event as ChangeEvent);
     }
 
     this._element.dispatchEvent(
@@ -391,7 +391,7 @@ class TempusDominus {
    * @param e change event
    * @private
    */
-  private _handlePromptTimeIfNeeded(e: ChangeEvent) {
+  private _handleAfterChangeEvent(e: ChangeEvent) {
     if (
       // options is disabled
       !this._options.promptTimeOnDateChange ||

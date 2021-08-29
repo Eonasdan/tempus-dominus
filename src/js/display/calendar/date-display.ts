@@ -158,7 +158,10 @@ export default class DateDisplay {
 
     for (let i = 0; i < 7; i++) {
       const htmlDivElement = document.createElement('div');
-      htmlDivElement.classList.add(Namespace.Css.dayOfTheWeek);
+      htmlDivElement.classList.add(
+        Namespace.Css.dayOfTheWeek,
+        Namespace.Css.noHighlight
+      );
       htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
       innerDate.manipulate(1, Unit.date);
       row.push(htmlDivElement);

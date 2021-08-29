@@ -155,63 +155,6 @@ todo look at how bootstrap loops through their vars to make a --root section
     }
   }
 
-  &:before,
-  &:after {
-    content: '';
-    display: inline-block;
-    position: absolute;
-  }
-
-  &.bottom {
-    &:before {
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-bottom: 7px solid $td-secondary-border-color;
-      border-bottom-color: $td-secondary-border-color-rgba;
-      top: -7px;
-      left: 7px;
-    }
-
-    &:after {
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-bottom: 6px solid $td-primary-border-color;
-      top: -6px;
-      left: 8px;
-    }
-  }
-
-  &.top {
-    &:before {
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 7px solid $td-secondary-border-color;
-      border-top-color: $td-secondary-border-color-rgba;
-      bottom: -7px;
-      left: 6px;
-    }
-
-    &:after {
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 6px solid $td-primary-border-color;
-      bottom: -6px;
-      left: 7px;
-    }
-  }
-
-  &.float-right {
-    &:before {
-      left: auto;
-      right: 6px;
-    }
-
-    &:after {
-      left: auto;
-      right: 7px;
-    }
-  }
-
   div[data-action]:active {
     box-shadow: none;
   }

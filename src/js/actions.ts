@@ -126,7 +126,7 @@ export default class Actions {
 
         if (
           !this._context._display._hasTime &&
-          !this._context._options.keepOpen &&
+          !this._context._options.display.keepOpen &&
           !this._context._options.display.inline &&
           !this._context._options.multipleDates
         ) {
@@ -143,7 +143,7 @@ export default class Actions {
         if (
           this._context._options.display.components.useTwentyfourHour &&
           !this._context._options.display.components.minutes &&
-          !this._context._options.keepOpen &&
+          !this._context._options.display.keepOpen &&
           !this._context._options.display.inline
         ) {
           this._context._display.hide();
@@ -160,7 +160,7 @@ export default class Actions {
         if (
           this._context._options.display.components.useTwentyfourHour &&
           !this._context._options.display.components.seconds &&
-          !this._context._options.keepOpen &&
+          !this._context._options.display.keepOpen &&
           !this._context._options.display.inline
         ) {
           this._context._display.hide();
@@ -176,7 +176,7 @@ export default class Actions {
         );
         if (
           this._context._options.display.components.useTwentyfourHour &&
-          !this._context._options.keepOpen &&
+          !this._context._options.display.keepOpen &&
           !this._context._options.display.inline
         ) {
           this._context._display.hide();
@@ -278,6 +278,7 @@ export default class Actions {
         break;
       case ActionTypes.clear:
         this._context.dates._setValue(null);
+        this._context._display._showMode();
         break;
       case ActionTypes.close:
         this._context._display.hide();

@@ -742,7 +742,8 @@
             sideBySide: false,
             calendarWeeks: false,
             viewMode: 'calendar',
-            toolbarPlacement: 'default',
+            toolbarPlacement: 'bottom',
+            keepOpen: false,
             buttons: {
                 today: false,
                 clear: false,
@@ -754,7 +755,6 @@
                 month: true,
                 year: true,
                 decades: true,
-                century: true,
                 clock: true,
                 hours: true,
                 minutes: true,
@@ -766,7 +766,7 @@
         },
         stepping: 1,
         useCurrent: true,
-        defaultDate: false,
+        defaultDate: undefined,
         localization: {
             today: 'Go to today',
             clear: 'Clear selection',
@@ -797,52 +797,7 @@
             dayViewHeaderFormat: 'long',
             locale: 'default',
         },
-        readonly: false,
-        ignoreReadonly: false,
-        keepOpen: false,
-        focusOnShow: true,
         keepInvalid: false,
-        keyBinds: {
-            'control down': () => {
-                return false;
-            },
-            pageDown: () => {
-                return false;
-            },
-            'control up': () => {
-                return false;
-            },
-            right: () => {
-                return false;
-            },
-            pageUp: () => {
-                return false;
-            },
-            down: () => {
-                return false;
-            },
-            delete: () => {
-                return false;
-            },
-            t: () => {
-                return false;
-            },
-            left: () => {
-                return false;
-            },
-            up: () => {
-                return false;
-            },
-            enter: () => {
-                return false;
-            },
-            'control space': () => {
-                return false;
-            },
-            escape: () => {
-                return false;
-            },
-        },
         debug: false,
         allowInputToggle: false,
         viewDate: new DateTime(),
@@ -1062,7 +1017,7 @@
                         this._context.dates._setValue(day, this._context.dates.lastPickedIndex);
                     }
                     if (!this._context._display._hasTime &&
-                        !this._context._options.keepOpen &&
+                        !this._context._options.display.keepOpen &&
                         !this._context._options.display.inline &&
                         !this._context._options.multipleDates) {
                         this._context._display.hide();
@@ -1074,7 +1029,7 @@
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
                     if (this._context._options.display.components.useTwentyfourHour &&
                         !this._context._options.display.components.minutes &&
-                        !this._context._options.keepOpen &&
+                        !this._context._options.display.keepOpen &&
                         !this._context._options.display.inline) {
                         this._context._display.hide();
                     }
@@ -1087,7 +1042,7 @@
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
                     if (this._context._options.display.components.useTwentyfourHour &&
                         !this._context._options.display.components.seconds &&
-                        !this._context._options.keepOpen &&
+                        !this._context._options.display.keepOpen &&
                         !this._context._options.display.inline) {
                         this._context._display.hide();
                     }
@@ -1099,7 +1054,7 @@
                     lastPicked.seconds = +currentTarget.innerText;
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
                     if (this._context._options.display.components.useTwentyfourHour &&
-                        !this._context._options.keepOpen &&
+                        !this._context._options.display.keepOpen &&
                         !this._context._options.display.inline) {
                         this._context._display.hide();
                     }
@@ -1175,6 +1130,7 @@
                     break;
                 case ActionTypes.clear:
                     this._context.dates._setValue(null);
+                    this._context._display._showMode();
                     break;
                 case ActionTypes.close:
                     this._context._display.hide();
@@ -1329,7 +1285,7 @@
             }
             for (let i = 0; i < 7; i++) {
                 const htmlDivElement = document.createElement('div');
-                htmlDivElement.classList.add(Namespace.Css.dayOfTheWeek);
+                htmlDivElement.classList.add(Namespace.Css.dayOfTheWeek, Namespace.Css.noHighlight);
                 htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
                 innerDate.manipulate(1, Unit.date);
                 row.push(htmlDivElement);
@@ -1499,7 +1455,7 @@
             const updateInput = () => {
                 if (!this._context._input)
                     return;
-                let newValue = target === null || target === void 0 ? void 0 : target.format(this._context._options.display.inputFormat);
+                let newValue = (target === null || target === void 0 ? void 0 : target.format(this._context._options.display.inputFormat)) || '';
                 if (this._context._options.multipleDates) {
                     newValue = this._dates
                         .map((d) => d.format(this._context._options.display.inputFormat))
@@ -1557,6 +1513,7 @@
             if (this._context._options.keepInvalid) {
                 this._dates[index] = target;
                 this._context._viewDate = target.clone;
+                updateInput();
                 this._context._triggerEvent({
                     type: Namespace.Events.change,
                     date: target,
@@ -2074,7 +2031,9 @@
                 if (this._isVisible &&
                     !e.composedPath().includes(this.widget) && // click inside the widget
                     !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this._context._element)) && // click on the element
-                    (!this._context._options.keepOpen || !this._context._options.debug)) {
+                    (!this._context._options.display.keepOpen ||
+                        !this._context._options.debug ||
+                        !window.debug)) {
                     this.hide();
                 }
             };
@@ -2150,6 +2109,7 @@
                     this._update(Unit.year);
                     this._update(Unit.month);
                     this._decadeDisplay._update();
+                    this._context._display._showMode();
                     break;
                 case 'all':
                     if (this._hasTime) {
@@ -2166,16 +2126,29 @@
          * @fires Events#show
          */
         show() {
+            var _a;
             if (this.widget == undefined) {
-                if (this._context._options.useCurrent) {
+                if (this._context._options.useCurrent &&
+                    !this._context._options.defaultDate) {
                     //todo in the td4 branch a pr changed this to allow granularity
                     const date = new DateTime().setLocale(this._context._options.localization.locale);
-                    if (this._context._options.keepInvalid) {
+                    if (!this._context._options.keepInvalid) {
+                        let tries = 0;
+                        let direction = 1;
+                        if ((_a = this._context._options.restrictions.maxDate) === null || _a === void 0 ? void 0 : _a.isBefore(date)) {
+                            direction = -1;
+                        }
                         while (!this._context._validation.isValid(date)) {
-                            date.manipulate(1, Unit.date);
+                            date.manipulate(direction, Unit.date);
+                            if (tries > 31)
+                                break;
+                            tries++;
                         }
                     }
                     this._context.dates._setValue(date);
+                }
+                if (this._context._options.defaultDate) {
+                    this._context.dates._setValue(this._context._options.defaultDate);
                 }
                 this._buildWidget();
                 if (this._hasDate) {
@@ -2351,8 +2324,7 @@
                 row.appendChild(dateView);
                 row.appendChild(timeView);
                 template.appendChild(row);
-                if (this._context._options.display.toolbarPlacement === 'bottom' ||
-                    this._context._options.display.toolbarPlacement === 'default') {
+                if (this._context._options.display.toolbarPlacement === 'bottom') {
                     template.appendChild(toolbar);
                 }
                 this._widget = template;
@@ -2368,9 +2340,6 @@
                         dateView.classList.add(Namespace.Css.show);
                 }
                 template.appendChild(dateView);
-            }
-            if (this._context._options.display.toolbarPlacement === 'default') {
-                template.appendChild(toolbar);
             }
             if (this._hasTime) {
                 if (this._hasDate) {
@@ -3150,7 +3119,7 @@
                     this._notifyChangeEventContext = 0;
                     return;
                 }
-                this._handlePromptTimeIfNeeded(event);
+                this._handleAfterChangeEvent(event);
             }
             this._element.dispatchEvent(new CustomEvent(event.type, { detail: event }));
             if (window.jQuery) {
@@ -3286,7 +3255,7 @@
          * @param e change event
          * @private
          */
-        _handlePromptTimeIfNeeded(e) {
+        _handleAfterChangeEvent(e) {
             var _a, _b;
             if (
             // options is disabled
