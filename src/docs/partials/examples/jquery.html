@@ -445,7 +445,6 @@ $('#datetimepicker3').tempusDominus({
    display: {
      viewMode: 'clock',
      components: {
-       century: false,
        decades: false,
        year: false,
        month: false,
@@ -500,7 +499,6 @@ $('#datetimepicker3').tempusDominus({
         display: {
           viewMode: 'clock',
           components: {
-            century: false,
             decades: false,
             year: false,
             month: false,
@@ -579,7 +577,6 @@ $('#datetimepicker4').tempusDominus({
    display: {
      viewMode: 'clock',
      components: {
-       century: true,
        decades: true,
        year: true,
        month: true,
@@ -635,7 +632,6 @@ $('#datetimepicker4').tempusDominus({
           components: {
             date: true,
             decades: true,
-            century: true,
             month: true,
             year: true,
             hours: false,
@@ -957,7 +953,7 @@ linkedPicker2Element.tempusDominus({
   useCurrent: false
 });
 
-linkedPicker1Element.on(tempusDominus.Namespace.Events.change, (e) => {
+linkedPicker1Element.on(tempusDominus.Namespace.events.change, (e) => {
   linkedPicker2Element.tempusDominus('updateOptions',{
     restrictions: {
       minDate: e.date
@@ -965,7 +961,7 @@ linkedPicker1Element.on(tempusDominus.Namespace.Events.change, (e) => {
   });
 });
 
-linkedPicker2Element.on(tempusDominus.Namespace.Events.change, (e) => {
+linkedPicker2Element.on(tempusDominus.Namespace.events.change, (e) => {
   linkedPicker2Element.tempusDominus('updateOptions',{
     restrictions: {
       maxDate: e.date
@@ -1042,7 +1038,7 @@ linkedPicker2Element.on(tempusDominus.Namespace.Events.change, (e) => {
         useCurrent: false
       });
 
-      linkedPicker1Element.on(tempusDominus.Namespace.Events.change, (e) => {
+      linkedPicker1Element.on(tempusDominus.Namespace.events.change, (e) => {
         linkedPicker2Element.tempusDominus('updateOptions', {
           restrictions: {
             minDate: e.date
@@ -1050,7 +1046,7 @@ linkedPicker2Element.on(tempusDominus.Namespace.Events.change, (e) => {
         });
       });
 
-      linkedPicker2Element.on(tempusDominus.Namespace.Events.change, (e) => {
+      linkedPicker2Element.on(tempusDominus.Namespace.events.change, (e) => {
         linkedPicker2Element.tempusDominus('updateOptions', {
           restrictions: {
             maxDate: e.date

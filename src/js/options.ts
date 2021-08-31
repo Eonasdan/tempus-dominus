@@ -103,7 +103,7 @@ export class OptionConverter {
           if (dateTime !== undefined) {
             return dateTime;
           }
-          Namespace.ErrorMessages.typeMismatch(
+          Namespace.errorMessages.typeMismatch(
             'viewDate',
             providedType,
             'DateTime or Date'
@@ -117,7 +117,7 @@ export class OptionConverter {
           if (dateTime !== undefined) {
             return dateTime;
           }
-          Namespace.ErrorMessages.typeMismatch(
+          Namespace.errorMessages.typeMismatch(
             'restrictions.minDate',
             providedType,
             'DateTime or Date'
@@ -131,7 +131,7 @@ export class OptionConverter {
           if (dateTime !== undefined) {
             return dateTime;
           }
-          Namespace.ErrorMessages.typeMismatch(
+          Namespace.errorMessages.typeMismatch(
             'restrictions.maxDate',
             providedType,
             'DateTime or Date'
@@ -147,7 +147,7 @@ export class OptionConverter {
             providedType
           );
           if (value.filter((x) => x < 0 || x > 24).length > 0)
-            Namespace.ErrorMessages.numbersOutOfRage(
+            Namespace.errorMessages.numbersOutOfRage(
               'restrictions.disabledHours',
               0,
               23
@@ -163,7 +163,7 @@ export class OptionConverter {
             providedType
           );
           if (value.filter((x) => x < 0 || x > 24).length > 0)
-            Namespace.ErrorMessages.numbersOutOfRage(
+            Namespace.errorMessages.numbersOutOfRage(
               'restrictions.enabledHours',
               0,
               23
@@ -179,7 +179,7 @@ export class OptionConverter {
             providedType
           );
           if (value.filter((x) => x < 0 || x > 6).length > 0)
-            Namespace.ErrorMessages.numbersOutOfRage(
+            Namespace.errorMessages.numbersOutOfRage(
               'restrictions.daysOfWeekDisabled',
               0,
               6
@@ -210,7 +210,7 @@ export class OptionConverter {
             return [];
           }
           if (!Array.isArray(value)) {
-            Namespace.ErrorMessages.typeMismatch(
+            Namespace.errorMessages.typeMismatch(
               key,
               providedType,
               'array of { from: DateTime|Date, to: DateTime|Date }'
@@ -223,7 +223,7 @@ export class OptionConverter {
               let d = valueObject[i][vk];
               const dateTime = this._dateConversion(d, subOptionName);
               if (!dateTime) {
-                Namespace.ErrorMessages.typeMismatch(
+                Namespace.errorMessages.typeMismatch(
                   subOptionName,
                   typeof d,
                   'DateTime or Date'
@@ -251,7 +251,7 @@ export class OptionConverter {
           };
           const keyOptions = optionValues[key];
           if (!keyOptions.includes(value))
-            Namespace.ErrorMessages.unexpectedOptionValue(
+            Namespace.errorMessages.unexpectedOptionValue(
               path.substring(1),
               value,
               keyOptions
@@ -273,7 +273,7 @@ export class OptionConverter {
             case 'function':
               return value;
             default:
-              Namespace.ErrorMessages.typeMismatch(
+              Namespace.errorMessages.typeMismatch(
                 path.substring(1),
                 providedType,
                 defaultType
@@ -303,7 +303,7 @@ export class OptionConverter {
           if (didYouMean) error += `Did you mean "${didYouMean}"?`;
           return error;
         });
-        Namespace.ErrorMessages.unexpectedOptions(errors);
+        Namespace.errorMessages.unexpectedOptions(errors);
       }
       Object.keys(mergeOption).forEach((key) => {
         const defaultOptionValue = mergeOption[key];
@@ -453,7 +453,7 @@ export class OptionConverter {
    */
   static _typeCheckDateArray(optionName: string, value, providedType: string) {
     if (!Array.isArray(value)) {
-      Namespace.ErrorMessages.typeMismatch(
+      Namespace.errorMessages.typeMismatch(
         optionName,
         providedType,
         'array of DateTime or Date'
@@ -463,7 +463,7 @@ export class OptionConverter {
       let d = value[i];
       const dateTime = this._dateConversion(d, optionName);
       if (!dateTime) {
-        Namespace.ErrorMessages.typeMismatch(
+        Namespace.errorMessages.typeMismatch(
           optionName,
           typeof d,
           'DateTime or Date'
@@ -485,7 +485,7 @@ export class OptionConverter {
     providedType: string
   ) {
     if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
-      Namespace.ErrorMessages.typeMismatch(
+      Namespace.errorMessages.typeMismatch(
         optionName,
         providedType,
         'array of numbers'
@@ -501,13 +501,13 @@ export class OptionConverter {
    */
   static _dateConversion(d: any, optionName: string) {
     if (typeof d === typeof '') {
-      Namespace.ErrorMessages.dateString();
+      Namespace.errorMessages.dateString();
     }
 
     const converted = this._dateTypeCheck(d);
 
     if (!converted) {
-      Namespace.ErrorMessages.failedToParseDate(optionName, d);
+      Namespace.errorMessages.failedToParseDate(optionName, d);
     }
     return converted;
   }
@@ -531,13 +531,13 @@ export class OptionConverter {
   static _validateConflcits(config: Options) {
     if (config.restrictions.minDate && config.restrictions.maxDate) {
       if (config.restrictions.minDate.isAfter(config.restrictions.maxDate)) {
-        Namespace.ErrorMessages.conflictingConfiguration(
+        Namespace.errorMessages.conflictingConfiguration(
           'minDate is after maxDate'
         );
       }
 
       if (config.restrictions.maxDate.isBefore(config.restrictions.minDate)) {
-        Namespace.ErrorMessages.conflictingConfiguration(
+        Namespace.errorMessages.conflictingConfiguration(
           'maxDate is before minDate'
         );
       }

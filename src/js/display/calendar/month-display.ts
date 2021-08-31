@@ -19,7 +19,7 @@ export default class MonthDisplay {
    */
   get _picker(): HTMLElement {
     const container = document.createElement('div');
-    container.classList.add(Namespace.Css.monthsContainer);
+    container.classList.add(Namespace.css.monthsContainer);
 
     for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
@@ -36,27 +36,30 @@ export default class MonthDisplay {
    */
   _update(): void {
     const container = this._context._display.widget.getElementsByClassName(
-      Namespace.Css.monthsContainer
+      Namespace.css.monthsContainer
     )[0];
     const [previous, switcher, next] = container.parentElement
-      .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+      .getElementsByClassName(Namespace.css.calendarHeader)[0]
       .getElementsByTagName('div');
 
-    switcher.innerText = this._context._viewDate.format({ year: 'numeric' });
+    switcher.setAttribute(
+      Namespace.css.monthsContainer,
+      this._context._viewDate.format({ year: 'numeric' })
+    );
 
     this._context._validation.isValid(
       this._context._viewDate.clone.manipulate(-1, Unit.year),
       Unit.year
     )
-      ? previous.classList.remove(Namespace.Css.disabled)
-      : previous.classList.add(Namespace.Css.disabled);
+      ? previous.classList.remove(Namespace.css.disabled)
+      : previous.classList.add(Namespace.css.disabled);
 
     this._context._validation.isValid(
       this._context._viewDate.clone.manipulate(1, Unit.year),
       Unit.year
     )
-      ? next.classList.remove(Namespace.Css.disabled)
-      : next.classList.add(Namespace.Css.disabled);
+      ? next.classList.remove(Namespace.css.disabled)
+      : next.classList.add(Namespace.css.disabled);
 
     let innerDate = this._context._viewDate.clone.startOf(Unit.year);
 
@@ -64,16 +67,16 @@ export default class MonthDisplay {
       .querySelectorAll(`[data-action="${ActionTypes.selectMonth}"]`)
       .forEach((containerClone: HTMLElement, index) => {
         let classes = [];
-        classes.push(Namespace.Css.month);
+        classes.push(Namespace.css.month);
 
         if (
           !this._context._unset &&
           this._context.dates.isPicked(innerDate, Unit.month)
         ) {
-          classes.push(Namespace.Css.active);
+          classes.push(Namespace.css.active);
         }
         if (!this._context._validation.isValid(innerDate, Unit.month)) {
-          classes.push(Namespace.Css.disabled);
+          classes.push(Namespace.css.disabled);
         }
 
         containerClone.classList.remove(...containerClone.classList);

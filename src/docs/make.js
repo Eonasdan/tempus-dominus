@@ -632,6 +632,7 @@ if (process.argv.slice(2)[0] === '--watch') {
       'src/docs/styles',
       'src/docs/templates',
       'src/docs/js',
+      'src/docs/assets',
       'dist/',
     ],
     {
@@ -651,7 +652,7 @@ if (process.argv.slice(2)[0] === '--watch') {
         builder.updateDist();
       }
       if (path.startsWith('src\\docs\\assets')) {
-        this.copyAssets();
+        builder.copyAssets();
       }
       if (path.startsWith('src\\docs\\partials')) {
         //reading the file stats seems to trigger this twice, so if the same file changed in less then a second, ignore

@@ -19,7 +19,7 @@ export default class secondDisplay {
    */
   get _picker(): HTMLElement {
     const container = document.createElement('div');
-    container.classList.add(Namespace.Css.secondContainer);
+    container.classList.add(Namespace.css.secondContainer);
 
     for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
@@ -36,7 +36,7 @@ export default class secondDisplay {
    */
   _update(): void {
     const container = this._context._display.widget.getElementsByClassName(
-      Namespace.Css.secondContainer
+      Namespace.css.secondContainer
     )[0];
     let innerDate = this._context._viewDate.clone.startOf(Unit.minutes);
 
@@ -44,10 +44,10 @@ export default class secondDisplay {
       .querySelectorAll(`[data-action="${ActionTypes.selectSecond}"]`)
       .forEach((containerClone: HTMLElement, index) => {
         let classes = [];
-        classes.push(Namespace.Css.second);
+        classes.push(Namespace.css.second);
 
         if (!this._context._validation.isValid(innerDate, Unit.seconds)) {
-          classes.push(Namespace.Css.disabled);
+          classes.push(Namespace.css.disabled);
         }
 
         containerClone.classList.remove(...containerClone.classList);

@@ -84,7 +84,7 @@ export default class Dates {
   clear() {
     this._context._unset = true;
     this._context._triggerEvent({
-      type: Namespace.Events.change,
+      type: Namespace.events.change,
       date: undefined,
       oldDate: this.lastPicked,
       isClear: true,
@@ -153,7 +153,7 @@ export default class Dates {
         this._dates.splice(index, 1);
       }
       this._context._triggerEvent({
-        type: Namespace.Events.change,
+        type: Namespace.events.change,
         date: undefined,
         oldDate,
         isClear,
@@ -185,7 +185,7 @@ export default class Dates {
       this._context._unset = false;
       this._context._display._update('all');
       this._context._triggerEvent({
-        type: Namespace.Events.change,
+        type: Namespace.events.change,
         date: target,
         oldDate,
         isClear,
@@ -201,7 +201,7 @@ export default class Dates {
       updateInput();
 
       this._context._triggerEvent({
-        type: Namespace.Events.change,
+        type: Namespace.events.change,
         date: target,
         oldDate,
         isClear,
@@ -209,8 +209,8 @@ export default class Dates {
       } as ChangeEvent);
     }
     this._context._triggerEvent({
-      type: Namespace.Events.error,
-      reason: Namespace.ErrorMessages.failedToSetInvalidDate,
+      type: Namespace.events.error,
+      reason: Namespace.errorMessages.failedToSetInvalidDate,
       date: target,
       oldDate,
     } as FailEvent);

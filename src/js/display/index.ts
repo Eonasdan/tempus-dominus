@@ -99,7 +99,7 @@ export default class Display {
         this._update(Unit.year);
         this._update(Unit.month);
         this._decadeDisplay._update();
-        this._context._display._showMode();
+        this._updateCalendarHeader();
         break;
       case 'all':
         if (this._hasTime) {
@@ -177,7 +177,7 @@ export default class Display {
         this._context._action.do(
           {
             currentTarget: this.widget.querySelector(
-              `.${Namespace.Css.timeContainer}`
+              `.${Namespace.css.timeContainer}`
             ),
           },
           ActionTypes.showClock
@@ -195,18 +195,18 @@ export default class Display {
         this._timeDisplay._update();
         (
           this.widget.getElementsByClassName(
-            Namespace.Css.clockContainer
+            Namespace.css.clockContainer
           )[0] as HTMLElement
         ).style.display = 'grid';
       }
     }
 
-    this.widget.classList.add(Namespace.Css.show);
+    this.widget.classList.add(Namespace.css.show);
     if (!this._context._options.display.inline) {
       this._popperInstance.update();
       document.addEventListener('click', this._documentClickEvent);
     }
-    this._context._triggerEvent({ type: Namespace.Events.show });
+    this._context._triggerEvent({ type: Namespace.events.show });
     this._isVisible = true;
   }
 
@@ -230,7 +230,7 @@ export default class Display {
 
     this.widget
       .querySelectorAll(
-        `.${Namespace.Css.dateContainer} > div:not(.${Namespace.Css.calendarHeader}), .${Namespace.Css.timeContainer} > div`
+        `.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div`
       )
       .forEach((e: HTMLElement) => (e.style.display = 'none'));
 
@@ -239,12 +239,38 @@ export default class Display {
       `.${datePickerMode.className}`
     );
 
+    switch (datePickerMode.className) {
+      case Namespace.css.decadesContainer:
+        this._decadeDisplay._update();
+        break;
+      case Namespace.css.yearsContainer:
+        this._yearDisplay._update();
+        break;
+      case Namespace.css.monthsContainer:
+        this._monthDisplay._update();
+        break;
+      case Namespace.css.daysContainer:
+        this._dateDisplay._update();
+        break;
+    }
+
+    picker.style.display = 'grid';
+    this._updateCalendarHeader();
+  }
+
+  _updateCalendarHeader() {
+    const showing = [
+      ...this.widget.querySelector(
+        `.${Namespace.css.dateContainer} div[style*="display: grid"]`
+      ).classList,
+    ].find((x) => x.startsWith(Namespace.css.dateContainer));
+
     const [previous, switcher, next] = this._context._display.widget
-      .getElementsByClassName(Namespace.Css.calendarHeader)[0]
+      .getElementsByClassName(Namespace.css.calendarHeader)[0]
       .getElementsByTagName('div');
 
-    switch (datePickerMode.className) {
-      case Namespace.Css.decadesContainer:
+    switch (showing) {
+      case Namespace.css.decadesContainer:
         previous.setAttribute(
           'title',
           this._context._options.localization.previousCentury
@@ -254,9 +280,8 @@ export default class Display {
           'title',
           this._context._options.localization.nextCentury
         );
-        this._decadeDisplay._update();
         break;
-      case Namespace.Css.yearsContainer:
+      case Namespace.css.yearsContainer:
         previous.setAttribute(
           'title',
           this._context._options.localization.previousDecade
@@ -269,9 +294,8 @@ export default class Display {
           'title',
           this._context._options.localization.nextDecade
         );
-        this._yearDisplay._update();
         break;
-      case Namespace.Css.monthsContainer:
+      case Namespace.css.monthsContainer:
         previous.setAttribute(
           'title',
           this._context._options.localization.previousYear
@@ -284,9 +308,8 @@ export default class Display {
           'title',
           this._context._options.localization.nextYear
         );
-        this._monthDisplay._update();
         break;
-      case Namespace.Css.daysContainer:
+      case Namespace.css.daysContainer:
         previous.setAttribute(
           'title',
           this._context._options.localization.previousMonth
@@ -299,11 +322,12 @@ export default class Display {
           'title',
           this._context._options.localization.nextMonth
         );
-        this._dateDisplay._update();
+        switcher.innerText = this._context._viewDate.format({
+          month: this._context._options.localization.dayViewHeaderFormat,
+        });
         break;
     }
-
-    picker.style.display = 'grid';
+    switcher.innerText = switcher.getAttribute(showing);
   }
 
   /**
@@ -312,11 +336,11 @@ export default class Display {
    * @fires Events#hide
    */
   hide(): void {
-    this.widget.classList.remove(Namespace.Css.show);
+    this.widget.classList.remove(Namespace.css.show);
 
     if (this._isVisible) {
       this._context._triggerEvent({
-        type: Namespace.Events.hide,
+        type: Namespace.events.hide,
         date: this._context._unset
           ? null
           : this._context.dates.lastPicked
@@ -358,10 +382,10 @@ export default class Display {
    */
   private _buildWidget(): HTMLElement {
     const template = document.createElement('div');
-    template.classList.add(Namespace.Css.widget);
+    template.classList.add(Namespace.css.widget);
 
     const dateView = document.createElement('div');
-    dateView.classList.add(Namespace.Css.dateContainer);
+    dateView.classList.add(Namespace.css.dateContainer);
     dateView.append(
       this._headTemplate,
       this._decadeDisplay._picker,
@@ -371,18 +395,18 @@ export default class Display {
     );
 
     const timeView = document.createElement('div');
-    timeView.classList.add(Namespace.Css.timeContainer);
+    timeView.classList.add(Namespace.css.timeContainer);
     timeView.appendChild(this._timeDisplay._picker);
     timeView.appendChild(this._hourDisplay._picker);
     timeView.appendChild(this._minuteDisplay._picker);
     timeView.appendChild(this._secondDisplay._picker);
 
     const toolbar = document.createElement('div');
-    toolbar.classList.add(Namespace.Css.toolbar);
+    toolbar.classList.add(Namespace.css.toolbar);
     toolbar.append(...this._toolbar);
 
     if (this._context._options.display.inline) {
-      template.classList.add(Namespace.Css.inline);
+      template.classList.add(Namespace.css.inline);
     }
 
     if (this._context._options.display.calendarWeeks) {
@@ -394,7 +418,7 @@ export default class Display {
       this._hasDate &&
       this._hasTime
     ) {
-      template.classList.add(Namespace.Css.sideBySide);
+      template.classList.add(Namespace.css.sideBySide);
       if (this._context._options.display.toolbarPlacement === 'top') {
         template.appendChild(toolbar);
       }
@@ -419,18 +443,18 @@ export default class Display {
 
     if (this._hasDate) {
       if (this._hasTime) {
-        dateView.classList.add(Namespace.Css.collapse);
+        dateView.classList.add(Namespace.css.collapse);
         if (this._context._options.display.viewMode !== 'clock')
-          dateView.classList.add(Namespace.Css.show);
+          dateView.classList.add(Namespace.css.show);
       }
       template.appendChild(dateView);
     }
 
     if (this._hasTime) {
       if (this._hasDate) {
-        timeView.classList.add(Namespace.Css.collapse);
+        timeView.classList.add(Namespace.css.collapse);
         if (this._context._options.display.viewMode === 'clock')
-          timeView.classList.add(Namespace.Css.show);
+          timeView.classList.add(Namespace.css.show);
       }
       template.appendChild(timeView);
     }
@@ -539,21 +563,21 @@ export default class Display {
    */
   get _headTemplate(): HTMLElement {
     const calendarHeader = document.createElement('div');
-    calendarHeader.classList.add(Namespace.Css.calendarHeader);
+    calendarHeader.classList.add(Namespace.css.calendarHeader);
 
     const previous = document.createElement('div');
-    previous.classList.add(Namespace.Css.previous);
+    previous.classList.add(Namespace.css.previous);
     previous.setAttribute('data-action', ActionTypes.previous);
     previous.appendChild(
       this._iconTag(this._context._options.display.icons.previous)
     );
 
     const switcher = document.createElement('div');
-    switcher.classList.add(Namespace.Css.switch);
+    switcher.classList.add(Namespace.css.switch);
     switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
 
     const next = document.createElement('div');
-    next.classList.add(Namespace.Css.next);
+    next.classList.add(Namespace.css.next);
     next.setAttribute('data-action', ActionTypes.next);
     next.appendChild(this._iconTag(this._context._options.display.icons.next));
 

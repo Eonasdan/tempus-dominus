@@ -66,7 +66,7 @@ tempusDominus.getSelectorFromElement = function ($element) {
  */
 $(document)
   .on(
-    `click${tempusDominus.Namespace.Events.key}.data-api`,
+    `click${tempusDominus.Namespace.events.key}.data-api`,
     `[data-toggle="${tempusDominus.Namespace.dataKey}"]`,
     function () {
       const $originalTarget = $(this),
@@ -85,7 +85,7 @@ $(document)
     }
   )
   .on(
-    tempusDominus.Namespace.Events.change,
+    tempusDominus.Namespace.events.change,
     `.${tempusDominus.Namespace.NAME}-input`,
     function (event) {
       const $target = tempusDominus.getSelectorFromElement($(this));
@@ -96,7 +96,7 @@ $(document)
     }
   )
   .on(
-    tempusDominus.Namespace.Events.blur,
+    tempusDominus.Namespace.events.blur,
     `.${tempusDominus.Namespace.NAME}-input`,
     function (event) {
       const $target = tempusDominus.getSelectorFromElement($(this)),
@@ -125,7 +125,7 @@ $(document)
     tempusDominus.jQueryInterface.call($target, '_keyup', event);
   })*/
   .on(
-    tempusDominus.Namespace.Events.focus,
+    tempusDominus.Namespace.events.focus,
     `.${tempusDominus.Namespace.NAME}-input`,
     function (event) {
       const $target = tempusDominus.getSelectorFromElement($(this)),

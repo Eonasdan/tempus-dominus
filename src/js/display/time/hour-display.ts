@@ -19,7 +19,7 @@ export default class HourDisplay {
    */
   get _picker(): HTMLElement {
     const container = document.createElement('div');
-    container.classList.add(Namespace.Css.hourContainer);
+    container.classList.add(Namespace.css.hourContainer);
 
     for (
       let i = 0;
@@ -41,7 +41,7 @@ export default class HourDisplay {
    */
   _update(): void {
     const container = this._context._display.widget.getElementsByClassName(
-      Namespace.Css.hourContainer
+      Namespace.css.hourContainer
     )[0];
     let innerDate = this._context._viewDate.clone.startOf(Unit.date);
 
@@ -49,10 +49,10 @@ export default class HourDisplay {
       .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
       .forEach((containerClone: HTMLElement, index) => {
         let classes = [];
-        classes.push(Namespace.Css.hour);
+        classes.push(Namespace.css.hour);
 
         if (!this._context._validation.isValid(innerDate, Unit.hours)) {
-          classes.push(Namespace.Css.disabled);
+          classes.push(Namespace.css.disabled);
         }
 
         containerClone.classList.remove(...containerClone.classList);

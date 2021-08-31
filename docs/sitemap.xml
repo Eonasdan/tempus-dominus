@@ -1,7 +1,7 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'>
 <url>
 <loc>https://getdatepicker.com</loc>
-<lastmod>2021-08-29T15:14:56.096Z</lastmod>
+<lastmod>2021-08-31T12:38:32.048Z</lastmod>
 <priority>1.00</priority>
 </url>
 <url>
@@ -25,7 +25,15 @@
 <lastmod>2021-07-08T04:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url><url>
+<loc>https://getdatepicker.com/docs/6/index.html</loc>
+<lastmod>2021-07-08T04:00:00.000Z</lastmod>
+<priority>0.80</priority>
+</url><url>
 <loc>https://getdatepicker.com/docs/6/installing.html</loc>
+<lastmod>2021-07-08T04:00:00.000Z</lastmod>
+<priority>0.80</priority>
+</url><url>
+<loc>https://getdatepicker.com/docs/6/migration.html</loc>
 <lastmod>2021-07-08T04:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url><url>

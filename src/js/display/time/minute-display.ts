@@ -19,7 +19,7 @@ export default class MinuteDisplay {
    */
   get _picker(): HTMLElement {
     const container = document.createElement('div');
-    container.classList.add(Namespace.Css.minuteContainer);
+    container.classList.add(Namespace.css.minuteContainer);
 
     let step =
       this._context._options.stepping === 1
@@ -40,7 +40,7 @@ export default class MinuteDisplay {
    */
   _update(): void {
     const container = this._context._display.widget.getElementsByClassName(
-      Namespace.Css.minuteContainer
+      Namespace.css.minuteContainer
     )[0];
     let innerDate = this._context._viewDate.clone.startOf(Unit.hours);
     let step =
@@ -52,10 +52,10 @@ export default class MinuteDisplay {
       .querySelectorAll(`[data-action="${ActionTypes.selectMinute}"]`)
       .forEach((containerClone: HTMLElement, index) => {
         let classes = [];
-        classes.push(Namespace.Css.minute);
+        classes.push(Namespace.css.minute);
 
         if (!this._context._validation.isValid(innerDate, Unit.minutes)) {
-          classes.push(Namespace.Css.disabled);
+          classes.push(Namespace.css.disabled);
         }
 
         containerClone.classList.remove(...containerClone.classList);

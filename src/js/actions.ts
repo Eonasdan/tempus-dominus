@@ -23,7 +23,7 @@ export default class Actions {
    */
   do(e: any, action?: ActionTypes) {
     const currentTarget = e.currentTarget;
-    if (currentTarget.classList.contains(Namespace.Css.disabled)) return false;
+    if (currentTarget.classList.contains(Namespace.css.disabled)) return false;
     action = action || currentTarget.dataset.action;
     const lastPicked = (
       this._context.dates.lastPicked || this._context._viewDate
@@ -54,14 +54,16 @@ export default class Actions {
         if (action === ActionTypes.next)
           this._context._viewDate.manipulate(step, unit);
         else this._context._viewDate.manipulate(step * -1, unit);
-        this._context._display._showMode();
         this._context._viewUpdate(unit);
+
+        this._context._display._showMode();
         break;
       case ActionTypes.pickerSwitch:
         this._context._display._showMode(1);
         this._context._viewUpdate(
           DatePickerModes[this._context._currentViewMode].unit
         );
+        this._context._display._updateCalendarHeader();
         break;
       case ActionTypes.selectMonth:
       case ActionTypes.selectYear:
@@ -98,10 +100,10 @@ export default class Actions {
         break;
       case ActionTypes.selectDay:
         const day = this._context._viewDate.clone;
-        if (currentTarget.classList.contains(Namespace.Css.old)) {
+        if (currentTarget.classList.contains(Namespace.css.old)) {
           day.manipulate(-1, Unit.month);
         }
-        if (currentTarget.classList.contains(Namespace.Css.new)) {
+        if (currentTarget.classList.contains(Namespace.css.new)) {
           day.manipulate(1, Unit.month);
         }
 
@@ -211,7 +213,7 @@ export default class Actions {
       case ActionTypes.togglePicker:
         this._context._display.widget
           .querySelectorAll(
-            `.${Namespace.Css.dateContainer}, .${Namespace.Css.timeContainer}`
+            `.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`
           )
           .forEach((htmlElement: HTMLElement) =>
             this.collapse.toggle(htmlElement)
@@ -229,7 +231,7 @@ export default class Actions {
             this._context._options.display.icons.time
           ).outerHTML;
 
-          this._context._display._showMode();
+          this._context._display._updateCalendarHeader();
         } else {
           currentTarget.setAttribute(
             'title',
@@ -247,7 +249,7 @@ export default class Actions {
       case ActionTypes.showMinutes:
       case ActionTypes.showSeconds:
         this._context._display.widget
-          .querySelectorAll(`.${Namespace.Css.timeContainer} > div`)
+          .querySelectorAll(`.${Namespace.css.timeContainer} > div`)
           .forEach(
             (htmlElement: HTMLElement) => (htmlElement.style.display = 'none')
           );
@@ -255,19 +257,19 @@ export default class Actions {
         let classToUse = '';
         switch (action) {
           case ActionTypes.showClock:
-            classToUse = Namespace.Css.clockContainer;
+            classToUse = Namespace.css.clockContainer;
             this._context._display._update('clock');
             break;
           case ActionTypes.showHours:
-            classToUse = Namespace.Css.hourContainer;
+            classToUse = Namespace.css.hourContainer;
             this._context._display._update(Unit.hours);
             break;
           case ActionTypes.showMinutes:
-            classToUse = Namespace.Css.minuteContainer;
+            classToUse = Namespace.css.minuteContainer;
             this._context._display._update(Unit.minutes);
             break;
           case ActionTypes.showSeconds:
-            classToUse = Namespace.Css.secondContainer;
+            classToUse = Namespace.css.secondContainer;
             this._context._display._update(Unit.seconds);
             break;
         }
@@ -278,7 +280,7 @@ export default class Actions {
         break;
       case ActionTypes.clear:
         this._context.dates._setValue(null);
-        this._context._display._showMode();
+        this._context._display._updateCalendarHeader();
         break;
       case ActionTypes.close:
         this._context._display.hide();

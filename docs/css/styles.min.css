@@ -10756,7 +10756,7 @@ textarea.form-control-lg {
  */
 .bd-navbar {
   padding: 0.75rem 0;
-  background-color: #7952b3;
+  background-color: var(--bs-primary);
 }
 
 .bd-navbar .navbar-toggler {

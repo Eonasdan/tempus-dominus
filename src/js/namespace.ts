@@ -264,9 +264,9 @@ export default class Namespace {
   static version = version;
   static dataKey = dataKey;
 
-  static Events = new Events();
+  static events = new Events();
 
-  static Css = new Css();
+  static css = new Css();
 
-  static ErrorMessages = new ErrorMessages();
+  static errorMessages = new ErrorMessages();
 }

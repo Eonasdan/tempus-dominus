@@ -18,7 +18,7 @@ export default class TimeDisplay {
    */
   get _picker(): HTMLElement {
     const container = document.createElement('div');
-    container.classList.add(Namespace.Css.clockContainer);
+    container.classList.add(Namespace.css.clockContainer);
 
     container.append(...this._grid());
 
@@ -32,7 +32,7 @@ export default class TimeDisplay {
    */
   _update(): void {
     const timesDiv = this._context._display.widget.getElementsByClassName(
-      Namespace.Css.clockContainer
+      Namespace.css.clockContainer
     )[0];
     const lastPicked = (
       this._context.dates.lastPicked || this._context._viewDate
@@ -42,7 +42,7 @@ export default class TimeDisplay {
 
     timesDiv
       .querySelectorAll('.disabled')
-      .forEach((element) => element.classList.remove(Namespace.Css.disabled));
+      .forEach((element) => element.classList.remove(Namespace.css.disabled));
 
     if (this._context._options.display.components.hours) {
       columns++;
@@ -54,7 +54,7 @@ export default class TimeDisplay {
       ) {
         timesDiv
           .querySelector(`[data-action=${ActionTypes.incrementHours}]`)
-          .classList.add(Namespace.Css.disabled);
+          .classList.add(Namespace.css.disabled);
       }
 
       if (
@@ -65,7 +65,7 @@ export default class TimeDisplay {
       ) {
         timesDiv
           .querySelector(`[data-action=${ActionTypes.decrementHours}]`)
-          .classList.add(Namespace.Css.disabled);
+          .classList.add(Namespace.css.disabled);
       }
       timesDiv.querySelector<HTMLElement>(
         `[data-time-component=${Unit.hours}]`
@@ -84,7 +84,7 @@ export default class TimeDisplay {
       ) {
         timesDiv
           .querySelector(`[data-action=${ActionTypes.incrementMinutes}]`)
-          .classList.add(Namespace.Css.disabled);
+          .classList.add(Namespace.css.disabled);
       }
 
       if (
@@ -95,7 +95,7 @@ export default class TimeDisplay {
       ) {
         timesDiv
           .querySelector(`[data-action=${ActionTypes.decrementMinutes}]`)
-          .classList.add(Namespace.Css.disabled);
+          .classList.add(Namespace.css.disabled);
       }
       timesDiv.querySelector<HTMLElement>(
         `[data-time-component=${Unit.minutes}]`
@@ -112,7 +112,7 @@ export default class TimeDisplay {
       ) {
         timesDiv
           .querySelector(`[data-action=${ActionTypes.incrementSeconds}]`)
-          .classList.add(Namespace.Css.disabled);
+          .classList.add(Namespace.css.disabled);
       }
 
       if (
@@ -123,7 +123,7 @@ export default class TimeDisplay {
       ) {
         timesDiv
           .querySelector(`[data-action=${ActionTypes.decrementSeconds}]`)
-          .classList.add(Namespace.Css.disabled);
+          .classList.add(Namespace.css.disabled);
       }
       timesDiv.querySelector<HTMLElement>(
         `[data-time-component=${Unit.seconds}]`
@@ -146,9 +146,9 @@ export default class TimeDisplay {
           )
         )
       ) {
-        toggle.classList.add(Namespace.Css.disabled);
+        toggle.classList.add(Namespace.css.disabled);
       } else {
-        toggle.classList.remove(Namespace.Css.disabled);
+        toggle.classList.remove(Namespace.css.disabled);
       }
     }
 
@@ -160,8 +160,7 @@ export default class TimeDisplay {
    * @private
    */
   private _grid(): HTMLElement[] {
-    const
-      top = [],
+    const top = [],
       middle = [],
       bottom = [],
       separator = document.createElement('div'),
@@ -172,7 +171,7 @@ export default class TimeDisplay {
         this._context._options.display.icons.down
       );
 
-    separator.classList.add(Namespace.Css.separator, Namespace.Css.noHighlight);
+    separator.classList.add(Namespace.css.separator, Namespace.css.noHighlight);
     const separatorColon = <HTMLElement>separator.cloneNode(true);
     separatorColon.innerHTML = ':';
 
@@ -292,7 +291,7 @@ export default class TimeDisplay {
       button.setAttribute('tabindex', '-1');
 
       divElement = document.createElement('div');
-      divElement.classList.add(Namespace.Css.noHighlight);
+      divElement.classList.add(Namespace.css.noHighlight);
       divElement.appendChild(button);
       middle.push(divElement);
 

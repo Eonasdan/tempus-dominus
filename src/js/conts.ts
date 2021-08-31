@@ -102,25 +102,25 @@ const DatePickerModes: {
 }[] = [
   {
     name: 'calendar',
-    className: Namespace.Css.daysContainer,
+    className: Namespace.css.daysContainer,
     unit: Unit.month,
     step: 1,
   },
   {
     name: 'months',
-    className: Namespace.Css.monthsContainer,
+    className: Namespace.css.monthsContainer,
     unit: Unit.year,
     step: 1,
   },
   {
     name: 'years',
-    className: Namespace.Css.yearsContainer,
+    className: Namespace.css.yearsContainer,
     unit: Unit.year,
     step: 10,
   },
   {
     name: 'decades',
-    className: Namespace.Css.decadesContainer,
+    className: Namespace.css.decadesContainer,
     unit: Unit.year,
     step: 100,
   },

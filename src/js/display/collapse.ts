@@ -11,7 +11,7 @@ export default class Collapse {
    * @param target html element to affect.
    */
   toggle(target: HTMLElement) {
-    if (target.classList.contains(Namespace.Css.show)) {
+    if (target.classList.contains(Namespace.css.show)) {
       this.hide(target);
     } else {
       this.show(target);
@@ -24,21 +24,21 @@ export default class Collapse {
    */
   show(target: HTMLElement) {
     if (
-      target.classList.contains(Namespace.Css.collapsing) ||
-      target.classList.contains(Namespace.Css.show)
+      target.classList.contains(Namespace.css.collapsing) ||
+      target.classList.contains(Namespace.css.show)
     )
       return;
 
     const complete = () => {
-      target.classList.remove(Namespace.Css.collapsing);
-      target.classList.add(Namespace.Css.collapse, Namespace.Css.show);
+      target.classList.remove(Namespace.css.collapsing);
+      target.classList.add(Namespace.css.collapse, Namespace.css.show);
       target.style.height = '';
       this.timeOut = null;
     };
 
     target.style.height = '0';
-    target.classList.remove(Namespace.Css.collapse);
-    target.classList.add(Namespace.Css.collapsing);
+    target.classList.remove(Namespace.css.collapse);
+    target.classList.add(Namespace.css.collapsing);
 
     this.timeOut = setTimeout(
       complete,
@@ -53,14 +53,14 @@ export default class Collapse {
    */
   hide(target: HTMLElement) {
     if (
-      target.classList.contains(Namespace.Css.collapsing) ||
-      !target.classList.contains(Namespace.Css.show)
+      target.classList.contains(Namespace.css.collapsing) ||
+      !target.classList.contains(Namespace.css.show)
     )
       return;
 
     const complete = () => {
-      target.classList.remove(Namespace.Css.collapsing);
-      target.classList.add(Namespace.Css.collapse);
+      target.classList.remove(Namespace.css.collapsing);
+      target.classList.add(Namespace.css.collapse);
       this.timeOut = null;
     };
 
@@ -70,8 +70,8 @@ export default class Collapse {
 
     reflow(target);
 
-    target.classList.remove(Namespace.Css.collapse, Namespace.Css.show);
-    target.classList.add(Namespace.Css.collapsing);
+    target.classList.remove(Namespace.css.collapse, Namespace.css.show);
+    target.classList.add(Namespace.css.collapsing);
     target.style.height = '';
 
     this.timeOut = setTimeout(
@@ -91,9 +91,8 @@ export default class Collapse {
     }
 
     // Get transition-duration of the element
-    let { transitionDuration, transitionDelay } = window.getComputedStyle(
-      element
-    );
+    let { transitionDuration, transitionDelay } =
+      window.getComputedStyle(element);
 
     const floatTransitionDuration = Number.parseFloat(transitionDuration);
     const floatTransitionDelay = Number.parseFloat(transitionDelay);

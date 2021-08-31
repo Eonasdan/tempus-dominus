@@ -36,7 +36,7 @@ class TempusDominus {
 
   constructor(element: HTMLElement, options: Options = {} as Options) {
     if (!element) {
-      Namespace.ErrorMessages.mustProvideElement;
+      Namespace.errorMessages.mustProvideElement;
     }
     this._element = element;
     this._options = this._initializeOptions(options, DefaultOptions, true);
@@ -156,7 +156,7 @@ class TempusDominus {
     }
 
     if (eventTypes.length !== callBackArray.length) {
-      Namespace.ErrorMessages.subscribeMismatch;
+      Namespace.errorMessages.subscribeMismatch;
     }
 
     const returnArray = [];
@@ -259,7 +259,7 @@ class TempusDominus {
    */
   _viewUpdate(unit: Unit) {
     this._triggerEvent({
-      type: Namespace.Events.update,
+      type: Namespace.events.update,
       change: unit,
       viewDate: this._viewDate.clone,
     } as ViewUpdateEvent);
@@ -401,8 +401,8 @@ class TempusDominus {
       !this._display._hasTime ||
       // clock component is already showing
       this._display.widget
-        ?.getElementsByClassName(Namespace.Css.show)[0]
-        .classList.contains(Namespace.Css.timeContainer)
+        ?.getElementsByClassName(Namespace.css.show)[0]
+        .classList.contains(Namespace.css.timeContainer)
     )
       return;
 
@@ -422,7 +422,7 @@ class TempusDominus {
         this._action.do(
           {
             currentTarget: this._display.widget.querySelector(
-              `.${Namespace.Css.switch} div`
+              `.${Namespace.css.switch} div`
             ),
           },
           ActionTypes.togglePicker
@@ -443,8 +443,8 @@ class TempusDominus {
       this.dates._setValue(parsedDate);
     } else {
       this._triggerEvent({
-        type: Namespace.Events.error,
-        reason: Namespace.ErrorMessages.failedToParseInput,
+        type: Namespace.events.error,
+        reason: Namespace.errorMessages.failedToParseInput,
         date: parsedDate,
       } as FailEvent);
     }

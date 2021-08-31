@@ -188,17 +188,6 @@
     </div>
     <script type='text/javascript'>
       const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
-        /*restrictions: {
-          maxDate: new tempusDominus.DateTime().manipulate(-1, 'date').startOf('date')
-        },
-        display: {
-          components: {
-            clock: false
-          },
-          keepOpen: true
-        },*/
-        //allowInputToggle: true,
-        multipleDates: true,
 
       });
     </script>
@@ -955,7 +944,7 @@ const linked2 = new tempusDominus.TempusDominus(document.getElementById('linkedP
 });
 
 //using event listeners
-linkedPicker1Element.addEventListener(tempusDominus.Namespace.Events.change, (e) => {
+linkedPicker1Element.addEventListener(tempusDominus.Namespace.events.change, (e) => {
   linked2.updateOptions({
     restrictions: {
       minDate: e.detail.date
@@ -964,7 +953,7 @@ linkedPicker1Element.addEventListener(tempusDominus.Namespace.Events.change, (e)
 });
 
 //using subscribe method
-const subscription = linked2.subscribe(tempusDominus.Namespace.Events.change, (e) => {
+const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e) => {
   linked1.updateOptions({
     restrictions: {
       maxDate: e.detail.date
@@ -1044,7 +1033,7 @@ const subscription = linked2.subscribe(tempusDominus.Namespace.Events.change, (e
       });
 
       //using event listeners
-      linkedPicker1Element.addEventListener(tempusDominus.Namespace.Events.change, (e) => {
+      linkedPicker1Element.addEventListener(tempusDominus.Namespace.events.change, (e) => {
         linked2.updateOptions({
           restrictions: {
             minDate: e.detail.date
@@ -1053,7 +1042,7 @@ const subscription = linked2.subscribe(tempusDominus.Namespace.Events.change, (e
       });
 
       //using subscribe method
-      const subscription = linked2.subscribe(tempusDominus.Namespace.Events.change, (e) => {
+      const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e) => {
         linked1.updateOptions({
           restrictions: {
             maxDate: e.detail.date
