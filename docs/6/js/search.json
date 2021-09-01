@@ -56,7 +56,7 @@
   {
     "file": "installing.html",
     "title": "Download",
-    "body": "full installation doc comming soon if you want to test out the alpha grab js/css files from dist folder https://cdn.jsdelivr.net/gh/eonasdan/tempus-dominus@v6-alpha1/dist/js/tempus-dominus.js https://cdn.jsdelivr.net/gh/eonasdan/tempus-dominus@v6-alpha1/dist/css/tempus-dominus.css",
+    "body": "no matter how you choose to get the files make sure that popper is include before picker's main script file compiled code can grab js and css from github still need yourself via cdn popperjs src=\"https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js integrity=\"sha384-emncoe7tc1dohpgowe/6omvemdavtms2xqw4mwxrxsw0l84iytr2wi5v2qjrp/xp crossorigin=\"anonymous\"></script tempus dominus javascript src=\"https://cdn.jsdelivr.net/gh/eonasdan/tempus-dominus@v6-alpha1/dist/js/tempus-dominus.js styles link href=\"https://cdn.jsdelivr.net/gh/eonasdan/tempus-dominus@v6-alpha1/dist/css/tempus-dominus.css rel=\"stylesheet crossorigin=\"anonymous nuget package are returning coming soon",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
     "excerpt": "How to install Tempus Dominus datetime picker.",

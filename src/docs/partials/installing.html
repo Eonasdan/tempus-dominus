@@ -1,13 +1,37 @@
 <page-body>
-  Full installation doc comming soon. If you want to test out the alpha, grab the js/css files from the dist folder.
-
+  <section>
+    <p>
+      No matter how you choose to get the files, make sure that Popper is include before the picker's main script file.
+    </p>
+  </section>
+  <section>
+    <h2>Compiled Code</h2>
+    <p>
+      You can grab the compiled js and css from <a href='https://github.com/Eonasdan/tempus-dominus/tree/master/dist'
+                                                   target='_blank' rel='noopener'>GitHub</a>
+    </p>
+    <p>You still need to get Popper yourself.</p>
+  </section>
+  <section>
+  <h2>Via CDN</h2>
   <pre>
     <code class='language-html'>
-      https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@v6-alpha1/dist/js/tempus-dominus.js
-  https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@v6-alpha1/dist/css/tempus-dominus.css
-    </code>
-  </pre>
+&lt;!-- Popperjs --&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js&quot; integrity=&quot;sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+&lt;!-- Tempus Dominus JavaScript --&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@v6-alpha1/dist/js/tempus-dominus.js&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
 
+&lt;!-- Tempus Dominus Styles --&gt;
+&lt;link href=&quot;https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@v6-alpha1/dist/css/tempus-dominus.css&quot; rel=&quot;stylesheet&quot; crossorigin=&quot;anonymous&quot;&gt;
+    </code>
+</pre>
+  </section>
+  <section>
+    <h2>Nuget Package</h2>
+    <p>
+      Nuget package are returning! Coming Soon.
+    </p>
+  </section>
 </page-body>
 <page-meta>
   <title>Download</title>
@@ -16,8 +40,3 @@
   <excerpt>How to install Tempus Dominus datetime picker.</excerpt>
   <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
 </page-meta>
-
-
-<script src="https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@v6-alpha1/dist/js/tempus-dominus.js" crossorigin="anonymous"></script>
-
-<link href="https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@v6-alpha1/dist/css/tempus-dominus.css" rel="stylesheet" crossorigin="anonymous">
