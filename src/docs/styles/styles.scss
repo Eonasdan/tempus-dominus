@@ -1,0 +1,23 @@
+@use "../../../node_modules/bootstrap/scss/bootstrap.scss";
+@use "bs5_docs";
+@import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900";
+
+.show-code {
+  cursor: pointer;
+}
+
+.tab-content > .active {
+  min-height: 35vh;
+  max-height: 35vh;
+  overflow-y: auto;
+}
+
+section:not(:last-child) {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid grey;
+}
+
+section h2 {
+  margin-top: 3rem
+}

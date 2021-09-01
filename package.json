@@ -1,0 +1,66 @@
+{
+  "author": {
+    "name": "Jonathan Peterson"
+  },
+  "scripts": {
+    "start": "npm run build && browser-sync start --config build/browser-sync-config.js",
+    "build": "npm run rollup && npm run sass && node ./build/copyToDist.js",
+    "sass": "sass ./src/sass/tempus-dominus.scss ./dist/css/tempus-dominus.css",
+    "sass-watch": "sass ./src/sass/tempus-dominus.scss ./dist/css/tempus-dominus.css --watch",
+    "rollup": "rollup -c ./build/rollup.config.js",
+    "rollup-watch": "rollup -c ./build/rollup.config.js -w",
+    "build:declarations": "npx typescript ./src/js/**/*.ts --declaration --emitDeclarationOnly --outDir types",
+    "prettier": "prettier --write .",
+    "docs": "node ./src/docs/make.js",
+    "docs-watch": "npm run build && node ./src/docs/make.js --watch",
+    "watchers": "concurrently \"npm start\" \"npm:*-watch\""
+  },
+  "bugs": {
+    "url": "https://github.com/eonasdan/tempus-dominus/issues"
+  },
+  "peerDependencies": {
+    "@popperjs/core": "^2.9.2"
+  },
+  "dependencies": {
+  },
+  "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/node": "^14.14.22",
+    "bootstrap": "^5.0.2",
+    "browser-sync": "^2.27.4",
+    "chokidar": "^3.5.1",
+    "clean-css": "^5.1.3",
+    "dropcss": "^1.0.16",
+    "html-minifier-terser": "^5.1.1",
+    "jsdom": "^16.4.0",
+    "multiparty": "^4.2.2",
+    "prettier": "^2.3.2",
+    "rollup": "^2.52.8",
+    "sass": "^1.35.2",
+    "terser": "^5.4.0",
+    "tslib": "^2.3.0",
+    "typescript": "^4.3.5",
+    "concurrently": "^6.2.0",
+    "@digitak/esrun": "^1.2.6",
+    "@popperjs/core": "^2.9.2"
+  },
+  "homepage": "https://getdatepicker.com/",
+  "keywords": [
+    "datepicker",
+    "datetimepicker",
+    "timepicker"
+  ],
+  "license": "MIT",
+  "style": "dist/css/tempus-dominus.css",
+  "sass": "scss/tempus-dominus.scss",
+  "main": "src/js/tempus-dominus.js",
+  "name": "tempus-dominus",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eonasdan/tempus-dominus.git"
+  },
+  "version": "6.0.0-alpha1",
+  "funding": "https://ko-fi.com/eonasdan"
+}

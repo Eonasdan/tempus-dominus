@@ -1,0 +1,86 @@
+<page-body>
+  <section>
+    <p>
+      These events may provide additional details. For native javascript you can
+      get this data via <code>e.details.*</code>. For jQuery the details are directly in the event, e.g.
+      <code>e.date</code>
+    </p>
+    <p>
+      Each of these events inherit from the <code>BaseEvent</code> interface.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface BaseEvent {
+  type: string; //e.g. change.td
+}
+    </code>
+  </pre>
+    <h2 id="change">change.td <a class='anchorjs-link ' aria-label='Anchor' href='#change'><i
+      class='fas fa-anchor'></i></a></h2>
+    <p>
+      Emit when the date selection is changed.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface ChangeEvent extends BaseEvent {
+  date: DateTime | undefined;
+  oldDate: DateTime;
+  isClear: boolean;
+  isValid: boolean;
+}
+    </code>
+  </pre>
+    <h2 id="update">update.td <a class='anchorjs-link ' aria-label='Anchor' href='#update'><i
+      class='fas fa-anchor'></i></a></h2>
+    <p>
+      Emits when the view changes for example from month view to the year view.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface ViewUpdateEvent extends BaseEvent {
+  change: Unit;
+  viewDate: DateTime;
+}
+    </code>
+  </pre>
+    <h2 id="error">error.td <a class='anchorjs-link ' aria-label='Anchor' href='#error'><i
+      class='fas fa-anchor'></i></a></h2>
+    <p>
+      Emits when a selected date or value from the input field fails to meet the provided validation rules.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface FailEvent extends BaseEvent {
+  reason: string;
+  date: DateTime;
+  oldDate: DateTime;
+}
+    </code>
+  </pre>
+    <h2 id="show">show.td <a class='anchorjs-link ' aria-label='Anchor' href='#show'><i
+      class='fas fa-anchor'></i></a></h2>
+    <p>
+      Emits when then picker widget is displayed.
+    </p>
+    <h2 id="hide">hide.td <a class='anchorjs-link ' aria-label='Anchor' href='#hide'><i
+      class='fas fa-anchor'></i></a></h2>
+    <p>
+      Emits when the picker widget is hidden.
+    </p>
+    <pre>
+    <code class='language-javascript'>
+interface HideEvent extends BaseEvent {
+  date: DateTime;
+}
+    </code>
+  </pre>
+  </section>
+</page-body>
+
+<page-meta>
+  <title>Events</title>
+  <post-date>07/08/2021</post-date>
+  <update-date>07/08/2021</update-date>
+  <excerpt>Overview of the events fired from Tempius Dominus Datetime picker.</excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

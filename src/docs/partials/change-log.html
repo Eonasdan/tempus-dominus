@@ -1,0 +1,149 @@
+<page-body>
+  <section>
+    <h1>Version 6</h1>
+    <h2 id='general'>General</h2>
+    <ul>
+      <li>picker returns a <code>DateTime</code> which is an extended javascript <code>Date</code> object.</li>
+      <li>picker no longer uses jQuery, momentjs, or bootstrap</li>
+      <li>events now have interfaces</li>
+    </ul>
+    <h2 id='configuration'>Configuration</h2>
+    <ul>
+      <li>renamed <code>tooltip</code> to <code>localization</code>
+        <ul>
+          <li>renamed <code>tooltip.prevMonth</code> to <code>localization.previousMonth</code></li>
+          <li>renamed <code>tooltip.prevYear</code> to <code>localization.previousYear</code></li>
+          <li>renamed <code>tooltip.prevDecade</code> to <code>localization.previousDecade</code></li>
+          <li>renamed <code>tooltip.prevCentury</code> to <code>localization.previousCentury</code></li>
+          <li>moved <code>dayViewHeaderFormat</code> to <code>localization.dayViewHeaderFormat</code></li>
+          <li><code>dayViewHeaderFormat</code> now takes a javascript <code>intl</code> month option, e.g.
+            <code>long</code> (default)
+          </li>
+        </ul>
+      </li>
+      <li>moved <code>locale</code> to <code>localization</code>
+      </li>
+      <li>removed <code>useStrict</code></li>
+      <li>removed <code>timeZone</code></li>
+      <li>removed <code>format</code>
+        <ul>
+          <li>added <code>display.inputFormat</code> that takes <code>DateTimeFormatOptions</code>;</li>
+        </ul>
+      </li>
+      <li>removed <code>collapse</code></li>
+      <li>removed <code>extraFormats</code></li>
+      <li>removed <code>widgetParent</code></li>
+      <li>removed <code>widgetPositioning</code></li>
+      <li>changed <code>viewMode</code> from <code>&#39;times&#39; | &#39;days&#39;</code> to <code>&#39;clock&#39; |
+        &#39;calendar&#39;</code></li>
+      <li>renamed <code>allowMultidate</code> and <code>multidateSeparator</code> to <code>multipleDates</code> and
+        <code>multipleDatesSeparator</code>
+      </li>
+      <li>moved the following to <code>restrictions</code>
+        <ul>
+          <li>minDate</li>
+          <li>maxDate</li>
+          <li>disabledDates</li>
+          <li>enabledDates</li>
+          <li>daysOfWeekDisabled</li>
+          <li>disabledHours</li>
+          <li>enabledHours</li>
+          <li>readonly</li>
+          <li>disabledTimeIntervals</li>
+        </ul>
+      </li>
+      <li>moved the following to <code>display</code>
+        <ul>
+          <li>sideBySide</li>
+          <li>calendarWeeks</li>
+          <li>viewMode</li>
+          <li>toolbarPlacement</li>
+          <li>buttons</li>
+          <li>widgetPositioning</li>
+          <li>icons</li>
+          <li>inline</li>
+          <li>keepOpen</li>
+        </ul>
+      </li>
+      <li>disabledTimeIntervals is now an array of <code>{ from: DateTime, to: DateTime }</code>
+      </li>
+      <li>removed check for <code>dateOptions</code> on the element data set. jQuery hid allowing an object by looping
+        through the properties
+      </li>
+      <li>removed <code>keybindings</code> - this might come back later</li>
+      <li>removed <code>readonly<</code></li>
+      <li>removed <code>ignoreReadonly<</code></li>
+      <li>removed <code>focusOnShow<</code></li>
+    </ul>
+    <h3 id='styles'>Styles</h3>
+    <h4 id='tip-all-new-css-values-are-in-namespace-css-in-the-consts-ts-file'>Tip: All new css values are in <code>Namespace.Css.*</code>
+      in the <code>consts.ts</code> file</h4>
+    <ul>
+      <li>renamed <code>bootstrap-datetimepicker-widget</code> to <code>tempus-dominus-widget</code></li>
+      <li>renamed <code>tempusDominus-bootstrap-datetimepicker-widget-with-calendar-weeks</code> to <code>tempus-dominus-with-calendar-weeks</code>
+        (
+        v5)
+        <ul>
+          <li>removed <code>.input-group [data-toggle=&quot;datetimepicker&quot;]</code> setting the cursor type to
+            pointer.
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h5 id='date'>Date</h5>
+    <ul>
+      <li>renamed <code>datepicker</code> to <code>date-container</code></li>
+      <li>renamed <code>datepicker-decades</code> to <code>date-container-decades</code></li>
+      <li>renamed <code>datepicker-years</code> to <code>date-container-years</code></li>
+      <li>renamed <code>datepicker-months</code> to <code>date-container-months</code></li>
+      <li>renamed <code>datepicker-days</code> to <code>date-container-days</code></li>
+      <li>renamed <code>prev</code> to <code>previous</code></li>
+      <li>renamed <code>data-day</code> to <code>data-value</code> to be consistent with other views</li>
+    </ul>
+    <h5 id='time'>Time</h5>
+    <ul>
+      <li>renamed <code>usetwentyfour</code> to <code>useTwentyfour</code></li>
+      <li>renamed <code>timepicker</code> to <code>time-container</code></li>
+      <li>renamed <code>timepicker-hour</code> to <code>time-container-hour</code></li>
+      <li>renamed <code>timepicker-minute</code> to <code>time-container-minute</code></li>
+      <li>renamed <code>timepicker-second</code> to <code>time-container-second</code></li>
+    </ul>
+    <h4 id='saas'>Saas</h4>
+    <p>Saas file is now called <code>tempus-dominus.scss</code>. The &quot;build&quot; file has been deleted as it&#39;s
+      no longer required.</p>
+    <h2 id='events'>Events</h2>
+    <ul>
+      <li>changed <code>isInvalid</code> to <code>isValid</code> and flipped the boolean (v5)</li>
+      <li>changed event now emits <code>undefined</code> instead of false when the date is being cleared</li>
+      <li>changed plugin.name from <code>datetimepicker</code> to <code>tempus-dominus</code></li>
+      <li>changed root data namespace from <code>datetimepicker</code> to <code>td</code></li>
+    </ul>
+  </section>
+
+  <section>
+  <h1>
+    Version 5
+  </h1>
+    <p>
+      Version 5 was a rewrite of v4 taking some pending pull requests and fixes along with it. Unfortunately, I didn't do a very good job at documenting those changes.
+    </p>
+  </section>
+
+  <section>
+    <h1>
+      Version 4
+    </h1>
+    <p>
+      The changlog from v2-v4 can be <a href='https://getdatepicker.com/4/ChangeLog/'>read here</a>.
+    </p>
+  </section>
+
+</page-body>
+<page-meta>
+  <title>Change Log</title>
+  <post-date>07/20/2021</post-date>
+  <update-date>07/20/2021</update-date>
+  <excerpt>An overview of changes between different version of tempus dominus
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>
