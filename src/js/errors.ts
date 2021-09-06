@@ -94,7 +94,7 @@ export class ErrorMessages {
    */
   failedToParseDate(optionName: string, date: any) {
     const error = new TdError(
-      `${this.base} Could not correctly parse "${date}" to a date for option ${optionName}.`
+      `${this.base} Could not correctly parse "${date}" to a date for ${optionName}.`
     );
     error.code = 5;
     throw error;

@@ -27,7 +27,7 @@ module.exports = {
     cert: 'C:\\projects\\https\\localhost.crt',
   },
   proxy: false,
-  port: 3000,
+  port: 3001,
   middleware: false,
   serveStatic: [],
   ghostMode: {

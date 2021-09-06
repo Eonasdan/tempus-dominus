@@ -82,7 +82,7 @@ export default class DecadeDisplay {
             containerClone.innerText = `${this._startDecade.year - 10}`;
             containerClone.setAttribute(
               'data-value',
-              `${this._startDecade.year + 6}`
+              `${this._startDecade.year}`
             );
             return;
           }
@@ -105,7 +105,7 @@ export default class DecadeDisplay {
         containerClone.classList.add(...classes);
         containerClone.setAttribute(
           'data-value',
-          `${this._startDecade.year + 6}`
+          `${this._startDecade.year}`
         );
         containerClone.innerText = `${this._startDecade.year}`;
 

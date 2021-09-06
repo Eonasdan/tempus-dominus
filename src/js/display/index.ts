@@ -120,7 +120,8 @@ export default class Display {
     if (this.widget == undefined) {
       if (
         this._context._options.useCurrent &&
-        !this._context._options.defaultDate
+        !this._context._options.defaultDate &&
+        !this._context._input?.value
       ) {
         //todo in the td4 branch a pr changed this to allow granularity
         const date = new DateTime().setLocale(

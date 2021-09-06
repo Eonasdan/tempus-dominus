@@ -7,7 +7,7 @@ export enum Unit {
   year = 'year',
 }
 
-interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
+export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
   timeStyle?: 'short' | 'medium' | 'long';
   dateStyle?: 'short' | 'medium' | 'long' | 'full';
 }

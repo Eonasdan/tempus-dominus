@@ -39,7 +39,7 @@ export default class YearDisplay {
    */
   _update() {
     const [start, end] = Dates.getStartEndYear(
-      100,
+      10,
       this._context._viewDate.year
     );
     this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
@@ -52,7 +52,10 @@ export default class YearDisplay {
       .getElementsByClassName(Namespace.css.calendarHeader)[0]
       .getElementsByTagName('div');
 
-    switcher.setAttribute(Namespace.css.yearsContainer,`${this._startYear.year}-${this._endYear.year}`);
+    switcher.setAttribute(
+      Namespace.css.yearsContainer,
+      `${this._startYear.year}-${this._endYear.year}`
+    );
 
     this._context._validation.isValid(this._startYear, Unit.year)
       ? previous.classList.remove(Namespace.css.disabled)

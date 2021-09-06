@@ -1,13 +1,23 @@
 <page-body>
+  <h1>Version 6</h1>
   <section>
-    <h1>Version 6</h1>
-    <h2 id='general'>General</h2>
+    <h2>Version 6-alpha1.0.3</h2>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed year display after selecting a decade. <a href='https://github.com/Eonasdan/tempus-dominus/issues/2386'>#2386</a></li>
+      <li>Fixed issue if the input field had a value. <a href='https://github.com/Eonasdan/tempus-dominus/issues/2387'>#2387</a></li>
+      <li>Fixed setting the defaultDate option with a Date object. <a href='https://github.com/Eonasdan/tempus-dominus/issues/2391'>#2391</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Version 6-alpha1</h2>
+    <h3 id='general'>General</h3>
     <ul>
       <li>picker returns a <code>DateTime</code> which is an extended javascript <code>Date</code> object.</li>
       <li>picker no longer uses jQuery, momentjs, or bootstrap</li>
       <li>events now have interfaces</li>
     </ul>
-    <h2 id='configuration'>Configuration</h2>
+    <h3 id='configuration'>Configuration</h3>
     <ul>
       <li>renamed <code>tooltip</code> to <code>localization</code>
         <ul>
@@ -75,9 +85,9 @@
       <li>removed <code>ignoreReadonly<</code></li>
       <li>removed <code>focusOnShow<</code></li>
     </ul>
-    <h3 id='styles'>Styles</h3>
-    <h4 id='tip-all-new-css-values-are-in-namespace-css-in-the-consts-ts-file'>Tip: All new css values are in <code>Namespace.Css.*</code>
-      in the <code>consts.ts</code> file</h4>
+    <h4 id='styles'>Styles</h4>
+    <h5 id='tip-all-new-css-values-are-in-namespace-css-in-the-consts-ts-file'>Tip: All new css values are in <code>Namespace.Css.*</code>
+      in the <code>consts.ts</code> file</h5>
     <ul>
       <li>renamed <code>bootstrap-datetimepicker-widget</code> to <code>tempus-dominus-widget</code></li>
       <li>renamed <code>tempusDominus-bootstrap-datetimepicker-widget-with-calendar-weeks</code> to <code>tempus-dominus-with-calendar-weeks</code>
@@ -90,7 +100,7 @@
         </ul>
       </li>
     </ul>
-    <h5 id='date'>Date</h5>
+    <h6 id='date'>Date</h6>
     <ul>
       <li>renamed <code>datepicker</code> to <code>date-container</code></li>
       <li>renamed <code>datepicker-decades</code> to <code>date-container-decades</code></li>
@@ -100,7 +110,7 @@
       <li>renamed <code>prev</code> to <code>previous</code></li>
       <li>renamed <code>data-day</code> to <code>data-value</code> to be consistent with other views</li>
     </ul>
-    <h5 id='time'>Time</h5>
+    <h6 id='time'>Time</h6>
     <ul>
       <li>renamed <code>usetwentyfour</code> to <code>useTwentyfour</code></li>
       <li>renamed <code>timepicker</code> to <code>time-container</code></li>
@@ -108,10 +118,10 @@
       <li>renamed <code>timepicker-minute</code> to <code>time-container-minute</code></li>
       <li>renamed <code>timepicker-second</code> to <code>time-container-second</code></li>
     </ul>
-    <h4 id='saas'>Saas</h4>
+    <h5 id='saas'>Saas</h5>
     <p>Saas file is now called <code>tempus-dominus.scss</code>. The &quot;build&quot; file has been deleted as it&#39;s
       no longer required.</p>
-    <h2 id='events'>Events</h2>
+    <h3 id='events'>Events</h3>
     <ul>
       <li>changed <code>isInvalid</code> to <code>isValid</code> and flipped the boolean (v5)</li>
       <li>changed event now emits <code>undefined</code> instead of false when the date is being cleared</li>

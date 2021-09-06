@@ -1,5 +1,4 @@
-import { DateTime } from './datetime';
-import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
+import { DateTime, DateTimeFormatOptions } from './datetime';
 import Namespace from './namespace';
 import { DefaultOptions } from './conts';
 
@@ -98,6 +97,17 @@ export class OptionConverter {
 
     const processKey = (key, value, providedType, defaultType) => {
       switch (key) {
+        case 'defaultDate': {
+          const dateTime = this._dateConversion(value, 'defaultDate');
+          if (dateTime !== undefined) {
+            return dateTime;
+          }
+          Namespace.errorMessages.typeMismatch(
+            'defaultDate',
+            providedType,
+            'DateTime or Date'
+          );
+        }
         case 'viewDate': {
           const dateTime = this._dateConversion(value, 'viewDate');
           if (dateTime !== undefined) {

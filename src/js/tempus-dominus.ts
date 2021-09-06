@@ -365,9 +365,19 @@ class TempusDominus {
       }
     }
 
-    this._input?.addEventListener('change', this._inputChangeEvent);
+    if (!this._input) return;
+
+    this._input.addEventListener('change', this._inputChangeEvent);
     if (this._options.allowInputToggle) {
-      this._input?.addEventListener('click', this._toggleClickEvent);
+      this._input.addEventListener('click', this._toggleClickEvent);
+    }
+
+    if (this._input.value) {
+      const converted = OptionConverter._dateConversion(
+        this._input.value,
+        'input field'
+      );
+      if (converted !== undefined) this.dates._setValue(converted);
     }
   }
 

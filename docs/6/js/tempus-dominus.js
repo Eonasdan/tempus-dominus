@@ -459,7 +459,7 @@
          * @param date
          */
         failedToParseDate(optionName, date) {
-            const error = new TdError(`${this.base} Could not correctly parse "${date}" to a date for option ${optionName}.`);
+            const error = new TdError(`${this.base} Could not correctly parse "${date}" to a date for ${optionName}.`);
             error.code = 5;
             throw error;
         }
@@ -1575,7 +1575,7 @@
          * @private
          */
         _update() {
-            Dates.getStartEndYear(100, this._context._viewDate.year);
+            Dates.getStartEndYear(10, this._context._viewDate.year);
             this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
             this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
             const container = this._context._display.widget.getElementsByClassName(Namespace.css.yearsContainer)[0];
@@ -1670,7 +1670,7 @@
                     }
                     else {
                         containerClone.innerText = `${this._startDecade.year - 10}`;
-                        containerClone.setAttribute('data-value', `${this._startDecade.year + 6}`);
+                        containerClone.setAttribute('data-value', `${this._startDecade.year}`);
                         return;
                     }
                 }
@@ -1685,7 +1685,7 @@
                 }
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${this._startDecade.year + 6}`);
+                containerClone.setAttribute('data-value', `${this._startDecade.year}`);
                 containerClone.innerText = `${this._startDecade.year}`;
                 this._startDecade.manipulate(10, Unit.year);
             });
@@ -2127,16 +2127,17 @@
          * @fires Events#show
          */
         show() {
-            var _a;
+            var _a, _b;
             if (this.widget == undefined) {
                 if (this._context._options.useCurrent &&
-                    !this._context._options.defaultDate) {
+                    !this._context._options.defaultDate &&
+                    !((_a = this._context._input) === null || _a === void 0 ? void 0 : _a.value)) {
                     //todo in the td4 branch a pr changed this to allow granularity
                     const date = new DateTime().setLocale(this._context._options.localization.locale);
                     if (!this._context._options.keepInvalid) {
                         let tries = 0;
                         let direction = 1;
-                        if ((_a = this._context._options.restrictions.maxDate) === null || _a === void 0 ? void 0 : _a.isBefore(date)) {
+                        if ((_b = this._context._options.restrictions.maxDate) === null || _b === void 0 ? void 0 : _b.isBefore(date)) {
                             direction = -1;
                         }
                         while (!this._context._validation.isValid(date)) {
@@ -2616,6 +2617,13 @@
             let path = '';
             const processKey = (key, value, providedType, defaultType) => {
                 switch (key) {
+                    case 'defaultDate': {
+                        const dateTime = this._dateConversion(value, 'defaultDate');
+                        if (dateTime !== undefined) {
+                            return dateTime;
+                        }
+                        Namespace.errorMessages.typeMismatch('defaultDate', providedType, 'DateTime or Date');
+                    }
                     case 'viewDate': {
                         const dateTime = this._dateConversion(value, 'viewDate');
                         if (dateTime !== undefined) {
@@ -3238,7 +3246,6 @@
          * @private
          */
         _initializeInput() {
-            var _a, _b;
             if (this._element.tagName == 'INPUT') {
                 this._input = this._element;
             }
@@ -3251,9 +3258,16 @@
                     this._input = this._element.querySelector(query);
                 }
             }
-            (_a = this._input) === null || _a === void 0 ? void 0 : _a.addEventListener('change', this._inputChangeEvent);
+            if (!this._input)
+                return;
+            this._input.addEventListener('change', this._inputChangeEvent);
             if (this._options.allowInputToggle) {
-                (_b = this._input) === null || _b === void 0 ? void 0 : _b.addEventListener('click', this._toggleClickEvent);
+                this._input.addEventListener('click', this._toggleClickEvent);
+            }
+            if (this._input.value) {
+                const converted = OptionConverter._dateConversion(this._input.value, 'input field');
+                if (converted !== undefined)
+                    this.dates._setValue(converted);
             }
         }
         /**
