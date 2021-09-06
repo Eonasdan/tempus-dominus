@@ -1,6 +1,6 @@
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R53OEFF)
 
-# Tempus Dominus Date/Time Picker v6.0.0-alpha1
+# Tempus Dominus Date/Time Picker v6.0.0-alpha1.0.3
 
 Tempus Dominus is a powerful and robust date time picker for javascript. Version 6 is another major rewrite over the previous version. V6 is written with modern browsers in mind and is written in typescript. Bootstrap, momentjs and jQuery are no longer required dependencies. Popper2 is all that is required for the picker to position correctly. If you still require jQuery (seriously, you should move off that asap) there's a jQuery provider that wraps the native js functions.
 
@@ -22,7 +22,7 @@ The docs folder contains the generated documentation site, don't modify this dir
 
 ## Running
 
-You can run `npm start` which will start a browser-sync server. Navigate to `http://localhost:3000/` to view the docs. Note that 3000 is the default port, yours might be different.
+You can run `npm start` which will start a browser-sync server. Navigate to `http://localhost:3001/` to view the docs. Note that 3000 is the default port, yours might be different.
 
 ## Watchers
 Do not run `npm start` and the watchers at the same time.
