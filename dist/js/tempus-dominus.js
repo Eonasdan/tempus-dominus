@@ -299,15 +299,7 @@
          * @param locale
          */
         meridiem(locale = this.locale) {
-            /*
-            for some reason this stopped returning "AM/PM" and returned "in the morning"
-            const dayPeriod = new Intl.DateTimeFormat(locale, {
-              hour: 'numeric',
-              dayPeriod: 'narrow',
-            } as any)
-              .formatToParts(this)
-              .find((p) => p.type === 'dayPeriod')?.value;*/
-            return this.hours <= 12 ? 'AM' : 'PM';
+            return this.hours < 12 ? 'AM' : 'PM';
         }
         /**
          * Shortcut to Date.getDate()
@@ -945,9 +937,6 @@
             const manipulateAndSet = (unit, value = 1) => {
                 const newDate = lastPicked.manipulate(value, unit);
                 if (this._context._validation.isValid(newDate, unit)) {
-                    /*if (this.context.dates.lastPickedIndex < 0) {
-                                this.date(newDate);
-                            }*/
                     this._context.dates._setValue(newDate, this._context.dates.lastPickedIndex);
                 }
             };
@@ -1026,6 +1015,8 @@
                     break;
                 case ActionTypes.selectHour:
                     let hour = +currentTarget.getAttribute('data-value');
+                    if (lastPicked.hours >= 12)
+                        hour += 12;
                     lastPicked.hours = hour;
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
                     if (this._context._options.display.components.useTwentyfourHour &&
@@ -2757,7 +2748,7 @@
             const spread = (provided, mergeOption, copyTo) => {
                 const unsupportedOptions = Object.keys(provided).filter((x) => !Object.keys(mergeOption).includes(x));
                 if (unsupportedOptions.length > 0) {
-                    const flattenedOptions = OptionConverter._flattenDefaultOptions();
+                    const flattenedOptions = OptionConverter._flattenDefaultOptions;
                     const errors = unsupportedOptions.map((x) => {
                         let error = `"${path.substring(1)}.${x}" in not a known option.`;
                         let didYouMean = flattenedOptions.find((y) => y.includes(x));
@@ -2921,13 +2912,16 @@
             }
             return converted;
         }
-        static _flattenDefaultOptions() {
+        static get _flattenDefaultOptions() {
+            if (this._flatback)
+                return this._flatback;
             const deepKeys = (t, pre = []) => Array.isArray(t)
                 ? []
                 : Object(t) === t
                     ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
                     : pre.join('.');
-            return deepKeys(DefaultOptions);
+            this._flatback = deepKeys(DefaultOptions);
+            return this._flatback;
         }
         /**
          * Some options conflict like min/max date. Verify that these kinds of options

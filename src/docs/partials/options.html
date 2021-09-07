@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class='row'>
-        <div class='col offset-1'>
+        <div class='col offset-1 border-start border-dark'>
           <div>
             <h3 id='restrictionsMinDate'>minDate
               <a class='anchorjs-link' aria-label='Anchor' href='#restrictionsMinDate'><i class='fas fa-anchor'></i></a>
@@ -66,7 +66,7 @@
             </div>
           </div>
           <div class='row'>
-            <div class='col offset-1'>
+            <div class='col offset-1 border-start border-dark'>
               <h4>enabledDates</h4>
               <p>
                 Allows the user to select only from the provided days. Setting this takes precedence over
@@ -94,7 +94,7 @@
             </p>
           </div>
           <div class='row'>
-            <div class='col offset-1'>
+            <div class='col offset-1 border-start border-dark'>
               <h4>enabledHours</h4>
               <p>
                 Allows the user to select only from the provided hours.
@@ -148,13 +148,13 @@ new tempusDominus.TempusDominus(..., {
     </h2>
 
     <div class='row'>
-      <div class='col offset-1'>
+      <div class='col offset-1 border-start border-dark'>
         <h3 id='displayToolbarPlacement'>toolbarPlacement<a class='anchorjs-link' aria-label='Anchor'
                                                             href='#displayToolbarPlacement'><i
           class='fas fa-anchor'></i></a></h3>
         <div>
           <p>
-            <strong>Accepts:</strong> 'top' and 'bottom' <strong>Defaults:</strong> bottom<br />
+            <strong>Accepts:</strong> 'top' | 'bottom' <strong>Defaults:</strong> bottom<br />
             Changes the placement of the toolbar where the today, clear, component switch icon are located.
           </p>
           <p>
@@ -173,99 +173,104 @@ new tempusDominus.TempusDominus(..., {
           for instance.
         </p>
 
-        <div class='col offset-1'>
-          <h4 id='displayComponentsCalendar'>calendar<a class='anchorjs-link' aria-label='Anchor'
-                                                        href='#displayComponentsCalendar'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> true<br />
-            A convenience flag that can enable or disable all of the calendar components like date, month, year,
-            decades, century.
-            This flag must be true for any of the calendar components to be visible, even if those options are true.
-          </p>
+        <div class='row'>
+          <div class='col offset-1 border-start border-dark'>
+            <h4 id='displayComponentsCalendar'>calendar<a class='anchorjs-link' aria-label='Anchor'
+                                                          href='#displayComponentsCalendar'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> true<br />
+              A convenience flag that can enable or disable all of the calendar components like date, month, year,
+              decades, century.
+              This flag must be true for any of the calendar components to be visible, even if those options are true.
+            </p>
 
-          <h4 id='displayComponentsDate'>date<a class='anchorjs-link' aria-label='Anchor' href='#displayComponentsDate'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> true<br />
-            <img src='images/calendar-view.png' class='img-fluid img-thumbnail d-block' alt='Date View' />
-          </p>
+            <h4 id='displayComponentsDate'>date<a class='anchorjs-link' aria-label='Anchor'
+                                                  href='#displayComponentsDate'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> true<br />
+              <img src='images/calendar-view.png' class='img-fluid img-thumbnail d-block' alt='Date View' />
+            </p>
 
-          <h4 id='displayComponentsMonth'>month<a class='anchorjs-link' aria-label='Anchor'
-                                                  href='#displayComponentsMonth'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> true<br />
-            <img src='images/month-view.png' class='img-fluid img-thumbnail d-block' alt='Month View' />
-            Turns on or off the month selection view.
-          </p>
+            <h4 id='displayComponentsMonth'>month<a class='anchorjs-link' aria-label='Anchor'
+                                                    href='#displayComponentsMonth'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> true<br />
+              <img src='images/month-view.png' class='img-fluid img-thumbnail d-block' alt='Month View' />
+              Turns on or off the month selection view.
+            </p>
 
-          <h4 id='displayComponentsYear'>year<a class='anchorjs-link' aria-label='Anchor' href='#displayComponentsYear'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> true<br />
-            <img src='images/year-view.png' class='img-fluid img-thumbnail d-block' alt='Year View' />
-          </p>
+            <h4 id='displayComponentsYear'>year<a class='anchorjs-link' aria-label='Anchor'
+                                                  href='#displayComponentsYear'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> true<br />
+              <img src='images/year-view.png' class='img-fluid img-thumbnail d-block' alt='Year View' />
+            </p>
 
-          <h4 id='displayComponentsDecades'>decades<a class='anchorjs-link' aria-label='Anchor'
-                                                      href='#displayComponentsDecades'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> true<br />
-            <img src='images/decade-view.png' class='img-fluid img-thumbnail d-block' alt='Decade View' />
-          </p>
+            <h4 id='displayComponentsDecades'>decades<a class='anchorjs-link' aria-label='Anchor'
+                                                        href='#displayComponentsDecades'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> true<br />
+              <img src='images/decade-view.png' class='img-fluid img-thumbnail d-block' alt='Decade View' />
+            </p>
 
-          <h4 id='displayComponentsClock'>clock<a class='anchorjs-link' aria-label='Anchor'
-                                                  href='#displayComponentsClock'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <img src='images/time-view.png' class='img-fluid img-thumbnail d-block' alt='Time View' />
-          </p>
-          <p>
-            <strong>Defaults:</strong> true<br />
-            A convenience flag that can enable or disable all of the calendar components like date, month, year,
-            decades, century.
-            This flag must be true for any of the calendar components to be visible, even if those options are true.
-          </p>
+            <h4 id='displayComponentsClock'>clock<a class='anchorjs-link' aria-label='Anchor'
+                                                    href='#displayComponentsClock'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <img src='images/time-view.png' class='img-fluid img-thumbnail d-block' alt='Time View' />
+            </p>
+            <p>
+              <strong>Defaults:</strong> true<br />
+              A convenience flag that can enable or disable all of the calendar components like date, month, year,
+              decades, century.
+              This flag must be true for any of the calendar components to be visible, even if those options are true.
+            </p>
 
-          <h4 id='displayComponentsHours'>hours<a class='anchorjs-link' aria-label='Anchor'
-                                                  href='#displayComponentsHours'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> true<br />
-            Displayed above in <span style='color:#FC4242;'>red</span>
-          </p>
+            <h4 id='displayComponentsHours'>hours<a class='anchorjs-link' aria-label='Anchor'
+                                                    href='#displayComponentsHours'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> true<br />
+              Displayed above in <span style='color:#FC4242;'>red</span>
+            </p>
 
-          <h4 id='displayComponentsMinutes'>minutes<a class='anchorjs-link' aria-label='Anchor'
-                                                      href='#displayComponentsMinutes'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> true<br />
-            Displayed above in <span style='color:#632289;'>purple</span>
-          </p>
+            <h4 id='displayComponentsMinutes'>minutes<a class='anchorjs-link' aria-label='Anchor'
+                                                        href='#displayComponentsMinutes'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> true<br />
+              Displayed above in <span style='color:#632289;'>purple</span>
+            </p>
 
-          <h4 id='displayComponentsSeconds'>seconds<a class='anchorjs-link' aria-label='Anchor'
-                                                      href='#displayComponentsSeconds'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> false<br />
-            Displayed above in <span style='color:#06AF8F;'>green</span>
-          </p>
+            <h4 id='displayComponentsSeconds'>seconds<a class='anchorjs-link' aria-label='Anchor'
+                                                        href='#displayComponentsSeconds'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> false<br />
+              Displayed above in <span style='color:#06AF8F;'>green</span>
+            </p>
 
-          <h4 id='displayComponentsUseTwentyfourHour'>useTwentyfourHour<a class='anchorjs-link' aria-label='Anchor'
-                                                                          href='#displayComponentsUseTwentyfourHour'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> false<br />
-            <img src='images/24hour.png' class='img-fluid img-thumbnail d-block' alt='Twenty-four View' />
-          </p>
+            <h4 id='displayComponentsUseTwentyfourHour'>useTwentyfourHour<a class='anchorjs-link' aria-label='Anchor'
+                                                                            href='#displayComponentsUseTwentyfourHour'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> false<br />
+              <img src='images/24hour.png' class='img-fluid img-thumbnail d-block' alt='Twenty-four View' />
+            </p>
+          </div>
         </div>
+
         <h3 id='displayButtons'>buttons<a class='anchorjs-link' aria-label='Anchor' href='#displayButtons'><i
           class='fas fa-anchor'></i></a>
         </h3>
@@ -273,31 +278,36 @@ new tempusDominus.TempusDominus(..., {
         <p>
           <img src='images/buttons.png' class='img-fluid img-thumbnail d-block' alt='Buttons' />
         </p>
-        <div class='col offset-1'>
-          <h4 id='displayButtonsToday'>today<a class='anchorjs-link' aria-label='Anchor' href='#displayButtonsToday'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> false<br />
-            Displayed above in <span style='color:#FC4242;'>red</span>
-          </p>
+        <div class='row'>
+          <div class='col offset-1 border-start border-dark'>
+            <h4 id='displayButtonsToday'>today<a class='anchorjs-link' aria-label='Anchor'
+                                                 href='#displayButtonsToday'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> false<br />
+              Displayed above in <span style='color:#FC4242;'>red</span>
+            </p>
 
-          <h4 id='displayButtonsClose'>close<a class='anchorjs-link' aria-label='Anchor' href='#displayButtonsClose'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> false<br />
-            Displayed above in <span style='color:#632289;'>purple</span>
-          </p>
+            <h4 id='displayButtonsClose'>close<a class='anchorjs-link' aria-label='Anchor'
+                                                 href='#displayButtonsClose'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> false<br />
+              Displayed above in <span style='color:#632289;'>purple</span>
+            </p>
 
-          <h4 id='displayButtonsClear'>clear<a class='anchorjs-link' aria-label='Anchor' href='#displayButtonsClear'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> false<br />
-            Displayed above in <span style='color:#06AF8F;'>green</span>
-          </p>
+            <h4 id='displayButtonsClear'>clear<a class='anchorjs-link' aria-label='Anchor'
+                                                 href='#displayButtonsClear'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> false<br />
+              Displayed above in <span style='color:#06AF8F;'>green</span>
+            </p>
 
+          </div>
         </div>
         <h3 id='displayCalendarWeeks'>calendarWeeks<a class='anchorjs-link' aria-label='Anchor'
                                                       href='#displayCalendarWeeks'><i
@@ -320,81 +330,84 @@ new tempusDominus.TempusDominus(..., {
           styles and scripts needed.
         </p>
         <p>Icon sprites are also supported.</p>
-        <div class='col offset-1'>
-          <h4 id='displayIconsType'>type<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsType'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Accepts either "icons" or "sprites"</strong><br />
-            Defaults to "icons". If "sprites" is used as the value, the icons will be render with an svg element instead
-            of an "i" element. If you don't know which you should use, leave it as "icons".
-          </p>
+        <div class='row'>
+          <div class='col offset-1 border-start border-dark'>
+            <h4 id='displayIconsType'>type<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsType'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Accepts either "icons" or "sprites"</strong><br />
+              Defaults to "icons". If "sprites" is used as the value, the icons will be render with an svg element
+              instead
+              of an "i" element. If you don't know which you should use, leave it as "icons".
+            </p>
 
-          <h4 id='displayIconsTime'>time<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsTime'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> <i class='fas fa-clock'></i> (fas fa-clock)<br />
-            This icon is used to change the view from the calendar view to the clock view.
-          </p>
+            <h4 id='displayIconsTime'>time<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsTime'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> <i class='fas fa-clock'></i> (fas fa-clock)<br />
+              This icon is used to change the view from the calendar view to the clock view.
+            </p>
 
-          <h4 id='displayIconsDate'>date<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsDate'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> <i class='fas fa-calendar'></i> (fas fa-calendar)<br />
-            This icon is used to change the view from the clock view to the calendar view.
-          </p>
+            <h4 id='displayIconsDate'>date<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsDate'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> <i class='fas fa-calendar'></i> (fas fa-calendar)<br />
+              This icon is used to change the view from the clock view to the calendar view.
+            </p>
 
-          <h4 id='displayIconsUp'>up<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsUp'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> <i class='fas fa-arrow-up'></i> (fas fa-arrow-up)<br />
-            This icon is used to incremeant hours, minutes and seconds in the clock view.
-          </p>
+            <h4 id='displayIconsUp'>up<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsUp'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> <i class='fas fa-arrow-up'></i> (fas fa-arrow-up)<br />
+              This icon is used to incremeant hours, minutes and seconds in the clock view.
+            </p>
 
-          <h4 id='displayIconsDown'>down<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsDown'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> <i class='fas fa-arrow-down'></i> (fas fa-arrow-down)<br />
-            This icon is used to decremeant hours, minutes and seconds in the clock view.
-          </p>
+            <h4 id='displayIconsDown'>down<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsDown'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> <i class='fas fa-arrow-down'></i> (fas fa-arrow-down)<br />
+              This icon is used to decremeant hours, minutes and seconds in the clock view.
+            </p>
 
-          <h4 id='displayIconsNext'>next<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsNext'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> <i class='fas fa-chevron-right'></i> (fas fa-chevron-right)<br />
-            This icon is used to navigation forward in the calendar, month, year, and decade views.
-          </p>
+            <h4 id='displayIconsNext'>next<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsNext'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> <i class='fas fa-chevron-right'></i> (fas fa-chevron-right)<br />
+              This icon is used to navigation forward in the calendar, month, year, and decade views.
+            </p>
 
-          <h4 id='displayIconsPrevious'>previous<a class='anchorjs-link' aria-label='Anchor'
-                                                   href='#displayIconsPrevious'><i
-            class='fas fa-anchor'></i></a></h4>
-          <p>
-            <strong>Defaults:</strong> <i class='fas fa-chevron-left'></i> (fas fa-chevron-left)<br />
-            This icon is used to navigation backwards in the calendar, month, year, and decade views.
-          </p>
+            <h4 id='displayIconsPrevious'>previous<a class='anchorjs-link' aria-label='Anchor'
+                                                     href='#displayIconsPrevious'><i
+              class='fas fa-anchor'></i></a></h4>
+            <p>
+              <strong>Defaults:</strong> <i class='fas fa-chevron-left'></i> (fas fa-chevron-left)<br />
+              This icon is used to navigation backwards in the calendar, month, year, and decade views.
+            </p>
 
-          <h4 id='displayIconsToday'>today<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsToday'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> <i class='fas fa-calendar-check'></i> (fas fa-calendar-check)<br />
-            This icon is used to change the date and view to now.
-          </p>
+            <h4 id='displayIconsToday'>today<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsToday'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> <i class='fas fa-calendar-check'></i> (fas fa-calendar-check)<br />
+              This icon is used to change the date and view to now.
+            </p>
 
-          <h4 id='displayIconsClear'>clear<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsClear'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> <i class='fas fa-trash'></i> (fas fa-trash)<br />
-            This icon is used to clear the currently selected date.
-          </p>
+            <h4 id='displayIconsClear'>clear<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsClear'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> <i class='fas fa-trash'></i> (fas fa-trash)<br />
+              This icon is used to clear the currently selected date.
+            </p>
 
-          <h4 id='displayIconsClose'>close<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsClose'><i
-            class='fas fa-anchor'></i></a>
-          </h4>
-          <p>
-            <strong>Defaults:</strong> <i class='fas fa-times'></i> (fas fa-times)<br />
-            This icon is used to close the picker.
-          </p>
+            <h4 id='displayIconsClose'>close<a class='anchorjs-link' aria-label='Anchor' href='#displayIconsClose'><i
+              class='fas fa-anchor'></i></a>
+            </h4>
+            <p>
+              <strong>Defaults:</strong> <i class='fas fa-times'></i> (fas fa-times)<br />
+              This icon is used to close the picker.
+            </p>
+          </div>
         </div>
         <h3 id='displayViewMode'>viewMode<a class='anchorjs-link' aria-label='Anchor' href='#displayViewMode'><i
           class='fas fa-anchor'></i></a></h3>
@@ -429,15 +442,17 @@ new tempusDominus.TempusDominus(..., {
           rel='noopener noreferrer nofollow' target='_blank'>options</a>.
           Used to format selected values before updating the option input fields value.
         </p>
+
+        <h3 id='keepOpen'>keepOpen<a class='anchorjs-link' aria-label='Anchor' href='#keepOpen'><i
+          class='fas fa-anchor'></i></a></h3>
+        <p>
+          <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br />
+          Keep the picker window open even after a date selection. The picker can still be closed by the target or
+          clicking on on an outside element.
+        </p>
       </div>
 
-      <h2 id='keepOpen'>keepOpen<a class='anchorjs-link' aria-label='Anchor' href='#keepOpen'><i
-        class='fas fa-anchor'></i></a></h2>
-      <p>
-        <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br />
-        Keep the picker window open even after a date selection. The picker can still be closed by the target or
-        clicking on on an outside element.
-      </p>
+
     </div>
   </section>
   <h2 id='stepping'>stepping<a class='anchorjs-link' aria-label='Anchor' href='#stepping'><i class='fas fa-anchor'></i></a>
@@ -488,203 +503,208 @@ new tempusDominus.TempusDominus(..., {
      </pre>
         </div>
       </div>
-      <div class='col offset-1'>
-        <h3 id='localizationToday'>today<a class='anchorjs-link' aria-label='Anchor' href='#localizationToday'><i
-          class='fas fa-anchor'></i></a>
-        </h3>
-        <p>
-          <strong>Defaults:</strong> Go to today<br />
-        </p>
+      <div class='row'>
+        <div class='col offset-1 border-start border-dark'>
+          <h3 id='localizationToday'>today<a class='anchorjs-link' aria-label='Anchor' href='#localizationToday'><i
+            class='fas fa-anchor'></i></a>
+          </h3>
+          <p>
+            <strong>Defaults:</strong> Go to today<br />
+          </p>
 
-        <h3 id='localizationClear'>clear<a class='anchorjs-link' aria-label='Anchor' href='#localizationClear'><i
-          class='fas fa-anchor'></i></a>
-        </h3>
-        <p>
-          <strong>Defaults:</strong> Clear selection<br />
-        </p>
+          <h3 id='localizationClear'>clear<a class='anchorjs-link' aria-label='Anchor' href='#localizationClear'><i
+            class='fas fa-anchor'></i></a>
+          </h3>
+          <p>
+            <strong>Defaults:</strong> Clear selection<br />
+          </p>
 
-        <h3 id='localizationClose'>close<a class='anchorjs-link' aria-label='Anchor' href='#localizationClose'><i
-          class='fas fa-anchor'></i></a>
-        </h3>
-        <p>
-          <strong>Defaults:</strong> Close the picker<br />
-        </p>
+          <h3 id='localizationClose'>close<a class='anchorjs-link' aria-label='Anchor' href='#localizationClose'><i
+            class='fas fa-anchor'></i></a>
+          </h3>
+          <p>
+            <strong>Defaults:</strong> Close the picker<br />
+          </p>
 
-        <h3 id='localizationSelectMonth'>selectMonth<a class='anchorjs-link' aria-label='Anchor'
-                                                       href='#localizationSelectMonth'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Select Month<br />
-        </p>
+          <h3 id='localizationSelectMonth'>selectMonth<a class='anchorjs-link' aria-label='Anchor'
+                                                         href='#localizationSelectMonth'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Select Month<br />
+          </p>
 
-        <h3 id='localizationPreviousMonth'>previousMonth<a class='anchorjs-link' aria-label='Anchor'
-                                                           href='#localizationPreviousMonth'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Previous Month<br />
-        </p>
+          <h3 id='localizationPreviousMonth'>previousMonth<a class='anchorjs-link' aria-label='Anchor'
+                                                             href='#localizationPreviousMonth'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Previous Month<br />
+          </p>
 
-        <h3 id='localizationNextMonth'>nextMonth<a class='anchorjs-link' aria-label='Anchor'
-                                                   href='#localizationNextMonth'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Next Month<br />
-        </p>
+          <h3 id='localizationNextMonth'>nextMonth<a class='anchorjs-link' aria-label='Anchor'
+                                                     href='#localizationNextMonth'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Next Month<br />
+          </p>
 
-        <h3 id='localizationSelectYear'>selectYear<a class='anchorjs-link' aria-label='Anchor'
-                                                     href='#localizationSelectYear'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Select Year<br />
-        </p>
+          <h3 id='localizationSelectYear'>selectYear<a class='anchorjs-link' aria-label='Anchor'
+                                                       href='#localizationSelectYear'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Select Year<br />
+          </p>
 
-        <h3 id='localizationPreviousYear'>previousYear<a class='anchorjs-link' aria-label='Anchor'
-                                                         href='#localizationPreviousYear'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Previous Year<br />
-        </p>
+          <h3 id='localizationPreviousYear'>previousYear<a class='anchorjs-link' aria-label='Anchor'
+                                                           href='#localizationPreviousYear'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Previous Year<br />
+          </p>
 
-        <h3 id='localizationNextYear'>nextYear<a class='anchorjs-link' aria-label='Anchor' href='#localizationNextYear'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Next Year<br />
-        </p>
+          <h3 id='localizationNextYear'>nextYear<a class='anchorjs-link' aria-label='Anchor'
+                                                   href='#localizationNextYear'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Next Year<br />
+          </p>
 
-        <h3 id='localizationSelectDecade'>selectDecade<a class='anchorjs-link' aria-label='Anchor'
-                                                         href='#localizationSelectDecade'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Select Decade<br />
-        </p>
+          <h3 id='localizationSelectDecade'>selectDecade<a class='anchorjs-link' aria-label='Anchor'
+                                                           href='#localizationSelectDecade'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Select Decade<br />
+          </p>
 
-        <h3 id='localizationPreviousDecade'>previousDecade<a class='anchorjs-link' aria-label='Anchor'
-                                                             href='#localizationPreviousDecade'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Previous Decade<br />
-        </p>
+          <h3 id='localizationPreviousDecade'>previousDecade<a class='anchorjs-link' aria-label='Anchor'
+                                                               href='#localizationPreviousDecade'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Previous Decade<br />
+          </p>
 
-        <h3 id='localizationNextDecade'>nextDecade<a class='anchorjs-link' aria-label='Anchor'
-                                                     href='#localizationNextDecade'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Next Decade<br />
-        </p>
+          <h3 id='localizationNextDecade'>nextDecade<a class='anchorjs-link' aria-label='Anchor'
+                                                       href='#localizationNextDecade'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Next Decade<br />
+          </p>
 
-        <h3 id='localizationPreviousCentury'>previousCentury<a class='anchorjs-link' aria-label='Anchor'
-                                                               href='#localizationPreviousCentury'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Previous Century<br />
-        </p>
+          <h3 id='localizationPreviousCentury'>previousCentury<a class='anchorjs-link' aria-label='Anchor'
+                                                                 href='#localizationPreviousCentury'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Previous Century<br />
+          </p>
 
-        <h3 id='localizationNextCentury'>nextCentury<a class='anchorjs-link' aria-label='Anchor'
-                                                       href='#localizationNextCentury'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Next Century<br />
-        </p>
+          <h3 id='localizationNextCentury'>nextCentury<a class='anchorjs-link' aria-label='Anchor'
+                                                         href='#localizationNextCentury'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Next Century<br />
+          </p>
 
-        <h3 id='localizationPickHour'>pickHour<a class='anchorjs-link' aria-label='Anchor' href='#localizationPickHour'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Pick Hour<br />
-        </p>
+          <h3 id='localizationPickHour'>pickHour<a class='anchorjs-link' aria-label='Anchor'
+                                                   href='#localizationPickHour'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Pick Hour<br />
+          </p>
 
-        <h3 id='localizationIncrementHour'>incrementHour<a class='anchorjs-link' aria-label='Anchor'
-                                                           href='#localizationIncrementHour'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Increment Hour<br />
-        </p>
+          <h3 id='localizationIncrementHour'>incrementHour<a class='anchorjs-link' aria-label='Anchor'
+                                                             href='#localizationIncrementHour'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Increment Hour<br />
+          </p>
 
-        <h3 id='localizationDecrementHour'>decrementHour<a class='anchorjs-link' aria-label='Anchor'
-                                                           href='#localizationDecrementHour'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Decrement Hour<br />
-        </p>
+          <h3 id='localizationDecrementHour'>decrementHour<a class='anchorjs-link' aria-label='Anchor'
+                                                             href='#localizationDecrementHour'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Decrement Hour<br />
+          </p>
 
-        <h3 id='localizationPickMinute'>pickMinute<a class='anchorjs-link' aria-label='Anchor'
-                                                     href='#localizationPickMinute'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Pick Minute<br />
-        </p>
+          <h3 id='localizationPickMinute'>pickMinute<a class='anchorjs-link' aria-label='Anchor'
+                                                       href='#localizationPickMinute'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Pick Minute<br />
+          </p>
 
-        <h3 id='localizationIncrementMinute'>incrementMinute<a class='anchorjs-link' aria-label='Anchor'
-                                                               href='#localizationIncrementMinute'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Increment Minute<br />
-        </p>
+          <h3 id='localizationIncrementMinute'>incrementMinute<a class='anchorjs-link' aria-label='Anchor'
+                                                                 href='#localizationIncrementMinute'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Increment Minute<br />
+          </p>
 
-        <h3 id='localizationDecrementMinute'>decrementMinute<a class='anchorjs-link' aria-label='Anchor'
-                                                               href='#localizationDecrementMinute'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Decrement Minute<br />
-        </p>
+          <h3 id='localizationDecrementMinute'>decrementMinute<a class='anchorjs-link' aria-label='Anchor'
+                                                                 href='#localizationDecrementMinute'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Decrement Minute<br />
+          </p>
 
-        <h3 id='localizationPickSecond'>pickSecond<a class='anchorjs-link' aria-label='Anchor'
-                                                     href='#localizationPickSecond'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Pick Second<br />
-        </p>
+          <h3 id='localizationPickSecond'>pickSecond<a class='anchorjs-link' aria-label='Anchor'
+                                                       href='#localizationPickSecond'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Pick Second<br />
+          </p>
 
-        <h3 id='localizationIncrementSecond'>incrementSecond<a class='anchorjs-link' aria-label='Anchor'
-                                                               href='#localizationIncrementSecond'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Increment Second<br />
-        </p>
+          <h3 id='localizationIncrementSecond'>incrementSecond<a class='anchorjs-link' aria-label='Anchor'
+                                                                 href='#localizationIncrementSecond'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Increment Second<br />
+          </p>
 
-        <h3 id='localizationDecrementSecond'>decrementSecond<a class='anchorjs-link' aria-label='Anchor'
-                                                               href='#localizationDecrementSecond'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Decrement Second<br />
-        </p>
+          <h3 id='localizationDecrementSecond'>decrementSecond<a class='anchorjs-link' aria-label='Anchor'
+                                                                 href='#localizationDecrementSecond'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Decrement Second<br />
+          </p>
 
-        <h3 id='localizationTogglePeriod'>togglePeriod<a class='anchorjs-link' aria-label='Anchor'
-                                                         href='#localizationTogglePeriod'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Toggle Period<br />
-        </p>
+          <h3 id='localizationTogglePeriod'>togglePeriod<a class='anchorjs-link' aria-label='Anchor'
+                                                           href='#localizationTogglePeriod'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Toggle Period<br />
+          </p>
 
-        <h3 id='localizationSelectTime'>selectTime<a class='anchorjs-link' aria-label='Anchor'
-                                                     href='#localizationSelectTime'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Select Time<br />
-        </p>
+          <h3 id='localizationSelectTime'>selectTime<a class='anchorjs-link' aria-label='Anchor'
+                                                       href='#localizationSelectTime'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Select Time<br />
+          </p>
 
-        <h3 id='localizationSelectDate'>selectDate<a class='anchorjs-link' aria-label='Anchor'
-                                                     href='#localizationSelectDate'><i
-          class='fas fa-anchor'></i></a></h3>
-        <p>
-          <strong>Defaults:</strong> Select Date<br />
-        </p>
+          <h3 id='localizationSelectDate'>selectDate<a class='anchorjs-link' aria-label='Anchor'
+                                                       href='#localizationSelectDate'><i
+            class='fas fa-anchor'></i></a></h3>
+          <p>
+            <strong>Defaults:</strong> Select Date<br />
+          </p>
 
-        <h3 id='localizationDayViewHeaderFormat'>dayViewHeaderFormat<a class='anchorjs-link' aria-label='Anchor'
-                                                                       href='#localizationDayViewHeaderFormat'><i
-          class='fas fa-anchor'></i></a>
-        </h3>
-        <p>
-          <strong>Defaults:</strong> long<br />
-          This should be an appropriate value from the Intl.DateFormat options.
-        </p>
+          <h3 id='localizationDayViewHeaderFormat'>dayViewHeaderFormat<a class='anchorjs-link' aria-label='Anchor'
+                                                                         href='#localizationDayViewHeaderFormat'><i
+            class='fas fa-anchor'></i></a>
+          </h3>
+          <p>
+            <strong>Accepts:</strong> "numeric" | "2-digit" | "long" | "short" | "narrow" <strong>Defaults:</strong>
+            long<br />
+            This should be an appropriate value from the Intl.DateFormat options.
+          </p>
 
-        <h3 id='localizationLocale'>locale<a class='anchorjs-link' aria-label='Anchor' href='#localizationLocale'><i
-          class='fas fa-anchor'></i></a>
-        </h3>
-        <p>
-          <strong>Defaults:</strong> default<br />
-          This should be a language value supported by Intl.
-        </p>
+          <h3 id='localizationLocale'>locale<a class='anchorjs-link' aria-label='Anchor' href='#localizationLocale'><i
+            class='fas fa-anchor'></i></a>
+          </h3>
+          <p>
+            <strong>Defaults:</strong> default<br />
+            This should be a BCP 47 language tag or a value supported by Intl.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -751,7 +771,8 @@ new tempusDominus.TempusDominus(..., {
     class='fas fa-anchor'></i></a></h2>
   <p>
     <strong>Accepts</strong> number <strong>Defaults:</strong> 200<br />
-    Used with <code>promptTimeOnDateChange</code>. The number of milliseconds before the picker will display the clock view.
+    Used with <code>promptTimeOnDateChange</code>. The number of milliseconds before the picker will display the clock
+    view.
   </p>
 
 

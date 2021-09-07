@@ -37,9 +37,6 @@ export default class Actions {
     const manipulateAndSet = (unit: Unit, value = 1) => {
       const newDate = lastPicked.manipulate(value, unit);
       if (this._context._validation.isValid(newDate, unit)) {
-        /*if (this.context.dates.lastPickedIndex < 0) {
-                    this.date(newDate);
-                }*/
         this._context.dates._setValue(
           newDate,
           this._context.dates.lastPickedIndex
@@ -137,6 +134,7 @@ export default class Actions {
         break;
       case ActionTypes.selectHour:
         let hour = +currentTarget.getAttribute('data-value');
+        if (lastPicked.hours >= 12) hour += 12;
         lastPicked.hours = hour;
         this._context.dates._setValue(
           lastPicked,

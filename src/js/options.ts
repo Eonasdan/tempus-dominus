@@ -305,7 +305,7 @@ export class OptionConverter {
         (x) => !Object.keys(mergeOption).includes(x)
       );
       if (unsupportedOptions.length > 0) {
-        const flattenedOptions = OptionConverter._flattenDefaultOptions();
+        const flattenedOptions = OptionConverter._flattenDefaultOptions;
 
         const errors = unsupportedOptions.map((x) => {
           let error = `"${path.substring(1)}.${x}" in not a known option.`;
@@ -504,6 +504,7 @@ export class OptionConverter {
     return;
   }
 
+
   /**
    * Attempts to convert `d` to a DateTime object
    * @param d value to convert
@@ -522,7 +523,10 @@ export class OptionConverter {
     return converted;
   }
 
-  private static _flattenDefaultOptions(): string[] {
+  private static _flatback: string[];
+
+  private static get _flattenDefaultOptions(): string[] {
+    if (this._flatback) return this._flatback;
     const deepKeys = (t, pre = []) =>
       Array.isArray(t)
         ? []
@@ -530,7 +534,9 @@ export class OptionConverter {
         ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
         : pre.join('.');
 
-    return deepKeys(DefaultOptions);
+    this._flatback = deepKeys(DefaultOptions);
+
+    return this._flatback;
   }
 
   /**

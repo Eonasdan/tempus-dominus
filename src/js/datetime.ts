@@ -338,15 +338,7 @@ export class DateTime extends Date {
    * @param locale
    */
   meridiem(locale: string = this.locale): string {
-    /*
-    for some reason this stopped returning "AM/PM" and returned "in the morning"
-    const dayPeriod = new Intl.DateTimeFormat(locale, {
-      hour: 'numeric',
-      dayPeriod: 'narrow',
-    } as any)
-      .formatToParts(this)
-      .find((p) => p.type === 'dayPeriod')?.value;*/
-    return this.hours <= 12 ? 'AM' : 'PM';
+    return this.hours < 12 ? 'AM' : 'PM';
   }
 
   /**
