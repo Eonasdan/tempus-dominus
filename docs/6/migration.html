@@ -225,6 +225,10 @@
   <div id="mainContent" class="bd-content ps-lg-4">
   <div id="migration">
     <p>
+      Version 6 defaults to FA 5 icons (but will switch to FA 6 when that's released), removes moment, jQuery and
+      Bootstrap as depedencies. It also uses Popper.js v2.
+    </p>
+    <p>
       This tool attempts to convert your configurations from previous version of the picker to v6. Paste your current
       configuration into the input box. Due to how this process works, it cannot convert usages of moment or date
       objects. Set any property that uses unsupported values to <code>undefined</code> so that configuration can still
@@ -241,53 +245,7 @@
     <div class="row">
       <div class="col">
         <label for="from" class="form-label">Input</label>
-        <textarea id="from" class="form-control">{
-	locale: 'pt-BR',
-	buttons: {
-		showToday: true,
-		showClear: true,
-		showClose: true
-	},
-	icons: {
-		time: 'far fa-clock',
-		date: 'far fa-calendar-alt',
-		up: 'fas fa-arrow-up',
-		down: 'fas fa-arrow-down',
-		previous: 'fas fa-chevron-left',
-		next: 'fas fa-chevron-right',
-		today: 'far fa-calendar-check',
-		clear: 'far fa-trash-alt',
-		close: 'fas fa-times'
-	},
-	tooltips: {
-		selectDate: 'Calendário',
-		selectTime: 'Horário',
-		today: 'Hoje/Agora',
-		clear: 'Limpar',
-		close: 'Fechar',
-		selectMonth: 'Seleciona Mês',
-		prevMonth: 'Mês Anterior',
-		nextMonth: 'Próximo Mês',
-		selectYear: 'Seleciona Ano',
-		prevYear: 'Ano Anterior',
-		nextYear: 'Próximo Ano',
-		selectDecade: 'Seleciona Década',
-		prevDecade: 'Década Anterior',
-		nextDecade: 'Próxima Década',
-		prevCentury: 'Céculo Passado',
-		nextCentury: 'Próximo Céculo',
-		incrementHour: 'Aumentar Hora',
-		pickHour: 'Seleciona Hora',
-		decrementHour: 'Diminuir Hora',
-		incrementMinute: 'Aumentar Minuto',
-		pickMinute: 'Seleciona Minuto',
-		decrementMinute: 'Diminuir Minuto',
-		incrementSecond: 'Aumentar Segundo',
-		pickSecond: 'Seleciona Segundo',
-		decrementSecond: 'Diminuir Segundo'
-	}
-}
-</textarea>
+        <textarea id="from" class="form-control"></textarea>
       </div>
       <div class="col-sm-1">
         <button class="btn btn-primary" id="convertButton"><i class="fas fa-angle-double-right"></i></button>
@@ -540,8 +498,6 @@
 
       datetimepicker1.updateOptions(convertedConfiguration);
     });
-
-    convert();
   </script>
   <style>
       textarea {
