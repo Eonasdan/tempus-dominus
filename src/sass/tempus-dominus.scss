@@ -34,6 +34,7 @@ todo look at how bootstrap loops through their vars to make a --root section
   display: none;
   background-color: white;
   border: 1px solid black;
+  z-index: 9999;
 
   &.calendarWeeks {
     width: 21rem;

@@ -470,4 +470,4 @@ class TempusDominus {
   };
 }
 
-export { TempusDominus, Namespace, DefaultOptions, DateTime };
+export { TempusDominus, Namespace, DefaultOptions, DateTime, Options };
