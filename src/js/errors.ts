@@ -91,13 +91,15 @@ export class ErrorMessages {
    * the option was an invalide string or an invalid Date object.
    * @param optionName
    * @param date
+   * @param soft If true, logs a warning instead of an error.
    */
-  failedToParseDate(optionName: string, date: any) {
+  failedToParseDate(optionName: string, date: any, soft = false) {
     const error = new TdError(
       `${this.base} Could not correctly parse "${date}" to a date for ${optionName}.`
     );
     error.code = 5;
-    throw error;
+    if (!soft) throw error;
+    console.warn(error);
   }
 
   /**

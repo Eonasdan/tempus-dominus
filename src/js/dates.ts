@@ -2,6 +2,7 @@ import { TempusDominus } from './tempus-dominus';
 import { DateTime, Unit } from './datetime';
 import Namespace from './namespace';
 import { ChangeEvent, FailEvent } from './event-types';
+import { OptionConverter } from './options';
 
 export default class Dates {
   private _dates: DateTime[] = [];
@@ -39,6 +40,20 @@ export default class Dates {
    */
   add(date: DateTime): void {
     this._dates.push(date);
+  }
+
+  /**
+   * Tries to convert the provided value to a DateTime object.
+   * If value is null|undefined then clear the value of the provided index (or 0).
+   * @param value Value to convert or null|undefined
+   * @param index When using multidates this is the index in the array
+   * @param from Used in the warning message, useful for debugging.
+   */
+  set(value: any, index?: number, from: string = 'date.set') {
+    if (!value) this._setValue(value, index);
+    const converted = OptionConverter._dateConversion(value, 'input field');
+    if (converted !== undefined) this._setValue(converted, index);
+    else Namespace.errorMessages.failedToParseDate(from, value, true);
   }
 
   /**
@@ -110,7 +125,7 @@ export default class Dates {
   }
 
   /**
-   * Attempts to either clear or set the `target` date at `index`.
+   * Do not use direectly. Attempts to either clear or set the `target` date at `index`.
    * If the `target` is null then the date will be cleared.
    * If multi-date is being used then it will be removed from the array.
    * If `target` is valid and multi-date is used then if `index` is
@@ -125,6 +140,8 @@ export default class Dates {
     if (!oldDate && !this._context._unset && noIndex && isClear) {
       oldDate = this.lastPicked;
     }
+
+    if (target && oldDate?.isSame(target)) return;
 
     const updateInput = () => {
       if (!this._context._input) return;

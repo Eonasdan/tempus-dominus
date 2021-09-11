@@ -143,7 +143,7 @@ class TempusDominus {
    */
   subscribe(
     eventTypes: string | string[],
-    callbacks: (event: any) => {} | ((event: any) => {})[]
+    callbacks: (event: any) => void | ((event: any) => void)[]
   ): { unsubscribe: void }[] {
     if (typeof eventTypes === 'string') {
       eventTypes = [eventTypes];
@@ -373,11 +373,7 @@ class TempusDominus {
     }
 
     if (this._input.value) {
-      const converted = OptionConverter._dateConversion(
-        this._input.value,
-        'input field'
-      );
-      if (converted !== undefined) this.dates._setValue(converted);
+      this._inputChangeEvent();
     }
   }
 
@@ -447,16 +443,20 @@ class TempusDominus {
    * @private
    */
   private _inputChangeEvent = () => {
-    let parsedDate = OptionConverter._dateTypeCheck(this._input.value);
-
-    if (parsedDate) {
-      this.dates._setValue(parsedDate);
+    const value = this._input.value;
+    if (this._options.multipleDates) {
+      try {
+        const valueSplit = value.split(this._options.multipleDatesSeparator);
+        for (let i = 0; i < valueSplit.length; i++) {
+          this.dates.set(valueSplit[i], i, 'input');
+        }
+      } catch {
+        console.warn(
+          'TD: Something went wrong trying to set the multidate values from the input field.'
+        );
+      }
     } else {
-      this._triggerEvent({
-        type: Namespace.events.error,
-        reason: Namespace.errorMessages.failedToParseInput,
-        date: parsedDate,
-      } as FailEvent);
+      this.dates.set(value, 0, 'input');
     }
   };
 
