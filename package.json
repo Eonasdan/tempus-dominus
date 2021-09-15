@@ -3,28 +3,31 @@
     "name": "Jonathan Peterson"
   },
   "name": "@eonasdan/tempus-dominus",
-  "version": "6.0.0-alpha1.0.5",
+  "version": "6.0.0-alpha1.0.13",
   "style": "dist/css/tempus-dominus.css",
   "sass": "scss/tempus-dominus.scss",
   "main": "dist/js/tempus-dominus.js",
   "module": "dist/js/tempus-dominus.esm.js",
+  "types": "types/tempus-dominus.d.ts",
   "files": [
-    "dist/**/*.*",
+    "dist/**/*",
     "src/js/**/*.ts",
-    "src/sass/**/*.scss"
+    "src/sass/**/*.scss",
+    "types/**/*"
   ],
   "scripts": {
-    "start": "npm run build && browser-sync start --config build/browser-sync-config.js",
-    "build": "npm run rollup && npm run sass && node ./build/copyToDist.js",
+    "start": "npm run build && concurrently \"npm run serve\" \"npm:*-watch\"",
+    "serve": "browser-sync start --config build/browser-sync-config.js",
+    "build": "npm run rollup && node ./build/copyToDist.js",
+    "build:declarations": "tsc --declaration --emitDeclarationOnly --outDir types",
     "sass": "sass ./src/sass/tempus-dominus.scss ./dist/css/tempus-dominus.css",
-    "sass-watch": "sass ./src/sass/tempus-dominus.scss ./dist/css/tempus-dominus.css --watch",
     "rollup": "rollup -c ./build/rollup.config.js",
     "rollup-watch": "rollup -c ./build/rollup.config.js -w",
-    "build:declarations": "npx typescript ./src/js/**/*.ts --declaration --emitDeclarationOnly --outDir types",
     "prettier": "prettier --write .",
     "docs": "node ./src/docs/make.js",
-    "docs-watch": "npm run build && node ./src/docs/make.js --watch",
-    "watchers": "concurrently \"npm start\" \"npm:*-watch\""
+    "docs-watch": "node ./src/docs/make.js --watch",
+    "release": "npm run release-version && npm run build && npm run build:declarations && npm run prettier",
+    "release-version": "node build/change-version.js"
   },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
@@ -32,17 +35,18 @@
   "peerDependencies": {
     "@popperjs/core": "^2.10.1"
   },
-  "dependencies": {
-  },
   "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
   "devDependencies": {
+    "@popperjs/core": "^2.10.1",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-typescript": "^8.2.5",
+    "rollup-plugin-postcss": "^4.0.1",
     "@types/node": "^16.7.10",
     "bootstrap": "^5.1.0",
     "browser-sync": "^2.27.5",
     "chokidar": "^3.5.1",
     "clean-css": "^5.1.5",
+    "concurrently": "^6.2.1",
     "dropcss": "^1.0.16",
     "html-minifier-terser": "^5.1.1",
     "jsdom": "^17.0.0",
@@ -52,9 +56,7 @@
     "sass": "^1.39.0",
     "terser": "^5.7.2",
     "tslib": "^2.3.1",
-    "typescript": "~4.3.5",
-    "concurrently": "^6.2.1",
-    "@popperjs/core": "^2.10.1"
+    "typescript": "~4.3.5"
   },
   "homepage": "https://getdatepicker.com/",
   "keywords": [

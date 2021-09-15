@@ -1,15 +1,23 @@
 <page-body>
   <h1>Version 6</h1>
   <section>
-    <h2>Version 6-alpha1.0.6</h2>
+    <h2>Version 6-alpha1.0.13</h2>
     <h3>New</h3>
     <ul>
       <li>Created a new method <code>set(value: any, index?: number, from: string = 'date.set')</code> that tries to conver the <code>value</code> provided and then tries to set that value to the <code>index</code> (or 0 if not using multidate).</li>
       <li>Added esm output</li>
+      <li>Exposed <code>Unit</code> and <code>DateTimeFormatOptions</code> from the DateTime class.</li>
+      <li>Renamed <code>togglePeriod</code> to <code>toggleMeridiem</code></li>
+      <li>Added <code>toggleMeridiem</code> class to AM/PM button</li>
+      <li>Cleaned up css a bit. Got rid of the popper arrow and aligned the picker to the start of the element.</li>
     </ul>
     <h3>Bug fixes</h3>
     <ul>
       <li>Fixed dealing with input values/changes.</li>
+      <li>Fixed issue when calling hide if the widget hasn't been built (or shown) yet.</li>
+      <li>Fixed meridiem issue. Thanks @hkvstore  <a href='https://github.com/Eonasdan/tempus-dominus/issues/2398'>#2398</a></li>
+      <li>Merged PR 2396 to fix 24 hour hour selection. <a href='https://github.com/Eonasdan/tempus-dominus/issues/2395'>#2395</a></li>
+      <li>Fixed issue with time component grid. <a href='https://github.com/Eonasdan/tempus-dominus/issues/2395'>#2395</a></li>
     </ul>
   </section>
   <section>

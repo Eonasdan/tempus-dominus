@@ -71,7 +71,7 @@ export default interface Options {
     incrementMinute: string;
     selectTime: string;
     clear: string;
-    togglePeriod: string;
+    toggleMeridiem: string;
     selectMonth: string;
     decrementMinute: string;
     pickMinute: string;
@@ -504,14 +504,13 @@ export class OptionConverter {
     return;
   }
 
-
   /**
    * Attempts to convert `d` to a DateTime object
    * @param d value to convert
    * @param optionName Provides text to error messages e.g. disabledDates
    */
   static _dateConversion(d: any, optionName: string) {
-    if (typeof d === typeof '') {
+    if (typeof d === typeof '' && optionName !== 'input field') {
       Namespace.errorMessages.dateString();
     }
 

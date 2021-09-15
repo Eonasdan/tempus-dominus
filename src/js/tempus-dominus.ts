@@ -3,7 +3,7 @@ import Validation from './validation';
 import Dates from './dates';
 import Actions, { ActionTypes } from './actions';
 import { DatePickerModes, DefaultOptions } from './conts';
-import { DateTime, Unit } from './datetime';
+import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
 import Namespace from './namespace';
 import Options, { OptionConverter } from './options';
 import {
@@ -470,4 +470,12 @@ class TempusDominus {
   };
 }
 
-export { TempusDominus, Namespace, DefaultOptions, DateTime, Options };
+export {
+  TempusDominus,
+  Namespace,
+  DefaultOptions,
+  DateTime,
+  Options,
+  Unit,
+  DateTimeFormatOptions,
+};

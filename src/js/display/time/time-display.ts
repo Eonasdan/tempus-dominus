@@ -8,6 +8,7 @@ import Namespace from '../../namespace';
  */
 export default class TimeDisplay {
   private _context: TempusDominus;
+  private _gridColumns = '';
   constructor(context: TempusDominus) {
     this._context = context;
   }
@@ -31,21 +32,20 @@ export default class TimeDisplay {
    * @private
    */
   _update(): void {
-    const timesDiv = this._context._display.widget.getElementsByClassName(
-      Namespace.css.clockContainer
-    )[0];
+    const timesDiv = <HTMLElement>(
+      this._context._display.widget.getElementsByClassName(
+        Namespace.css.clockContainer
+      )[0]
+    );
     const lastPicked = (
       this._context.dates.lastPicked || this._context._viewDate
     ).clone;
-
-    let columns = 0;
 
     timesDiv
       .querySelectorAll('.disabled')
       .forEach((element) => element.classList.remove(Namespace.css.disabled));
 
     if (this._context._options.display.components.hours) {
-      columns++;
       if (
         !this._context._validation.isValid(
           this._context._viewDate.clone.manipulate(1, Unit.hours),
@@ -75,7 +75,6 @@ export default class TimeDisplay {
     }
 
     if (this._context._options.display.components.minutes) {
-      columns++;
       if (
         !this._context._validation.isValid(
           this._context._viewDate.clone.manipulate(1, Unit.minutes),
@@ -103,7 +102,6 @@ export default class TimeDisplay {
     }
 
     if (this._context._options.display.components.seconds) {
-      columns++;
       if (
         !this._context._validation.isValid(
           this._context._viewDate.clone.manipulate(1, Unit.seconds),
@@ -131,9 +129,8 @@ export default class TimeDisplay {
     }
 
     if (!this._context._options.display.components.useTwentyfourHour) {
-      columns++;
       const toggle = timesDiv.querySelector<HTMLElement>(
-        `[data-action=${ActionTypes.togglePeriod}]`
+        `[data-action=${ActionTypes.toggleMeridiem}]`
       );
 
       toggle.innerText = lastPicked.meridiem();
@@ -152,7 +149,7 @@ export default class TimeDisplay {
       }
     }
 
-    timesDiv.classList.add(`clock-columns-${columns}`);
+    timesDiv.style.gridTemplateAreas = `"${this._gridColumns}"`;
   }
 
   /**
@@ -160,6 +157,7 @@ export default class TimeDisplay {
    * @private
    */
   private _grid(): HTMLElement[] {
+    this._gridColumns = '';
     const top = [],
       middle = [],
       bottom = [],
@@ -208,13 +206,16 @@ export default class TimeDisplay {
       divElement.setAttribute('data-action', ActionTypes.decrementHours);
       divElement.appendChild(downIcon.cloneNode(true));
       bottom.push(divElement);
+      this._gridColumns += 'a';
     }
 
     if (this._context._options.display.components.minutes) {
+      this._gridColumns += ' a';
       if (this._context._options.display.components.hours) {
         top.push(getSeparator());
         middle.push(getSeparator(true));
         bottom.push(getSeparator());
+        this._gridColumns += ' a';
       }
       let divElement = document.createElement('div');
       divElement.setAttribute(
@@ -245,10 +246,12 @@ export default class TimeDisplay {
     }
 
     if (this._context._options.display.components.seconds) {
+      this._gridColumns += ' a';
       if (this._context._options.display.components.minutes) {
         top.push(getSeparator());
         middle.push(getSeparator(true));
         bottom.push(getSeparator());
+        this._gridColumns += ' a';
       }
       let divElement = document.createElement('div');
       divElement.setAttribute(
@@ -279,16 +282,18 @@ export default class TimeDisplay {
     }
 
     if (!this._context._options.display.components.useTwentyfourHour) {
+      this._gridColumns += ' a';
       let divElement = getSeparator();
       top.push(divElement);
 
       let button = document.createElement('button');
       button.setAttribute(
         'title',
-        this._context._options.localization.togglePeriod
+        this._context._options.localization.toggleMeridiem
       );
-      button.setAttribute('data-action', ActionTypes.togglePeriod);
+      button.setAttribute('data-action', ActionTypes.toggleMeridiem);
       button.setAttribute('tabindex', '-1');
+      button.classList.add(Namespace.css.toggleMeridiem);
 
       divElement = document.createElement('div');
       divElement.classList.add(Namespace.css.noHighlight);
@@ -298,6 +303,8 @@ export default class TimeDisplay {
       divElement = getSeparator();
       bottom.push(divElement);
     }
+
+    this._gridColumns = this._gridColumns.trim();
 
     return [...top, ...middle, ...bottom];
   }

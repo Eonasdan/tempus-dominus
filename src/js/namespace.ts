@@ -230,6 +230,11 @@ class Css {
    */
   second = 'second';
 
+  /**
+   * Applied AM/PM toggle button.
+   */
+  toggleMeridiem = 'toggleMeridiem';
+
   //#endregion
 
   //#region collapse

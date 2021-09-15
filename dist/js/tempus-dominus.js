@@ -1,10 +1,15 @@
+/*!
+  * Tempus Dominus v6.0.0-alpha1.0.5 (https://getdatepicker.com/)
+  * Copyright 2013-2021 [object Object]
+  * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
+  */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@popperjs/core')) :
     typeof define === 'function' && define.amd ? define(['exports', '@popperjs/core'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusDominus = {}, global.Popper));
 }(this, (function (exports, core) { 'use strict';
 
-    var Unit;
+    exports.Unit = void 0;
     (function (Unit) {
         Unit["seconds"] = "seconds";
         Unit["minutes"] = "minutes";
@@ -12,7 +17,7 @@
         Unit["date"] = "date";
         Unit["month"] = "month";
         Unit["year"] = "year";
-    })(Unit || (Unit = {}));
+    })(exports.Unit || (exports.Unit = {}));
     /**
      * For the most part this object behaves exactly the same way
      * as the native Date object with a little extra spice.
@@ -72,15 +77,15 @@
                     this.setHours(0, 0, 0, 0);
                     break;
                 case 'weekDay':
-                    this.startOf(Unit.date);
-                    this.manipulate(0 - this.weekDay, Unit.date);
+                    this.startOf(exports.Unit.date);
+                    this.manipulate(0 - this.weekDay, exports.Unit.date);
                     break;
                 case 'month':
-                    this.startOf(Unit.date);
+                    this.startOf(exports.Unit.date);
                     this.setDate(1);
                     break;
                 case 'year':
-                    this.startOf(Unit.date);
+                    this.startOf(exports.Unit.date);
                     this.setMonth(0, 1);
                     break;
             }
@@ -109,17 +114,17 @@
                     this.setHours(23, 59, 59, 999);
                     break;
                 case 'weekDay':
-                    this.startOf(Unit.date);
-                    this.manipulate(6 - this.weekDay, Unit.date);
+                    this.startOf(exports.Unit.date);
+                    this.manipulate(6 - this.weekDay, exports.Unit.date);
                     break;
                 case 'month':
-                    this.endOf(Unit.date);
-                    this.manipulate(1, Unit.month);
+                    this.endOf(exports.Unit.date);
+                    this.manipulate(1, exports.Unit.month);
                     this.setDate(0);
                     break;
                 case 'year':
-                    this.endOf(Unit.date);
-                    this.manipulate(1, Unit.year);
+                    this.endOf(exports.Unit.date);
+                    this.manipulate(1, exports.Unit.year);
                     this.setDate(0);
                     break;
             }
@@ -299,7 +304,13 @@
          * @param locale
          */
         meridiem(locale = this.locale) {
-            return this.hours < 12 ? 'AM' : 'PM';
+            var _a;
+            return (_a = new Intl.DateTimeFormat(locale, {
+                hour: 'numeric',
+                hour12: true,
+            })
+                .formatToParts(this)
+                .find((p) => p.type === 'dayPeriod')) === null || _a === void 0 ? void 0 : _a.value;
         }
         /**
          * Shortcut to Date.getDate()
@@ -324,11 +335,9 @@
          * Gets the week of the year
          */
         get week() {
-            const MILLISECONDS_IN_WEEK = 604800000;
-            const firstDayOfWeek = 1; // monday as the first day (0 = sunday)
             const startOfYear = new Date(this.year, 0, 1);
-            startOfYear.setDate(startOfYear.getDate() + (firstDayOfWeek - (startOfYear.getDay() % 7)));
-            return (Math.round((this.valueOf() - startOfYear.valueOf()) / MILLISECONDS_IN_WEEK) + 1);
+            startOfYear.setDate(startOfYear.getDate() + (1 - (startOfYear.getDay() % 7)));
+            return Math.round((this.valueOf() - startOfYear.valueOf()) / 604800000) + 1;
         }
         /**
          * Shortcut to Date.getDay()
@@ -678,6 +687,10 @@
              * Applied to each element in the seconds selection view.
              */
             this.second = 'second';
+            /**
+             * Applied AM/PM toggle button.
+             */
+            this.toggleMeridiem = 'toggleMeridiem';
             //#endregion
             //#region collapse
             /**
@@ -786,7 +799,7 @@
             pickSecond: 'Pick Second',
             incrementSecond: 'Increment Second',
             decrementSecond: 'Decrement Second',
-            togglePeriod: 'Toggle Period',
+            toggleMeridiem: 'Toggle Meridiem',
             selectTime: 'Select Time',
             selectDate: 'Select Date',
             dayViewHeaderFormat: 'long',
@@ -805,25 +818,25 @@
         {
             name: 'calendar',
             className: Namespace.css.daysContainer,
-            unit: Unit.month,
+            unit: exports.Unit.month,
             step: 1,
         },
         {
             name: 'months',
             className: Namespace.css.monthsContainer,
-            unit: Unit.year,
+            unit: exports.Unit.year,
             step: 1,
         },
         {
             name: 'years',
             className: Namespace.css.yearsContainer,
-            unit: Unit.year,
+            unit: exports.Unit.year,
             step: 10,
         },
         {
             name: 'decades',
             className: Namespace.css.decadesContainer,
-            unit: Unit.year,
+            unit: exports.Unit.year,
             step: 100,
         },
     ];
@@ -862,19 +875,19 @@
          * Flips the show/hide state of `target`
          * @param target html element to affect.
          */
-        toggle(target) {
+        toggle(target, callback = undefined) {
             if (target.classList.contains(Namespace.css.show)) {
-                this.hide(target);
+                this.hide(target, callback);
             }
             else {
-                this.show(target);
+                this.show(target, callback);
             }
         }
         /**
          * If `target` is not already showing, then show after the animation.
          * @param target
          */
-        show(target) {
+        show(target, callback = undefined) {
             if (target.classList.contains(Namespace.css.collapsing) ||
                 target.classList.contains(Namespace.css.show))
                 return;
@@ -883,6 +896,8 @@
                 target.classList.add(Namespace.css.collapse, Namespace.css.show);
                 target.style.height = '';
                 this.timeOut = null;
+                if (callback)
+                    callback();
             };
             target.style.height = '0';
             target.classList.remove(Namespace.css.collapse);
@@ -894,7 +909,7 @@
          * If `target` is not already hidden, then hide after the animation.
          * @param target HTML Element
          */
-        hide(target) {
+        hide(target, callback = undefined) {
             if (target.classList.contains(Namespace.css.collapsing) ||
                 !target.classList.contains(Namespace.css.show))
                 return;
@@ -966,15 +981,15 @@
                     switch (action) {
                         case ActionTypes.selectMonth:
                             this._context._viewDate.month = value;
-                            this._context._viewUpdate(Unit.month);
+                            this._context._viewUpdate(exports.Unit.month);
                             break;
                         case ActionTypes.selectYear:
                             this._context._viewDate.year = value;
-                            this._context._viewUpdate(Unit.year);
+                            this._context._viewUpdate(exports.Unit.year);
                             break;
                         case ActionTypes.selectDecade:
                             this._context._viewDate.year = value;
-                            this._context._viewUpdate(Unit.year);
+                            this._context._viewUpdate(exports.Unit.year);
                             break;
                     }
                     if (this._context._currentViewMode === this._context._minViewModeNumber) {
@@ -990,15 +1005,15 @@
                 case ActionTypes.selectDay:
                     const day = this._context._viewDate.clone;
                     if (currentTarget.classList.contains(Namespace.css.old)) {
-                        day.manipulate(-1, Unit.month);
+                        day.manipulate(-1, exports.Unit.month);
                     }
                     if (currentTarget.classList.contains(Namespace.css.new)) {
-                        day.manipulate(1, Unit.month);
+                        day.manipulate(1, exports.Unit.month);
                     }
                     day.date = +currentTarget.innerText;
                     let index = 0;
                     if (this._context._options.multipleDates) {
-                        index = this._context.dates.pickedIndex(day, Unit.date);
+                        index = this._context.dates.pickedIndex(day, exports.Unit.date);
                         if (index !== -1) {
                             this._context.dates._setValue(null, index); //deselect multi-date
                         }
@@ -1058,25 +1073,25 @@
                     }
                     break;
                 case ActionTypes.incrementHours:
-                    manipulateAndSet(Unit.hours);
+                    manipulateAndSet(exports.Unit.hours);
                     break;
                 case ActionTypes.incrementMinutes:
-                    manipulateAndSet(Unit.minutes, this._context._options.stepping);
+                    manipulateAndSet(exports.Unit.minutes, this._context._options.stepping);
                     break;
                 case ActionTypes.incrementSeconds:
-                    manipulateAndSet(Unit.seconds);
+                    manipulateAndSet(exports.Unit.seconds);
                     break;
                 case ActionTypes.decrementHours:
-                    manipulateAndSet(Unit.hours, -1);
+                    manipulateAndSet(exports.Unit.hours, -1);
                     break;
                 case ActionTypes.decrementMinutes:
-                    manipulateAndSet(Unit.minutes, this._context._options.stepping * -1);
+                    manipulateAndSet(exports.Unit.minutes, this._context._options.stepping * -1);
                     break;
                 case ActionTypes.decrementSeconds:
-                    manipulateAndSet(Unit.seconds, -1);
+                    manipulateAndSet(exports.Unit.seconds, -1);
                     break;
-                case ActionTypes.togglePeriod:
-                    manipulateAndSet(Unit.hours, this._context.dates.lastPicked.hours >= 12 ? -12 : 12);
+                case ActionTypes.toggleMeridiem:
+                    manipulateAndSet(exports.Unit.hours, this._context.dates.lastPicked.hours >= 12 ? -12 : 12);
                     break;
                 case ActionTypes.togglePicker:
                     this._context._display.widget
@@ -1110,15 +1125,15 @@
                             break;
                         case ActionTypes.showHours:
                             classToUse = Namespace.css.hourContainer;
-                            this._context._display._update(Unit.hours);
+                            this._context._display._update(exports.Unit.hours);
                             break;
                         case ActionTypes.showMinutes:
                             classToUse = Namespace.css.minuteContainer;
-                            this._context._display._update(Unit.minutes);
+                            this._context._display._update(exports.Unit.minutes);
                             break;
                         case ActionTypes.showSeconds:
                             classToUse = Namespace.css.secondContainer;
-                            this._context._display._update(Unit.seconds);
+                            this._context._display._update(exports.Unit.seconds);
                             break;
                     }
                     (this._context._display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
@@ -1133,7 +1148,7 @@
                 case ActionTypes.today:
                     const today = new DateTime().setLocale(this._context._options.localization.locale);
                     this._context._viewDate = today;
-                    if (this._context._validation.isValid(today, Unit.date))
+                    if (this._context._validation.isValid(today, exports.Unit.date))
                         this._context.dates._setValue(today, this._context.dates.lastPickedIndex);
                     break;
             }
@@ -1157,7 +1172,7 @@
         ActionTypes["decrementHours"] = "decrementHours";
         ActionTypes["decrementMinutes"] = "decrementMinutes";
         ActionTypes["decrementSeconds"] = "decrementSeconds";
-        ActionTypes["togglePeriod"] = "togglePeriod";
+        ActionTypes["toggleMeridiem"] = "toggleMeridiem";
         ActionTypes["togglePicker"] = "togglePicker";
         ActionTypes["showClock"] = "showClock";
         ActionTypes["showHours"] = "showHours";
@@ -1214,16 +1229,16 @@
             switcher.setAttribute(Namespace.css.daysContainer, this._context._viewDate.format({
                 month: this._context._options.localization.dayViewHeaderFormat,
             }));
-            this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.month), Unit.month)
+            this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.month), exports.Unit.month)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
-            this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.month), Unit.month)
+            this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.month), exports.Unit.month)
                 ? next.classList.remove(Namespace.css.disabled)
                 : next.classList.add(Namespace.css.disabled);
             let innerDate = this._context._viewDate.clone
-                .startOf(Unit.month)
+                .startOf(exports.Unit.month)
                 .startOf('weekDay')
-                .manipulate(12, Unit.hours);
+                .manipulate(12, exports.Unit.hours);
             container
                 .querySelectorAll(`[data-action="${ActionTypes.selectDay}"], .${Namespace.css.calendarWeeks}`)
                 .forEach((containerClone, index) => {
@@ -1236,20 +1251,20 @@
                 }
                 let classes = [];
                 classes.push(Namespace.css.day);
-                if (innerDate.isBefore(this._context._viewDate, Unit.month)) {
+                if (innerDate.isBefore(this._context._viewDate, exports.Unit.month)) {
                     classes.push(Namespace.css.old);
                 }
-                if (innerDate.isAfter(this._context._viewDate, Unit.month)) {
+                if (innerDate.isAfter(this._context._viewDate, exports.Unit.month)) {
                     classes.push(Namespace.css.new);
                 }
                 if (!this._context._unset &&
-                    this._context.dates.isPicked(innerDate, Unit.date)) {
+                    this._context.dates.isPicked(innerDate, exports.Unit.date)) {
                     classes.push(Namespace.css.active);
                 }
-                if (!this._context._validation.isValid(innerDate, Unit.date)) {
+                if (!this._context._validation.isValid(innerDate, exports.Unit.date)) {
                     classes.push(Namespace.css.disabled);
                 }
-                if (innerDate.isSame(new DateTime(), Unit.date)) {
+                if (innerDate.isSame(new DateTime(), exports.Unit.date)) {
                     classes.push(Namespace.css.today);
                 }
                 if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
@@ -1259,7 +1274,7 @@
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
                 containerClone.innerText = `${innerDate.date}`;
-                innerDate.manipulate(1, Unit.date);
+                innerDate.manipulate(1, exports.Unit.date);
             });
         }
         /***
@@ -1269,7 +1284,7 @@
         _daysOfTheWeek() {
             let innerDate = this._context._viewDate.clone
                 .startOf('weekDay')
-                .startOf(Unit.date);
+                .startOf(exports.Unit.date);
             const row = [];
             document.createElement('div');
             if (this._context._options.display.calendarWeeks) {
@@ -1282,7 +1297,7 @@
                 const htmlDivElement = document.createElement('div');
                 htmlDivElement.classList.add(Namespace.css.dayOfTheWeek, Namespace.css.noHighlight);
                 htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
-                innerDate.manipulate(1, Unit.date);
+                innerDate.manipulate(1, exports.Unit.date);
                 row.push(htmlDivElement);
             }
             return row;
@@ -1320,30 +1335,30 @@
                 .getElementsByClassName(Namespace.css.calendarHeader)[0]
                 .getElementsByTagName('div');
             switcher.setAttribute(Namespace.css.monthsContainer, this._context._viewDate.format({ year: 'numeric' }));
-            this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.year), Unit.year)
+            this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.year), exports.Unit.year)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
-            this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.year), Unit.year)
+            this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.year), exports.Unit.year)
                 ? next.classList.remove(Namespace.css.disabled)
                 : next.classList.add(Namespace.css.disabled);
-            let innerDate = this._context._viewDate.clone.startOf(Unit.year);
+            let innerDate = this._context._viewDate.clone.startOf(exports.Unit.year);
             container
                 .querySelectorAll(`[data-action="${ActionTypes.selectMonth}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.css.month);
                 if (!this._context._unset &&
-                    this._context.dates.isPicked(innerDate, Unit.month)) {
+                    this._context.dates.isPicked(innerDate, exports.Unit.month)) {
                     classes.push(Namespace.css.active);
                 }
-                if (!this._context._validation.isValid(innerDate, Unit.month)) {
+                if (!this._context._validation.isValid(innerDate, exports.Unit.month)) {
                     classes.push(Namespace.css.disabled);
                 }
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${index}`);
                 containerClone.innerText = `${innerDate.format({ month: 'short' })}`;
-                innerDate.manipulate(1, Unit.month);
+                innerDate.manipulate(1, exports.Unit.month);
             });
         }
     }
@@ -1649,7 +1664,7 @@
          * @param optionName Provides text to error messages e.g. disabledDates
          */
         static _dateConversion(d, optionName) {
-            if (typeof d === typeof '') {
+            if (typeof d === typeof '' && optionName !== 'input field') {
                 Namespace.errorMessages.dateString();
             }
             const converted = this._dateTypeCheck(d);
@@ -1926,39 +1941,39 @@
          */
         _update() {
             Dates.getStartEndYear(10, this._context._viewDate.year);
-            this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
-            this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
+            this._startYear = this._context._viewDate.clone.manipulate(-1, exports.Unit.year);
+            this._endYear = this._context._viewDate.clone.manipulate(10, exports.Unit.year);
             const container = this._context._display.widget.getElementsByClassName(Namespace.css.yearsContainer)[0];
             const [previous, switcher, next] = container.parentElement
                 .getElementsByClassName(Namespace.css.calendarHeader)[0]
                 .getElementsByTagName('div');
             switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.year}-${this._endYear.year}`);
-            this._context._validation.isValid(this._startYear, Unit.year)
+            this._context._validation.isValid(this._startYear, exports.Unit.year)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
-            this._context._validation.isValid(this._endYear, Unit.year)
+            this._context._validation.isValid(this._endYear, exports.Unit.year)
                 ? next.classList.remove(Namespace.css.disabled)
                 : next.classList.add(Namespace.css.disabled);
             let innerDate = this._context._viewDate.clone
-                .startOf(Unit.year)
-                .manipulate(-1, Unit.year);
+                .startOf(exports.Unit.year)
+                .manipulate(-1, exports.Unit.year);
             container
                 .querySelectorAll(`[data-action="${ActionTypes.selectYear}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.css.year);
                 if (!this._context._unset &&
-                    this._context.dates.isPicked(innerDate, Unit.year)) {
+                    this._context.dates.isPicked(innerDate, exports.Unit.year)) {
                     classes.push(Namespace.css.active);
                 }
-                if (!this._context._validation.isValid(innerDate, Unit.year)) {
+                if (!this._context._validation.isValid(innerDate, exports.Unit.year)) {
                     classes.push(Namespace.css.disabled);
                 }
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.year}`);
                 containerClone.innerText = `${innerDate.year}`;
-                innerDate.manipulate(1, Unit.year);
+                innerDate.manipulate(1, exports.Unit.year);
             });
         }
     }
@@ -1990,19 +2005,19 @@
          */
         _update() {
             const [start, end] = Dates.getStartEndYear(100, this._context._viewDate.year);
-            this._startDecade = this._context._viewDate.clone.startOf(Unit.year);
+            this._startDecade = this._context._viewDate.clone.startOf(exports.Unit.year);
             this._startDecade.year = start;
-            this._endDecade = this._context._viewDate.clone.startOf(Unit.year);
+            this._endDecade = this._context._viewDate.clone.startOf(exports.Unit.year);
             this._endDecade.year = end;
             const container = this._context._display.widget.getElementsByClassName(Namespace.css.decadesContainer)[0];
             const [previous, switcher, next] = container.parentElement
                 .getElementsByClassName(Namespace.css.calendarHeader)[0]
                 .getElementsByTagName('div');
             switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.year}-${this._endDecade.year}`);
-            this._context._validation.isValid(this._startDecade, Unit.year)
+            this._context._validation.isValid(this._startDecade, exports.Unit.year)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
-            this._context._validation.isValid(this._endDecade, Unit.year)
+            this._context._validation.isValid(this._endDecade, exports.Unit.year)
                 ? next.classList.remove(Namespace.css.disabled)
                 : next.classList.add(Namespace.css.disabled);
             const pickedYears = this._context.dates.picked.map((x) => x.year);
@@ -2037,7 +2052,7 @@
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${this._startDecade.year}`);
                 containerClone.innerText = `${this._startDecade.year}`;
-                this._startDecade.manipulate(10, Unit.year);
+                this._startDecade.manipulate(10, exports.Unit.year);
             });
         }
     }
@@ -2047,6 +2062,7 @@
      */
     class TimeDisplay {
         constructor(context) {
+            this._gridColumns = '';
             this._context = context;
         }
         /**
@@ -2065,74 +2081,70 @@
          * @private
          */
         _update() {
-            const timesDiv = this._context._display.widget.getElementsByClassName(Namespace.css.clockContainer)[0];
+            const timesDiv = (this._context._display.widget.getElementsByClassName(Namespace.css.clockContainer)[0]);
             const lastPicked = (this._context.dates.lastPicked || this._context._viewDate).clone;
-            let columns = 0;
             timesDiv
                 .querySelectorAll('.disabled')
                 .forEach((element) => element.classList.remove(Namespace.css.disabled));
             if (this._context._options.display.components.hours) {
-                columns++;
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.hours), exports.Unit.hours)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes.incrementHours}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.hours), exports.Unit.hours)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes.decrementHours}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = this._context._options.display.components.useTwentyfourHour
+                timesDiv.querySelector(`[data-time-component=${exports.Unit.hours}]`).innerText = this._context._options.display.components.useTwentyfourHour
                     ? lastPicked.hoursFormatted
                     : lastPicked.twelveHoursFormatted;
             }
             if (this._context._options.display.components.minutes) {
-                columns++;
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.minutes), exports.Unit.minutes)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes.incrementMinutes}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.minutes), exports.Unit.minutes)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes.decrementMinutes}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
+                timesDiv.querySelector(`[data-time-component=${exports.Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
             }
             if (this._context._options.display.components.seconds) {
-                columns++;
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.seconds), exports.Unit.seconds)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes.incrementSeconds}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.seconds), exports.Unit.seconds)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes.decrementSeconds}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
+                timesDiv.querySelector(`[data-time-component=${exports.Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
             }
             if (!this._context._options.display.components.useTwentyfourHour) {
-                columns++;
-                const toggle = timesDiv.querySelector(`[data-action=${ActionTypes.togglePeriod}]`);
+                const toggle = timesDiv.querySelector(`[data-action=${ActionTypes.toggleMeridiem}]`);
                 toggle.innerText = lastPicked.meridiem();
-                if (!this._context._validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
+                if (!this._context._validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, exports.Unit.hours))) {
                     toggle.classList.add(Namespace.css.disabled);
                 }
                 else {
                     toggle.classList.remove(Namespace.css.disabled);
                 }
             }
-            timesDiv.classList.add(`clock-columns-${columns}`);
+            timesDiv.style.gridTemplateAreas = `"${this._gridColumns}"`;
         }
         /**
          * Creates the table for the clock display depending on what options are selected.
          * @private
          */
         _grid() {
+            this._gridColumns = '';
             const top = [], middle = [], bottom = [], separator = document.createElement('div'), upIcon = this._context._display._iconTag(this._context._options.display.icons.up), downIcon = this._context._display._iconTag(this._context._options.display.icons.down);
             separator.classList.add(Namespace.css.separator, Namespace.css.noHighlight);
             const separatorColon = separator.cloneNode(true);
@@ -2151,19 +2163,22 @@
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this._context._options.localization.pickHour);
                 divElement.setAttribute('data-action', ActionTypes.showHours);
-                divElement.setAttribute('data-time-component', Unit.hours);
+                divElement.setAttribute('data-time-component', exports.Unit.hours);
                 middle.push(divElement);
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this._context._options.localization.decrementHour);
                 divElement.setAttribute('data-action', ActionTypes.decrementHours);
                 divElement.appendChild(downIcon.cloneNode(true));
                 bottom.push(divElement);
+                this._gridColumns += 'a';
             }
             if (this._context._options.display.components.minutes) {
+                this._gridColumns += ' a';
                 if (this._context._options.display.components.hours) {
                     top.push(getSeparator());
                     middle.push(getSeparator(true));
                     bottom.push(getSeparator());
+                    this._gridColumns += ' a';
                 }
                 let divElement = document.createElement('div');
                 divElement.setAttribute('title', this._context._options.localization.incrementMinute);
@@ -2173,7 +2188,7 @@
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this._context._options.localization.pickMinute);
                 divElement.setAttribute('data-action', ActionTypes.showMinutes);
-                divElement.setAttribute('data-time-component', Unit.minutes);
+                divElement.setAttribute('data-time-component', exports.Unit.minutes);
                 middle.push(divElement);
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this._context._options.localization.decrementMinute);
@@ -2182,10 +2197,12 @@
                 bottom.push(divElement);
             }
             if (this._context._options.display.components.seconds) {
+                this._gridColumns += ' a';
                 if (this._context._options.display.components.minutes) {
                     top.push(getSeparator());
                     middle.push(getSeparator(true));
                     bottom.push(getSeparator());
+                    this._gridColumns += ' a';
                 }
                 let divElement = document.createElement('div');
                 divElement.setAttribute('title', this._context._options.localization.incrementSecond);
@@ -2195,7 +2212,7 @@
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this._context._options.localization.pickSecond);
                 divElement.setAttribute('data-action', ActionTypes.showSeconds);
-                divElement.setAttribute('data-time-component', Unit.seconds);
+                divElement.setAttribute('data-time-component', exports.Unit.seconds);
                 middle.push(divElement);
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this._context._options.localization.decrementSecond);
@@ -2204,12 +2221,14 @@
                 bottom.push(divElement);
             }
             if (!this._context._options.display.components.useTwentyfourHour) {
+                this._gridColumns += ' a';
                 let divElement = getSeparator();
                 top.push(divElement);
                 let button = document.createElement('button');
-                button.setAttribute('title', this._context._options.localization.togglePeriod);
-                button.setAttribute('data-action', ActionTypes.togglePeriod);
+                button.setAttribute('title', this._context._options.localization.toggleMeridiem);
+                button.setAttribute('data-action', ActionTypes.toggleMeridiem);
                 button.setAttribute('tabindex', '-1');
+                button.classList.add(Namespace.css.toggleMeridiem);
                 divElement = document.createElement('div');
                 divElement.classList.add(Namespace.css.noHighlight);
                 divElement.appendChild(button);
@@ -2217,6 +2236,7 @@
                 divElement = getSeparator();
                 bottom.push(divElement);
             }
+            this._gridColumns = this._gridColumns.trim();
             return [...top, ...middle, ...bottom];
         }
     }
@@ -2249,13 +2269,13 @@
          */
         _update() {
             const container = this._context._display.widget.getElementsByClassName(Namespace.css.hourContainer)[0];
-            let innerDate = this._context._viewDate.clone.startOf(Unit.date);
+            let innerDate = this._context._viewDate.clone.startOf(exports.Unit.date);
             container
                 .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.css.hour);
-                if (!this._context._validation.isValid(innerDate, Unit.hours)) {
+                if (!this._context._validation.isValid(innerDate, exports.Unit.hours)) {
                     classes.push(Namespace.css.disabled);
                 }
                 containerClone.classList.remove(...containerClone.classList);
@@ -2265,7 +2285,7 @@
                     .useTwentyfourHour
                     ? innerDate.hoursFormatted
                     : innerDate.twelveHoursFormatted;
-                innerDate.manipulate(1, Unit.hours);
+                innerDate.manipulate(1, exports.Unit.hours);
             });
         }
     }
@@ -2300,7 +2320,7 @@
          */
         _update() {
             const container = this._context._display.widget.getElementsByClassName(Namespace.css.minuteContainer)[0];
-            let innerDate = this._context._viewDate.clone.startOf(Unit.hours);
+            let innerDate = this._context._viewDate.clone.startOf(exports.Unit.hours);
             let step = this._context._options.stepping === 1
                 ? 5
                 : this._context._options.stepping;
@@ -2309,14 +2329,14 @@
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.css.minute);
-                if (!this._context._validation.isValid(innerDate, Unit.minutes)) {
+                if (!this._context._validation.isValid(innerDate, exports.Unit.minutes)) {
                     classes.push(Namespace.css.disabled);
                 }
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.minutes}`);
                 containerClone.innerText = innerDate.minutesFormatted;
-                innerDate.manipulate(step, Unit.minutes);
+                innerDate.manipulate(step, exports.Unit.minutes);
             });
         }
     }
@@ -2348,20 +2368,20 @@
          */
         _update() {
             const container = this._context._display.widget.getElementsByClassName(Namespace.css.secondContainer)[0];
-            let innerDate = this._context._viewDate.clone.startOf(Unit.minutes);
+            let innerDate = this._context._viewDate.clone.startOf(exports.Unit.minutes);
             container
                 .querySelectorAll(`[data-action="${ActionTypes.selectSecond}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.css.second);
-                if (!this._context._validation.isValid(innerDate, Unit.seconds)) {
+                if (!this._context._validation.isValid(innerDate, exports.Unit.seconds)) {
                     classes.push(Namespace.css.disabled);
                 }
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.seconds}`);
                 containerClone.innerText = innerDate.secondsFormatted;
-                innerDate.manipulate(5, Unit.seconds);
+                innerDate.manipulate(5, exports.Unit.seconds);
             });
         }
     }
@@ -2431,34 +2451,34 @@
                 return;
             //todo do I want some kind of error catching or other guards here?
             switch (unit) {
-                case Unit.seconds:
+                case exports.Unit.seconds:
                     this._secondDisplay._update();
                     break;
-                case Unit.minutes:
+                case exports.Unit.minutes:
                     this._minuteDisplay._update();
                     break;
-                case Unit.hours:
+                case exports.Unit.hours:
                     this._hourDisplay._update();
                     break;
-                case Unit.date:
+                case exports.Unit.date:
                     this._dateDisplay._update();
                     break;
-                case Unit.month:
+                case exports.Unit.month:
                     this._monthDisplay._update();
                     break;
-                case Unit.year:
+                case exports.Unit.year:
                     this._yearDisplay._update();
                     break;
                 case 'clock':
                     this._timeDisplay._update();
-                    this._update(Unit.hours);
-                    this._update(Unit.minutes);
-                    this._update(Unit.seconds);
+                    this._update(exports.Unit.hours);
+                    this._update(exports.Unit.minutes);
+                    this._update(exports.Unit.seconds);
                     break;
                 case 'calendar':
-                    this._update(Unit.date);
-                    this._update(Unit.year);
-                    this._update(Unit.month);
+                    this._update(exports.Unit.date);
+                    this._update(exports.Unit.year);
+                    this._update(exports.Unit.month);
                     this._decadeDisplay._update();
                     this._updateCalendarHeader();
                     break;
@@ -2491,7 +2511,7 @@
                             direction = -1;
                         }
                         while (!this._context._validation.isValid(date)) {
-                            date.manipulate(direction, Unit.date);
+                            date.manipulate(direction, exports.Unit.date);
                             if (tries > 31)
                                 break;
                             tries++;
@@ -2510,15 +2530,15 @@
                     document.body.appendChild(this.widget);
                     this._popperInstance = core.createPopper(this._context._element, this.widget, {
                         modifiers: [
-                            {
+                            /*  {
                                 name: 'offset',
                                 options: {
-                                    offset: [2, 8],
+                                  offset: [2, 8],
                                 },
-                            },
+                              },*/
                             { name: 'eventListeners', enabled: true },
                         ],
-                        placement: 'auto',
+                        placement: 'bottom-start',
                     });
                 }
                 else {
@@ -2623,6 +2643,8 @@
          * @fires Events#hide
          */
         hide() {
+            if (!this.widget || !this._isVisible)
+                return;
             this.widget.classList.remove(Namespace.css.show);
             if (this._isVisible) {
                 this._context._triggerEvent({
@@ -2883,9 +2905,9 @@
                 targetDate.isAfter(this._context._options.restrictions.maxDate, granularity)) {
                 return false;
             }
-            if (granularity === Unit.hours ||
-                granularity === Unit.minutes ||
-                granularity === Unit.seconds) {
+            if (granularity === exports.Unit.hours ||
+                granularity === exports.Unit.minutes ||
+                granularity === exports.Unit.seconds) {
                 if (this._context._options.restrictions.disabledHours.length > 0 &&
                     this._isInDisabledHours(targetDate)) {
                     return false;
@@ -2913,9 +2935,9 @@
             if (!this._context._options.restrictions.disabledDates ||
                 this._context._options.restrictions.disabledDates.length === 0)
                 return false;
-            const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
+            const formattedDate = testDate.format(Dates.getFormatByUnit(exports.Unit.date));
             return this._context._options.restrictions.disabledDates
-                .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
+                .map((x) => x.format(Dates.getFormatByUnit(exports.Unit.date)))
                 .find((x) => x === formattedDate);
         }
         /**
@@ -2928,9 +2950,9 @@
             if (!this._context._options.restrictions.enabledDates ||
                 this._context._options.restrictions.enabledDates.length === 0)
                 return true;
-            const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
+            const formattedDate = testDate.format(Dates.getFormatByUnit(exports.Unit.date));
             return this._context._options.restrictions.enabledDates
-                .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
+                .map((x) => x.format(Dates.getFormatByUnit(exports.Unit.date)))
                 .find((x) => x === formattedDate);
         }
         /**

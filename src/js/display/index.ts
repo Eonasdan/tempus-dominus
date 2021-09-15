@@ -159,15 +159,15 @@ export default class Display {
           this.widget,
           {
             modifiers: [
-              {
+            /*  {
                 name: 'offset',
                 options: {
                   offset: [2, 8],
                 },
-              },
+              },*/
               { name: 'eventListeners', enabled: true },
             ],
-            placement: 'auto',
+            placement: 'bottom-start',
           }
         );
       } else {
@@ -337,6 +337,8 @@ export default class Display {
    * @fires Events#hide
    */
   hide(): void {
+    if (!this.widget || !this._isVisible) return;
+
     this.widget.classList.remove(Namespace.css.show);
 
     if (this._isVisible) {

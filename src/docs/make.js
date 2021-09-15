@@ -644,6 +644,7 @@ if (process.argv.slice(2)[0] === '--watch') {
   let lastChangeFile = '';
 
   const handleChange = (event, path) => {
+    if (path.includes('.map.')) return;
     log(`${event}: ${path}`);
     try {
       if (path.startsWith('dist')) {

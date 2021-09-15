@@ -22,14 +22,12 @@ The docs folder contains the generated documentation site, don't modify this dir
 
 ## Running
 
-You can run `npm start` which will start a browser-sync server. Navigate to `http://localhost:3001/` to view the docs. Note that 3000 is the default port, yours might be different.
+You can run `npm run serve` which will start a browser-sync server. Navigate to `http://localhost:3001/` to view the docs.
 
-## Watchers
-Do not run `npm start` and the watchers at the same time.
+## Watching for changes
+Do not run `npm run serve` at the same time.
 
-Browser-sync will watch for html, css, and js changes.
-
-Run `npm run watchers` to watch changes. This runs browser-sync, the build and watchers for the docs, styles, and typescript.
+Run `npm start`. This runs browser-sync, the build and watchers for the docs, styles, and typescript.
 
 ## Where do you use this?
 I'd love to know if your public site is using this plugin and list your logo on the documentation site. Leave [create a discussion](https://github.com/Eonasdan/tempus-dominus/discussions/categories/show-your-love) and let me know.

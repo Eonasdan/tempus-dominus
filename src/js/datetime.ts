@@ -338,7 +338,12 @@ export class DateTime extends Date {
    * @param locale
    */
   meridiem(locale: string = this.locale): string {
-    return this.hours < 12 ? 'AM' : 'PM';
+    return new Intl.DateTimeFormat(locale, {
+      hour: 'numeric',
+      hour12: true,
+    } as any)
+      .formatToParts(this)
+      .find((p) => p.type === 'dayPeriod')?.value;
   }
 
   /**
@@ -367,17 +372,11 @@ export class DateTime extends Date {
    * Gets the week of the year
    */
   get week(): number {
-    const MILLISECONDS_IN_WEEK = 604800000;
-    const firstDayOfWeek = 1; // monday as the first day (0 = sunday)
     const startOfYear = new Date(this.year, 0, 1);
     startOfYear.setDate(
-      startOfYear.getDate() + (firstDayOfWeek - (startOfYear.getDay() % 7))
+      startOfYear.getDate() + (1 - (startOfYear.getDay() % 7))
     );
-    return (
-      Math.round(
-        (this.valueOf() - startOfYear.valueOf()) / MILLISECONDS_IN_WEEK
-      ) + 1
-    );
+    return Math.round((this.valueOf() - startOfYear.valueOf()) / 604800000) + 1;
   }
 
   /**

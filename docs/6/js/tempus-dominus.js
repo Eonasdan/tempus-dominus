@@ -1,10 +1,15 @@
+/*!
+  * Tempus Dominus v6.0.0-alpha1.0.5 (https://getdatepicker.com/)
+  * Copyright 2013-2021 [object Object]
+  * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
+  */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@popperjs/core')) :
     typeof define === 'function' && define.amd ? define(['exports', '@popperjs/core'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusDominus = {}, global.Popper));
 }(this, (function (exports, core) { 'use strict';
 
-    var Unit;
+    exports.Unit = void 0;
     (function (Unit) {
         Unit["seconds"] = "seconds";
         Unit["minutes"] = "minutes";
@@ -12,7 +17,7 @@
         Unit["date"] = "date";
         Unit["month"] = "month";
         Unit["year"] = "year";
-    })(Unit || (Unit = {}));
+    })(exports.Unit || (exports.Unit = {}));
     /**
      * For the most part this object behaves exactly the same way
      * as the native Date object with a little extra spice.
@@ -72,15 +77,15 @@
                     this.setHours(0, 0, 0, 0);
                     break;
                 case 'weekDay':
-                    this.startOf(Unit.date);
-                    this.manipulate(0 - this.weekDay, Unit.date);
+                    this.startOf(exports.Unit.date);
+                    this.manipulate(0 - this.weekDay, exports.Unit.date);
                     break;
                 case 'month':
-                    this.startOf(Unit.date);
+                    this.startOf(exports.Unit.date);
                     this.setDate(1);
                     break;
                 case 'year':
-                    this.startOf(Unit.date);
+                    this.startOf(exports.Unit.date);
                     this.setMonth(0, 1);
                     break;
             }
@@ -109,17 +114,17 @@
                     this.setHours(23, 59, 59, 999);
                     break;
                 case 'weekDay':
-                    this.startOf(Unit.date);
-                    this.manipulate(6 - this.weekDay, Unit.date);
+                    this.startOf(exports.Unit.date);
+                    this.manipulate(6 - this.weekDay, exports.Unit.date);
                     break;
                 case 'month':
-                    this.endOf(Unit.date);
-                    this.manipulate(1, Unit.month);
+                    this.endOf(exports.Unit.date);
+                    this.manipulate(1, exports.Unit.month);
                     this.setDate(0);
                     break;
                 case 'year':
-                    this.endOf(Unit.date);
-                    this.manipulate(1, Unit.year);
+                    this.endOf(exports.Unit.date);
+                    this.manipulate(1, exports.Unit.year);
                     this.setDate(0);
                     break;
             }
@@ -299,7 +304,13 @@
          * @param locale
          */
         meridiem(locale = this.locale) {
-            return this.hours < 12 ? 'AM' : 'PM';
+            var _a;
+            return (_a = new Intl.DateTimeFormat(locale, {
+                hour: 'numeric',
+                hour12: true,
+            })
+                .formatToParts(this)
+                .find((p) => p.type === 'dayPeriod')) === null || _a === void 0 ? void 0 : _a.value;
         }
         /**
          * Shortcut to Date.getDate()
@@ -324,11 +335,9 @@
          * Gets the week of the year
          */
         get week() {
-            const MILLISECONDS_IN_WEEK = 604800000;
-            const firstDayOfWeek = 1; // monday as the first day (0 = sunday)
             const startOfYear = new Date(this.year, 0, 1);
-            startOfYear.setDate(startOfYear.getDate() + (firstDayOfWeek - (startOfYear.getDay() % 7)));
-            return (Math.round((this.valueOf() - startOfYear.valueOf()) / MILLISECONDS_IN_WEEK) + 1);
+            startOfYear.setDate(startOfYear.getDate() + (1 - (startOfYear.getDay() % 7)));
+            return Math.round((this.valueOf() - startOfYear.valueOf()) / 604800000) + 1;
         }
         /**
          * Shortcut to Date.getDay()
@@ -449,11 +458,14 @@
          * the option was an invalide string or an invalid Date object.
          * @param optionName
          * @param date
+         * @param soft If true, logs a warning instead of an error.
          */
-        failedToParseDate(optionName, date) {
+        failedToParseDate(optionName, date, soft = false) {
             const error = new TdError(`${this.base} Could not correctly parse "${date}" to a date for ${optionName}.`);
             error.code = 5;
-            throw error;
+            if (!soft)
+                throw error;
+            console.warn(error);
         }
         /**
          * Throws when an element to attach to was not provided in the constructor.
@@ -675,6 +687,10 @@
              * Applied to each element in the seconds selection view.
              */
             this.second = 'second';
+            /**
+             * Applied AM/PM toggle button.
+             */
+            this.toggleMeridiem = 'toggleMeridiem';
             //#endregion
             //#region collapse
             /**
@@ -783,7 +799,7 @@
             pickSecond: 'Pick Second',
             incrementSecond: 'Increment Second',
             decrementSecond: 'Decrement Second',
-            togglePeriod: 'Toggle Period',
+            toggleMeridiem: 'Toggle Meridiem',
             selectTime: 'Select Time',
             selectDate: 'Select Date',
             dayViewHeaderFormat: 'long',
@@ -802,25 +818,25 @@
         {
             name: 'calendar',
             className: Namespace.css.daysContainer,
-            unit: Unit.month,
+            unit: exports.Unit.month,
             step: 1,
         },
         {
             name: 'months',
             className: Namespace.css.monthsContainer,
-            unit: Unit.year,
+            unit: exports.Unit.year,
             step: 1,
         },
         {
             name: 'years',
             className: Namespace.css.yearsContainer,
-            unit: Unit.year,
+            unit: exports.Unit.year,
             step: 10,
         },
         {
             name: 'decades',
             className: Namespace.css.decadesContainer,
-            unit: Unit.year,
+            unit: exports.Unit.year,
             step: 100,
         },
     ];
@@ -859,19 +875,19 @@
          * Flips the show/hide state of `target`
          * @param target html element to affect.
          */
-        toggle(target) {
+        toggle(target, callback = undefined) {
             if (target.classList.contains(Namespace.css.show)) {
-                this.hide(target);
+                this.hide(target, callback);
             }
             else {
-                this.show(target);
+                this.show(target, callback);
             }
         }
         /**
          * If `target` is not already showing, then show after the animation.
          * @param target
          */
-        show(target) {
+        show(target, callback = undefined) {
             if (target.classList.contains(Namespace.css.collapsing) ||
                 target.classList.contains(Namespace.css.show))
                 return;
@@ -880,6 +896,8 @@
                 target.classList.add(Namespace.css.collapse, Namespace.css.show);
                 target.style.height = '';
                 this.timeOut = null;
+                if (callback)
+                    callback();
             };
             target.style.height = '0';
             target.classList.remove(Namespace.css.collapse);
@@ -891,7 +909,7 @@
          * If `target` is not already hidden, then hide after the animation.
          * @param target HTML Element
          */
-        hide(target) {
+        hide(target, callback = undefined) {
             if (target.classList.contains(Namespace.css.collapsing) ||
                 !target.classList.contains(Namespace.css.show))
                 return;
@@ -963,15 +981,15 @@
                     switch (action) {
                         case ActionTypes.selectMonth:
                             this._context._viewDate.month = value;
-                            this._context._viewUpdate(Unit.month);
+                            this._context._viewUpdate(exports.Unit.month);
                             break;
                         case ActionTypes.selectYear:
                             this._context._viewDate.year = value;
-                            this._context._viewUpdate(Unit.year);
+                            this._context._viewUpdate(exports.Unit.year);
                             break;
                         case ActionTypes.selectDecade:
                             this._context._viewDate.year = value;
-                            this._context._viewUpdate(Unit.year);
+                            this._context._viewUpdate(exports.Unit.year);
                             break;
                     }
                     if (this._context._currentViewMode === this._context._minViewModeNumber) {
@@ -987,15 +1005,15 @@
                 case ActionTypes.selectDay:
                     const day = this._context._viewDate.clone;
                     if (currentTarget.classList.contains(Namespace.css.old)) {
-                        day.manipulate(-1, Unit.month);
+                        day.manipulate(-1, exports.Unit.month);
                     }
                     if (currentTarget.classList.contains(Namespace.css.new)) {
-                        day.manipulate(1, Unit.month);
+                        day.manipulate(1, exports.Unit.month);
                     }
                     day.date = +currentTarget.innerText;
                     let index = 0;
                     if (this._context._options.multipleDates) {
-                        index = this._context.dates.pickedIndex(day, Unit.date);
+                        index = this._context.dates.pickedIndex(day, exports.Unit.date);
                         if (index !== -1) {
                             this._context.dates._setValue(null, index); //deselect multi-date
                         }
@@ -1055,25 +1073,25 @@
                     }
                     break;
                 case ActionTypes.incrementHours:
-                    manipulateAndSet(Unit.hours);
+                    manipulateAndSet(exports.Unit.hours);
                     break;
                 case ActionTypes.incrementMinutes:
-                    manipulateAndSet(Unit.minutes, this._context._options.stepping);
+                    manipulateAndSet(exports.Unit.minutes, this._context._options.stepping);
                     break;
                 case ActionTypes.incrementSeconds:
-                    manipulateAndSet(Unit.seconds);
+                    manipulateAndSet(exports.Unit.seconds);
                     break;
                 case ActionTypes.decrementHours:
-                    manipulateAndSet(Unit.hours, -1);
+                    manipulateAndSet(exports.Unit.hours, -1);
                     break;
                 case ActionTypes.decrementMinutes:
-                    manipulateAndSet(Unit.minutes, this._context._options.stepping * -1);
+                    manipulateAndSet(exports.Unit.minutes, this._context._options.stepping * -1);
                     break;
                 case ActionTypes.decrementSeconds:
-                    manipulateAndSet(Unit.seconds, -1);
+                    manipulateAndSet(exports.Unit.seconds, -1);
                     break;
-                case ActionTypes.togglePeriod:
-                    manipulateAndSet(Unit.hours, this._context.dates.lastPicked.hours >= 12 ? -12 : 12);
+                case ActionTypes.toggleMeridiem:
+                    manipulateAndSet(exports.Unit.hours, this._context.dates.lastPicked.hours >= 12 ? -12 : 12);
                     break;
                 case ActionTypes.togglePicker:
                     this._context._display.widget
@@ -1107,15 +1125,15 @@
                             break;
                         case ActionTypes.showHours:
                             classToUse = Namespace.css.hourContainer;
-                            this._context._display._update(Unit.hours);
+                            this._context._display._update(exports.Unit.hours);
                             break;
                         case ActionTypes.showMinutes:
                             classToUse = Namespace.css.minuteContainer;
-                            this._context._display._update(Unit.minutes);
+                            this._context._display._update(exports.Unit.minutes);
                             break;
                         case ActionTypes.showSeconds:
                             classToUse = Namespace.css.secondContainer;
-                            this._context._display._update(Unit.seconds);
+                            this._context._display._update(exports.Unit.seconds);
                             break;
                     }
                     (this._context._display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
@@ -1130,7 +1148,7 @@
                 case ActionTypes.today:
                     const today = new DateTime().setLocale(this._context._options.localization.locale);
                     this._context._viewDate = today;
-                    if (this._context._validation.isValid(today, Unit.date))
+                    if (this._context._validation.isValid(today, exports.Unit.date))
                         this._context.dates._setValue(today, this._context.dates.lastPickedIndex);
                     break;
             }
@@ -1154,7 +1172,7 @@
         ActionTypes["decrementHours"] = "decrementHours";
         ActionTypes["decrementMinutes"] = "decrementMinutes";
         ActionTypes["decrementSeconds"] = "decrementSeconds";
-        ActionTypes["togglePeriod"] = "togglePeriod";
+        ActionTypes["toggleMeridiem"] = "toggleMeridiem";
         ActionTypes["togglePicker"] = "togglePicker";
         ActionTypes["showClock"] = "showClock";
         ActionTypes["showHours"] = "showHours";
@@ -1211,16 +1229,16 @@
             switcher.setAttribute(Namespace.css.daysContainer, this._context._viewDate.format({
                 month: this._context._options.localization.dayViewHeaderFormat,
             }));
-            this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.month), Unit.month)
+            this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.month), exports.Unit.month)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
-            this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.month), Unit.month)
+            this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.month), exports.Unit.month)
                 ? next.classList.remove(Namespace.css.disabled)
                 : next.classList.add(Namespace.css.disabled);
             let innerDate = this._context._viewDate.clone
-                .startOf(Unit.month)
+                .startOf(exports.Unit.month)
                 .startOf('weekDay')
-                .manipulate(12, Unit.hours);
+                .manipulate(12, exports.Unit.hours);
             container
                 .querySelectorAll(`[data-action="${ActionTypes.selectDay}"], .${Namespace.css.calendarWeeks}`)
                 .forEach((containerClone, index) => {
@@ -1233,20 +1251,20 @@
                 }
                 let classes = [];
                 classes.push(Namespace.css.day);
-                if (innerDate.isBefore(this._context._viewDate, Unit.month)) {
+                if (innerDate.isBefore(this._context._viewDate, exports.Unit.month)) {
                     classes.push(Namespace.css.old);
                 }
-                if (innerDate.isAfter(this._context._viewDate, Unit.month)) {
+                if (innerDate.isAfter(this._context._viewDate, exports.Unit.month)) {
                     classes.push(Namespace.css.new);
                 }
                 if (!this._context._unset &&
-                    this._context.dates.isPicked(innerDate, Unit.date)) {
+                    this._context.dates.isPicked(innerDate, exports.Unit.date)) {
                     classes.push(Namespace.css.active);
                 }
-                if (!this._context._validation.isValid(innerDate, Unit.date)) {
+                if (!this._context._validation.isValid(innerDate, exports.Unit.date)) {
                     classes.push(Namespace.css.disabled);
                 }
-                if (innerDate.isSame(new DateTime(), Unit.date)) {
+                if (innerDate.isSame(new DateTime(), exports.Unit.date)) {
                     classes.push(Namespace.css.today);
                 }
                 if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
@@ -1256,7 +1274,7 @@
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
                 containerClone.innerText = `${innerDate.date}`;
-                innerDate.manipulate(1, Unit.date);
+                innerDate.manipulate(1, exports.Unit.date);
             });
         }
         /***
@@ -1266,7 +1284,7 @@
         _daysOfTheWeek() {
             let innerDate = this._context._viewDate.clone
                 .startOf('weekDay')
-                .startOf(Unit.date);
+                .startOf(exports.Unit.date);
             const row = [];
             document.createElement('div');
             if (this._context._options.display.calendarWeeks) {
@@ -1279,7 +1297,7 @@
                 const htmlDivElement = document.createElement('div');
                 htmlDivElement.classList.add(Namespace.css.dayOfTheWeek, Namespace.css.noHighlight);
                 htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
-                innerDate.manipulate(1, Unit.date);
+                innerDate.manipulate(1, exports.Unit.date);
                 row.push(htmlDivElement);
             }
             return row;
@@ -1317,1288 +1335,31 @@
                 .getElementsByClassName(Namespace.css.calendarHeader)[0]
                 .getElementsByTagName('div');
             switcher.setAttribute(Namespace.css.monthsContainer, this._context._viewDate.format({ year: 'numeric' }));
-            this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.year), Unit.year)
+            this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.year), exports.Unit.year)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
-            this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.year), Unit.year)
+            this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.year), exports.Unit.year)
                 ? next.classList.remove(Namespace.css.disabled)
                 : next.classList.add(Namespace.css.disabled);
-            let innerDate = this._context._viewDate.clone.startOf(Unit.year);
+            let innerDate = this._context._viewDate.clone.startOf(exports.Unit.year);
             container
                 .querySelectorAll(`[data-action="${ActionTypes.selectMonth}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.css.month);
                 if (!this._context._unset &&
-                    this._context.dates.isPicked(innerDate, Unit.month)) {
+                    this._context.dates.isPicked(innerDate, exports.Unit.month)) {
                     classes.push(Namespace.css.active);
                 }
-                if (!this._context._validation.isValid(innerDate, Unit.month)) {
+                if (!this._context._validation.isValid(innerDate, exports.Unit.month)) {
                     classes.push(Namespace.css.disabled);
                 }
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${index}`);
                 containerClone.innerText = `${innerDate.format({ month: 'short' })}`;
-                innerDate.manipulate(1, Unit.month);
+                innerDate.manipulate(1, exports.Unit.month);
             });
-        }
-    }
-
-    class Dates {
-        constructor(context) {
-            this._dates = [];
-            this._context = context;
-        }
-        /**
-         * Returns the array of selected dates
-         */
-        get picked() {
-            return this._dates;
-        }
-        /**
-         * Returns the last picked value.
-         */
-        get lastPicked() {
-            return this._dates[this.lastPickedIndex];
-        }
-        /**
-         * Returns the length of picked dates -1 or 0 if none are selected.
-         */
-        get lastPickedIndex() {
-            if (this._dates.length === 0)
-                return 0;
-            return this._dates.length - 1;
-        }
-        /**
-         * Adds a new DateTime to selected dates array
-         * @param date
-         */
-        add(date) {
-            this._dates.push(date);
-        }
-        /**
-         * Returns true if the `targetDate` is part of the selected dates array.
-         * If `unit` is provided then a granularity to that unit will be used.
-         * @param targetDate
-         * @param unit
-         */
-        isPicked(targetDate, unit) {
-            if (!unit)
-                return this._dates.find((x) => x === targetDate) !== undefined;
-            const format = Dates.getFormatByUnit(unit);
-            let innerDateFormatted = targetDate.format(format);
-            return (this._dates
-                .map((x) => x.format(format))
-                .find((x) => x === innerDateFormatted) !== undefined);
-        }
-        /**
-         * Returns the index at which `targetDate` is in the array.
-         * This is used for updating or removing a date when multi-date is used
-         * If `unit` is provided then a granularity to that unit will be used.
-         * @param targetDate
-         * @param unit
-         */
-        pickedIndex(targetDate, unit) {
-            if (!unit)
-                return this._dates.indexOf(targetDate);
-            const format = Dates.getFormatByUnit(unit);
-            let innerDateFormatted = targetDate.format(format);
-            return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
-        }
-        /**
-         * Clears all selected dates.
-         */
-        clear() {
-            this._context._unset = true;
-            this._context._triggerEvent({
-                type: Namespace.events.change,
-                date: undefined,
-                oldDate: this.lastPicked,
-                isClear: true,
-                isValid: true,
-            });
-            this._dates = [];
-        }
-        /**
-         * Find the "book end" years given a `year` and a `factor`
-         * @param factor e.g. 100 for decades
-         * @param year e.g. 2021
-         */
-        static getStartEndYear(factor, year) {
-            const step = factor / 10, startYear = Math.floor(year / factor) * factor, endYear = startYear + step * 9, focusValue = Math.floor(year / step) * step;
-            return [startYear, endYear, focusValue];
-        }
-        /**
-         * Attempts to either clear or set the `target` date at `index`.
-         * If the `target` is null then the date will be cleared.
-         * If multi-date is being used then it will be removed from the array.
-         * If `target` is valid and multi-date is used then if `index` is
-         * provided the date at that index will be replaced, otherwise it is appended.
-         * @param target
-         * @param index
-         */
-        _setValue(target, index) {
-            const noIndex = typeof index === 'undefined', isClear = !target && noIndex;
-            let oldDate = this._context._unset ? null : this._dates[index];
-            if (!oldDate && !this._context._unset && noIndex && isClear) {
-                oldDate = this.lastPicked;
-            }
-            const updateInput = () => {
-                if (!this._context._input)
-                    return;
-                let newValue = (target === null || target === void 0 ? void 0 : target.format(this._context._options.display.inputFormat)) || '';
-                if (this._context._options.multipleDates) {
-                    newValue = this._dates
-                        .map((d) => d.format(this._context._options.display.inputFormat))
-                        .join(this._context._options.multipleDatesSeparator);
-                }
-                if (this._context._input.value != newValue)
-                    this._context._input.value = newValue;
-            };
-            // case of calling setValue(null)
-            if (!target) {
-                if (!this._context._options.multipleDates ||
-                    this._dates.length === 1 ||
-                    isClear) {
-                    this._context._unset = true;
-                    this._dates = [];
-                }
-                else {
-                    this._dates.splice(index, 1);
-                }
-                this._context._triggerEvent({
-                    type: Namespace.events.change,
-                    date: undefined,
-                    oldDate,
-                    isClear,
-                    isValid: true,
-                });
-                updateInput();
-                this._context._display._update('all');
-                return;
-            }
-            index = index || 0;
-            target = target.clone;
-            // minute stepping is being used, force the minute to the closest value
-            if (this._context._options.stepping !== 1) {
-                target.minutes =
-                    Math.round(target.minutes / this._context._options.stepping) *
-                        this._context._options.stepping;
-                target.seconds = 0;
-            }
-            if (this._context._validation.isValid(target)) {
-                this._dates[index] = target;
-                this._context._viewDate = target.clone;
-                updateInput();
-                this._context._unset = false;
-                this._context._display._update('all');
-                this._context._triggerEvent({
-                    type: Namespace.events.change,
-                    date: target,
-                    oldDate,
-                    isClear,
-                    isValid: true,
-                });
-                return;
-            }
-            if (this._context._options.keepInvalid) {
-                this._dates[index] = target;
-                this._context._viewDate = target.clone;
-                updateInput();
-                this._context._triggerEvent({
-                    type: Namespace.events.change,
-                    date: target,
-                    oldDate,
-                    isClear,
-                    isValid: false,
-                });
-            }
-            this._context._triggerEvent({
-                type: Namespace.events.error,
-                reason: Namespace.errorMessages.failedToSetInvalidDate,
-                date: target,
-                oldDate,
-            });
-        }
-        /**
-         * Returns a format object based on the granularity of `unit`
-         * @param unit
-         */
-        static getFormatByUnit(unit) {
-            switch (unit) {
-                case 'date':
-                    return { dateStyle: 'short' };
-                case 'month':
-                    return {
-                        month: 'numeric',
-                        year: 'numeric',
-                    };
-                case 'year':
-                    return { year: 'numeric' };
-            }
-        }
-    }
-
-    /**
-     * Creates and updates the grid for `year`
-     */
-    class YearDisplay {
-        constructor(context) {
-            this._context = context;
-        }
-        /**
-         * Build the container html for the display
-         * @private
-         */
-        get _picker() {
-            const container = document.createElement('div');
-            container.classList.add(Namespace.css.yearsContainer);
-            for (let i = 0; i < 12; i++) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.selectYear);
-                container.appendChild(div);
-            }
-            return container;
-        }
-        /**
-         * Populates the grid and updates enabled states
-         * @private
-         */
-        _update() {
-            Dates.getStartEndYear(10, this._context._viewDate.year);
-            this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
-            this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
-            const container = this._context._display.widget.getElementsByClassName(Namespace.css.yearsContainer)[0];
-            const [previous, switcher, next] = container.parentElement
-                .getElementsByClassName(Namespace.css.calendarHeader)[0]
-                .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.year}-${this._endYear.year}`);
-            this._context._validation.isValid(this._startYear, Unit.year)
-                ? previous.classList.remove(Namespace.css.disabled)
-                : previous.classList.add(Namespace.css.disabled);
-            this._context._validation.isValid(this._endYear, Unit.year)
-                ? next.classList.remove(Namespace.css.disabled)
-                : next.classList.add(Namespace.css.disabled);
-            let innerDate = this._context._viewDate.clone
-                .startOf(Unit.year)
-                .manipulate(-1, Unit.year);
-            container
-                .querySelectorAll(`[data-action="${ActionTypes.selectYear}"]`)
-                .forEach((containerClone, index) => {
-                let classes = [];
-                classes.push(Namespace.css.year);
-                if (!this._context._unset &&
-                    this._context.dates.isPicked(innerDate, Unit.year)) {
-                    classes.push(Namespace.css.active);
-                }
-                if (!this._context._validation.isValid(innerDate, Unit.year)) {
-                    classes.push(Namespace.css.disabled);
-                }
-                containerClone.classList.remove(...containerClone.classList);
-                containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${innerDate.year}`);
-                containerClone.innerText = `${innerDate.year}`;
-                innerDate.manipulate(1, Unit.year);
-            });
-        }
-    }
-
-    /**
-     * Creates and updates the grid for `seconds`
-     */
-    class DecadeDisplay {
-        constructor(context) {
-            this._context = context;
-        }
-        /**
-         * Build the container html for the display
-         * @private
-         */
-        get _picker() {
-            const container = document.createElement('div');
-            container.classList.add(Namespace.css.decadesContainer);
-            for (let i = 0; i < 12; i++) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.selectDecade);
-                container.appendChild(div);
-            }
-            return container;
-        }
-        /**
-         * Populates the grid and updates enabled states
-         * @private
-         */
-        _update() {
-            const [start, end] = Dates.getStartEndYear(100, this._context._viewDate.year);
-            this._startDecade = this._context._viewDate.clone.startOf(Unit.year);
-            this._startDecade.year = start;
-            this._endDecade = this._context._viewDate.clone.startOf(Unit.year);
-            this._endDecade.year = end;
-            const container = this._context._display.widget.getElementsByClassName(Namespace.css.decadesContainer)[0];
-            const [previous, switcher, next] = container.parentElement
-                .getElementsByClassName(Namespace.css.calendarHeader)[0]
-                .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.year}-${this._endDecade.year}`);
-            this._context._validation.isValid(this._startDecade, Unit.year)
-                ? previous.classList.remove(Namespace.css.disabled)
-                : previous.classList.add(Namespace.css.disabled);
-            this._context._validation.isValid(this._endDecade, Unit.year)
-                ? next.classList.remove(Namespace.css.disabled)
-                : next.classList.add(Namespace.css.disabled);
-            const pickedYears = this._context.dates.picked.map((x) => x.year);
-            container
-                .querySelectorAll(`[data-action="${ActionTypes.selectDecade}"]`)
-                .forEach((containerClone, index) => {
-                if (index === 0) {
-                    containerClone.classList.add(Namespace.css.old);
-                    if (this._startDecade.year - 10 < 0) {
-                        containerClone.textContent = ' ';
-                        previous.classList.add(Namespace.css.disabled);
-                        containerClone.classList.add(Namespace.css.disabled);
-                        containerClone.setAttribute('data-value', ``);
-                        return;
-                    }
-                    else {
-                        containerClone.innerText = `${this._startDecade.year - 10}`;
-                        containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-                        return;
-                    }
-                }
-                let classes = [];
-                classes.push(Namespace.css.decade);
-                const startDecadeYear = this._startDecade.year;
-                const endDecadeYear = this._startDecade.year + 9;
-                if (!this._context._unset &&
-                    pickedYears.filter((x) => x >= startDecadeYear && x <= endDecadeYear)
-                        .length > 0) {
-                    classes.push(Namespace.css.active);
-                }
-                containerClone.classList.remove(...containerClone.classList);
-                containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-                containerClone.innerText = `${this._startDecade.year}`;
-                this._startDecade.manipulate(10, Unit.year);
-            });
-        }
-    }
-
-    /**
-     * Creates the clock display
-     */
-    class TimeDisplay {
-        constructor(context) {
-            this._context = context;
-        }
-        /**
-         * Build the container html for the clock display
-         * @private
-         */
-        get _picker() {
-            const container = document.createElement('div');
-            container.classList.add(Namespace.css.clockContainer);
-            container.append(...this._grid());
-            return container;
-        }
-        /**
-         * Populates the various elements with in the clock display
-         * like the current hour and if the manipulation icons are enabled.
-         * @private
-         */
-        _update() {
-            const timesDiv = this._context._display.widget.getElementsByClassName(Namespace.css.clockContainer)[0];
-            const lastPicked = (this._context.dates.lastPicked || this._context._viewDate).clone;
-            let columns = 0;
-            timesDiv
-                .querySelectorAll('.disabled')
-                .forEach((element) => element.classList.remove(Namespace.css.disabled));
-            if (this._context._options.display.components.hours) {
-                columns++;
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes.incrementHours}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes.decrementHours}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = this._context._options.display.components.useTwentyfourHour
-                    ? lastPicked.hoursFormatted
-                    : lastPicked.twelveHoursFormatted;
-            }
-            if (this._context._options.display.components.minutes) {
-                columns++;
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes.incrementMinutes}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes.decrementMinutes}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
-            }
-            if (this._context._options.display.components.seconds) {
-                columns++;
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes.incrementSeconds}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes.decrementSeconds}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
-            }
-            if (!this._context._options.display.components.useTwentyfourHour) {
-                columns++;
-                const toggle = timesDiv.querySelector(`[data-action=${ActionTypes.togglePeriod}]`);
-                toggle.innerText = lastPicked.meridiem();
-                if (!this._context._validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
-                    toggle.classList.add(Namespace.css.disabled);
-                }
-                else {
-                    toggle.classList.remove(Namespace.css.disabled);
-                }
-            }
-            timesDiv.classList.add(`clock-columns-${columns}`);
-        }
-        /**
-         * Creates the table for the clock display depending on what options are selected.
-         * @private
-         */
-        _grid() {
-            const top = [], middle = [], bottom = [], separator = document.createElement('div'), upIcon = this._context._display._iconTag(this._context._options.display.icons.up), downIcon = this._context._display._iconTag(this._context._options.display.icons.down);
-            separator.classList.add(Namespace.css.separator, Namespace.css.noHighlight);
-            const separatorColon = separator.cloneNode(true);
-            separatorColon.innerHTML = ':';
-            const getSeparator = (colon = false) => {
-                return colon
-                    ? separatorColon.cloneNode(true)
-                    : separator.cloneNode(true);
-            };
-            if (this._context._options.display.components.hours) {
-                let divElement = document.createElement('div');
-                divElement.setAttribute('title', this._context._options.localization.incrementHour);
-                divElement.setAttribute('data-action', ActionTypes.incrementHours);
-                divElement.appendChild(upIcon.cloneNode(true));
-                top.push(divElement);
-                divElement = document.createElement('div');
-                divElement.setAttribute('title', this._context._options.localization.pickHour);
-                divElement.setAttribute('data-action', ActionTypes.showHours);
-                divElement.setAttribute('data-time-component', Unit.hours);
-                middle.push(divElement);
-                divElement = document.createElement('div');
-                divElement.setAttribute('title', this._context._options.localization.decrementHour);
-                divElement.setAttribute('data-action', ActionTypes.decrementHours);
-                divElement.appendChild(downIcon.cloneNode(true));
-                bottom.push(divElement);
-            }
-            if (this._context._options.display.components.minutes) {
-                if (this._context._options.display.components.hours) {
-                    top.push(getSeparator());
-                    middle.push(getSeparator(true));
-                    bottom.push(getSeparator());
-                }
-                let divElement = document.createElement('div');
-                divElement.setAttribute('title', this._context._options.localization.incrementMinute);
-                divElement.setAttribute('data-action', ActionTypes.incrementMinutes);
-                divElement.appendChild(upIcon.cloneNode(true));
-                top.push(divElement);
-                divElement = document.createElement('div');
-                divElement.setAttribute('title', this._context._options.localization.pickMinute);
-                divElement.setAttribute('data-action', ActionTypes.showMinutes);
-                divElement.setAttribute('data-time-component', Unit.minutes);
-                middle.push(divElement);
-                divElement = document.createElement('div');
-                divElement.setAttribute('title', this._context._options.localization.decrementMinute);
-                divElement.setAttribute('data-action', ActionTypes.decrementMinutes);
-                divElement.appendChild(downIcon.cloneNode(true));
-                bottom.push(divElement);
-            }
-            if (this._context._options.display.components.seconds) {
-                if (this._context._options.display.components.minutes) {
-                    top.push(getSeparator());
-                    middle.push(getSeparator(true));
-                    bottom.push(getSeparator());
-                }
-                let divElement = document.createElement('div');
-                divElement.setAttribute('title', this._context._options.localization.incrementSecond);
-                divElement.setAttribute('data-action', ActionTypes.incrementSeconds);
-                divElement.appendChild(upIcon.cloneNode(true));
-                top.push(divElement);
-                divElement = document.createElement('div');
-                divElement.setAttribute('title', this._context._options.localization.pickSecond);
-                divElement.setAttribute('data-action', ActionTypes.showSeconds);
-                divElement.setAttribute('data-time-component', Unit.seconds);
-                middle.push(divElement);
-                divElement = document.createElement('div');
-                divElement.setAttribute('title', this._context._options.localization.decrementSecond);
-                divElement.setAttribute('data-action', ActionTypes.decrementSeconds);
-                divElement.appendChild(downIcon.cloneNode(true));
-                bottom.push(divElement);
-            }
-            if (!this._context._options.display.components.useTwentyfourHour) {
-                let divElement = getSeparator();
-                top.push(divElement);
-                let button = document.createElement('button');
-                button.setAttribute('title', this._context._options.localization.togglePeriod);
-                button.setAttribute('data-action', ActionTypes.togglePeriod);
-                button.setAttribute('tabindex', '-1');
-                divElement = document.createElement('div');
-                divElement.classList.add(Namespace.css.noHighlight);
-                divElement.appendChild(button);
-                middle.push(divElement);
-                divElement = getSeparator();
-                bottom.push(divElement);
-            }
-            return [...top, ...middle, ...bottom];
-        }
-    }
-
-    /**
-     * Creates and updates the grid for `hours`
-     */
-    class HourDisplay {
-        constructor(context) {
-            this._context = context;
-        }
-        /**
-         * Build the container html for the display
-         * @private
-         */
-        get _picker() {
-            const container = document.createElement('div');
-            container.classList.add(Namespace.css.hourContainer);
-            for (let i = 0; i <
-                (this._context._options.display.components.useTwentyfourHour ? 24 : 12); i++) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.selectHour);
-                container.appendChild(div);
-            }
-            return container;
-        }
-        /**
-         * Populates the grid and updates enabled states
-         * @private
-         */
-        _update() {
-            const container = this._context._display.widget.getElementsByClassName(Namespace.css.hourContainer)[0];
-            let innerDate = this._context._viewDate.clone.startOf(Unit.date);
-            container
-                .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
-                .forEach((containerClone, index) => {
-                let classes = [];
-                classes.push(Namespace.css.hour);
-                if (!this._context._validation.isValid(innerDate, Unit.hours)) {
-                    classes.push(Namespace.css.disabled);
-                }
-                containerClone.classList.remove(...containerClone.classList);
-                containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${innerDate.hours}`);
-                containerClone.innerText = this._context._options.display.components
-                    .useTwentyfourHour
-                    ? innerDate.hoursFormatted
-                    : innerDate.twelveHoursFormatted;
-                innerDate.manipulate(1, Unit.hours);
-            });
-        }
-    }
-
-    /**
-     * Creates and updates the grid for `minutes`
-     */
-    class MinuteDisplay {
-        constructor(context) {
-            this._context = context;
-        }
-        /**
-         * Build the container html for the display
-         * @private
-         */
-        get _picker() {
-            const container = document.createElement('div');
-            container.classList.add(Namespace.css.minuteContainer);
-            let step = this._context._options.stepping === 1
-                ? 5
-                : this._context._options.stepping;
-            for (let i = 0; i < 60 / step; i++) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.selectMinute);
-                container.appendChild(div);
-            }
-            return container;
-        }
-        /**
-         * Populates the grid and updates enabled states
-         * @private
-         */
-        _update() {
-            const container = this._context._display.widget.getElementsByClassName(Namespace.css.minuteContainer)[0];
-            let innerDate = this._context._viewDate.clone.startOf(Unit.hours);
-            let step = this._context._options.stepping === 1
-                ? 5
-                : this._context._options.stepping;
-            container
-                .querySelectorAll(`[data-action="${ActionTypes.selectMinute}"]`)
-                .forEach((containerClone, index) => {
-                let classes = [];
-                classes.push(Namespace.css.minute);
-                if (!this._context._validation.isValid(innerDate, Unit.minutes)) {
-                    classes.push(Namespace.css.disabled);
-                }
-                containerClone.classList.remove(...containerClone.classList);
-                containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${innerDate.minutes}`);
-                containerClone.innerText = innerDate.minutesFormatted;
-                innerDate.manipulate(step, Unit.minutes);
-            });
-        }
-    }
-
-    /**
-     * Creates and updates the grid for `seconds`
-     */
-    class secondDisplay {
-        constructor(context) {
-            this._context = context;
-        }
-        /**
-         * Build the container html for the display
-         * @private
-         */
-        get _picker() {
-            const container = document.createElement('div');
-            container.classList.add(Namespace.css.secondContainer);
-            for (let i = 0; i < 12; i++) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.selectSecond);
-                container.appendChild(div);
-            }
-            return container;
-        }
-        /**
-         * Populates the grid and updates enabled states
-         * @private
-         */
-        _update() {
-            const container = this._context._display.widget.getElementsByClassName(Namespace.css.secondContainer)[0];
-            let innerDate = this._context._viewDate.clone.startOf(Unit.minutes);
-            container
-                .querySelectorAll(`[data-action="${ActionTypes.selectSecond}"]`)
-                .forEach((containerClone, index) => {
-                let classes = [];
-                classes.push(Namespace.css.second);
-                if (!this._context._validation.isValid(innerDate, Unit.seconds)) {
-                    classes.push(Namespace.css.disabled);
-                }
-                containerClone.classList.remove(...containerClone.classList);
-                containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${innerDate.seconds}`);
-                containerClone.innerText = innerDate.secondsFormatted;
-                innerDate.manipulate(5, Unit.seconds);
-            });
-        }
-    }
-
-    /**
-     * Main class for all things display related.
-     */
-    class Display {
-        constructor(context) {
-            this._isVisible = false;
-            /**
-             * A document click event to hide the widget if click is outside
-             * @private
-             * @param e MouseEvent
-             */
-            this._documentClickEvent = (e) => {
-                var _a;
-                if (this._isVisible &&
-                    !e.composedPath().includes(this.widget) && // click inside the widget
-                    !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this._context._element)) && // click on the element
-                    (!this._context._options.display.keepOpen ||
-                        !this._context._options.debug ||
-                        !window.debug)) {
-                    this.hide();
-                }
-            };
-            /**
-             * Click event for any action like selecting a date
-             * @param e MouseEvent
-             * @private
-             */
-            this._actionsClickEvent = (e) => {
-                this._context._action.do(e);
-            };
-            this._context = context;
-            this._dateDisplay = new DateDisplay(context);
-            this._monthDisplay = new MonthDisplay(context);
-            this._yearDisplay = new YearDisplay(context);
-            this._decadeDisplay = new DecadeDisplay(context);
-            this._timeDisplay = new TimeDisplay(context);
-            this._hourDisplay = new HourDisplay(context);
-            this._minuteDisplay = new MinuteDisplay(context);
-            this._secondDisplay = new secondDisplay(context);
-            this._widget = undefined;
-        }
-        /**
-         * Returns the widget body or undefined
-         * @private
-         */
-        get widget() {
-            return this._widget;
-        }
-        /**
-         * Returns this visible state of the picker (shown)
-         */
-        get isVisible() {
-            return this._isVisible;
-        }
-        /**
-         * Updates the table for a particular unit. Used when an option as changed or
-         * whenever the class list might need to be refreshed.
-         * @param unit
-         * @private
-         */
-        _update(unit) {
-            if (!this.widget)
-                return;
-            //todo do I want some kind of error catching or other guards here?
-            switch (unit) {
-                case Unit.seconds:
-                    this._secondDisplay._update();
-                    break;
-                case Unit.minutes:
-                    this._minuteDisplay._update();
-                    break;
-                case Unit.hours:
-                    this._hourDisplay._update();
-                    break;
-                case Unit.date:
-                    this._dateDisplay._update();
-                    break;
-                case Unit.month:
-                    this._monthDisplay._update();
-                    break;
-                case Unit.year:
-                    this._yearDisplay._update();
-                    break;
-                case 'clock':
-                    this._timeDisplay._update();
-                    this._update(Unit.hours);
-                    this._update(Unit.minutes);
-                    this._update(Unit.seconds);
-                    break;
-                case 'calendar':
-                    this._update(Unit.date);
-                    this._update(Unit.year);
-                    this._update(Unit.month);
-                    this._decadeDisplay._update();
-                    this._updateCalendarHeader();
-                    break;
-                case 'all':
-                    if (this._hasTime) {
-                        this._update('clock');
-                    }
-                    if (this._hasDate) {
-                        this._update('calendar');
-                    }
-            }
-        }
-        /**
-         * Shows the picker and creates a Popper instance if needed.
-         * Add document click event to hide when clicking outside the picker.
-         * @fires Events#show
-         */
-        show() {
-            var _a, _b;
-            if (this.widget == undefined) {
-                if (this._context._options.useCurrent &&
-                    !this._context._options.defaultDate &&
-                    !((_a = this._context._input) === null || _a === void 0 ? void 0 : _a.value)) {
-                    //todo in the td4 branch a pr changed this to allow granularity
-                    const date = new DateTime().setLocale(this._context._options.localization.locale);
-                    if (!this._context._options.keepInvalid) {
-                        let tries = 0;
-                        let direction = 1;
-                        if ((_b = this._context._options.restrictions.maxDate) === null || _b === void 0 ? void 0 : _b.isBefore(date)) {
-                            direction = -1;
-                        }
-                        while (!this._context._validation.isValid(date)) {
-                            date.manipulate(direction, Unit.date);
-                            if (tries > 31)
-                                break;
-                            tries++;
-                        }
-                    }
-                    this._context.dates._setValue(date);
-                }
-                if (this._context._options.defaultDate) {
-                    this._context.dates._setValue(this._context._options.defaultDate);
-                }
-                this._buildWidget();
-                if (this._hasDate) {
-                    this._showMode();
-                }
-                if (!this._context._options.display.inline) {
-                    document.body.appendChild(this.widget);
-                    this._popperInstance = core.createPopper(this._context._element, this.widget, {
-                        modifiers: [
-                            {
-                                name: 'offset',
-                                options: {
-                                    offset: [2, 8],
-                                },
-                            },
-                            { name: 'eventListeners', enabled: true },
-                        ],
-                        placement: 'auto',
-                    });
-                }
-                else {
-                    this._context._element.appendChild(this.widget);
-                }
-                if (this._context._options.display.viewMode == 'clock') {
-                    this._context._action.do({
-                        currentTarget: this.widget.querySelector(`.${Namespace.css.timeContainer}`),
-                    }, ActionTypes.showClock);
-                }
-                this.widget
-                    .querySelectorAll('[data-action]')
-                    .forEach((element) => element.addEventListener('click', this._actionsClickEvent));
-                // show the clock when using sideBySide
-                if (this._context._options.display.sideBySide) {
-                    this._timeDisplay._update();
-                    this.widget.getElementsByClassName(Namespace.css.clockContainer)[0].style.display = 'grid';
-                }
-            }
-            this.widget.classList.add(Namespace.css.show);
-            if (!this._context._options.display.inline) {
-                this._popperInstance.update();
-                document.addEventListener('click', this._documentClickEvent);
-            }
-            this._context._triggerEvent({ type: Namespace.events.show });
-            this._isVisible = true;
-        }
-        /**
-         * Changes the calendar view mode. E.g. month <-> year
-         * @param direction -/+ number to move currentViewMode
-         * @private
-         */
-        _showMode(direction) {
-            if (!this.widget) {
-                return;
-            }
-            if (direction) {
-                const max = Math.max(this._context._minViewModeNumber, Math.min(3, this._context._currentViewMode + direction));
-                if (this._context._currentViewMode == max)
-                    return;
-                this._context._currentViewMode = max;
-            }
-            this.widget
-                .querySelectorAll(`.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div`)
-                .forEach((e) => (e.style.display = 'none'));
-            const datePickerMode = DatePickerModes[this._context._currentViewMode];
-            let picker = this.widget.querySelector(`.${datePickerMode.className}`);
-            switch (datePickerMode.className) {
-                case Namespace.css.decadesContainer:
-                    this._decadeDisplay._update();
-                    break;
-                case Namespace.css.yearsContainer:
-                    this._yearDisplay._update();
-                    break;
-                case Namespace.css.monthsContainer:
-                    this._monthDisplay._update();
-                    break;
-                case Namespace.css.daysContainer:
-                    this._dateDisplay._update();
-                    break;
-            }
-            picker.style.display = 'grid';
-            this._updateCalendarHeader();
-        }
-        _updateCalendarHeader() {
-            const showing = [
-                ...this.widget.querySelector(`.${Namespace.css.dateContainer} div[style*="display: grid"]`).classList,
-            ].find((x) => x.startsWith(Namespace.css.dateContainer));
-            const [previous, switcher, next] = this._context._display.widget
-                .getElementsByClassName(Namespace.css.calendarHeader)[0]
-                .getElementsByTagName('div');
-            switch (showing) {
-                case Namespace.css.decadesContainer:
-                    previous.setAttribute('title', this._context._options.localization.previousCentury);
-                    switcher.setAttribute('title', '');
-                    next.setAttribute('title', this._context._options.localization.nextCentury);
-                    break;
-                case Namespace.css.yearsContainer:
-                    previous.setAttribute('title', this._context._options.localization.previousDecade);
-                    switcher.setAttribute('title', this._context._options.localization.selectDecade);
-                    next.setAttribute('title', this._context._options.localization.nextDecade);
-                    break;
-                case Namespace.css.monthsContainer:
-                    previous.setAttribute('title', this._context._options.localization.previousYear);
-                    switcher.setAttribute('title', this._context._options.localization.selectYear);
-                    next.setAttribute('title', this._context._options.localization.nextYear);
-                    break;
-                case Namespace.css.daysContainer:
-                    previous.setAttribute('title', this._context._options.localization.previousMonth);
-                    switcher.setAttribute('title', this._context._options.localization.selectMonth);
-                    next.setAttribute('title', this._context._options.localization.nextMonth);
-                    switcher.innerText = this._context._viewDate.format({
-                        month: this._context._options.localization.dayViewHeaderFormat,
-                    });
-                    break;
-            }
-            switcher.innerText = switcher.getAttribute(showing);
-        }
-        /**
-         * Hides the picker if needed.
-         * Remove document click event to hide when clicking outside the picker.
-         * @fires Events#hide
-         */
-        hide() {
-            this.widget.classList.remove(Namespace.css.show);
-            if (this._isVisible) {
-                this._context._triggerEvent({
-                    type: Namespace.events.hide,
-                    date: this._context._unset
-                        ? null
-                        : this._context.dates.lastPicked
-                            ? this._context.dates.lastPicked.clone
-                            : void 0,
-                });
-                this._isVisible = false;
-            }
-            document.removeEventListener('click', this._documentClickEvent);
-        }
-        /**
-         * Toggles the picker's open state. Fires a show/hide event depending.
-         */
-        toggle() {
-            return this._isVisible ? this.hide() : this.show();
-        }
-        /**
-         * Removes document and data-action click listener and reset the widget
-         * @private
-         */
-        _dispose() {
-            document.removeEventListener('click', this._documentClickEvent);
-            if (!this.widget)
-                return;
-            this.widget
-                .querySelectorAll('[data-action]')
-                .forEach((element) => element.removeEventListener('click', this._actionsClickEvent));
-            this.widget.parentNode.removeChild(this.widget);
-            this._widget = undefined;
-        }
-        /**
-         * Builds the widgets html template.
-         * @private
-         */
-        _buildWidget() {
-            const template = document.createElement('div');
-            template.classList.add(Namespace.css.widget);
-            const dateView = document.createElement('div');
-            dateView.classList.add(Namespace.css.dateContainer);
-            dateView.append(this._headTemplate, this._decadeDisplay._picker, this._yearDisplay._picker, this._monthDisplay._picker, this._dateDisplay._picker);
-            const timeView = document.createElement('div');
-            timeView.classList.add(Namespace.css.timeContainer);
-            timeView.appendChild(this._timeDisplay._picker);
-            timeView.appendChild(this._hourDisplay._picker);
-            timeView.appendChild(this._minuteDisplay._picker);
-            timeView.appendChild(this._secondDisplay._picker);
-            const toolbar = document.createElement('div');
-            toolbar.classList.add(Namespace.css.toolbar);
-            toolbar.append(...this._toolbar);
-            if (this._context._options.display.inline) {
-                template.classList.add(Namespace.css.inline);
-            }
-            if (this._context._options.display.calendarWeeks) {
-                template.classList.add('calendarWeeks');
-            }
-            if (this._context._options.display.sideBySide &&
-                this._hasDate &&
-                this._hasTime) {
-                template.classList.add(Namespace.css.sideBySide);
-                if (this._context._options.display.toolbarPlacement === 'top') {
-                    template.appendChild(toolbar);
-                }
-                const row = document.createElement('div');
-                row.classList.add('td-row');
-                dateView.classList.add('td-half');
-                timeView.classList.add('td-half');
-                row.appendChild(dateView);
-                row.appendChild(timeView);
-                template.appendChild(row);
-                if (this._context._options.display.toolbarPlacement === 'bottom') {
-                    template.appendChild(toolbar);
-                }
-                this._widget = template;
-                return;
-            }
-            if (this._context._options.display.toolbarPlacement === 'top') {
-                template.appendChild(toolbar);
-            }
-            if (this._hasDate) {
-                if (this._hasTime) {
-                    dateView.classList.add(Namespace.css.collapse);
-                    if (this._context._options.display.viewMode !== 'clock')
-                        dateView.classList.add(Namespace.css.show);
-                }
-                template.appendChild(dateView);
-            }
-            if (this._hasTime) {
-                if (this._hasDate) {
-                    timeView.classList.add(Namespace.css.collapse);
-                    if (this._context._options.display.viewMode === 'clock')
-                        timeView.classList.add(Namespace.css.show);
-                }
-                template.appendChild(timeView);
-            }
-            if (this._context._options.display.toolbarPlacement === 'bottom') {
-                template.appendChild(toolbar);
-            }
-            const arrow = document.createElement('div');
-            arrow.classList.add('arrow');
-            arrow.setAttribute('data-popper-arrow', '');
-            template.appendChild(arrow);
-            this._widget = template;
-        }
-        /**
-         * Returns true if the hours, minutes, or seconds component is turned on
-         */
-        get _hasTime() {
-            return (this._context._options.display.components.clock &&
-                (this._context._options.display.components.hours ||
-                    this._context._options.display.components.minutes ||
-                    this._context._options.display.components.seconds));
-        }
-        /**
-         * Returns true if the year, month, or date component is turned on
-         */
-        get _hasDate() {
-            return (this._context._options.display.components.calendar &&
-                (this._context._options.display.components.year ||
-                    this._context._options.display.components.month ||
-                    this._context._options.display.components.date));
-        }
-        /**
-         * Get the toolbar html based on options like buttons.today
-         * @private
-         */
-        get _toolbar() {
-            const toolbar = [];
-            if (this._context._options.display.buttons.today) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.today);
-                div.setAttribute('title', this._context._options.localization.today);
-                div.appendChild(this._iconTag(this._context._options.display.icons.today));
-                toolbar.push(div);
-            }
-            if (!this._context._options.display.sideBySide &&
-                this._hasDate &&
-                this._hasTime) {
-                let title, icon;
-                if (this._context._options.display.viewMode === 'clock') {
-                    title = this._context._options.localization.selectDate;
-                    icon = this._context._options.display.icons.date;
-                }
-                else {
-                    title = this._context._options.localization.selectTime;
-                    icon = this._context._options.display.icons.time;
-                }
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.togglePicker);
-                div.setAttribute('title', title);
-                div.appendChild(this._iconTag(icon));
-                toolbar.push(div);
-            }
-            if (this._context._options.display.buttons.clear) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.clear);
-                div.setAttribute('title', this._context._options.localization.clear);
-                div.appendChild(this._iconTag(this._context._options.display.icons.clear));
-                toolbar.push(div);
-            }
-            if (this._context._options.display.buttons.close) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes.close);
-                div.setAttribute('title', this._context._options.localization.close);
-                div.appendChild(this._iconTag(this._context._options.display.icons.close));
-                toolbar.push(div);
-            }
-            return toolbar;
-        }
-        /***
-         * Builds the base header template with next and previous icons
-         * @private
-         */
-        get _headTemplate() {
-            const calendarHeader = document.createElement('div');
-            calendarHeader.classList.add(Namespace.css.calendarHeader);
-            const previous = document.createElement('div');
-            previous.classList.add(Namespace.css.previous);
-            previous.setAttribute('data-action', ActionTypes.previous);
-            previous.appendChild(this._iconTag(this._context._options.display.icons.previous));
-            const switcher = document.createElement('div');
-            switcher.classList.add(Namespace.css.switch);
-            switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
-            const next = document.createElement('div');
-            next.classList.add(Namespace.css.next);
-            next.setAttribute('data-action', ActionTypes.next);
-            next.appendChild(this._iconTag(this._context._options.display.icons.next));
-            calendarHeader.append(previous, switcher, next);
-            return calendarHeader;
-        }
-        /**
-         * Builds an icon tag as either an `<i>`
-         * or with icons.type is `sprites` then an svg tag instead
-         * @param iconClass
-         * @private
-         */
-        _iconTag(iconClass) {
-            if (this._context._options.display.icons.type === 'sprites') {
-                const svg = document.createElement('svg');
-                svg.innerHTML = `<use xlink:href='${iconClass}'></use>`;
-                return svg;
-            }
-            const icon = document.createElement('i');
-            DOMTokenList.prototype.add.apply(icon.classList, iconClass.split(' '));
-            return icon;
-        }
-        /**
-         * Causes the widget to get rebuilt on next show. If the picker is already open
-         * then hide and reshow it.
-         * @private
-         */
-        _rebuild() {
-            const wasVisible = this._isVisible;
-            if (wasVisible)
-                this.hide();
-            this._dispose();
-            if (wasVisible) {
-                this.show();
-            }
-        }
-    }
-
-    /**
-     * Main class for date validation rules based on the options provided.
-     */
-    class Validation {
-        constructor(context) {
-            this._context = context;
-        }
-        /**
-         * Checks to see if the target date is valid based on the rules provided in the options.
-         * Granularity can be provide to chek portions of the date instead of the whole.
-         * @param targetDate
-         * @param granularity
-         */
-        isValid(targetDate, granularity) {
-            var _a;
-            if (this._context._options.restrictions.disabledDates.length > 0 &&
-                this._isInDisabledDates(targetDate)) {
-                return false;
-            }
-            if (this._context._options.restrictions.enabledDates.length > 0 &&
-                !this._isInEnabledDates(targetDate)) {
-                return false;
-            }
-            if (((_a = this._context._options.restrictions.daysOfWeekDisabled) === null || _a === void 0 ? void 0 : _a.length) > 0 &&
-                this._context._options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
-                return false;
-            }
-            if (this._context._options.restrictions.minDate &&
-                targetDate.isBefore(this._context._options.restrictions.minDate, granularity)) {
-                return false;
-            }
-            if (this._context._options.restrictions.maxDate &&
-                targetDate.isAfter(this._context._options.restrictions.maxDate, granularity)) {
-                return false;
-            }
-            if (granularity === Unit.hours ||
-                granularity === Unit.minutes ||
-                granularity === Unit.seconds) {
-                if (this._context._options.restrictions.disabledHours.length > 0 &&
-                    this._isInDisabledHours(targetDate)) {
-                    return false;
-                }
-                if (this._context._options.restrictions.enabledHours.length > 0 &&
-                    !this._isInEnabledHours(targetDate)) {
-                    return false;
-                }
-                if (this._context._options.restrictions.disabledTimeIntervals.length > 0) {
-                    for (let i = 0; i < this._context._options.restrictions.disabledTimeIntervals.length; i++) {
-                        if (targetDate.isBetween(this._context._options.restrictions.disabledTimeIntervals[i].from, this._context._options.restrictions.disabledTimeIntervals[i].to))
-                            return false;
-                    }
-                }
-            }
-            return true;
-        }
-        /**
-         * Checks to see if the disabledDates option is in use and returns true (meaning invalid)
-         * if the `testDate` is with in the array. Granularity is by date.
-         * @param testDate
-         * @private
-         */
-        _isInDisabledDates(testDate) {
-            if (!this._context._options.restrictions.disabledDates ||
-                this._context._options.restrictions.disabledDates.length === 0)
-                return false;
-            const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-            return this._context._options.restrictions.disabledDates
-                .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
-                .find((x) => x === formattedDate);
-        }
-        /**
-         * Checks to see if the enabledDates option is in use and returns true (meaning valid)
-         * if the `testDate` is with in the array. Granularity is by date.
-         * @param testDate
-         * @private
-         */
-        _isInEnabledDates(testDate) {
-            if (!this._context._options.restrictions.enabledDates ||
-                this._context._options.restrictions.enabledDates.length === 0)
-                return true;
-            const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-            return this._context._options.restrictions.enabledDates
-                .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
-                .find((x) => x === formattedDate);
-        }
-        /**
-         * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
-         * if the `testDate` is with in the array. Granularity is by hours.
-         * @param testDate
-         * @private
-         */
-        _isInDisabledHours(testDate) {
-            if (!this._context._options.restrictions.disabledHours ||
-                this._context._options.restrictions.disabledHours.length === 0)
-                return false;
-            const formattedDate = testDate.hours;
-            return this._context._options.restrictions.disabledHours.find((x) => x === formattedDate);
-        }
-        /**
-         * Checks to see if the enabledHours option is in use and returns true (meaning valid)
-         * if the `testDate` is with in the array. Granularity is by hours.
-         * @param testDate
-         * @private
-         */
-        _isInEnabledHours(testDate) {
-            if (!this._context._options.restrictions.enabledHours ||
-                this._context._options.restrictions.enabledHours.length === 0)
-                return true;
-            const formattedDate = testDate.hours;
-            return this._context._options.restrictions.enabledHours.find((x) => x === formattedDate);
         }
     }
 
@@ -2903,7 +1664,7 @@
          * @param optionName Provides text to error messages e.g. disabledDates
          */
         static _dateConversion(d, optionName) {
-            if (typeof d === typeof '') {
+            if (typeof d === typeof '' && optionName !== 'input field') {
                 Namespace.errorMessages.dateString();
             }
             const converted = this._dateTypeCheck(d);
@@ -2940,6 +1701,1288 @@
         }
     }
 
+    class Dates {
+        constructor(context) {
+            this._dates = [];
+            this._context = context;
+        }
+        /**
+         * Returns the array of selected dates
+         */
+        get picked() {
+            return this._dates;
+        }
+        /**
+         * Returns the last picked value.
+         */
+        get lastPicked() {
+            return this._dates[this.lastPickedIndex];
+        }
+        /**
+         * Returns the length of picked dates -1 or 0 if none are selected.
+         */
+        get lastPickedIndex() {
+            if (this._dates.length === 0)
+                return 0;
+            return this._dates.length - 1;
+        }
+        /**
+         * Adds a new DateTime to selected dates array
+         * @param date
+         */
+        add(date) {
+            this._dates.push(date);
+        }
+        /**
+         * Tries to convert the provided value to a DateTime object.
+         * If value is null|undefined then clear the value of the provided index (or 0).
+         * @param value Value to convert or null|undefined
+         * @param index When using multidates this is the index in the array
+         * @param from Used in the warning message, useful for debugging.
+         */
+        set(value, index, from = 'date.set') {
+            if (!value)
+                this._setValue(value, index);
+            const converted = OptionConverter._dateConversion(value, 'input field');
+            if (converted !== undefined)
+                this._setValue(converted, index);
+            else
+                Namespace.errorMessages.failedToParseDate(from, value, true);
+        }
+        /**
+         * Returns true if the `targetDate` is part of the selected dates array.
+         * If `unit` is provided then a granularity to that unit will be used.
+         * @param targetDate
+         * @param unit
+         */
+        isPicked(targetDate, unit) {
+            if (!unit)
+                return this._dates.find((x) => x === targetDate) !== undefined;
+            const format = Dates.getFormatByUnit(unit);
+            let innerDateFormatted = targetDate.format(format);
+            return (this._dates
+                .map((x) => x.format(format))
+                .find((x) => x === innerDateFormatted) !== undefined);
+        }
+        /**
+         * Returns the index at which `targetDate` is in the array.
+         * This is used for updating or removing a date when multi-date is used
+         * If `unit` is provided then a granularity to that unit will be used.
+         * @param targetDate
+         * @param unit
+         */
+        pickedIndex(targetDate, unit) {
+            if (!unit)
+                return this._dates.indexOf(targetDate);
+            const format = Dates.getFormatByUnit(unit);
+            let innerDateFormatted = targetDate.format(format);
+            return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
+        }
+        /**
+         * Clears all selected dates.
+         */
+        clear() {
+            this._context._unset = true;
+            this._context._triggerEvent({
+                type: Namespace.events.change,
+                date: undefined,
+                oldDate: this.lastPicked,
+                isClear: true,
+                isValid: true,
+            });
+            this._dates = [];
+        }
+        /**
+         * Find the "book end" years given a `year` and a `factor`
+         * @param factor e.g. 100 for decades
+         * @param year e.g. 2021
+         */
+        static getStartEndYear(factor, year) {
+            const step = factor / 10, startYear = Math.floor(year / factor) * factor, endYear = startYear + step * 9, focusValue = Math.floor(year / step) * step;
+            return [startYear, endYear, focusValue];
+        }
+        /**
+         * Do not use direectly. Attempts to either clear or set the `target` date at `index`.
+         * If the `target` is null then the date will be cleared.
+         * If multi-date is being used then it will be removed from the array.
+         * If `target` is valid and multi-date is used then if `index` is
+         * provided the date at that index will be replaced, otherwise it is appended.
+         * @param target
+         * @param index
+         */
+        _setValue(target, index) {
+            const noIndex = typeof index === 'undefined', isClear = !target && noIndex;
+            let oldDate = this._context._unset ? null : this._dates[index];
+            if (!oldDate && !this._context._unset && noIndex && isClear) {
+                oldDate = this.lastPicked;
+            }
+            if (target && (oldDate === null || oldDate === void 0 ? void 0 : oldDate.isSame(target)))
+                return;
+            const updateInput = () => {
+                if (!this._context._input)
+                    return;
+                let newValue = (target === null || target === void 0 ? void 0 : target.format(this._context._options.display.inputFormat)) || '';
+                if (this._context._options.multipleDates) {
+                    newValue = this._dates
+                        .map((d) => d.format(this._context._options.display.inputFormat))
+                        .join(this._context._options.multipleDatesSeparator);
+                }
+                if (this._context._input.value != newValue)
+                    this._context._input.value = newValue;
+            };
+            // case of calling setValue(null)
+            if (!target) {
+                if (!this._context._options.multipleDates ||
+                    this._dates.length === 1 ||
+                    isClear) {
+                    this._context._unset = true;
+                    this._dates = [];
+                }
+                else {
+                    this._dates.splice(index, 1);
+                }
+                this._context._triggerEvent({
+                    type: Namespace.events.change,
+                    date: undefined,
+                    oldDate,
+                    isClear,
+                    isValid: true,
+                });
+                updateInput();
+                this._context._display._update('all');
+                return;
+            }
+            index = index || 0;
+            target = target.clone;
+            // minute stepping is being used, force the minute to the closest value
+            if (this._context._options.stepping !== 1) {
+                target.minutes =
+                    Math.round(target.minutes / this._context._options.stepping) *
+                        this._context._options.stepping;
+                target.seconds = 0;
+            }
+            if (this._context._validation.isValid(target)) {
+                this._dates[index] = target;
+                this._context._viewDate = target.clone;
+                updateInput();
+                this._context._unset = false;
+                this._context._display._update('all');
+                this._context._triggerEvent({
+                    type: Namespace.events.change,
+                    date: target,
+                    oldDate,
+                    isClear,
+                    isValid: true,
+                });
+                return;
+            }
+            if (this._context._options.keepInvalid) {
+                this._dates[index] = target;
+                this._context._viewDate = target.clone;
+                updateInput();
+                this._context._triggerEvent({
+                    type: Namespace.events.change,
+                    date: target,
+                    oldDate,
+                    isClear,
+                    isValid: false,
+                });
+            }
+            this._context._triggerEvent({
+                type: Namespace.events.error,
+                reason: Namespace.errorMessages.failedToSetInvalidDate,
+                date: target,
+                oldDate,
+            });
+        }
+        /**
+         * Returns a format object based on the granularity of `unit`
+         * @param unit
+         */
+        static getFormatByUnit(unit) {
+            switch (unit) {
+                case 'date':
+                    return { dateStyle: 'short' };
+                case 'month':
+                    return {
+                        month: 'numeric',
+                        year: 'numeric',
+                    };
+                case 'year':
+                    return { year: 'numeric' };
+            }
+        }
+    }
+
+    /**
+     * Creates and updates the grid for `year`
+     */
+    class YearDisplay {
+        constructor(context) {
+            this._context = context;
+        }
+        /**
+         * Build the container html for the display
+         * @private
+         */
+        get _picker() {
+            const container = document.createElement('div');
+            container.classList.add(Namespace.css.yearsContainer);
+            for (let i = 0; i < 12; i++) {
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.selectYear);
+                container.appendChild(div);
+            }
+            return container;
+        }
+        /**
+         * Populates the grid and updates enabled states
+         * @private
+         */
+        _update() {
+            Dates.getStartEndYear(10, this._context._viewDate.year);
+            this._startYear = this._context._viewDate.clone.manipulate(-1, exports.Unit.year);
+            this._endYear = this._context._viewDate.clone.manipulate(10, exports.Unit.year);
+            const container = this._context._display.widget.getElementsByClassName(Namespace.css.yearsContainer)[0];
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                .getElementsByTagName('div');
+            switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.year}-${this._endYear.year}`);
+            this._context._validation.isValid(this._startYear, exports.Unit.year)
+                ? previous.classList.remove(Namespace.css.disabled)
+                : previous.classList.add(Namespace.css.disabled);
+            this._context._validation.isValid(this._endYear, exports.Unit.year)
+                ? next.classList.remove(Namespace.css.disabled)
+                : next.classList.add(Namespace.css.disabled);
+            let innerDate = this._context._viewDate.clone
+                .startOf(exports.Unit.year)
+                .manipulate(-1, exports.Unit.year);
+            container
+                .querySelectorAll(`[data-action="${ActionTypes.selectYear}"]`)
+                .forEach((containerClone, index) => {
+                let classes = [];
+                classes.push(Namespace.css.year);
+                if (!this._context._unset &&
+                    this._context.dates.isPicked(innerDate, exports.Unit.year)) {
+                    classes.push(Namespace.css.active);
+                }
+                if (!this._context._validation.isValid(innerDate, exports.Unit.year)) {
+                    classes.push(Namespace.css.disabled);
+                }
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${innerDate.year}`);
+                containerClone.innerText = `${innerDate.year}`;
+                innerDate.manipulate(1, exports.Unit.year);
+            });
+        }
+    }
+
+    /**
+     * Creates and updates the grid for `seconds`
+     */
+    class DecadeDisplay {
+        constructor(context) {
+            this._context = context;
+        }
+        /**
+         * Build the container html for the display
+         * @private
+         */
+        get _picker() {
+            const container = document.createElement('div');
+            container.classList.add(Namespace.css.decadesContainer);
+            for (let i = 0; i < 12; i++) {
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.selectDecade);
+                container.appendChild(div);
+            }
+            return container;
+        }
+        /**
+         * Populates the grid and updates enabled states
+         * @private
+         */
+        _update() {
+            const [start, end] = Dates.getStartEndYear(100, this._context._viewDate.year);
+            this._startDecade = this._context._viewDate.clone.startOf(exports.Unit.year);
+            this._startDecade.year = start;
+            this._endDecade = this._context._viewDate.clone.startOf(exports.Unit.year);
+            this._endDecade.year = end;
+            const container = this._context._display.widget.getElementsByClassName(Namespace.css.decadesContainer)[0];
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                .getElementsByTagName('div');
+            switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.year}-${this._endDecade.year}`);
+            this._context._validation.isValid(this._startDecade, exports.Unit.year)
+                ? previous.classList.remove(Namespace.css.disabled)
+                : previous.classList.add(Namespace.css.disabled);
+            this._context._validation.isValid(this._endDecade, exports.Unit.year)
+                ? next.classList.remove(Namespace.css.disabled)
+                : next.classList.add(Namespace.css.disabled);
+            const pickedYears = this._context.dates.picked.map((x) => x.year);
+            container
+                .querySelectorAll(`[data-action="${ActionTypes.selectDecade}"]`)
+                .forEach((containerClone, index) => {
+                if (index === 0) {
+                    containerClone.classList.add(Namespace.css.old);
+                    if (this._startDecade.year - 10 < 0) {
+                        containerClone.textContent = ' ';
+                        previous.classList.add(Namespace.css.disabled);
+                        containerClone.classList.add(Namespace.css.disabled);
+                        containerClone.setAttribute('data-value', ``);
+                        return;
+                    }
+                    else {
+                        containerClone.innerText = `${this._startDecade.year - 10}`;
+                        containerClone.setAttribute('data-value', `${this._startDecade.year}`);
+                        return;
+                    }
+                }
+                let classes = [];
+                classes.push(Namespace.css.decade);
+                const startDecadeYear = this._startDecade.year;
+                const endDecadeYear = this._startDecade.year + 9;
+                if (!this._context._unset &&
+                    pickedYears.filter((x) => x >= startDecadeYear && x <= endDecadeYear)
+                        .length > 0) {
+                    classes.push(Namespace.css.active);
+                }
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${this._startDecade.year}`);
+                containerClone.innerText = `${this._startDecade.year}`;
+                this._startDecade.manipulate(10, exports.Unit.year);
+            });
+        }
+    }
+
+    /**
+     * Creates the clock display
+     */
+    class TimeDisplay {
+        constructor(context) {
+            this._gridColumns = '';
+            this._context = context;
+        }
+        /**
+         * Build the container html for the clock display
+         * @private
+         */
+        get _picker() {
+            const container = document.createElement('div');
+            container.classList.add(Namespace.css.clockContainer);
+            container.append(...this._grid());
+            return container;
+        }
+        /**
+         * Populates the various elements with in the clock display
+         * like the current hour and if the manipulation icons are enabled.
+         * @private
+         */
+        _update() {
+            const timesDiv = (this._context._display.widget.getElementsByClassName(Namespace.css.clockContainer)[0]);
+            const lastPicked = (this._context.dates.lastPicked || this._context._viewDate).clone;
+            timesDiv
+                .querySelectorAll('.disabled')
+                .forEach((element) => element.classList.remove(Namespace.css.disabled));
+            if (this._context._options.display.components.hours) {
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.hours), exports.Unit.hours)) {
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.incrementHours}]`)
+                        .classList.add(Namespace.css.disabled);
+                }
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.hours), exports.Unit.hours)) {
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.decrementHours}]`)
+                        .classList.add(Namespace.css.disabled);
+                }
+                timesDiv.querySelector(`[data-time-component=${exports.Unit.hours}]`).innerText = this._context._options.display.components.useTwentyfourHour
+                    ? lastPicked.hoursFormatted
+                    : lastPicked.twelveHoursFormatted;
+            }
+            if (this._context._options.display.components.minutes) {
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.minutes), exports.Unit.minutes)) {
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.incrementMinutes}]`)
+                        .classList.add(Namespace.css.disabled);
+                }
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.minutes), exports.Unit.minutes)) {
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.decrementMinutes}]`)
+                        .classList.add(Namespace.css.disabled);
+                }
+                timesDiv.querySelector(`[data-time-component=${exports.Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
+            }
+            if (this._context._options.display.components.seconds) {
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(1, exports.Unit.seconds), exports.Unit.seconds)) {
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.incrementSeconds}]`)
+                        .classList.add(Namespace.css.disabled);
+                }
+                if (!this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, exports.Unit.seconds), exports.Unit.seconds)) {
+                    timesDiv
+                        .querySelector(`[data-action=${ActionTypes.decrementSeconds}]`)
+                        .classList.add(Namespace.css.disabled);
+                }
+                timesDiv.querySelector(`[data-time-component=${exports.Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
+            }
+            if (!this._context._options.display.components.useTwentyfourHour) {
+                const toggle = timesDiv.querySelector(`[data-action=${ActionTypes.toggleMeridiem}]`);
+                toggle.innerText = lastPicked.meridiem();
+                if (!this._context._validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, exports.Unit.hours))) {
+                    toggle.classList.add(Namespace.css.disabled);
+                }
+                else {
+                    toggle.classList.remove(Namespace.css.disabled);
+                }
+            }
+            timesDiv.style.gridTemplateAreas = `"${this._gridColumns}"`;
+        }
+        /**
+         * Creates the table for the clock display depending on what options are selected.
+         * @private
+         */
+        _grid() {
+            this._gridColumns = '';
+            const top = [], middle = [], bottom = [], separator = document.createElement('div'), upIcon = this._context._display._iconTag(this._context._options.display.icons.up), downIcon = this._context._display._iconTag(this._context._options.display.icons.down);
+            separator.classList.add(Namespace.css.separator, Namespace.css.noHighlight);
+            const separatorColon = separator.cloneNode(true);
+            separatorColon.innerHTML = ':';
+            const getSeparator = (colon = false) => {
+                return colon
+                    ? separatorColon.cloneNode(true)
+                    : separator.cloneNode(true);
+            };
+            if (this._context._options.display.components.hours) {
+                let divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.incrementHour);
+                divElement.setAttribute('data-action', ActionTypes.incrementHours);
+                divElement.appendChild(upIcon.cloneNode(true));
+                top.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.pickHour);
+                divElement.setAttribute('data-action', ActionTypes.showHours);
+                divElement.setAttribute('data-time-component', exports.Unit.hours);
+                middle.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.decrementHour);
+                divElement.setAttribute('data-action', ActionTypes.decrementHours);
+                divElement.appendChild(downIcon.cloneNode(true));
+                bottom.push(divElement);
+                this._gridColumns += 'a';
+            }
+            if (this._context._options.display.components.minutes) {
+                this._gridColumns += ' a';
+                if (this._context._options.display.components.hours) {
+                    top.push(getSeparator());
+                    middle.push(getSeparator(true));
+                    bottom.push(getSeparator());
+                    this._gridColumns += ' a';
+                }
+                let divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.incrementMinute);
+                divElement.setAttribute('data-action', ActionTypes.incrementMinutes);
+                divElement.appendChild(upIcon.cloneNode(true));
+                top.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.pickMinute);
+                divElement.setAttribute('data-action', ActionTypes.showMinutes);
+                divElement.setAttribute('data-time-component', exports.Unit.minutes);
+                middle.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.decrementMinute);
+                divElement.setAttribute('data-action', ActionTypes.decrementMinutes);
+                divElement.appendChild(downIcon.cloneNode(true));
+                bottom.push(divElement);
+            }
+            if (this._context._options.display.components.seconds) {
+                this._gridColumns += ' a';
+                if (this._context._options.display.components.minutes) {
+                    top.push(getSeparator());
+                    middle.push(getSeparator(true));
+                    bottom.push(getSeparator());
+                    this._gridColumns += ' a';
+                }
+                let divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.incrementSecond);
+                divElement.setAttribute('data-action', ActionTypes.incrementSeconds);
+                divElement.appendChild(upIcon.cloneNode(true));
+                top.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.pickSecond);
+                divElement.setAttribute('data-action', ActionTypes.showSeconds);
+                divElement.setAttribute('data-time-component', exports.Unit.seconds);
+                middle.push(divElement);
+                divElement = document.createElement('div');
+                divElement.setAttribute('title', this._context._options.localization.decrementSecond);
+                divElement.setAttribute('data-action', ActionTypes.decrementSeconds);
+                divElement.appendChild(downIcon.cloneNode(true));
+                bottom.push(divElement);
+            }
+            if (!this._context._options.display.components.useTwentyfourHour) {
+                this._gridColumns += ' a';
+                let divElement = getSeparator();
+                top.push(divElement);
+                let button = document.createElement('button');
+                button.setAttribute('title', this._context._options.localization.toggleMeridiem);
+                button.setAttribute('data-action', ActionTypes.toggleMeridiem);
+                button.setAttribute('tabindex', '-1');
+                button.classList.add(Namespace.css.toggleMeridiem);
+                divElement = document.createElement('div');
+                divElement.classList.add(Namespace.css.noHighlight);
+                divElement.appendChild(button);
+                middle.push(divElement);
+                divElement = getSeparator();
+                bottom.push(divElement);
+            }
+            this._gridColumns = this._gridColumns.trim();
+            return [...top, ...middle, ...bottom];
+        }
+    }
+
+    /**
+     * Creates and updates the grid for `hours`
+     */
+    class HourDisplay {
+        constructor(context) {
+            this._context = context;
+        }
+        /**
+         * Build the container html for the display
+         * @private
+         */
+        get _picker() {
+            const container = document.createElement('div');
+            container.classList.add(Namespace.css.hourContainer);
+            for (let i = 0; i <
+                (this._context._options.display.components.useTwentyfourHour ? 24 : 12); i++) {
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.selectHour);
+                container.appendChild(div);
+            }
+            return container;
+        }
+        /**
+         * Populates the grid and updates enabled states
+         * @private
+         */
+        _update() {
+            const container = this._context._display.widget.getElementsByClassName(Namespace.css.hourContainer)[0];
+            let innerDate = this._context._viewDate.clone.startOf(exports.Unit.date);
+            container
+                .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
+                .forEach((containerClone, index) => {
+                let classes = [];
+                classes.push(Namespace.css.hour);
+                if (!this._context._validation.isValid(innerDate, exports.Unit.hours)) {
+                    classes.push(Namespace.css.disabled);
+                }
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${innerDate.hours}`);
+                containerClone.innerText = this._context._options.display.components
+                    .useTwentyfourHour
+                    ? innerDate.hoursFormatted
+                    : innerDate.twelveHoursFormatted;
+                innerDate.manipulate(1, exports.Unit.hours);
+            });
+        }
+    }
+
+    /**
+     * Creates and updates the grid for `minutes`
+     */
+    class MinuteDisplay {
+        constructor(context) {
+            this._context = context;
+        }
+        /**
+         * Build the container html for the display
+         * @private
+         */
+        get _picker() {
+            const container = document.createElement('div');
+            container.classList.add(Namespace.css.minuteContainer);
+            let step = this._context._options.stepping === 1
+                ? 5
+                : this._context._options.stepping;
+            for (let i = 0; i < 60 / step; i++) {
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.selectMinute);
+                container.appendChild(div);
+            }
+            return container;
+        }
+        /**
+         * Populates the grid and updates enabled states
+         * @private
+         */
+        _update() {
+            const container = this._context._display.widget.getElementsByClassName(Namespace.css.minuteContainer)[0];
+            let innerDate = this._context._viewDate.clone.startOf(exports.Unit.hours);
+            let step = this._context._options.stepping === 1
+                ? 5
+                : this._context._options.stepping;
+            container
+                .querySelectorAll(`[data-action="${ActionTypes.selectMinute}"]`)
+                .forEach((containerClone, index) => {
+                let classes = [];
+                classes.push(Namespace.css.minute);
+                if (!this._context._validation.isValid(innerDate, exports.Unit.minutes)) {
+                    classes.push(Namespace.css.disabled);
+                }
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${innerDate.minutes}`);
+                containerClone.innerText = innerDate.minutesFormatted;
+                innerDate.manipulate(step, exports.Unit.minutes);
+            });
+        }
+    }
+
+    /**
+     * Creates and updates the grid for `seconds`
+     */
+    class secondDisplay {
+        constructor(context) {
+            this._context = context;
+        }
+        /**
+         * Build the container html for the display
+         * @private
+         */
+        get _picker() {
+            const container = document.createElement('div');
+            container.classList.add(Namespace.css.secondContainer);
+            for (let i = 0; i < 12; i++) {
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.selectSecond);
+                container.appendChild(div);
+            }
+            return container;
+        }
+        /**
+         * Populates the grid and updates enabled states
+         * @private
+         */
+        _update() {
+            const container = this._context._display.widget.getElementsByClassName(Namespace.css.secondContainer)[0];
+            let innerDate = this._context._viewDate.clone.startOf(exports.Unit.minutes);
+            container
+                .querySelectorAll(`[data-action="${ActionTypes.selectSecond}"]`)
+                .forEach((containerClone, index) => {
+                let classes = [];
+                classes.push(Namespace.css.second);
+                if (!this._context._validation.isValid(innerDate, exports.Unit.seconds)) {
+                    classes.push(Namespace.css.disabled);
+                }
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute('data-value', `${innerDate.seconds}`);
+                containerClone.innerText = innerDate.secondsFormatted;
+                innerDate.manipulate(5, exports.Unit.seconds);
+            });
+        }
+    }
+
+    /**
+     * Main class for all things display related.
+     */
+    class Display {
+        constructor(context) {
+            this._isVisible = false;
+            /**
+             * A document click event to hide the widget if click is outside
+             * @private
+             * @param e MouseEvent
+             */
+            this._documentClickEvent = (e) => {
+                var _a;
+                if (this._isVisible &&
+                    !e.composedPath().includes(this.widget) && // click inside the widget
+                    !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this._context._element)) && // click on the element
+                    (!this._context._options.display.keepOpen ||
+                        !this._context._options.debug ||
+                        !window.debug)) {
+                    this.hide();
+                }
+            };
+            /**
+             * Click event for any action like selecting a date
+             * @param e MouseEvent
+             * @private
+             */
+            this._actionsClickEvent = (e) => {
+                this._context._action.do(e);
+            };
+            this._context = context;
+            this._dateDisplay = new DateDisplay(context);
+            this._monthDisplay = new MonthDisplay(context);
+            this._yearDisplay = new YearDisplay(context);
+            this._decadeDisplay = new DecadeDisplay(context);
+            this._timeDisplay = new TimeDisplay(context);
+            this._hourDisplay = new HourDisplay(context);
+            this._minuteDisplay = new MinuteDisplay(context);
+            this._secondDisplay = new secondDisplay(context);
+            this._widget = undefined;
+        }
+        /**
+         * Returns the widget body or undefined
+         * @private
+         */
+        get widget() {
+            return this._widget;
+        }
+        /**
+         * Returns this visible state of the picker (shown)
+         */
+        get isVisible() {
+            return this._isVisible;
+        }
+        /**
+         * Updates the table for a particular unit. Used when an option as changed or
+         * whenever the class list might need to be refreshed.
+         * @param unit
+         * @private
+         */
+        _update(unit) {
+            if (!this.widget)
+                return;
+            //todo do I want some kind of error catching or other guards here?
+            switch (unit) {
+                case exports.Unit.seconds:
+                    this._secondDisplay._update();
+                    break;
+                case exports.Unit.minutes:
+                    this._minuteDisplay._update();
+                    break;
+                case exports.Unit.hours:
+                    this._hourDisplay._update();
+                    break;
+                case exports.Unit.date:
+                    this._dateDisplay._update();
+                    break;
+                case exports.Unit.month:
+                    this._monthDisplay._update();
+                    break;
+                case exports.Unit.year:
+                    this._yearDisplay._update();
+                    break;
+                case 'clock':
+                    this._timeDisplay._update();
+                    this._update(exports.Unit.hours);
+                    this._update(exports.Unit.minutes);
+                    this._update(exports.Unit.seconds);
+                    break;
+                case 'calendar':
+                    this._update(exports.Unit.date);
+                    this._update(exports.Unit.year);
+                    this._update(exports.Unit.month);
+                    this._decadeDisplay._update();
+                    this._updateCalendarHeader();
+                    break;
+                case 'all':
+                    if (this._hasTime) {
+                        this._update('clock');
+                    }
+                    if (this._hasDate) {
+                        this._update('calendar');
+                    }
+            }
+        }
+        /**
+         * Shows the picker and creates a Popper instance if needed.
+         * Add document click event to hide when clicking outside the picker.
+         * @fires Events#show
+         */
+        show() {
+            var _a, _b;
+            if (this.widget == undefined) {
+                if (this._context._options.useCurrent &&
+                    !this._context._options.defaultDate &&
+                    !((_a = this._context._input) === null || _a === void 0 ? void 0 : _a.value)) {
+                    //todo in the td4 branch a pr changed this to allow granularity
+                    const date = new DateTime().setLocale(this._context._options.localization.locale);
+                    if (!this._context._options.keepInvalid) {
+                        let tries = 0;
+                        let direction = 1;
+                        if ((_b = this._context._options.restrictions.maxDate) === null || _b === void 0 ? void 0 : _b.isBefore(date)) {
+                            direction = -1;
+                        }
+                        while (!this._context._validation.isValid(date)) {
+                            date.manipulate(direction, exports.Unit.date);
+                            if (tries > 31)
+                                break;
+                            tries++;
+                        }
+                    }
+                    this._context.dates._setValue(date);
+                }
+                if (this._context._options.defaultDate) {
+                    this._context.dates._setValue(this._context._options.defaultDate);
+                }
+                this._buildWidget();
+                if (this._hasDate) {
+                    this._showMode();
+                }
+                if (!this._context._options.display.inline) {
+                    document.body.appendChild(this.widget);
+                    this._popperInstance = core.createPopper(this._context._element, this.widget, {
+                        modifiers: [
+                            /*  {
+                                name: 'offset',
+                                options: {
+                                  offset: [2, 8],
+                                },
+                              },*/
+                            { name: 'eventListeners', enabled: true },
+                        ],
+                        placement: 'bottom-start',
+                    });
+                }
+                else {
+                    this._context._element.appendChild(this.widget);
+                }
+                if (this._context._options.display.viewMode == 'clock') {
+                    this._context._action.do({
+                        currentTarget: this.widget.querySelector(`.${Namespace.css.timeContainer}`),
+                    }, ActionTypes.showClock);
+                }
+                this.widget
+                    .querySelectorAll('[data-action]')
+                    .forEach((element) => element.addEventListener('click', this._actionsClickEvent));
+                // show the clock when using sideBySide
+                if (this._context._options.display.sideBySide) {
+                    this._timeDisplay._update();
+                    this.widget.getElementsByClassName(Namespace.css.clockContainer)[0].style.display = 'grid';
+                }
+            }
+            this.widget.classList.add(Namespace.css.show);
+            if (!this._context._options.display.inline) {
+                this._popperInstance.update();
+                document.addEventListener('click', this._documentClickEvent);
+            }
+            this._context._triggerEvent({ type: Namespace.events.show });
+            this._isVisible = true;
+        }
+        /**
+         * Changes the calendar view mode. E.g. month <-> year
+         * @param direction -/+ number to move currentViewMode
+         * @private
+         */
+        _showMode(direction) {
+            if (!this.widget) {
+                return;
+            }
+            if (direction) {
+                const max = Math.max(this._context._minViewModeNumber, Math.min(3, this._context._currentViewMode + direction));
+                if (this._context._currentViewMode == max)
+                    return;
+                this._context._currentViewMode = max;
+            }
+            this.widget
+                .querySelectorAll(`.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div`)
+                .forEach((e) => (e.style.display = 'none'));
+            const datePickerMode = DatePickerModes[this._context._currentViewMode];
+            let picker = this.widget.querySelector(`.${datePickerMode.className}`);
+            switch (datePickerMode.className) {
+                case Namespace.css.decadesContainer:
+                    this._decadeDisplay._update();
+                    break;
+                case Namespace.css.yearsContainer:
+                    this._yearDisplay._update();
+                    break;
+                case Namespace.css.monthsContainer:
+                    this._monthDisplay._update();
+                    break;
+                case Namespace.css.daysContainer:
+                    this._dateDisplay._update();
+                    break;
+            }
+            picker.style.display = 'grid';
+            this._updateCalendarHeader();
+        }
+        _updateCalendarHeader() {
+            const showing = [
+                ...this.widget.querySelector(`.${Namespace.css.dateContainer} div[style*="display: grid"]`).classList,
+            ].find((x) => x.startsWith(Namespace.css.dateContainer));
+            const [previous, switcher, next] = this._context._display.widget
+                .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                .getElementsByTagName('div');
+            switch (showing) {
+                case Namespace.css.decadesContainer:
+                    previous.setAttribute('title', this._context._options.localization.previousCentury);
+                    switcher.setAttribute('title', '');
+                    next.setAttribute('title', this._context._options.localization.nextCentury);
+                    break;
+                case Namespace.css.yearsContainer:
+                    previous.setAttribute('title', this._context._options.localization.previousDecade);
+                    switcher.setAttribute('title', this._context._options.localization.selectDecade);
+                    next.setAttribute('title', this._context._options.localization.nextDecade);
+                    break;
+                case Namespace.css.monthsContainer:
+                    previous.setAttribute('title', this._context._options.localization.previousYear);
+                    switcher.setAttribute('title', this._context._options.localization.selectYear);
+                    next.setAttribute('title', this._context._options.localization.nextYear);
+                    break;
+                case Namespace.css.daysContainer:
+                    previous.setAttribute('title', this._context._options.localization.previousMonth);
+                    switcher.setAttribute('title', this._context._options.localization.selectMonth);
+                    next.setAttribute('title', this._context._options.localization.nextMonth);
+                    switcher.innerText = this._context._viewDate.format({
+                        month: this._context._options.localization.dayViewHeaderFormat,
+                    });
+                    break;
+            }
+            switcher.innerText = switcher.getAttribute(showing);
+        }
+        /**
+         * Hides the picker if needed.
+         * Remove document click event to hide when clicking outside the picker.
+         * @fires Events#hide
+         */
+        hide() {
+            if (!this.widget || !this._isVisible)
+                return;
+            this.widget.classList.remove(Namespace.css.show);
+            if (this._isVisible) {
+                this._context._triggerEvent({
+                    type: Namespace.events.hide,
+                    date: this._context._unset
+                        ? null
+                        : this._context.dates.lastPicked
+                            ? this._context.dates.lastPicked.clone
+                            : void 0,
+                });
+                this._isVisible = false;
+            }
+            document.removeEventListener('click', this._documentClickEvent);
+        }
+        /**
+         * Toggles the picker's open state. Fires a show/hide event depending.
+         */
+        toggle() {
+            return this._isVisible ? this.hide() : this.show();
+        }
+        /**
+         * Removes document and data-action click listener and reset the widget
+         * @private
+         */
+        _dispose() {
+            document.removeEventListener('click', this._documentClickEvent);
+            if (!this.widget)
+                return;
+            this.widget
+                .querySelectorAll('[data-action]')
+                .forEach((element) => element.removeEventListener('click', this._actionsClickEvent));
+            this.widget.parentNode.removeChild(this.widget);
+            this._widget = undefined;
+        }
+        /**
+         * Builds the widgets html template.
+         * @private
+         */
+        _buildWidget() {
+            const template = document.createElement('div');
+            template.classList.add(Namespace.css.widget);
+            const dateView = document.createElement('div');
+            dateView.classList.add(Namespace.css.dateContainer);
+            dateView.append(this._headTemplate, this._decadeDisplay._picker, this._yearDisplay._picker, this._monthDisplay._picker, this._dateDisplay._picker);
+            const timeView = document.createElement('div');
+            timeView.classList.add(Namespace.css.timeContainer);
+            timeView.appendChild(this._timeDisplay._picker);
+            timeView.appendChild(this._hourDisplay._picker);
+            timeView.appendChild(this._minuteDisplay._picker);
+            timeView.appendChild(this._secondDisplay._picker);
+            const toolbar = document.createElement('div');
+            toolbar.classList.add(Namespace.css.toolbar);
+            toolbar.append(...this._toolbar);
+            if (this._context._options.display.inline) {
+                template.classList.add(Namespace.css.inline);
+            }
+            if (this._context._options.display.calendarWeeks) {
+                template.classList.add('calendarWeeks');
+            }
+            if (this._context._options.display.sideBySide &&
+                this._hasDate &&
+                this._hasTime) {
+                template.classList.add(Namespace.css.sideBySide);
+                if (this._context._options.display.toolbarPlacement === 'top') {
+                    template.appendChild(toolbar);
+                }
+                const row = document.createElement('div');
+                row.classList.add('td-row');
+                dateView.classList.add('td-half');
+                timeView.classList.add('td-half');
+                row.appendChild(dateView);
+                row.appendChild(timeView);
+                template.appendChild(row);
+                if (this._context._options.display.toolbarPlacement === 'bottom') {
+                    template.appendChild(toolbar);
+                }
+                this._widget = template;
+                return;
+            }
+            if (this._context._options.display.toolbarPlacement === 'top') {
+                template.appendChild(toolbar);
+            }
+            if (this._hasDate) {
+                if (this._hasTime) {
+                    dateView.classList.add(Namespace.css.collapse);
+                    if (this._context._options.display.viewMode !== 'clock')
+                        dateView.classList.add(Namespace.css.show);
+                }
+                template.appendChild(dateView);
+            }
+            if (this._hasTime) {
+                if (this._hasDate) {
+                    timeView.classList.add(Namespace.css.collapse);
+                    if (this._context._options.display.viewMode === 'clock')
+                        timeView.classList.add(Namespace.css.show);
+                }
+                template.appendChild(timeView);
+            }
+            if (this._context._options.display.toolbarPlacement === 'bottom') {
+                template.appendChild(toolbar);
+            }
+            const arrow = document.createElement('div');
+            arrow.classList.add('arrow');
+            arrow.setAttribute('data-popper-arrow', '');
+            template.appendChild(arrow);
+            this._widget = template;
+        }
+        /**
+         * Returns true if the hours, minutes, or seconds component is turned on
+         */
+        get _hasTime() {
+            return (this._context._options.display.components.clock &&
+                (this._context._options.display.components.hours ||
+                    this._context._options.display.components.minutes ||
+                    this._context._options.display.components.seconds));
+        }
+        /**
+         * Returns true if the year, month, or date component is turned on
+         */
+        get _hasDate() {
+            return (this._context._options.display.components.calendar &&
+                (this._context._options.display.components.year ||
+                    this._context._options.display.components.month ||
+                    this._context._options.display.components.date));
+        }
+        /**
+         * Get the toolbar html based on options like buttons.today
+         * @private
+         */
+        get _toolbar() {
+            const toolbar = [];
+            if (this._context._options.display.buttons.today) {
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.today);
+                div.setAttribute('title', this._context._options.localization.today);
+                div.appendChild(this._iconTag(this._context._options.display.icons.today));
+                toolbar.push(div);
+            }
+            if (!this._context._options.display.sideBySide &&
+                this._hasDate &&
+                this._hasTime) {
+                let title, icon;
+                if (this._context._options.display.viewMode === 'clock') {
+                    title = this._context._options.localization.selectDate;
+                    icon = this._context._options.display.icons.date;
+                }
+                else {
+                    title = this._context._options.localization.selectTime;
+                    icon = this._context._options.display.icons.time;
+                }
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.togglePicker);
+                div.setAttribute('title', title);
+                div.appendChild(this._iconTag(icon));
+                toolbar.push(div);
+            }
+            if (this._context._options.display.buttons.clear) {
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.clear);
+                div.setAttribute('title', this._context._options.localization.clear);
+                div.appendChild(this._iconTag(this._context._options.display.icons.clear));
+                toolbar.push(div);
+            }
+            if (this._context._options.display.buttons.close) {
+                const div = document.createElement('div');
+                div.setAttribute('data-action', ActionTypes.close);
+                div.setAttribute('title', this._context._options.localization.close);
+                div.appendChild(this._iconTag(this._context._options.display.icons.close));
+                toolbar.push(div);
+            }
+            return toolbar;
+        }
+        /***
+         * Builds the base header template with next and previous icons
+         * @private
+         */
+        get _headTemplate() {
+            const calendarHeader = document.createElement('div');
+            calendarHeader.classList.add(Namespace.css.calendarHeader);
+            const previous = document.createElement('div');
+            previous.classList.add(Namespace.css.previous);
+            previous.setAttribute('data-action', ActionTypes.previous);
+            previous.appendChild(this._iconTag(this._context._options.display.icons.previous));
+            const switcher = document.createElement('div');
+            switcher.classList.add(Namespace.css.switch);
+            switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
+            const next = document.createElement('div');
+            next.classList.add(Namespace.css.next);
+            next.setAttribute('data-action', ActionTypes.next);
+            next.appendChild(this._iconTag(this._context._options.display.icons.next));
+            calendarHeader.append(previous, switcher, next);
+            return calendarHeader;
+        }
+        /**
+         * Builds an icon tag as either an `<i>`
+         * or with icons.type is `sprites` then an svg tag instead
+         * @param iconClass
+         * @private
+         */
+        _iconTag(iconClass) {
+            if (this._context._options.display.icons.type === 'sprites') {
+                const svg = document.createElement('svg');
+                svg.innerHTML = `<use xlink:href='${iconClass}'></use>`;
+                return svg;
+            }
+            const icon = document.createElement('i');
+            DOMTokenList.prototype.add.apply(icon.classList, iconClass.split(' '));
+            return icon;
+        }
+        /**
+         * Causes the widget to get rebuilt on next show. If the picker is already open
+         * then hide and reshow it.
+         * @private
+         */
+        _rebuild() {
+            const wasVisible = this._isVisible;
+            if (wasVisible)
+                this.hide();
+            this._dispose();
+            if (wasVisible) {
+                this.show();
+            }
+        }
+    }
+
+    /**
+     * Main class for date validation rules based on the options provided.
+     */
+    class Validation {
+        constructor(context) {
+            this._context = context;
+        }
+        /**
+         * Checks to see if the target date is valid based on the rules provided in the options.
+         * Granularity can be provide to chek portions of the date instead of the whole.
+         * @param targetDate
+         * @param granularity
+         */
+        isValid(targetDate, granularity) {
+            var _a;
+            if (this._context._options.restrictions.disabledDates.length > 0 &&
+                this._isInDisabledDates(targetDate)) {
+                return false;
+            }
+            if (this._context._options.restrictions.enabledDates.length > 0 &&
+                !this._isInEnabledDates(targetDate)) {
+                return false;
+            }
+            if (((_a = this._context._options.restrictions.daysOfWeekDisabled) === null || _a === void 0 ? void 0 : _a.length) > 0 &&
+                this._context._options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
+                return false;
+            }
+            if (this._context._options.restrictions.minDate &&
+                targetDate.isBefore(this._context._options.restrictions.minDate, granularity)) {
+                return false;
+            }
+            if (this._context._options.restrictions.maxDate &&
+                targetDate.isAfter(this._context._options.restrictions.maxDate, granularity)) {
+                return false;
+            }
+            if (granularity === exports.Unit.hours ||
+                granularity === exports.Unit.minutes ||
+                granularity === exports.Unit.seconds) {
+                if (this._context._options.restrictions.disabledHours.length > 0 &&
+                    this._isInDisabledHours(targetDate)) {
+                    return false;
+                }
+                if (this._context._options.restrictions.enabledHours.length > 0 &&
+                    !this._isInEnabledHours(targetDate)) {
+                    return false;
+                }
+                if (this._context._options.restrictions.disabledTimeIntervals.length > 0) {
+                    for (let i = 0; i < this._context._options.restrictions.disabledTimeIntervals.length; i++) {
+                        if (targetDate.isBetween(this._context._options.restrictions.disabledTimeIntervals[i].from, this._context._options.restrictions.disabledTimeIntervals[i].to))
+                            return false;
+                    }
+                }
+            }
+            return true;
+        }
+        /**
+         * Checks to see if the disabledDates option is in use and returns true (meaning invalid)
+         * if the `testDate` is with in the array. Granularity is by date.
+         * @param testDate
+         * @private
+         */
+        _isInDisabledDates(testDate) {
+            if (!this._context._options.restrictions.disabledDates ||
+                this._context._options.restrictions.disabledDates.length === 0)
+                return false;
+            const formattedDate = testDate.format(Dates.getFormatByUnit(exports.Unit.date));
+            return this._context._options.restrictions.disabledDates
+                .map((x) => x.format(Dates.getFormatByUnit(exports.Unit.date)))
+                .find((x) => x === formattedDate);
+        }
+        /**
+         * Checks to see if the enabledDates option is in use and returns true (meaning valid)
+         * if the `testDate` is with in the array. Granularity is by date.
+         * @param testDate
+         * @private
+         */
+        _isInEnabledDates(testDate) {
+            if (!this._context._options.restrictions.enabledDates ||
+                this._context._options.restrictions.enabledDates.length === 0)
+                return true;
+            const formattedDate = testDate.format(Dates.getFormatByUnit(exports.Unit.date));
+            return this._context._options.restrictions.enabledDates
+                .map((x) => x.format(Dates.getFormatByUnit(exports.Unit.date)))
+                .find((x) => x === formattedDate);
+        }
+        /**
+         * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
+         * if the `testDate` is with in the array. Granularity is by hours.
+         * @param testDate
+         * @private
+         */
+        _isInDisabledHours(testDate) {
+            if (!this._context._options.restrictions.disabledHours ||
+                this._context._options.restrictions.disabledHours.length === 0)
+                return false;
+            const formattedDate = testDate.hours;
+            return this._context._options.restrictions.disabledHours.find((x) => x === formattedDate);
+        }
+        /**
+         * Checks to see if the enabledHours option is in use and returns true (meaning valid)
+         * if the `testDate` is with in the array. Granularity is by hours.
+         * @param testDate
+         * @private
+         */
+        _isInEnabledHours(testDate) {
+            if (!this._context._options.restrictions.enabledHours ||
+                this._context._options.restrictions.enabledHours.length === 0)
+                return true;
+            const formattedDate = testDate.hours;
+            return this._context._options.restrictions.enabledHours.find((x) => x === formattedDate);
+        }
+    }
+
     /**
      * A robust and powerful date/time picker component.
      */
@@ -2957,16 +3000,20 @@
              * @private
              */
             this._inputChangeEvent = () => {
-                let parsedDate = OptionConverter._dateTypeCheck(this._input.value);
-                if (parsedDate) {
-                    this.dates._setValue(parsedDate);
+                const value = this._input.value;
+                if (this._options.multipleDates) {
+                    try {
+                        const valueSplit = value.split(this._options.multipleDatesSeparator);
+                        for (let i = 0; i < valueSplit.length; i++) {
+                            this.dates.set(valueSplit[i], i, 'input');
+                        }
+                    }
+                    catch (_a) {
+                        console.warn('TD: Something went wrong trying to set the multidate values from the input field.');
+                    }
                 }
                 else {
-                    this._triggerEvent({
-                        type: Namespace.events.error,
-                        reason: Namespace.errorMessages.failedToParseInput,
-                        date: parsedDate,
-                    });
+                    this.dates.set(value, 0, 'input');
                 }
             };
             /**
@@ -3259,9 +3306,7 @@
                 this._input.addEventListener('click', this._toggleClickEvent);
             }
             if (this._input.value) {
-                const converted = OptionConverter._dateConversion(this._input.value, 'input field');
-                if (converted !== undefined)
-                    this.dates._setValue(converted);
+                this._inputChangeEvent();
             }
         }
         /**

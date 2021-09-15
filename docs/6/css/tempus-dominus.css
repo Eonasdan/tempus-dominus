@@ -20,7 +20,9 @@ todo look at how bootstrap loops through their vars to make a --root section
   border-radius: 4px;
   display: none;
   background-color: white;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
+  z-index: 9999;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
 }
 .tempus-dominus-widget.calendarWeeks {
   width: 21rem;
@@ -39,45 +41,7 @@ todo look at how bootstrap loops through their vars to make a --root section
   color: #6c757d;
   cursor: not-allowed;
 }
-.tempus-dominus-widget .arrow::before {
-  visibility: hidden;
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: inherit;
-}
-.tempus-dominus-widget .arrow::before {
-  visibility: visible;
-  content: "";
-  transform: rotate(45deg);
-  border-style: solid;
-  border-width: 5px;
-}
-.tempus-dominus-widget[data-popper-placement^=top] > .arrow {
-  bottom: -4px;
-}
-.tempus-dominus-widget[data-popper-placement^=top] > .arrow::before {
-  border-color: transparent black black transparent;
-}
-.tempus-dominus-widget[data-popper-placement^=bottom] > .arrow {
-  top: -4px;
-}
-.tempus-dominus-widget[data-popper-placement^=bottom] > .arrow::before {
-  border-color: black transparent transparent black;
-}
-.tempus-dominus-widget[data-popper-placement^=left] > .arrow {
-  right: -4px;
-}
-.tempus-dominus-widget[data-popper-placement^=left] > .arrow::before {
-  border-color: black black transparent transparent;
-}
-.tempus-dominus-widget[data-popper-placement^=right] > .arrow {
-  left: -4px;
-}
-.tempus-dominus-widget[data-popper-placement^=right] > .arrow::before {
-  border-color: transparent transparent black black;
-}
-.tempus-dominus-widget.inline > .arrow {
+.tempus-dominus-widget .arrow {
   display: none;
 }
 .tempus-dominus-widget.show {
@@ -127,9 +91,9 @@ todo look at how bootstrap loops through their vars to make a --root section
 .tempus-dominus-widget button[data-action] {
   padding: 6px;
 }
-.tempus-dominus-widget .btn[data-action=togglePeriod] {
+.tempus-dominus-widget .toggleMeridiem {
   text-align: center;
-  width: 38px;
+  /*width: 38px;*/
   height: 38px;
 }
 .tempus-dominus-widget .calendar-header {
@@ -168,7 +132,13 @@ todo look at how bootstrap loops through their vars to make a --root section
   display: grid;
   grid-template-areas: "a a a a a a a";
   grid-auto-rows: 40px;
-  grid-auto-columns: 14.5%;
+  grid-auto-columns: calc(100% / 7);
+}
+.tempus-dominus-widget .date-container-days .dow {
+  color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .tempus-dominus-widget .date-container-days .cw {
   width: 90%;
@@ -178,7 +148,7 @@ todo look at how bootstrap loops through their vars to make a --root section
   display: flex;
   font-size: 0.8em;
   line-height: 20px;
-  color: #6c757d;
+  color: rgba(0, 0, 0, 0.38);
   cursor: default;
 }
 .tempus-dominus-widget.calendarWeeks .date-container-days {
@@ -187,28 +157,16 @@ todo look at how bootstrap loops through their vars to make a --root section
 .tempus-dominus-widget .date-container-decades, .tempus-dominus-widget .date-container-years, .tempus-dominus-widget .date-container-months {
   display: grid;
   grid-template-areas: "a a a";
-  grid-auto-rows: 40px;
+  grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
 }
 .tempus-dominus-widget .time-container-hour, .tempus-dominus-widget .time-container-minute, .tempus-dominus-widget .time-container-second {
   display: grid;
   grid-template-areas: "a a a a";
-  grid-auto-rows: 40px;
+  grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
 }
 .tempus-dominus-widget .time-container-clock {
   display: grid;
-  grid-auto-rows: 40px;
-}
-.tempus-dominus-widget .time-container-clock.clock-columns-1 {
-  grid-template-areas: "a";
-}
-.tempus-dominus-widget .time-container-clock.clock-columns-2 {
-  grid-template-areas: "a a a";
-}
-.tempus-dominus-widget .time-container-clock.clock-columns-3 {
-  grid-template-areas: "a a a a";
-}
-.tempus-dominus-widget .time-container-clock.clock-columns-4 {
-  grid-template-areas: "a a a a a a";
+  grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
 }
 .tempus-dominus-widget .time-container-clock .no-highlight {
   width: 90%;
@@ -244,7 +202,7 @@ todo look at how bootstrap loops through their vars to make a --root section
 .tempus-dominus-widget .date-container-decades div:not(.no-highlight).old, .tempus-dominus-widget .date-container-decades div:not(.no-highlight).new, .tempus-dominus-widget .date-container-years div:not(.no-highlight).old, .tempus-dominus-widget .date-container-years div:not(.no-highlight).new, .tempus-dominus-widget .date-container-months div:not(.no-highlight).old, .tempus-dominus-widget .date-container-months div:not(.no-highlight).new, .tempus-dominus-widget .date-container-days div:not(.no-highlight).old, .tempus-dominus-widget .date-container-days div:not(.no-highlight).new,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).old,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).new, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).old, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).new, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).old, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).new, .tempus-dominus-widget .time-container-second div:not(.no-highlight).old, .tempus-dominus-widget .time-container-second div:not(.no-highlight).new {
-  color: #6c757d;
+  color: rgba(0, 0, 0, 0.38);
 }
 .tempus-dominus-widget .date-container-decades div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-decades div:not(.no-highlight).disabled:hover, .tempus-dominus-widget .date-container-years div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-years div:not(.no-highlight).disabled:hover, .tempus-dominus-widget .date-container-months div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-months div:not(.no-highlight).disabled:hover, .tempus-dominus-widget .date-container-days div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-days div:not(.no-highlight).disabled:hover,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).disabled,
@@ -266,8 +224,8 @@ todo look at how bootstrap loops through their vars to make a --root section
   border-bottom-color: #0d6efd;
   border-top-color: rgba(0, 0, 0, 0.2);
   position: absolute;
-  bottom: 4px;
-  right: 4px;
+  bottom: 6px;
+  right: 6px;
 }
 .tempus-dominus-widget .time-container {
   margin-bottom: 0.5rem;
@@ -324,5 +282,4 @@ todo look at how bootstrap loops through their vars to make a --root section
 .tempus-dominus-widget.tempus-dominus-widget-readonly table td [data-action=togglePeriod]:hover {
   background: none;
 }
-
 /*# sourceMappingURL=tempus-dominus.css.map */

@@ -372,7 +372,12 @@
     </div>
     <script type="text/javascript">
       const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
-
+display: {
+  components: {
+    useTwentyfourHour: true,
+    seconds: true
+  }
+}
       });
     </script>
   </section>
@@ -463,7 +468,7 @@
        pickSecond: 'Выбрать второй',
        incrementSecond: 'Увеличение секунды',
        decrementSecond: 'Уменьшение секунды',
-       togglePeriod: 'Переключить период',
+       toggleMeridiem: 'Переключить период',
        selectTime: 'Выбрать время',
        selectDate: 'Выбрать дату',
        dayViewHeaderFormat: 'long',
@@ -520,7 +525,7 @@
           pickSecond: 'Выбрать второй',
           incrementSecond: 'Увеличение секунды',
           decrementSecond: 'Уменьшение секунды',
-          togglePeriod: 'Переключить период',
+          toggleMeridiem: 'Переключить период',
           selectTime: 'Выбрать время',
           selectDate: 'Выбрать дату',
           dayViewHeaderFormat: 'long',

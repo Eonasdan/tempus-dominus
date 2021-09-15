@@ -10,11 +10,11 @@ export default class Collapse {
    * Flips the show/hide state of `target`
    * @param target html element to affect.
    */
-  toggle(target: HTMLElement) {
+  toggle(target: HTMLElement, callback = undefined) {
     if (target.classList.contains(Namespace.css.show)) {
-      this.hide(target);
+      this.hide(target, callback);
     } else {
-      this.show(target);
+      this.show(target, callback);
     }
   }
 
@@ -22,7 +22,7 @@ export default class Collapse {
    * If `target` is not already showing, then show after the animation.
    * @param target
    */
-  show(target: HTMLElement) {
+  show(target: HTMLElement, callback = undefined) {
     if (
       target.classList.contains(Namespace.css.collapsing) ||
       target.classList.contains(Namespace.css.show)
@@ -34,6 +34,7 @@ export default class Collapse {
       target.classList.add(Namespace.css.collapse, Namespace.css.show);
       target.style.height = '';
       this.timeOut = null;
+      if (callback) callback();
     };
 
     target.style.height = '0';
@@ -51,7 +52,7 @@ export default class Collapse {
    * If `target` is not already hidden, then hide after the animation.
    * @param target HTML Element
    */
-  hide(target: HTMLElement) {
+  hide(target: HTMLElement, callback = undefined) {
     if (
       target.classList.contains(Namespace.css.collapsing) ||
       !target.classList.contains(Namespace.css.show)

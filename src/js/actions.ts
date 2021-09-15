@@ -202,7 +202,7 @@ export default class Actions {
       case ActionTypes.decrementSeconds:
         manipulateAndSet(Unit.seconds, -1);
         break;
-      case ActionTypes.togglePeriod:
+      case ActionTypes.toggleMeridiem:
         manipulateAndSet(
           Unit.hours,
           this._context.dates.lastPicked.hours >= 12 ? -12 : 12
@@ -216,7 +216,6 @@ export default class Actions {
           .forEach((htmlElement: HTMLElement) =>
             this.collapse.toggle(htmlElement)
           );
-
         if (
           currentTarget.getAttribute('title') ===
           this._context._options.localization.selectDate
@@ -315,7 +314,7 @@ export enum ActionTypes {
   decrementHours = 'decrementHours',
   decrementMinutes = 'decrementMinutes',
   decrementSeconds = 'decrementSeconds',
-  togglePeriod = 'togglePeriod',
+  toggleMeridiem = 'toggleMeridiem',
   togglePicker = 'togglePicker',
   showClock = 'showClock',
   showHours = 'showHours',

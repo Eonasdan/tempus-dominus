@@ -78,7 +78,7 @@ const DefaultOptions: Options = {
     pickSecond: 'Pick Second',
     incrementSecond: 'Increment Second',
     decrementSecond: 'Decrement Second',
-    togglePeriod: 'Toggle Period',
+    toggleMeridiem: 'Toggle Meridiem',
     selectTime: 'Select Time',
     selectDate: 'Select Date',
     dayViewHeaderFormat: 'long',

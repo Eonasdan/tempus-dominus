@@ -4,7 +4,7 @@ $td-active-color: #fff !default;
 $td-border-radius: 999px !default;
 $td-btn-hover-bg: #e9ecef !default;
 $td-disabled-color: #6c757d !default;
-$td-alternate-color: #6c757d !default;
+$td-alternate-color: rgba(0,0,0,.38) !default;
 $td-secondary-border-color: #ccc !default;
 $td-secondary-border-color-rgba: rgba(0, 0, 0, 0.2) !default;
 $td-primary-border-color: white !default;
@@ -33,8 +33,9 @@ todo look at how bootstrap loops through their vars to make a --root section
   border-radius: 4px;
   display: none;
   background-color: white;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   z-index: 9999;
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
 
   &.calendarWeeks {
     width: 21rem;
@@ -62,60 +63,10 @@ todo look at how bootstrap loops through their vars to make a --root section
 
   //popper
   .arrow {
-    &::before {
-      visibility: hidden;
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: inherit;
-    }
-
-    &::before {
-      visibility: visible;
-      content: '';
-      transform: rotate(45deg);
-      border-style: solid;
-      border-width: 5px;
-    }
-  }
-
-  &[data-popper-placement^='top'] > .arrow {
-    bottom: -4px;
-
-    &::before {
-      border-color: transparent black black transparent;
-    }
-  }
-
-  &[data-popper-placement^='bottom'] > .arrow {
-    top: -4px;
-
-    &::before {
-      border-color: black transparent transparent black;
-    }
-  }
-
-  &[data-popper-placement^='left'] > .arrow {
-    right: -4px;
-
-    &::before {
-      border-color: black black transparent transparent;
-    }
-  }
-
-  &[data-popper-placement^='right'] > .arrow {
-    left: -4px;
-
-    &::before {
-      border-color: transparent transparent black black;
-    }
-  }
-
-  &.inline > .arrow {
     display: none;
   }
 
-  //end popper
+   //end popper
 
   &.show {
     display: block;
@@ -173,9 +124,9 @@ todo look at how bootstrap loops through their vars to make a --root section
     padding: 6px;
   }
 
-  .btn[data-action='togglePeriod'] {
+  .toggleMeridiem {
     text-align: center;
-    width: 38px;
+    /*width: 38px;*/
     height: 38px;
   }
 
@@ -220,7 +171,14 @@ todo look at how bootstrap loops through their vars to make a --root section
     display: grid;
     grid-template-areas: "a a a a a a a";
     grid-auto-rows: 40px;
-    grid-auto-columns: 14.5%;
+    grid-auto-columns: calc(100% / 7);
+
+    & .dow {
+      color: rgba(0,0,0,.50);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
 
     & .cw {
       width: 90%;
@@ -242,34 +200,18 @@ todo look at how bootstrap loops through their vars to make a --root section
   .date-container-decades, .date-container-years, .date-container-months {
     display: grid;
     grid-template-areas: "a a a";
-    grid-auto-rows: 40px;
+    grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
   }
 
   .time-container-hour, .time-container-minute, .time-container-second {
     display: grid;
     grid-template-areas: "a a a a";
-    grid-auto-rows: 40px;
+    grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
   }
 
   .time-container-clock {
     display: grid;
-    grid-auto-rows: 40px;
-
-    &.clock-columns-1 {
-      grid-template-areas: "a";
-    }
-
-    &.clock-columns-2 {
-      grid-template-areas: "a a a";
-    }
-
-    &.clock-columns-3 {
-      grid-template-areas: "a a a a";
-    }
-
-    &.clock-columns-4 {
-      grid-template-areas: "a a a a a a";
-    }
+    grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
 
     & .no-highlight {
       width: 90%;
@@ -331,8 +273,8 @@ todo look at how bootstrap loops through their vars to make a --root section
           border-bottom-color: $td-active-bg;
           border-top-color: $td-secondary-border-color-rgba;
           position: absolute;
-          bottom: 4px;
-          right: 4px;
+          bottom: 6px;
+          right: 6px;
         }
       }
     }
