@@ -3,7 +3,7 @@ import Validation from './validation';
 import Dates from './dates';
 import Actions from './actions';
 import { DefaultOptions } from './conts';
-import { DateTime, Unit } from './datetime';
+import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
 import Namespace from './namespace';
 import Options from './options';
 import { BaseEvent } from './event-types';
@@ -133,4 +133,4 @@ declare class TempusDominus {
      */
     private _toggleClickEvent;
 }
-export { TempusDominus, Namespace, DefaultOptions, DateTime, Options, Unit };
+export { TempusDominus, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions, };

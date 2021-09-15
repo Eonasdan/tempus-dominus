@@ -75,7 +75,7 @@ export default interface Options {
         incrementMinute: string;
         selectTime: string;
         clear: string;
-        togglePeriod: string;
+        toggleMeridiem: string;
         selectMonth: string;
         decrementMinute: string;
         pickMinute: string;

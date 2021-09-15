@@ -30,7 +30,7 @@ export declare enum ActionTypes {
     decrementHours = "decrementHours",
     decrementMinutes = "decrementMinutes",
     decrementSeconds = "decrementSeconds",
-    togglePeriod = "togglePeriod",
+    toggleMeridiem = "toggleMeridiem",
     togglePicker = "togglePicker",
     showClock = "showClock",
     showHours = "showHours",

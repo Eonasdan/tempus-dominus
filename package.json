@@ -26,7 +26,7 @@
     "prettier": "prettier --write .",
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
-    "release": "npm run release-version && npm run build && npm run build:declarations && npm run prettier",
+    "release": "npm run build && npm run build:declarations",
     "release-version": "node build/change-version.js"
   },
   "bugs": {

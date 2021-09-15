@@ -176,6 +176,10 @@ declare class Css {
      */
     second: string;
     /**
+     * Applied AM/PM toggle button.
+     */
+    toggleMeridiem: string;
+    /**
      * Applied the element of the current view mode, e.g. calendar or clock.
      */
     show: string;

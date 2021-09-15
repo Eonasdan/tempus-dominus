@@ -4,6 +4,7 @@ import { TempusDominus } from '../../tempus-dominus';
  */
 export default class TimeDisplay {
     private _context;
+    private _gridColumns;
     constructor(context: TempusDominus);
     /**
      * Build the container html for the clock display
