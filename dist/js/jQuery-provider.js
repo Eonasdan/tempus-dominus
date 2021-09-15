@@ -1,6 +1,11 @@
 ///<reference src="js/tempus-dominus"/>
 /*global $ */
 
+/*!
+  * Tempus Dominus v6.0.0-alpha1.0.13 (https://getdatepicker.com/)
+  * Copyright 2013-2021 [object Object]
+  * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
+  */
 tempusDominus.jQueryInterface = function (option, argument) {
   if (this.length === 1) {
     return tempusDominus.jQueryHandleThis(this, option, argument);

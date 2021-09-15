@@ -1033,7 +1033,7 @@
                     break;
                 case ActionTypes.selectHour:
                     let hour = +currentTarget.getAttribute('data-value');
-                    if (lastPicked.hours >= 12)
+                    if (lastPicked.hours >= 12 && !this._context._options.display.components.useTwentyfourHour)
                         hour += 12;
                     lastPicked.hours = hour;
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
