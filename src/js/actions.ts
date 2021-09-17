@@ -104,7 +104,7 @@ export default class Actions {
           day.manipulate(1, Unit.month);
         }
 
-        day.date = +currentTarget.innerText;
+        day.date = +currentTarget.getAttribute('data-day');
         let index = 0;
         if (this._context._options.multipleDates) {
           index = this._context.dates.pickedIndex(day, Unit.date);
@@ -152,7 +152,7 @@ export default class Actions {
         }
         break;
       case ActionTypes.selectMinute:
-        lastPicked.minutes = +currentTarget.innerText;
+        lastPicked.minutes = +currentTarget.getAttribute('data-value');
         this._context.dates._setValue(
           lastPicked,
           this._context.dates.lastPickedIndex

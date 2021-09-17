@@ -133,7 +133,11 @@ export default class DateDisplay {
           'data-value',
           `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`
         );
-        containerClone.innerText = `${innerDate.date}`;
+        containerClone.setAttribute(
+          'data-day',
+          `${innerDate.date}`
+        );
+        containerClone.innerText = innerDate.format({ day: "numeric" });
         innerDate.manipulate(1, Unit.date);
       });
   }
