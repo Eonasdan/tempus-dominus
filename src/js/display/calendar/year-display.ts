@@ -54,7 +54,7 @@ export default class YearDisplay {
 
     switcher.setAttribute(
       Namespace.css.yearsContainer,
-      `${this._startYear.year}-${this._endYear.year}`
+      `${this._startYear.format({ year: 'numeric' })}-${this._endYear.format({ year: 'numeric' })}`
     );
 
     this._context._validation.isValid(this._startYear, Unit.year)
@@ -87,7 +87,7 @@ export default class YearDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${innerDate.year}`);
-        containerClone.innerText = `${innerDate.year}`;
+        containerClone.innerText = innerDate.format({ year: "numeric" });
 
         innerDate.manipulate(1, Unit.year);
       });
