@@ -441,8 +441,8 @@ export class OptionConverter {
    * @private
    */
   static _dateTypeCheck(d: any): DateTime | null {
-    if (d.constructor.name === 'DateTime') return d;
-    if (d.constructor.name === 'Date') {
+    if (d.constructor.name === DateTime.name) return d;
+    if (d.constructor.name === Date.name) {
       return DateTime.convert(d);
     }
     if (typeof d === typeof '') {
