@@ -152,7 +152,7 @@ export default class Actions {
         }
         break;
       case ActionTypes.selectMinute:
-        lastPicked.minutes = +currentTarget.getAttribute('data-value');
+        lastPicked.minutes = +currentTarget.dataset.value;
         this._context.dates._setValue(
           lastPicked,
           this._context.dates.lastPickedIndex
