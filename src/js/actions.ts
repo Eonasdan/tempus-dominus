@@ -104,7 +104,7 @@ export default class Actions {
           day.manipulate(1, Unit.month);
         }
 
-        day.date = +currentTarget.getAttribute('data-day');
+        day.date = +currentTarget.dataset.day;
         let index = 0;
         if (this._context._options.multipleDates) {
           index = this._context.dates.pickedIndex(day, Unit.date);
