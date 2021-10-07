@@ -65,7 +65,7 @@ export default class Actions {
       case ActionTypes.selectMonth:
       case ActionTypes.selectYear:
       case ActionTypes.selectDecade:
-        const value = +currentTarget.getAttribute('data-value');
+        const value = +currentTarget.dataset.value;
         switch (action) {
           case ActionTypes.selectMonth:
             this._context._viewDate.month = value;
@@ -133,8 +133,12 @@ export default class Actions {
         }
         break;
       case ActionTypes.selectHour:
-        let hour = +currentTarget.getAttribute('data-value');
-        if (lastPicked.hours >= 12 && !this._context._options.display.components.useTwentyfourHour) hour += 12;
+        let hour = +currentTarget.dataset.value;
+        if (
+          lastPicked.hours >= 12 &&
+          !this._context._options.display.components.useTwentyfourHour
+        )
+          hour += 12;
         lastPicked.hours = hour;
         this._context.dates._setValue(
           lastPicked,

@@ -353,7 +353,7 @@
           differentAccepts(key);
           switch (key) {
             case 'format':
-              createAlert('Format is no longer used to determine component display. See <a href="options.html#displayComponents" target="_blank">component usage</a> and <a href="options.html#displayInputFormat" target="_blank">input formatting</a>.', 'warning');
+              createAlert('Format is no longer used to determine component display. See <a href="options.html#displayComponents" target="_blank">component usage</a> and <a href="options.html#hooksInputFormat" target="_blank">input formatting</a>.', 'warning');
               ensurePath('display', newOptions);
               newOptions.display.components = {
                 calendar: true,
@@ -390,7 +390,6 @@
             case 'keyBinds':
             case 'ignoreReadonly':
             case 'focusOnShow':
-            case 'parseInputDate':
             case 'timeZone':
               createAlert(`${key} is no longer supported and was ignored.`, 'danger');
               break;
@@ -453,6 +452,11 @@
               break;
             case 'multidateSeparator':
               newOptions.multipleDatesSeparator = value;
+              break;
+            case 'parseInputDate':
+              createAlert(`${key} is now <a href="options.html#hooksInputFormat" target="_blank"><code>hooks.inputParse</code></a> and takes a function that must return a <code>DateTime</code> object.`, 'danger');
+              ensurePath('hooks.inputParse', newOptions);
+              newOptions.hooks.inputParse = undefined;
               break;
           }
         });

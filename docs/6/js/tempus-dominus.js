@@ -248,7 +248,7 @@
          * Returns two digit hours
          */
         get secondsFormatted() {
-            return this.seconds < 10 ? `0${this.seconds}` : `${this.seconds}`;
+            return this.format({ second: "2-digit" });
         }
         /**
          * Shortcut to Date.getMinutes()
@@ -266,7 +266,7 @@
          * Returns two digit hours
          */
         get minutesFormatted() {
-            return this.minutes < 10 ? `0${this.minutes}` : `${this.minutes}`;
+            return this.format({ minute: "2-digit" });
         }
         /**
          * Shortcut to Date.getHours()
@@ -284,18 +284,13 @@
          * Returns two digit hours
          */
         get hoursFormatted() {
-            return this.hours < 10 ? `0${this.hours}` : `${this.hours}`;
+            return this.format({ hour: "2-digit" });
         }
         /**
          * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
          */
         get twelveHoursFormatted() {
-            let hour = this.hours;
-            if (hour > 12)
-                hour = hour - 12;
-            if (hour === 0)
-                hour = 12;
-            return hour < 10 ? `0${hour}` : `${hour}`;
+            return this.format({ hour12: true, hour: "2-digit" });
         }
         /**
          * Get the meridiem of the date. E.g. AM or PM.
@@ -980,7 +975,7 @@
                 case ActionTypes.selectMonth:
                 case ActionTypes.selectYear:
                 case ActionTypes.selectDecade:
-                    const value = +currentTarget.getAttribute('data-value');
+                    const value = +currentTarget.dataset.value;
                     switch (action) {
                         case ActionTypes.selectMonth:
                             this._context._viewDate.month = value;
@@ -1013,7 +1008,7 @@
                     if (currentTarget.classList.contains(Namespace.css.new)) {
                         day.manipulate(1, exports.Unit.month);
                     }
-                    day.date = +currentTarget.innerText;
+                    day.date = +currentTarget.dataset.day;
                     let index = 0;
                     if (this._context._options.multipleDates) {
                         index = this._context.dates.pickedIndex(day, exports.Unit.date);
@@ -1035,8 +1030,9 @@
                     }
                     break;
                 case ActionTypes.selectHour:
-                    let hour = +currentTarget.getAttribute('data-value');
-                    if (lastPicked.hours >= 12 && !this._context._options.display.components.useTwentyfourHour)
+                    let hour = +currentTarget.dataset.value;
+                    if (lastPicked.hours >= 12 &&
+                        !this._context._options.display.components.useTwentyfourHour)
                         hour += 12;
                     lastPicked.hours = hour;
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
@@ -1051,7 +1047,7 @@
                     }
                     break;
                 case ActionTypes.selectMinute:
-                    lastPicked.minutes = +currentTarget.innerText;
+                    lastPicked.minutes = +currentTarget.dataset.value;
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
                     if (this._context._options.display.components.useTwentyfourHour &&
                         !this._context._options.display.components.seconds &&
@@ -1276,7 +1272,8 @@
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
-                containerClone.innerText = `${innerDate.date}`;
+                containerClone.setAttribute('data-day', `${innerDate.date}`);
+                containerClone.innerText = innerDate.format({ day: "numeric" });
                 innerDate.manipulate(1, exports.Unit.date);
             });
         }
@@ -1950,7 +1947,7 @@
             const [previous, switcher, next] = container.parentElement
                 .getElementsByClassName(Namespace.css.calendarHeader)[0]
                 .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.year}-${this._endYear.year}`);
+            switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.format({ year: 'numeric' })}-${this._endYear.format({ year: 'numeric' })}`);
             this._context._validation.isValid(this._startYear, exports.Unit.year)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
@@ -1975,7 +1972,7 @@
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.year}`);
-                containerClone.innerText = `${innerDate.year}`;
+                containerClone.innerText = innerDate.format({ year: "numeric" });
                 innerDate.manipulate(1, exports.Unit.year);
             });
         }
@@ -2016,7 +2013,7 @@
             const [previous, switcher, next] = container.parentElement
                 .getElementsByClassName(Namespace.css.calendarHeader)[0]
                 .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.year}-${this._endDecade.year}`);
+            switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.format({ year: 'numeric' })}-${this._endDecade.format({ year: 'numeric' })}`);
             this._context._validation.isValid(this._startDecade, exports.Unit.year)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
@@ -2037,7 +2034,7 @@
                         return;
                     }
                     else {
-                        containerClone.innerText = `${this._startDecade.year - 10}`;
+                        containerClone.innerText = this._startDecade.clone.manipulate(-10, exports.Unit.year).format({ year: 'numeric' });
                         containerClone.setAttribute('data-value', `${this._startDecade.year}`);
                         return;
                     }
@@ -2054,7 +2051,7 @@
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-                containerClone.innerText = `${this._startDecade.year}`;
+                containerClone.innerText = `${this._startDecade.format({ year: 'numeric' })}`;
                 this._startDecade.manipulate(10, exports.Unit.year);
             });
         }
