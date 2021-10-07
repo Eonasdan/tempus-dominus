@@ -765,7 +765,6 @@ const DefaultOptions = {
             seconds: false,
             useTwentyfourHour: false,
         },
-        inputFormat: undefined,
         inline: false,
     },
     stepping: 1,
@@ -809,6 +808,10 @@ const DefaultOptions = {
     multipleDatesSeparator: '; ',
     promptTimeOnDateChange: false,
     promptTimeOnDateChangeTransitionDelay: 200,
+    hooks: {
+        inputParse: undefined,
+        inputFormat: undefined,
+    },
 };
 const DatePickerModes = [
     {
@@ -1029,7 +1032,7 @@ class Actions {
                 break;
             case ActionTypes.selectHour:
                 let hour = +currentTarget.getAttribute('data-value');
-                if (lastPicked.hours >= 12)
+                if (lastPicked.hours >= 12 && !this._context._options.display.components.useTwentyfourHour)
                     hour += 12;
                 lastPicked.hours = hour;
                 this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
@@ -1363,6 +1366,7 @@ class OptionConverter {
     static _mergeOptions(providedOptions, mergeTo) {
         const newOptions = {};
         let path = '';
+        const ignoreProperties = ['inputParse', 'inputFormat'];
         const processKey = (key, value, providedType, defaultType) => {
             switch (key) {
                 case 'defaultDate': {
@@ -1475,6 +1479,7 @@ class OptionConverter {
                     if (!keyOptions.includes(value))
                         Namespace.errorMessages.unexpectedOptionValue(path.substring(1), value, keyOptions);
                     return value;
+                case 'inputParse':
                 case 'inputFormat':
                     return value;
                 default:
@@ -1531,7 +1536,7 @@ class OptionConverter {
                 }
                 path += `.${key}`;
                 copyTo[key] = processKey(key, value, providedType, defaultType);
-                if (typeof defaultOptionValue !== 'object' || key === 'inputFormat') {
+                if (typeof defaultOptionValue !== 'object' || ignoreProperties.includes(key)) {
                     path = path.substring(0, path.lastIndexOf(`.${key}`));
                     return;
                 }
@@ -1609,9 +1614,9 @@ class OptionConverter {
      * @private
      */
     static _dateTypeCheck(d) {
-        if (d.constructor.name === 'DateTime')
+        if (d.constructor.name === DateTime.name)
             return d;
-        if (d.constructor.name === 'Date') {
+        if (d.constructor.name === Date.name) {
             return DateTime.convert(d);
         }
         if (typeof d === typeof '') {
@@ -1660,12 +1665,12 @@ class OptionConverter {
      * @param optionName Provides text to error messages e.g. disabledDates
      */
     static _dateConversion(d, optionName) {
-        if (typeof d === typeof '' && optionName !== 'input field') {
+        if (typeof d === typeof '' && optionName !== 'input') {
             Namespace.errorMessages.dateString();
         }
         const converted = this._dateTypeCheck(d);
         if (!converted) {
-            Namespace.errorMessages.failedToParseDate(optionName, d);
+            Namespace.errorMessages.failedToParseDate(optionName, d, optionName === 'input');
         }
         return converted;
     }
@@ -1739,11 +1744,9 @@ class Dates {
     set(value, index, from = 'date.set') {
         if (!value)
             this._setValue(value, index);
-        const converted = OptionConverter._dateConversion(value, 'input field');
-        if (converted !== undefined)
+        const converted = OptionConverter._dateConversion(value, from);
+        if (converted)
             this._setValue(converted, index);
-        else
-            Namespace.errorMessages.failedToParseDate(from, value, true);
     }
     /**
      * Returns true if the `targetDate` is part of the selected dates array.
@@ -1817,10 +1820,10 @@ class Dates {
         const updateInput = () => {
             if (!this._context._input)
                 return;
-            let newValue = (target === null || target === void 0 ? void 0 : target.format(this._context._options.display.inputFormat)) || '';
+            let newValue = this._context._options.hooks.inputFormat(target);
             if (this._context._options.multipleDates) {
                 newValue = this._dates
-                    .map((d) => d.format(this._context._options.display.inputFormat))
+                    .map((d) => this._context._options.hooks.inputFormat(d))
                     .join(this._context._options.multipleDatesSeparator);
             }
             if (this._context._input.value != newValue)
@@ -2395,12 +2398,14 @@ class Display {
          */
         this._documentClickEvent = (e) => {
             var _a;
+            if (this._context._options.display.keepOpen ||
+                this._context._options.debug ||
+                window.debug)
+                return;
             if (this._isVisible &&
                 !e.composedPath().includes(this.widget) && // click inside the widget
-                !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this._context._element)) && // click on the element
-                (!this._context._options.display.keepOpen ||
-                    !this._context._options.debug ||
-                    !window.debug)) {
+                !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this._context._element)) // click on the element
+            ) {
                 this.hide();
             }
         };
@@ -2578,7 +2583,7 @@ class Display {
             this._context._currentViewMode = max;
         }
         this.widget
-            .querySelectorAll(`.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div`)
+            .querySelectorAll(`.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div:not(.${Namespace.css.clockContainer})`)
             .forEach((e) => (e.style.display = 'none'));
         const datePickerMode = DatePickerModes[this._context._currentViewMode];
         let picker = this.widget.querySelector(`.${datePickerMode.className}`);
@@ -2996,20 +3001,36 @@ class TempusDominus {
          * @private
          */
         this._inputChangeEvent = () => {
+            const setViewDate = () => {
+                if (this.dates.lastPicked)
+                    this._viewDate = this.dates.lastPicked;
+            };
             const value = this._input.value;
             if (this._options.multipleDates) {
                 try {
                     const valueSplit = value.split(this._options.multipleDatesSeparator);
                     for (let i = 0; i < valueSplit.length; i++) {
-                        this.dates.set(valueSplit[i], i, 'input');
+                        if (this._options.hooks.inputParse) {
+                            this.dates.set(this._options.hooks.inputParse(valueSplit[i]), i, 'input');
+                        }
+                        else {
+                            this.dates.set(valueSplit[i], i, 'input');
+                        }
                     }
+                    setViewDate();
                 }
                 catch (_a) {
                     console.warn('TD: Something went wrong trying to set the multidate values from the input field.');
                 }
             }
             else {
-                this.dates.set(value, 0, 'input');
+                if (this._options.hooks.inputParse) {
+                    this.dates.set(this._options.hooks.inputParse(value), 0, 'input');
+                }
+                else {
+                    this.dates.set(value, 0, 'input');
+                }
+                setViewDate();
             }
         };
         /**
@@ -3256,20 +3277,22 @@ class TempusDominus {
             this._currentViewMode = Math.max(DatePickerModes.findIndex((x) => x.name === config.display.viewMode), this._minViewModeNumber);
         }
         // defaults the input format based on the components enabled
-        if (config.display.inputFormat === undefined) {
+        if (config.hooks.inputFormat === undefined) {
             const components = config.display.components;
-            config.display.inputFormat = {
-                year: components.calendar && components.year ? 'numeric' : undefined,
-                month: components.calendar && components.month ? '2-digit' : undefined,
-                day: components.calendar && components.date ? '2-digit' : undefined,
-                hour: components.clock && components.hours
-                    ? components.useTwentyfourHour
-                        ? '2-digit'
-                        : 'numeric'
-                    : undefined,
-                minute: components.clock && components.minutes ? '2-digit' : undefined,
-                second: components.clock && components.seconds ? '2-digit' : undefined,
-                hour12: !components.useTwentyfourHour,
+            config.hooks.inputFormat = (date) => {
+                return date.format({
+                    year: components.calendar && components.year ? 'numeric' : undefined,
+                    month: components.calendar && components.month ? '2-digit' : undefined,
+                    day: components.calendar && components.date ? '2-digit' : undefined,
+                    hour: components.clock && components.hours
+                        ? components.useTwentyfourHour
+                            ? '2-digit'
+                            : 'numeric'
+                        : undefined,
+                    minute: components.clock && components.minutes ? '2-digit' : undefined,
+                    second: components.clock && components.seconds ? '2-digit' : undefined,
+                    hour12: !components.useTwentyfourHour,
+                });
             };
         }
         if ((_a = this._display) === null || _a === void 0 ? void 0 : _a.isVisible) {

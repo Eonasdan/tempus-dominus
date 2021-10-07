@@ -48,7 +48,6 @@ const DefaultOptions: Options = {
       seconds: false,
       useTwentyfourHour: false,
     },
-    inputFormat: undefined,
     inline: false,
   },
   stepping: 1,
@@ -92,6 +91,10 @@ const DefaultOptions: Options = {
   multipleDatesSeparator: '; ',
   promptTimeOnDateChange: false,
   promptTimeOnDateChangeTransitionDelay: 200,
+  hooks: {
+    inputParse: undefined,
+    inputFormat: undefined,
+  },
 };
 
 const DatePickerModes: {

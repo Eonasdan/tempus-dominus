@@ -1,4 +1,4 @@
-import { DateTime, DateTimeFormatOptions } from './datetime';
+import { DateTime } from './datetime';
 export default interface Options {
     restrictions: {
         minDate: DateTime;
@@ -47,7 +47,6 @@ export default interface Options {
         };
         viewMode: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
         sideBySide: boolean;
-        inputFormat: DateTimeFormatOptions;
         inline: boolean;
         keepOpen: boolean;
     };
@@ -92,6 +91,10 @@ export default interface Options {
     multipleDatesSeparator: string;
     promptTimeOnDateChange: boolean;
     promptTimeOnDateChangeTransitionDelay: number;
+    hooks: {
+        inputParse: (value: any) => DateTime;
+        inputFormat: (date: DateTime) => string;
+    };
 }
 export declare class OptionConverter {
     static _mergeOptions(providedOptions: Options, mergeTo: Options): Options;

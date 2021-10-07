@@ -225,6 +225,21 @@
   <div id="mainContent" class="bd-content ps-lg-4">
   <h1>Version 6</h1>
   <section>
+    <h2>Version 6-alpha_</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Cleaned up css a bit. Got rid of the popper arrow and aligned the picker to the start of the element.</li>
+      <li><span class="badge bg-danger">BREAKING</span> <code>display.inputFormat</code> now takes a function, not an Intl format. By default a function will be executed that uses Intl to format the selected date(s) based on the selected components.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Merged a fix for parsing issue from comparing constructor names. Thanks @faatihi <a href="https://github.com/Eonasdan/tempus-dominus/issues/2408">#2408</a></li>
+      <li>Fixed doc issue</li>
+      <li>Fixed input value for real this time.  <a href="https://github.com/Eonasdan/tempus-dominus/issues/2387">#2387</a></li>
+      <li>Fixed <code>keepOpen</code></li>
+    </ul>
+  </section>
+  <section>
     <h2>Version 6-alpha1.0.13</h2>
     <h3>New</h3>
     <ul>

@@ -595,20 +595,12 @@ new tempusDominus.TempusDominus(..., {
           <img src="images/side-by-side.png" class="img-fluid img-thumbnail d-block" alt="Side by Side View">
           Displays the date and time pickers side by side.
         </p>
-
-        <h3 id="displayInputFormat">inputFormat<a class="anchorjs-link" aria-label="Anchor" href="#displayInputFormat"><i class="fas fa-anchor"></i></a></h3>
-        <p>
-          <strong>Accepts:</strong> <strong>Defaults:</strong> <br>
-        </p>
-
         <h3 id="displayInline">inline<a class="anchorjs-link" aria-label="Anchor" href="#displayInline"><i class="fas fa-anchor"></i></a>
         </h3>
         <p>
-          <strong>Accepts:</strong> object <strong>Defaults:</strong> undefined<br>
-          Takes an object of <code>Intl.DateTimeFormat</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat#using_options" rel="noopener noreferrer nofollow" target="_blank">options</a>.
-          Used to format selected values before updating the option input fields value.
+          <strong>Accepts:</strong> <strong>Defaults:boolean</strong> <br>
+          Displays the picker in a inline div instead of a popup.
         </p>
-
         <h3 id="keepOpen">keepOpen<a class="anchorjs-link" aria-label="Anchor" href="#keepOpen"><i class="fas fa-anchor"></i></a></h3>
         <p>
           <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
@@ -616,8 +608,47 @@ new tempusDominus.TempusDominus(..., {
           clicking on on an outside element.
         </p>
       </div>
+    </div>
+  </section>
+  <section>
+    <h2 id="hooks">hooks<a class="anchorjs-link" aria-label="Anchor" href="#hooks"><i class="fas fa-anchor"></i></a>
+    </h2>
 
-
+    <div class="row">
+      <div class="col offset-1 border-start border-dark">
+        <h3 id="hooksInputFormat">inputFormat<a class="anchorjs-link" aria-label="Anchor" href="#hooksInputFormat"><i class="fas fa-anchor"></i></a>
+        </h3>
+        <p>
+          <strong>Accepts:</strong> <code>(date: DateTime) =&gt; string</code> or undefined <strong>Defaults:</strong>
+          undefined<br>
+          Takes a function that turns the selected date(s) into a string. If not provided, Intl formatting will be
+          used based on configured components.
+        </p>
+        <p>
+          Whenever the picker attempts to set the input value from a selection, it will call this function. An example
+          that would set the value to an ISO string. Obviously, it's up to you how you want the results to be displayed.
+        </p>
+        <pre><code class="language-js">
+inputFormat:(date) =&gt; { return date.toISOString() }
+</code>
+        </pre>
+        <h3 id="hooksinputParse" class="mt-3">inputParse<a class="anchorjs-link" aria-label="Anchor" href="#hooksinputParse"><i class="fas fa-anchor"></i></a>
+        </h3>
+        <p>
+          <strong>Accepts:</strong> <code>(value: any) =&gt; DateTime</code> or undefined <strong>Defaults:</strong>
+          undefined<br>
+          Takes a function that turns the input value into a DateTime object. If not provided, the internal parsing
+          method will be used.
+        </p>
+        <p>
+          Whenever the input value changes, this function will be called. The most simple example is just to attempt to
+          parse the string.
+        </p>
+        <pre><code class="language-js">
+inputParse: (value) =&gt; { return new tempusDominus.DateTime(value) }
+</code>
+        </pre>
+      </div>
     </div>
   </section>
   <h2 id="stepping">stepping<a class="anchorjs-link" aria-label="Anchor" href="#stepping"><i class="fas fa-anchor"></i></a>

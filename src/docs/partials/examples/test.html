@@ -187,7 +187,12 @@
       </div>
     </div>
     <script type='text/javascript'>
-      const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+      const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
+        hooks: {
+          inputParse: (value) => { return new tempusDominus.DateTime(value)},
+          inputFormat:(date) => { console.log(date); return date.toISOString()}
+        }
+      });
     </script>
   </section>
 

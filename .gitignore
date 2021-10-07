@@ -9,3 +9,4 @@ site
 *.csproj
 *.sln
 *.nupkg
+src/docs/partials/examples/test.html

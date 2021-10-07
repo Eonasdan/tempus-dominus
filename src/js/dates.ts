@@ -51,9 +51,8 @@ export default class Dates {
    */
   set(value: any, index?: number, from: string = 'date.set') {
     if (!value) this._setValue(value, index);
-    const converted = OptionConverter._dateConversion(value, 'input field');
-    if (converted !== undefined) this._setValue(converted, index);
-    else Namespace.errorMessages.failedToParseDate(from, value, true);
+    const converted = OptionConverter._dateConversion(value, from);
+    if (converted) this._setValue(converted, index);
   }
 
   /**
@@ -146,11 +145,10 @@ export default class Dates {
     const updateInput = () => {
       if (!this._context._input) return;
 
-      let newValue =
-        target?.format(this._context._options.display.inputFormat) || '';
+      let newValue = this._context._options.hooks.inputFormat(target);
       if (this._context._options.multipleDates) {
         newValue = this._dates
-          .map((d) => d.format(this._context._options.display.inputFormat))
+          .map((d) => this._context._options.hooks.inputFormat(d))
           .join(this._context._options.multipleDatesSeparator);
       }
       if (this._context._input.value != newValue)

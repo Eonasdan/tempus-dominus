@@ -43,7 +43,6 @@ export default interface Options {
     };
     viewMode: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
     sideBySide: boolean;
-    inputFormat: DateTimeFormatOptions;
     inline: boolean;
     keepOpen: boolean;
   };
@@ -88,12 +87,17 @@ export default interface Options {
   multipleDatesSeparator: string;
   promptTimeOnDateChange: boolean;
   promptTimeOnDateChangeTransitionDelay: number;
+  hooks: {
+    inputParse: (value: any) => DateTime;
+    inputFormat: (date: DateTime) => string;
+  };
 }
 
 export class OptionConverter {
   static _mergeOptions(providedOptions: Options, mergeTo: Options): Options {
     const newOptions = {} as Options;
     let path = '';
+    const ignoreProperties = ['inputParse', 'inputFormat'];
 
     const processKey = (key, value, providedType, defaultType) => {
       switch (key) {
@@ -268,6 +272,7 @@ export class OptionConverter {
             );
 
           return value;
+        case 'inputParse':
         case 'inputFormat':
           return value;
         default:
@@ -334,7 +339,7 @@ export class OptionConverter {
         path += `.${key}`;
         copyTo[key] = processKey(key, value, providedType, defaultType);
 
-        if (typeof defaultOptionValue !== 'object' || key === 'inputFormat') {
+        if (typeof defaultOptionValue !== 'object' || ignoreProperties.includes(key)) {
           path = path.substring(0, path.lastIndexOf(`.${key}`));
           return;
         }
@@ -510,14 +515,18 @@ export class OptionConverter {
    * @param optionName Provides text to error messages e.g. disabledDates
    */
   static _dateConversion(d: any, optionName: string) {
-    if (typeof d === typeof '' && optionName !== 'input field') {
+    if (typeof d === typeof '' && optionName !== 'input') {
       Namespace.errorMessages.dateString();
     }
 
     const converted = this._dateTypeCheck(d);
 
     if (!converted) {
-      Namespace.errorMessages.failedToParseDate(optionName, d);
+      Namespace.errorMessages.failedToParseDate(
+        optionName,
+        d,
+        optionName === 'input'
+      );
     }
     return converted;
   }
