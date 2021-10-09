@@ -132,7 +132,7 @@ todo look at how bootstrap loops through their vars to make a --root section
   display: grid;
   grid-template-areas: "a a a a a a a";
   grid-auto-rows: 40px;
-  grid-auto-columns: calc(100% / 7);
+  grid-auto-columns: 14.2857142857%;
 }
 .tempus-dominus-widget .date-container-days .dow {
   color: rgba(0, 0, 0, 0.5);
@@ -157,16 +157,16 @@ todo look at how bootstrap loops through their vars to make a --root section
 .tempus-dominus-widget .date-container-decades, .tempus-dominus-widget .date-container-years, .tempus-dominus-widget .date-container-months {
   display: grid;
   grid-template-areas: "a a a";
-  grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
+  grid-auto-rows: calc((19rem - 8px) / 7);
 }
 .tempus-dominus-widget .time-container-hour, .tempus-dominus-widget .time-container-minute, .tempus-dominus-widget .time-container-second {
   display: grid;
   grid-template-areas: "a a a a";
-  grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
+  grid-auto-rows: calc((19rem - 8px) / 7);
 }
 .tempus-dominus-widget .time-container-clock {
   display: grid;
-  grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
+  grid-auto-rows: calc((19rem - 8px) / 7);
 }
 .tempus-dominus-widget .time-container-clock .no-highlight {
   width: 90%;

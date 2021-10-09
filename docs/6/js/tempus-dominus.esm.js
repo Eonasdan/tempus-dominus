@@ -1029,7 +1029,7 @@ class Actions {
                 break;
             case ActionTypes.selectHour:
                 let hour = +currentTarget.getAttribute('data-value');
-                if (lastPicked.hours >= 12)
+                if (lastPicked.hours >= 12 && !this._context._options.display.components.useTwentyfourHour)
                     hour += 12;
                 lastPicked.hours = hour;
                 this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
@@ -1609,9 +1609,9 @@ class OptionConverter {
      * @private
      */
     static _dateTypeCheck(d) {
-        if (d.constructor.name === 'DateTime')
+        if (d.constructor.name === DateTime.name)
             return d;
-        if (d.constructor.name === 'Date') {
+        if (d.constructor.name === Date.name) {
             return DateTime.convert(d);
         }
         if (typeof d === typeof '') {

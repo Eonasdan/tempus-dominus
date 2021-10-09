@@ -1609,9 +1609,9 @@ class OptionConverter {
      * @private
      */
     static _dateTypeCheck(d) {
-        if (d.constructor.name === 'DateTime')
+        if (d.constructor.name === DateTime.name)
             return d;
-        if (d.constructor.name === 'Date') {
+        if (d.constructor.name === Date.name) {
             return DateTime.convert(d);
         }
         if (typeof d === typeof '') {

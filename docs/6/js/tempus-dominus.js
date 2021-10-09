@@ -7,7 +7,7 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@popperjs/core')) :
     typeof define === 'function' && define.amd ? define(['exports', '@popperjs/core'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusDominus = {}, global.Popper));
-}(this, (function (exports, core) { 'use strict';
+})(this, (function (exports, core) { 'use strict';
 
     exports.Unit = void 0;
     (function (Unit) {
@@ -1033,7 +1033,7 @@
                     break;
                 case ActionTypes.selectHour:
                     let hour = +currentTarget.getAttribute('data-value');
-                    if (lastPicked.hours >= 12)
+                    if (lastPicked.hours >= 12 && !this._context._options.display.components.useTwentyfourHour)
                         hour += 12;
                     lastPicked.hours = hour;
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
@@ -1613,9 +1613,9 @@
          * @private
          */
         static _dateTypeCheck(d) {
-            if (d.constructor.name === 'DateTime')
+            if (d.constructor.name === DateTime.name)
                 return d;
-            if (d.constructor.name === 'Date') {
+            if (d.constructor.name === Date.name) {
                 return DateTime.convert(d);
             }
             if (typeof d === typeof '') {
@@ -3367,5 +3367,5 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=tempus-dominus.js.map

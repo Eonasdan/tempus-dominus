@@ -7,7 +7,7 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@popperjs/core')) :
     typeof define === 'function' && define.amd ? define(['exports', '@popperjs/core'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusDominus = {}, global.Popper));
-}(this, (function (exports, core) { 'use strict';
+})(this, (function (exports, core) { 'use strict';
 
     exports.Unit = void 0;
     (function (Unit) {
@@ -1613,9 +1613,9 @@
          * @private
          */
         static _dateTypeCheck(d) {
-            if (d.constructor.name === 'DateTime')
+            if (d.constructor.name === DateTime.name)
                 return d;
-            if (d.constructor.name === 'Date') {
+            if (d.constructor.name === Date.name) {
                 return DateTime.convert(d);
             }
             if (typeof d === typeof '') {
@@ -3367,5 +3367,5 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=tempus-dominus.js.map
