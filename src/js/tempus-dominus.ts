@@ -325,7 +325,7 @@ class TempusDominus {
     // defaults the input format based on the components enabled
     if (config.hooks.inputFormat === undefined) {
       const components = config.display.components;
-      config.hooks.inputFormat = (date: DateTime) => {
+      config.hooks.inputFormat = (_, date: DateTime) => {
         return date.format({
           year: components.calendar && components.year ? 'numeric' : undefined,
           month:
@@ -359,6 +359,7 @@ class TempusDominus {
    * @private
    */
   private _initializeInput() {
+
     if (this._element.tagName == 'INPUT') {
       this._input = this._element as HTMLInputElement;
     } else {
@@ -459,7 +460,7 @@ class TempusDominus {
         for (let i = 0; i < valueSplit.length; i++) {
           if (this._options.hooks.inputParse) {
             this.dates.set(
-              this._options.hooks.inputParse(valueSplit[i]),
+              this._options.hooks.inputParse(this, valueSplit[i]),
               i,
               'input'
             );
@@ -475,7 +476,7 @@ class TempusDominus {
       }
     } else {
       if (this._options.hooks.inputParse) {
-        this.dates.set(this._options.hooks.inputParse(value), 0, 'input');
+        this.dates.set(this._options.hooks.inputParse(this, value), 0, 'input');
       } else {
         this.dates.set(value, 0, 'input');
       }

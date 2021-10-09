@@ -1056,7 +1056,7 @@ class Actions {
                 }
                 break;
             case ActionTypes.selectSecond:
-                lastPicked.seconds = +currentTarget.innerText;
+                lastPicked.seconds = +currentTarget.dataset.value;
                 this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
                 if (this._context._options.display.components.useTwentyfourHour &&
                     !this._context._options.display.keepOpen &&
@@ -1533,7 +1533,8 @@ class OptionConverter {
                 }
                 path += `.${key}`;
                 copyTo[key] = processKey(key, value, providedType, defaultType);
-                if (typeof defaultOptionValue !== 'object' || ignoreProperties.includes(key)) {
+                if (typeof defaultOptionValue !== 'object' ||
+                    ignoreProperties.includes(key)) {
                     path = path.substring(0, path.lastIndexOf(`.${key}`));
                     return;
                 }
@@ -1812,20 +1813,22 @@ class Dates {
         if (!oldDate && !this._context._unset && noIndex && isClear) {
             oldDate = this.lastPicked;
         }
-        if (target && (oldDate === null || oldDate === void 0 ? void 0 : oldDate.isSame(target)))
-            return;
         const updateInput = () => {
             if (!this._context._input)
                 return;
-            let newValue = this._context._options.hooks.inputFormat(target);
+            let newValue = this._context._options.hooks.inputFormat(this._context, target);
             if (this._context._options.multipleDates) {
                 newValue = this._dates
-                    .map((d) => this._context._options.hooks.inputFormat(d))
+                    .map((d) => this._context._options.hooks.inputFormat(this._context, d))
                     .join(this._context._options.multipleDatesSeparator);
             }
             if (this._context._input.value != newValue)
                 this._context._input.value = newValue;
         };
+        if (target && (oldDate === null || oldDate === void 0 ? void 0 : oldDate.isSame(target))) {
+            updateInput();
+            return;
+        }
         // case of calling setValue(null)
         if (!target) {
             if (!this._context._options.multipleDates ||
@@ -2395,9 +2398,7 @@ class Display {
          */
         this._documentClickEvent = (e) => {
             var _a;
-            if (this._context._options.display.keepOpen ||
-                this._context._options.debug ||
-                window.debug)
+            if (this._context._options.debug || window.debug)
                 return;
             if (this._isVisible &&
                 !e.composedPath().includes(this.widget) && // click inside the widget
@@ -2527,16 +2528,11 @@ class Display {
             if (!this._context._options.display.inline) {
                 document.body.appendChild(this.widget);
                 this._popperInstance = createPopper(this._context._element, this.widget, {
-                    modifiers: [
-                        /*  {
-                            name: 'offset',
-                            options: {
-                              offset: [2, 8],
-                            },
-                          },*/
-                        { name: 'eventListeners', enabled: true },
-                    ],
-                    placement: 'bottom-start',
+                    modifiers: [{ name: 'eventListeners', enabled: true }],
+                    //#2400
+                    placement: document.documentElement.dir === 'rtl'
+                        ? 'bottom-end'
+                        : 'bottom-start',
                 });
             }
             else {
@@ -3008,7 +3004,7 @@ class TempusDominus {
                     const valueSplit = value.split(this._options.multipleDatesSeparator);
                     for (let i = 0; i < valueSplit.length; i++) {
                         if (this._options.hooks.inputParse) {
-                            this.dates.set(this._options.hooks.inputParse(valueSplit[i]), i, 'input');
+                            this.dates.set(this._options.hooks.inputParse(this, valueSplit[i]), i, 'input');
                         }
                         else {
                             this.dates.set(valueSplit[i], i, 'input');
@@ -3022,7 +3018,7 @@ class TempusDominus {
             }
             else {
                 if (this._options.hooks.inputParse) {
-                    this.dates.set(this._options.hooks.inputParse(value), 0, 'input');
+                    this.dates.set(this._options.hooks.inputParse(this, value), 0, 'input');
                 }
                 else {
                     this.dates.set(value, 0, 'input');
@@ -3276,7 +3272,7 @@ class TempusDominus {
         // defaults the input format based on the components enabled
         if (config.hooks.inputFormat === undefined) {
             const components = config.display.components;
-            config.hooks.inputFormat = (date) => {
+            config.hooks.inputFormat = (_, date) => {
                 return date.format({
                     year: components.calendar && components.year ? 'numeric' : undefined,
                     month: components.calendar && components.month ? '2-digit' : undefined,

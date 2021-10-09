@@ -158,16 +158,12 @@ export default class Display {
           this._context._element,
           this.widget,
           {
-            modifiers: [
-            /*  {
-                name: 'offset',
-                options: {
-                  offset: [2, 8],
-                },
-              },*/
-              { name: 'eventListeners', enabled: true },
-            ],
-            placement: 'bottom-start',
+            modifiers: [{ name: 'eventListeners', enabled: true }],
+            //#2400
+            placement:
+              document.documentElement.dir === 'rtl'
+                ? 'bottom-end'
+                : 'bottom-start',
           }
         );
       } else {
@@ -611,9 +607,7 @@ export default class Display {
    * @param e MouseEvent
    */
   private _documentClickEvent = (e: MouseEvent) => {
-    if (this._context._options.display.keepOpen ||
-      this._context._options.debug ||
-      (window as any).debug) return;
+    if (this._context._options.debug || (window as any).debug) return;
 
     if (
       this._isVisible &&

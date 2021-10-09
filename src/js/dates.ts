@@ -140,20 +140,28 @@ export default class Dates {
       oldDate = this.lastPicked;
     }
 
-    if (target && oldDate?.isSame(target)) return;
-
     const updateInput = () => {
       if (!this._context._input) return;
 
-      let newValue = this._context._options.hooks.inputFormat(target);
+      let newValue = this._context._options.hooks.inputFormat(
+        this._context,
+        target
+      );
       if (this._context._options.multipleDates) {
         newValue = this._dates
-          .map((d) => this._context._options.hooks.inputFormat(d))
+          .map((d) =>
+            this._context._options.hooks.inputFormat(this._context, d)
+          )
           .join(this._context._options.multipleDatesSeparator);
       }
       if (this._context._input.value != newValue)
         this._context._input.value = newValue;
     };
+
+    if (target && oldDate?.isSame(target)) {
+      updateInput();
+      return;
+    }
 
     // case of calling setValue(null)
     if (!target) {

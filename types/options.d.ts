@@ -1,4 +1,5 @@
 import { DateTime } from './datetime';
+import { TempusDominus } from './tempus-dominus';
 export default interface Options {
     restrictions: {
         minDate: DateTime;
@@ -92,8 +93,8 @@ export default interface Options {
     promptTimeOnDateChange: boolean;
     promptTimeOnDateChangeTransitionDelay: number;
     hooks: {
-        inputParse: (value: any) => DateTime;
-        inputFormat: (date: DateTime) => string;
+        inputParse: (context: TempusDominus, value: any) => DateTime;
+        inputFormat: (context: TempusDominus, date: DateTime) => string;
     };
 }
 export declare class OptionConverter {

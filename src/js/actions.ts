@@ -173,7 +173,7 @@ export default class Actions {
         }
         break;
       case ActionTypes.selectSecond:
-        lastPicked.seconds = +currentTarget.innerText;
+        lastPicked.seconds = +currentTarget.dataset.value;
         this._context.dates._setValue(
           lastPicked,
           this._context.dates.lastPickedIndex

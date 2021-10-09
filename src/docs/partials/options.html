@@ -453,10 +453,12 @@ new tempusDominus.TempusDominus(..., {
           class='fas fa-anchor'></i></a>
         </h3>
         <p>
-          <strong>Accepts:</strong> <code>(date: DateTime) => string</code> or undefined <strong>Defaults:</strong>
+          <strong>Accepts:</strong> <code>(context: TempusDominus, date: DateTime) => string</code> or undefined
+          <strong>Defaults:</strong>
           undefined<br />
           Takes a function that turns the selected date(s) into a string. If not provided, Intl formatting will be
-          used based on configured components.
+          used based on configured components. The complete context is provided so you can access the input field itself
+          via <code>context.input</code> or any of the validation methods and so on.
         </p>
         <p>
           Whenever the picker attempts to set the input value from a selection, it will call this function. An example
@@ -464,18 +466,19 @@ new tempusDominus.TempusDominus(..., {
         </p>
         <pre>
 <code class='language-js'>
-inputFormat:(date) => { return date.toISOString() }
+inputFormat:(context, date) => { return date.toISOString() }
 </code>
         </pre>
         <h3 id='hooksInputParse' class='mt-3'>inputParse<a class='anchorjs-link' aria-label='Anchor'
-                                              href='#hooksInputParse'><i
+                                                           href='#hooksInputParse'><i
           class='fas fa-anchor'></i></a>
         </h3>
         <p>
-          <strong>Accepts:</strong> <code>(value: any) => DateTime</code> or undefined <strong>Defaults:</strong>
+          <strong>Accepts:</strong> <code>(context: TempusDominus, value: any) => DateTime</code> or undefined <strong>Defaults:</strong>
           undefined<br />
           Takes a function that turns the input value into a DateTime object. If not provided, the internal parsing
-          method will be used.
+          method will be used. The complete context is provided so you can access the input field itself
+          via <code>context.input</code> or any of the validation methods and so on.
         </p>
         <p>
           Whenever the input value changes, this function will be called. The most simple example is just to attempt to
@@ -483,7 +486,7 @@ inputFormat:(date) => { return date.toISOString() }
         </p>
         <pre>
 <code class='language-js'>
-inputParse: (value) => { return new tempusDominus.DateTime(value) }
+inputParse: (context, value) => { return new tempusDominus.DateTime(value) }
 </code>
         </pre>
       </div>

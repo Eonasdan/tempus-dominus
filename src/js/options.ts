@@ -1,6 +1,7 @@
 import { DateTime, DateTimeFormatOptions } from './datetime';
 import Namespace from './namespace';
 import { DefaultOptions } from './conts';
+import { TempusDominus } from './tempus-dominus';
 
 export default interface Options {
   restrictions: {
@@ -88,8 +89,8 @@ export default interface Options {
   promptTimeOnDateChange: boolean;
   promptTimeOnDateChangeTransitionDelay: number;
   hooks: {
-    inputParse: (value: any) => DateTime;
-    inputFormat: (date: DateTime) => string;
+    inputParse: (context: TempusDominus, value: any) => DateTime;
+    inputFormat: (context: TempusDominus, date: DateTime) => string;
   };
 }
 
@@ -339,7 +340,10 @@ export class OptionConverter {
         path += `.${key}`;
         copyTo[key] = processKey(key, value, providedType, defaultType);
 
-        if (typeof defaultOptionValue !== 'object' || ignoreProperties.includes(key)) {
+        if (
+          typeof defaultOptionValue !== 'object' ||
+          ignoreProperties.includes(key)
+        ) {
           path = path.substring(0, path.lastIndexOf(`.${key}`));
           return;
         }
