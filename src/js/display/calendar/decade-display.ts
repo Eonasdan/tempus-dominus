@@ -55,7 +55,7 @@ export default class DecadeDisplay {
 
     switcher.setAttribute(
       Namespace.css.decadesContainer,
-      `${this._startDecade.year}-${this._endDecade.year}`
+      `${this._startDecade.format({ year: 'numeric' })}-${this._endDecade.format({ year: 'numeric' })}`
     );
 
     this._context._validation.isValid(this._startDecade, Unit.year)
@@ -79,7 +79,7 @@ export default class DecadeDisplay {
             containerClone.setAttribute('data-value', ``);
             return;
           } else {
-            containerClone.innerText = `${this._startDecade.year - 10}`;
+            containerClone.innerText = this._startDecade.clone.manipulate(-10, Unit.year).format({ year: 'numeric' });
             containerClone.setAttribute(
               'data-value',
               `${this._startDecade.year}`
@@ -107,7 +107,7 @@ export default class DecadeDisplay {
           'data-value',
           `${this._startDecade.year}`
         );
-        containerClone.innerText = `${this._startDecade.year}`;
+        containerClone.innerText = `${this._startDecade.format({ year: 'numeric' })}`;
 
         this._startDecade.manipulate(10, Unit.year);
       });

@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-alpha1.0.13 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-alpha14 (https://getdatepicker.com/)
   * Copyright 2013-2021 [object Object]
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -248,7 +248,7 @@
          * Returns two digit hours
          */
         get secondsFormatted() {
-            return this.seconds < 10 ? `0${this.seconds}` : `${this.seconds}`;
+            return this.format({ second: "2-digit" });
         }
         /**
          * Shortcut to Date.getMinutes()
@@ -266,7 +266,7 @@
          * Returns two digit hours
          */
         get minutesFormatted() {
-            return this.minutes < 10 ? `0${this.minutes}` : `${this.minutes}`;
+            return this.format({ minute: "2-digit" });
         }
         /**
          * Shortcut to Date.getHours()
@@ -284,18 +284,13 @@
          * Returns two digit hours
          */
         get hoursFormatted() {
-            return this.hours < 10 ? `0${this.hours}` : `${this.hours}`;
+            return this.format({ hour: "2-digit" });
         }
         /**
          * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
          */
         get twelveHoursFormatted() {
-            let hour = this.hours;
-            if (hour > 12)
-                hour = hour - 12;
-            if (hour === 0)
-                hour = 12;
-            return hour < 10 ? `0${hour}` : `${hour}`;
+            return this.format({ hour12: true, hour: "2-digit" });
         }
         /**
          * Get the meridiem of the date. E.g. AM or PM.
@@ -769,7 +764,6 @@
                 seconds: false,
                 useTwentyfourHour: false,
             },
-            inputFormat: undefined,
             inline: false,
         },
         stepping: 1,
@@ -813,6 +807,10 @@
         multipleDatesSeparator: '; ',
         promptTimeOnDateChange: false,
         promptTimeOnDateChangeTransitionDelay: 200,
+        hooks: {
+            inputParse: undefined,
+            inputFormat: undefined,
+        },
     };
     const DatePickerModes = [
         {
@@ -977,7 +975,7 @@
                 case ActionTypes.selectMonth:
                 case ActionTypes.selectYear:
                 case ActionTypes.selectDecade:
-                    const value = +currentTarget.getAttribute('data-value');
+                    const value = +currentTarget.dataset.value;
                     switch (action) {
                         case ActionTypes.selectMonth:
                             this._context._viewDate.month = value;
@@ -1010,7 +1008,7 @@
                     if (currentTarget.classList.contains(Namespace.css.new)) {
                         day.manipulate(1, exports.Unit.month);
                     }
-                    day.date = +currentTarget.innerText;
+                    day.date = +currentTarget.dataset.day;
                     let index = 0;
                     if (this._context._options.multipleDates) {
                         index = this._context.dates.pickedIndex(day, exports.Unit.date);
@@ -1032,8 +1030,9 @@
                     }
                     break;
                 case ActionTypes.selectHour:
-                    let hour = +currentTarget.getAttribute('data-value');
-                    if (lastPicked.hours >= 12 && !this._context._options.display.components.useTwentyfourHour)
+                    let hour = +currentTarget.dataset.value;
+                    if (lastPicked.hours >= 12 &&
+                        !this._context._options.display.components.useTwentyfourHour)
                         hour += 12;
                     lastPicked.hours = hour;
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
@@ -1048,7 +1047,7 @@
                     }
                     break;
                 case ActionTypes.selectMinute:
-                    lastPicked.minutes = +currentTarget.innerText;
+                    lastPicked.minutes = +currentTarget.dataset.value;
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
                     if (this._context._options.display.components.useTwentyfourHour &&
                         !this._context._options.display.components.seconds &&
@@ -1061,7 +1060,7 @@
                     }
                     break;
                 case ActionTypes.selectSecond:
-                    lastPicked.seconds = +currentTarget.innerText;
+                    lastPicked.seconds = +currentTarget.dataset.value;
                     this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
                     if (this._context._options.display.components.useTwentyfourHour &&
                         !this._context._options.display.keepOpen &&
@@ -1273,7 +1272,8 @@
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
-                containerClone.innerText = `${innerDate.date}`;
+                containerClone.setAttribute('data-day', `${innerDate.date}`);
+                containerClone.innerText = innerDate.format({ day: "numeric" });
                 innerDate.manipulate(1, exports.Unit.date);
             });
         }
@@ -1367,6 +1367,7 @@
         static _mergeOptions(providedOptions, mergeTo) {
             const newOptions = {};
             let path = '';
+            const ignoreProperties = ['inputParse', 'inputFormat'];
             const processKey = (key, value, providedType, defaultType) => {
                 switch (key) {
                     case 'defaultDate': {
@@ -1479,6 +1480,7 @@
                         if (!keyOptions.includes(value))
                             Namespace.errorMessages.unexpectedOptionValue(path.substring(1), value, keyOptions);
                         return value;
+                    case 'inputParse':
                     case 'inputFormat':
                         return value;
                     default:
@@ -1535,7 +1537,8 @@
                     }
                     path += `.${key}`;
                     copyTo[key] = processKey(key, value, providedType, defaultType);
-                    if (typeof defaultOptionValue !== 'object' || key === 'inputFormat') {
+                    if (typeof defaultOptionValue !== 'object' ||
+                        ignoreProperties.includes(key)) {
                         path = path.substring(0, path.lastIndexOf(`.${key}`));
                         return;
                     }
@@ -1664,12 +1667,12 @@
          * @param optionName Provides text to error messages e.g. disabledDates
          */
         static _dateConversion(d, optionName) {
-            if (typeof d === typeof '' && optionName !== 'input field') {
+            if (typeof d === typeof '' && optionName !== 'input') {
                 Namespace.errorMessages.dateString();
             }
             const converted = this._dateTypeCheck(d);
             if (!converted) {
-                Namespace.errorMessages.failedToParseDate(optionName, d);
+                Namespace.errorMessages.failedToParseDate(optionName, d, optionName === 'input');
             }
             return converted;
         }
@@ -1743,11 +1746,9 @@
         set(value, index, from = 'date.set') {
             if (!value)
                 this._setValue(value, index);
-            const converted = OptionConverter._dateConversion(value, 'input field');
-            if (converted !== undefined)
+            const converted = OptionConverter._dateConversion(value, from);
+            if (converted)
                 this._setValue(converted, index);
-            else
-                Namespace.errorMessages.failedToParseDate(from, value, true);
         }
         /**
          * Returns true if the `targetDate` is part of the selected dates array.
@@ -1816,20 +1817,22 @@
             if (!oldDate && !this._context._unset && noIndex && isClear) {
                 oldDate = this.lastPicked;
             }
-            if (target && (oldDate === null || oldDate === void 0 ? void 0 : oldDate.isSame(target)))
-                return;
             const updateInput = () => {
                 if (!this._context._input)
                     return;
-                let newValue = (target === null || target === void 0 ? void 0 : target.format(this._context._options.display.inputFormat)) || '';
+                let newValue = this._context._options.hooks.inputFormat(this._context, target);
                 if (this._context._options.multipleDates) {
                     newValue = this._dates
-                        .map((d) => d.format(this._context._options.display.inputFormat))
+                        .map((d) => this._context._options.hooks.inputFormat(this._context, d))
                         .join(this._context._options.multipleDatesSeparator);
                 }
                 if (this._context._input.value != newValue)
                     this._context._input.value = newValue;
             };
+            if (target && (oldDate === null || oldDate === void 0 ? void 0 : oldDate.isSame(target))) {
+                updateInput();
+                return;
+            }
             // case of calling setValue(null)
             if (!target) {
                 if (!this._context._options.multipleDates ||
@@ -1947,7 +1950,7 @@
             const [previous, switcher, next] = container.parentElement
                 .getElementsByClassName(Namespace.css.calendarHeader)[0]
                 .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.year}-${this._endYear.year}`);
+            switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.format({ year: 'numeric' })}-${this._endYear.format({ year: 'numeric' })}`);
             this._context._validation.isValid(this._startYear, exports.Unit.year)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
@@ -1972,7 +1975,7 @@
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.year}`);
-                containerClone.innerText = `${innerDate.year}`;
+                containerClone.innerText = innerDate.format({ year: "numeric" });
                 innerDate.manipulate(1, exports.Unit.year);
             });
         }
@@ -2013,7 +2016,7 @@
             const [previous, switcher, next] = container.parentElement
                 .getElementsByClassName(Namespace.css.calendarHeader)[0]
                 .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.year}-${this._endDecade.year}`);
+            switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.format({ year: 'numeric' })}-${this._endDecade.format({ year: 'numeric' })}`);
             this._context._validation.isValid(this._startDecade, exports.Unit.year)
                 ? previous.classList.remove(Namespace.css.disabled)
                 : previous.classList.add(Namespace.css.disabled);
@@ -2034,7 +2037,7 @@
                         return;
                     }
                     else {
-                        containerClone.innerText = `${this._startDecade.year - 10}`;
+                        containerClone.innerText = this._startDecade.clone.manipulate(-10, exports.Unit.year).format({ year: 'numeric' });
                         containerClone.setAttribute('data-value', `${this._startDecade.year}`);
                         return;
                     }
@@ -2051,7 +2054,7 @@
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-                containerClone.innerText = `${this._startDecade.year}`;
+                containerClone.innerText = `${this._startDecade.format({ year: 'numeric' })}`;
                 this._startDecade.manipulate(10, exports.Unit.year);
             });
         }
@@ -2399,12 +2402,12 @@
              */
             this._documentClickEvent = (e) => {
                 var _a;
+                if (this._context._options.debug || window.debug)
+                    return;
                 if (this._isVisible &&
                     !e.composedPath().includes(this.widget) && // click inside the widget
-                    !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this._context._element)) && // click on the element
-                    (!this._context._options.display.keepOpen ||
-                        !this._context._options.debug ||
-                        !window.debug)) {
+                    !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this._context._element)) // click on the element
+                ) {
                     this.hide();
                 }
             };
@@ -2529,16 +2532,11 @@
                 if (!this._context._options.display.inline) {
                     document.body.appendChild(this.widget);
                     this._popperInstance = core.createPopper(this._context._element, this.widget, {
-                        modifiers: [
-                            /*  {
-                                name: 'offset',
-                                options: {
-                                  offset: [2, 8],
-                                },
-                              },*/
-                            { name: 'eventListeners', enabled: true },
-                        ],
-                        placement: 'bottom-start',
+                        modifiers: [{ name: 'eventListeners', enabled: true }],
+                        //#2400
+                        placement: document.documentElement.dir === 'rtl'
+                            ? 'bottom-end'
+                            : 'bottom-start',
                     });
                 }
                 else {
@@ -2582,7 +2580,7 @@
                 this._context._currentViewMode = max;
             }
             this.widget
-                .querySelectorAll(`.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div`)
+                .querySelectorAll(`.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div:not(.${Namespace.css.clockContainer})`)
                 .forEach((e) => (e.style.display = 'none'));
             const datePickerMode = DatePickerModes[this._context._currentViewMode];
             let picker = this.widget.querySelector(`.${datePickerMode.className}`);
@@ -3000,20 +2998,36 @@
              * @private
              */
             this._inputChangeEvent = () => {
+                const setViewDate = () => {
+                    if (this.dates.lastPicked)
+                        this._viewDate = this.dates.lastPicked;
+                };
                 const value = this._input.value;
                 if (this._options.multipleDates) {
                     try {
                         const valueSplit = value.split(this._options.multipleDatesSeparator);
                         for (let i = 0; i < valueSplit.length; i++) {
-                            this.dates.set(valueSplit[i], i, 'input');
+                            if (this._options.hooks.inputParse) {
+                                this.dates.set(this._options.hooks.inputParse(this, valueSplit[i]), i, 'input');
+                            }
+                            else {
+                                this.dates.set(valueSplit[i], i, 'input');
+                            }
                         }
+                        setViewDate();
                     }
                     catch (_a) {
                         console.warn('TD: Something went wrong trying to set the multidate values from the input field.');
                     }
                 }
                 else {
-                    this.dates.set(value, 0, 'input');
+                    if (this._options.hooks.inputParse) {
+                        this.dates.set(this._options.hooks.inputParse(this, value), 0, 'input');
+                    }
+                    else {
+                        this.dates.set(value, 0, 'input');
+                    }
+                    setViewDate();
                 }
             };
             /**
@@ -3260,20 +3274,22 @@
                 this._currentViewMode = Math.max(DatePickerModes.findIndex((x) => x.name === config.display.viewMode), this._minViewModeNumber);
             }
             // defaults the input format based on the components enabled
-            if (config.display.inputFormat === undefined) {
+            if (config.hooks.inputFormat === undefined) {
                 const components = config.display.components;
-                config.display.inputFormat = {
-                    year: components.calendar && components.year ? 'numeric' : undefined,
-                    month: components.calendar && components.month ? '2-digit' : undefined,
-                    day: components.calendar && components.date ? '2-digit' : undefined,
-                    hour: components.clock && components.hours
-                        ? components.useTwentyfourHour
-                            ? '2-digit'
-                            : 'numeric'
-                        : undefined,
-                    minute: components.clock && components.minutes ? '2-digit' : undefined,
-                    second: components.clock && components.seconds ? '2-digit' : undefined,
-                    hour12: !components.useTwentyfourHour,
+                config.hooks.inputFormat = (_, date) => {
+                    return date.format({
+                        year: components.calendar && components.year ? 'numeric' : undefined,
+                        month: components.calendar && components.month ? '2-digit' : undefined,
+                        day: components.calendar && components.date ? '2-digit' : undefined,
+                        hour: components.clock && components.hours
+                            ? components.useTwentyfourHour
+                                ? '2-digit'
+                                : 'numeric'
+                            : undefined,
+                        minute: components.clock && components.minutes ? '2-digit' : undefined,
+                        second: components.clock && components.seconds ? '2-digit' : undefined,
+                        hour12: !components.useTwentyfourHour,
+                    });
                 };
             }
             if ((_a = this._display) === null || _a === void 0 ? void 0 : _a.isVisible) {

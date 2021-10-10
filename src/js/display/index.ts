@@ -158,16 +158,12 @@ export default class Display {
           this._context._element,
           this.widget,
           {
-            modifiers: [
-            /*  {
-                name: 'offset',
-                options: {
-                  offset: [2, 8],
-                },
-              },*/
-              { name: 'eventListeners', enabled: true },
-            ],
-            placement: 'bottom-start',
+            modifiers: [{ name: 'eventListeners', enabled: true }],
+            //#2400
+            placement:
+              document.documentElement.dir === 'rtl'
+                ? 'bottom-end'
+                : 'bottom-start',
           }
         );
       } else {
@@ -231,7 +227,7 @@ export default class Display {
 
     this.widget
       .querySelectorAll(
-        `.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div`
+        `.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div:not(.${Namespace.css.clockContainer})`
       )
       .forEach((e: HTMLElement) => (e.style.display = 'none'));
 
@@ -611,13 +607,12 @@ export default class Display {
    * @param e MouseEvent
    */
   private _documentClickEvent = (e: MouseEvent) => {
+    if (this._context._options.debug || (window as any).debug) return;
+
     if (
       this._isVisible &&
       !e.composedPath().includes(this.widget) && // click inside the widget
-      !e.composedPath()?.includes(this._context._element) && // click on the element
-      (!this._context._options.display.keepOpen ||
-        !this._context._options.debug ||
-        !(window as any).debug)
+      !e.composedPath()?.includes(this._context._element) // click on the element
     ) {
       this.hide();
     }

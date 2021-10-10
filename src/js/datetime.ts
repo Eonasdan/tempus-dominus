@@ -276,7 +276,7 @@ export class DateTime extends Date {
    * Returns two digit hours
    */
   get secondsFormatted(): string {
-    return this.seconds < 10 ? `0${this.seconds}` : `${this.seconds}`;
+    return this.format({ second: "2-digit" });
   }
 
   /**
@@ -297,7 +297,7 @@ export class DateTime extends Date {
    * Returns two digit hours
    */
   get minutesFormatted(): string {
-    return this.minutes < 10 ? `0${this.minutes}` : `${this.minutes}`;
+    return this.format({ minute: "2-digit" });
   }
 
   /**
@@ -318,17 +318,14 @@ export class DateTime extends Date {
    * Returns two digit hours
    */
   get hoursFormatted(): string {
-    return this.hours < 10 ? `0${this.hours}` : `${this.hours}`;
+    return this.format({ hour: "2-digit" });
   }
 
   /**
    * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
    */
   get twelveHoursFormatted(): string {
-    let hour = this.hours;
-    if (hour > 12) hour = hour - 12;
-    if (hour === 0) hour = 12;
-    return hour < 10 ? `0${hour}` : `${hour}`;
+    return this.format({ hour12: true, hour: "2-digit" });
   }
 
   /**

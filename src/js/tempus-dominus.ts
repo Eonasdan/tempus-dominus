@@ -323,21 +323,26 @@ class TempusDominus {
     }
 
     // defaults the input format based on the components enabled
-    if (config.display.inputFormat === undefined) {
+    if (config.hooks.inputFormat === undefined) {
       const components = config.display.components;
-      config.display.inputFormat = {
-        year: components.calendar && components.year ? 'numeric' : undefined,
-        month: components.calendar && components.month ? '2-digit' : undefined,
-        day: components.calendar && components.date ? '2-digit' : undefined,
-        hour:
-          components.clock && components.hours
-            ? components.useTwentyfourHour
-              ? '2-digit'
-              : 'numeric'
-            : undefined,
-        minute: components.clock && components.minutes ? '2-digit' : undefined,
-        second: components.clock && components.seconds ? '2-digit' : undefined,
-        hour12: !components.useTwentyfourHour,
+      config.hooks.inputFormat = (_, date: DateTime) => {
+        return date.format({
+          year: components.calendar && components.year ? 'numeric' : undefined,
+          month:
+            components.calendar && components.month ? '2-digit' : undefined,
+          day: components.calendar && components.date ? '2-digit' : undefined,
+          hour:
+            components.clock && components.hours
+              ? components.useTwentyfourHour
+                ? '2-digit'
+                : 'numeric'
+              : undefined,
+          minute:
+            components.clock && components.minutes ? '2-digit' : undefined,
+          second:
+            components.clock && components.seconds ? '2-digit' : undefined,
+          hour12: !components.useTwentyfourHour,
+        });
       };
     }
 
@@ -354,6 +359,7 @@ class TempusDominus {
    * @private
    */
   private _initializeInput() {
+
     if (this._element.tagName == 'INPUT') {
       this._input = this._element as HTMLInputElement;
     } else {
@@ -443,20 +449,38 @@ class TempusDominus {
    * @private
    */
   private _inputChangeEvent = () => {
+    const setViewDate = () => {
+      if (this.dates.lastPicked) this._viewDate = this.dates.lastPicked;
+    };
+
     const value = this._input.value;
     if (this._options.multipleDates) {
       try {
         const valueSplit = value.split(this._options.multipleDatesSeparator);
         for (let i = 0; i < valueSplit.length; i++) {
-          this.dates.set(valueSplit[i], i, 'input');
+          if (this._options.hooks.inputParse) {
+            this.dates.set(
+              this._options.hooks.inputParse(this, valueSplit[i]),
+              i,
+              'input'
+            );
+          } else {
+            this.dates.set(valueSplit[i], i, 'input');
+          }
         }
+        setViewDate();
       } catch {
         console.warn(
           'TD: Something went wrong trying to set the multidate values from the input field.'
         );
       }
     } else {
-      this.dates.set(value, 0, 'input');
+      if (this._options.hooks.inputParse) {
+        this.dates.set(this._options.hooks.inputParse(this, value), 0, 'input');
+      } else {
+        this.dates.set(value, 0, 'input');
+      }
+      setViewDate();
     }
   };
 

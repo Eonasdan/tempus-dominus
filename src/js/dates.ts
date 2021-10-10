@@ -51,9 +51,8 @@ export default class Dates {
    */
   set(value: any, index?: number, from: string = 'date.set') {
     if (!value) this._setValue(value, index);
-    const converted = OptionConverter._dateConversion(value, 'input field');
-    if (converted !== undefined) this._setValue(converted, index);
-    else Namespace.errorMessages.failedToParseDate(from, value, true);
+    const converted = OptionConverter._dateConversion(value, from);
+    if (converted) this._setValue(converted, index);
   }
 
   /**
@@ -141,21 +140,28 @@ export default class Dates {
       oldDate = this.lastPicked;
     }
 
-    if (target && oldDate?.isSame(target)) return;
-
     const updateInput = () => {
       if (!this._context._input) return;
 
-      let newValue =
-        target?.format(this._context._options.display.inputFormat) || '';
+      let newValue = this._context._options.hooks.inputFormat(
+        this._context,
+        target
+      );
       if (this._context._options.multipleDates) {
         newValue = this._dates
-          .map((d) => d.format(this._context._options.display.inputFormat))
+          .map((d) =>
+            this._context._options.hooks.inputFormat(this._context, d)
+          )
           .join(this._context._options.multipleDatesSeparator);
       }
       if (this._context._input.value != newValue)
         this._context._input.value = newValue;
     };
+
+    if (target && oldDate?.isSame(target)) {
+      updateInput();
+      return;
+    }
 
     // case of calling setValue(null)
     if (!target) {
