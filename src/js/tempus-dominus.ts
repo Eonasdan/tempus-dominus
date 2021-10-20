@@ -326,6 +326,7 @@ class TempusDominus {
     if (config.hooks.inputFormat === undefined) {
       const components = config.display.components;
       config.hooks.inputFormat = (_, date: DateTime) => {
+        if (!date) return '';
         return date.format({
           year: components.calendar && components.year ? 'numeric' : undefined,
           month:

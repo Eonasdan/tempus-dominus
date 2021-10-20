@@ -248,7 +248,7 @@
          * Returns two digit hours
          */
         get secondsFormatted() {
-            return this.format({ second: "2-digit" });
+            return this.format({ second: '2-digit' });
         }
         /**
          * Shortcut to Date.getMinutes()
@@ -266,7 +266,7 @@
          * Returns two digit hours
          */
         get minutesFormatted() {
-            return this.format({ minute: "2-digit" });
+            return this.format({ minute: '2-digit' });
         }
         /**
          * Shortcut to Date.getHours()
@@ -284,13 +284,13 @@
          * Returns two digit hours
          */
         get hoursFormatted() {
-            return this.format({ hour: "2-digit" });
+            return this.format({ hour: '2-digit', hour12: false });
         }
         /**
          * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
          */
         get twelveHoursFormatted() {
-            return this.format({ hour12: true, hour: "2-digit" });
+            return this.format({ hour12: true, hour: '2-digit' });
         }
         /**
          * Get the meridiem of the date. E.g. AM or PM.
@@ -3277,6 +3277,8 @@
             if (config.hooks.inputFormat === undefined) {
                 const components = config.display.components;
                 config.hooks.inputFormat = (_, date) => {
+                    if (!date)
+                        return '';
                     return date.format({
                         year: components.calendar && components.year ? 'numeric' : undefined,
                         month: components.calendar && components.month ? '2-digit' : undefined,
