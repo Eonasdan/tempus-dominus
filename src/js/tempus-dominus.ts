@@ -144,7 +144,7 @@ class TempusDominus {
   subscribe(
     eventTypes: string | string[],
     callbacks: (event: any) => void | ((event: any) => void)[]
-  ): { unsubscribe: void }[] {
+  ): { unsubscribe: () => void } | { unsubscribe: () => void }[] {
     if (typeof eventTypes === 'string') {
       eventTypes = [eventTypes];
     }
@@ -360,7 +360,6 @@ class TempusDominus {
    * @private
    */
   private _initializeInput() {
-
     if (this._element.tagName == 'INPUT') {
       this._input = this._element as HTMLInputElement;
     } else {
