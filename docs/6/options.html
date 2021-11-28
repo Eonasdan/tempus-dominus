@@ -836,8 +836,8 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
           <h3 id="localizationDayViewHeaderFormat">dayViewHeaderFormat<a class="anchorjs-link" aria-label="Anchor" href="#localizationDayViewHeaderFormat"><i class="fas fa-anchor"></i></a>
           </h3>
           <p>
-            <strong>Accepts:</strong> "numeric" | "2-digit" | "long" | "short" | "narrow" <strong>Defaults:</strong>
-            long<br>
+            <strong>Accepts:</strong> DateTimeFormatOptions <strong>Defaults:</strong>
+            <code>{ month: 'long', year: '2-digit' }</code><br>
             This should be an appropriate value from the Intl.DateFormat options.
           </p>
 
@@ -846,6 +846,15 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
           <p>
             <strong>Defaults:</strong> default<br>
             This should be a BCP 47 language tag or a value supported by Intl.
+          </p>
+
+          <h3 id="localizationStartOfTheWeek">startOfTheWeek<a class="anchorjs-link" aria-label="Anchor" href="#localizationStartOfTheWeek"><i class="fas fa-anchor"></i></a>
+          </h3>
+          <p>
+            <strong>Accepts:</strong> 0-6 <strong>Defaults:</strong> 0<br>
+            Changes the start of the week to the provided index. Intl/Date does not provide apis to get the locale's
+            start of the week. 0 = Sunday, 6 = Saturday. If you want the calendar view to start on Monday, set this
+            option to 1.
           </p>
         </div>
       </div>
@@ -903,11 +912,25 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
     display the clock view after <code>promptTimeOnDateChangeTransitionDelay</code>.
   </p>
 
-  <h2 id="promptTimeOnDateChangeTransitionDelay">promptTimeOnDateChangeTransitionDelay<a class="anchorjs-link" aria-label="Anchor" href="#promptTimeOnDateChangeTransitionDelay"><i class="fas fa-anchor"></i></a></h2>
+  <h2 id="promptTimeOnDateChangeTransitionDelay">promptTimeOnDateChangeTransitionDelay
+    <a class="anchorjs-link" aria-label="Anchor" href="#promptTimeOnDateChangeTransitionDelay">
+      <i class="fas fa-anchor"></i>
+    </a>
+  </h2>
   <p>
     <strong>Accepts</strong> number <strong>Defaults:</strong> 200<br>
     Used with <code>promptTimeOnDateChange</code>. The number of milliseconds before the picker will display the clock
     view.
+  </p>
+
+  <h2 id="meta">meta
+    <a class="anchorjs-link" aria-label="Anchor" href="#meta">
+      <i class="fas fa-anchor"></i>
+    </a>
+  </h2>
+  <p>
+    <strong>Accepts</strong> object <strong>Defaults:</strong> {}<br>
+   This property is to provide developers a place to store extra information about the picker. You can use this to store database format strings for instance. There are no rules on what you add to this object and the picker will not reference it.
   </p>
 
 

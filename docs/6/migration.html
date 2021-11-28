@@ -380,7 +380,7 @@
             case 'dayViewHeaderFormat':
               createAlert('Moment is no longer supported. This option now accepts Intl formats. See <a href="options.html#localizationDayViewHeaderFormat" target="_blank">localization usage</a>', 'warning');
               ensurePath('localization', newOptions);
-              newOptions.localization.dayViewHeaderFormat = 'long';
+              newOptions.localization.dayViewHeaderFormat = { month: 'long', year: '2-digit' };
               break;
             case 'extraFormats':
             case 'collapse':

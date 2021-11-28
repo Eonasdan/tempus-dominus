@@ -1,101 +1,103 @@
-import { DateTime } from './datetime';
+import { DateTime, DateTimeFormatOptions } from './datetime';
 import { TempusDominus } from './tempus-dominus';
 export default interface Options {
-    restrictions: {
-        minDate: DateTime;
-        maxDate: DateTime;
-        enabledDates: DateTime[];
-        disabledDates: DateTime[];
-        enabledHours: number[];
-        disabledHours: number[];
-        disabledTimeIntervals: {
+    restrictions?: {
+        minDate?: DateTime;
+        maxDate?: DateTime;
+        enabledDates?: DateTime[];
+        disabledDates?: DateTime[];
+        enabledHours?: number[];
+        disabledHours?: number[];
+        disabledTimeIntervals?: {
             from: DateTime;
             to: DateTime;
         }[];
-        daysOfWeekDisabled: number[];
+        daysOfWeekDisabled?: number[];
     };
-    display: {
-        toolbarPlacement: 'top' | 'bottom';
-        components: {
-            calendar: boolean;
-            date: boolean;
-            month: boolean;
-            year: boolean;
-            decades: boolean;
-            clock: boolean;
-            hours: boolean;
-            minutes: boolean;
-            seconds: boolean;
-            useTwentyfourHour: boolean;
+    display?: {
+        toolbarPlacement?: 'top' | 'bottom';
+        components?: {
+            calendar?: boolean;
+            date?: boolean;
+            month?: boolean;
+            year?: boolean;
+            decades?: boolean;
+            clock?: boolean;
+            hours?: boolean;
+            minutes?: boolean;
+            seconds?: boolean;
+            useTwentyfourHour?: boolean;
         };
-        buttons: {
-            today: boolean;
-            close: boolean;
-            clear: boolean;
+        buttons?: {
+            today?: boolean;
+            close?: boolean;
+            clear?: boolean;
         };
-        calendarWeeks: boolean;
-        icons: {
-            date: string;
-            next: string;
-            previous: string;
-            today: string;
-            clear: string;
-            time: string;
-            up: string;
-            type: 'icons' | 'sprites';
-            down: string;
-            close: string;
+        calendarWeeks?: boolean;
+        icons?: {
+            date?: string;
+            next?: string;
+            previous?: string;
+            today?: string;
+            clear?: string;
+            time?: string;
+            up?: string;
+            type?: 'icons' | 'sprites';
+            down?: string;
+            close?: string;
         };
-        viewMode: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
-        sideBySide: boolean;
-        inline: boolean;
-        keepOpen: boolean;
+        viewMode?: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
+        sideBySide?: boolean;
+        inline?: boolean;
+        keepOpen?: boolean;
     };
-    stepping: number;
-    useCurrent: boolean;
-    defaultDate: DateTime;
-    localization: {
-        nextMonth: string;
-        pickHour: string;
-        incrementSecond: string;
-        nextDecade: string;
-        selectDecade: string;
-        dayViewHeaderFormat: 'numeric' | '2-digit' | 'long' | 'short' | 'narrow';
-        decrementHour: string;
-        selectDate: string;
-        incrementHour: string;
-        previousCentury: string;
-        decrementSecond: string;
-        today: string;
-        previousMonth: string;
-        selectYear: string;
-        pickSecond: string;
-        nextCentury: string;
-        close: string;
-        incrementMinute: string;
-        selectTime: string;
-        clear: string;
-        toggleMeridiem: string;
-        selectMonth: string;
-        decrementMinute: string;
-        pickMinute: string;
-        nextYear: string;
-        previousYear: string;
-        previousDecade: string;
-        locale: string;
+    stepping?: number;
+    useCurrent?: boolean;
+    defaultDate?: DateTime;
+    localization?: {
+        nextMonth?: string;
+        pickHour?: string;
+        incrementSecond?: string;
+        nextDecade?: string;
+        selectDecade?: string;
+        dayViewHeaderFormat?: DateTimeFormatOptions;
+        decrementHour?: string;
+        selectDate?: string;
+        incrementHour?: string;
+        previousCentury?: string;
+        decrementSecond?: string;
+        today?: string;
+        previousMonth?: string;
+        selectYear?: string;
+        pickSecond?: string;
+        nextCentury?: string;
+        close?: string;
+        incrementMinute?: string;
+        selectTime?: string;
+        clear?: string;
+        toggleMeridiem?: string;
+        selectMonth?: string;
+        decrementMinute?: string;
+        pickMinute?: string;
+        nextYear?: string;
+        previousYear?: string;
+        previousDecade?: string;
+        locale?: string;
+        startOfTheWeek?: number;
     };
-    keepInvalid: boolean;
-    debug: boolean;
-    allowInputToggle: boolean;
-    viewDate: DateTime;
-    multipleDates: boolean;
-    multipleDatesSeparator: string;
-    promptTimeOnDateChange: boolean;
-    promptTimeOnDateChangeTransitionDelay: number;
-    hooks: {
-        inputParse: (context: TempusDominus, value: any) => DateTime;
-        inputFormat: (context: TempusDominus, date: DateTime) => string;
+    keepInvalid?: boolean;
+    debug?: boolean;
+    allowInputToggle?: boolean;
+    viewDate?: DateTime;
+    multipleDates?: boolean;
+    multipleDatesSeparator?: string;
+    promptTimeOnDateChange?: boolean;
+    promptTimeOnDateChangeTransitionDelay?: number;
+    hooks?: {
+        inputParse?: (context: TempusDominus, value: any) => DateTime;
+        inputFormat?: (context: TempusDominus, date: DateTime) => string;
     };
+    meta?: {};
 }
 export declare class OptionConverter {
     static _mergeOptions(providedOptions: Options, mergeTo: Options): Options;
@@ -112,7 +114,7 @@ export declare class OptionConverter {
      * @param value Option value
      * @param providedType Used to provide text to error messages
      */
-    static _typeCheckDateArray(optionName: string, value: any, providedType: string): void;
+    static _typeCheckDateArray(optionName: string, value: any, providedType: string, locale?: string): void;
     /**
      * Type checks that `value` is an array of numbers
      * @param optionName Provides text to error messages e.g. disabledDates
