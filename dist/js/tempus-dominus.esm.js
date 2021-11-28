@@ -39,10 +39,10 @@ class DateTime extends Date {
      * Doing this allows access to format, etc.
      * @param  date
      */
-    static convert(date) {
+    static convert(date, locale = 'default') {
         if (!date)
             throw `A date is required`;
-        return new DateTime(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+        return new DateTime(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).setLocale(locale);
     }
     /**
      * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
@@ -55,8 +55,9 @@ class DateTime extends Date {
      * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).startOf('month')
      * would return April 1, 2021, 12:00:00.000 AM (midnight)
      * @param unit
+     * @param startOfTheWeek Allows for the changing the start of the week.
      */
-    startOf(unit) {
+    startOf(unit, startOfTheWeek = 0) {
         if (this[unit] === undefined)
             throw `Unit '${unit}' is not valid`;
         switch (unit) {
@@ -74,7 +75,7 @@ class DateTime extends Date {
                 break;
             case 'weekDay':
                 this.startOf(Unit.date);
-                this.manipulate(0 - this.weekDay, Unit.date);
+                this.manipulate(startOfTheWeek - this.weekDay, Unit.date);
                 break;
             case 'month':
                 this.startOf(Unit.date);
@@ -244,7 +245,7 @@ class DateTime extends Date {
      * Returns two digit hours
      */
     get secondsFormatted() {
-        return this.format({ second: '2-digit' });
+        return this.seconds < 10 ? `0${this.seconds}` : `${this.seconds}`;
     }
     /**
      * Shortcut to Date.getMinutes()
@@ -259,10 +260,10 @@ class DateTime extends Date {
         this.setMinutes(value);
     }
     /**
-     * Returns two digit hours
+     * Returns two digit minutes
      */
     get minutesFormatted() {
-        return this.format({ minute: '2-digit' });
+        return this.minutes < 10 ? `0${this.minutes}` : `${this.minutes}`;
     }
     /**
      * Shortcut to Date.getHours()
@@ -280,13 +281,19 @@ class DateTime extends Date {
      * Returns two digit hours
      */
     get hoursFormatted() {
-        return this.format({ hour: '2-digit', hour12: false });
+        let formatted = this.format({ hour: '2-digit', hour12: false });
+        if (formatted === '24')
+            formatted = '00';
+        return formatted;
     }
     /**
      * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
      */
     get twelveHoursFormatted() {
-        return this.format({ hour12: true, hour: '2-digit' });
+        let hour = this.parts().hour;
+        if (hour.length === 1)
+            hour = `0${hour}`;
+        return hour;
     }
     /**
      * Get the meridiem of the date. E.g. AM or PM.
@@ -792,8 +799,9 @@ const DefaultOptions = {
         toggleMeridiem: 'Toggle Meridiem',
         selectTime: 'Select Time',
         selectDate: 'Select Date',
-        dayViewHeaderFormat: 'long',
+        dayViewHeaderFormat: { month: 'long', year: '2-digit' },
         locale: 'default',
+        startOfTheWeek: 0,
     },
     keepInvalid: false,
     debug: false,
@@ -807,6 +815,7 @@ const DefaultOptions = {
         inputParse: undefined,
         inputFormat: undefined,
     },
+    meta: {},
 };
 const DatePickerModes = [
     {
@@ -839,49 +848,23 @@ const DatePickerModes = [
  * Provides a collapse functionality to the view changes
  */
 class Collapse {
-    constructor() {
-        /**
-         * Gets the transition duration from the `element` by getting css properties
-         * `transition-duration` and `transition-delay`
-         * @param element HTML Element
-         */
-        this.getTransitionDurationFromElement = (element) => {
-            if (!element) {
-                return 0;
-            }
-            // Get transition-duration of the element
-            let { transitionDuration, transitionDelay } = window.getComputedStyle(element);
-            const floatTransitionDuration = Number.parseFloat(transitionDuration);
-            const floatTransitionDelay = Number.parseFloat(transitionDelay);
-            // Return 0 if element or transition duration is not found
-            if (!floatTransitionDuration && !floatTransitionDelay) {
-                return 0;
-            }
-            // If multiple durations are defined, take the first
-            transitionDuration = transitionDuration.split(',')[0];
-            transitionDelay = transitionDelay.split(',')[0];
-            return ((Number.parseFloat(transitionDuration) +
-                Number.parseFloat(transitionDelay)) *
-                1000);
-        };
-    }
     /**
      * Flips the show/hide state of `target`
      * @param target html element to affect.
      */
-    toggle(target, callback = undefined) {
+    static toggle(target) {
         if (target.classList.contains(Namespace.css.show)) {
-            this.hide(target, callback);
+            this.hide(target);
         }
         else {
-            this.show(target, callback);
+            this.show(target);
         }
     }
     /**
      * If `target` is not already showing, then show after the animation.
      * @param target
      */
-    show(target, callback = undefined) {
+    static show(target) {
         if (target.classList.contains(Namespace.css.collapsing) ||
             target.classList.contains(Namespace.css.show))
             return;
@@ -889,28 +872,24 @@ class Collapse {
             target.classList.remove(Namespace.css.collapsing);
             target.classList.add(Namespace.css.collapse, Namespace.css.show);
             target.style.height = '';
-            this.timeOut = null;
-            if (callback)
-                callback();
         };
         target.style.height = '0';
         target.classList.remove(Namespace.css.collapse);
         target.classList.add(Namespace.css.collapsing);
-        this.timeOut = setTimeout(complete, this.getTransitionDurationFromElement(target));
+        setTimeout(complete, this.getTransitionDurationFromElement(target));
         target.style.height = `${target.scrollHeight}px`;
     }
     /**
      * If `target` is not already hidden, then hide after the animation.
      * @param target HTML Element
      */
-    hide(target, callback = undefined) {
+    static hide(target) {
         if (target.classList.contains(Namespace.css.collapsing) ||
             !target.classList.contains(Namespace.css.show))
             return;
         const complete = () => {
             target.classList.remove(Namespace.css.collapsing);
             target.classList.add(Namespace.css.collapse);
-            this.timeOut = null;
         };
         target.style.height = `${target.getBoundingClientRect()['height']}px`;
         const reflow = (element) => element.offsetHeight;
@@ -918,9 +897,33 @@ class Collapse {
         target.classList.remove(Namespace.css.collapse, Namespace.css.show);
         target.classList.add(Namespace.css.collapsing);
         target.style.height = '';
-        this.timeOut = setTimeout(complete, this.getTransitionDurationFromElement(target));
+        setTimeout(complete, this.getTransitionDurationFromElement(target));
     }
 }
+/**
+ * Gets the transition duration from the `element` by getting css properties
+ * `transition-duration` and `transition-delay`
+ * @param element HTML Element
+ */
+Collapse.getTransitionDurationFromElement = (element) => {
+    if (!element) {
+        return 0;
+    }
+    // Get transition-duration of the element
+    let { transitionDuration, transitionDelay } = window.getComputedStyle(element);
+    const floatTransitionDuration = Number.parseFloat(transitionDuration);
+    const floatTransitionDelay = Number.parseFloat(transitionDelay);
+    // Return 0 if element or transition duration is not found
+    if (!floatTransitionDuration && !floatTransitionDelay) {
+        return 0;
+    }
+    // If multiple durations are defined, take the first
+    transitionDuration = transitionDuration.split(',')[0];
+    transitionDelay = transitionDelay.split(',')[0];
+    return ((Number.parseFloat(transitionDuration) +
+        Number.parseFloat(transitionDelay)) *
+        1000);
+};
 
 /**
  *
@@ -928,7 +931,6 @@ class Collapse {
 class Actions {
     constructor(context) {
         this._context = context;
-        this.collapse = new Collapse();
     }
     /**
      * Performs the selected `action`. See ActionTypes
@@ -936,13 +938,14 @@ class Actions {
      * @param action If not provided, then look for a [data-action]
      */
     do(e, action) {
-        const currentTarget = e.currentTarget;
-        if (currentTarget.classList.contains(Namespace.css.disabled))
+        var _a, _b;
+        const currentTarget = e === null || e === void 0 ? void 0 : e.currentTarget;
+        if ((_a = currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.classList) === null || _a === void 0 ? void 0 : _a.contains(Namespace.css.disabled))
             return false;
-        action = action || currentTarget.dataset.action;
+        action = action || ((_b = currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.dataset) === null || _b === void 0 ? void 0 : _b.action);
         const lastPicked = (this._context.dates.lastPicked || this._context._viewDate).clone;
         /**
-         * Common function to manipulate {@link lastPicked} by `unit`
+         * Common function to manipulate {@link lastPicked} by `unit`.
          * @param unit
          * @param value Value to change by
          */
@@ -950,6 +953,23 @@ class Actions {
             const newDate = lastPicked.manipulate(value, unit);
             if (this._context._validation.isValid(newDate, unit)) {
                 this._context.dates._setValue(newDate, this._context.dates.lastPickedIndex);
+            }
+        };
+        /**
+         * Common function to manipulate {@link lastPicked} by `unit`.
+         * After setting the value it will either show the clock or hide the widget.
+         * @param unit
+         * @param value Value to change by
+         */
+        const hideOrClock = () => {
+            if (this._context._options.display.components.useTwentyfourHour &&
+                !this._context._options.display.components.minutes &&
+                !this._context._options.display.keepOpen &&
+                !this._context._options.display.inline) {
+                this._context._display.hide();
+            }
+            else {
+                this.do(e, ActionTypes.showClock);
             }
         };
         switch (action) {
@@ -1032,40 +1052,17 @@ class Actions {
                     hour += 12;
                 lastPicked.hours = hour;
                 this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
-                if (this._context._options.display.components.useTwentyfourHour &&
-                    !this._context._options.display.components.minutes &&
-                    !this._context._options.display.keepOpen &&
-                    !this._context._options.display.inline) {
-                    this._context._display.hide();
-                }
-                else {
-                    this.do(e, ActionTypes.showClock);
-                }
+                hideOrClock();
                 break;
             case ActionTypes.selectMinute:
                 lastPicked.minutes = +currentTarget.dataset.value;
                 this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
-                if (this._context._options.display.components.useTwentyfourHour &&
-                    !this._context._options.display.components.seconds &&
-                    !this._context._options.display.keepOpen &&
-                    !this._context._options.display.inline) {
-                    this._context._display.hide();
-                }
-                else {
-                    this.do(e, ActionTypes.showClock);
-                }
+                hideOrClock();
                 break;
             case ActionTypes.selectSecond:
                 lastPicked.seconds = +currentTarget.dataset.value;
                 this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
-                if (this._context._options.display.components.useTwentyfourHour &&
-                    !this._context._options.display.keepOpen &&
-                    !this._context._options.display.inline) {
-                    this._context._display.hide();
-                }
-                else {
-                    this.do(e, ActionTypes.showClock);
-                }
+                hideOrClock();
                 break;
             case ActionTypes.incrementHours:
                 manipulateAndSet(Unit.hours);
@@ -1089,9 +1086,6 @@ class Actions {
                 manipulateAndSet(Unit.hours, this._context.dates.lastPicked.hours >= 12 ? -12 : 12);
                 break;
             case ActionTypes.togglePicker:
-                this._context._display.widget
-                    .querySelectorAll(`.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`)
-                    .forEach((htmlElement) => this.collapse.toggle(htmlElement));
                 if (currentTarget.getAttribute('title') ===
                     this._context._options.localization.selectDate) {
                     currentTarget.setAttribute('title', this._context._options.localization.selectTime);
@@ -1101,9 +1095,14 @@ class Actions {
                 else {
                     currentTarget.setAttribute('title', this._context._options.localization.selectDate);
                     currentTarget.innerHTML = this._context._display._iconTag(this._context._options.display.icons.date).outerHTML;
-                    this.do(e, ActionTypes.showClock);
-                    this._context._display._update('clock');
+                    if (this._context._display._hasTime) {
+                        this.do(e, ActionTypes.showClock);
+                        this._context._display._update('clock');
+                    }
                 }
+                this._context._display.widget
+                    .querySelectorAll(`.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`)
+                    .forEach((htmlElement) => Collapse.toggle(htmlElement));
                 break;
             case ActionTypes.showClock:
             case ActionTypes.showHours:
@@ -1221,9 +1220,7 @@ class DateDisplay {
         const [previous, switcher, next] = container.parentElement
             .getElementsByClassName(Namespace.css.calendarHeader)[0]
             .getElementsByTagName('div');
-        switcher.setAttribute(Namespace.css.daysContainer, this._context._viewDate.format({
-            month: this._context._options.localization.dayViewHeaderFormat,
-        }));
+        switcher.setAttribute(Namespace.css.daysContainer, this._context._viewDate.format(this._context._options.localization.dayViewHeaderFormat));
         this._context._validation.isValid(this._context._viewDate.clone.manipulate(-1, Unit.month), Unit.month)
             ? previous.classList.remove(Namespace.css.disabled)
             : previous.classList.add(Namespace.css.disabled);
@@ -1232,7 +1229,7 @@ class DateDisplay {
             : next.classList.add(Namespace.css.disabled);
         let innerDate = this._context._viewDate.clone
             .startOf(Unit.month)
-            .startOf('weekDay')
+            .startOf('weekDay', this._context._options.localization.startOfTheWeek)
             .manipulate(12, Unit.hours);
         container
             .querySelectorAll(`[data-action="${ActionTypes.selectDay}"], .${Namespace.css.calendarWeeks}`)
@@ -1269,7 +1266,7 @@ class DateDisplay {
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
             containerClone.setAttribute('data-day', `${innerDate.date}`);
-            containerClone.innerText = innerDate.format({ day: "numeric" });
+            containerClone.innerText = innerDate.format({ day: 'numeric' });
             innerDate.manipulate(1, Unit.date);
         });
     }
@@ -1361,14 +1358,23 @@ class MonthDisplay {
 
 class OptionConverter {
     static _mergeOptions(providedOptions, mergeTo) {
+        var _a;
         const newOptions = {};
         let path = '';
-        const ignoreProperties = ['inputParse', 'inputFormat'];
+        const ignoreProperties = [
+            'inputParse',
+            'inputFormat',
+            'meta',
+            'dayViewHeaderFormat',
+        ];
+        //see if the options specify a locale
+        const locale = ((_a = providedOptions === null || providedOptions === void 0 ? void 0 : providedOptions.localization) === null || _a === void 0 ? void 0 : _a.locale) || 'default';
         const processKey = (key, value, providedType, defaultType) => {
             switch (key) {
                 case 'defaultDate': {
                     const dateTime = this._dateConversion(value, 'defaultDate');
                     if (dateTime !== undefined) {
+                        dateTime.setLocale(locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('defaultDate', providedType, 'DateTime or Date');
@@ -1376,6 +1382,7 @@ class OptionConverter {
                 case 'viewDate': {
                     const dateTime = this._dateConversion(value, 'viewDate');
                     if (dateTime !== undefined) {
+                        dateTime.setLocale(locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('viewDate', providedType, 'DateTime or Date');
@@ -1386,6 +1393,7 @@ class OptionConverter {
                     }
                     const dateTime = this._dateConversion(value, 'restrictions.minDate');
                     if (dateTime !== undefined) {
+                        dateTime.setLocale(locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('restrictions.minDate', providedType, 'DateTime or Date');
@@ -1396,6 +1404,7 @@ class OptionConverter {
                     }
                     const dateTime = this._dateConversion(value, 'restrictions.maxDate');
                     if (dateTime !== undefined) {
+                        dateTime.setLocale(locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('restrictions.maxDate', providedType, 'DateTime or Date');
@@ -1428,13 +1437,13 @@ class OptionConverter {
                     if (value === undefined) {
                         return [];
                     }
-                    this._typeCheckDateArray('restrictions.enabledDates', value, providedType);
+                    this._typeCheckDateArray('restrictions.enabledDates', value, providedType, locale);
                     return value;
                 case 'disabledDates':
                     if (value === undefined) {
                         return [];
                     }
-                    this._typeCheckDateArray('restrictions.disabledDates', value, providedType);
+                    this._typeCheckDateArray('restrictions.disabledDates', value, providedType, locale);
                     return value;
                 case 'disabledTimeIntervals':
                     if (value === undefined) {
@@ -1452,6 +1461,7 @@ class OptionConverter {
                             if (!dateTime) {
                                 Namespace.errorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
                             }
+                            dateTime.setLocale(locale);
                             valueObject[i][vk] = dateTime;
                         });
                     }
@@ -1459,18 +1469,10 @@ class OptionConverter {
                 case 'toolbarPlacement':
                 case 'type':
                 case 'viewMode':
-                case 'dayViewHeaderFormat':
                     const optionValues = {
                         toolbarPlacement: ['top', 'bottom', 'default'],
                         type: ['icons', 'sprites'],
                         viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
-                        dayViewHeaderFormat: [
-                            'numeric',
-                            '2-digit',
-                            'long',
-                            'short',
-                            'narrow',
-                        ],
                     };
                     const keyOptions = optionValues[key];
                     if (!keyOptions.includes(value))
@@ -1478,6 +1480,8 @@ class OptionConverter {
                     return value;
                 case 'inputParse':
                 case 'inputFormat':
+                case 'meta':
+                case 'dayViewHeaderFormat':
                     return value;
                 default:
                     switch (defaultType) {
@@ -1632,7 +1636,7 @@ class OptionConverter {
      * @param value Option value
      * @param providedType Used to provide text to error messages
      */
-    static _typeCheckDateArray(optionName, value, providedType) {
+    static _typeCheckDateArray(optionName, value, providedType, locale = 'default') {
         if (!Array.isArray(value)) {
             Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
         }
@@ -1642,6 +1646,7 @@ class OptionConverter {
             if (!dateTime) {
                 Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
             }
+            dateTime.setLocale(locale);
             value[i] = dateTime;
         }
     }
@@ -1743,8 +1748,10 @@ class Dates {
         if (!value)
             this._setValue(value, index);
         const converted = OptionConverter._dateConversion(value, from);
-        if (converted)
+        if (converted) {
+            converted.setLocale(this._context._options.localization.locale);
             this._setValue(converted, index);
+        }
     }
     /**
      * Returns true if the `targetDate` is part of the selected dates array.
@@ -2333,7 +2340,7 @@ class MinuteDisplay {
             }
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
-            containerClone.setAttribute('data-value', `${innerDate.minutes}`);
+            containerClone.setAttribute('data-value', `${innerDate.minutesFormatted}`);
             containerClone.innerText = innerDate.minutesFormatted;
             innerDate.manipulate(step, Unit.minutes);
         });
@@ -2469,6 +2476,8 @@ class Display {
                 this._yearDisplay._update();
                 break;
             case 'clock':
+                if (!this._hasTime)
+                    break;
                 this._timeDisplay._update();
                 this._update(Unit.hours);
                 this._update(Unit.minutes);
@@ -2522,6 +2531,17 @@ class Display {
                 this._context.dates._setValue(this._context._options.defaultDate);
             }
             this._buildWidget();
+            // reset the view to the clock if there's no date components
+            if (this._hasTime && !this._hasDate) {
+                this._context._action.do(null, ActionTypes.showClock);
+                return;
+            }
+            // otherwise return to the calendar view
+            this._context._currentViewMode = this._context._minViewModeNumber;
+            Collapse.hide(this._context._display.widget
+                .getElementsByClassName(Namespace.css.timeContainer)[0]);
+            Collapse.show(this._context._display.widget
+                .getElementsByClassName(Namespace.css.dateContainer)[0]);
             if (this._hasDate) {
                 this._showMode();
             }
@@ -2539,9 +2559,7 @@ class Display {
                 this._context._element.appendChild(this.widget);
             }
             if (this._context._options.display.viewMode == 'clock') {
-                this._context._action.do({
-                    currentTarget: this.widget.querySelector(`.${Namespace.css.timeContainer}`),
-                }, ActionTypes.showClock);
+                this._context._action.do(null, ActionTypes.showClock);
             }
             this.widget
                 .querySelectorAll('[data-action]')
@@ -2624,9 +2642,7 @@ class Display {
                 previous.setAttribute('title', this._context._options.localization.previousMonth);
                 switcher.setAttribute('title', this._context._options.localization.selectMonth);
                 next.setAttribute('title', this._context._options.localization.nextMonth);
-                switcher.innerText = this._context._viewDate.format({
-                    month: this._context._options.localization.dayViewHeaderFormat,
-                });
+                switcher.innerText = this._context._viewDate.format(this._context._options.localization.dayViewHeaderFormat);
                 break;
         }
         switcher.innerText = switcher.getAttribute(showing);

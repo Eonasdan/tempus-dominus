@@ -10,6 +10,7 @@ export enum Unit {
 export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
   timeStyle?: 'short' | 'medium' | 'long';
   dateStyle?: 'short' | 'medium' | 'long' | 'full';
+  numberingSystem?: string;
 }
 
 /**
@@ -36,7 +37,7 @@ export class DateTime extends Date {
    * Doing this allows access to format, etc.
    * @param  date
    */
-  static convert(date: Date): DateTime {
+  static convert(date: Date, locale: string = 'default'): DateTime {
     if (!date) throw `A date is required`;
     return new DateTime(
       date.getFullYear(),
@@ -46,7 +47,7 @@ export class DateTime extends Date {
       date.getMinutes(),
       date.getSeconds(),
       date.getMilliseconds()
-    );
+    ).setLocale(locale);
   }
 
   /**
@@ -69,8 +70,9 @@ export class DateTime extends Date {
    * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).startOf('month')
    * would return April 1, 2021, 12:00:00.000 AM (midnight)
    * @param unit
+   * @param startOfTheWeek Allows for the changing the start of the week.
    */
-  startOf(unit: Unit | 'weekDay'): this {
+  startOf(unit: Unit | 'weekDay', startOfTheWeek = 0): this {
     if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
     switch (unit) {
       case 'seconds':
@@ -87,7 +89,7 @@ export class DateTime extends Date {
         break;
       case 'weekDay':
         this.startOf(Unit.date);
-        this.manipulate(0 - this.weekDay, Unit.date);
+        this.manipulate(startOfTheWeek - this.weekDay, Unit.date);
         break;
       case 'month':
         this.startOf(Unit.date);
@@ -249,7 +251,7 @@ export class DateTime extends Date {
   parts(
     locale = this.locale,
     template: any = { dateStyle: 'full', timeStyle: 'long' }
-  ) {
+  ): any {
     const parts = {};
     new Intl.DateTimeFormat(locale, template)
       .formatToParts(this)
@@ -276,7 +278,7 @@ export class DateTime extends Date {
    * Returns two digit hours
    */
   get secondsFormatted(): string {
-    return this.format({ second: '2-digit' });
+    return this.seconds < 10 ? `0${this.seconds}` : `${this.seconds}`;
   }
 
   /**
@@ -294,10 +296,10 @@ export class DateTime extends Date {
   }
 
   /**
-   * Returns two digit hours
+   * Returns two digit minutes
    */
   get minutesFormatted(): string {
-    return this.format({ minute: '2-digit' });
+    return this.minutes < 10 ? `0${this.minutes}` : `${this.minutes}`;
   }
 
   /**
@@ -318,14 +320,18 @@ export class DateTime extends Date {
    * Returns two digit hours
    */
   get hoursFormatted(): string {
-    return this.format({ hour: '2-digit', hour12: false });
+    let formatted = this.format({ hour: '2-digit', hour12: false });
+    if (formatted === '24') formatted = '00';
+    return formatted;
   }
 
   /**
    * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
    */
   get twelveHoursFormatted(): string {
-    return this.format({ hour12: true, hour: '2-digit' });
+    let hour = this.parts().hour;
+    if (hour.length === 1) hour = `0${hour}`;
+    return hour;
   }
 
   /**

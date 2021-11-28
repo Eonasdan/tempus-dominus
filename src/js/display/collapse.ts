@@ -4,17 +4,15 @@ import Namespace from '../namespace';
  * Provides a collapse functionality to the view changes
  */
 export default class Collapse {
-  private timeOut;
-
   /**
    * Flips the show/hide state of `target`
    * @param target html element to affect.
    */
-  toggle(target: HTMLElement, callback = undefined) {
+  static toggle(target: HTMLElement) {
     if (target.classList.contains(Namespace.css.show)) {
-      this.hide(target, callback);
+      this.hide(target);
     } else {
-      this.show(target, callback);
+      this.show(target);
     }
   }
 
@@ -22,26 +20,26 @@ export default class Collapse {
    * If `target` is not already showing, then show after the animation.
    * @param target
    */
-  show(target: HTMLElement, callback = undefined) {
+  static show(target: HTMLElement) {
     if (
       target.classList.contains(Namespace.css.collapsing) ||
       target.classList.contains(Namespace.css.show)
     )
       return;
 
+    let timeOut = null;
     const complete = () => {
       target.classList.remove(Namespace.css.collapsing);
       target.classList.add(Namespace.css.collapse, Namespace.css.show);
       target.style.height = '';
-      this.timeOut = null;
-      if (callback) callback();
+      timeOut = null;
     };
 
     target.style.height = '0';
     target.classList.remove(Namespace.css.collapse);
     target.classList.add(Namespace.css.collapsing);
 
-    this.timeOut = setTimeout(
+    timeOut = setTimeout(
       complete,
       this.getTransitionDurationFromElement(target)
     );
@@ -52,17 +50,18 @@ export default class Collapse {
    * If `target` is not already hidden, then hide after the animation.
    * @param target HTML Element
    */
-  hide(target: HTMLElement, callback = undefined) {
+  static hide(target: HTMLElement) {
     if (
       target.classList.contains(Namespace.css.collapsing) ||
       !target.classList.contains(Namespace.css.show)
     )
       return;
 
+    let timeOut = null;
     const complete = () => {
       target.classList.remove(Namespace.css.collapsing);
       target.classList.add(Namespace.css.collapse);
-      this.timeOut = null;
+      timeOut = null;
     };
 
     target.style.height = `${target.getBoundingClientRect()['height']}px`;
@@ -75,7 +74,7 @@ export default class Collapse {
     target.classList.add(Namespace.css.collapsing);
     target.style.height = '';
 
-    this.timeOut = setTimeout(
+    timeOut = setTimeout(
       complete,
       this.getTransitionDurationFromElement(target)
     );
@@ -86,7 +85,7 @@ export default class Collapse {
    * `transition-duration` and `transition-delay`
    * @param element HTML Element
    */
-  private getTransitionDurationFromElement = (element: HTMLElement) => {
+  private static getTransitionDurationFromElement = (element: HTMLElement) => {
     if (!element) {
       return 0;
     }

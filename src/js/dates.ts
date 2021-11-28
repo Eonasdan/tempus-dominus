@@ -52,7 +52,10 @@ export default class Dates {
   set(value: any, index?: number, from: string = 'date.set') {
     if (!value) this._setValue(value, index);
     const converted = OptionConverter._dateConversion(value, from);
-    if (converted) this._setValue(converted, index);
+    if (converted) {
+      converted.setLocale(this._context._options.localization.locale);
+      this._setValue(converted, index);
+    }
   }
 
   /**

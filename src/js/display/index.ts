@@ -13,6 +13,7 @@ import { ActionTypes } from '../actions';
 import { createPopper } from '@popperjs/core';
 import Namespace from '../namespace';
 import { HideEvent } from '../event-types';
+import Collapse from './collapse';
 
 /**
  * Main class for all things display related.
@@ -89,6 +90,7 @@ export default class Display {
         this._yearDisplay._update();
         break;
       case 'clock':
+        if (!this._hasTime) break;
         this._timeDisplay._update();
         this._update(Unit.hours);
         this._update(Unit.minutes);
@@ -147,6 +149,21 @@ export default class Display {
       }
 
       this._buildWidget();
+
+      // reset the view to the clock if there's no date components
+      if (this._hasTime && !this._hasDate) {
+        this._context._action.do(null, ActionTypes.showClock);
+        return;
+      }
+
+      // otherwise return to the calendar view
+      this._context._currentViewMode = this._context._minViewModeNumber;
+
+      Collapse.hide(this._context._display.widget
+        .getElementsByClassName(Namespace.css.timeContainer)[0] as HTMLElement);
+      Collapse.show(this._context._display.widget
+        .getElementsByClassName(Namespace.css.dateContainer)[0] as HTMLElement);
+
       if (this._hasDate) {
         this._showMode();
       }
@@ -171,14 +188,7 @@ export default class Display {
       }
 
       if (this._context._options.display.viewMode == 'clock') {
-        this._context._action.do(
-          {
-            currentTarget: this.widget.querySelector(
-              `.${Namespace.css.timeContainer}`
-            ),
-          },
-          ActionTypes.showClock
-        );
+        this._context._action.do(null, ActionTypes.showClock);
       }
 
       this.widget
@@ -319,9 +329,7 @@ export default class Display {
           'title',
           this._context._options.localization.nextMonth
         );
-        switcher.innerText = this._context._viewDate.format({
-          month: this._context._options.localization.dayViewHeaderFormat,
-        });
+        switcher.innerText = this._context._viewDate.format(this._context._options.localization.dayViewHeaderFormat);
         break;
     }
     switcher.innerText = switcher.getAttribute(showing);

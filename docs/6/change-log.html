@@ -223,41 +223,68 @@
     </div>
   </div>
   <div id="mainContent" class="bd-content ps-lg-4">
-  <h1>Version 6</h1>
-  <h2>Version 6-alpha15</h2>
-  <h3>New</h3>
-  <ul>
-    <li></li>
-  </ul>
-  <h3>Bug fixes</h3>
-  <ul>
-    <li>Fixed issue with 24 hour display formatting. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2414">#2414</a></li>
-    <li>Fixed default input change formatting function to check for empty dates. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2411">#2411</a></li>
-  </ul>
-  
+  <section>
+    <h1>Version 6</h1>
+    <h2>Version 6-alpha15</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Added <code>localization.startOfTheWeek</code>. This allows setting the start of the week.</li>
+      <li>Added <code>numberingSystem</code> to <code>DateTimeFormatOptions</code></li>
+      <li>Added <code>meta</code> property to options.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed issue with 24 hour display formatting. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2414">#2414</a>
+      </li>
+      <li>Fixed default input change formatting function to check for empty dates. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2411">#2411</a>
+      </li>
+      <li>Fixed an issue with the unsubscribe method typing. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2411">#2411</a>
+      </li>
+      <li>Fixed an issue where the picker would try to update the clock view even it wasn't enabled. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2438">#2438</a>
+      </li>
+      <li>Fixed an issue using a time component would not go back to the clock view. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2431">#2431</a>
+      </li>
+      <li>The picker will return to the view date and show the calendar or clock after being reopened. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2410">#2410</a>
+      </li>
+      <li>Fixed clock/calendar switching to wait until the other view is ready before switching. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2421">#2421</a>
+      </li>
+      <li>Fixed the options interface so all properties are optionsal. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2439">#2439</a>
+      </li>
+      <li><span class="badge bg-danger">BREAKING</span> <code>localization.dayViewHeaderFormat</code> no longer takes a string but instead accepts a <code>DateTimeFormatOptions</code>. This will allow for more customization. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2420">#2420</a>
+      </li>
+    </ul>
+  </section>
   <section>
     <h2>Version 6-alpha14</h2>
     <h3>New</h3>
     <ul>
       <li>Cleaned up css a bit. Got rid of the popper arrow and aligned the picker to the start of the element.</li>
-      <li><span class="badge bg-danger">BREAKING</span> <code>display.inputFormat</code> now takes a function, not an Intl format. It has also been moved to <code>hooks.inputFormat</code> By default a function will be executed that uses Intl to format the selected date(s) based on the selected components.</li>
+      <li><span class="badge bg-danger">BREAKING</span> <code>display.inputFormat</code> now takes a function, not an
+        Intl format. It has also been moved to <code>hooks.inputFormat</code> By default a function will be executed
+        that uses Intl to format the selected date(s) based on the selected components.
+      </li>
       <li>Added <code>hooks.inputParse</code></li>
-      <li>Merged number localization Thanks @hkvstore <a href="https://github.com/Eonasdan/tempus-dominus/issues/2408">#2408</a></li>
+      <li>Merged number localization Thanks @hkvstore <a href="https://github.com/Eonasdan/tempus-dominus/issues/2408">#2408</a>
+      </li>
     </ul>
     <h3>Bug fixes</h3>
     <ul>
       <li>Merged a fix for parsing issue from comparing constructor names. Thanks @faatihi <a href="https://github.com/Eonasdan/tempus-dominus/issues/2408">#2408</a></li>
       <li>Fixed doc issue</li>
-      <li>Fixed input value for real this time.  <a href="https://github.com/Eonasdan/tempus-dominus/issues/2387">#2387</a></li>
+      <li>Fixed input value for real this time. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2387">#2387</a></li>
       <li>Fixed <code>keepOpen</code></li>
-      <li>Fixed widget positioning with rtl <a href="https://github.com/Eonasdan/tempus-dominus/issues/2400">#2400</a></li>
+      <li>Fixed widget positioning with rtl <a href="https://github.com/Eonasdan/tempus-dominus/issues/2400">#2400</a>
+      </li>
     </ul>
   </section>
   <section>
     <h2>Version 6-alpha1.0.13</h2>
     <h3>New</h3>
     <ul>
-      <li>Created a new method <code>set(value: any, index?: number, from: string = 'date.set')</code> that tries to conver the <code>value</code> provided and then tries to set that value to the <code>index</code> (or 0 if not using multidate).</li>
+      <li>Created a new method <code>set(value: any, index?: number, from: string = 'date.set')</code> that tries to
+        conver the <code>value</code> provided and then tries to set that value to the <code>index</code> (or 0 if not
+        using multidate).
+      </li>
       <li>Added esm output</li>
       <li>Exposed <code>Unit</code> and <code>DateTimeFormatOptions</code> from the DateTime class.</li>
       <li>Renamed <code>togglePeriod</code> to <code>toggleMeridiem</code></li>
@@ -268,7 +295,7 @@
     <ul>
       <li>Fixed dealing with input values/changes.</li>
       <li>Fixed issue when calling hide if the widget hasn't been built (or shown) yet.</li>
-      <li>Fixed meridiem issue. Thanks @hkvstore  <a href="https://github.com/Eonasdan/tempus-dominus/issues/2398">#2398</a></li>
+      <li>Fixed meridiem issue. Thanks @hkvstore <a href="https://github.com/Eonasdan/tempus-dominus/issues/2398">#2398</a></li>
       <li>Merged PR 2396 to fix 24 hour hour selection. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2395">#2395</a></li>
       <li>Fixed issue with time component grid. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2395">#2395</a></li>
     </ul>
@@ -284,8 +311,10 @@
     <h2>Version 6-alpha1.0.3</h2>
     <h3>Bug fixes</h3>
     <ul>
-      <li>Fixed year display after selecting a decade. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2386">#2386</a></li>
-      <li>Fixed issue if the input field had a value. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2387">#2387</a></li>
+      <li>Fixed year display after selecting a decade. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2386">#2386</a>
+      </li>
+      <li>Fixed issue if the input field had a value. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2387">#2387</a>
+      </li>
       <li>Fixed setting the defaultDate option with a Date object. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2391">#2391</a></li>
     </ul>
   </section>
@@ -411,11 +440,12 @@
   </section>
 
   <section>
-  <h1>
-    Version 5
-  </h1>
+    <h1>
+      Version 5
+    </h1>
     <p>
-      Version 5 was a rewrite of v4 taking some pending pull requests and fixes along with it. Unfortunately, I didn't do a very good job at documenting those changes.
+      Version 5 was a rewrite of v4 taking some pending pull requests and fixes along with it. Unfortunately, I didn't
+      do a very good job at documenting those changes.
     </p>
   </section>
 
