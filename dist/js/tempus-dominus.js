@@ -1280,7 +1280,7 @@
          */
         _daysOfTheWeek() {
             let innerDate = this._context._viewDate.clone
-                .startOf('weekDay')
+                .startOf('weekDay', this._context._options.localization.startOfTheWeek)
                 .startOf(exports.Unit.date);
             const row = [];
             document.createElement('div');

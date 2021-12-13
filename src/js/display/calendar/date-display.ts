@@ -145,7 +145,7 @@ export default class DateDisplay {
    */
   private _daysOfTheWeek(): HTMLElement[] {
     let innerDate = this._context._viewDate.clone
-      .startOf('weekDay')
+      .startOf('weekDay', this._context._options.localization.startOfTheWeek)
       .startOf(Unit.date);
     const row = [];
     document.createElement('div');
