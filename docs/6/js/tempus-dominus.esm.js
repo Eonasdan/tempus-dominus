@@ -1276,7 +1276,7 @@ class DateDisplay {
      */
     _daysOfTheWeek() {
         let innerDate = this._context._viewDate.clone
-            .startOf('weekDay')
+            .startOf('weekDay', this._context._options.localization.startOfTheWeek)
             .startOf(Unit.date);
         const row = [];
         document.createElement('div');

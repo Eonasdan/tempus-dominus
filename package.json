@@ -16,7 +16,7 @@
     "types/**/*"
   ],
   "scripts": {
-    "start": "npm run build && concurrently \"npm run serve\" \"npm:*-watch\"",
+    "start": "npm run build && concurrently \"npm:*-watch\" \"npm run serve\"",
     "serve": "browser-sync start --config build/browser-sync-config.js",
     "build": "npm run rollup && node ./build/copyToDist.js",
     "build:declarations": "tsc --declaration --emitDeclarationOnly --outDir types",
