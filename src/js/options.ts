@@ -108,7 +108,9 @@ export class OptionConverter {
     ];
 
     //see if the options specify a locale
-    const locale = providedOptions?.localization?.locale || 'default';
+    const locale =
+      mergeTo.localization.locale !== 'default' ? mergeTo.localization.locale :
+      providedOptions?.localization?.locale || 'default';
 
     const processKey = (key, value, providedType, defaultType) => {
       switch (key) {
@@ -372,6 +374,10 @@ export class OptionConverter {
 
   static _dataToOptions(element, options: Options): Options {
     const eData = element.dataset;
+
+    if (eData?.tdTargetInput) delete eData.tdTargetInput;
+    if (eData?.tdTargetToggle) delete eData.tdTargetToggle;
+
     if (
       !eData ||
       Object.keys(eData).length === 0 ||

@@ -1372,7 +1372,8 @@
                 'dayViewHeaderFormat',
             ];
             //see if the options specify a locale
-            const locale = ((_a = providedOptions === null || providedOptions === void 0 ? void 0 : providedOptions.localization) === null || _a === void 0 ? void 0 : _a.locale) || 'default';
+            const locale = mergeTo.localization.locale !== 'default' ? mergeTo.localization.locale :
+                ((_a = providedOptions === null || providedOptions === void 0 ? void 0 : providedOptions.localization) === null || _a === void 0 ? void 0 : _a.locale) || 'default';
             const processKey = (key, value, providedType, defaultType) => {
                 switch (key) {
                     case 'defaultDate': {
@@ -1558,6 +1559,10 @@
         }
         static _dataToOptions(element, options) {
             const eData = element.dataset;
+            if (eData === null || eData === void 0 ? void 0 : eData.tdTargetInput)
+                delete eData.tdTargetInput;
+            if (eData === null || eData === void 0 ? void 0 : eData.tdTargetToggle)
+                delete eData.tdTargetToggle;
             if (!eData ||
                 Object.keys(eData).length === 0 ||
                 eData.constructor !== DOMStringMap)

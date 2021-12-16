@@ -11589,3 +11589,38 @@ section:not(:last-child) {
 section h2 {
   margin-top: 3rem;
 }
+
+#migration {
+  /* hide the right side toc to give more room */
+}
+#migration textarea {
+  height: 60vh;
+}
+@media (min-width: 768px) {
+  #migration .bd-main {
+    display: grid;
+    gap: inherit;
+    grid-template-areas: "intro" "content";
+    grid-template-rows: auto auto 1fr;
+  }
+  #migration #convertButton, #migration #convertButtonHtml {
+    position: relative;
+    top: 50%;
+  }
+}
+@media (min-width: 992px) {
+  #migration .bd-main {
+    grid-template-areas: "intro" "content";
+    grid-template-columns: 4fr;
+    grid-template-rows: auto 1fr;
+  }
+}
+#migration #alert {
+  max-height: 20vh;
+  overflow-y: scroll;
+}
+#migration .tab-content > .active {
+  min-height: initial;
+  max-height: initial;
+  overflow-y: initial;
+}
