@@ -159,8 +159,9 @@ export default class Display {
       // otherwise return to the calendar view
       this._context._currentViewMode = this._context._minViewModeNumber;
 
-      Collapse.hide(this._context._display.widget
-        .getElementsByClassName(Namespace.css.timeContainer)[0] as HTMLElement);
+      if (this._hasTime)
+        Collapse.hide(this._context._display.widget
+          .getElementsByClassName(Namespace.css.timeContainer)[0] as HTMLElement);
       Collapse.show(this._context._display.widget
         .getElementsByClassName(Namespace.css.dateContainer)[0] as HTMLElement);
 
@@ -180,7 +181,7 @@ export default class Display {
             placement:
               document.documentElement.dir === 'rtl'
                 ? 'bottom-end'
-                : 'bottom-start',
+                : 'bottom-start'
           }
         );
       } else {
@@ -269,7 +270,7 @@ export default class Display {
     const showing = [
       ...this.widget.querySelector(
         `.${Namespace.css.dateContainer} div[style*="display: grid"]`
-      ).classList,
+      ).classList
     ].find((x) => x.startsWith(Namespace.css.dateContainer));
 
     const [previous, switcher, next] = this._context._display.widget
@@ -351,8 +352,8 @@ export default class Display {
         date: this._context._unset
           ? null
           : this._context.dates.lastPicked
-          ? this._context.dates.lastPicked.clone
-          : void 0,
+            ? this._context.dates.lastPicked.clone
+            : void 0
       } as HideEvent);
       this._isVisible = false;
     }

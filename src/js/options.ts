@@ -580,6 +580,17 @@ export class OptionConverter {
    * @param config
    */
   static _validateConflcits(config: Options) {
+    if (config.display.sideBySide && (!config.display.components.clock ||
+      !(config.display.components.hours ||
+        config.display.components.minutes ||
+        config.display.components.seconds)
+    )) {
+      Namespace.errorMessages.conflictingConfiguration(
+        'Cannot use side by side mode without the clock components'
+      );
+    }
+
+
     if (config.restrictions.minDate && config.restrictions.maxDate) {
       if (config.restrictions.minDate.isAfter(config.restrictions.maxDate)) {
         Namespace.errorMessages.conflictingConfiguration(

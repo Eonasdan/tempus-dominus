@@ -1699,6 +1699,12 @@ class OptionConverter {
      * @param config
      */
     static _validateConflcits(config) {
+        if (config.display.sideBySide && (!config.display.components.clock ||
+            !(config.display.components.hours ||
+                config.display.components.minutes ||
+                config.display.components.seconds))) {
+            Namespace.errorMessages.conflictingConfiguration('Cannot use side by side mode without the clock components');
+        }
         if (config.restrictions.minDate && config.restrictions.maxDate) {
             if (config.restrictions.minDate.isAfter(config.restrictions.maxDate)) {
                 Namespace.errorMessages.conflictingConfiguration('minDate is after maxDate');
@@ -2092,6 +2098,8 @@ class TimeDisplay {
      * @private
      */
     _update() {
+        if (!this._context._display._hasTime)
+            return;
         const timesDiv = (this._context._display.widget.getElementsByClassName(Namespace.css.clockContainer)[0]);
         const lastPicked = (this._context.dates.lastPicked || this._context._viewDate).clone;
         timesDiv
@@ -2543,8 +2551,9 @@ class Display {
             }
             // otherwise return to the calendar view
             this._context._currentViewMode = this._context._minViewModeNumber;
-            Collapse.hide(this._context._display.widget
-                .getElementsByClassName(Namespace.css.timeContainer)[0]);
+            if (this._hasTime)
+                Collapse.hide(this._context._display.widget
+                    .getElementsByClassName(Namespace.css.timeContainer)[0]);
             Collapse.show(this._context._display.widget
                 .getElementsByClassName(Namespace.css.dateContainer)[0]);
             if (this._hasDate) {
@@ -2557,7 +2566,7 @@ class Display {
                     //#2400
                     placement: document.documentElement.dir === 'rtl'
                         ? 'bottom-end'
-                        : 'bottom-start',
+                        : 'bottom-start'
                 });
             }
             else {
@@ -2622,7 +2631,7 @@ class Display {
     }
     _updateCalendarHeader() {
         const showing = [
-            ...this.widget.querySelector(`.${Namespace.css.dateContainer} div[style*="display: grid"]`).classList,
+            ...this.widget.querySelector(`.${Namespace.css.dateContainer} div[style*="display: grid"]`).classList
         ].find((x) => x.startsWith(Namespace.css.dateContainer));
         const [previous, switcher, next] = this._context._display.widget
             .getElementsByClassName(Namespace.css.calendarHeader)[0]
@@ -2668,7 +2677,7 @@ class Display {
                     ? null
                     : this._context.dates.lastPicked
                         ? this._context.dates.lastPicked.clone
-                        : void 0,
+                        : void 0
             });
             this._isVisible = false;
         }
