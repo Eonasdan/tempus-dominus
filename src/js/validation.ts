@@ -1,4 +1,4 @@
-import { TempusDominus } from './tempus-dominus';
+import { TempusDominus, Unit } from './tempus-dominus';
 import { DateTime, Unit } from './datetime';
 import Dates from './dates';
 
@@ -32,6 +32,7 @@ export default class Validation {
       return false;
     }
     if (
+      granularity !== Unit.month &&
       this._context._options.restrictions.daysOfWeekDisabled?.length > 0 &&
       this._context._options.restrictions.daysOfWeekDisabled.indexOf(
         targetDate.weekDay
