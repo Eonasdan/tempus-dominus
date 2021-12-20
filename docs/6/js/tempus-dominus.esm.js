@@ -2917,7 +2917,9 @@ class Validation {
             !this._isInEnabledDates(targetDate)) {
             return false;
         }
-        if (((_a = this._context._options.restrictions.daysOfWeekDisabled) === null || _a === void 0 ? void 0 : _a.length) > 0 &&
+        if (granularity !== Unit.month &&
+            granularity !== Unit.year &&
+            ((_a = this._context._options.restrictions.daysOfWeekDisabled) === null || _a === void 0 ? void 0 : _a.length) > 0 &&
             this._context._options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
             return false;
         }
