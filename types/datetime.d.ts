@@ -162,10 +162,6 @@ export declare class DateTime extends Date {
      */
     get dateFormatted(): string;
     /**
-     * Gets the week of the year
-     */
-    get week(): number;
-    /**
      * Shortcut to Date.getDay()
      */
     get weekDay(): number;
@@ -189,4 +185,13 @@ export declare class DateTime extends Date {
      * Shortcut to Date.setFullYear()
      */
     set year(value: number);
+    /**
+     * Gets the week of the year
+     */
+    get week(): number;
+    weeksInWeekYear(weekYear: any): 53 | 52;
+    get isLeapYear(): boolean;
+    private computeOrdinal;
+    private nonLeapLadder;
+    private leapLadder;
 }

@@ -370,18 +370,6 @@ export class DateTime extends Date {
     return this.date < 10 ? `0${this.date}` : `${this.date}`;
   }
 
-  // https://github.com/you-dont-need/You-Dont-Need-Momentjs#week-of-year
-  /**
-   * Gets the week of the year
-   */
-  get week(): number {
-    const startOfYear = new Date(this.year, 0, 1);
-    startOfYear.setDate(
-      startOfYear.getDate() + (1 - (startOfYear.getDay() % 7))
-    );
-    return Math.round((this.valueOf() - startOfYear.valueOf()) / 604800000) + 1;
-  }
-
   /**
    * Shortcut to Date.getDay()
    */
@@ -423,4 +411,51 @@ export class DateTime extends Date {
   set year(value: number) {
     this.setFullYear(value);
   }
+
+  // borrowed a bunch of stuff from Luxon
+  /**
+   * Gets the week of the year
+   */
+  get week(): number {
+    const ordinal = this.computeOrdinal(),
+      weekday = this.getUTCDay();
+
+    let weekNumber = Math.floor((ordinal - weekday + 10) / 7);
+
+    if (weekNumber < 1) {
+      weekNumber = this.weeksInWeekYear( this.year - 1);
+    } else if (weekNumber > this. weeksInWeekYear(this.year)) {
+      weekNumber = 1;
+    }
+
+    return weekNumber;
+  }
+
+  weeksInWeekYear(weekYear) {
+    const p1 =
+        (weekYear +
+          Math.floor(weekYear / 4) -
+          Math.floor(weekYear / 100) +
+          Math.floor(weekYear / 400)) %
+        7,
+      last = weekYear - 1,
+      p2 =
+        (last +
+          Math.floor(last / 4) -
+          Math.floor(last / 100) +
+          Math.floor(last / 400)) %
+        7;
+    return p1 === 4 || p2 === 3 ? 53 : 52;
+  }
+
+  get isLeapYear() {
+    return this.year % 4 === 0 && (this.year % 100 !== 0 || this.year % 400 === 0);
+  }
+
+  private computeOrdinal() {
+    return this.date + (this.isLeapYear ? this.leapLadder : this.nonLeapLadder)[this.month];
+  }
+
+  private nonLeapLadder = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+  private leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
 }

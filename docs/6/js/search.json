@@ -38,7 +38,7 @@
   {
     "file": "test.html",
     "title": "Examples",
-    "body": "version removes the need for an input field bootstrap jquery and momemntjs if you still check out examples simple setup this is simplest can have with font awesome picker defaults to fa solid icons however overwrite globally html javascript events div class='input-group id='datetimepicker data-td-target-input='nearest data-td-target-toggle='nearest id='datetimepicker1input type='text class='form-control data-td-target='#datetimepicker span class='input-group-text data-td-toggle='datetimepicker class='fas fa-calendar'></span new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker will display as manipulate const datetimepicker restrictions daysofweekdisabled",
+    "body": "version removes the need for an input field bootstrap jquery and momemntjs if you still check out examples simple setup this is simplest can have with font awesome picker defaults to fa solid icons however overwrite globally html javascript events div class='input-group id='datetimepicker data-td-target-input='nearest data-td-target-toggle='nearest id='datetimepicker1input type='text class='form-control data-td-target='#datetimepicker span class='input-group-text data-td-toggle='datetimepicker class='fas fa-calendar'></span new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker will display as manipulate const datetimepicker calendarweeks true",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
     "excerpt": "How to use Tempus Dominus datetime picker\n  ",
