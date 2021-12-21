@@ -80,8 +80,9 @@ const DefaultOptions: Options = {
     toggleMeridiem: 'Toggle Meridiem',
     selectTime: 'Select Time',
     selectDate: 'Select Date',
-    dayViewHeaderFormat: 'long',
+    dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'default',
+    startOfTheWeek: 0,
   },
   keepInvalid: false,
   debug: false,
@@ -95,6 +96,7 @@ const DefaultOptions: Options = {
     inputParse: undefined,
     inputFormat: undefined,
   },
+  meta: {},
 };
 
 const DatePickerModes: {

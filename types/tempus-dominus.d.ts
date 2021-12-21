@@ -75,7 +75,9 @@ declare class TempusDominus {
      * @public
      */
     subscribe(eventTypes: string | string[], callbacks: (event: any) => void | ((event: any) => void)[]): {
-        unsubscribe: void;
+        unsubscribe: () => void;
+    } | {
+        unsubscribe: () => void;
     }[];
     /**
      * Hides the picker and removes event listeners

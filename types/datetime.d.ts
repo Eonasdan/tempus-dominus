@@ -9,6 +9,7 @@ export declare enum Unit {
 export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
     timeStyle?: 'short' | 'medium' | 'long';
     dateStyle?: 'short' | 'medium' | 'long' | 'full';
+    numberingSystem?: string;
 }
 /**
  * For the most part this object behaves exactly the same way
@@ -29,7 +30,7 @@ export declare class DateTime extends Date {
      * Doing this allows access to format, etc.
      * @param  date
      */
-    static convert(date: Date): DateTime;
+    static convert(date: Date, locale?: string): DateTime;
     /**
      * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
      */
@@ -39,8 +40,9 @@ export declare class DateTime extends Date {
      * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).startOf('month')
      * would return April 1, 2021, 12:00:00.000 AM (midnight)
      * @param unit
+     * @param startOfTheWeek Allows for the changing the start of the week.
      */
-    startOf(unit: Unit | 'weekDay'): this;
+    startOf(unit: Unit | 'weekDay', startOfTheWeek?: number): this;
     /**
      * Sets the current date to the end of the {@link unit} provided
      * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).endOf('month')
@@ -99,7 +101,7 @@ export declare class DateTime extends Date {
      * @param locale
      * @param template
      */
-    parts(locale?: string, template?: any): {};
+    parts(locale?: string, template?: any): any;
     /**
      * Shortcut to Date.getSeconds()
      */
@@ -121,7 +123,7 @@ export declare class DateTime extends Date {
      */
     set minutes(value: number);
     /**
-     * Returns two digit hours
+     * Returns two digit minutes
      */
     get minutesFormatted(): string;
     /**
@@ -160,10 +162,6 @@ export declare class DateTime extends Date {
      */
     get dateFormatted(): string;
     /**
-     * Gets the week of the year
-     */
-    get week(): number;
-    /**
      * Shortcut to Date.getDay()
      */
     get weekDay(): number;
@@ -187,4 +185,13 @@ export declare class DateTime extends Date {
      * Shortcut to Date.setFullYear()
      */
     set year(value: number);
+    /**
+     * Gets the week of the year
+     */
+    get week(): number;
+    weeksInWeekYear(weekYear: any): 53 | 52;
+    get isLeapYear(): boolean;
+    private computeOrdinal;
+    private nonLeapLadder;
+    private leapLadder;
 }

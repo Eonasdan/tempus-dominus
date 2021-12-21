@@ -6,20 +6,18 @@ Issues that are submitted without a description (title only) will be closed with
 
 # Contributing code
 
-To contribute, fork the library and install grunt and dependencies. You need [node](http://nodejs.org/); use [nvm](https://github.com/creationix/nvm) or [nenv](https://github.com/ryuone/nenv) to install it.
+To contribute, fork the library and run `npm install`. You need [node](http://nodejs.org/); use [nvm](https://github.com/creationix/nvm) or [nenv](https://github.com/ryuone/nenv) to install it.
 
-> There isn't a development branch at the moment, so use master
 ```bash
 git https://github.com/Eonasdan/tempus-dominus.git
 cd tempus-dominus
 npm i
 git checkout development  # all patches against development branch, please!
-grunt                 # this runs tests and jshint
 ```
 
 # Very important notes
 
-[comment]: <> (- **Pull requests to the `master` branch will be closed.** Please submit all pull requests to the `development` branch.)
+**Pull requests to the `master` branch will be closed.** Please submit all pull requests to the `development` branch.
 - **Do not include the minified files in your pull request.** Don't worry, we'll build them when we cut a release.
 - Pull requests that do not include a description (title only) and the following will be closed:
   - What the change does

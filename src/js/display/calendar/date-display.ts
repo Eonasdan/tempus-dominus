@@ -63,9 +63,9 @@ export default class DateDisplay {
 
     switcher.setAttribute(
       Namespace.css.daysContainer,
-      this._context._viewDate.format({
-        month: this._context._options.localization.dayViewHeaderFormat,
-      })
+      this._context._viewDate.format(
+        this._context._options.localization.dayViewHeaderFormat
+      )
     );
 
     this._context._validation.isValid(
@@ -84,7 +84,7 @@ export default class DateDisplay {
 
     let innerDate = this._context._viewDate.clone
       .startOf(Unit.month)
-      .startOf('weekDay')
+      .startOf('weekDay', this._context._options.localization.startOfTheWeek)
       .manipulate(12, Unit.hours);
 
     container
@@ -133,11 +133,8 @@ export default class DateDisplay {
           'data-value',
           `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`
         );
-        containerClone.setAttribute(
-          'data-day',
-          `${innerDate.date}`
-        );
-        containerClone.innerText = innerDate.format({ day: "numeric" });
+        containerClone.setAttribute('data-day', `${innerDate.date}`);
+        containerClone.innerText = innerDate.format({ day: 'numeric' });
         innerDate.manipulate(1, Unit.date);
       });
   }
@@ -148,7 +145,7 @@ export default class DateDisplay {
    */
   private _daysOfTheWeek(): HTMLElement[] {
     let innerDate = this._context._viewDate.clone
-      .startOf('weekDay')
+      .startOf('weekDay', this._context._options.localization.startOfTheWeek)
       .startOf(Unit.date);
     const row = [];
     document.createElement('div');

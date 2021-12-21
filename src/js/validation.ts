@@ -32,6 +32,8 @@ export default class Validation {
       return false;
     }
     if (
+      granularity !== Unit.month &&
+      granularity !== Unit.year &&
       this._context._options.restrictions.daysOfWeekDisabled?.length > 0 &&
       this._context._options.restrictions.daysOfWeekDisabled.indexOf(
         targetDate.weekDay

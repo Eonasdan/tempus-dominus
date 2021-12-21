@@ -18,18 +18,55 @@
     </p>
     <div id='alert'>
     </div>
-    <div class='row'>
-      <div class='col'>
-        <label for='from' class='form-label'>Input</label>
-        <textarea id='from' class='form-control'></textarea>
+    <nav>
+      <div class='nav nav-tabs' id='nav-tab' role='tablist'>
+        <button class='nav-link active' id='nav-migration-js-tab' data-bs-toggle='tab'
+                data-bs-target='#nav-migration-js' type='button' role='tab' aria-controls='nav-migration-js'
+                aria-selected='true'>JS
+        </button>
+        <button class='nav-link' id='nav-migration-html-tab' data-bs-toggle='tab' data-bs-target='#nav-migration-html'
+                type='button' role='tab' aria-controls='nav-migration-html' aria-selected='false'>HTML
+        </button>
       </div>
-      <div class='col-sm-1'>
-        <button class='btn btn-primary' id='convertButton'><i class='fas fa-angle-double-right'></i></button>
+    </nav>
+    <div class='tab-content' id='nav-tabContent'>
+      <div class='tab-pane fade show active' id='nav-migration-js' role='tabpanel'
+           aria-labelledby='nav-migration-js-tab'>
+        <div class='row'>
+          <div class='col'>
+            <label for='from' class='form-label'>Input</label>
+            <textarea id='from' class='form-control'></textarea>
+          </div>
+          <div class='col-sm-1'>
+            <button class='btn btn-primary' id='convertButton'><i class='fas fa-angle-double-right'></i></button>
+          </div>
+          <div class='col'>
+            <label for='to' class='form-label'>Output</label>
+            <textarea id='to' class='form-control' readonly></textarea>
+          </div>
+        </div>
       </div>
-      <div class='col'>
-        <label for='to' class='form-label'>Output</label>
-        <textarea id='to' class='form-control' readonly>
-     </textarea>
+      <div class='tab-pane fade' id='nav-migration-html' role='tabpanel' aria-labelledby='nav-migration-html-tab'>
+        <div class='row'>
+          <div class='col'>
+            <label for='fromHtml' class='form-label'>Input</label>
+            <textarea id='fromHtml' class='form-control'>
+<div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
+    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+    </div>
+</div>
+            </textarea>
+          </div>
+          <div class='col-sm-1'>
+            <button class='btn btn-primary' id='convertButtonHtml'><i class='fas fa-angle-double-right'></i></button>
+          </div>
+          <div class='col'>
+            <label for='toHtml' class='form-label'>Output</label>
+            <textarea id='toHtml' class='form-control' readonly></textarea>
+          </div>
+        </div>
       </div>
     </div>
     <div class='row mt-3'>
@@ -78,256 +115,6 @@
       </p>
     </div>
   </div>
-  <script>
-    const input = document.getElementById('from');
-    const output = document.getElementById('to');
-    const convertButton = document.getElementById('convertButton');
-    const alertBox = document.getElementById('alert');
-    const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
-    let convertedConfiguration = undefined;
-
-    const createAlert = (message, style) => {
-      const div = document.createElement('div');
-      div.className = `alert alert-${style} alert-dismissible fade show`;
-      div.innerHTML = `${message}<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>`;
-      alertBox.appendChild(div);
-    };
-
-    const convert = () => {
-      convertedConfiguration = undefined;
-      alertBox.innerHTML = '';
-      output.value = '';
-      const value = input.value;
-
-      if (!value) {
-        output.value = 'No configuration was provided.';
-        return;
-      }
-
-      if (value.includes('moment')) {
-        createAlert(
-          'I can\'t convert moment objects. See Exception 1.',
-          'danger'
-        );
-        return;
-      }
-
-      if (value.match(/\(|\)|<|>/gi)) {
-        createAlert(
-          'Can\'t parse functions or object initializations like new Date(). See Exception 2.',
-          'danger'
-        );
-        return;
-      }
-
-      try {
-        let config = Function('"use strict";return (' + value + ')')();
-        const newOptions = {};
-
-        const prop = prop => obj => {
-          const value = obj[prop];
-          if (value) return value;
-          else {
-            obj[prop] = {};
-            return obj[prop];
-          }
-        };
-
-        const ensurePath = (paths, obj) => paths.split('.').reduce((value, key) => prop(key)(value), obj);
-
-        const differentAccepts = (key) => {
-          if (['viewMode', 'toolbarPlacement'].includes(key))
-            createAlert(`${key} takes a different set of values. Verify this option.`, 'warning');
-        };
-
-        Object.entries(config).forEach(([key, value]) => {
-          differentAccepts(key);
-          switch (key) {
-            case 'format':
-              createAlert('Format is no longer used to determine component display. See <a href="options.html#displayComponents" target="_blank">component usage</a> and <a href="options.html#hooksInputFormat" target="_blank">input formatting</a>.', 'warning');
-              ensurePath('display', newOptions);
-              newOptions.display.components = {
-                calendar: true,
-                date: true,
-                month: true,
-                year: true,
-                decades: true,
-                clock: true,
-                hours: true,
-                minutes: true,
-                seconds: false,
-                useTwentyfourHour: false
-              };
-              break;
-            case 'icons':
-            case 'sideBySide':
-            case 'calendarWeeks':
-            case 'viewMode':
-            case 'toolbarPlacement':
-            case 'inline':
-              ensurePath('display', newOptions);
-              newOptions.display[key] = value;
-              break;
-            case 'dayViewHeaderFormat':
-              createAlert('Moment is no longer supported. This option now accepts Intl formats. See <a href="options.html#localizationDayViewHeaderFormat" target="_blank">localization usage</a>', 'warning');
-              ensurePath('localization', newOptions);
-              newOptions.localization.dayViewHeaderFormat = 'long';
-              break;
-            case 'extraFormats':
-            case 'collapse':
-            case 'useStrict':
-            case 'widgetPositioning':
-            case 'widgetParent':
-            case 'keyBinds':
-            case 'ignoreReadonly':
-            case 'focusOnShow':
-            case 'timeZone':
-              createAlert(`${key} is no longer supported and was ignored.`, 'danger');
-              break;
-            case 'minDate':
-            case 'maxDate':
-            case 'enabledDates':
-            case 'disabledDates':
-            case 'enabledHours':
-            case 'disabledHours':
-            case 'daysOfWeekDisabled':
-              ensurePath('restrictions', newOptions);
-              newOptions.restrictions[key] = value;
-              break;
-            case 'disabledTimeIntervals':
-              ensurePath('restrictions', newOptions);
-              createAlert('This option now expects an array of <code>{ from: x, to: y}</code> See <a href="options.html#restrictionsDisabledTimeIntervals" target="_blank">usage</a>', 'warning');
-              newOptions.restrictions.restrictions = [{ from: new Date(), to: new Date() }];
-              break;
-            case 'useCurrent':
-            case 'stepping':
-            case 'defaultDate':
-            case 'keepOpen':
-            case 'keepInvalid':
-            case 'debug':
-            case 'allowInputToggle':
-            case 'viewDate':
-              newOptions[key] = value;
-              break;
-            case 'locale':
-              createAlert('Moment is no longer supported. This option now accepts Intl languages. See <a href="options.html#localizationLocale" target="_blank">localization usage</a>', 'warning');
-              ensurePath('localization', newOptions);
-              newOptions.localization.locale = value;
-              break;
-            case 'showTodayButton':
-            case 'showClear':
-            case 'showClose':
-            case 'buttons':
-              ensurePath('display.buttons', newOptions);
-              const handleButton = (k, v) => {
-                newOptions.display.buttons[k.replace('show', '').replace('Button', '').toLowerCase()] = v;
-              };
-              if (key === 'buttons') {
-                //v5
-                Object.entries(value).forEach(([k, v]) => handleButton(k, v));
-              } else {
-                //v4
-                handleButton(key, value);
-              }
-              break;
-            case 'tooltips':
-              ensurePath('localization', newOptions);
-              Object.entries(value).forEach(([k, v]) => {
-                if (k.startsWith('prev')) k = k.replace('prev', 'previous');
-                if (k === 'togglePeriod') k = 'toggleMeridiem';
-                newOptions.localization[k] = v;
-              });
-              break;
-            case 'allowMultidate':
-              newOptions.multipleDates = value;
-              break;
-            case 'multidateSeparator':
-              newOptions.multipleDatesSeparator = value;
-              break;
-            case 'parseInputDate':
-              createAlert(`${key} is now <a href="options.html#hooksInputFormat" target="_blank"><code>hooks.inputParse</code></a> and takes a function that must return a <code>DateTime</code> object.`, 'danger');
-              ensurePath('hooks.inputParse', newOptions);
-              newOptions.hooks.inputParse = undefined;
-              break;
-          }
-        });
-
-        let outputValue = '{\n';
-        let spacing = 0;
-
-        const readme = (obj) => {
-          Object.entries(obj).forEach(([key, value]) => {
-            if (!Array.isArray(value) && typeof value === 'object') {
-              spacing += 2;
-              outputValue += `${Array(spacing).fill(' ').join(' ')}${key}: {\n`;
-              spacing += 2;
-              readme(value);
-              spacing -= 2;
-              outputValue += `${Array(spacing).fill(' ').join(' ')}}\n`;
-              spacing -= 2;
-              return;
-            }
-            if (Array.isArray(value)) {
-              outputValue += `${Array(spacing).fill(' ').join(' ')}${key}: [${value}],\n`;
-              return;
-            }
-            outputValue += `${Array(spacing).fill(' ').join(' ')}${key}: ${typeof value === 'string' ? `'${value}'` : value},\n`;
-          });
-        };
-
-        readme(newOptions);
-        convertedConfiguration = newOptions;
-        output.value = `${outputValue}}`;
-      } catch (e) {
-        createAlert(`Something went wrong trying to perform a conversion. Please report your configuration settings.<br/>${e}`, 'danger');
-      }
-    };
-
-    convertButton.addEventListener('click', convert);
-    input.addEventListener('change', convert);
-
-    document.getElementById('tryIt').addEventListener('click', () => {
-      // run if it hasn't been for some reason
-      if (!convertedConfiguration) convert();
-      // if still no config, then there was an error.
-      if (!convertedConfiguration) return;
-
-      datetimepicker1.updateOptions(convertedConfiguration);
-    });
-  </script>
-  <style>
-      textarea {
-          height: 60vh;
-      }
-
-      /* hide the right side toc to give more room */
-      @media (min-width: 768px) {
-          .bd-main {
-              display: grid;
-              gap: inherit;
-              grid-template-areas: "intro" "content";
-              grid-template-rows: auto auto 1fr;
-          }
-
-          #convertButton {
-              position: relative;
-              top: 50%;
-          }
-      }
-
-      @media (min-width: 992px) {
-          .bd-main {
-              grid-template-areas: "intro" "content";
-              grid-template-columns: 4fr;
-              grid-template-rows: auto 1fr;
-          }
-      }
-
-      #alert {
-          max-height: 20vh;
-          overflow-y: scroll;
-      }
-  </style>
 </page-body>
 <page-meta>
   <title>Migration</title>

@@ -556,6 +556,7 @@ ${this.siteMap}
 
     const uglified = await minify(js);
 
+    this.writeFileAndEnsurePathExists('./docs/js/bundle.js', js);
     this.writeFileAndEnsurePathExists('./docs/js/bundle.min.js', uglified.code);
   }
 

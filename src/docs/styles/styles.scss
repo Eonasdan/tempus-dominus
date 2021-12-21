@@ -21,3 +21,43 @@ section:not(:last-child) {
 section h2 {
   margin-top: 3rem
 }
+
+#migration {
+  textarea {
+    height: 60vh;
+  }
+
+  /* hide the right side toc to give more room */
+  @media (min-width: 768px) {
+    .bd-main {
+      display: grid;
+      gap: inherit;
+      grid-template-areas: "intro" "content";
+      grid-template-rows: auto auto 1fr;
+    }
+
+    #convertButton, #convertButtonHtml {
+      position: relative;
+      top: 50%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .bd-main {
+      grid-template-areas: "intro" "content";
+      grid-template-columns: 4fr;
+      grid-template-rows: auto 1fr;
+    }
+  }
+
+  #alert {
+    max-height: 20vh;
+    overflow-y: scroll;
+  }
+
+  .tab-content > .active {
+    min-height: initial;
+    max-height: initial;
+    overflow-y: initial;
+  }
+}

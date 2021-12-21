@@ -4,7 +4,6 @@ import { TempusDominus } from './tempus-dominus';
  */
 export default class Actions {
     private _context;
-    private collapse;
     constructor(context: TempusDominus);
     /**
      * Performs the selected `action`. See ActionTypes

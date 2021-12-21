@@ -32,6 +32,7 @@ export default class TimeDisplay {
    * @private
    */
   _update(): void {
+    if (!this._context._display._hasTime) return;
     const timesDiv = <HTMLElement>(
       this._context._display.widget.getElementsByClassName(
         Namespace.css.clockContainer

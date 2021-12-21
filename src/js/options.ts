@@ -4,107 +4,120 @@ import { DefaultOptions } from './conts';
 import { TempusDominus } from './tempus-dominus';
 
 export default interface Options {
-  restrictions: {
-    minDate: DateTime;
-    maxDate: DateTime;
-    enabledDates: DateTime[];
-    disabledDates: DateTime[];
-    enabledHours: number[];
-    disabledHours: number[];
-    disabledTimeIntervals: { from: DateTime; to: DateTime }[];
-    daysOfWeekDisabled: number[];
+  restrictions?: {
+    minDate?: DateTime;
+    maxDate?: DateTime;
+    enabledDates?: DateTime[];
+    disabledDates?: DateTime[];
+    enabledHours?: number[];
+    disabledHours?: number[];
+    disabledTimeIntervals?: { from: DateTime; to: DateTime }[];
+    daysOfWeekDisabled?: number[];
   };
-  display: {
-    toolbarPlacement: 'top' | 'bottom';
-    components: {
-      calendar: boolean;
-      date: boolean;
-      month: boolean;
-      year: boolean;
-      decades: boolean;
-      clock: boolean;
-      hours: boolean;
-      minutes: boolean;
-      seconds: boolean;
-      useTwentyfourHour: boolean;
+  display?: {
+    toolbarPlacement?: 'top' | 'bottom';
+    components?: {
+      calendar?: boolean;
+      date?: boolean;
+      month?: boolean;
+      year?: boolean;
+      decades?: boolean;
+      clock?: boolean;
+      hours?: boolean;
+      minutes?: boolean;
+      seconds?: boolean;
+      useTwentyfourHour?: boolean;
     };
-    buttons: { today: boolean; close: boolean; clear: boolean };
-    calendarWeeks: boolean;
-    icons: {
-      date: string;
-      next: string;
-      previous: string;
-      today: string;
-      clear: string;
-      time: string;
-      up: string;
-      type: 'icons' | 'sprites';
-      down: string;
-      close: string;
+    buttons?: { today?: boolean; close?: boolean; clear?: boolean };
+    calendarWeeks?: boolean;
+    icons?: {
+      date?: string;
+      next?: string;
+      previous?: string;
+      today?: string;
+      clear?: string;
+      time?: string;
+      up?: string;
+      type?: 'icons' | 'sprites';
+      down?: string;
+      close?: string;
     };
-    viewMode: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
-    sideBySide: boolean;
-    inline: boolean;
-    keepOpen: boolean;
+    viewMode?: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
+    sideBySide?: boolean;
+    inline?: boolean;
+    keepOpen?: boolean;
   };
-  stepping: number;
-  useCurrent: boolean;
-  defaultDate: DateTime;
-  localization: {
-    nextMonth: string;
-    pickHour: string;
-    incrementSecond: string;
-    nextDecade: string;
-    selectDecade: string;
-    dayViewHeaderFormat: 'numeric' | '2-digit' | 'long' | 'short' | 'narrow';
-    decrementHour: string;
-    selectDate: string;
-    incrementHour: string;
-    previousCentury: string;
-    decrementSecond: string;
-    today: string;
-    previousMonth: string;
-    selectYear: string;
-    pickSecond: string;
-    nextCentury: string;
-    close: string;
-    incrementMinute: string;
-    selectTime: string;
-    clear: string;
-    toggleMeridiem: string;
-    selectMonth: string;
-    decrementMinute: string;
-    pickMinute: string;
-    nextYear: string;
-    previousYear: string;
-    previousDecade: string;
-    locale: string;
+  stepping?: number;
+  useCurrent?: boolean;
+  defaultDate?: DateTime;
+  localization?: {
+    nextMonth?: string;
+    pickHour?: string;
+    incrementSecond?: string;
+    nextDecade?: string;
+    selectDecade?: string;
+    dayViewHeaderFormat?: DateTimeFormatOptions;
+    decrementHour?: string;
+    selectDate?: string;
+    incrementHour?: string;
+    previousCentury?: string;
+    decrementSecond?: string;
+    today?: string;
+    previousMonth?: string;
+    selectYear?: string;
+    pickSecond?: string;
+    nextCentury?: string;
+    close?: string;
+    incrementMinute?: string;
+    selectTime?: string;
+    clear?: string;
+    toggleMeridiem?: string;
+    selectMonth?: string;
+    decrementMinute?: string;
+    pickMinute?: string;
+    nextYear?: string;
+    previousYear?: string;
+    previousDecade?: string;
+    locale?: string;
+    startOfTheWeek?: number;
   };
-  keepInvalid: boolean;
-  debug: boolean;
-  allowInputToggle: boolean;
-  viewDate: DateTime;
-  multipleDates: boolean;
-  multipleDatesSeparator: string;
-  promptTimeOnDateChange: boolean;
-  promptTimeOnDateChangeTransitionDelay: number;
-  hooks: {
-    inputParse: (context: TempusDominus, value: any) => DateTime;
-    inputFormat: (context: TempusDominus, date: DateTime) => string;
+  keepInvalid?: boolean;
+  debug?: boolean;
+  allowInputToggle?: boolean;
+  viewDate?: DateTime;
+  multipleDates?: boolean;
+  multipleDatesSeparator?: string;
+  promptTimeOnDateChange?: boolean;
+  promptTimeOnDateChangeTransitionDelay?: number;
+  hooks?: {
+    inputParse?: (context: TempusDominus, value: any) => DateTime;
+    inputFormat?: (context: TempusDominus, date: DateTime) => string;
   };
+  meta?: {};
 }
 
 export class OptionConverter {
   static _mergeOptions(providedOptions: Options, mergeTo: Options): Options {
     const newOptions = {} as Options;
     let path = '';
-    const ignoreProperties = ['inputParse', 'inputFormat'];
+    const ignoreProperties = [
+      'inputParse',
+      'inputFormat',
+      'meta',
+      'dayViewHeaderFormat',
+    ];
+
+    //see if the options specify a locale
+    const locale =
+      mergeTo.localization.locale !== 'default' ? mergeTo.localization.locale :
+      providedOptions?.localization?.locale || 'default';
 
     const processKey = (key, value, providedType, defaultType) => {
       switch (key) {
         case 'defaultDate': {
           const dateTime = this._dateConversion(value, 'defaultDate');
           if (dateTime !== undefined) {
+            dateTime.setLocale(locale);
             return dateTime;
           }
           Namespace.errorMessages.typeMismatch(
@@ -116,6 +129,7 @@ export class OptionConverter {
         case 'viewDate': {
           const dateTime = this._dateConversion(value, 'viewDate');
           if (dateTime !== undefined) {
+            dateTime.setLocale(locale);
             return dateTime;
           }
           Namespace.errorMessages.typeMismatch(
@@ -130,6 +144,7 @@ export class OptionConverter {
           }
           const dateTime = this._dateConversion(value, 'restrictions.minDate');
           if (dateTime !== undefined) {
+            dateTime.setLocale(locale);
             return dateTime;
           }
           Namespace.errorMessages.typeMismatch(
@@ -144,6 +159,7 @@ export class OptionConverter {
           }
           const dateTime = this._dateConversion(value, 'restrictions.maxDate');
           if (dateTime !== undefined) {
+            dateTime.setLocale(locale);
             return dateTime;
           }
           Namespace.errorMessages.typeMismatch(
@@ -207,7 +223,8 @@ export class OptionConverter {
           this._typeCheckDateArray(
             'restrictions.enabledDates',
             value,
-            providedType
+            providedType,
+            locale
           );
           return value;
         case 'disabledDates':
@@ -217,7 +234,8 @@ export class OptionConverter {
           this._typeCheckDateArray(
             'restrictions.disabledDates',
             value,
-            providedType
+            providedType,
+            locale
           );
           return value;
         case 'disabledTimeIntervals':
@@ -244,6 +262,7 @@ export class OptionConverter {
                   'DateTime or Date'
                 );
               }
+              dateTime.setLocale(locale);
               valueObject[i][vk] = dateTime;
             });
           }
@@ -251,18 +270,10 @@ export class OptionConverter {
         case 'toolbarPlacement':
         case 'type':
         case 'viewMode':
-        case 'dayViewHeaderFormat':
           const optionValues = {
             toolbarPlacement: ['top', 'bottom', 'default'],
             type: ['icons', 'sprites'],
             viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
-            dayViewHeaderFormat: [
-              'numeric',
-              '2-digit',
-              'long',
-              'short',
-              'narrow',
-            ],
           };
           const keyOptions = optionValues[key];
           if (!keyOptions.includes(value))
@@ -275,6 +286,8 @@ export class OptionConverter {
           return value;
         case 'inputParse':
         case 'inputFormat':
+        case 'meta':
+        case 'dayViewHeaderFormat':
           return value;
         default:
           switch (defaultType) {
@@ -361,6 +374,10 @@ export class OptionConverter {
 
   static _dataToOptions(element, options: Options): Options {
     const eData = element.dataset;
+
+    if (eData?.tdTargetInput) delete eData.tdTargetInput;
+    if (eData?.tdTargetToggle) delete eData.tdTargetToggle;
+
     if (
       !eData ||
       Object.keys(eData).length === 0 ||
@@ -470,7 +487,12 @@ export class OptionConverter {
    * @param value Option value
    * @param providedType Used to provide text to error messages
    */
-  static _typeCheckDateArray(optionName: string, value, providedType: string) {
+  static _typeCheckDateArray(
+    optionName: string,
+    value,
+    providedType: string,
+    locale: string = 'default'
+  ) {
     if (!Array.isArray(value)) {
       Namespace.errorMessages.typeMismatch(
         optionName,
@@ -488,6 +510,7 @@ export class OptionConverter {
           'DateTime or Date'
         );
       }
+      dateTime.setLocale(locale);
       value[i] = dateTime;
     }
   }
@@ -557,6 +580,17 @@ export class OptionConverter {
    * @param config
    */
   static _validateConflcits(config: Options) {
+    if (config.display.sideBySide && (!config.display.components.clock ||
+      !(config.display.components.hours ||
+        config.display.components.minutes ||
+        config.display.components.seconds)
+    )) {
+      Namespace.errorMessages.conflictingConfiguration(
+        'Cannot use side by side mode without the clock components'
+      );
+    }
+
+
     if (config.restrictions.minDate && config.restrictions.maxDate) {
       if (config.restrictions.minDate.isAfter(config.restrictions.maxDate)) {
         Namespace.errorMessages.conflictingConfiguration(

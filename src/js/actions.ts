@@ -9,11 +9,9 @@ import Namespace from './namespace';
  */
 export default class Actions {
   private _context: TempusDominus;
-  private collapse: Collapse;
 
   constructor(context: TempusDominus) {
     this._context = context;
-    this.collapse = new Collapse();
   }
 
   /**
@@ -22,15 +20,16 @@ export default class Actions {
    * @param action If not provided, then look for a [data-action]
    */
   do(e: any, action?: ActionTypes) {
-    const currentTarget = e.currentTarget;
-    if (currentTarget.classList.contains(Namespace.css.disabled)) return false;
-    action = action || currentTarget.dataset.action;
+    const currentTarget = e?.currentTarget;
+    if (currentTarget?.classList?.contains(Namespace.css.disabled))
+      return false;
+    action = action || currentTarget?.dataset?.action;
     const lastPicked = (
       this._context.dates.lastPicked || this._context._viewDate
     ).clone;
 
     /**
-     * Common function to manipulate {@link lastPicked} by `unit`
+     * Common function to manipulate {@link lastPicked} by `unit`.
      * @param unit
      * @param value Value to change by
      */
@@ -41,6 +40,25 @@ export default class Actions {
           newDate,
           this._context.dates.lastPickedIndex
         );
+      }
+    };
+
+    /**
+     * Common function to manipulate {@link lastPicked} by `unit`.
+     * After setting the value it will either show the clock or hide the widget.
+     * @param unit
+     * @param value Value to change by
+     */
+    const hideOrClock = () => {
+      if (
+        this._context._options.display.components.useTwentyfourHour &&
+        !this._context._options.display.components.minutes &&
+        !this._context._options.display.keepOpen &&
+        !this._context._options.display.inline
+      ) {
+        this._context._display.hide();
+      } else {
+        this.do(e, ActionTypes.showClock);
       }
     };
 
@@ -144,16 +162,7 @@ export default class Actions {
           lastPicked,
           this._context.dates.lastPickedIndex
         );
-        if (
-          this._context._options.display.components.useTwentyfourHour &&
-          !this._context._options.display.components.minutes &&
-          !this._context._options.display.keepOpen &&
-          !this._context._options.display.inline
-        ) {
-          this._context._display.hide();
-        } else {
-          this.do(e, ActionTypes.showClock);
-        }
+        hideOrClock();
         break;
       case ActionTypes.selectMinute:
         lastPicked.minutes = +currentTarget.dataset.value;
@@ -161,16 +170,7 @@ export default class Actions {
           lastPicked,
           this._context.dates.lastPickedIndex
         );
-        if (
-          this._context._options.display.components.useTwentyfourHour &&
-          !this._context._options.display.components.seconds &&
-          !this._context._options.display.keepOpen &&
-          !this._context._options.display.inline
-        ) {
-          this._context._display.hide();
-        } else {
-          this.do(e, ActionTypes.showClock);
-        }
+        hideOrClock();
         break;
       case ActionTypes.selectSecond:
         lastPicked.seconds = +currentTarget.dataset.value;
@@ -178,15 +178,7 @@ export default class Actions {
           lastPicked,
           this._context.dates.lastPickedIndex
         );
-        if (
-          this._context._options.display.components.useTwentyfourHour &&
-          !this._context._options.display.keepOpen &&
-          !this._context._options.display.inline
-        ) {
-          this._context._display.hide();
-        } else {
-          this.do(e, ActionTypes.showClock);
-        }
+        hideOrClock();
         break;
       case ActionTypes.incrementHours:
         manipulateAndSet(Unit.hours);
@@ -213,13 +205,6 @@ export default class Actions {
         );
         break;
       case ActionTypes.togglePicker:
-        this._context._display.widget
-          .querySelectorAll(
-            `.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`
-          )
-          .forEach((htmlElement: HTMLElement) =>
-            this.collapse.toggle(htmlElement)
-          );
         if (
           currentTarget.getAttribute('title') ===
           this._context._options.localization.selectDate
@@ -241,9 +226,16 @@ export default class Actions {
           currentTarget.innerHTML = this._context._display._iconTag(
             this._context._options.display.icons.date
           ).outerHTML;
-          this.do(e, ActionTypes.showClock);
-          this._context._display._update('clock');
+          if (this._context._display._hasTime) {
+            this.do(e, ActionTypes.showClock);
+            this._context._display._update('clock');
+          }
         }
+        this._context._display.widget
+          .querySelectorAll(
+            `.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`
+          )
+          .forEach((htmlElement: HTMLElement) => Collapse.toggle(htmlElement));
         break;
       case ActionTypes.showClock:
       case ActionTypes.showHours:

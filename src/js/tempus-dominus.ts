@@ -144,7 +144,7 @@ class TempusDominus {
   subscribe(
     eventTypes: string | string[],
     callbacks: (event: any) => void | ((event: any) => void)[]
-  ): { unsubscribe: void }[] {
+  ): { unsubscribe: () => void } | { unsubscribe: () => void }[] {
     if (typeof eventTypes === 'string') {
       eventTypes = [eventTypes];
     }
@@ -326,6 +326,7 @@ class TempusDominus {
     if (config.hooks.inputFormat === undefined) {
       const components = config.display.components;
       config.hooks.inputFormat = (_, date: DateTime) => {
+        if (!date) return '';
         return date.format({
           year: components.calendar && components.year ? 'numeric' : undefined,
           month:
@@ -359,7 +360,6 @@ class TempusDominus {
    * @private
    */
   private _initializeInput() {
-
     if (this._element.tagName == 'INPUT') {
       this._input = this._element as HTMLInputElement;
     } else {

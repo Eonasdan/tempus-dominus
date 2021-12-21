@@ -1,7 +1,7 @@
 @charset "UTF-8";
 @import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900";
 /*!
- * Bootstrap v5.1.2 (https://getbootstrap.com/)
+ * Bootstrap v5.1.3 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
@@ -2895,7 +2895,6 @@ textarea.form-control-lg {
 
 .btn {
   display: inline-block;
-  align-self: center;
   font-weight: 400;
   line-height: 1.5;
   color: #212529;
@@ -11589,4 +11588,39 @@ section:not(:last-child) {
 
 section h2 {
   margin-top: 3rem;
+}
+
+#migration {
+  /* hide the right side toc to give more room */
+}
+#migration textarea {
+  height: 60vh;
+}
+@media (min-width: 768px) {
+  #migration .bd-main {
+    display: grid;
+    gap: inherit;
+    grid-template-areas: "intro" "content";
+    grid-template-rows: auto auto 1fr;
+  }
+  #migration #convertButton, #migration #convertButtonHtml {
+    position: relative;
+    top: 50%;
+  }
+}
+@media (min-width: 992px) {
+  #migration .bd-main {
+    grid-template-areas: "intro" "content";
+    grid-template-columns: 4fr;
+    grid-template-rows: auto 1fr;
+  }
+}
+#migration #alert {
+  max-height: 20vh;
+  overflow-y: scroll;
+}
+#migration .tab-content > .active {
+  min-height: initial;
+  max-height: initial;
+  overflow-y: initial;
 }
