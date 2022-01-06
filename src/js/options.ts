@@ -94,6 +94,7 @@ export default interface Options {
     inputFormat?: (context: TempusDominus, date: DateTime) => string;
   };
   meta?: {};
+  container?: HTMLElement;
 }
 
 export class OptionConverter {
@@ -105,6 +106,7 @@ export class OptionConverter {
       'inputFormat',
       'meta',
       'dayViewHeaderFormat',
+      'container'
     ];
 
     //see if the options specify a locale
@@ -288,6 +290,15 @@ export class OptionConverter {
         case 'inputFormat':
         case 'meta':
         case 'dayViewHeaderFormat':
+          return value;
+        case 'container':
+          if (value && !(value instanceof HTMLElement || value instanceof Element || value?.appendChild)) {
+            Namespace.errorMessages.typeMismatch(
+              path.substring(1),
+              typeof value,
+              'HTMLElement'
+            );
+          }
           return value;
         default:
           switch (defaultType) {
