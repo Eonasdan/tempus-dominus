@@ -960,7 +960,7 @@ linkedPicker1Element.addEventListener(tempusDominus.Namespace.events.change, (e)
 const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e) => {
   linked1.updateOptions({
     restrictions: {
-      maxDate: e.detail.date
+      maxDate: e.date
     }
   });
 });
@@ -1049,7 +1049,7 @@ const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e
       const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e) => {
         linked1.updateOptions({
           restrictions: {
-            maxDate: e.detail.date
+            maxDate: e.date
           }
         });
       });
