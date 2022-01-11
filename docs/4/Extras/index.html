@@ -208,7 +208,7 @@ Here is what I did.</p>
 </li>
 </ol>
 <p>If you open the datetimepicker widget and click on some button or date inside it, widget is automatically closed.
-So I added <code>debug: true</code> as an option when initializing the widget. Why I did this? I saw on line 1121 from bootsrap-datetimepicker.js the code <code>'blur': options.debug ? '' : hide</code>.
+So I added <code>debug: true</code> as an option when initializing the widget. Why I did this? I saw on line 1121 from bootstrap-datetimepicker.js the code <code>'blur': options.debug ? '' : hide</code>.
 And now widget window is not closed on every click inside it, but now you can't close it anyway :)
 And closing should be done manually. I've added this document click handler. If you click something outside the widget, now closing works.</p>
 <pre><code>$(document).click(function(e){
