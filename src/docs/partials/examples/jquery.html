@@ -1938,8 +1938,8 @@ changeOptionsButton.addEventListener('click', () => {
         <div class='tab-pane fade' id='container-optionJs' role='tabpanel' aria-labelledby='container-optionJs-tab'>
          <pre>
            <code class='language-javascript'>
-$('div[id="containerDatePicker"]').tempusDominus({
-  container: $('div[id="parent-container"]'),
+$('#containerDatePicker').tempusDominus({
+  container: $('div[id="parent-container"]')[0],
 });
            </code>
          </pre>
