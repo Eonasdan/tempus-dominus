@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta1 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta2 (https://getdatepicker.com/)
   * Copyright 2013-2022 [object Object]
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -842,6 +842,7 @@ const DefaultOptions = {
         inputFormat: undefined,
     },
     meta: {},
+    container: undefined
 };
 const DatePickerModes = [
     {
@@ -1392,6 +1393,7 @@ class OptionConverter {
             'inputFormat',
             'meta',
             'dayViewHeaderFormat',
+            'container'
         ];
         //see if the options specify a locale
         const locale = mergeTo.localization.locale !== 'default' ? mergeTo.localization.locale :
@@ -1509,6 +1511,11 @@ class OptionConverter {
                 case 'inputFormat':
                 case 'meta':
                 case 'dayViewHeaderFormat':
+                    return value;
+                case 'container':
+                    if (value && !(value instanceof HTMLElement || value instanceof Element || (value === null || value === void 0 ? void 0 : value.appendChild))) {
+                        Namespace.errorMessages.typeMismatch(path.substring(1), typeof value, 'HTMLElement');
+                    }
                     return value;
                 default:
                     switch (defaultType) {
@@ -2544,7 +2551,7 @@ class Display {
      * @fires Events#show
      */
     show() {
-        var _a, _b;
+        var _a, _b, _c;
         if (this.widget == undefined) {
             if (this._context._options.useCurrent &&
                 !this._context._options.defaultDate &&
@@ -2570,23 +2577,27 @@ class Display {
                 this._context.dates._setValue(this._context._options.defaultDate);
             }
             this._buildWidget();
+            // If modeView is only clock
+            const onlyClock = this._hasTime && !this._hasDate;
             // reset the view to the clock if there's no date components
-            if (this._hasTime && !this._hasDate) {
+            if (onlyClock) {
                 this._context._action.do(null, ActionTypes.showClock);
-                return;
             }
             // otherwise return to the calendar view
             this._context._currentViewMode = this._context._minViewModeNumber;
-            if (this._hasTime)
-                Collapse.hide(this._context._display.widget
-                    .getElementsByClassName(Namespace.css.timeContainer)[0]);
-            Collapse.show(this._context._display.widget
-                .getElementsByClassName(Namespace.css.dateContainer)[0]);
+            if (!onlyClock) {
+                if (this._hasTime) {
+                    Collapse.hide(this._context._display.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                }
+                Collapse.show(this._context._display.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+            }
             if (this._hasDate) {
                 this._showMode();
             }
             if (!this._context._options.display.inline) {
-                document.body.appendChild(this.widget);
+                // If needed to change the parent container
+                const container = ((_c = this._context._options) === null || _c === void 0 ? void 0 : _c.container) || document.body;
+                container.appendChild(this.widget);
                 this._popperInstance = createPopper(this._context._element, this.widget, {
                     modifiers: [{ name: 'eventListeners', enabled: true }],
                     //#2400
