@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta1 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta2 (https://getdatepicker.com/)
   * Copyright 2013-2022 [object Object]
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
