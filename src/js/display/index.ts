@@ -150,27 +150,32 @@ export default class Display {
 
       this._buildWidget();
 
+      // If modeView is only clock
+      const onlyClock = this._hasTime && !this._hasDate;
+
       // reset the view to the clock if there's no date components
-      if (this._hasTime && !this._hasDate) {
+      if (onlyClock) {
         this._context._action.do(null, ActionTypes.showClock);
-        return;
       }
 
       // otherwise return to the calendar view
       this._context._currentViewMode = this._context._minViewModeNumber;
 
-      if (this._hasTime)
-        Collapse.hide(this._context._display.widget
-          .getElementsByClassName(Namespace.css.timeContainer)[0] as HTMLElement);
-      Collapse.show(this._context._display.widget
-        .getElementsByClassName(Namespace.css.dateContainer)[0] as HTMLElement);
+      if (!onlyClock) {
+        if (this._hasTime) {
+          Collapse.hide(this._context._display.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+        }
+        Collapse.show(this._context._display.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+      }
 
       if (this._hasDate) {
         this._showMode();
       }
 
       if (!this._context._options.display.inline) {
-        document.body.appendChild(this.widget);
+        // If needed to change the parent container
+        const container = this._context._options?.container || document.body;
+        container.appendChild(this.widget);
 
         this._popperInstance = createPopper(
           this._context._element,

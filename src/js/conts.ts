@@ -97,6 +97,7 @@ const DefaultOptions: Options = {
     inputFormat: undefined,
   },
   meta: {},
+  container: undefined
 };
 
 const DatePickerModes: {

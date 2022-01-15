@@ -1890,6 +1890,90 @@ changeOptionsButton.addEventListener('click', () => {
     </script>
   </section>
 
+  <section>
+    <h3 id='container-option'>Example with container parameter<a class='anchorjs-link ' aria-label='Anchor' href='#container-option'><i
+      class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
+
+    <p>
+      All you need is an element to atach the picker to and a parent container.
+    </p>
+
+    <div class='code-blocks d-none'>
+      <ul class='nav nav-tabs' role='tablist'>
+        <li class='nav-item' role='presentation'>
+          <button class='nav-link active' id='container-optionHtml-tab' data-bs-toggle='tab'
+                  data-bs-target='#container-optionHtml' type='button'
+                  role='tab' aria-controls='container-optionHtml' aria-selected='true'>HTML
+          </button>
+        </li>
+        <li class='nav-item' role='presentation'>
+          <button class='nav-link' id='container-optionJs-tab' data-bs-toggle='tab' data-bs-target='#container-optionJs'
+                  type='button'
+                  role='tab' aria-controls='container-optionJs' aria-selected='false'>Javascript
+          </button>
+        </li>
+        <li class='nav-item' role='presentation'>
+          <button class='nav-link' id='container-optionLog-tab' data-bs-toggle='tab' data-bs-target='#container-optionLog'
+                  type='button'
+                  role='tab' aria-controls='container-optionLog' aria-selected='false'>Events
+          </button>
+        </li>
+      </ul>
+      <div class='tab-content'>
+        <div class='tab-pane fade show active' id='container-optionHtml' role='tabpanel'
+             aria-labelledby='container-optionHtml-tab'>
+         <pre>
+           <code class='language-html'>
+&lt;div id='parent-container' class='relative p-5' style='overflow: auto; height: 100px; width: 100%;'&gt;
+  &lt;div class='input-group log-event' id='containerDatePicker' data-td-target-input='nearest'
+    data-td-target-toggle='nearest'&gt;
+    &lt;input id='containerDatePickerInput' type='text' class='form-control' /&gt;
+    &lt;span class='input-group-text' data-td-target='#settingOptions' data-td-toggle='datetimepicker'&gt;
+      &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class='tab-pane fade' id='container-optionJs' role='tabpanel' aria-labelledby='container-optionJs-tab'>
+         <pre>
+           <code class='language-javascript'>
+$('#containerDatePicker').tempusDominus({
+  container: $('div[id="parent-container"]')[0],
+});
+           </code>
+         </pre>
+        </div>
+        <div class='tab-pane fade logger' id='container-optionLog' role='tabpanel'
+             aria-labelledby='datetimepicker1Log-tab'>
+          <div class='alert alert-info'>
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='container'>
+      <div class='row'>
+        <div class='col-sm-6'>
+          <div id='parent-container' class='relative p-5' style='overflow: auto; height: 100px; width: 100%;'>
+            <div class='input-group log-event' id='containerDatePicker' data-td-target-input='nearest'
+              data-td-target-toggle='nearest'>
+              <input id='containerDatePickerInput' type='text' class='form-control' />
+              <span class='input-group-text' data-td-target='#settingOptions' data-td-toggle='datetimepicker'>
+                <span class='fas fa-calendar'></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type='text/javascript'>
+      $('#containerDatePicker').tempusDominus({
+        container: $('div[id="parent-container"]')[0],
+      });
+    </script>
+  </section>
+
   <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css'>
 </page-body>
 
