@@ -98,6 +98,7 @@ export default interface Options {
         inputFormat?: (context: TempusDominus, date: DateTime) => string;
     };
     meta?: {};
+    container?: HTMLElement;
 }
 export declare class OptionConverter {
     static _mergeOptions(providedOptions: Options, mergeTo: Options): Options;
