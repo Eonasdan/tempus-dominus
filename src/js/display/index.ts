@@ -173,7 +173,9 @@ export default class Display {
       }
 
       if (!this._context._options.display.inline) {
-        document.body.appendChild(this.widget);
+        // If needed to change the parent container
+        const container = this._context._options?.container || document.body;
+        container.appendChild(this.widget);
 
         this._popperInstance = createPopper(
           this._context._element,
