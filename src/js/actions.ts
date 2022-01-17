@@ -28,50 +28,10 @@ export default class Actions {
       this._context.dates.lastPicked || this._context._viewDate
     ).clone;
 
-    /**
-     * Common function to manipulate {@link lastPicked} by `unit`.
-     * @param unit
-     * @param value Value to change by
-     */
-    const manipulateAndSet = (unit: Unit, value = 1) => {
-      const newDate = lastPicked.manipulate(value, unit);
-      if (this._context._validation.isValid(newDate, unit)) {
-        this._context.dates._setValue(
-          newDate,
-          this._context.dates.lastPickedIndex
-        );
-      }
-    };
-
-    /**
-     * Common function to manipulate {@link lastPicked} by `unit`.
-     * After setting the value it will either show the clock or hide the widget.
-     * @param unit
-     * @param value Value to change by
-     */
-    const hideOrClock = () => {
-      if (
-        this._context._options.display.components.useTwentyfourHour &&
-        !this._context._options.display.components.minutes &&
-        !this._context._options.display.keepOpen &&
-        !this._context._options.display.inline
-      ) {
-        this._context._display.hide();
-      } else {
-        this.do(e, ActionTypes.showClock);
-      }
-    };
-
     switch (action) {
       case ActionTypes.next:
       case ActionTypes.previous:
-        const { unit, step } = DatePickerModes[this._context._currentViewMode];
-        if (action === ActionTypes.next)
-          this._context._viewDate.manipulate(step, unit);
-        else this._context._viewDate.manipulate(step * -1, unit);
-        this._context._viewUpdate(unit);
-
-        this._context._display._showMode();
+        this.handleNextPrevious(action);
         break;
       case ActionTypes.pickerSwitch:
         this._context._display._showMode(1);
@@ -90,9 +50,6 @@ export default class Actions {
             this._context._viewUpdate(Unit.month);
             break;
           case ActionTypes.selectYear:
-            this._context._viewDate.year = value;
-            this._context._viewUpdate(Unit.year);
-            break;
           case ActionTypes.selectDecade:
             this._context._viewDate.year = value;
             this._context._viewUpdate(Unit.year);
@@ -162,7 +119,7 @@ export default class Actions {
           lastPicked,
           this._context.dates.lastPickedIndex
         );
-        hideOrClock();
+        this.hideOrClock(e);
         break;
       case ActionTypes.selectMinute:
         lastPicked.minutes = +currentTarget.dataset.value;
@@ -170,7 +127,7 @@ export default class Actions {
           lastPicked,
           this._context.dates.lastPickedIndex
         );
-        hideOrClock();
+        this.hideOrClock(e);
         break;
       case ActionTypes.selectSecond:
         lastPicked.seconds = +currentTarget.dataset.value;
@@ -178,28 +135,28 @@ export default class Actions {
           lastPicked,
           this._context.dates.lastPickedIndex
         );
-        hideOrClock();
+        this.hideOrClock(e);
         break;
       case ActionTypes.incrementHours:
-        manipulateAndSet(Unit.hours);
+       this.manipulateAndSet(lastPicked, Unit.hours);
         break;
       case ActionTypes.incrementMinutes:
-        manipulateAndSet(Unit.minutes, this._context._options.stepping);
+        this.manipulateAndSet(lastPicked, Unit.minutes, this._context._options.stepping);
         break;
       case ActionTypes.incrementSeconds:
-        manipulateAndSet(Unit.seconds);
+        this.manipulateAndSet(lastPicked, Unit.seconds);
         break;
       case ActionTypes.decrementHours:
-        manipulateAndSet(Unit.hours, -1);
+        this.manipulateAndSet(lastPicked, Unit.hours, -1);
         break;
       case ActionTypes.decrementMinutes:
-        manipulateAndSet(Unit.minutes, this._context._options.stepping * -1);
+        this.manipulateAndSet(lastPicked, Unit.minutes, this._context._options.stepping * -1);
         break;
       case ActionTypes.decrementSeconds:
-        manipulateAndSet(Unit.seconds, -1);
+        this.manipulateAndSet(lastPicked, Unit.seconds, -1);
         break;
       case ActionTypes.toggleMeridiem:
-        manipulateAndSet(
+        this.manipulateAndSet(lastPicked,
           Unit.hours,
           this._context.dates.lastPicked.hours >= 12 ? -12 : 12
         );
@@ -289,6 +246,50 @@ export default class Actions {
             this._context.dates.lastPickedIndex
           );
         break;
+    }
+  }
+
+  private handleNextPrevious(action: ActionTypes) {
+    const { unit, step } = DatePickerModes[this._context._currentViewMode];
+    if (action === ActionTypes.next)
+      this._context._viewDate.manipulate(step, unit);
+    else this._context._viewDate.manipulate(step * -1, unit);
+    this._context._viewUpdate(unit);
+
+    this._context._display._showMode();
+  }
+
+  /**
+   * Common function to manipulate {@link lastPicked} by `unit`.
+   * After setting the value it will either show the clock or hide the widget.
+   * @param unit
+   * @param value Value to change by
+   */
+  private hideOrClock(e) {
+    if (
+      this._context._options.display.components.useTwentyfourHour &&
+      !this._context._options.display.components.minutes &&
+      !this._context._options.display.keepOpen &&
+      !this._context._options.display.inline
+    ) {
+      this._context._display.hide();
+    } else {
+      this.do(e, ActionTypes.showClock);
+    }
+  }
+
+  /**
+   * Common function to manipulate {@link lastPicked} by `unit`.
+   * @param unit
+   * @param value Value to change by
+   */
+  private manipulateAndSet(lastPicked: DateTime, unit: Unit, value = 1) {
+    const newDate = lastPicked.manipulate(value, unit);
+    if (this._context._validation.isValid(newDate, unit)) {
+      this._context.dates._setValue(
+        newDate,
+        this._context.dates.lastPickedIndex
+      );
     }
   }
 }

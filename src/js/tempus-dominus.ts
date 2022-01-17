@@ -36,7 +36,7 @@ class TempusDominus {
 
   constructor(element: HTMLElement, options: Options = {} as Options) {
     if (!element) {
-      Namespace.errorMessages.mustProvideElement;
+      Namespace.errorMessages.mustProvideElement();
     }
     this._element = element;
     this._options = this._initializeOptions(options, DefaultOptions, true);
@@ -156,7 +156,7 @@ class TempusDominus {
     }
 
     if (eventTypes.length !== callBackArray.length) {
-      Namespace.errorMessages.subscribeMismatch;
+      Namespace.errorMessages.subscribeMismatch();
     }
 
     const returnArray = [];
