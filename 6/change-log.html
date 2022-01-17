@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset="UTF-8">
+  <meta name="description" content="A robust and powerful date/time picker component.">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+
+  <title>Change Log - Tempus Dominus</title>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <meta name="title" content="Change Log">
+  <meta name="description" content="An overview of changes between different version of tempus dominus
+  ">
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://getdatepicker.com/docs/6//change-log.html">
+  <meta property="og:title" content="Change Log">
+  <meta property="og:description" content="An overview of changes between different version of tempus dominus
+  ">
+  <meta class="metaImage" property="og:image" content="">
+
+  <meta property="article:published_time" content="2021-07-20T00:00:00.000Z">
+  <meta property="article:modified_time" content="2021-07-20T00:00:00.000Z">
+  <meta property="article:tag" content="datepicker, javascript, open source, tempus dominus, eonasdan">
+  <meta property="article:author" content="Jonathan Peterson">
+  <meta property="article:section" content="Technology">
+
+  
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:site" content="@eonasdan">
+  <meta property="twitter:creator" content="@eonasdan">
+  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//change-log.html">
+  <meta property="twitter:title" content="Change Log">
+  <meta property="twitter:description" content="An overview of changes between different version of tempus dominus
+  ">
+  <meta class="metaImage" property="twitter:image" content="">
+  <link rel="stylesheet" href="/css/styles.min.css">
+
+  <script src="/js/bundle.min.js"></script>
+  <script src="/6/js/tempus-dominus.js"></script>
+  <link rel="stylesheet" href="/6/css/tempus-dominus.css">
+
+</head>
+
+<body>
+<div class="skippy visually-hidden-focusable overflow-hidden">
+  <div class="container-xl">
+    <a class="d-inline-flex p-2 m-1" href="#content">Skip to main content</a>
+    <a class="d-none d-md-inline-flex p-2 m-1" href="#bd-docs-nav">Skip to docs navigation</a>
+  </div>
+</div>
+
+
+<header class="navbar navbar-expand-md navbar-dark bd-navbar">
+  <nav class="container-xxl flex-wrap flex-md-nowrap" aria-label="Main navigation">
+    <a class="navbar-brand p-0 me-2" href="/" aria-label="Tempus Dominus">
+      <img src="https://getdatepicker.com/favicon-32x32.png" alt="home">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="bdNavbar">
+      <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav pt-2 py-md-0">
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'TempisuDominus');">Home</a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" aria-current="true" href="/6/installing.html" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Docs');">Docs</a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" aria-current="true" href="/6/examples/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Docs');">Examples</a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" aria-current="true" href="/6/change-log.html" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Change Log');">Change Log</a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://eonasdan.com/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Blog');" target="_blank" rel="noopener">Blog</a>
+        </li>
+      </ul>
+
+      <hr class="d-md-none text-white-50">
+
+      <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://github.com/Eonasdan/tempus-dominus" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i>
+            <small class="d-md-none ms-2">GitHub</small>
+          </a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://twitter.com/eonasdan" target="_blank" rel="noopener">
+            <i class="fab fa-twitter"></i>
+            <small class="d-md-none ms-2">Twitter</small>
+          </a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://discord.gg/BHS9jw9YPf" target="_blank" rel="noopener">
+            <i class="fab fa-discord"></i>
+            <small class="d-md-none ms-2">Discord</small>
+          </a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://ko-fi.com/eonasdan" target="_blank" rel="noopener">
+            <i class="fas fa-coffee"></i>
+            <small class="d-md-none ms-2">Ko-fi</small>
+          </a>
+        </li>
+      </ul>
+
+      <a class="btn btn-bd-download d-lg-inline-block my-2 my-md-0 ms-md-3" href="/6/installing.html">Download</a>
+    </div>
+  </nav>
+</header>
+
+
+<nav class="bd-subnavbar py-2" aria-label="Secondary navigation">
+  <div class="container-xxl d-flex align-items-md-center">
+    
+
+    <div class="dropdown ms-3">
+      <button class="btn btn-bd-light dropdown-toggle" id="bd-versions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+        <span class="d-none d-lg-inline">Tempus Dominus</span> v6.0
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-versions">
+        <li><a class="dropdown-item current" aria-current="true" href="/docs/6/">Latest (6.0.x)</a></li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li><a class="dropdown-item" href="/5-4/">v5.39.0 - Bootstrap 4</a></li>
+        <li><a class="dropdown-item" href="/5-3/">v5 - Bootstrap 3</a></li>
+        <li><a class="dropdown-item" href="/4/">v4.17.49</a></li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li><a class="dropdown-item" href="/docs/versions/">All versions</a></li>
+      </ul>
+    </div>
+
+
+    <button class="btn bd-sidebar-toggle d-md-none py-0 px-1 ms-3 order-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bd-docs-nav" aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation">
+      <i class="fas fa-expand-arrows-alt"></i>
+      <i class="fas fa-compress-arrows-alt"></i>
+
+    </button>
+  </div>
+</nav>
+
+<div id="outerContainer" class="container-xxl my-md-4 bd-layout"><aside class="bd-sidebar">
+  <nav class="collapse bd-links" id="bd-docs-nav" aria-label="Docs navigation">
+    <ul class="list-unstyled mb-0 py-3 pt-md-1" id="mainToc">
+      <li class="mb-1">
+        <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#getting-started-collapse" aria-expanded="false" aria-current="true">
+          Getting started
+        </button>
+
+        <div class="collapse" id="getting-started-collapse">
+          <ul class="list-unstyled fw-normal pb-1 small">
+            <li><a href="/6/" class="d-inline-flex align-items-center rounded" aria-current="page">Introduction</a></li>
+            <li><a href="/6/installing.html" class="d-inline-flex align-items-center rounded">Download</a>
+            </li>
+            <li><a href="/6/change-log.html" class="d-inline-flex align-items-center rounded" aria-current="page">Change Log</a></li>
+            <li><a href="/6/functions.html" class="d-inline-flex align-items-center rounded" aria-current="page">Functions</a></li>
+            <li><a href="/6/options.html" class="d-inline-flex align-items-center rounded" aria-current="page">Options</a></li>
+            <li><a href="/6/datetime.html" class="d-inline-flex align-items-center rounded" aria-current="page">DateTime</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#customize-collapse" aria-expanded="false">
+          Namespace
+        </button>
+
+        <div class="collapse" id="customize-collapse">
+          <ul class="list-unstyled fw-normal pb-1 small">
+            <li><a href="/6/namespace/" class="d-inline-flex align-items-center rounded">Overview</a>
+            </li>
+            <li><a href="/6/namespace/css.html" class="d-inline-flex align-items-center rounded">CSS</a></li>
+            <li><a href="/6/namespace/errors.html" class="d-inline-flex align-items-center rounded">Errors</a>
+            </li>
+            <li><a href="/6/namespace/events.html" class="d-inline-flex align-items-center rounded">Events</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#examples-collapse" aria-expanded="false">
+          Examples
+        </button>
+
+        <div class="collapse" id="examples-collapse">
+          <ul class="list-unstyled fw-normal pb-1 small">
+            <li><a href="/6/examples/" class="d-inline-flex align-items-center rounded">Overview</a>
+            </li>
+            <li><a href="/6/examples/jquery.html" class="d-inline-flex align-items-center rounded">jQuery</a></li>
+            <li><a href="/6/examples/no-styles.html" class="d-inline-flex align-items-center rounded">No Styles</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="my-3 mx-4 border-top"></li>
+      <li>
+        <a href="/6/migration.html" class="d-inline-flex align-items-center rounded">
+          Migration
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</aside>
+<main class="bd-main order-1">
+  <div class="bd-intro ps-lg-4">
+    <div class="d-md-flex align-items-center justify-content-between">
+      <h1 class="bd-title title" id="content">Change Log</h1>
+    </div>
+  </div>
+  <div id="mainContent" class="bd-content ps-lg-4">
+  <section>
+    <h1>Version 6</h1>
+    <h2>Version 6-alpha17</h2>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed issue with calendar weeks. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2441">#2441</a>
+      </li>
+    </ul>
+    <h2>Version 6-alpha16</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Started building html migration tool</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed issue with daysOfWeekDisabled. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2419">#2419</a>
+      </li>
+      <li>Fixed issue with reading the data- attributes. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2430">#2430</a>
+      </li>
+      <li>Fixed start of the week option having the incorrect heading. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2414">#2443</a>
+      </li>
+    </ul>
+    <h2>Version 6-alpha15</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Added <code>localization.startOfTheWeek</code>. This allows setting the start of the week.</li>
+      <li>Added <code>numberingSystem</code> to <code>DateTimeFormatOptions</code></li>
+      <li>Added <code>meta</code> property to options.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed issue with 24 hour display formatting. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2414">#2414</a>
+      </li>
+      <li>Fixed default input change formatting function to check for empty dates. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2411">#2411</a>
+      </li>
+      <li>Fixed an issue with the unsubscribe method typing. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2411">#2411</a>
+      </li>
+      <li>Fixed an issue where the picker would try to update the clock view even it wasn't enabled. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2438">#2438</a>
+      </li>
+      <li>Fixed an issue using a time component would not go back to the clock view. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2431">#2431</a>
+      </li>
+      <li>The picker will return to the view date and show the calendar or clock after being reopened. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2410">#2410</a>
+      </li>
+      <li>Fixed clock/calendar switching to wait until the other view is ready before switching. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2421">#2421</a>
+      </li>
+      <li>Fixed the options interface so all properties are optionsal. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2439">#2439</a>
+      </li>
+      <li><span class="badge bg-danger">BREAKING</span> <code>localization.dayViewHeaderFormat</code> no longer takes a
+        string but instead accepts a <code>DateTimeFormatOptions</code>. This will allow for more customization. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2420">#2420</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+    <h2>Version 6-alpha14</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Cleaned up css a bit. Got rid of the popper arrow and aligned the picker to the start of the element.</li>
+      <li><span class="badge bg-danger">BREAKING</span> <code>display.inputFormat</code> now takes a function, not an
+        Intl format. It has also been moved to <code>hooks.inputFormat</code> By default a function will be executed
+        that uses Intl to format the selected date(s) based on the selected components.
+      </li>
+      <li>Added <code>hooks.inputParse</code></li>
+      <li>Merged number localization Thanks @hkvstore <a href="https://github.com/Eonasdan/tempus-dominus/issues/2408">#2408</a>
+      </li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Merged a fix for parsing issue from comparing constructor names. Thanks @faatihi <a href="https://github.com/Eonasdan/tempus-dominus/issues/2408">#2408</a></li>
+      <li>Fixed doc issue</li>
+      <li>Fixed input value for real this time. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2387">#2387</a></li>
+      <li>Fixed <code>keepOpen</code></li>
+      <li>Fixed widget positioning with rtl <a href="https://github.com/Eonasdan/tempus-dominus/issues/2400">#2400</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+    <h2>Version 6-alpha1.0.13</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Created a new method <code>set(value: any, index?: number, from: string = 'date.set')</code> that tries to
+        conver the <code>value</code> provided and then tries to set that value to the <code>index</code> (or 0 if not
+        using multidate).
+      </li>
+      <li>Added esm output</li>
+      <li>Exposed <code>Unit</code> and <code>DateTimeFormatOptions</code> from the DateTime class.</li>
+      <li>Renamed <code>togglePeriod</code> to <code>toggleMeridiem</code></li>
+      <li>Added <code>toggleMeridiem</code> class to AM/PM button</li>
+      <li>Cleaned up css a bit. Got rid of the popper arrow and aligned the picker to the start of the element.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed dealing with input values/changes.</li>
+      <li>Fixed issue when calling hide if the widget hasn't been built (or shown) yet.</li>
+      <li>Fixed meridiem issue. Thanks @hkvstore <a href="https://github.com/Eonasdan/tempus-dominus/issues/2398">#2398</a></li>
+      <li>Merged PR 2396 to fix 24 hour hour selection. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2395">#2395</a></li>
+      <li>Fixed issue with time component grid. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2395">#2395</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Version 6-alpha1.0.4</h2>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed issue with meridiem (AM/PM) button clicks.</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Version 6-alpha1.0.3</h2>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed year display after selecting a decade. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2386">#2386</a>
+      </li>
+      <li>Fixed issue if the input field had a value. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2387">#2387</a>
+      </li>
+      <li>Fixed setting the defaultDate option with a Date object. <a href="https://github.com/Eonasdan/tempus-dominus/issues/2391">#2391</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Version 6-alpha1</h2>
+    <h3 id="general">General</h3>
+    <ul>
+      <li>picker returns a <code>DateTime</code> which is an extended javascript <code>Date</code> object.</li>
+      <li>picker no longer uses jQuery, momentjs, or bootstrap</li>
+      <li>events now have interfaces</li>
+    </ul>
+    <h3 id="configuration">Configuration</h3>
+    <ul>
+      <li>renamed <code>tooltip</code> to <code>localization</code>
+        <ul>
+          <li>renamed <code>tooltip.prevMonth</code> to <code>localization.previousMonth</code></li>
+          <li>renamed <code>tooltip.prevYear</code> to <code>localization.previousYear</code></li>
+          <li>renamed <code>tooltip.prevDecade</code> to <code>localization.previousDecade</code></li>
+          <li>renamed <code>tooltip.prevCentury</code> to <code>localization.previousCentury</code></li>
+          <li>moved <code>dayViewHeaderFormat</code> to <code>localization.dayViewHeaderFormat</code></li>
+          <li><code>dayViewHeaderFormat</code> now takes a javascript <code>intl</code> month option, e.g.
+            <code>long</code> (default)
+          </li>
+        </ul>
+      </li>
+      <li>moved <code>locale</code> to <code>localization</code>
+      </li>
+      <li>removed <code>useStrict</code></li>
+      <li>removed <code>timeZone</code></li>
+      <li>removed <code>format</code>
+        <ul>
+          <li>added <code>display.inputFormat</code> that takes <code>DateTimeFormatOptions</code>;</li>
+        </ul>
+      </li>
+      <li>removed <code>collapse</code></li>
+      <li>removed <code>extraFormats</code></li>
+      <li>removed <code>widgetParent</code></li>
+      <li>removed <code>widgetPositioning</code></li>
+      <li>changed <code>viewMode</code> from <code>'times' | 'days'</code> to <code>'clock' |
+        'calendar'</code></li>
+      <li>renamed <code>allowMultidate</code> and <code>multidateSeparator</code> to <code>multipleDates</code> and
+        <code>multipleDatesSeparator</code>
+      </li>
+      <li>moved the following to <code>restrictions</code>
+        <ul>
+          <li>minDate</li>
+          <li>maxDate</li>
+          <li>disabledDates</li>
+          <li>enabledDates</li>
+          <li>daysOfWeekDisabled</li>
+          <li>disabledHours</li>
+          <li>enabledHours</li>
+          <li>readonly</li>
+          <li>disabledTimeIntervals</li>
+        </ul>
+      </li>
+      <li>moved the following to <code>display</code>
+        <ul>
+          <li>sideBySide</li>
+          <li>calendarWeeks</li>
+          <li>viewMode</li>
+          <li>toolbarPlacement</li>
+          <li>buttons</li>
+          <li>widgetPositioning</li>
+          <li>icons</li>
+          <li>inline</li>
+          <li>keepOpen</li>
+        </ul>
+      </li>
+      <li>disabledTimeIntervals is now an array of <code>{ from: DateTime, to: DateTime }</code>
+      </li>
+      <li>removed check for <code>dateOptions</code> on the element data set. jQuery hid allowing an object by looping
+        through the properties
+      </li>
+      <li>removed <code>keybindings</code> - this might come back later</li>
+      <li>removed <code>readonly&lt;</code></li>
+      <li>removed <code>ignoreReadonly&lt;</code></li>
+      <li>removed <code>focusOnShow&lt;</code></li>
+    </ul>
+    <h4 id="styles">Styles</h4>
+    <h5 id="tip-all-new-css-values-are-in-namespace-css-in-the-consts-ts-file">Tip: All new css values are in <code>Namespace.Css.*</code>
+      in the <code>consts.ts</code> file</h5>
+    <ul>
+      <li>renamed <code>bootstrap-datetimepicker-widget</code> to <code>tempus-dominus-widget</code></li>
+      <li>renamed <code>tempusDominus-bootstrap-datetimepicker-widget-with-calendar-weeks</code> to <code>tempus-dominus-with-calendar-weeks</code>
+        (
+        v5)
+        <ul>
+          <li>removed <code>.input-group [data-toggle="datetimepicker"]</code> setting the cursor type to
+            pointer.
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h6 id="date">Date</h6>
+    <ul>
+      <li>renamed <code>datepicker</code> to <code>date-container</code></li>
+      <li>renamed <code>datepicker-decades</code> to <code>date-container-decades</code></li>
+      <li>renamed <code>datepicker-years</code> to <code>date-container-years</code></li>
+      <li>renamed <code>datepicker-months</code> to <code>date-container-months</code></li>
+      <li>renamed <code>datepicker-days</code> to <code>date-container-days</code></li>
+      <li>renamed <code>prev</code> to <code>previous</code></li>
+      <li>renamed <code>data-day</code> to <code>data-value</code> to be consistent with other views</li>
+    </ul>
+    <h6 id="time">Time</h6>
+    <ul>
+      <li>renamed <code>usetwentyfour</code> to <code>useTwentyfour</code></li>
+      <li>renamed <code>timepicker</code> to <code>time-container</code></li>
+      <li>renamed <code>timepicker-hour</code> to <code>time-container-hour</code></li>
+      <li>renamed <code>timepicker-minute</code> to <code>time-container-minute</code></li>
+      <li>renamed <code>timepicker-second</code> to <code>time-container-second</code></li>
+    </ul>
+    <h5 id="saas">Saas</h5>
+    <p>Saas file is now called <code>tempus-dominus.scss</code>. The "build" file has been deleted as it's
+      no longer required.</p>
+    <h3 id="events">Events</h3>
+    <ul>
+      <li>changed <code>isInvalid</code> to <code>isValid</code> and flipped the boolean (v5)</li>
+      <li>changed event now emits <code>undefined</code> instead of false when the date is being cleared</li>
+      <li>changed plugin.name from <code>datetimepicker</code> to <code>tempus-dominus</code></li>
+      <li>changed root data namespace from <code>datetimepicker</code> to <code>td</code></li>
+    </ul>
+  </section>
+
+  <section>
+    <h1>
+      Version 5
+    </h1>
+    <p>
+      Version 5 was a rewrite of v4 taking some pending pull requests and fixes along with it. Unfortunately, I didn't
+      do a very good job at documenting those changes.
+    </p>
+  </section>
+
+  <section>
+    <h1>
+      Version 4
+    </h1>
+    <p>
+      The changlog from v2-v4 can be <a href="https://getdatepicker.com/4/ChangeLog/">read here</a>.
+    </p>
+  </section>
+
+</div>
+</main></div>
+
+<footer class="bd-footer py-5 mt-5 bg-light">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-lg-3 mb-3">
+        <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="/" aria-label="Tempus Dominus">
+          <img src="https://getdatepicker.com/favicon-32x32.png" alt="home">
+          <span class="fs-5">Tempus Dominus</span>
+        </a>
+        <ul class="list-unstyled small text-muted">
+          <li class="mb-2">Created by the <a href="https://eonasdan.com">Eonasdan (Jonathan Peterson</a> with the help of <a href="https://github.com/Eonasdan/tempus-dominus/graphs/contributors">our contributors</a>.</li>
+          <li class="mb-2">Code licensed <a href="https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE" target="_blank" rel="license noopener">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY 3.0</a>.</li>
+          <li class="mb-2">Currently v6.0.0-alpha1.</li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2 offset-lg-1 mb-3">
+        <h5>Links</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="/">Home</a></li>
+          <li class="mb-2"><a href="/docs/6/">Docs</a></li>
+          <li class="mb-2"><a href="https://eonasdan.com">Blog</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-6 col-lg-2 mb-3">
+        <h5>Community</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="https://github.com/Eonasdan/tempus-dominus/issues" target="_blank" rel="noopener">Issues</a></li>
+          <li class="mb-2"><a href="https://github.com/Eonasdan/tempus-dominus/discussions" target="_blank" rel="noopener">Discussions</a></li>
+          <li class="mb-2"><a href="https://ko-fi.com/eonasdan" target="_blank" rel="noopener">Support me on Ko-fi</a></li>
+          <li class="mb-2"><a href="https://discord.gg/BHS9jw9YPf" target="_blank" rel="noopener">Discord</a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/solid.min.js" integrity="sha512-Qc+cBMt/4/KXJ1F6nNQahXIsgPygHM4S2XWChoumV8qkpZ9oO+gBDBEpOxgbkQQ/6DlHx6cUxa5nBhEbuiR8xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/brands.min.js" integrity="sha512-vefaKmSAX3XohXhN50vLfnK12TPIO+4uRpHjXVkX726CqbicEiAQGRzsMTE+EpLkBk4noUcUYu6AQ5af2vfRLA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/fontawesome.min.js" integrity="sha512-KCwrxBJebca0PPOaHELfqGtqkUlFUCuqCnmtydvBSTnJrBirJ55hRG5xcP4R9Rdx9Fz9IF3Yw6Rx40uhuAHR8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" integrity="sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==" crossorigin="anonymous"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-javascript.min.js" integrity="sha512-I4ZWqUpk7wqHcm7Gkv7k4IdgrDUTlGm1a7xeqyduqZLWeoGOn2E9us4XNBEDGclpk+6d1CmqIHYwmoyyL59zeA==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism-tomorrow.min.css" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous">
+<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
+<script defer="">
+  kofiWidgetOverlay.draw("eonasdan", {
+    "type": "floating-chat",
+    "floating-chat.donateButton.text": "Support me",
+    "floating-chat.donateButton.background-color": "#323842",
+    "floating-chat.donateButton.text-color": "#fff"
+  });
+</script>
+<link rel="stylesheet" href="/css/carbon.css">
+
+
+</body>
+</html>

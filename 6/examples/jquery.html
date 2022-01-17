@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset="UTF-8">
+  <meta name="description" content="A robust and powerful date/time picker component.">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+
+  <title>Examples using jQuery - Tempus Dominus</title>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <meta name="title" content="Examples using jQuery">
+  <meta name="description" content="How to use Tempus Dominus datetime picker with jquery
+  ">
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://getdatepicker.com/docs/6//examples/jquery.html">
+  <meta property="og:title" content="Examples using jQuery">
+  <meta property="og:description" content="How to use Tempus Dominus datetime picker with jquery
+  ">
+  <meta class="metaImage" property="og:image" content="">
+
+  <meta property="article:published_time" content="2021-07-08T00:00:00.000Z">
+  <meta property="article:modified_time" content="2021-07-08T00:00:00.000Z">
+  <meta property="article:tag" content="datepicker, javascript, open source, tempus dominus, eonasdan">
+  <meta property="article:author" content="Jonathan Peterson">
+  <meta property="article:section" content="Technology">
+
+  
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:site" content="@eonasdan">
+  <meta property="twitter:creator" content="@eonasdan">
+  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//examples/jquery.html">
+  <meta property="twitter:title" content="Examples using jQuery">
+  <meta property="twitter:description" content="How to use Tempus Dominus datetime picker with jquery
+  ">
+  <meta class="metaImage" property="twitter:image" content="">
+  <link rel="stylesheet" href="/css/styles.min.css">
+
+  <script src="/js/bundle.min.js"></script>
+  <script src="/6/js/tempus-dominus.js"></script>
+  <link rel="stylesheet" href="/6/css/tempus-dominus.css">
+
+</head>
+
+<body>
+<div class="skippy visually-hidden-focusable overflow-hidden">
+  <div class="container-xl">
+    <a class="d-inline-flex p-2 m-1" href="#content">Skip to main content</a>
+    <a class="d-none d-md-inline-flex p-2 m-1" href="#bd-docs-nav">Skip to docs navigation</a>
+  </div>
+</div>
+
+
+<header class="navbar navbar-expand-md navbar-dark bd-navbar">
+  <nav class="container-xxl flex-wrap flex-md-nowrap" aria-label="Main navigation">
+    <a class="navbar-brand p-0 me-2" href="/" aria-label="Tempus Dominus">
+      <img src="https://getdatepicker.com/favicon-32x32.png" alt="home">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="bdNavbar">
+      <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav pt-2 py-md-0">
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'TempisuDominus');">Home</a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" aria-current="true" href="/6/installing.html" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Docs');">Docs</a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" aria-current="true" href="/6/examples/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Docs');">Examples</a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" aria-current="true" href="/6/change-log.html" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Change Log');">Change Log</a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://eonasdan.com/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Blog');" target="_blank" rel="noopener">Blog</a>
+        </li>
+      </ul>
+
+      <hr class="d-md-none text-white-50">
+
+      <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://github.com/Eonasdan/tempus-dominus" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i>
+            <small class="d-md-none ms-2">GitHub</small>
+          </a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://twitter.com/eonasdan" target="_blank" rel="noopener">
+            <i class="fab fa-twitter"></i>
+            <small class="d-md-none ms-2">Twitter</small>
+          </a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://discord.gg/BHS9jw9YPf" target="_blank" rel="noopener">
+            <i class="fab fa-discord"></i>
+            <small class="d-md-none ms-2">Discord</small>
+          </a>
+        </li>
+        <li class="nav-item col-6 col-md-auto">
+          <a class="nav-link p-2" href="https://ko-fi.com/eonasdan" target="_blank" rel="noopener">
+            <i class="fas fa-coffee"></i>
+            <small class="d-md-none ms-2">Ko-fi</small>
+          </a>
+        </li>
+      </ul>
+
+      <a class="btn btn-bd-download d-lg-inline-block my-2 my-md-0 ms-md-3" href="/6/installing.html">Download</a>
+    </div>
+  </nav>
+</header>
+
+
+<nav class="bd-subnavbar py-2" aria-label="Secondary navigation">
+  <div class="container-xxl d-flex align-items-md-center">
+    
+
+    <div class="dropdown ms-3">
+      <button class="btn btn-bd-light dropdown-toggle" id="bd-versions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+        <span class="d-none d-lg-inline">Tempus Dominus</span> v6.0
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-versions">
+        <li><a class="dropdown-item current" aria-current="true" href="/docs/6/">Latest (6.0.x)</a></li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li><a class="dropdown-item" href="/5-4/">v5.39.0 - Bootstrap 4</a></li>
+        <li><a class="dropdown-item" href="/5-3/">v5 - Bootstrap 3</a></li>
+        <li><a class="dropdown-item" href="/4/">v4.17.49</a></li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li><a class="dropdown-item" href="/docs/versions/">All versions</a></li>
+      </ul>
+    </div>
+
+
+    <button class="btn bd-sidebar-toggle d-md-none py-0 px-1 ms-3 order-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bd-docs-nav" aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation">
+      <i class="fas fa-expand-arrows-alt"></i>
+      <i class="fas fa-compress-arrows-alt"></i>
+
+    </button>
+  </div>
+</nav>
+
+<div id="outerContainer" class="container-xxl my-md-4 bd-layout"><aside class="bd-sidebar">
+  <nav class="collapse bd-links" id="bd-docs-nav" aria-label="Docs navigation">
+    <ul class="list-unstyled mb-0 py-3 pt-md-1" id="mainToc">
+      <li class="mb-1">
+        <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#getting-started-collapse" aria-expanded="false" aria-current="true">
+          Getting started
+        </button>
+
+        <div class="collapse" id="getting-started-collapse">
+          <ul class="list-unstyled fw-normal pb-1 small">
+            <li><a href="/6/" class="d-inline-flex align-items-center rounded" aria-current="page">Introduction</a></li>
+            <li><a href="/6/installing.html" class="d-inline-flex align-items-center rounded">Download</a>
+            </li>
+            <li><a href="/6/change-log.html" class="d-inline-flex align-items-center rounded" aria-current="page">Change Log</a></li>
+            <li><a href="/6/functions.html" class="d-inline-flex align-items-center rounded" aria-current="page">Functions</a></li>
+            <li><a href="/6/options.html" class="d-inline-flex align-items-center rounded" aria-current="page">Options</a></li>
+            <li><a href="/6/datetime.html" class="d-inline-flex align-items-center rounded" aria-current="page">DateTime</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#customize-collapse" aria-expanded="false">
+          Namespace
+        </button>
+
+        <div class="collapse" id="customize-collapse">
+          <ul class="list-unstyled fw-normal pb-1 small">
+            <li><a href="/6/namespace/" class="d-inline-flex align-items-center rounded">Overview</a>
+            </li>
+            <li><a href="/6/namespace/css.html" class="d-inline-flex align-items-center rounded">CSS</a></li>
+            <li><a href="/6/namespace/errors.html" class="d-inline-flex align-items-center rounded">Errors</a>
+            </li>
+            <li><a href="/6/namespace/events.html" class="d-inline-flex align-items-center rounded">Events</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#examples-collapse" aria-expanded="false">
+          Examples
+        </button>
+
+        <div class="collapse" id="examples-collapse">
+          <ul class="list-unstyled fw-normal pb-1 small">
+            <li><a href="/6/examples/" class="d-inline-flex align-items-center rounded">Overview</a>
+            </li>
+            <li><a href="/6/examples/jquery.html" class="d-inline-flex align-items-center rounded">jQuery</a></li>
+            <li><a href="/6/examples/no-styles.html" class="d-inline-flex align-items-center rounded">No Styles</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="my-3 mx-4 border-top"></li>
+      <li>
+        <a href="/6/migration.html" class="d-inline-flex align-items-center rounded">
+          Migration
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</aside>
+<main class="bd-main order-1">
+  <div class="bd-intro ps-lg-4">
+    <div class="d-md-flex align-items-center justify-content-between">
+      <h1 class="bd-title title" id="content">Examples using jQuery</h1>
+    </div>
+  </div>
+  <div id="mainContent" class="bd-content ps-lg-4">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="/6/js/jQuery-provider.js"></script>
+  <section>
+    <p>
+      This page outlines using the picker with jQuery. The <code>jQuery-provider.js</code> file must be included after
+      the
+      main picker code. jQuery is no longer a requirement and is here for backwards compatibility.
+    </p>
+    <p>
+      It's highly recommend to use the native methods as jQuery will be dropped completely in the future.
+    </p>
+    <p>
+      The events are slightly different with jQuery. Using the native methods events return as <code>event.detail.[date|oldDate|etc]</code>.
+      With jQuery, you will access those values <code>e.[date|oldDate|ect]</code>.
+    </p>
+  </section>
+  <section>
+    <h3 id="minimum-setup">Minimum Setup <a class="anchorjs-link" aria-label="Anchor" href="#minimum-setup"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      All you need is an element to atach the picker to.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="icon-onlyHtml-tab" data-bs-toggle="tab" data-bs-target="#icon-onlyHtml" type="button" role="tab" aria-controls="icon-onlyHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="icon-onlyJs-tab" data-bs-toggle="tab" data-bs-target="#icon-onlyJs" type="button" role="tab" aria-controls="icon-onlyJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="icon-onlyLog-tab" data-bs-toggle="tab" data-bs-target="#icon-onlyLog" type="button" role="tab" aria-controls="icon-onlyLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="icon-onlyHtml" role="tabpanel" aria-labelledby="icon-onlyHtml-tab">
+         <pre>           <code class="language-html">
+ &lt;span
+   id='icon-only'
+   class='log-event'
+   style='display: inline-block'
+ &gt;
+   &lt;i class='fas fa-calendar fa-9x'&gt;&lt;/i&gt;
+ &lt;/span&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="icon-onlyJs" role="tabpanel" aria-labelledby="icon-onlyJs-tab">
+         <pre>           <code class="language-javascript">
+ $('#icon-only').tempusDominus();
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="icon-onlyLog" role="tabpanel" aria-labelledby="datetimepicker1Log-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+           <span id="icon-only" class="log-event" style="display: inline-block">
+             <i class="fas fa-calendar fa-6x"></i>
+           </span>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#icon-only').tempusDominus();
+    </script>
+  </section>
+
+  <section>
+    <h3 id="simple-setup">Simple Setup <a class="anchorjs-link" aria-label="Anchor" href="#simple-setup"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      This is the simplest setup you can have with Bootstrap and Font Awesome 5. The picker defaults to FA 5 Solid
+      icons, however you can overwrite the defaults globally.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="datetimepicker1Html-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker1Html" type="button" role="tab" aria-controls="datetimepicker1Html" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker1Js-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker1Js" type="button" role="tab" aria-controls="datetimepicker1Js" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker1Log-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker1Log" type="button" role="tab" aria-controls="datetimepicker1Log" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="datetimepicker1Html" role="tabpanel" aria-labelledby="datetimepicker1Html-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='datetimepicker1'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='datetimepicker1Input'
+     type='text'
+     class='form-control'
+     data-td-target='#datetimepicker1'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#datetimepicker1'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="datetimepicker1Js" role="tabpanel" aria-labelledby="datetimepicker1Js-tab">
+         <pre>           <code class="language-javascript">
+ $('#datetimepicker1').tempusDominus();
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="datetimepicker1Log" role="tabpanel" aria-labelledby="datetimepicker1Log-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="datetimepicker1Input" class="form-label">Simple picker</label>
+          <div class="input-group log-event" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1">
+            <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#datetimepicker1').tempusDominus();
+    </script>
+  </section>
+
+  <section>
+    <h3 id="locales">Using Locales <a class="anchorjs-link" aria-label="Anchor" href="#locales"><i class="fas fa-anchor"></i></a> <small class="show-code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      You can provide localization options to override the tooltips as well as the day/month display.
+    </p>
+    <p>
+      You could also set this globally via <code>tempusDominus.DefaultOptions.localization = { ... }</code> or by
+      creating a variable e.g. <code>const ru = { today:'Перейти сегодня' ... };</code> then provide the options as
+    </p>
+    <pre>         <code class="language-javascript">
+$('#datetimepicker2').tempusDominus({
+   localization: ru
+ }
+         </code>
+     </pre>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="datetimepicker2Html-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker2Html" type="button" role="tab" aria-controls="datetimepicker2Html" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker2Js-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker2Js" type="button" role="tab" aria-controls="datetimepicker2Js" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker2Log-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker2Log" type="button" role="tab" aria-controls="datetimepicker2Log" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="datetimepicker2Html" role="tabpanel" aria-labelledby="datetimepicker2Html-tab">
+         <pre>           <code class="language-html">
+ &lt;label for='datetimepicker2Input' class='form-label'&gt;Russian locale&lt;/label&gt;
+ &lt;div
+   class='input-group log-event'
+   id='datetimepicker2'
+   data-td-target-input='nearest'
+   data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='datetimepicker2Input'
+     type='text'
+     class='form-control'
+     data-td-target='#datetimepicker2'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#datetimepicker2'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="datetimepicker2Js" role="tabpanel" aria-labelledby="datetimepicker2Js-tab">
+         <pre>           <code class="language-javascript">
+$('#datetimepicker2').tempusDominus({
+     localization: {
+       today: "Перейти сегодня",
+       clear: 'Очистить выделение',
+       close: 'Закрыть сборщик',
+       selectMonth: 'Выбрать месяц',
+       previousMonth: "Предыдущий месяц",
+       nextMonth: "В следующем месяце",
+       selectYear: 'Выбрать год',
+       previousYear: 'Предыдущий год',
+       nextYear: 'В следующем году',
+       selectDecade: 'Выбрать десятилетие',
+       previousDecade: 'Предыдущее десятилетие',
+       nextDecade: 'Следующее десятилетие',
+       previousCentury: 'Предыдущий век',
+       nextCentury: 'Следующий век',
+       pickHour: "Выберите час",
+       incrementHour: 'Время увеличения',
+       decrementHour: 'Уменьшить час',
+       pickMinute: 'Выбрать минуту',
+       incrementMinute: 'Минута приращения',
+       decrementMinute: 'Уменьшить минуту',
+       pickSecond: 'Выбрать второй',
+       incrementSecond: 'Увеличение секунды',
+       decrementSecond: 'Уменьшение секунды',
+       togglePeriod: 'Переключить период',
+       selectTime: 'Выбрать время',
+       selectDate: 'Выбрать дату',
+       dayViewHeaderFormat: 'long',
+       locale: 'ru'
+     }
+ });
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="datetimepicker2Log" role="tabpanel" aria-labelledby="datetimepicker2Log-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="datetimepicker2Input" class="form-label">Russian locale</label>
+          <div class="input-group log-event" id="datetimepicker2" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="datetimepicker2Input" type="text" class="form-control" data-td-target="#datetimepicker2">
+            <span class="input-group-text" data-td-target="#datetimepicker2" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#datetimepicker2').tempusDominus({
+        localization: {
+          today: 'Перейти сегодня',
+          clear: 'Очистить выделение',
+          close: 'Закрыть сборщик',
+          selectMonth: 'Выбрать месяц',
+          previousMonth: 'Предыдущий месяц',
+          nextMonth: 'В следующем месяце',
+          selectYear: 'Выбрать год',
+          previousYear: 'Предыдущий год',
+          nextYear: 'В следующем году',
+          selectDecade: 'Выбрать десятилетие',
+          previousDecade: 'Предыдущее десятилетие',
+          nextDecade: 'Следующее десятилетие',
+          previousCentury: 'Предыдущий век',
+          nextCentury: 'Следующий век',
+          pickHour: 'Выберите час',
+          incrementHour: 'Время увеличения',
+          decrementHour: 'Уменьшить час',
+          pickMinute: 'Выбрать минуту',
+          incrementMinute: 'Минута приращения',
+          decrementMinute: 'Уменьшить минуту',
+          pickSecond: 'Выбрать второй',
+          incrementSecond: 'Увеличение секунды',
+          decrementSecond: 'Уменьшение секунды',
+          togglePeriod: 'Переключить период',
+          selectTime: 'Выбрать время',
+          selectDate: 'Выбрать дату',
+          dayViewHeaderFormat: 'long',
+          locale: 'ru'
+        }
+      });
+    </script>
+  </section>
+
+  <section>
+    <h3 id="time-only">Time Only <a class="anchorjs-link" aria-label="Anchor" href="#time-only"><i class="fas fa-anchor"></i></a> <small class="show-code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      Version 6 no longer uses MomentJs so selecting the what to display is now done via the
+      <code>display.components</code>.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="datetimepicker3Html-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker3Html" type="button" role="tab" aria-controls="datetimepicker3Html" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker3Js-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker3Js" type="button" role="tab" aria-controls="datetimepicker3Js" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker3Log-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker3Log" type="button" role="tab" aria-controls="datetimepicker3Log" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="datetimepicker3Html" role="tabpanel" aria-labelledby="datetimepicker3Html-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='datetimepicker3'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='datetimepicker3Input'
+     type='text'
+     class='form-control'
+     data-td-target='#datetimepicker3'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#datetimepicker3'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-clock'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="datetimepicker3Js" role="tabpanel" aria-labelledby="datetimepicker3Js-tab">
+         <pre>           <code class="language-javascript">
+$('#datetimepicker3').tempusDominus({
+   display: {
+     viewMode: 'clock',
+     components: {
+       decades: false,
+       year: false,
+       month: false,
+       date: false,
+       hours: true,
+       minutes: true,
+       seconds: false
+     }
+   }
+ });
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="datetimepicker3Log" role="tabpanel" aria-labelledby="datetimepicker3Log-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="datetimepicker3Input" class="form-label">Time</label>
+          <div class="input-group log-event" id="datetimepicker3" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="datetimepicker3Input" type="text" class="form-control" data-td-target="#datetimepicker3">
+            <span class="input-group-text" data-td-target="#datetimepicker3" data-td-toggle="datetimepicker">
+               <span class="fas fa-clock"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#datetimepicker3').tempusDominus({
+        display: {
+          viewMode: 'clock',
+          components: {
+            decades: false,
+            year: false,
+            month: false,
+            date: false,
+            hours: true,
+            minutes: true,
+            seconds: false
+          }
+        }
+      });
+    </script>
+  </section>
+
+  <section>
+    <h3 id="date-only">Date Only <a class="anchorjs-link" aria-label="Anchor" href="#date-only"><i class="fas fa-anchor"></i></a> <small class="show-code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      Version 6 no longer uses MomentJs so selecting the what to display is now done via the
+      <code>display.components</code>.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="datetimepicker4Html-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker4Html" type="button" role="tab" aria-controls="datetimepicker4Html" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker4Js-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker4Js" type="button" role="tab" aria-controls="datetimepicker4Js" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker4Log-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker4Log" type="button" role="tab" aria-controls="datetimepicker4Log" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="datetimepicker4Html" role="tabpanel" aria-labelledby="datetimepicker4Html-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='datetimepicker4'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='datetimepicker4Input'
+     type='text'
+     class='form-control'
+     data-td-target='#datetimepicker4'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#datetimepicker4'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="datetimepicker4Js" role="tabpanel" aria-labelledby="datetimepicker4Js-tab">
+         <pre>           <code class="language-javascript">
+$('#datetimepicker4').tempusDominus({
+   display: {
+     viewMode: 'clock',
+     components: {
+       decades: true,
+       year: true,
+       month: true,
+       date: true,
+       hours: false,
+       minutes: false,
+       seconds: false,
+     }
+   }
+ });
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="datetimepicker4Log" role="tabpanel" aria-labelledby="datetimepicker4Log-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="datetimepicker4Input" class="form-label">Date</label>
+          <div class="input-group log-event" id="datetimepicker4" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="datetimepicker4Input" type="text" class="form-control" data-td-target="#datetimepicker4">
+            <span class="input-group-text" data-td-target="#datetimepicker4" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#datetimepicker4').tempusDominus({
+        display: {
+          components: {
+            date: true,
+            decades: true,
+            month: true,
+            year: true,
+            hours: false,
+            seconds: false,
+            minutes: false
+          }
+        }
+      });
+    </script>
+  </section>
+
+  <section>
+    <h3 id="input-only">Input Only <a class="anchorjs-link" aria-label="Anchor" href="#simple-setup"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      An input group and icon are not required for the picker to function, you can also simply use an input field.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="datetimepicker5Html-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker5Html" type="button" role="tab" aria-controls="datetimepicker5Html" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker5Js-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker5Js" type="button" role="tab" aria-controls="datetimepicker5Js" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="datetimepicker5Log-tab" data-bs-toggle="tab" data-bs-target="#datetimepicker5Log" type="button" role="tab" aria-controls="datetimepicker5Log" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="datetimepicker5Html" role="tabpanel" aria-labelledby="datetimepicker5Html-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='datetimepicker5'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='datetimepicker5Input'
+     type='text'
+     class='form-control'
+     data-td-target='#datetimepicker5'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#datetimepicker5'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="datetimepicker5Js" role="tabpanel" aria-labelledby="datetimepicker5Js-tab">
+         <pre>           <code class="language-javascript">
+ $('#datetimepicker5').tempusDominus();
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="datetimepicker5Log" role="tabpanel" aria-labelledby="datetimepicker5Log-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="datetimepicker5" class="form-label">No icon</label>
+          <input id="datetimepicker5" type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#datetimepicker5').tempusDominus();
+    </script>
+  </section>
+
+  <section>
+    <h3 id="enabledDisabled-dates">Enabled/Disabled Dates <a class="anchorjs-link" aria-label="Anchor" href="#simple-setup"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      You can provide an array of dates to enable or dates to disable.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="enabledDisabledHtml-tab" data-bs-toggle="tab" data-bs-target="#enabledDisabledHtml" type="button" role="tab" aria-controls="enabledDisabledHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="enabledDisabledJs-tab" data-bs-toggle="tab" data-bs-target="#enabledDisabledJs" type="button" role="tab" aria-controls="enabledDisabledJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="enabledDisabledLog-tab" data-bs-toggle="tab" data-bs-target="#enabledDisabledLog" type="button" role="tab" aria-controls="enabledDisabledLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="enabledDisabledHtml" role="tabpanel" aria-labelledby="enabledDisabledHtml-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='enabledDisabled'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='enabledDisabledInput'
+     type='text'
+     class='form-control'
+     data-td-target='#enabledDisabled'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#enabledDisabled'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="enabledDisabledJs" role="tabpanel" aria-labelledby="enabledDisabledJs-tab">
+         <pre>           <code class="language-javascript">
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate()+1);
+$('#enabledDisabled').tempusDominus({
+ restrictions: {
+   disabledDates: [
+     tomorrow,
+     new tempusDominus.DateTime().manipulate(2, 'date')
+   ]
+ }
+});
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="enabledDisabledLog" role="tabpanel" aria-labelledby="enabledDisabledLog-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="enabledDisabledInput" class="form-label">Next two days are disabled</label>
+          <div class="input-group log-event" id="enabledDisabled" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="enabledDisabledInput" type="text" class="form-control" data-td-target="#enabledDisabled">
+            <span class="input-group-text" data-td-target="#enabledDisabled" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      $('#enabledDisabled').tempusDominus({
+        restrictions: {
+          disabledDates: [
+            tomorrow,
+            new tempusDominus.DateTime().manipulate(2, 'date')
+          ]
+        }
+      });
+    </script>
+  </section>
+
+  <section>
+    <h3 id="linked-pickers">Linked pickers <a class="anchorjs-link" aria-label="Anchor" href="#linked-pickers"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      You can use event listeners or the subscribe method to link two pickers together. For example, a hotel stay
+      booking.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="linkedPickersHtml-tab" data-bs-toggle="tab" data-bs-target="#linkedPickersHtml" type="button" role="tab" aria-controls="linkedPickersHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="linkedPickersJs-tab" data-bs-toggle="tab" data-bs-target="#linkedPickersJs" type="button" role="tab" aria-controls="linkedPickersJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="linkedPickersLog-tab" data-bs-toggle="tab" data-bs-target="#linkedPickersLog" type="button" role="tab" aria-controls="linkedPickersLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="linkedPickersHtml" role="tabpanel" aria-labelledby="linkedPickersHtml-tab">
+         <pre>           <code class="language-html">
+&lt;div class='row'&gt;
+	&lt;div class='col-sm-6'&gt;
+	  &lt;label for='linkedPickers1Input' class='form-label'&gt;From&lt;/label&gt;
+	  &lt;div
+		class='input-group log-event'
+		id='linkedPickers1'
+		data-td-target-input='nearest'
+		data-td-target-toggle='nearest'
+	  &gt;
+		&lt;input
+		  id='linkedPickers1Input'
+		  type='text'
+		  class='form-control'
+		  data-td-target='#linkedPickers1'
+		/&gt;
+		&lt;span
+		  class='input-group-text'
+		  data-td-target='#linkedPickers1'
+		  data-td-toggle='datetimepicker'
+		&gt;
+		   &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+		 &lt;/span&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;
+	&lt;div class='col-sm-6'&gt;
+	  &lt;label for='linkedPickers2Input' class='form-label'&gt;To&lt;/label&gt;
+	  &lt;div
+		class='input-group log-event'
+		id='linkedPickers2'
+		data-td-target-input='nearest'
+		data-td-target-toggle='nearest'
+	  &gt;
+		&lt;input
+		  id='linkedPickers2Input'
+		  type='text'
+		  class='form-control'
+		  data-td-target='#linkedPickers2'
+		/&gt;
+		&lt;span
+		  class='input-group-text'
+		  data-td-target='#linkedPickers2'
+		  data-td-toggle='datetimepicker'
+		&gt;
+		   &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+		 &lt;/span&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="linkedPickersJs" role="tabpanel" aria-labelledby="linkedPickersJs-tab">
+         <pre>           <code class="language-javascript">
+const linkedPicker1Element = $('#linkedPickers1');
+const linkedPicker2Element = $('#linkedPickers2');
+linkedPicker1Element.tempusDominus();
+linkedPicker2Element.tempusDominus({
+  useCurrent: false
+});
+
+linkedPicker1Element.on(tempusDominus.Namespace.events.change, (e) =&gt; {
+  linkedPicker2Element.tempusDominus('updateOptions',{
+    restrictions: {
+      minDate: e.date
+    }
+  });
+});
+
+linkedPicker2Element.on(tempusDominus.Namespace.events.change, (e) =&gt; {
+  linkedPicker2Element.tempusDominus('updateOptions',{
+    restrictions: {
+      maxDate: e.date
+    }
+  });
+});
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="linkedPickersLog" role="tabpanel" aria-labelledby="linkedPickersLog-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="linkedPickers1Input" class="form-label">From</label>
+          <div class="input-group log-event" id="linkedPickers1" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="linkedPickers1Input" type="text" class="form-control" data-td-target="#linkedPickers1">
+            <span class="input-group-text" data-td-target="#linkedPickers1" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label for="linkedPickers2Input" class="form-label">To</label>
+          <div class="input-group log-event" id="linkedPickers2" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="linkedPickers2Input" type="text" class="form-control" data-td-target="#linkedPickers2">
+            <span class="input-group-text" data-td-target="#linkedPickers2" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      const linkedPicker1Element = $('#linkedPickers1');
+      const linkedPicker2Element = $('#linkedPickers2');
+      linkedPicker1Element.tempusDominus();
+      linkedPicker2Element.tempusDominus({
+        useCurrent: false
+      });
+
+      linkedPicker1Element.on(tempusDominus.Namespace.events.change, (e) => {
+        linkedPicker2Element.tempusDominus('updateOptions', {
+          restrictions: {
+            minDate: e.date
+          }
+        });
+      });
+
+      linkedPicker2Element.on(tempusDominus.Namespace.events.change, (e) => {
+        linkedPicker2Element.tempusDominus('updateOptions', {
+          restrictions: {
+            maxDate: e.date
+          }
+        });
+      });
+    </script>
+  </section>
+
+  <section>
+    <h3 id="custom-icons">Custom Icons <a class="anchorjs-link" aria-label="Anchor" href="#custom-icons"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      You can change the icons from the Font Awesome default to another icon
+      set like <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener">Bootstrap's Icon</a>
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="customIconsHtml-tab" data-bs-toggle="tab" data-bs-target="#customIconsHtml" type="button" role="tab" aria-controls="customIconsHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="customIconsJs-tab" data-bs-toggle="tab" data-bs-target="#customIconsJs" type="button" role="tab" aria-controls="customIconsJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="customIconsLog-tab" data-bs-toggle="tab" data-bs-target="#customIconsLog" type="button" role="tab" aria-controls="customIconsLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="customIconsHtml" role="tabpanel" aria-labelledby="customIconsHtml-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='customIcons'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='customIconsInput'
+     type='text'
+     class='form-control'
+     data-td-target='#customIcons'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#customIcons'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='bi bi-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="customIconsJs" role="tabpanel" aria-labelledby="customIconsJs-tab">
+         <pre>           <code class="language-javascript">
+$('#customIcons').tempusDominus({
+ display: {
+   icons: {
+     time: 'bi bi-clock',
+     date: 'bi bi-calendar',
+     up: 'bi bi-arrow-up',
+     down: 'bi bi-arrow-down',
+     previous: 'bi bi-chevron-left',
+     next: 'bi bi-chevron-right',
+     today: 'bi bi-calendar-check',
+     clear: 'bi bi-trash',
+     close: 'bi bi-x',
+   },
+   buttons: {
+     today: true,
+     clear: true,
+     close: true,
+   },
+ }
+});
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="customIconsLog" role="tabpanel" aria-labelledby="customIconsLog-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="customIconsInput" class="form-label">Bootstrap Icons</label>
+          <div class="input-group log-event" id="customIcons" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="customIconsInput" type="text" class="form-control" data-td-target="#customIcons">
+            <span class="input-group-text" data-td-target="#customIcons" data-td-toggle="datetimepicker">
+               <span class="bi bi-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#customIcons').tempusDominus({
+        display: {
+          icons: {
+            time: 'bi bi-clock',
+            date: 'bi bi-calendar',
+            up: 'bi bi-arrow-up',
+            down: 'bi bi-arrow-down',
+            previous: 'bi bi-chevron-left',
+            next: 'bi bi-chevron-right',
+            today: 'bi bi-calendar-check',
+            clear: 'bi bi-trash',
+            close: 'bi bi-x'
+          },
+          buttons: {
+            today: true,
+            clear: true,
+            close: true
+          }
+        }
+      });
+    </script>
+  </section>
+
+  <section>
+    <h3 id="view-mode">View Mode <a class="anchorjs-link" aria-label="Anchor" href="#view-mode"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      The view mode options allows you to show a different initial view. For example selecting a date of birth.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="viewModeHtml-tab" data-bs-toggle="tab" data-bs-target="#viewModeHtml" type="button" role="tab" aria-controls="viewModeHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="viewModeJs-tab" data-bs-toggle="tab" data-bs-target="#viewModeJs" type="button" role="tab" aria-controls="viewModeJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="viewModeLog-tab" data-bs-toggle="tab" data-bs-target="#viewModeLog" type="button" role="tab" aria-controls="viewModeLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="viewModeHtml" role="tabpanel" aria-labelledby="viewModeHtml-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='viewMode'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='viewModeInput'
+     type='text'
+     class='form-control'
+     data-td-target='#viewMode'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#viewMode'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="viewModeJs" role="tabpanel" aria-labelledby="viewModeJs-tab">
+         <pre>           <code class="language-javascript">
+$('#viewMode').tempusDominus({
+   display: {
+     viewMode: 'years'
+   }
+ });
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="viewModeLog" role="tabpanel" aria-labelledby="viewModeLog-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="viewModeInput" class="form-label">Birth Date</label>
+          <div class="input-group log-event" id="viewMode" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="viewModeInput" type="text" class="form-control" data-td-target="#viewMode">
+            <span class="input-group-text" data-td-target="#viewMode" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#viewMode').tempusDominus({
+        display: {
+          viewMode: 'years'
+        }
+      });
+    </script>
+  </section>
+  <section>
+    <h3 id="min-view-mode">Minimum View <a class="anchorjs-link" aria-label="Anchor" href="#min-view-mode"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      You can set the minimum view mode by turning off lower level components. If you only want your user to select
+      month and year,<code>display.components.date: false</code>. The <code>display.components</code> object also
+      provides convenience shortcuts. For instance if you don't want any of the time picker components to be available
+      simple set <code>display.components.clock: false</code>. Do be aware that <code>display.components.clock</code>
+      must be true (default) in order to display the time components regardless of <code>display.components.hours|minutes|seconds</code>
+      is true. The same applies for <code>display.components.calendar</code>
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="minViewModeHtml-tab" data-bs-toggle="tab" data-bs-target="#minViewModeHtml" type="button" role="tab" aria-controls="minViewModeHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="minViewModeJs-tab" data-bs-toggle="tab" data-bs-target="#minViewModeJs" type="button" role="tab" aria-controls="minViewModeJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="minViewModeLog-tab" data-bs-toggle="tab" data-bs-target="#minViewModeLog" type="button" role="tab" aria-controls="minViewModeLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="minViewModeHtml" role="tabpanel" aria-labelledby="minViewModeHtml-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='minViewMode'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='minViewModeInput'
+     type='text'
+     class='form-control'
+     data-td-target='#minViewMode'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#minViewMode'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="minViewModeJs" role="tabpanel" aria-labelledby="minViewModeJs-tab">
+         <pre>           <code class="language-javascript">
+$('#minViewMode').tempusDominus({
+   display: {
+     components: {
+       clock:false,
+       date: false,
+     }
+   }
+ });
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="minViewModeLog" role="tabpanel" aria-labelledby="minViewModeLog-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="minViewModeInput" class="form-label">Month/Year</label>
+          <div class="input-group log-event" id="minViewMode" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="minViewModeInput" type="text" class="form-control" data-td-target="#minViewMode">
+            <span class="input-group-text" data-td-target="#minViewMode" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#minViewMode').tempusDominus({
+        display: {
+          components: {
+            clock: false,
+            date: false
+            // hours:false,
+            // minutes:false,
+          }
+        }
+      });
+    </script>
+  </section>
+
+  <section>
+    <h3 id="disabled-days-of-the-week">Disabled Days of the Week <a class="anchorjs-link" aria-label="Anchor" href="#disabled-days-of-the-week"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      This is the simplest setup you can have with Bootstrap and Font Awesome 5. The picker defaults to FA 5 Solid
+      icons, however you can overwrite the defaults globally.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="disabledDowHtml-tab" data-bs-toggle="tab" data-bs-target="#disabledDowHtml" type="button" role="tab" aria-controls="disabledDowHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="disabledDowJs-tab" data-bs-toggle="tab" data-bs-target="#disabledDowJs" type="button" role="tab" aria-controls="disabledDowJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="disabledDowLog-tab" data-bs-toggle="tab" data-bs-target="#disabledDowLog" type="button" role="tab" aria-controls="disabledDowLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="disabledDowHtml" role="tabpanel" aria-labelledby="disabledDowHtml-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='disabledDow'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='disabledDowInput'
+     type='text'
+     class='form-control'
+     data-td-target='#disabledDow'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#disabledDow'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="disabledDowJs" role="tabpanel" aria-labelledby="disabledDowJs-tab">
+         <pre>           <code class="language-javascript">
+$('#disabledDow').tempusDominus({
+   restrictions: {
+     daysOfWeekDisabled: [0, 6]
+   }
+ });
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="disabledDowLog" role="tabpanel" aria-labelledby="disabledDowLog-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="disabledDowInput" class="form-label">Closed Weekends</label>
+          <div class="input-group log-event" id="disabledDow" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="disabledDowInput" type="text" class="form-control" data-td-target="#disabledDow">
+            <span class="input-group-text" data-td-target="#disabledDow" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#disabledDow').tempusDominus({
+        restrictions: {
+          daysOfWeekDisabled: [0, 6]
+        }
+      });
+    </script>
+  </section>
+
+
+  <section>
+    <h3 id="inline">Inline <a class="anchorjs-link" aria-label="Anchor" href="#inline"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      You can also use the picker inline
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="inlineHtml-tab" data-bs-toggle="tab" data-bs-target="#inlineHtml" type="button" role="tab" aria-controls="inlineHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="inlineJs-tab" data-bs-toggle="tab" data-bs-target="#inlineJs" type="button" role="tab" aria-controls="inlineJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="inlineLog-tab" data-bs-toggle="tab" data-bs-target="#inlineLog" type="button" role="tab" aria-controls="inlineLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="inlineHtml" role="tabpanel" aria-labelledby="inlineHtml-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+   class='log-event'
+   id='inlinePicker'
+ &gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="inlineJs" role="tabpanel" aria-labelledby="inlineJs-tab">
+         <pre>           <code class="language-javascript">
+$('#inlinePicker').tempusDominus({
+   display: {
+     inline: true
+   }
+ });
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="inlineLog" role="tabpanel" aria-labelledby="inlineLog-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="inlinePicker" class="form-label">Inline</label>
+          <div class="log-event" id="inlinePicker">
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#inlinePicker').tempusDominus({
+        display: {
+          inline: true
+        }
+      });
+    </script>
+  </section>
+
+
+  <section>
+    <h3 id="multidate">Multiple Dates <a class="anchorjs-link" aria-label="Anchor" href="#multidate"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      The picker allows for multiple dates to be selected.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="multipleDateHtml-tab" data-bs-toggle="tab" data-bs-target="#multipleDateHtml" type="button" role="tab" aria-controls="multipleDateHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="multipleDateJs-tab" data-bs-toggle="tab" data-bs-target="#multipleDateJs" type="button" role="tab" aria-controls="multipleDateJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="multipleDateLog-tab" data-bs-toggle="tab" data-bs-target="#multipleDateLog" type="button" role="tab" aria-controls="multipleDateLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="multipleDateHtml" role="tabpanel" aria-labelledby="multipleDateHtml-tab">
+         <pre>           <code class="language-html">
+ &lt;div
+     class='input-group'
+     id='multipleDate'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='multipleDateInput'
+     type='text'
+     class='form-control'
+     data-td-target='#multipleDate'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#multipleDate'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="multipleDateJs" role="tabpanel" aria-labelledby="multipleDateJs-tab">
+         <pre>           <code class="language-javascript">
+$('#multipleDatePicker').tempusDominus({
+   multipleDates: true
+ });
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="multipleDateLog" role="tabpanel" aria-labelledby="multipleDateLog-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="multipleDateInput" class="form-label">Multiple dates</label>
+          <div class="input-group log-event" id="multipleDatePicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="multipleDateInput" type="text" class="form-control" data-td-target="#multipleDatePicker">
+            <span class="input-group-text" data-td-target="#multipleDatePicker" data-td-toggle="datetimepicker">
+               <span class="fas fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#multipleDatePicker').tempusDominus({
+        display: {
+          components: {
+            clock: false
+          }
+        },
+        multipleDates: true
+      });
+    </script>
+  </section>
+
+  <section>
+    <h3 id="setting-options">Updating Options <a class="anchorjs-link" aria-label="Anchor" href="#setting-options"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      You can provide a new set of options by calling <code>updateOptions([newOptions])</code>. This function also
+      allows you to reset the options back to the default or merge the new options with the default instead of the
+      existing uptions by passing <code>true</code> as the section parameter.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="settingOptionsHtml-tab" data-bs-toggle="tab" data-bs-target="#settingOptionsHtml" type="button" role="tab" aria-controls="settingOptionsHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="settingOptionsJs-tab" data-bs-toggle="tab" data-bs-target="#settingOptionsJs" type="button" role="tab" aria-controls="settingOptionsJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="settingOptionsLog-tab" data-bs-toggle="tab" data-bs-target="#settingOptionsLog" type="button" role="tab" aria-controls="settingOptionsLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="settingOptionsHtml" role="tabpanel" aria-labelledby="settingOptionsHtml-tab">
+        <pre>          <code class="language-html">
+&lt;div
+    class='input-group'
+    id='settingOptions'
+    data-td-target-input='nearest'
+    data-td-target-toggle='nearest'
+&gt;
+  &lt;input
+    id='settingOptionsInput'
+    type='text'
+    class='form-control'
+    data-td-target='#settingOptions'
+  /&gt;
+  &lt;span
+    class='input-group-text'
+    data-td-target='#settingOptions'
+    data-td-toggle='datetimepicker'
+  &gt;
+    &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/div&gt;
+          </code>
+        </pre>
+        </div>
+        <div class="tab-pane fade" id="settingOptionsJs" role="tabpanel" aria-labelledby="settingOptionsJs-tab">
+        <pre>          <code class="language-javascript">
+const changeOptionsButton = document.getElementById('changeOptions');
+const settingOptionsPicker = $('#settingOptions').tempusDominus();
+
+let on = false
+changeOptionsButton.addEventListener('click', () =&gt; {
+  settingOptionsPicker.updateOptions({
+    restrictions: {
+      daysOfWeekDisabled: on ? [] : [0, 6]
+    }
+  });
+  on = !on;
+  changeOptionsButton.classList.toggle('btn-primary');
+  changeOptionsButton.classList.toggle('btn-secondary');
+});
+          </code>
+        </pre>
+        </div>
+        <div class="tab-pane fade logger" id="settingOptionsLog" role="tabpanel" aria-labelledby="settingOptionsLog-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="settingOptionsInput" class="form-label">Update options</label>
+          <div class="input-group log-event" id="settingOptions" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="settingOptionsInput" type="text" class="form-control" data-td-target="#settingOptions">
+            <span class="input-group-text" data-td-target="#settingOptions" data-td-toggle="datetimepicker">
+              <span class="fas fa-calendar"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-6">
+          <button id="changeOptions" class="btn btn-primary">Toggle disabled weekends</button>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      const changeOptionsButton = document.getElementById('changeOptions');
+      $('#settingOptions').tempusDominus();
+
+      let on = false;
+      changeOptionsButton.addEventListener('click', () => {
+        $('#settingOptions').tempusDominus('updateOptions', {
+          restrictions: {
+            daysOfWeekDisabled: on ? [] : [0, 6]
+          }
+        });
+        on = !on;
+        changeOptionsButton.classList.toggle('btn-primary');
+        changeOptionsButton.classList.toggle('btn-secondary');
+      });
+    </script>
+  </section>
+
+  <section>
+    <h3 id="container-option">Example with container parameter<a class="anchorjs-link" aria-label="Anchor" href="#container-option"><i class="fas fa-anchor"></i></a> <small class="show-code" title="View Code"><i class="fas fa-code"></i></small></h3>
+
+    <p>
+      All you need is an element to atach the picker to and a parent container.
+    </p>
+
+    <div class="code-blocks d-none">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="container-optionHtml-tab" data-bs-toggle="tab" data-bs-target="#container-optionHtml" type="button" role="tab" aria-controls="container-optionHtml" aria-selected="true">HTML
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="container-optionJs-tab" data-bs-toggle="tab" data-bs-target="#container-optionJs" type="button" role="tab" aria-controls="container-optionJs" aria-selected="false">Javascript
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="container-optionLog-tab" data-bs-toggle="tab" data-bs-target="#container-optionLog" type="button" role="tab" aria-controls="container-optionLog" aria-selected="false">Events
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="container-optionHtml" role="tabpanel" aria-labelledby="container-optionHtml-tab">
+         <pre>           <code class="language-html">
+&lt;div id='parent-container' class='relative p-5' style='overflow: auto; height: 100px; width: 100%;'&gt;
+  &lt;div class='input-group log-event' id='containerDatePicker' data-td-target-input='nearest'
+    data-td-target-toggle='nearest'&gt;
+    &lt;input id='containerDatePickerInput' type='text' class='form-control' /&gt;
+    &lt;span class='input-group-text' data-td-target='#settingOptions' data-td-toggle='datetimepicker'&gt;
+      &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade" id="container-optionJs" role="tabpanel" aria-labelledby="container-optionJs-tab">
+         <pre>           <code class="language-javascript">
+$('#containerDatePicker').tempusDominus({
+  container: $('div[id="parent-container"]')[0],
+});
+           </code>
+         </pre>
+        </div>
+        <div class="tab-pane fade logger" id="container-optionLog" role="tabpanel" aria-labelledby="datetimepicker1Log-tab">
+          <div class="alert alert-info">
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <div id="parent-container" class="relative p-5" style="overflow: auto; height: 100px; width: 100%;">
+            <div class="input-group log-event" id="containerDatePicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+              <input id="containerDatePickerInput" type="text" class="form-control">
+              <span class="input-group-text" data-td-target="#settingOptions" data-td-toggle="datetimepicker">
+                <span class="fas fa-calendar"></span>
+            </span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#containerDatePicker').tempusDominus({
+        container: $('div[id="parent-container"]')[0],
+      });
+    </script>
+  </section>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+</div>
+</main></div>
+
+<footer class="bd-footer py-5 mt-5 bg-light">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-lg-3 mb-3">
+        <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="/" aria-label="Tempus Dominus">
+          <img src="https://getdatepicker.com/favicon-32x32.png" alt="home">
+          <span class="fs-5">Tempus Dominus</span>
+        </a>
+        <ul class="list-unstyled small text-muted">
+          <li class="mb-2">Created by the <a href="https://eonasdan.com">Eonasdan (Jonathan Peterson</a> with the help of <a href="https://github.com/Eonasdan/tempus-dominus/graphs/contributors">our contributors</a>.</li>
+          <li class="mb-2">Code licensed <a href="https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE" target="_blank" rel="license noopener">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY 3.0</a>.</li>
+          <li class="mb-2">Currently v6.0.0-alpha1.</li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2 offset-lg-1 mb-3">
+        <h5>Links</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="/">Home</a></li>
+          <li class="mb-2"><a href="/docs/6/">Docs</a></li>
+          <li class="mb-2"><a href="https://eonasdan.com">Blog</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-6 col-lg-2 mb-3">
+        <h5>Community</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="https://github.com/Eonasdan/tempus-dominus/issues" target="_blank" rel="noopener">Issues</a></li>
+          <li class="mb-2"><a href="https://github.com/Eonasdan/tempus-dominus/discussions" target="_blank" rel="noopener">Discussions</a></li>
+          <li class="mb-2"><a href="https://ko-fi.com/eonasdan" target="_blank" rel="noopener">Support me on Ko-fi</a></li>
+          <li class="mb-2"><a href="https://discord.gg/BHS9jw9YPf" target="_blank" rel="noopener">Discord</a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/solid.min.js" integrity="sha512-Qc+cBMt/4/KXJ1F6nNQahXIsgPygHM4S2XWChoumV8qkpZ9oO+gBDBEpOxgbkQQ/6DlHx6cUxa5nBhEbuiR8xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/brands.min.js" integrity="sha512-vefaKmSAX3XohXhN50vLfnK12TPIO+4uRpHjXVkX726CqbicEiAQGRzsMTE+EpLkBk4noUcUYu6AQ5af2vfRLA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/fontawesome.min.js" integrity="sha512-KCwrxBJebca0PPOaHELfqGtqkUlFUCuqCnmtydvBSTnJrBirJ55hRG5xcP4R9Rdx9Fz9IF3Yw6Rx40uhuAHR8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" integrity="sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==" crossorigin="anonymous"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-javascript.min.js" integrity="sha512-I4ZWqUpk7wqHcm7Gkv7k4IdgrDUTlGm1a7xeqyduqZLWeoGOn2E9us4XNBEDGclpk+6d1CmqIHYwmoyyL59zeA==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism-tomorrow.min.css" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous">
+<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
+<script defer="">
+  kofiWidgetOverlay.draw("eonasdan", {
+    "type": "floating-chat",
+    "floating-chat.donateButton.text": "Support me",
+    "floating-chat.donateButton.background-color": "#323842",
+    "floating-chat.donateButton.text-color": "#fff"
+  });
+</script>
+<link rel="stylesheet" href="/css/carbon.css">
+
+
+</body>
+</html>
