@@ -8,7 +8,7 @@ const cleanCSS = require('clean-css');
 const { minify } = require('terser');
 const sass = require('sass');
 const chokidar = require('chokidar');
-const rootDirectory = '.\\src\\docs\\partials';
+const rootDirectory = path.join('.','src','docs','partials');
 
 class PageMeta {
   file;
@@ -65,8 +65,7 @@ class FileInformation {
 
   constructor(file, fullPath, isDirectory, extension) {
     this.relativePath = fullPath
-      .replace(rootDirectory.replace('.\\', ''), '')
-      .substring(1);
+      .replace(rootDirectory.replace(`.${path.sep}`, ''), '');
     this.file = file;
     this.fullPath = fullPath;
     this.isDirectory = isDirectory;
@@ -108,7 +107,7 @@ class Build {
   }
 
   loadTemplate(template) {
-    return fs.readFileSync(`./src/docs/templates/${template}.html`, 'utf8');
+    return fs.readFileSync(path.join('.','src','docs', 'templates', `${template}.html`), 'utf8');
   }
 
   directoryWalk(directory, extension = '.html') {
@@ -225,7 +224,7 @@ class Build {
 
     this.css = sass
       .renderSync({
-        file: './src/docs/styles/styles.scss',
+        file: path.join('.', 'src', 'docs', 'styles', 'styles.scss'),
       })
       .css.toString();
   }
@@ -375,7 +374,7 @@ class Build {
           newPageDocument.documentElement.innerHTML
         );
         this.writeFileAndEnsurePathExists(
-          `./${siteConfig.output}/${fileInformation.relativePath}`,
+          path.join('.', siteConfig.output, fileInformation.relativePath),
           completeHtml
         );
 
@@ -405,7 +404,7 @@ class Build {
     });
 
     this.writeFileAndEnsurePathExists(
-      `./docs/6/js/search.json`,
+      path.join('.', 'docs', '6', 'js', 'search.json'),
       JSON.stringify(this.pagesMeta, null, 2)
     );
 
@@ -418,7 +417,7 @@ class Build {
 
   updateHomepage() {
     const indexDocument = new JSDOM(
-      fs.readFileSync(`./src/docs/templates/index.html`, 'utf8')
+      fs.readFileSync(path.join('.','src', 'docs','templates', 'index.html'), 'utf8')
     ).window.document;
 
     const shell = this.shellDocument;
@@ -436,7 +435,7 @@ class Build {
     shell.body.appendChild(el);
 
     const completeHtml = this.createRootHtml(shell.documentElement.innerHTML);
-    this.writeFileAndEnsurePathExists(`./docs/index.html`, completeHtml);
+    this.writeFileAndEnsurePathExists(path.join('.','docs','index.html'), completeHtml);
     dropCss({
       css: this.css,
       html: completeHtml,
@@ -445,7 +444,7 @@ class Build {
 
   update404() {
     const indexDocument = new JSDOM(
-      fs.readFileSync(`./src/docs/templates/404.html`, 'utf8')
+      fs.readFileSync(path.join('.','src','docs','templates','404.html'), 'utf8')
     ).window.document;
     const shell = this.shellDocument;
     shell.getElementById('outerContainer').innerHTML =
@@ -453,7 +452,7 @@ class Build {
 
     const completeHtml = this.createRootHtml(shell.documentElement.innerHTML);
     this.writeFileAndEnsurePathExists(
-      `./docs/404.html`,
+      path.join('.', 'docs','404.html'),
       this.createRootHtml(shell.documentElement.innerHTML)
     );
     dropCss({
@@ -463,7 +462,7 @@ class Build {
   }
 
   updateSiteMap() {
-    this.siteMap = `<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'>
+    this.siteMap = `<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>${siteConfig.root}</loc>
 <lastmod>${new Date().toISOString()}</lastmod>
@@ -471,7 +470,7 @@ class Build {
 </url>
 ${this.siteMap}
 </urlset>`;
-    this.writeFileAndEnsurePathExists(`./docs/sitemap.xml`, this.siteMap);
+    this.writeFileAndEnsurePathExists(path.join('.','docs','sitemap.xml'), this.siteMap);
   }
 
   updateCss() {
@@ -493,9 +492,9 @@ ${this.siteMap}
       .map((x) => x.fullPath)
       .forEach(gatherCss);
 
-    fs.readdirSync('./src/docs/templates')
+    fs.readdirSync(path.join('.','src','docs','templates'))
       .filter((file) => path.extname(file).toLowerCase() === '.html')
-      .map((file) => `./src/docs/templates/${file}`)
+      .map((file) =>  path.join('.','src','docs','templates', file))
       .forEach(gatherCss);
 
     this.cleanCss();
@@ -508,7 +507,7 @@ ${this.siteMap}
       shouldDrop: (sel) => !this.cssWhitelist.has(sel),
     });
     this.writeFileAndEnsurePathExists(
-      `./docs/css/styles.min.css`,
+      path.join('.','docs','css', 'styles.min.css'),
       //new cleanCSS().minify(cleaned.css).styles
       this.css
     );
@@ -566,8 +565,8 @@ ${this.siteMap}
   }
 
   updateDist() {
-    this.copyDirectory('./dist/js', `./${siteConfig.output}/js`);
-    this.copyDirectory('./dist/css', `./${siteConfig.output}/css`);
+    this.copyDirectory(path.join('.','dist', 'js'), path.join('.', siteConfig.output, 'js'));
+    this.copyDirectory(path.join('.','dist', 'css'), path.join('.', siteConfig.output, 'css'));
   }
 
   /**
@@ -651,10 +650,10 @@ if (process.argv.slice(2)[0] === '--watch') {
       if (path.startsWith('dist')) {
         builder.updateDist();
       }
-      if (path.startsWith('src\\docs\\assets')) {
+      if (path.startsWith('src/docs/assets')) {
         builder.copyAssets();
       }
-      if (path.startsWith('src\\docs\\partials')) {
+      if (path.startsWith('src/docs/partials')) {
         //reading the file stats seems to trigger this twice, so if the same file changed in less then a second, ignore
         if (
           lastChange === formatter.format(new Date()) &&
@@ -665,13 +664,13 @@ if (process.argv.slice(2)[0] === '--watch') {
         }
         builder.updatePages();
       }
-      if (path.startsWith('src\\docs\\styles')) {
+      if (path.startsWith('src/docs/styles')) {
         builder.updateCss();
       }
-      if (path.startsWith('src\\docs\\templates')) {
+      if (path.startsWith('src/docs/templates')) {
         builder.updateAll();
       }
-      if (path.startsWith('src\\docs\\js')) {
+      if (path.startsWith('src/docs/js')) {
         builder.minifyJs().then();
       }
       log('\x1b[32m Update successful');
