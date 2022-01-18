@@ -38,10 +38,6 @@ export default class YearDisplay {
    * @private
    */
   _update() {
-    const [start, end] = Dates.getStartEndYear(
-      10,
-      this._context._viewDate.year
-    );
     this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
     this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
 

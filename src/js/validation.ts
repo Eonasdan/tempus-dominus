@@ -81,15 +81,11 @@ export default class Validation {
       if (
         this._context._options.restrictions.disabledTimeIntervals.length > 0
       ) {
-        for (
-          let i = 0;
-          i < this._context._options.restrictions.disabledTimeIntervals.length;
-          i++
-        ) {
+        for (let disabledTimeIntervals of this._context._options.restrictions.disabledTimeIntervals) {
           if (
             targetDate.isBetween(
-              this._context._options.restrictions.disabledTimeIntervals[i].from,
-              this._context._options.restrictions.disabledTimeIntervals[i].to
+              disabledTimeIntervals.from,
+              disabledTimeIntervals.to
             )
           )
             return false;

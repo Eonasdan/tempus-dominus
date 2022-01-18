@@ -4,7 +4,7 @@ $td-active-color: #fff !default;
 $td-border-radius: 999px !default;
 $td-btn-hover-bg: #e9ecef !default;
 $td-disabled-color: #6c757d !default;
-$td-alternate-color: rgba(0,0,0,.38) !default;
+$td-alternate-color: rgba(0, 0, 0, .38) !default;
 $td-secondary-border-color: #ccc !default;
 $td-secondary-border-color-rgba: rgba(0, 0, 0, 0.2) !default;
 $td-primary-border-color: white !default;
@@ -35,13 +35,14 @@ todo look at how bootstrap loops through their vars to make a --root section
   background-color: white;
   /*border: 1px solid black;*/
   z-index: 9999;
-  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
 
   &.calendarWeeks {
     width: 21rem;
 
-    &  .date-container-days {
+    & .date-container-days {
       grid-auto-columns: 12.5%;
+      grid-template-areas: "a a a a a a a a";
     }
   }
 
@@ -66,7 +67,7 @@ todo look at how bootstrap loops through their vars to make a --root section
     display: none;
   }
 
-   //end popper
+  //end popper
 
   &.show {
     display: block;
@@ -140,10 +141,12 @@ todo look at how bootstrap loops through their vars to make a --root section
       text-align: right;
       padding-right: 10px;
     }
+
     & .previous {
       text-align: left;
       padding-left: 10px;
     }
+
     & .picker-switch {
       text-align: center;
     }
@@ -174,7 +177,7 @@ todo look at how bootstrap loops through their vars to make a --root section
     grid-auto-columns: calc(100% / 7);
 
     & .dow {
-      color: rgba(0,0,0,.50);
+      color: rgba(0, 0, 0, .50);
       align-items: center;
       justify-content: center;
       text-align: center;
@@ -191,10 +194,6 @@ todo look at how bootstrap loops through their vars to make a --root section
       color: $td-alternate-color;
       cursor: default;
     }
-  }
-
-  &.calendarWeeks .date-container-days {
-    grid-template-areas: "a a a a a a a a";
   }
 
   .date-container-decades, .date-container-years, .date-container-months {
@@ -259,9 +258,6 @@ todo look at how bootstrap loops through their vars to make a --root section
         cursor: not-allowed;
       }
 
-      &.day {
-      }
-
       &.today {
         position: relative;
 
@@ -302,7 +298,7 @@ todo look at how bootstrap loops through their vars to make a --root section
     font-size: 1rem;
     border-radius: 0.25rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-      border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
 
   &.tempus-dominus-widget-readonly {
