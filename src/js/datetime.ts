@@ -38,7 +38,7 @@ export class DateTime extends Date {
    * @param  date
    */
   static convert(date: Date, locale: string = 'default'): DateTime {
-    if (!date) throw `A date is required`;
+    if (!date) throw new Error(`A date is required`);
     return new DateTime(
       date.getFullYear(),
       date.getMonth(),
@@ -73,7 +73,7 @@ export class DateTime extends Date {
    * @param startOfTheWeek Allows for the changing the start of the week.
    */
   startOf(unit: Unit | 'weekDay', startOfTheWeek = 0): this {
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
       case 'seconds':
         this.setMilliseconds(0);
@@ -110,7 +110,7 @@ export class DateTime extends Date {
    * @param unit
    */
   endOf(unit: Unit | 'weekDay'): this {
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
       case 'seconds':
         this.setMilliseconds(999);
@@ -150,7 +150,7 @@ export class DateTime extends Date {
    * @param unit
    */
   manipulate(value: number, unit: Unit): this {
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     this[unit] += value;
     return this;
   }
@@ -174,7 +174,7 @@ export class DateTime extends Date {
    */
   isBefore(compare: DateTime, unit?: Unit): boolean {
     if (!unit) return this.valueOf() < compare.valueOf();
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     return (
       this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf()
     );
@@ -188,7 +188,7 @@ export class DateTime extends Date {
    */
   isAfter(compare: DateTime, unit?: Unit): boolean {
     if (!unit) return this.valueOf() > compare.valueOf();
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     return (
       this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf()
     );
@@ -202,7 +202,7 @@ export class DateTime extends Date {
    */
   isSame(compare: DateTime, unit?: Unit): boolean {
     if (!unit) return this.valueOf() === compare.valueOf();
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     compare = DateTime.convert(compare);
     return (
       this.clone.startOf(unit).valueOf() === compare.startOf(unit).valueOf()
@@ -223,7 +223,7 @@ export class DateTime extends Date {
     unit?: Unit,
     inclusivity: '()' | '[]' | '(]' | '[)' = '()'
   ): boolean {
-    if (unit && this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (unit && this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     const leftInclusivity = inclusivity[0] === '(';
     const rightInclusivity = inclusivity[1] === ')';
 
