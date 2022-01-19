@@ -2,7 +2,7 @@
 /*global $ */
 
 /*!
-  * Tempus Dominus v6.0.0-beta2 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta3 (https://getdatepicker.com/)
   * Copyright 2013-2021 [object Object]
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -147,7 +147,8 @@ $(document)
 const name = 'tempusDominus';
 $.fn[name] = tempusDominus.jQueryInterface;
 $.fn[name].Constructor = tempusDominus.TempusDominus;
+const JQUERY_NO_CONFLICT = $.fn[name];
 $.fn[name].noConflict = function () {
-  $.fn[name] = $.fn[name];
+  $.fn[name] = JQUERY_NO_CONFLICT;
   return tempusDominus.jQueryInterface;
 };

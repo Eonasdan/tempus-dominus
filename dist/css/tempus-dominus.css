@@ -29,6 +29,7 @@ todo look at how bootstrap loops through their vars to make a --root section
 }
 .tempus-dominus-widget.calendarWeeks .date-container-days {
   grid-auto-columns: 12.5%;
+  grid-template-areas: "a a a a a a a a";
 }
 .tempus-dominus-widget [data-action] {
   cursor: pointer;
@@ -150,9 +151,6 @@ todo look at how bootstrap loops through their vars to make a --root section
   line-height: 20px;
   color: rgba(0, 0, 0, 0.38);
   cursor: default;
-}
-.tempus-dominus-widget.calendarWeeks .date-container-days {
-  grid-template-areas: "a a a a a a a a";
 }
 .tempus-dominus-widget .date-container-decades, .tempus-dominus-widget .date-container-years, .tempus-dominus-widget .date-container-months {
   display: grid;

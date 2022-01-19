@@ -3,7 +3,7 @@
     "name": "Jonathan Peterson"
   },
   "name": "@eonasdan/tempus-dominus",
-  "version": "6.0.0-beta2",
+  "version": "6.0.0-beta3",
   "style": "dist/css/tempus-dominus.css",
   "sass": "scss/tempus-dominus.scss",
   "main": "dist/js/tempus-dominus.js",
@@ -19,6 +19,7 @@
     "start": "npm run build && concurrently \"npm:*-watch\" \"npm run serve\"",
     "serve": "browser-sync start --config build/browser-sync-config.js",
     "build": "npm run rollup && node ./build/copyToDist.js",
+    "build:plugins": "node ./build/plugins.js",
     "build:declarations": "tsc --declaration --emitDeclarationOnly --outDir types",
     "sass": "sass ./src/sass/tempus-dominus.scss ./dist/css/tempus-dominus.css",
     "rollup": "rollup -c ./build/rollup.config.js",
@@ -26,8 +27,8 @@
     "prettier": "prettier --write .",
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
-    "release": "npm run build && npm run build:declarations",
-    "release-version": "npm run release && node build/change-version.js"
+    "release": "npm run build && npm run build:plugins && npm run build:declarations",
+    "release:version": "npm run release && node build/change-version.js"
   },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"

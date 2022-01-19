@@ -3,6 +3,7 @@
           integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=='
           crossorigin='anonymous' referrerpolicy='no-referrer'></script>
   <script src='/6/js/jQuery-provider.js'></script>
+
   <section>
     <p>
       This page outlines using the picker with jQuery. The <code>jQuery-provider.js</code> file must be included after
@@ -17,6 +18,7 @@
       With jQuery, you will access those values <code>e.[date|oldDate|ect]</code>.
     </p>
   </section>
+
   <section>
     <h3 id='minimum-setup'>Minimum Setup <a class='anchorjs-link ' aria-label='Anchor' href='#minimum-setup'><i
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
@@ -1312,6 +1314,7 @@ $('#viewMode').tempusDominus({
       });
     </script>
   </section>
+
   <section>
     <h3 id='min-view-mode'>Minimum View <a class='anchorjs-link ' aria-label='Anchor' href='#min-view-mode'><i
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
@@ -1553,7 +1556,6 @@ $('#disabledDow').tempusDominus({
     </script>
   </section>
 
-
   <section>
     <h3 id='inline'>Inline <a class='anchorjs-link ' aria-label='Anchor' href='#inline'><i
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
@@ -1636,7 +1638,6 @@ $('#inlinePicker').tempusDominus({
       });
     </script>
   </section>
-
 
   <section>
     <h3 id='multidate'>Multiple Dates <a class='anchorjs-link ' aria-label='Anchor' href='#multidate'><i
@@ -1891,7 +1892,8 @@ changeOptionsButton.addEventListener('click', () => {
   </section>
 
   <section>
-    <h3 id='container-option'>Example with container parameter<a class='anchorjs-link ' aria-label='Anchor' href='#container-option'><i
+    <h3 id='container-option'>Example with container parameter<a class='anchorjs-link ' aria-label='Anchor'
+                                                                 href='#container-option'><i
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
 
     <p>
@@ -1913,7 +1915,8 @@ changeOptionsButton.addEventListener('click', () => {
           </button>
         </li>
         <li class='nav-item' role='presentation'>
-          <button class='nav-link' id='container-optionLog-tab' data-bs-toggle='tab' data-bs-target='#container-optionLog'
+          <button class='nav-link' id='container-optionLog-tab' data-bs-toggle='tab'
+                  data-bs-target='#container-optionLog'
                   type='button'
                   role='tab' aria-controls='container-optionLog' aria-selected='false'>Events
           </button>
@@ -1958,10 +1961,11 @@ $('#containerDatePicker').tempusDominus({
         <div class='col-sm-6'>
           <div id='parent-container' class='relative p-5' style='overflow: auto; height: 100px; width: 100%;'>
             <div class='input-group log-event' id='containerDatePicker' data-td-target-input='nearest'
-              data-td-target-toggle='nearest'>
+                 data-td-target-toggle='nearest'>
               <input id='containerDatePickerInput' type='text' class='form-control' />
               <span class='input-group-text' data-td-target='#settingOptions' data-td-toggle='datetimepicker'>
                 <span class='fas fa-calendar'></span>
+              </span>
             </div>
           </div>
         </div>
@@ -1969,7 +1973,7 @@ $('#containerDatePicker').tempusDominus({
     </div>
     <script type='text/javascript'>
       $('#containerDatePicker').tempusDominus({
-        container: $('div[id="parent-container"]')[0],
+        container: $('div[id="parent-container"]')[0]
       });
     </script>
   </section>
