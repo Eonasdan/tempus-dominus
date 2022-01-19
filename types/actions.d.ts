@@ -11,6 +11,20 @@ export default class Actions {
      * @param action If not provided, then look for a [data-action]
      */
     do(e: any, action?: ActionTypes): boolean;
+    private handleNextPrevious;
+    /**
+     * Common function to manipulate {@link lastPicked} by `unit`.
+     * After setting the value it will either show the clock or hide the widget.
+     * @param unit
+     * @param value Value to change by
+     */
+    private hideOrClock;
+    /**
+     * Common function to manipulate {@link lastPicked} by `unit`.
+     * @param unit
+     * @param value Value to change by
+     */
+    private manipulateAndSet;
 }
 export declare enum ActionTypes {
     next = "next",

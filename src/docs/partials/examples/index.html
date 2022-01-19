@@ -2,11 +2,13 @@
   <section>
     <p>
       Version 6 removes the need for an input field, Bootstrap, jQuery and MomemntJs.
+      Each example comes code section that can be toggled by clicking on <i class='fas fa-code'></i>.
     </p>
     <p>
       If you still need jQuery, check out the <a href='jquery.html'>jQuery examples</a>.
     </p>
   </section>
+
   <section>
     <h3 id='minimum-setup'>Minimum Setup <a class='anchorjs-link ' aria-label='Anchor' href='#minimum-setup'><i
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
@@ -91,7 +93,8 @@
         <i class='fas fa-anchor'></i></a>
       <small class='show-code' title='View Code'><i class='fas fa-code'></i></small>
 
-      <a aria-label='stackblitz' href='https://stackblitz.com/edit/tempus-dominus-v6-simple-setup' title='Stackblitz example'>
+      <a aria-label='stackblitz' href='https://stackblitz.com/edit/tempus-dominus-v6-simple-setup'
+         title='Stackblitz example'>
         <i class='fas fa-bolt'></i></a>
     </h3>
 
@@ -271,7 +274,7 @@
            <code class='language-javascript'>
  new tempusDominus.TempusDominus(document.getElementById('datetimepicker2'), {
      localization: {
-       today: &quot;Перейти сегодня&quot;,
+       today: 'Перейти сегодня&quot',
        clear: 'Очистить выделение',
        close: 'Закрыть сборщик',
        selectMonth: 'Выбрать месяц',
@@ -858,7 +861,8 @@
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
 
     <p>
-      You can use event listeners or the subscribe method to link two pickers together. For example, a hotel stay booking.
+      You can use event listeners or the subscribe method to link two pickers together. For example, a hotel stay
+      booking.
     </p>
 
     <div class='code-blocks d-none'>
@@ -1315,6 +1319,7 @@ const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e
       });
     </script>
   </section>
+
   <section>
     <h3 id='min-view-mode'>Minimum View <a class='anchorjs-link ' aria-label='Anchor' href='#min-view-mode'><i
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
@@ -1556,7 +1561,6 @@ const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e
     </script>
   </section>
 
-
   <section>
     <h3 id='inline'>Inline <a class='anchorjs-link ' aria-label='Anchor' href='#inline'><i
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
@@ -1639,7 +1643,6 @@ const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e
       });
     </script>
   </section>
-
 
   <section>
     <h3 id='multidate'>Multiple Dates <a class='anchorjs-link ' aria-label='Anchor' href='#multidate'><i
@@ -1760,7 +1763,9 @@ const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
 
     <p>
-     You can provide a new set of options by calling <code>updateOptions([newOptions])</code>. This function also allows you to reset the options back to the default or merge the new options with the default instead of the existing uptions by passing <code>true</code> as the section parameter.
+      You can provide a new set of options by calling <code>updateOptions([newOptions])</code>. This function also
+      allows you to reset the options back to the default or merge the new options with the default instead of the
+      existing uptions by passing <code>true</code> as the section parameter.
     </p>
 
     <div class='code-blocks d-none'>
@@ -1892,7 +1897,8 @@ changeOptionsButton.addEventListener('click', () => {
   </section>
 
   <section>
-    <h3 id='container-option'>Example with container parameter<a class='anchorjs-link ' aria-label='Anchor' href='#container-option'><i
+    <h3 id='container-option'>Example with container parameter<a class='anchorjs-link ' aria-label='Anchor'
+                                                                 href='#container-option'><i
       class='fas fa-anchor'></i></a> <small class='show-code' title='View Code'><i class='fas fa-code'></i></small></h3>
 
     <p>
@@ -1914,7 +1920,8 @@ changeOptionsButton.addEventListener('click', () => {
           </button>
         </li>
         <li class='nav-item' role='presentation'>
-          <button class='nav-link' id='container-optionLog-tab' data-bs-toggle='tab' data-bs-target='#container-optionLog'
+          <button class='nav-link' id='container-optionLog-tab' data-bs-toggle='tab'
+                  data-bs-target='#container-optionLog'
                   type='button'
                   role='tab' aria-controls='container-optionLog' aria-selected='false'>Events
           </button>
@@ -1959,10 +1966,11 @@ new tempusDominus.TempusDominus(document.getElementById('containerDatePicker'), 
         <div class='col-sm-6'>
           <div id='parent-container' class='relative p-5' style='overflow: auto; height: 100px; width: 100%;'>
             <div class='input-group log-event' id='containerDatePicker' data-td-target-input='nearest'
-              data-td-target-toggle='nearest'>
+                 data-td-target-toggle='nearest'>
               <input id='containerDatePickerInput' type='text' class='form-control' />
               <span class='input-group-text' data-td-target='#settingOptions' data-td-toggle='datetimepicker'>
                 <span class='fas fa-calendar'></span>
+              </span>
             </div>
           </div>
         </div>
@@ -1970,7 +1978,166 @@ new tempusDominus.TempusDominus(document.getElementById('containerDatePicker'), 
     </div>
     <script type='text/javascript'>
       new tempusDominus.TempusDominus(document.getElementById('containerDatePicker'), {
-        container: document.querySelector('div#parent-container'),
+        container: document.querySelector('div#parent-container')
+      });
+    </script>
+  </section>
+
+  <section id='plugins-example'>
+    <h3>Plugins
+      <a class='anchorjs-link ' aria-label='Anchor' href='#plugins-example'>
+        <i class='fas fa-anchor'></i></a>
+      <small class='show-code' title='View Code'><i class='fas fa-code'></i></small>
+    </h3>
+
+    <p>
+      Plugins allow you to extend the picker by adding new functionality to either Tempus Dominus globally,
+      the plugin or by overwritting existing functionality. Check the events tab to see the logs.
+    </p>
+
+    <div class='code-blocks d-none'>
+      <ul class='nav nav-tabs' role='tablist'>
+        <li class='nav-item' role='presentation'>
+          <button class='nav-link active' id='pluginsHtml-tab' data-bs-toggle='tab'
+                  data-bs-target='#pluginsHtml' type='button'
+                  role='tab' aria-controls='pluginsHtml' aria-selected='true'>HTML
+          </button>
+        </li>
+        <li class='nav-item' role='presentation'>
+          <button class='nav-link' id='pluginsJs-tab' data-bs-toggle='tab' data-bs-target='#pluginsJs'
+                  type='button'
+                  role='tab' aria-controls='pluginsJs' aria-selected='false'>Javascript
+          </button>
+        </li>
+        <li class='nav-item' role='presentation'>
+          <button class='nav-link' id='pluginsLog-tab' data-bs-toggle='tab' data-bs-target='#pluginsLog'
+                  type='button'
+                  role='tab' aria-controls='pluginsLog' aria-selected='false'>Events
+          </button>
+        </li>
+      </ul>
+      <div class='tab-content'>
+        <div class='tab-pane fade show active' id='pluginsHtml' role='tabpanel'
+             aria-labelledby='pluginsHtml-tab'>
+         <pre>
+           <code class='language-html'>
+ &lt;div
+     class='input-group'
+     id='plugins'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='pluginsInput'
+     type='text'
+     class='form-control'
+     data-td-target='#plugins'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#plugins'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fas fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+        </div>
+        <div class='tab-pane fade' id='pluginsJs' role='tabpanel' aria-labelledby='pluginsJs-tab'>
+         <pre>
+           <code class='language-javascript'>
+/*
+* the bulk of this code isn't really needed. The main requirement is loading the plugin, and calling extend
+* &lt;script src=&quot;/path/to/plugin.js&quot;&gt;&lt;/script&gt;
+* tempusDominus.extend(window.tempusDominus_plugin_PLUGINNAME);
+*/
+const loadPluginButton = document.getElementById(&#39;loadPlugin&#39;);
+const plugins = new tempusDominus.TempusDominus(document.getElementById(&#39;plugins&#39;));
+
+const doLog = (value)=&gt;
+{
+	logger(document.getElementById(&#39;plugins-example&#39;).getElementsByClassName(&#39;logger&#39;)[0],
+	  &#39;log&#39;,
+	  `from plugin:`, value);
+};
+loadPluginButton.addEventListener(&#39;click&#39;, () =&gt; {
+	const script = document.createElement(&#39;script&#39;);
+	script.onload = function () {
+	  tempusDominus.extend(window.tempusDominus_plugin_example);
+	  tempusDominus.example(&#39;hi&#39;, doLog);
+	  plugins.someFunction(&#39;world&#39;, doLog);
+	  plugins.show(&#39;hello world&#39;, doLog);
+	};
+	script.src = &#39;/6/js/plugins/example.js&#39;;
+
+	document.body.appendChild(script);
+});
+           </code>
+         </pre>
+        </div>
+        <div class='tab-pane fade logger' id='pluginsLog' role='tabpanel'
+             aria-labelledby='pluginsLog-tab'>
+          <div class='alert alert-info'>
+            Events will display as you manipulate the picker.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='container'>
+      <div class='row'>
+        <div class='col-sm-6'>
+          <label for='pluginsInput' class='form-label'>Plugin</label>
+          <div
+            class='input-group log-event'
+            id='plugins'
+            data-td-target-input='nearest'
+            data-td-target-toggle='nearest'
+          >
+            <input
+              id='pluginsInput'
+              type='text'
+              class='form-control'
+              data-td-target='#plugins'
+            />
+            <span
+              class='input-group-text'
+              data-td-target='#plugins'
+              data-td-toggle='datetimepicker'
+            >
+               <span class='fas fa-calendar'></span>
+             </span>
+          </div>
+        </div>
+      </div>
+      <div class='row mt-3'>
+        <div class='col-sm-6'>
+          <button id='loadPlugin' class='btn btn-primary'>Load Plugin</button>
+        </div>
+      </div>
+    </div>
+    <script type='text/javascript'>
+      const loadPluginButton = document.getElementById('loadPlugin');
+      const plugins = new tempusDominus.TempusDominus(document.getElementById('plugins'));
+
+      const doLog = (value)=>
+      {
+        logger(document.getElementById('plugins-example').getElementsByClassName('logger')[0],
+          'log',
+          `from plugin:`, value);
+      };
+      loadPluginButton.addEventListener('click', () => {
+        const script = document.createElement('script');
+        script.onload = function () {
+          tempusDominus.extend(window.tempusDominus_plugin_example);
+          tempusDominus.example('hi', doLog);
+          plugins.someFunction('world', doLog);
+          plugins.show('hello world', doLog);
+        };
+        script.src = '/6/js/plugins/example.js';
+
+        document.body.appendChild(script);
       });
     </script>
   </section>
@@ -1981,7 +2148,7 @@ new tempusDominus.TempusDominus(document.getElementById('containerDatePicker'), 
 <page-meta>
   <title>Examples</title>
   <post-date>07/08/2021</post-date>
-  <update-date>07/08/2021</update-date>
+  <update-date>1/18/2022</update-date>
   <excerpt>How to use Tempus Dominus datetime picker
   </excerpt>
   <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>

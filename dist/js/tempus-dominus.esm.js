@@ -1,6 +1,6 @@
 /*!
-  * Tempus Dominus v6.0.0-beta2 (https://getdatepicker.com/)
-  * Copyright 2013-2022 [object Object]
+  * Tempus Dominus v6.0.0-beta3 (https://getdatepicker.com/)
+  * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
 import { createPopper } from '@popperjs/core';
@@ -43,7 +43,7 @@ class DateTime extends Date {
      */
     static convert(date, locale = 'default') {
         if (!date)
-            throw `A date is required`;
+            throw new Error(`A date is required`);
         return new DateTime(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).setLocale(locale);
     }
     /**
@@ -61,7 +61,7 @@ class DateTime extends Date {
      */
     startOf(unit, startOfTheWeek = 0) {
         if (this[unit] === undefined)
-            throw `Unit '${unit}' is not valid`;
+            throw new Error(`Unit '${unit}' is not valid`);
         switch (unit) {
             case 'seconds':
                 this.setMilliseconds(0);
@@ -98,7 +98,7 @@ class DateTime extends Date {
      */
     endOf(unit) {
         if (this[unit] === undefined)
-            throw `Unit '${unit}' is not valid`;
+            throw new Error(`Unit '${unit}' is not valid`);
         switch (unit) {
             case 'seconds':
                 this.setMilliseconds(999);
@@ -138,7 +138,7 @@ class DateTime extends Date {
      */
     manipulate(value, unit) {
         if (this[unit] === undefined)
-            throw `Unit '${unit}' is not valid`;
+            throw new Error(`Unit '${unit}' is not valid`);
         this[unit] += value;
         return this;
     }
@@ -162,7 +162,7 @@ class DateTime extends Date {
         if (!unit)
             return this.valueOf() < compare.valueOf();
         if (this[unit] === undefined)
-            throw `Unit '${unit}' is not valid`;
+            throw new Error(`Unit '${unit}' is not valid`);
         return (this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf());
     }
     /**
@@ -175,7 +175,7 @@ class DateTime extends Date {
         if (!unit)
             return this.valueOf() > compare.valueOf();
         if (this[unit] === undefined)
-            throw `Unit '${unit}' is not valid`;
+            throw new Error(`Unit '${unit}' is not valid`);
         return (this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf());
     }
     /**
@@ -188,7 +188,7 @@ class DateTime extends Date {
         if (!unit)
             return this.valueOf() === compare.valueOf();
         if (this[unit] === undefined)
-            throw `Unit '${unit}' is not valid`;
+            throw new Error(`Unit '${unit}' is not valid`);
         compare = DateTime.convert(compare);
         return (this.clone.startOf(unit).valueOf() === compare.startOf(unit).valueOf());
     }
@@ -202,7 +202,7 @@ class DateTime extends Date {
      */
     isBetween(left, right, unit, inclusivity = '()') {
         if (unit && this[unit] === undefined)
-            throw `Unit '${unit}' is not valid`;
+            throw new Error(`Unit '${unit}' is not valid`);
         const leftInclusivity = inclusivity[0] === '(';
         const rightInclusivity = inclusivity[1] === ')';
         return (((leftInclusivity
@@ -971,44 +971,10 @@ class Actions {
             return false;
         action = action || ((_b = currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.dataset) === null || _b === void 0 ? void 0 : _b.action);
         const lastPicked = (this._context.dates.lastPicked || this._context._viewDate).clone;
-        /**
-         * Common function to manipulate {@link lastPicked} by `unit`.
-         * @param unit
-         * @param value Value to change by
-         */
-        const manipulateAndSet = (unit, value = 1) => {
-            const newDate = lastPicked.manipulate(value, unit);
-            if (this._context._validation.isValid(newDate, unit)) {
-                this._context.dates._setValue(newDate, this._context.dates.lastPickedIndex);
-            }
-        };
-        /**
-         * Common function to manipulate {@link lastPicked} by `unit`.
-         * After setting the value it will either show the clock or hide the widget.
-         * @param unit
-         * @param value Value to change by
-         */
-        const hideOrClock = () => {
-            if (this._context._options.display.components.useTwentyfourHour &&
-                !this._context._options.display.components.minutes &&
-                !this._context._options.display.keepOpen &&
-                !this._context._options.display.inline) {
-                this._context._display.hide();
-            }
-            else {
-                this.do(e, ActionTypes.showClock);
-            }
-        };
         switch (action) {
             case ActionTypes.next:
             case ActionTypes.previous:
-                const { unit, step } = DatePickerModes[this._context._currentViewMode];
-                if (action === ActionTypes.next)
-                    this._context._viewDate.manipulate(step, unit);
-                else
-                    this._context._viewDate.manipulate(step * -1, unit);
-                this._context._viewUpdate(unit);
-                this._context._display._showMode();
+                this.handleNextPrevious(action);
                 break;
             case ActionTypes.pickerSwitch:
                 this._context._display._showMode(1);
@@ -1025,9 +991,6 @@ class Actions {
                         this._context._viewUpdate(Unit.month);
                         break;
                     case ActionTypes.selectYear:
-                        this._context._viewDate.year = value;
-                        this._context._viewUpdate(Unit.year);
-                        break;
                     case ActionTypes.selectDecade:
                         this._context._viewDate.year = value;
                         this._context._viewUpdate(Unit.year);
@@ -1079,38 +1042,38 @@ class Actions {
                     hour += 12;
                 lastPicked.hours = hour;
                 this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
-                hideOrClock();
+                this.hideOrClock(e);
                 break;
             case ActionTypes.selectMinute:
                 lastPicked.minutes = +currentTarget.dataset.value;
                 this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
-                hideOrClock();
+                this.hideOrClock(e);
                 break;
             case ActionTypes.selectSecond:
                 lastPicked.seconds = +currentTarget.dataset.value;
                 this._context.dates._setValue(lastPicked, this._context.dates.lastPickedIndex);
-                hideOrClock();
+                this.hideOrClock(e);
                 break;
             case ActionTypes.incrementHours:
-                manipulateAndSet(Unit.hours);
+                this.manipulateAndSet(lastPicked, Unit.hours);
                 break;
             case ActionTypes.incrementMinutes:
-                manipulateAndSet(Unit.minutes, this._context._options.stepping);
+                this.manipulateAndSet(lastPicked, Unit.minutes, this._context._options.stepping);
                 break;
             case ActionTypes.incrementSeconds:
-                manipulateAndSet(Unit.seconds);
+                this.manipulateAndSet(lastPicked, Unit.seconds);
                 break;
             case ActionTypes.decrementHours:
-                manipulateAndSet(Unit.hours, -1);
+                this.manipulateAndSet(lastPicked, Unit.hours, -1);
                 break;
             case ActionTypes.decrementMinutes:
-                manipulateAndSet(Unit.minutes, this._context._options.stepping * -1);
+                this.manipulateAndSet(lastPicked, Unit.minutes, this._context._options.stepping * -1);
                 break;
             case ActionTypes.decrementSeconds:
-                manipulateAndSet(Unit.seconds, -1);
+                this.manipulateAndSet(lastPicked, Unit.seconds, -1);
                 break;
             case ActionTypes.toggleMeridiem:
-                manipulateAndSet(Unit.hours, this._context.dates.lastPicked.hours >= 12 ? -12 : 12);
+                this.manipulateAndSet(lastPicked, Unit.hours, this._context.dates.lastPicked.hours >= 12 ? -12 : 12);
                 break;
             case ActionTypes.togglePicker:
                 if (currentTarget.getAttribute('title') ===
@@ -1172,6 +1135,43 @@ class Actions {
                 if (this._context._validation.isValid(today, Unit.date))
                     this._context.dates._setValue(today, this._context.dates.lastPickedIndex);
                 break;
+        }
+    }
+    handleNextPrevious(action) {
+        const { unit, step } = DatePickerModes[this._context._currentViewMode];
+        if (action === ActionTypes.next)
+            this._context._viewDate.manipulate(step, unit);
+        else
+            this._context._viewDate.manipulate(step * -1, unit);
+        this._context._viewUpdate(unit);
+        this._context._display._showMode();
+    }
+    /**
+     * Common function to manipulate {@link lastPicked} by `unit`.
+     * After setting the value it will either show the clock or hide the widget.
+     * @param unit
+     * @param value Value to change by
+     */
+    hideOrClock(e) {
+        if (this._context._options.display.components.useTwentyfourHour &&
+            !this._context._options.display.components.minutes &&
+            !this._context._options.display.keepOpen &&
+            !this._context._options.display.inline) {
+            this._context._display.hide();
+        }
+        else {
+            this.do(e, ActionTypes.showClock);
+        }
+    }
+    /**
+     * Common function to manipulate {@link lastPicked} by `unit`.
+     * @param unit
+     * @param value Value to change by
+     */
+    manipulateAndSet(lastPicked, unit, value = 1) {
+        const newDate = lastPicked.manipulate(value, unit);
+        if (this._context._validation.isValid(newDate, unit)) {
+            this._context.dates._setValue(newDate, this._context.dates.lastPickedIndex);
         }
     }
 }
@@ -1379,6 +1379,69 @@ class MonthDisplay {
             containerClone.setAttribute('data-value', `${index}`);
             containerClone.innerText = `${innerDate.format({ month: 'short' })}`;
             innerDate.manipulate(1, Unit.month);
+        });
+    }
+}
+
+/**
+ * Creates and updates the grid for `year`
+ */
+class YearDisplay {
+    constructor(context) {
+        this._context = context;
+    }
+    /**
+     * Build the container html for the display
+     * @private
+     */
+    get _picker() {
+        const container = document.createElement('div');
+        container.classList.add(Namespace.css.yearsContainer);
+        for (let i = 0; i < 12; i++) {
+            const div = document.createElement('div');
+            div.setAttribute('data-action', ActionTypes.selectYear);
+            container.appendChild(div);
+        }
+        return container;
+    }
+    /**
+     * Populates the grid and updates enabled states
+     * @private
+     */
+    _update() {
+        this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
+        this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
+        const container = this._context._display.widget.getElementsByClassName(Namespace.css.yearsContainer)[0];
+        const [previous, switcher, next] = container.parentElement
+            .getElementsByClassName(Namespace.css.calendarHeader)[0]
+            .getElementsByTagName('div');
+        switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.format({ year: 'numeric' })}-${this._endYear.format({ year: 'numeric' })}`);
+        this._context._validation.isValid(this._startYear, Unit.year)
+            ? previous.classList.remove(Namespace.css.disabled)
+            : previous.classList.add(Namespace.css.disabled);
+        this._context._validation.isValid(this._endYear, Unit.year)
+            ? next.classList.remove(Namespace.css.disabled)
+            : next.classList.add(Namespace.css.disabled);
+        let innerDate = this._context._viewDate.clone
+            .startOf(Unit.year)
+            .manipulate(-1, Unit.year);
+        container
+            .querySelectorAll(`[data-action="${ActionTypes.selectYear}"]`)
+            .forEach((containerClone, index) => {
+            let classes = [];
+            classes.push(Namespace.css.year);
+            if (!this._context._unset &&
+                this._context.dates.isPicked(innerDate, Unit.year)) {
+                classes.push(Namespace.css.active);
+            }
+            if (!this._context._validation.isValid(innerDate, Unit.year)) {
+                classes.push(Namespace.css.disabled);
+            }
+            containerClone.classList.remove(...containerClone.classList);
+            containerClone.classList.add(...classes);
+            containerClone.setAttribute('data-value', `${innerDate.year}`);
+            containerClone.innerText = innerDate.format({ year: "numeric" });
+            innerDate.manipulate(1, Unit.year);
         });
     }
 }
@@ -1961,70 +2024,6 @@ class Dates {
             case 'year':
                 return { year: 'numeric' };
         }
-    }
-}
-
-/**
- * Creates and updates the grid for `year`
- */
-class YearDisplay {
-    constructor(context) {
-        this._context = context;
-    }
-    /**
-     * Build the container html for the display
-     * @private
-     */
-    get _picker() {
-        const container = document.createElement('div');
-        container.classList.add(Namespace.css.yearsContainer);
-        for (let i = 0; i < 12; i++) {
-            const div = document.createElement('div');
-            div.setAttribute('data-action', ActionTypes.selectYear);
-            container.appendChild(div);
-        }
-        return container;
-    }
-    /**
-     * Populates the grid and updates enabled states
-     * @private
-     */
-    _update() {
-        Dates.getStartEndYear(10, this._context._viewDate.year);
-        this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
-        this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
-        const container = this._context._display.widget.getElementsByClassName(Namespace.css.yearsContainer)[0];
-        const [previous, switcher, next] = container.parentElement
-            .getElementsByClassName(Namespace.css.calendarHeader)[0]
-            .getElementsByTagName('div');
-        switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.format({ year: 'numeric' })}-${this._endYear.format({ year: 'numeric' })}`);
-        this._context._validation.isValid(this._startYear, Unit.year)
-            ? previous.classList.remove(Namespace.css.disabled)
-            : previous.classList.add(Namespace.css.disabled);
-        this._context._validation.isValid(this._endYear, Unit.year)
-            ? next.classList.remove(Namespace.css.disabled)
-            : next.classList.add(Namespace.css.disabled);
-        let innerDate = this._context._viewDate.clone
-            .startOf(Unit.year)
-            .manipulate(-1, Unit.year);
-        container
-            .querySelectorAll(`[data-action="${ActionTypes.selectYear}"]`)
-            .forEach((containerClone, index) => {
-            let classes = [];
-            classes.push(Namespace.css.year);
-            if (!this._context._unset &&
-                this._context.dates.isPicked(innerDate, Unit.year)) {
-                classes.push(Namespace.css.active);
-            }
-            if (!this._context._validation.isValid(innerDate, Unit.year)) {
-                classes.push(Namespace.css.disabled);
-            }
-            containerClone.classList.remove(...containerClone.classList);
-            containerClone.classList.add(...classes);
-            containerClone.setAttribute('data-value', `${innerDate.year}`);
-            containerClone.innerText = innerDate.format({ year: "numeric" });
-            innerDate.manipulate(1, Unit.year);
-        });
     }
 }
 
@@ -2980,8 +2979,8 @@ class Validation {
                 return false;
             }
             if (this._context._options.restrictions.disabledTimeIntervals.length > 0) {
-                for (let i = 0; i < this._context._options.restrictions.disabledTimeIntervals.length; i++) {
-                    if (targetDate.isBetween(this._context._options.restrictions.disabledTimeIntervals[i].from, this._context._options.restrictions.disabledTimeIntervals[i].to))
+                for (let disabledTimeIntervals of this._context._options.restrictions.disabledTimeIntervals) {
+                    if (targetDate.isBetween(disabledTimeIntervals.from, disabledTimeIntervals.to))
                         return false;
                 }
             }
@@ -3104,7 +3103,7 @@ class TempusDominus {
             this.toggle();
         };
         if (!element) {
-            Namespace.errorMessages.mustProvideElement;
+            Namespace.errorMessages.mustProvideElement();
         }
         this._element = element;
         this._options = this._initializeOptions(options, DefaultOptions, true);
@@ -3214,7 +3213,7 @@ class TempusDominus {
             callBackArray = callbacks;
         }
         if (eventTypes.length !== callBackArray.length) {
-            Namespace.errorMessages.subscribeMismatch;
+            Namespace.errorMessages.subscribeMismatch();
         }
         const returnArray = [];
         for (let i = 0; i < eventTypes.length; i++) {
@@ -3224,7 +3223,7 @@ class TempusDominus {
             }
             this._subscribers[eventType].push(callBackArray[i]);
             returnArray.push({
-                unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1),
+                unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1)
             });
             if (eventTypes.length === 1) {
                 return returnArray[0];
@@ -3247,6 +3246,19 @@ class TempusDominus {
         }
         this._toggle.removeEventListener('click', this._toggleClickEvent);
         this._subscribers = {};
+    }
+    /**
+     * Updates the options to use the provided language.
+     * THe language file must be loaded first.
+     * @param language
+     */
+    loacle(language) {
+        let asked = loadedLocales[language];
+        if (!asked)
+            return;
+        this.updateOptions({
+            localization: asked
+        });
     }
     /**
      * Triggers an event like ChangeEvent when the picker has updated the value
@@ -3297,7 +3309,7 @@ class TempusDominus {
         this._triggerEvent({
             type: Namespace.events.update,
             change: unit,
-            viewDate: this._viewDate.clone,
+            viewDate: this._viewDate.clone
         });
     }
     _unsubscribe(eventName, index) {
@@ -3355,7 +3367,7 @@ class TempusDominus {
                         : undefined,
                     minute: components.clock && components.minutes ? '2-digit' : undefined,
                     second: components.clock && components.seconds ? '2-digit' : undefined,
-                    hour12: !components.useTwentyfourHour,
+                    hour12: !components.useTwentyfourHour
                 });
             };
         }
@@ -3436,12 +3448,31 @@ class TempusDominus {
         this._currentPromptTimeTimeout = setTimeout(() => {
             if (this._display.widget) {
                 this._action.do({
-                    currentTarget: this._display.widget.querySelector(`.${Namespace.css.switch} div`),
+                    currentTarget: this._display.widget.querySelector(`.${Namespace.css.switch} div`)
                 }, ActionTypes.togglePicker);
             }
         }, this._options.promptTimeOnDateChangeTransitionDelay);
     }
 }
+const extend = function (plugin, option) {
+    if (!plugin.$i) { // install plugin only once
+        plugin(option, TempusDominus, this);
+        plugin.$i = true;
+    }
+    return this;
+};
+const loadedLocales = {};
+const loadLocale = (locale, name) => {
+    if (loadedLocales[name])
+        return;
+    loadedLocales[name] = locale;
+};
+const locale = (l) => {
+    let asked = loadedLocales[l];
+    if (!asked)
+        return;
+    DefaultOptions.localization = asked;
+};
 
-export { DateTime, DefaultOptions, Namespace, TempusDominus, Unit };
+export { DateTime, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale };
 //# sourceMappingURL=tempus-dominus.esm.js.map

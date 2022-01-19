@@ -10,7 +10,7 @@ import {
   BaseEvent,
   ChangeEvent,
   ViewUpdateEvent,
-  FailEvent,
+  FailEvent
 } from './event-types';
 
 /**
@@ -174,7 +174,7 @@ class TempusDominus {
           this,
           eventType,
           this._subscribers[eventType].length - 1
-        ),
+        )
       });
 
       if (eventTypes.length === 1) {
@@ -199,6 +199,19 @@ class TempusDominus {
     }
     this._toggle.removeEventListener('click', this._toggleClickEvent);
     this._subscribers = {};
+  }
+
+  /**
+   * Updates the options to use the provided language.
+   * THe language file must be loaded first.
+   * @param language
+   */
+  loacle(language: string) {
+    let asked = loadedLocales[language];
+    if (!asked) return;
+    this.updateOptions({
+      localization: asked
+    })
   }
 
   /**
@@ -261,7 +274,7 @@ class TempusDominus {
     this._triggerEvent({
       type: Namespace.events.update,
       change: unit,
-      viewDate: this._viewDate.clone,
+      viewDate: this._viewDate.clone
     } as ViewUpdateEvent);
   }
 
@@ -342,7 +355,7 @@ class TempusDominus {
             components.clock && components.minutes ? '2-digit' : undefined,
           second:
             components.clock && components.seconds ? '2-digit' : undefined,
-          hour12: !components.useTwentyfourHour,
+          hour12: !components.useTwentyfourHour
         });
       };
     }
@@ -435,7 +448,7 @@ class TempusDominus {
           {
             currentTarget: this._display.widget.querySelector(
               `.${Namespace.css.switch} div`
-            ),
+            )
           },
           ActionTypes.togglePicker
         );
@@ -494,12 +507,36 @@ class TempusDominus {
   };
 }
 
+const extend = function(plugin, option) {
+  if (!plugin.$i) { // install plugin only once
+    plugin(option, TempusDominus, this);
+    plugin.$i = true;
+  }
+  return this;
+}
+
+const loadedLocales = {}
+
+const loadLocale = (locale, name: string) => {
+  if (loadedLocales[name]) return;
+  loadedLocales[name] = locale;
+}
+
+const locale = (l: string) => {
+  let asked = loadedLocales[l];
+  if (!asked) return;
+  DefaultOptions.localization = asked;
+}
+
 export {
   TempusDominus,
+  extend,
+  loadLocale,
+  locale,
   Namespace,
   DefaultOptions,
   DateTime,
   Options,
   Unit,
-  DateTimeFormatOptions,
+  DateTimeFormatOptions
 };

@@ -84,6 +84,12 @@ declare class TempusDominus {
      */
     dispose(): void;
     /**
+     * Updates the options to use the provided language.
+     * THe language file must be loaded first.
+     * @param language
+     */
+    loacle(language: string): void;
+    /**
      * Triggers an event like ChangeEvent when the picker has updated the value
      * of a selected date.
      * @param event Accepts a BaseEvent object.
@@ -135,4 +141,7 @@ declare class TempusDominus {
      */
     private _toggleClickEvent;
 }
-export { TempusDominus, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions, };
+declare const extend: (plugin: any, option: any) => any;
+declare const loadLocale: (locale: any, name: string) => void;
+declare const locale: (l: string) => void;
+export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions };

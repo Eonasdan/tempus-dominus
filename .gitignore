@@ -10,4 +10,4 @@ site
 *.sln
 *.nupkg
 src/docs/partials/examples/test.html
-docs/
+/docs/
