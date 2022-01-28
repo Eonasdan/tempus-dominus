@@ -96,6 +96,7 @@ declare class TempusDominus {
      * @private
      */
     _triggerEvent(event: BaseEvent): void;
+    private _publish;
     /**
      * Fires a ViewUpdate event when, for example, the month view is changed.
      * @param {Unit} unit
@@ -141,7 +142,22 @@ declare class TempusDominus {
      */
     private _toggleClickEvent;
 }
+/**
+ * Extend the global picker object
+ * @param plugin
+ * @param option
+ */
 declare const extend: (plugin: any, option: any) => any;
+/**
+ * Called from a locale plugin.
+ * @param locale locale object for localization options
+ * @param name name of the language e.g 'ru', 'en-gb'
+ */
 declare const loadLocale: (locale: any, name: string) => void;
-declare const locale: (l: string) => void;
+/**
+ * A sets the global localization options to the provided locale name.
+ * `locadLocale` MUST be called first.
+ * @param locale
+ */
+declare const locale: (locale: string) => void;
 export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions };

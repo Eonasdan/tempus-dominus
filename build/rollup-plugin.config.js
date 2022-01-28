@@ -1,4 +1,4 @@
-const typescript = require('@rollup/plugin-typescript');
+const typescript = require('rollup-plugin-typescript2');
 const banner = require('./banner.js');
 const globals = {
   '@popperjs/core': 'Popper',

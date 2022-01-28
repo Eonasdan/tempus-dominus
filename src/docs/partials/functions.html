@@ -114,7 +114,7 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
             Clears all selected dates.
           </p>
           <p>
-            <strong>Emits</strong> <code>Namespace.Events.change</code> with the last picked date.
+            <strong>Emits</strong> <code>Namespace.events.change</code> with the last picked date.
           </p>
         </div>
       </div>
@@ -148,13 +148,13 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
         <h4 id='emits'>Emits</h4>
         <ul>
           <li>
-            <p><code>Namespace.Events.hide</code> - if the widget is hidden after the toggle call</p>
+            <p><code>Namespace.events.hide</code> - if the widget is hidden after the toggle call</p>
           </li>
           <li>
-            <p><code>Namespace.Events.show</code> - if the widget is show after the toggle call</p>
+            <p><code>Namespace.events.show</code> - if the widget is show after the toggle call</p>
           </li>
           <li>
-            <p><code>Namespace.Events.change</code> - if the widget is opened for the first time and the input element
+            <p><code>Namespace.events.change</code> - if the widget is opened for the first time and the input element
               is
               empty and <code>options.useCurrent != false</code></p>
           </li>
@@ -166,10 +166,10 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
         <h4>Emits</h4>
         <ul>
           <li>
-            <p><code>Namespace.Events.show</code> - if the widget was hidden before that call</p>
+            <p><code>Namespace.events.show</code> - if the widget was hidden before that call</p>
           </li>
           <li>
-            <p><code>Namespace.Events.change</code> - if the widget is opened for the first time and the
+            <p><code>Namespace.events.change</code> - if the widget is opened for the first time and the
               <code>useCurrent</code> is set to true or to a granularity value and the input element the component is
               attached to has an empty value</p>
           </li>
@@ -179,9 +179,10 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
         <p>Hides the widget</p>
         <h4>Emits</h4>
         <ul>
-          <li><code>Namespace.Events.hide</code> - if the widget was visible before that call</li>
+          <li><code>Namespace.events.hide</code> - if the widget was visible before that call</li>
         </ul>
       </div>
+    </div>
   </section>
   <section>
     <h2 id='dispose'>dispose
@@ -197,7 +198,7 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
       it. If the widget was visible before that call it is hidden.</p>
     <h3>Emits</h3>
     <ul>
-      <li><code>Namespace.Events.hide</code> - if the widget was visible before this call</li>
+      <li><code>Namespace.events.hide</code> - if the widget was visible before this call</li>
     </ul>
   </section>
   <section>
@@ -226,7 +227,7 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
     </p>
     <pre>
       <code class='language-javascript'>
-const subscription = picker.subscribe(tempusdominus.Namespace.Events.change, (e) => {
+const subscription = picker.subscribe(tempusdominus.Namespace.events.change, (e) => {
   console.log(e);
 });
 
@@ -235,7 +236,7 @@ subscription.unsubscribe();
 
 //you can also provide multiple events:
 const subscriptions = picker.subscribe(
-        [tempusdominus.Namespace.Events.show,tempusdominus.Namespace.Events.hide],
+        [tempusdominus.Namespace.events.show,tempusdominus.Namespace.events.hide],
         [(e)=> console.log(e), (e) => console.log(e)]
 )
       </code>

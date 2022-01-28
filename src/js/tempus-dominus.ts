@@ -248,21 +248,21 @@ class TempusDominus {
       $(this._element).trigger(event);
     }
 
-    const publish = () => {
-      // return if event is not subscribed
-      if (!Array.isArray(this._subscribers[event.type])) {
-        return;
-      }
-
-      // Trigger callback for each subscriber
-      this._subscribers[event.type].forEach((callback) => {
-        callback(event);
-      });
-    };
-
-    publish();
+    this._publish(event);
 
     this._notifyChangeEventContext = 0;
+  }
+
+  private _publish(event: BaseEvent) {
+    // return if event is not subscribed
+    if (!Array.isArray(this._subscribers[event.type])) {
+      return;
+    }
+
+    // Trigger callback for each subscriber
+    this._subscribers[event.type].forEach((callback) => {
+      callback(event);
+    });
   }
 
   /**
@@ -507,6 +507,11 @@ class TempusDominus {
   };
 }
 
+/**
+ * Extend the global picker object
+ * @param plugin
+ * @param option
+ */
 const extend = function(plugin, option) {
   if (!plugin.$i) { // install plugin only once
     plugin(option, TempusDominus, this);
@@ -515,15 +520,29 @@ const extend = function(plugin, option) {
   return this;
 }
 
+/**
+ * Whenever a locale is loaded via a plugin then store it here based on the
+ * locale name. E.g. loadedLocales['ru']
+ */
 const loadedLocales = {}
 
+/**
+ * Called from a locale plugin.
+ * @param locale locale object for localization options
+ * @param name name of the language e.g 'ru', 'en-gb'
+ */
 const loadLocale = (locale, name: string) => {
   if (loadedLocales[name]) return;
   loadedLocales[name] = locale;
 }
 
-const locale = (l: string) => {
-  let asked = loadedLocales[l];
+/**
+ * A sets the global localization options to the provided locale name.
+ * `locadLocale` MUST be called first.
+ * @param locale
+ */
+const locale = (locale: string) => {
+  let asked = loadedLocales[locale];
   if (!asked) return;
   DefaultOptions.localization = asked;
 }

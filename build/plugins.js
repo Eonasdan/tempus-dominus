@@ -11,7 +11,7 @@ const promisifyReadFile = promisify(fs.readFile)
 const promisifyWriteFile = promisify(fs.writeFile)
 
 const localeNameRegex = /\/\/ (.*) \[/
-const formatName = n => n.replace(/\.ts/, '').replace('-', '_')
+const formatName = n => n.replace(/\.ts/, '').replace(/-/g, '_')
 
 const localePath = path.join(__dirname, '../src/locales')
 
@@ -47,11 +47,21 @@ async function listLocaleJson(localeArr) {
     }
 
     const plugins = await promisifyReadDir(path.join(__dirname, '../src/plugins'))
-    for (const plugin of plugins) {
+    for (const plugin of plugins.filter(x => x !== 'examples')) {
       // run builds sequentially to limit RAM usage
       await build(genericRollup({
         input: `./src/plugins/${plugin}/index.ts`,
         fileName: `./dist/plugins/${plugin}.js`,
+        name: `tempusDominus.plugins.${formatName(plugin)}`
+      }))
+    }
+
+    const examplePlugins = await promisifyReadDir(path.join(__dirname, '../src/plugins/examples'))
+    for (const plugin of examplePlugins.map(x => x.replace('.ts', ''))) {
+      // run builds sequentially to limit RAM usage
+      await build(genericRollup({
+        input: `./src/plugins/examples/${plugin}.ts`,
+        fileName: `./dist/plugins/examples/${plugin}.js`,
         name: `tempusDominus.plugins.${formatName(plugin)}`
       }))
     }

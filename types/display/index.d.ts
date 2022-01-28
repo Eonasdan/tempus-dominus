@@ -1,4 +1,4 @@
-import { Unit } from '../datetime';
+import { DateTime, Unit } from '../datetime';
 import { TempusDominus } from '../tempus-dominus';
 /**
  * Main class for all things display related.
@@ -33,6 +33,7 @@ export default class Display {
      * @private
      */
     _update(unit: Unit | 'clock' | 'calendar' | 'all'): void;
+    paint(unit: Unit, date: DateTime, classes: string[]): void;
     /**
      * Shows the picker and creates a Popper instance if needed.
      * Add document click event to hide when clicking outside the picker.

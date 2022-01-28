@@ -113,6 +113,11 @@ export default class Display {
     }
   }
 
+
+  paint(unit: Unit, date: DateTime, classes: string[]) {
+    // implemented in plugin
+  }
+
   /**
    * Shows the picker and creates a Popper instance if needed.
    * Add document click event to hide when clicking outside the picker.
@@ -125,7 +130,6 @@ export default class Display {
         !this._context._options.defaultDate &&
         !this._context._input?.value
       ) {
-        //todo in the td4 branch a pr changed this to allow granularity
         const date = new DateTime().setLocale(
           this._context._options.localization.locale
         );

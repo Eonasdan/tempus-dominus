@@ -1289,6 +1289,7 @@ class DateDisplay {
             if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
                 classes.push(Namespace.css.weekend);
             }
+            this._context._display.paint(Unit.date, innerDate, classes);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
@@ -2544,6 +2545,9 @@ class Display {
                 }
         }
     }
+    paint(unit, date, classes) {
+        // implemented in plugin
+    }
     /**
      * Shows the picker and creates a Popper instance if needed.
      * Add document click event to hide when clicking outside the picker.
@@ -2555,7 +2559,6 @@ class Display {
             if (this._context._options.useCurrent &&
                 !this._context._options.defaultDate &&
                 !((_a = this._context._input) === null || _a === void 0 ? void 0 : _a.value)) {
-                //todo in the td4 branch a pr changed this to allow granularity
                 const date = new DateTime().setLocale(this._context._options.localization.locale);
                 if (!this._context._options.keepInvalid) {
                     let tries = 0;
@@ -3287,18 +3290,18 @@ class TempusDominus {
             const $ = window.jQuery;
             $(this._element).trigger(event);
         }
-        const publish = () => {
-            // return if event is not subscribed
-            if (!Array.isArray(this._subscribers[event.type])) {
-                return;
-            }
-            // Trigger callback for each subscriber
-            this._subscribers[event.type].forEach((callback) => {
-                callback(event);
-            });
-        };
-        publish();
+        this._publish(event);
         this._notifyChangeEventContext = 0;
+    }
+    _publish(event) {
+        // return if event is not subscribed
+        if (!Array.isArray(this._subscribers[event.type])) {
+            return;
+        }
+        // Trigger callback for each subscriber
+        this._subscribers[event.type].forEach((callback) => {
+            callback(event);
+        });
     }
     /**
      * Fires a ViewUpdate event when, for example, the month view is changed.
@@ -3454,6 +3457,11 @@ class TempusDominus {
         }, this._options.promptTimeOnDateChangeTransitionDelay);
     }
 }
+/**
+ * Extend the global picker object
+ * @param plugin
+ * @param option
+ */
 const extend = function (plugin, option) {
     if (!plugin.$i) { // install plugin only once
         plugin(option, TempusDominus, this);
@@ -3461,14 +3469,28 @@ const extend = function (plugin, option) {
     }
     return this;
 };
+/**
+ * Whenever a locale is loaded via a plugin then store it here based on the
+ * locale name. E.g. loadedLocales['ru']
+ */
 const loadedLocales = {};
+/**
+ * Called from a locale plugin.
+ * @param locale locale object for localization options
+ * @param name name of the language e.g 'ru', 'en-gb'
+ */
 const loadLocale = (locale, name) => {
     if (loadedLocales[name])
         return;
     loadedLocales[name] = locale;
 };
-const locale = (l) => {
-    let asked = loadedLocales[l];
+/**
+ * A sets the global localization options to the provided locale name.
+ * `locadLocale` MUST be called first.
+ * @param locale
+ */
+const locale = (locale) => {
+    let asked = loadedLocales[locale];
     if (!asked)
         return;
     DefaultOptions.localization = asked;

@@ -101,7 +101,7 @@ export default class DateDisplay {
           return;
         }
 
-        let classes = [];
+        let classes: string[] = [];
         classes.push(Namespace.css.day);
 
         if (innerDate.isBefore(this._context._viewDate, Unit.month)) {
@@ -126,6 +126,8 @@ export default class DateDisplay {
         if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
           classes.push(Namespace.css.weekend);
         }
+
+        this._context._display.paint(Unit.date, innerDate, classes);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

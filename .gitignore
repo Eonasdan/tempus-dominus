@@ -11,3 +11,4 @@ site
 *.nupkg
 src/docs/partials/examples/test.html
 /docs/
+/dist/plugins/examples/
