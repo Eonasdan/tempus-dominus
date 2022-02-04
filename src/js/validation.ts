@@ -1,15 +1,15 @@
-import { TempusDominus } from './tempus-dominus';
-import { DateTime, Unit } from './datetime';
-import Dates from './dates';
+import { DateTime, getFormatByUnit, Unit } from './datetime';
+import { OptionsStore } from './options';
+import { ServiceLocator } from './service-locator';
 
 /**
  * Main class for date validation rules based on the options provided.
  */
 export default class Validation {
-  private _context: TempusDominus;
+  private optionsStore: OptionsStore;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = ServiceLocator.locate(OptionsStore);
   }
 
   /**
@@ -20,13 +20,13 @@ export default class Validation {
    */
   isValid(targetDate: DateTime, granularity?: Unit): boolean {
     if (
-      this._context._options.restrictions.disabledDates.length > 0 &&
+      this.optionsStore.options.restrictions.disabledDates.length > 0 &&
       this._isInDisabledDates(targetDate)
     ) {
       return false;
     }
     if (
-      this._context._options.restrictions.enabledDates.length > 0 &&
+      this.optionsStore.options.restrictions.enabledDates.length > 0 &&
       !this._isInEnabledDates(targetDate)
     ) {
       return false;
@@ -34,8 +34,8 @@ export default class Validation {
     if (
       granularity !== Unit.month &&
       granularity !== Unit.year &&
-      this._context._options.restrictions.daysOfWeekDisabled?.length > 0 &&
-      this._context._options.restrictions.daysOfWeekDisabled.indexOf(
+      this.optionsStore.options.restrictions.daysOfWeekDisabled?.length > 0 &&
+      this.optionsStore.options.restrictions.daysOfWeekDisabled.indexOf(
         targetDate.weekDay
       ) !== -1
     ) {
@@ -43,18 +43,18 @@ export default class Validation {
     }
 
     if (
-      this._context._options.restrictions.minDate &&
+      this.optionsStore.options.restrictions.minDate &&
       targetDate.isBefore(
-        this._context._options.restrictions.minDate,
+        this.optionsStore.options.restrictions.minDate,
         granularity
       )
     ) {
       return false;
     }
     if (
-      this._context._options.restrictions.maxDate &&
+      this.optionsStore.options.restrictions.maxDate &&
       targetDate.isAfter(
-        this._context._options.restrictions.maxDate,
+        this.optionsStore.options.restrictions.maxDate,
         granularity
       )
     ) {
@@ -67,21 +67,21 @@ export default class Validation {
       granularity === Unit.seconds
     ) {
       if (
-        this._context._options.restrictions.disabledHours.length > 0 &&
+        this.optionsStore.options.restrictions.disabledHours.length > 0 &&
         this._isInDisabledHours(targetDate)
       ) {
         return false;
       }
       if (
-        this._context._options.restrictions.enabledHours.length > 0 &&
+        this.optionsStore.options.restrictions.enabledHours.length > 0 &&
         !this._isInEnabledHours(targetDate)
       ) {
         return false;
       }
       if (
-        this._context._options.restrictions.disabledTimeIntervals.length > 0
+        this.optionsStore.options.restrictions.disabledTimeIntervals.length > 0
       ) {
-        for (let disabledTimeIntervals of this._context._options.restrictions.disabledTimeIntervals) {
+        for (let disabledTimeIntervals of this.optionsStore.options.restrictions.disabledTimeIntervals) {
           if (
             targetDate.isBetween(
               disabledTimeIntervals.from,
@@ -104,13 +104,13 @@ export default class Validation {
    */
   private _isInDisabledDates(testDate: DateTime) {
     if (
-      !this._context._options.restrictions.disabledDates ||
-      this._context._options.restrictions.disabledDates.length === 0
+      !this.optionsStore.options.restrictions.disabledDates ||
+      this.optionsStore.options.restrictions.disabledDates.length === 0
     )
       return false;
-    const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-    return this._context._options.restrictions.disabledDates
-      .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
+    const formattedDate = testDate.format(getFormatByUnit(Unit.date));
+    return this.optionsStore.options.restrictions.disabledDates
+      .map((x) => x.format(getFormatByUnit(Unit.date)))
       .find((x) => x === formattedDate);
   }
 
@@ -122,13 +122,13 @@ export default class Validation {
    */
   private _isInEnabledDates(testDate: DateTime) {
     if (
-      !this._context._options.restrictions.enabledDates ||
-      this._context._options.restrictions.enabledDates.length === 0
+      !this.optionsStore.options.restrictions.enabledDates ||
+      this.optionsStore.options.restrictions.enabledDates.length === 0
     )
       return true;
-    const formattedDate = testDate.format(Dates.getFormatByUnit(Unit.date));
-    return this._context._options.restrictions.enabledDates
-      .map((x) => x.format(Dates.getFormatByUnit(Unit.date)))
+    const formattedDate = testDate.format(getFormatByUnit(Unit.date));
+    return this.optionsStore.options.restrictions.enabledDates
+      .map((x) => x.format(getFormatByUnit(Unit.date)))
       .find((x) => x === formattedDate);
   }
 
@@ -140,12 +140,12 @@ export default class Validation {
    */
   private _isInDisabledHours(testDate: DateTime) {
     if (
-      !this._context._options.restrictions.disabledHours ||
-      this._context._options.restrictions.disabledHours.length === 0
+      !this.optionsStore.options.restrictions.disabledHours ||
+      this.optionsStore.options.restrictions.disabledHours.length === 0
     )
       return false;
     const formattedDate = testDate.hours;
-    return this._context._options.restrictions.disabledHours.find(
+    return this.optionsStore.options.restrictions.disabledHours.find(
       (x) => x === formattedDate
     );
   }
@@ -158,12 +158,12 @@ export default class Validation {
    */
   private _isInEnabledHours(testDate: DateTime) {
     if (
-      !this._context._options.restrictions.enabledHours ||
-      this._context._options.restrictions.enabledHours.length === 0
+      !this.optionsStore.options.restrictions.enabledHours ||
+      this.optionsStore.options.restrictions.enabledHours.length === 0
     )
       return true;
     const formattedDate = testDate.hours;
-    return this._context._options.restrictions.enabledHours.find(
+    return this.optionsStore.options.restrictions.enabledHours.find(
       (x) => x === formattedDate
     );
   }

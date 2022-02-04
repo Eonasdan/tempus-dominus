@@ -1,7 +1,16 @@
 import { DateTime, DateTimeFormatOptions } from './datetime';
 import Namespace from './namespace';
 import { DefaultOptions } from './conts';
-import { TempusDominus } from './tempus-dominus';
+
+export class OptionsStore {
+  options: Options;
+  element: HTMLElement;
+  viewDate = new DateTime();
+  currentViewMode = 0;
+  input: HTMLInputElement;
+  unset: boolean;
+  minViewModeNumber = 0;
+}
 
 export default interface Options {
   restrictions?: {
@@ -89,10 +98,6 @@ export default interface Options {
   multipleDatesSeparator?: string;
   promptTimeOnDateChange?: boolean;
   promptTimeOnDateChangeTransitionDelay?: number;
-  hooks?: {
-    inputParse?: (context: TempusDominus, value: any) => DateTime;
-    inputFormat?: (context: TempusDominus, date: DateTime) => string;
-  };
   meta?: {};
   container?: HTMLElement;
 }
@@ -102,8 +107,6 @@ export class OptionConverter {
     const newOptions = {} as Options;
     let path = '';
     const ignoreProperties = [
-      'inputParse',
-      'inputFormat',
       'meta',
       'dayViewHeaderFormat',
       'container'
@@ -112,7 +115,7 @@ export class OptionConverter {
     //see if the options specify a locale
     const locale =
       mergeTo.localization.locale !== 'default' ? mergeTo.localization.locale :
-      providedOptions?.localization?.locale || 'default';
+        providedOptions?.localization?.locale || 'default';
 
     const processKey = (key, value, providedType, defaultType) => {
       switch (key) {
@@ -275,7 +278,7 @@ export class OptionConverter {
           const optionValues = {
             toolbarPlacement: ['top', 'bottom', 'default'],
             type: ['icons', 'sprites'],
-            viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
+            viewMode: ['clock', 'calendar', 'months', 'years', 'decades']
           };
           const keyOptions = optionValues[key];
           if (!keyOptions.includes(value))
@@ -286,8 +289,6 @@ export class OptionConverter {
             );
 
           return value;
-        case 'inputParse':
-        case 'inputFormat':
         case 'meta':
         case 'dayViewHeaderFormat':
           return value;
@@ -335,7 +336,7 @@ export class OptionConverter {
         (x) => !Object.keys(mergeOption).includes(x)
       );
       if (unsupportedOptions.length > 0) {
-        const flattenedOptions = OptionConverter._flattenDefaultOptions;
+        const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
 
         const errors = unsupportedOptions.map((x) => {
           let error = `"${path.substring(1)}.${x}" in not a known option.`;
@@ -571,14 +572,14 @@ export class OptionConverter {
 
   private static _flatback: string[];
 
-  private static get _flattenDefaultOptions(): string[] {
+  private static getFlattenDefaultOptions(): string[] {
     if (this._flatback) return this._flatback;
     const deepKeys = (t, pre = []) =>
       Array.isArray(t)
         ? []
         : Object(t) === t
-        ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
-        : pre.join('.');
+          ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
+          : pre.join('.');
 
     this._flatback = deepKeys(DefaultOptions);
 

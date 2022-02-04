@@ -1,26 +1,33 @@
-import { TempusDominus } from '../../tempus-dominus';
 import Dates from '../../dates';
 import { DateTime, Unit } from '../../datetime';
-import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
+import { OptionsStore } from '../../options';
+import Validation from '../../validation';
+import { Paint } from '../index';
+import { ActionTypes } from '../../actionTypes';
+import { ServiceLocator } from '../../service-locator';
 
 /**
  * Creates and updates the grid for `seconds`
  */
 export default class DecadeDisplay {
-  private _context: TempusDominus;
   private _startDecade: DateTime;
   private _endDecade: DateTime;
+  private optionsStore: OptionsStore;
+  private dates: Dates;
+  private validation: Validation;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = ServiceLocator.locate(OptionsStore);
+    this.dates = ServiceLocator.locate(Dates);
+    this.validation = ServiceLocator.locate(Validation);
   }
 
   /**
    * Build the container html for the display
    * @private
    */
-  get _picker() {
+  getPicker() {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.decadesContainer);
 
@@ -36,17 +43,17 @@ export default class DecadeDisplay {
    * Populates the grid and updates enabled states
    * @private
    */
-  _update() {
+  _update(widget: HTMLElement, paint: Paint) {
     const [start, end] = Dates.getStartEndYear(
       100,
-      this._context._viewDate.year
+      this.optionsStore.viewDate.year
     );
-    this._startDecade = this._context._viewDate.clone.startOf(Unit.year);
+    this._startDecade = this.optionsStore.viewDate.clone.startOf(Unit.year);
     this._startDecade.year = start;
-    this._endDecade = this._context._viewDate.clone.startOf(Unit.year);
+    this._endDecade = this.optionsStore.viewDate.clone.startOf(Unit.year);
     this._endDecade.year = end;
 
-    const container = this._context._display.widget.getElementsByClassName(
+    const container = widget.getElementsByClassName(
       Namespace.css.decadesContainer
     )[0];
     const [previous, switcher, next] = container.parentElement
@@ -58,14 +65,14 @@ export default class DecadeDisplay {
       `${this._startDecade.format({ year: 'numeric' })}-${this._endDecade.format({ year: 'numeric' })}`
     );
 
-    this._context._validation.isValid(this._startDecade, Unit.year)
+    this.validation.isValid(this._startDecade, Unit.year)
       ? previous.classList.remove(Namespace.css.disabled)
       : previous.classList.add(Namespace.css.disabled);
-    this._context._validation.isValid(this._endDecade, Unit.year)
+    this.validation.isValid(this._endDecade, Unit.year)
       ? next.classList.remove(Namespace.css.disabled)
       : next.classList.add(Namespace.css.disabled);
 
-    const pickedYears = this._context.dates.picked.map((x) => x.year);
+    const pickedYears = this.dates.picked.map((x) => x.year);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectDecade}"]`)
@@ -94,12 +101,14 @@ export default class DecadeDisplay {
         const endDecadeYear = this._startDecade.year + 9;
 
         if (
-          !this._context._unset &&
+          !this.optionsStore.unset &&
           pickedYears.filter((x) => x >= startDecadeYear && x <= endDecadeYear)
             .length > 0
         ) {
           classes.push(Namespace.css.active);
         }
+
+        paint('decade', this._startDecade, classes);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

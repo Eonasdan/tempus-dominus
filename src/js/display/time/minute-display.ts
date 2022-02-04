@@ -1,30 +1,33 @@
-import { TempusDominus } from '../../tempus-dominus';
 import { Unit } from '../../datetime';
-import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
+import { OptionsStore } from '../../options';
+import Validation from '../../validation';
+import { ActionTypes } from '../../actionTypes';
+import { ServiceLocator } from '../../service-locator';
 
 /**
  * Creates and updates the grid for `minutes`
  */
 export default class MinuteDisplay {
-  private _context: TempusDominus;
+  private optionsStore: OptionsStore;
+  private validation: Validation;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = ServiceLocator.locate(OptionsStore);
+    this.validation = ServiceLocator.locate(Validation);
   }
-
   /**
    * Build the container html for the display
    * @private
    */
-  get _picker(): HTMLElement {
+  getPicker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.minuteContainer);
 
     let step =
-      this._context._options.stepping === 1
+      this.optionsStore.options.stepping === 1
         ? 5
-        : this._context._options.stepping;
+        : this.optionsStore.options.stepping;
     for (let i = 0; i < 60 / step; i++) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectMinute);
@@ -38,15 +41,15 @@ export default class MinuteDisplay {
    * Populates the grid and updates enabled states
    * @private
    */
-  _update(): void {
-    const container = this._context._display.widget.getElementsByClassName(
+  _update(widget: HTMLElement): void {
+    const container = widget.getElementsByClassName(
       Namespace.css.minuteContainer
     )[0];
-    let innerDate = this._context._viewDate.clone.startOf(Unit.hours);
+    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.hours);
     let step =
-      this._context._options.stepping === 1
+      this.optionsStore.options.stepping === 1
         ? 5
-        : this._context._options.stepping;
+        : this.optionsStore.options.stepping;
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectMinute}"]`)
@@ -54,7 +57,7 @@ export default class MinuteDisplay {
         let classes = [];
         classes.push(Namespace.css.minute);
 
-        if (!this._context._validation.isValid(innerDate, Unit.minutes)) {
+        if (!this.validation.isValid(innerDate, Unit.minutes)) {
           classes.push(Namespace.css.disabled);
         }
 

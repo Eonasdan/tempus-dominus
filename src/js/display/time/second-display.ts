@@ -1,23 +1,26 @@
-import { TempusDominus } from '../../tempus-dominus';
 import { Unit } from '../../datetime';
-import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
+import { OptionsStore } from '../../options';
+import Validation from '../../validation';
+import { ActionTypes } from '../../actionTypes';
+import { ServiceLocator } from '../../service-locator';
 
 /**
  * Creates and updates the grid for `seconds`
  */
 export default class secondDisplay {
-  private _context: TempusDominus;
+  private optionsStore: OptionsStore;
+  private validation: Validation;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = ServiceLocator.locate(OptionsStore);
+    this.validation = ServiceLocator.locate(Validation);
   }
-
   /**
    * Build the container html for the display
    * @private
    */
-  get _picker(): HTMLElement {
+  getPicker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.secondContainer);
 
@@ -34,11 +37,11 @@ export default class secondDisplay {
    * Populates the grid and updates enabled states
    * @private
    */
-  _update(): void {
-    const container = this._context._display.widget.getElementsByClassName(
+  _update(widget: HTMLElement): void {
+    const container = widget.getElementsByClassName(
       Namespace.css.secondContainer
     )[0];
-    let innerDate = this._context._viewDate.clone.startOf(Unit.minutes);
+    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.minutes);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectSecond}"]`)
@@ -46,7 +49,7 @@ export default class secondDisplay {
         let classes = [];
         classes.push(Namespace.css.second);
 
-        if (!this._context._validation.isValid(innerDate, Unit.seconds)) {
+        if (!this.validation.isValid(innerDate, Unit.seconds)) {
           classes.push(Namespace.css.disabled);
         }
 

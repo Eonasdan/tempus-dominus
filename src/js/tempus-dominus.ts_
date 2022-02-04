@@ -1,0 +1,20 @@
+import Options from './options';
+import { Main } from './main';
+import { ServiceLocator } from './service-locator';
+
+/*
+class TempusDominus {
+  main: Main;
+
+  constructor(element: HTMLElement, options: Options = {} as Options) {
+    this.main = Container.get(Main);
+    this.main.initialize(element, options);
+  }
+}
+*/
+
+export const TempusDominus = (element: HTMLElement, options: Options = {} as Options) => {
+  const main = ServiceLocator.locate(Main);
+  main.initialize(element, options);
+  return main;
+}

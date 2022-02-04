@@ -8,41 +8,53 @@ import MinuteDisplay from './time/minute-display';
 import SecondDisplay from './time/second-display';
 import { DateTime, Unit } from '../datetime';
 import { DatePickerModes } from '../conts';
-import { TempusDominus } from '../tempus-dominus';
-import { ActionTypes } from '../actions';
 import { createPopper } from '@popperjs/core';
 import Namespace from '../namespace';
 import { HideEvent } from '../event-types';
 import Collapse from './collapse';
+import { OptionsStore } from '../options';
+import Validation from '../validation';
+import Dates from '../dates';
+import { EventEmitters } from '../event-emitter';
+import { ActionTypes } from '../actionTypes';
+import { ServiceLocator } from '../service-locator';
 
 /**
  * Main class for all things display related.
  */
 export default class Display {
-  private _context: TempusDominus;
-  private _dateDisplay: DateDisplay;
-  private _monthDisplay: MonthDisplay;
-  private _yearDisplay: YearDisplay;
-  private _decadeDisplay: DecadeDisplay;
-  private _timeDisplay: TimeDisplay;
   private _widget: HTMLElement;
-  private _hourDisplay: HourDisplay;
-  private _minuteDisplay: MinuteDisplay;
-  private _secondDisplay: SecondDisplay;
   private _popperInstance: any;
   private _isVisible = false;
+  private optionsStore: OptionsStore;
+  private validation: Validation;
+  private dates: Dates;
+  private display: Display;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
-    this._dateDisplay = new DateDisplay(context);
-    this._monthDisplay = new MonthDisplay(context);
-    this._yearDisplay = new YearDisplay(context);
-    this._decadeDisplay = new DecadeDisplay(context);
-    this._timeDisplay = new TimeDisplay(context);
-    this._hourDisplay = new HourDisplay(context);
-    this._minuteDisplay = new MinuteDisplay(context);
-    this._secondDisplay = new SecondDisplay(context);
+  dateDisplay: DateDisplay;
+  monthDisplay: MonthDisplay;
+  yearDisplay: YearDisplay;
+  decadeDisplay: DecadeDisplay;
+  timeDisplay: TimeDisplay;
+  hourDisplay: HourDisplay;
+  minuteDisplay: MinuteDisplay;
+  secondDisplay: SecondDisplay;
 
+
+  constructor() {
+
+    this.optionsStore = ServiceLocator.locate(OptionsStore);
+    this.validation = ServiceLocator.locate(Validation);
+    this.dates = ServiceLocator.locate(Dates);
+
+    this.dateDisplay = ServiceLocator.locate(DateDisplay);
+    this.monthDisplay = ServiceLocator.locate(MonthDisplay);
+    this.yearDisplay = ServiceLocator.locate(YearDisplay);
+    this.decadeDisplay = ServiceLocator.locate(DecadeDisplay);
+    this.timeDisplay = ServiceLocator.locate(TimeDisplay);
+    this.hourDisplay = ServiceLocator.locate(HourDisplay);
+    this.minuteDisplay = ServiceLocator.locate(MinuteDisplay);
+    this.secondDisplay = ServiceLocator.locate(SecondDisplay);
     this._widget = undefined;
   }
 
@@ -72,26 +84,26 @@ export default class Display {
     //todo do I want some kind of error catching or other guards here?
     switch (unit) {
       case Unit.seconds:
-        this._secondDisplay._update();
+        this.secondDisplay._update(this.widget);
         break;
       case Unit.minutes:
-        this._minuteDisplay._update();
+        this.minuteDisplay._update(this.widget);
         break;
       case Unit.hours:
-        this._hourDisplay._update();
+        this.hourDisplay._update(this.widget);
         break;
       case Unit.date:
-        this._dateDisplay._update();
+        this.dateDisplay._update(this.widget, this.paint);
         break;
       case Unit.month:
-        this._monthDisplay._update();
+        this.monthDisplay._update(this.widget, this.paint);
         break;
       case Unit.year:
-        this._yearDisplay._update();
+        this.yearDisplay._update(this.widget, this.paint);
         break;
       case 'clock':
         if (!this._hasTime) break;
-        this._timeDisplay._update();
+        this.timeDisplay._update(this.widget);
         this._update(Unit.hours);
         this._update(Unit.minutes);
         this._update(Unit.seconds);
@@ -100,7 +112,7 @@ export default class Display {
         this._update(Unit.date);
         this._update(Unit.year);
         this._update(Unit.month);
-        this._decadeDisplay._update();
+        this.decadeDisplay._update(this.widget, this.paint);
         this._updateCalendarHeader();
         break;
       case 'all':
@@ -114,7 +126,7 @@ export default class Display {
   }
 
 
-  paint(unit: Unit, date: DateTime, classes: string[]) {
+  paint(unit: Unit | 'decade', date: DateTime, classes: string[]) {
     // implemented in plugin
   }
 
@@ -126,30 +138,30 @@ export default class Display {
   show(): void {
     if (this.widget == undefined) {
       if (
-        this._context._options.useCurrent &&
-        !this._context._options.defaultDate &&
-        !this._context._input?.value
+        this.optionsStore.options.useCurrent &&
+        !this.optionsStore.options.defaultDate &&
+        !this.optionsStore.input?.value
       ) {
         const date = new DateTime().setLocale(
-          this._context._options.localization.locale
+          this.optionsStore.options.localization.locale
         );
-        if (!this._context._options.keepInvalid) {
+        if (!this.optionsStore.options.keepInvalid) {
           let tries = 0;
           let direction = 1;
-          if (this._context._options.restrictions.maxDate?.isBefore(date)) {
+          if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
             direction = -1;
           }
-          while (!this._context._validation.isValid(date)) {
+          while (!this.validation.isValid(date)) {
             date.manipulate(direction, Unit.date);
             if (tries > 31) break;
             tries++;
           }
         }
-        this._context.dates._setValue(date);
+        this.dates._setValue(date);
       }
 
-      if (this._context._options.defaultDate) {
-        this._context.dates._setValue(this._context._options.defaultDate);
+      if (this.optionsStore.options.defaultDate) {
+        this.dates._setValue(this.optionsStore.options.defaultDate);
       }
 
       this._buildWidget();
@@ -159,30 +171,30 @@ export default class Display {
 
       // reset the view to the clock if there's no date components
       if (onlyClock) {
-        this._context._action.do(null, ActionTypes.showClock);
+        EventEmitters.action.emit({ e: null, action: ActionTypes.showClock });
       }
 
       // otherwise return to the calendar view
-      this._context._currentViewMode = this._context._minViewModeNumber;
+      this.optionsStore.currentViewMode = this.optionsStore.minViewModeNumber;
 
       if (!onlyClock) {
         if (this._hasTime) {
-          Collapse.hide(this._context._display.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+          Collapse.hide(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
         }
-        Collapse.show(this._context._display.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+        Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
       }
 
       if (this._hasDate) {
         this._showMode();
       }
 
-      if (!this._context._options.display.inline) {
+      if (!this.optionsStore.options.display.inline) {
         // If needed to change the parent container
-        const container = this._context._options?.container || document.body;
+        const container = this.optionsStore.options?.container || document.body;
         container.appendChild(this.widget);
 
         this._popperInstance = createPopper(
-          this._context._element,
+          this.optionsStore.element,
           this.widget,
           {
             modifiers: [{ name: 'eventListeners', enabled: true }],
@@ -194,11 +206,11 @@ export default class Display {
           }
         );
       } else {
-        this._context._element.appendChild(this.widget);
+        this.optionsStore.element.appendChild(this.widget);
       }
 
-      if (this._context._options.display.viewMode == 'clock') {
-        this._context._action.do(null, ActionTypes.showClock);
+      if (this.optionsStore.options.display.viewMode == 'clock') {
+        EventEmitters.action.emit({ e: null, action: ActionTypes.showClock });
       }
 
       this.widget
@@ -208,8 +220,8 @@ export default class Display {
         );
 
       // show the clock when using sideBySide
-      if (this._context._options.display.sideBySide) {
-        this._timeDisplay._update();
+      if (this._hasTime && this.optionsStore.options.display.sideBySide) {
+        this.timeDisplay._update(this.widget);
         (
           this.widget.getElementsByClassName(
             Namespace.css.clockContainer
@@ -219,11 +231,11 @@ export default class Display {
     }
 
     this.widget.classList.add(Namespace.css.show);
-    if (!this._context._options.display.inline) {
+    if (!this.optionsStore.options.display.inline) {
       this._popperInstance.update();
       document.addEventListener('click', this._documentClickEvent);
     }
-    this._context._triggerEvent({ type: Namespace.events.show });
+    EventEmitters.triggerEvent.emit({ type: Namespace.events.show });
     this._isVisible = true;
   }
 
@@ -238,11 +250,11 @@ export default class Display {
     }
     if (direction) {
       const max = Math.max(
-        this._context._minViewModeNumber,
-        Math.min(3, this._context._currentViewMode + direction)
+        this.optionsStore.minViewModeNumber,
+        Math.min(3, this.optionsStore.currentViewMode + direction)
       );
-      if (this._context._currentViewMode == max) return;
-      this._context._currentViewMode = max;
+      if (this.optionsStore.currentViewMode == max) return;
+      this.optionsStore.currentViewMode = max;
     }
 
     this.widget
@@ -251,23 +263,23 @@ export default class Display {
       )
       .forEach((e: HTMLElement) => (e.style.display = 'none'));
 
-    const datePickerMode = DatePickerModes[this._context._currentViewMode];
+    const datePickerMode = DatePickerModes[this.optionsStore.currentViewMode];
     let picker: HTMLElement = this.widget.querySelector(
       `.${datePickerMode.className}`
     );
 
     switch (datePickerMode.className) {
       case Namespace.css.decadesContainer:
-        this._decadeDisplay._update();
+        this.decadeDisplay._update(this.widget, this.paint);
         break;
       case Namespace.css.yearsContainer:
-        this._yearDisplay._update();
+        this.yearDisplay._update(this.widget, this.paint);
         break;
       case Namespace.css.monthsContainer:
-        this._monthDisplay._update();
+        this.monthDisplay._update(this.widget, this.paint);
         break;
       case Namespace.css.daysContainer:
-        this._dateDisplay._update();
+        this.dateDisplay._update(this.widget, this.paint);
         break;
     }
 
@@ -282,7 +294,7 @@ export default class Display {
       ).classList
     ].find((x) => x.startsWith(Namespace.css.dateContainer));
 
-    const [previous, switcher, next] = this._context._display.widget
+    const [previous, switcher, next] = this.widget
       .getElementsByClassName(Namespace.css.calendarHeader)[0]
       .getElementsByTagName('div');
 
@@ -290,56 +302,56 @@ export default class Display {
       case Namespace.css.decadesContainer:
         previous.setAttribute(
           'title',
-          this._context._options.localization.previousCentury
+          this.optionsStore.options.localization.previousCentury
         );
         switcher.setAttribute('title', '');
         next.setAttribute(
           'title',
-          this._context._options.localization.nextCentury
+          this.optionsStore.options.localization.nextCentury
         );
         break;
       case Namespace.css.yearsContainer:
         previous.setAttribute(
           'title',
-          this._context._options.localization.previousDecade
+          this.optionsStore.options.localization.previousDecade
         );
         switcher.setAttribute(
           'title',
-          this._context._options.localization.selectDecade
+          this.optionsStore.options.localization.selectDecade
         );
         next.setAttribute(
           'title',
-          this._context._options.localization.nextDecade
+          this.optionsStore.options.localization.nextDecade
         );
         break;
       case Namespace.css.monthsContainer:
         previous.setAttribute(
           'title',
-          this._context._options.localization.previousYear
+          this.optionsStore.options.localization.previousYear
         );
         switcher.setAttribute(
           'title',
-          this._context._options.localization.selectYear
+          this.optionsStore.options.localization.selectYear
         );
         next.setAttribute(
           'title',
-          this._context._options.localization.nextYear
+          this.optionsStore.options.localization.nextYear
         );
         break;
       case Namespace.css.daysContainer:
         previous.setAttribute(
           'title',
-          this._context._options.localization.previousMonth
+          this.optionsStore.options.localization.previousMonth
         );
         switcher.setAttribute(
           'title',
-          this._context._options.localization.selectMonth
+          this.optionsStore.options.localization.selectMonth
         );
         next.setAttribute(
           'title',
-          this._context._options.localization.nextMonth
+          this.optionsStore.options.localization.nextMonth
         );
-        switcher.innerText = this._context._viewDate.format(this._context._options.localization.dayViewHeaderFormat);
+        switcher.innerText = this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat);
         break;
     }
     switcher.innerText = switcher.getAttribute(showing);
@@ -356,12 +368,12 @@ export default class Display {
     this.widget.classList.remove(Namespace.css.show);
 
     if (this._isVisible) {
-      this._context._triggerEvent({
+      EventEmitters.triggerEvent.emit({
         type: Namespace.events.hide,
-        date: this._context._unset
+        date: this.optionsStore.unset
           ? null
-          : this._context.dates.lastPicked
-            ? this._context.dates.lastPicked.clone
+          : this.dates.lastPicked
+            ? this.dates.lastPicked.clone
             : void 0
       } as HideEvent);
       this._isVisible = false;
@@ -404,39 +416,39 @@ export default class Display {
     const dateView = document.createElement('div');
     dateView.classList.add(Namespace.css.dateContainer);
     dateView.append(
-      this._headTemplate,
-      this._decadeDisplay._picker,
-      this._yearDisplay._picker,
-      this._monthDisplay._picker,
-      this._dateDisplay._picker
+      this.getHeadTemplate(),
+      this.decadeDisplay.getPicker(),
+      this.yearDisplay.getPicker(),
+      this.monthDisplay.getPicker(),
+      this.dateDisplay.getPicker()
     );
 
     const timeView = document.createElement('div');
     timeView.classList.add(Namespace.css.timeContainer);
-    timeView.appendChild(this._timeDisplay._picker);
-    timeView.appendChild(this._hourDisplay._picker);
-    timeView.appendChild(this._minuteDisplay._picker);
-    timeView.appendChild(this._secondDisplay._picker);
+    timeView.appendChild(this.timeDisplay.getPicker(this._iconTag.bind(this)));
+    timeView.appendChild(this.hourDisplay.getPicker());
+    timeView.appendChild(this.minuteDisplay.getPicker());
+    timeView.appendChild(this.secondDisplay.getPicker());
 
     const toolbar = document.createElement('div');
     toolbar.classList.add(Namespace.css.toolbar);
-    toolbar.append(...this._toolbar);
+    toolbar.append(...this.getToolbarElements());
 
-    if (this._context._options.display.inline) {
+    if (this.optionsStore.options.display.inline) {
       template.classList.add(Namespace.css.inline);
     }
 
-    if (this._context._options.display.calendarWeeks) {
+    if (this.optionsStore.options.display.calendarWeeks) {
       template.classList.add('calendarWeeks');
     }
 
     if (
-      this._context._options.display.sideBySide &&
+      this.optionsStore.options.display.sideBySide &&
       this._hasDate &&
       this._hasTime
     ) {
       template.classList.add(Namespace.css.sideBySide);
-      if (this._context._options.display.toolbarPlacement === 'top') {
+      if (this.optionsStore.options.display.toolbarPlacement === 'top') {
         template.appendChild(toolbar);
       }
       const row = document.createElement('div');
@@ -447,21 +459,21 @@ export default class Display {
       row.appendChild(dateView);
       row.appendChild(timeView);
       template.appendChild(row);
-      if (this._context._options.display.toolbarPlacement === 'bottom') {
+      if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
         template.appendChild(toolbar);
       }
       this._widget = template;
       return;
     }
 
-    if (this._context._options.display.toolbarPlacement === 'top') {
+    if (this.optionsStore.options.display.toolbarPlacement === 'top') {
       template.appendChild(toolbar);
     }
 
     if (this._hasDate) {
       if (this._hasTime) {
         dateView.classList.add(Namespace.css.collapse);
-        if (this._context._options.display.viewMode !== 'clock')
+        if (this.optionsStore.options.display.viewMode !== 'clock')
           dateView.classList.add(Namespace.css.show);
       }
       template.appendChild(dateView);
@@ -470,13 +482,13 @@ export default class Display {
     if (this._hasTime) {
       if (this._hasDate) {
         timeView.classList.add(Namespace.css.collapse);
-        if (this._context._options.display.viewMode === 'clock')
+        if (this.optionsStore.options.display.viewMode === 'clock')
           timeView.classList.add(Namespace.css.show);
       }
       template.appendChild(timeView);
     }
 
-    if (this._context._options.display.toolbarPlacement === 'bottom') {
+    if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
       template.appendChild(toolbar);
     }
 
@@ -493,10 +505,10 @@ export default class Display {
    */
   get _hasTime(): boolean {
     return (
-      this._context._options.display.components.clock &&
-      (this._context._options.display.components.hours ||
-        this._context._options.display.components.minutes ||
-        this._context._options.display.components.seconds)
+      this.optionsStore.options.display.components.clock &&
+      (this.optionsStore.options.display.components.hours ||
+        this.optionsStore.options.display.components.minutes ||
+        this.optionsStore.options.display.components.seconds)
     );
   }
 
@@ -505,10 +517,10 @@ export default class Display {
    */
   get _hasDate(): boolean {
     return (
-      this._context._options.display.components.calendar &&
-      (this._context._options.display.components.year ||
-        this._context._options.display.components.month ||
-        this._context._options.display.components.date)
+      this.optionsStore.options.display.components.calendar &&
+      (this.optionsStore.options.display.components.year ||
+        this.optionsStore.options.display.components.month ||
+        this.optionsStore.options.display.components.date)
     );
   }
 
@@ -516,31 +528,31 @@ export default class Display {
    * Get the toolbar html based on options like buttons.today
    * @private
    */
-  get _toolbar(): HTMLElement[] {
+  getToolbarElements(): HTMLElement[] {
     const toolbar = [];
 
-    if (this._context._options.display.buttons.today) {
+    if (this.optionsStore.options.display.buttons.today) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.today);
-      div.setAttribute('title', this._context._options.localization.today);
+      div.setAttribute('title', this.optionsStore.options.localization.today);
 
       div.appendChild(
-        this._iconTag(this._context._options.display.icons.today)
+        this._iconTag(this.optionsStore.options.display.icons.today)
       );
       toolbar.push(div);
     }
     if (
-      !this._context._options.display.sideBySide &&
+      !this.optionsStore.options.display.sideBySide &&
       this._hasDate &&
       this._hasTime
     ) {
       let title, icon;
-      if (this._context._options.display.viewMode === 'clock') {
-        title = this._context._options.localization.selectDate;
-        icon = this._context._options.display.icons.date;
+      if (this.optionsStore.options.display.viewMode === 'clock') {
+        title = this.optionsStore.options.localization.selectDate;
+        icon = this.optionsStore.options.display.icons.date;
       } else {
-        title = this._context._options.localization.selectTime;
-        icon = this._context._options.display.icons.time;
+        title = this.optionsStore.options.localization.selectTime;
+        icon = this.optionsStore.options.display.icons.time;
       }
 
       const div = document.createElement('div');
@@ -550,23 +562,23 @@ export default class Display {
       div.appendChild(this._iconTag(icon));
       toolbar.push(div);
     }
-    if (this._context._options.display.buttons.clear) {
+    if (this.optionsStore.options.display.buttons.clear) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.clear);
-      div.setAttribute('title', this._context._options.localization.clear);
+      div.setAttribute('title', this.optionsStore.options.localization.clear);
 
       div.appendChild(
-        this._iconTag(this._context._options.display.icons.clear)
+        this._iconTag(this.optionsStore.options.display.icons.clear)
       );
       toolbar.push(div);
     }
-    if (this._context._options.display.buttons.close) {
+    if (this.optionsStore.options.display.buttons.close) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.close);
-      div.setAttribute('title', this._context._options.localization.close);
+      div.setAttribute('title', this.optionsStore.options.localization.close);
 
       div.appendChild(
-        this._iconTag(this._context._options.display.icons.close)
+        this._iconTag(this.optionsStore.options.display.icons.close)
       );
       toolbar.push(div);
     }
@@ -578,7 +590,7 @@ export default class Display {
    * Builds the base header template with next and previous icons
    * @private
    */
-  get _headTemplate(): HTMLElement {
+  getHeadTemplate(): HTMLElement {
     const calendarHeader = document.createElement('div');
     calendarHeader.classList.add(Namespace.css.calendarHeader);
 
@@ -586,7 +598,7 @@ export default class Display {
     previous.classList.add(Namespace.css.previous);
     previous.setAttribute('data-action', ActionTypes.previous);
     previous.appendChild(
-      this._iconTag(this._context._options.display.icons.previous)
+      this._iconTag(this.optionsStore.options.display.icons.previous)
     );
 
     const switcher = document.createElement('div');
@@ -596,7 +608,7 @@ export default class Display {
     const next = document.createElement('div');
     next.classList.add(Namespace.css.next);
     next.setAttribute('data-action', ActionTypes.next);
-    next.appendChild(this._iconTag(this._context._options.display.icons.next));
+    next.appendChild(this._iconTag(this.optionsStore.options.display.icons.next));
 
     calendarHeader.append(previous, switcher, next);
     return calendarHeader;
@@ -609,7 +621,7 @@ export default class Display {
    * @private
    */
   _iconTag(iconClass: string): HTMLElement {
-    if (this._context._options.display.icons.type === 'sprites') {
+    if (this.optionsStore.options.display.icons.type === 'sprites') {
       const svg = document.createElement('svg');
       svg.innerHTML = `<use xlink:href='${iconClass}'></use>`;
       return svg;
@@ -625,12 +637,12 @@ export default class Display {
    * @param e MouseEvent
    */
   private _documentClickEvent = (e: MouseEvent) => {
-    if (this._context._options.debug || (window as any).debug) return;
+    if (this.optionsStore.options.debug || (window as any).debug) return;
 
     if (
       this._isVisible &&
       !e.composedPath().includes(this.widget) && // click inside the widget
-      !e.composedPath()?.includes(this._context._element) // click on the element
+      !e.composedPath()?.includes(this.optionsStore.element) // click on the element
     ) {
       this.hide();
     }
@@ -642,7 +654,7 @@ export default class Display {
    * @private
    */
   private _actionsClickEvent = (e: MouseEvent) => {
-    this._context._action.do(e);
+    EventEmitters.action.emit({ e: e });
   };
 
   /**
@@ -659,3 +671,5 @@ export default class Display {
     }
   }
 }
+
+export type Paint = (unit: Unit | 'decade', innerDate: DateTime, classes: string[]) => void;

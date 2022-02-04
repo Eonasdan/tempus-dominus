@@ -1,26 +1,32 @@
-import { TempusDominus } from '../../tempus-dominus';
 import { DateTime, Unit } from '../../datetime';
-import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
 import Dates from '../../dates';
+import { OptionsStore } from '../../options';
+import Validation from '../../validation';
+import { Paint } from '../index';
+import { ActionTypes } from '../../actionTypes';
+import { ServiceLocator } from '../../service-locator';
 
 /**
  * Creates and updates the grid for `year`
  */
 export default class YearDisplay {
-  private _context: TempusDominus;
   private _startYear: DateTime;
   private _endYear: DateTime;
+  private optionsStore: OptionsStore;
+  private dates: Dates;
+  private validation: Validation;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = ServiceLocator.locate(OptionsStore);
+    this.dates = ServiceLocator.locate(Dates);
+    this.validation = ServiceLocator.locate(Validation);
   }
-
   /**
    * Build the container html for the display
    * @private
    */
-  get _picker(): HTMLElement {
+  getPicker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.yearsContainer);
 
@@ -37,11 +43,11 @@ export default class YearDisplay {
    * Populates the grid and updates enabled states
    * @private
    */
-  _update() {
-    this._startYear = this._context._viewDate.clone.manipulate(-1, Unit.year);
-    this._endYear = this._context._viewDate.clone.manipulate(10, Unit.year);
+  _update(widget: HTMLElement, paint: Paint) {
+    this._startYear = this.optionsStore.viewDate.clone.manipulate(-1, Unit.year);
+    this._endYear = this.optionsStore.viewDate.clone.manipulate(10, Unit.year);
 
-    const container = this._context._display.widget.getElementsByClassName(
+    const container = widget.getElementsByClassName(
       Namespace.css.yearsContainer
     )[0];
     const [previous, switcher, next] = container.parentElement
@@ -53,14 +59,14 @@ export default class YearDisplay {
       `${this._startYear.format({ year: 'numeric' })}-${this._endYear.format({ year: 'numeric' })}`
     );
 
-    this._context._validation.isValid(this._startYear, Unit.year)
+    this.validation.isValid(this._startYear, Unit.year)
       ? previous.classList.remove(Namespace.css.disabled)
       : previous.classList.add(Namespace.css.disabled);
-    this._context._validation.isValid(this._endYear, Unit.year)
+    this.validation.isValid(this._endYear, Unit.year)
       ? next.classList.remove(Namespace.css.disabled)
       : next.classList.add(Namespace.css.disabled);
 
-    let innerDate = this._context._viewDate.clone
+    let innerDate = this.optionsStore.viewDate.clone
       .startOf(Unit.year)
       .manipulate(-1, Unit.year);
 
@@ -71,14 +77,16 @@ export default class YearDisplay {
         classes.push(Namespace.css.year);
 
         if (
-          !this._context._unset &&
-          this._context.dates.isPicked(innerDate, Unit.year)
+          !this.optionsStore.unset &&
+          this.dates.isPicked(innerDate, Unit.year)
         ) {
           classes.push(Namespace.css.active);
         }
-        if (!this._context._validation.isValid(innerDate, Unit.year)) {
+        if (!this.validation.isValid(innerDate, Unit.year)) {
           classes.push(Namespace.css.disabled);
         }
+
+        paint(Unit.year, innerDate, classes);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

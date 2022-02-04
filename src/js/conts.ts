@@ -92,10 +92,6 @@ const DefaultOptions: Options = {
   multipleDatesSeparator: '; ',
   promptTimeOnDateChange: false,
   promptTimeOnDateChangeTransitionDelay: 200,
-  hooks: {
-    inputParse: undefined,
-    inputFormat: undefined,
-  },
   meta: {},
   container: undefined
 };

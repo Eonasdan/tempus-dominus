@@ -1,29 +1,37 @@
-import { TempusDominus } from '../../tempus-dominus';
 import { DateTime, Unit } from '../../datetime';
-import { ActionTypes } from '../../actions';
 import Namespace from '../../namespace';
+import { OptionsStore } from '../../options';
+import Validation from '../../validation';
+import Dates from '../../dates';
+import { Paint } from '../index';
+import { ActionTypes } from '../../actionTypes';
+import { ServiceLocator } from '../../service-locator';
 
 /**
  * Creates and updates the grid for `date`
  */
 export default class DateDisplay {
-  private _context: TempusDominus;
+  private optionsStore: OptionsStore;
+  private dates: Dates;
+  private validation: Validation;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = ServiceLocator.locate(OptionsStore);
+    this.dates = ServiceLocator.locate(Dates);
+    this.validation = ServiceLocator.locate(Validation);
   }
 
   /**
    * Build the container html for the display
    * @private
    */
-  get _picker(): HTMLElement {
+  getPicker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.daysContainer);
 
     container.append(...this._daysOfTheWeek());
 
-    if (this._context._options.display.calendarWeeks) {
+    if (this.optionsStore.options.display.calendarWeeks) {
       const div = document.createElement('div');
       div.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
       container.appendChild(div);
@@ -31,7 +39,7 @@ export default class DateDisplay {
 
     for (let i = 0; i < 42; i++) {
       if (i !== 0 && i % 7 === 0) {
-        if (this._context._options.display.calendarWeeks) {
+        if (this.optionsStore.options.display.calendarWeeks) {
           const div = document.createElement('div');
           div.classList.add(
             Namespace.css.calendarWeeks,
@@ -53,8 +61,8 @@ export default class DateDisplay {
    * Populates the grid and updates enabled states
    * @private
    */
-  _update(): void {
-    const container = this._context._display.widget.getElementsByClassName(
+  _update(widget: HTMLElement, paint: Paint): void {
+    const container = widget.getElementsByClassName(
       Namespace.css.daysContainer
     )[0];
     const [previous, switcher, next] = container.parentElement
@@ -63,28 +71,28 @@ export default class DateDisplay {
 
     switcher.setAttribute(
       Namespace.css.daysContainer,
-      this._context._viewDate.format(
-        this._context._options.localization.dayViewHeaderFormat
+      this.optionsStore.viewDate.format(
+        this.optionsStore.options.localization.dayViewHeaderFormat
       )
     );
 
-    this._context._validation.isValid(
-      this._context._viewDate.clone.manipulate(-1, Unit.month),
+    this.validation.isValid(
+      this.optionsStore.viewDate.clone.manipulate(-1, Unit.month),
       Unit.month
     )
       ? previous.classList.remove(Namespace.css.disabled)
       : previous.classList.add(Namespace.css.disabled);
 
-    this._context._validation.isValid(
-      this._context._viewDate.clone.manipulate(1, Unit.month),
+    this.validation.isValid(
+      this.optionsStore.viewDate.clone.manipulate(1, Unit.month),
       Unit.month
     )
       ? next.classList.remove(Namespace.css.disabled)
       : next.classList.add(Namespace.css.disabled);
 
-    let innerDate = this._context._viewDate.clone
+    let innerDate = this.optionsStore.viewDate.clone
       .startOf(Unit.month)
-      .startOf('weekDay', this._context._options.localization.startOfTheWeek)
+      .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
       .manipulate(12, Unit.hours);
 
     container
@@ -93,7 +101,7 @@ export default class DateDisplay {
       )
       .forEach((containerClone: HTMLElement, index) => {
         if (
-          this._context._options.display.calendarWeeks &&
+          this.optionsStore.options.display.calendarWeeks &&
           containerClone.classList.contains(Namespace.css.calendarWeeks)
         ) {
           if (containerClone.innerText === '#') return;
@@ -104,20 +112,20 @@ export default class DateDisplay {
         let classes: string[] = [];
         classes.push(Namespace.css.day);
 
-        if (innerDate.isBefore(this._context._viewDate, Unit.month)) {
+        if (innerDate.isBefore(this.optionsStore.viewDate, Unit.month)) {
           classes.push(Namespace.css.old);
         }
-        if (innerDate.isAfter(this._context._viewDate, Unit.month)) {
+        if (innerDate.isAfter(this.optionsStore.viewDate, Unit.month)) {
           classes.push(Namespace.css.new);
         }
 
         if (
-          !this._context._unset &&
-          this._context.dates.isPicked(innerDate, Unit.date)
+          !this.optionsStore.unset &&
+          this.dates.isPicked(innerDate, Unit.date)
         ) {
           classes.push(Namespace.css.active);
         }
-        if (!this._context._validation.isValid(innerDate, Unit.date)) {
+        if (!this.validation.isValid(innerDate, Unit.date)) {
           classes.push(Namespace.css.disabled);
         }
         if (innerDate.isSame(new DateTime(), Unit.date)) {
@@ -127,7 +135,7 @@ export default class DateDisplay {
           classes.push(Namespace.css.weekend);
         }
 
-        this._context._display.paint(Unit.date, innerDate, classes);
+        paint(Unit.date, innerDate, classes);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
@@ -146,13 +154,13 @@ export default class DateDisplay {
    * @private
    */
   private _daysOfTheWeek(): HTMLElement[] {
-    let innerDate = this._context._viewDate.clone
-      .startOf('weekDay', this._context._options.localization.startOfTheWeek)
+    let innerDate = this.optionsStore.viewDate.clone
+      .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
       .startOf(Unit.date);
     const row = [];
     document.createElement('div');
 
-    if (this._context._options.display.calendarWeeks) {
+    if (this.optionsStore.options.display.calendarWeeks) {
       const htmlDivElement = document.createElement('div');
       htmlDivElement.classList.add(
         Namespace.css.calendarWeeks,
