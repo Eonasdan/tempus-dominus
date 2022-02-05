@@ -1,4 +1,6 @@
-const ru = {
+const name = 'ru';
+
+const localization = {
   today: 'Перейти сегодня',
   clear: 'Очистить выделение',
   close: 'Закрыть сборщик',
@@ -30,8 +32,4 @@ const ru = {
   startOfTheWeek: 1
 };
 
-// @ts-ignore
-window.tempusDominus.loadLocale(ru, 'ru');
-
-// noinspection JSUnusedGlobalSymbols
-export default ru;
+export { localization, name };

@@ -4,7 +4,7 @@ import { OptionsStore } from '../../options';
 import Validation from '../../validation';
 import Dates from '../../dates';
 import { ActionTypes } from '../../actionTypes';
-import { ServiceLocator } from '../../service-locator';
+import { serviceLocator } from '../../service-locator';
 
 /**
  * Creates the clock display
@@ -16,9 +16,9 @@ export default class TimeDisplay {
   private dates: Dates;
 
   constructor() {
-    this.optionsStore = ServiceLocator.locate(OptionsStore);
-    this.dates = ServiceLocator.locate(Dates);
-    this.validation = ServiceLocator.locate(Validation);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.dates = serviceLocator.locate(Dates);
+    this.validation = serviceLocator.locate(Validation);
   }
 
   /**

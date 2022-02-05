@@ -1,6 +1,6 @@
 // this obviously requires the FA 6 libraries to be loaded
 
-export const faSixIcons = {
+const faSixIcons = {
   type: 'icons',
   time: 'fa-solid fa-clock',
   date: 'fa-solid fa-calendar',
@@ -11,9 +11,11 @@ export const faSixIcons = {
   today: 'fa-solid fa-calendar-check',
   clear: 'fa-solid fa-trash',
   close: 'fa-solid fa-xmark'
-}
+};
 
 // noinspection JSUnusedGlobalSymbols
-export const setDefaults = (_, __, tdFactory) => {
+const load = (_, __, tdFactory) => {
   tdFactory.DefaultOptions.display.icons = faSixIcons;
-}
+};
+
+export { faSixIcons, load };

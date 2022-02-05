@@ -3,7 +3,8 @@ import Namespace from '../../namespace';
 import { OptionsStore } from '../../options';
 import Validation from '../../validation';
 import { ActionTypes } from '../../actionTypes';
-import { ServiceLocator } from '../../service-locator';
+import { serviceLocator } from '../../service-locator';
+import { Paint } from '../index';
 
 /**
  * Creates and updates the grid for `hours`
@@ -13,8 +14,8 @@ export default class HourDisplay {
   private validation: Validation;
 
   constructor() {
-    this.optionsStore = ServiceLocator.locate(OptionsStore);
-    this.validation = ServiceLocator.locate(Validation);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.validation = serviceLocator.locate(Validation);
   }
   /**
    * Build the container html for the display
@@ -42,7 +43,7 @@ export default class HourDisplay {
    * Populates the grid and updates enabled states
    * @private
    */
-  _update(widget: HTMLElement): void {
+  _update(widget: HTMLElement, paint: Paint): void {
     const container = widget.getElementsByClassName(
       Namespace.css.hourContainer
     )[0];
@@ -57,6 +58,8 @@ export default class HourDisplay {
         if (!this.validation.isValid(innerDate, Unit.hours)) {
           classes.push(Namespace.css.disabled);
         }
+
+        paint(Unit.hours, innerDate, classes);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

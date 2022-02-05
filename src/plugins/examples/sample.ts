@@ -1,4 +1,6 @@
-export default (option, tdClass, tdFactory) => {
+// noinspection JSUnusedGlobalSymbols
+
+export const load = (option, tdClass, tdFactory) => {
   // extend the picker
   // e.g. add new tempusDominus.TempusDominus(...).someFunction()
   tdClass.prototype.someFunction = (a, logger) => {

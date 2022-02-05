@@ -11,7 +11,7 @@
           <div class='col-sm-6'>
             <label for='datetimepicker1Input' class='form-label'>Simple picker</label>
             <div
-              class='input-group log-event'
+              class='input-group'
               id='datetimepicker1'
               data-td-target-input='nearest'
               data-td-target-toggle='nearest'
@@ -35,7 +35,7 @@
       </div>
       <script src='/6/js/plugins/fa-six.js'></script>
       <script type='text/javascript'>
-        tempusDominus.extend(window.tempusDominus.plugins.fa_six.setDefaults);
+        tempusDominus.extend(window.tempusDominus.plugins.fa_six);
         const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
       </script>
     </section>
@@ -45,10 +45,10 @@
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
 
 //to set globally
-tempusDominus.extend(window.tempusDominus.plugins.fa_six.setDefaults);
+tempusDominus.extend(window.tempusDominus.plugins.fa_six);
 //or
-import {setDefaults, faSixIcons} from 'tempusDominus/plugins/fa-six'
-tempusDominus.extend(setDefaults);
+import {load, faSixIcons} from 'tempusDominus/plugins/fa-six'
+tempusDominus.extend(load);
 
 // otherwise to set icons to an individual picker
 datetimepicker1.updateOptions({ display: icons: window.tempusDominus.plugins.fa_six.faSixIcons});

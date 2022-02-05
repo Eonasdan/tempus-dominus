@@ -15,9 +15,9 @@ import Collapse from './collapse';
 import { OptionsStore } from '../options';
 import Validation from '../validation';
 import Dates from '../dates';
-import { EventEmitters } from '../event-emitter';
+import { EventEmitters, ViewUpdateValues } from '../event-emitter';
 import { ActionTypes } from '../actionTypes';
-import { ServiceLocator } from '../service-locator';
+import { serviceLocator } from '../service-locator';
 
 /**
  * Main class for all things display related.
@@ -39,23 +39,29 @@ export default class Display {
   hourDisplay: HourDisplay;
   minuteDisplay: MinuteDisplay;
   secondDisplay: SecondDisplay;
+  private _eventEmitters: EventEmitters;
 
 
   constructor() {
 
-    this.optionsStore = ServiceLocator.locate(OptionsStore);
-    this.validation = ServiceLocator.locate(Validation);
-    this.dates = ServiceLocator.locate(Dates);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.validation = serviceLocator.locate(Validation);
+    this.dates = serviceLocator.locate(Dates);
 
-    this.dateDisplay = ServiceLocator.locate(DateDisplay);
-    this.monthDisplay = ServiceLocator.locate(MonthDisplay);
-    this.yearDisplay = ServiceLocator.locate(YearDisplay);
-    this.decadeDisplay = ServiceLocator.locate(DecadeDisplay);
-    this.timeDisplay = ServiceLocator.locate(TimeDisplay);
-    this.hourDisplay = ServiceLocator.locate(HourDisplay);
-    this.minuteDisplay = ServiceLocator.locate(MinuteDisplay);
-    this.secondDisplay = ServiceLocator.locate(SecondDisplay);
+    this.dateDisplay = serviceLocator.locate(DateDisplay);
+    this.monthDisplay = serviceLocator.locate(MonthDisplay);
+    this.yearDisplay = serviceLocator.locate(YearDisplay);
+    this.decadeDisplay = serviceLocator.locate(DecadeDisplay);
+    this.timeDisplay = serviceLocator.locate(TimeDisplay);
+    this.hourDisplay = serviceLocator.locate(HourDisplay);
+    this.minuteDisplay = serviceLocator.locate(MinuteDisplay);
+    this.secondDisplay = serviceLocator.locate(SecondDisplay);
+    this._eventEmitters = serviceLocator.locate(EventEmitters);
     this._widget = undefined;
+
+    this._eventEmitters.updateDisplay.subscribe((result: ViewUpdateValues) => {
+      this._update(result);
+    });
   }
 
   /**
@@ -79,18 +85,18 @@ export default class Display {
    * @param unit
    * @private
    */
-  _update(unit: Unit | 'clock' | 'calendar' | 'all'): void {
+  _update(unit: ViewUpdateValues): void {
     if (!this.widget) return;
     //todo do I want some kind of error catching or other guards here?
     switch (unit) {
       case Unit.seconds:
-        this.secondDisplay._update(this.widget);
+        this.secondDisplay._update(this.widget, this.paint);
         break;
       case Unit.minutes:
-        this.minuteDisplay._update(this.widget);
+        this.minuteDisplay._update(this.widget, this.paint);
         break;
       case Unit.hours:
-        this.hourDisplay._update(this.widget);
+        this.hourDisplay._update(this.widget, this.paint);
         break;
       case Unit.date:
         this.dateDisplay._update(this.widget, this.paint);
@@ -171,7 +177,7 @@ export default class Display {
 
       // reset the view to the clock if there's no date components
       if (onlyClock) {
-        EventEmitters.action.emit({ e: null, action: ActionTypes.showClock });
+        this._eventEmitters.action.emit({ e: null, action: ActionTypes.showClock });
       }
 
       // otherwise return to the calendar view
@@ -210,7 +216,7 @@ export default class Display {
       }
 
       if (this.optionsStore.options.display.viewMode == 'clock') {
-        EventEmitters.action.emit({ e: null, action: ActionTypes.showClock });
+        this._eventEmitters.action.emit({ e: null, action: ActionTypes.showClock });
       }
 
       this.widget
@@ -235,7 +241,7 @@ export default class Display {
       this._popperInstance.update();
       document.addEventListener('click', this._documentClickEvent);
     }
-    EventEmitters.triggerEvent.emit({ type: Namespace.events.show });
+    this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
     this._isVisible = true;
   }
 
@@ -368,7 +374,7 @@ export default class Display {
     this.widget.classList.remove(Namespace.css.show);
 
     if (this._isVisible) {
-      EventEmitters.triggerEvent.emit({
+      this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.hide,
         date: this.optionsStore.unset
           ? null
@@ -654,7 +660,7 @@ export default class Display {
    * @private
    */
   private _actionsClickEvent = (e: MouseEvent) => {
-    EventEmitters.action.emit({ e: e });
+    this._eventEmitters.action.emit({ e: e });
   };
 
   /**

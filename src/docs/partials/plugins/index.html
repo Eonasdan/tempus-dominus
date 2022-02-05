@@ -13,17 +13,17 @@
     </p>
     <pre>
       <code class='language-javascript'>
-export default (option, tdClass, tdFactory) =&gt; {
+export const load = (option, tdClass, tdFactory) => {
   // extend the picker
   // e.g. add new tempusDominus.TempusDominus(...).someFunction()
-  tdClass.prototype.someFunction = (a, logger) =&gt; {
+  tdClass.prototype.someFunction = (a, logger) => {
     logger = logger || console.log
     logger(a);
   }
 
   // extend tempusDominus
   // e.g. add tempusDominus.example()
-  tdFactory.example = (a, logger) =&gt; {
+  tdFactory.example = (a, logger) => {
     logger = logger || console.log
     logger(a);
   }
@@ -33,7 +33,7 @@ export default (option, tdClass, tdFactory) =&gt; {
   const oldShow = tdClass.prototype.show;
   tdClass.prototype.show = function(a, logger) {
     logger = logger || console.log
-    alert(&#39;from plugin&#39;);
+    alert('from plugin');
     logger(a);
     oldShow.bind(this)()
     // return modified result
@@ -59,9 +59,9 @@ tempusDominus.extend(window.tempusDominus.plugins.PLUGINNAME);
     </p>
     <pre>
       <code class='language-js'>
-const example = require('tempusDominus/plugins/example')
+const example = require('tempusDominus/plugins/examples/sample')
 // or
-import example from 'tempusDominus/plugins/example'
+import example from 'tempusDominus/plugins/examples/sample'
 
 tempusDominus.extend(example) // use plugin
       </code>
@@ -72,7 +72,7 @@ tempusDominus.extend(example) // use plugin
 <page-meta>
   <title>Plugins</title>
   <post-date>01/19/2022</post-date>
-  <update-date>01/19/2022</update-date>
+  <update-date>02/05/2022</update-date>
   <excerpt>How to use plugins with Tempus Dominus.
   </excerpt>
   <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>

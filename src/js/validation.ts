@@ -1,6 +1,6 @@
 import { DateTime, getFormatByUnit, Unit } from './datetime';
 import { OptionsStore } from './options';
-import { ServiceLocator } from './service-locator';
+import { serviceLocator } from './service-locator';
 
 /**
  * Main class for date validation rules based on the options provided.
@@ -9,7 +9,7 @@ export default class Validation {
   private optionsStore: OptionsStore;
 
   constructor() {
-    this.optionsStore = ServiceLocator.locate(OptionsStore);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
   }
 
   /**

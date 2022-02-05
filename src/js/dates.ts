@@ -3,17 +3,19 @@ import Namespace from './namespace';
 import { ChangeEvent, FailEvent } from './event-types';
 import { OptionConverter, OptionsStore } from './options';
 import Validation from './validation';
+import { serviceLocator } from './service-locator';
 import { EventEmitters } from './event-emitter';
-import { ServiceLocator } from './service-locator';
 
 export default class Dates {
   private _dates: DateTime[] = [];
   private optionsStore: OptionsStore;
   private validation: Validation;
+  private _eventEmitters: EventEmitters;
 
   constructor() {
-    this.optionsStore = ServiceLocator.locate(OptionsStore);
-    this.validation = ServiceLocator.locate(Validation);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.validation = serviceLocator.locate(Validation);
+    this._eventEmitters = serviceLocator.locate(EventEmitters);
   }
 
   /**
@@ -126,7 +128,7 @@ export default class Dates {
    */
   clear() {
     this.optionsStore.unset = true;
-    EventEmitters.triggerEvent.emit({
+    this._eventEmitters.triggerEvent.emit({
       type: Namespace.events.change,
       date: undefined,
       oldDate: this.lastPicked,
@@ -202,7 +204,7 @@ export default class Dates {
         this._dates.splice(index, 1);
       }
 
-       EventEmitters.triggerEvent.emit({
+       this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: undefined,
         oldDate,
@@ -211,7 +213,7 @@ export default class Dates {
       } as ChangeEvent);
 
       updateInput();
-      EventEmitters.updateDisplay.emit('all');
+      this._eventEmitters.updateDisplay.emit('all');
       return;
     }
 
@@ -233,8 +235,8 @@ export default class Dates {
       updateInput();
 
       this.optionsStore.unset = false;
-      EventEmitters.updateDisplay.emit('all');
-       EventEmitters.triggerEvent.emit({
+      this._eventEmitters.updateDisplay.emit('all');
+       this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: target,
         oldDate,
@@ -250,7 +252,7 @@ export default class Dates {
 
       updateInput();
 
-       EventEmitters.triggerEvent.emit({
+       this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: target,
         oldDate,
@@ -258,7 +260,7 @@ export default class Dates {
         isValid: false,
       } as ChangeEvent);
     }
-     EventEmitters.triggerEvent.emit({
+     this._eventEmitters.triggerEvent.emit({
       type: Namespace.events.error,
       reason: Namespace.errorMessages.failedToSetInvalidDate,
       date: target,

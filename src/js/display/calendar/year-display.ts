@@ -5,7 +5,7 @@ import { OptionsStore } from '../../options';
 import Validation from '../../validation';
 import { Paint } from '../index';
 import { ActionTypes } from '../../actionTypes';
-import { ServiceLocator } from '../../service-locator';
+import { serviceLocator } from '../../service-locator';
 
 /**
  * Creates and updates the grid for `year`
@@ -18,9 +18,9 @@ export default class YearDisplay {
   private validation: Validation;
 
   constructor() {
-    this.optionsStore = ServiceLocator.locate(OptionsStore);
-    this.dates = ServiceLocator.locate(Dates);
-    this.validation = ServiceLocator.locate(Validation);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.dates = serviceLocator.locate(Dates);
+    this.validation = serviceLocator.locate(Validation);
   }
   /**
    * Build the container html for the display

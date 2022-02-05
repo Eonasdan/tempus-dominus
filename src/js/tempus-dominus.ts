@@ -14,7 +14,7 @@ import {
 } from './event-types';
 import { EventEmitters } from './event-emitter';
 import { ActionTypes } from './actionTypes';
-import { ServiceLocator } from './service-locator';
+import { serviceLocator, setupServiceLocator } from './service-locator';
 
 /**
  * A robust and powerful date/time picker component.
@@ -25,14 +25,19 @@ class TempusDominus {
   private _notifyChangeEventContext = 0;
   private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: any;
+  private actions: Actions;
   private optionsStore: OptionsStore;
+  private _eventEmitters: EventEmitters
   display: Display;
   dates: Dates;
 
   constructor(element: HTMLElement, options: Options = {} as Options) {
-    this.optionsStore = ServiceLocator.locate(OptionsStore);
-    this.display = ServiceLocator.locate(Display);
-    this.dates = ServiceLocator.locate(Dates);
+    setupServiceLocator();
+    this._eventEmitters = serviceLocator.locate(EventEmitters);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.display = serviceLocator.locate(Display);
+    this.dates = serviceLocator.locate(Dates);
+    this.actions = serviceLocator.locate(Actions);
 
     if (!element) {
       Namespace.errorMessages.mustProvideElement();
@@ -48,9 +53,13 @@ class TempusDominus {
 
     if (this.optionsStore.options.display.inline) this.display.show();
 
-    EventEmitters.triggerEvent.subscribe((e) => {
+    this._eventEmitters.triggerEvent.subscribe((e) => {
       this._triggerEvent(e);
-    })
+    });
+
+    this._eventEmitters.viewUpdate.subscribe((unit) => {
+      this._viewUpdate(unit);
+    });
   }
 
   get viewDate() {
@@ -416,7 +425,7 @@ class TempusDominus {
     clearTimeout(this._currentPromptTimeTimeout);
     this._currentPromptTimeTimeout = setTimeout(() => {
       if (this.display.widget) {
-        EventEmitters.action.emit({
+        this._eventEmitters.action.emit({
           e:
             {
               currentTarget: this.display.widget.querySelector(
@@ -468,22 +477,21 @@ class TempusDominus {
   };
 }
 
-
 /**
  * Whenever a locale is loaded via a plugin then store it here based on the
  * locale name. E.g. loadedLocales['ru']
  */
-const loadedLocales = {}
+const loadedLocales = {};
 
 /**
  * Called from a locale plugin.
  * @param locale locale object for localization options
  * @param name name of the language e.g 'ru', 'en-gb'
  */
-const loadLocale = (locale, name: string) => {
-  if (loadedLocales[name]) return;
-  loadedLocales[name] = locale;
-}
+const loadLocale = (locale) => {
+  if (loadedLocales[locale.name]) return;
+  loadedLocales[locale.name] = locale.localization;
+};
 
 /**
  * A sets the global localization options to the provided locale name.
@@ -494,11 +502,19 @@ const locale = (locale: string) => {
   let asked = loadedLocales[locale];
   if (!asked) return;
   DefaultOptions.localization = asked;
-}
+};
+
+const extend = function(plugin, option) {
+  if (!plugin.$i) { // install plugin only once
+    plugin.load(option, TempusDominus, this);
+    plugin.$i = true;
+  }
+  return this;
+};
 
 export {
   TempusDominus,
-  //extend,
+  extend,
   loadLocale,
   locale,
   Namespace,

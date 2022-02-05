@@ -3,7 +3,8 @@
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
-(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?module.exports=f():typeof define==='function'&&define.amd?define(f):(g=typeof globalThis!=='undefined'?globalThis:g||self,(g.tempusDominus=g.tempusDominus||{},g.tempusDominus.locales=g.tempusDominus.locales||{},g.tempusDominus.locales.ru=f()));})(this,(function(){'use strict';const ru = {
+(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f((g.tempusDominus=g.tempusDominus||{},g.tempusDominus.locales=g.tempusDominus.locales||{},g.tempusDominus.locales.ru={})));})(this,(function(exports){'use strict';const name = 'ru';
+const localization = {
     today: 'Перейти сегодня',
     clear: 'Очистить выделение',
     close: 'Закрыть сборщик',
@@ -33,6 +34,4 @@
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'ru',
     startOfTheWeek: 1
-};
-// @ts-ignore
-window.tempusDominus.loadLocale(ru, 'ru');return ru;}));
+};exports.localization=localization;exports.name=name;Object.defineProperty(exports,'__esModule',{value:true});}));

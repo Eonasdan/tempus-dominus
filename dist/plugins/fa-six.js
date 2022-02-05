@@ -17,6 +17,6 @@ const faSixIcons = {
     close: 'fa-solid fa-xmark'
 };
 // noinspection JSUnusedGlobalSymbols
-const setDefaults = (_, __, tdFactory) => {
+const load = (_, __, tdFactory) => {
     tdFactory.DefaultOptions.display.icons = faSixIcons;
-};exports.faSixIcons=faSixIcons;exports.setDefaults=setDefaults;Object.defineProperty(exports,'__esModule',{value:true});}));
+};exports.faSixIcons=faSixIcons;exports.load=load;Object.defineProperty(exports,'__esModule',{value:true});}));

@@ -8,7 +8,7 @@ import Validation from './validation';
 import Display from './display';
 import { EventEmitters } from './event-emitter';
 import { ActionTypes } from './actionTypes';
-import { ServiceLocator } from './service-locator.js';
+import { serviceLocator } from './service-locator.js';
 
 /**
  *
@@ -18,12 +18,18 @@ export default class Actions {
   private validation: Validation;
   private dates: Dates;
   private display: Display;
+  private _eventEmitters: EventEmitters;
 
   constructor() {
-    this.optionsStore = ServiceLocator.locate(OptionsStore);
-    this.dates = ServiceLocator.locate(Dates);
-    this.validation = ServiceLocator.locate(Validation);
-    this.display = ServiceLocator.locate(Display);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.dates = serviceLocator.locate(Dates);
+    this.validation = serviceLocator.locate(Validation);
+    this.display = serviceLocator.locate(Display);
+    this._eventEmitters = serviceLocator.locate(EventEmitters);
+
+    this._eventEmitters.action.subscribe((result) => {
+      this.do(result.e, result.action);
+    })
   }
 
   /**
@@ -47,7 +53,7 @@ export default class Actions {
         break;
       case ActionTypes.pickerSwitch:
         this.display._showMode(1);
-        EventEmitters.viewUpdate.emit(
+        this._eventEmitters.viewUpdate.emit(
           DatePickerModes[this.optionsStore.currentViewMode].unit
         );
         this.display._updateCalendarHeader();
@@ -59,12 +65,12 @@ export default class Actions {
         switch (action) {
           case ActionTypes.selectMonth:
             this.optionsStore.viewDate.month = value;
-            EventEmitters.viewUpdate.emit(Unit.month);
+            this._eventEmitters.viewUpdate.emit(Unit.month);
             break;
           case ActionTypes.selectYear:
           case ActionTypes.selectDecade:
             this.optionsStore.viewDate.year = value;
-            EventEmitters.viewUpdate.emit(Unit.year);
+            this._eventEmitters.viewUpdate.emit(Unit.year);
             break;
         }
 
@@ -266,7 +272,7 @@ export default class Actions {
     if (action === ActionTypes.next)
       this.optionsStore.viewDate.manipulate(step, unit);
     else this.optionsStore.viewDate.manipulate(step * -1, unit);
-    EventEmitters.viewUpdate.emit(unit);
+    this._eventEmitters.viewUpdate.emit(unit);
 
     this.display._showMode();
   }

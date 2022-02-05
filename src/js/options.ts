@@ -385,7 +385,7 @@ export class OptionConverter {
   }
 
   static _dataToOptions(element, options: Options): Options {
-    const eData = element.dataset;
+    const eData = JSON.parse(JSON.stringify(element.dataset));
 
     if (eData?.tdTargetInput) delete eData.tdTargetInput;
     if (eData?.tdTargetToggle) delete eData.tdTargetToggle;

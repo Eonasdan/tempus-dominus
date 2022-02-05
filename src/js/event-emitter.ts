@@ -2,6 +2,8 @@ import { Unit } from './datetime';
 import { BaseEvent } from './event-types';
 import { ActionTypes } from './actionTypes';
 
+export type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
+
 export class EventEmitter<T> {
   private subscribers: ((value?: T) => void)[] = [];
 
@@ -22,11 +24,23 @@ export class EventEmitter<T> {
       callback(value);
     });
   }
+
+  destory() {
+    this.subscribers = null;
+    this.subscribers = [];
+  }
 }
 
 export class EventEmitters {
-  static triggerEvent = new EventEmitter<BaseEvent>();
-  static viewUpdate = new EventEmitter<Unit>();
-  static updateDisplay = new EventEmitter<string>();
-  static action = new EventEmitter<{e:any, action?: ActionTypes}>();
+  triggerEvent = new EventEmitter<BaseEvent>();
+  viewUpdate = new EventEmitter<Unit>();
+  updateDisplay = new EventEmitter<ViewUpdateValues>();
+  action = new EventEmitter<{e:any, action?: ActionTypes}>();
+
+  destory() {
+    this.triggerEvent.destory();
+    this.viewUpdate.destory();
+    this.updateDisplay.destory();
+    this.action.destory();
+  }
 }

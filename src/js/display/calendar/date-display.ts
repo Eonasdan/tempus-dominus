@@ -5,7 +5,7 @@ import Validation from '../../validation';
 import Dates from '../../dates';
 import { Paint } from '../index';
 import { ActionTypes } from '../../actionTypes';
-import { ServiceLocator } from '../../service-locator';
+import { serviceLocator } from '../../service-locator';
 
 /**
  * Creates and updates the grid for `date`
@@ -16,9 +16,9 @@ export default class DateDisplay {
   private validation: Validation;
 
   constructor() {
-    this.optionsStore = ServiceLocator.locate(OptionsStore);
-    this.dates = ServiceLocator.locate(Dates);
-    this.validation = ServiceLocator.locate(Validation);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.dates = serviceLocator.locate(Dates);
+    this.validation = serviceLocator.locate(Validation);
   }
 
   /**
