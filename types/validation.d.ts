@@ -1,11 +1,10 @@
-import { TempusDominus } from './tempus-dominus';
 import { DateTime, Unit } from './datetime';
 /**
  * Main class for date validation rules based on the options provided.
  */
 export default class Validation {
-    private _context;
-    constructor(context: TempusDominus);
+    private optionsStore;
+    constructor();
     /**
      * Checks to see if the target date is valid based on the rules provided in the options.
      * Granularity can be provide to chek portions of the date instead of the whole.

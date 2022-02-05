@@ -1,18 +1,20 @@
-import { TempusDominus } from '../../tempus-dominus';
+import { Paint } from '../index';
 /**
  * Creates and updates the grid for `month`
  */
 export default class MonthDisplay {
-    private _context;
-    constructor(context: TempusDominus);
+    private optionsStore;
+    private dates;
+    private validation;
+    constructor();
     /**
      * Build the container html for the display
      * @private
      */
-    get _picker(): HTMLElement;
+    getPicker(): HTMLElement;
     /**
      * Populates the grid and updates enabled states
      * @private
      */
-    _update(): void;
+    _update(widget: HTMLElement, paint: Paint): void;
 }

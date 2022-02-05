@@ -1,9 +1,10 @@
-import { TempusDominus } from './tempus-dominus';
 import { DateTime, Unit } from './datetime';
 export default class Dates {
     private _dates;
-    private _context;
-    constructor(context: TempusDominus);
+    private optionsStore;
+    private validation;
+    private _eventEmitters;
+    constructor();
     /**
      * Returns the array of selected dates
      */
@@ -16,6 +17,7 @@ export default class Dates {
      * Returns the length of picked dates -1 or 0 if none are selected.
      */
     get lastPickedIndex(): number;
+    formatInput(date: DateTime): string;
     /**
      * Adds a new DateTime to selected dates array
      * @param date
@@ -64,9 +66,4 @@ export default class Dates {
      * @param index
      */
     _setValue(target?: DateTime, index?: number): void;
-    /**
-     * Returns a format object based on the granularity of `unit`
-     * @param unit
-     */
-    static getFormatByUnit(unit: Unit): object;
 }

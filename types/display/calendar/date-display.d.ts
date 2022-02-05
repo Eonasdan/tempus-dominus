@@ -1,20 +1,22 @@
-import { TempusDominus } from '../../tempus-dominus';
+import { Paint } from '../index';
 /**
  * Creates and updates the grid for `date`
  */
 export default class DateDisplay {
-    private _context;
-    constructor(context: TempusDominus);
+    private optionsStore;
+    private dates;
+    private validation;
+    constructor();
     /**
      * Build the container html for the display
      * @private
      */
-    get _picker(): HTMLElement;
+    getPicker(): HTMLElement;
     /**
      * Populates the grid and updates enabled states
      * @private
      */
-    _update(): void;
+    _update(widget: HTMLElement, paint: Paint): void;
     /***
      * Generates an html row that contains the days of the week.
      * @private
