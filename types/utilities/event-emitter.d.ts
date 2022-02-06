@@ -1,4 +1,4 @@
-import { Unit } from './datetime';
+import { Unit } from '../datetime';
 import { BaseEvent } from './event-types';
 import { ActionTypes } from './actionTypes';
 export declare type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';

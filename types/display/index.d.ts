@@ -7,7 +7,7 @@ import HourDisplay from './time/hour-display';
 import MinuteDisplay from './time/minute-display';
 import SecondDisplay from './time/second-display';
 import { DateTime, Unit } from '../datetime';
-import { ViewUpdateValues } from '../event-emitter';
+import { ViewUpdateValues } from '../utilities/event-emitter';
 /**
  * Main class for all things display related.
  */

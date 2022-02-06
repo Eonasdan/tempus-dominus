@@ -1,4 +1,4 @@
-import { DateTime, DateTimeFormatOptions } from './datetime';
+import { DateTime, DateTimeFormatOptions } from '../datetime';
 export declare class OptionsStore {
     options: Options;
     element: HTMLElement;
@@ -132,7 +132,7 @@ export declare class OptionConverter {
      * @param d value to convert
      * @param optionName Provides text to error messages e.g. disabledDates
      */
-    static _dateConversion(d: any, optionName: string): DateTime;
+    static dateConversion(d: any, optionName: string): DateTime;
     private static _flatback;
     private static getFlattenDefaultOptions;
     /**

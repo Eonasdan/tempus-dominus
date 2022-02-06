@@ -30,7 +30,7 @@ export default class Dates {
      * @param index When using multidates this is the index in the array
      * @param from Used in the warning message, useful for debugging.
      */
-    set(value: any, index?: number, from?: string): void;
+    setFromInput(value: any, index?: number): void;
     /**
      * Returns true if the `targetDate` is part of the selected dates array.
      * If `unit` is provided then a granularity to that unit will be used.
@@ -65,5 +65,5 @@ export default class Dates {
      * @param target
      * @param index
      */
-    _setValue(target?: DateTime, index?: number): void;
+    setValue(target?: DateTime, index?: number): void;
 }

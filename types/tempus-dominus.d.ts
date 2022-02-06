@@ -1,10 +1,9 @@
 import Display from './display/index';
 import Dates from './dates';
-import { DefaultOptions } from './conts';
+import { DefaultOptions } from './utilities/conts';
 import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
-import Namespace from './namespace';
-import Options from './options';
-import { BaseEvent } from './event-types';
+import Namespace from './utilities/namespace';
+import Options from './utilities/options';
 /**
  * A robust and powerful date/time picker component.
  */
@@ -87,14 +86,14 @@ declare class TempusDominus {
      * @param event Accepts a BaseEvent object.
      * @private
      */
-    _triggerEvent(event: BaseEvent): void;
+    private _triggerEvent;
     private _publish;
     /**
      * Fires a ViewUpdate event when, for example, the month view is changed.
      * @param {Unit} unit
      * @private
      */
-    _viewUpdate(unit: Unit): void;
+    private _viewUpdate;
     private _unsubscribe;
     /**
      * Merges two Option objects together and validates options type
