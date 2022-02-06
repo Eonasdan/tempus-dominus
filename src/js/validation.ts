@@ -1,6 +1,6 @@
 import { DateTime, getFormatByUnit, Unit } from './datetime';
-import { OptionsStore } from './options';
-import { serviceLocator } from './service-locator';
+import { OptionsStore } from './utilities/options';
+import { serviceLocator } from './utilities/service-locator';
 
 /**
  * Main class for date validation rules based on the options provided.

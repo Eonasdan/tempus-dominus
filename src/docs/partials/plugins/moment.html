@@ -1,9 +1,7 @@
 <page-body>
   <section>
     <p>
-      You can customize the css classes applied to dates by overwritting the <code>display.paint</code>.
-      The fuunction provides a <a href='../namespace/unit.html'>Unit</a> value (extended to include "decade"),
-      the date involved and an array of string that represents the classes that will be applied.
+      If you still need to use momentjs, you can load this plugin to use moment to parse input dates.
     </p>
     <section>
       <div class='container'>
@@ -21,6 +19,7 @@
                 type='text'
                 class='form-control'
                 data-td-target='#datetimepicker1'
+                value='16.02.2022, 12:49 AM'
               />
               <span
                 class='input-group-text'
@@ -33,45 +32,29 @@
           </div>
         </div>
       </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src='/6/js/plugins/moment-parse.js'></script>
       <script type='text/javascript'>
+        tempusDominus.extend(tempusDominus.plugins.moment_parse, 'DD.MM.yyyy hh:mm a');
         const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
-        datetimepicker1.display.paint = (unit, date, classes) => {
-          if (unit === tempusDominus.Unit.date) {
-            if (date.isSame(new tempusDominus.DateTime().manipulate(1, 'date'), unit)) {
-              classes.push('special-day');
-            }
-          }
-        }
       </script>
-      <style>
-          .special-day {
-              background-color: deeppink !important;
-          }
-      </style>
     </section>
     <pre>
 <code class='language-js'>
 //example picker
-const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
-
-datetimepicker1.display.paint = (unit, date, classes) => {
-  if (unit === tempusDominus.Unit.date) {
-    //highlight tomorrow
-    if (date.isSame(new tempusDominus.DateTime().manipulate(1, 'date'), unit)) {
-      classes.push('special-day');
-    }
-  }
-}
+//note that you can optionally provide the format to use.
+tempusDominus.extend(tempusDominus.plugins.moment_parse, 'DD.MM.yyyy hh:mm a');
+const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
 </code>
     </pre>
   </section>
 </page-body>
 
 <page-meta>
-  <title>Plugins - Paint</title>
+  <title>Plugins - Moment</title>
   <post-date>02/05/2022</post-date>
   <update-date>02/05/2022</update-date>
-  <excerpt>How to use add custom classes with Tempus Dominus.
+  <excerpt>How to use momentjs plugin with Tempus Dominus.
   </excerpt>
   <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
 </page-meta>

@@ -903,7 +903,7 @@ class OptionConverter {
         const processKey = (key, value, providedType, defaultType) => {
             switch (key) {
                 case 'defaultDate': {
-                    const dateTime = this._dateConversion(value, 'defaultDate');
+                    const dateTime = this.dateConversion(value, 'defaultDate');
                     if (dateTime !== undefined) {
                         dateTime.setLocale(locale);
                         return dateTime;
@@ -911,7 +911,7 @@ class OptionConverter {
                     Namespace.errorMessages.typeMismatch('defaultDate', providedType, 'DateTime or Date');
                 }
                 case 'viewDate': {
-                    const dateTime = this._dateConversion(value, 'viewDate');
+                    const dateTime = this.dateConversion(value, 'viewDate');
                     if (dateTime !== undefined) {
                         dateTime.setLocale(locale);
                         return dateTime;
@@ -922,7 +922,7 @@ class OptionConverter {
                     if (value === undefined) {
                         return value;
                     }
-                    const dateTime = this._dateConversion(value, 'restrictions.minDate');
+                    const dateTime = this.dateConversion(value, 'restrictions.minDate');
                     if (dateTime !== undefined) {
                         dateTime.setLocale(locale);
                         return dateTime;
@@ -933,7 +933,7 @@ class OptionConverter {
                     if (value === undefined) {
                         return value;
                     }
-                    const dateTime = this._dateConversion(value, 'restrictions.maxDate');
+                    const dateTime = this.dateConversion(value, 'restrictions.maxDate');
                     if (dateTime !== undefined) {
                         dateTime.setLocale(locale);
                         return dateTime;
@@ -988,7 +988,7 @@ class OptionConverter {
                         Object.keys(valueObject[i]).forEach((vk) => {
                             const subOptionName = `${key}[${i}].${vk}`;
                             let d = valueObject[i][vk];
-                            const dateTime = this._dateConversion(d, subOptionName);
+                            const dateTime = this.dateConversion(d, subOptionName);
                             if (!dateTime) {
                                 Namespace.errorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
                             }
@@ -1180,7 +1180,7 @@ class OptionConverter {
         }
         for (let i = 0; i < value.length; i++) {
             let d = value[i];
-            const dateTime = this._dateConversion(d, optionName);
+            const dateTime = this.dateConversion(d, optionName);
             if (!dateTime) {
                 Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
             }
@@ -1205,7 +1205,7 @@ class OptionConverter {
      * @param d value to convert
      * @param optionName Provides text to error messages e.g. disabledDates
      */
-    static _dateConversion(d, optionName) {
+    static dateConversion(d, optionName) {
         if (typeof d === typeof '' && optionName !== 'input') {
             Namespace.errorMessages.dateString();
         }
@@ -1477,13 +1477,13 @@ class Dates {
      * @param index When using multidates this is the index in the array
      * @param from Used in the warning message, useful for debugging.
      */
-    set(value, index, from = 'date.set') {
+    setFromInput(value, index) {
         if (!value)
-            this._setValue(value, index);
-        const converted = OptionConverter._dateConversion(value, from);
+            this.setValue(value, index);
+        const converted = OptionConverter.dateConversion(value, 'input');
         if (converted) {
             converted.setLocale(this.optionsStore.options.localization.locale);
-            this._setValue(converted, index);
+            this.setValue(converted, index);
         }
     }
     /**
@@ -1525,7 +1525,7 @@ class Dates {
             date: undefined,
             oldDate: this.lastPicked,
             isClear: true,
-            isValid: true,
+            isValid: true
         });
         this._dates = [];
     }
@@ -1547,7 +1547,7 @@ class Dates {
      * @param target
      * @param index
      */
-    _setValue(target, index) {
+    setValue(target, index) {
         const noIndex = typeof index === 'undefined', isClear = !target && noIndex;
         let oldDate = this.optionsStore.unset ? null : this._dates[index];
         if (!oldDate && !this.optionsStore.unset && noIndex && isClear) {
@@ -1585,7 +1585,7 @@ class Dates {
                 date: undefined,
                 oldDate,
                 isClear,
-                isValid: true,
+                isValid: true
             });
             updateInput();
             this._eventEmitters.updateDisplay.emit('all');
@@ -1611,7 +1611,7 @@ class Dates {
                 date: target,
                 oldDate,
                 isClear,
-                isValid: true,
+                isValid: true
             });
             return;
         }
@@ -1624,14 +1624,14 @@ class Dates {
                 date: target,
                 oldDate,
                 isClear,
-                isValid: false,
+                isValid: false
             });
         }
         this._eventEmitters.triggerEvent.emit({
             type: Namespace.events.error,
             reason: Namespace.errorMessages.failedToSetInvalidDate,
             date: target,
-            oldDate,
+            oldDate
         });
     }
 }
@@ -2171,7 +2171,11 @@ class TimeDisplay {
             button.setAttribute('title', this.optionsStore.options.localization.toggleMeridiem);
             button.setAttribute('data-action', ActionTypes.toggleMeridiem);
             button.setAttribute('tabindex', '-1');
-            button.classList.add(Namespace.css.toggleMeridiem);
+            if (Namespace.css.toggleMeridiem.includes(',')) { //todo move this to paint function?
+                button.classList.add(...Namespace.css.toggleMeridiem.split(','));
+            }
+            else
+                button.classList.add(Namespace.css.toggleMeridiem);
             divElement = document.createElement('div');
             divElement.classList.add(Namespace.css.noHighlight);
             divElement.appendChild(button);
@@ -2557,10 +2561,10 @@ class Display {
                         tries++;
                     }
                 }
-                this.dates._setValue(date);
+                this.dates.setValue(date);
             }
             if (this.optionsStore.options.defaultDate) {
-                this.dates._setValue(this.optionsStore.options.defaultDate);
+                this.dates.setValue(this.optionsStore.options.defaultDate);
             }
             this._buildWidget();
             // If modeView is only clock
@@ -2969,7 +2973,7 @@ class Actions {
                         break;
                 }
                 if (this.optionsStore.currentViewMode === this.optionsStore.minViewModeNumber) {
-                    this.dates._setValue(this.optionsStore.viewDate, this.dates.lastPickedIndex);
+                    this.dates.setValue(this.optionsStore.viewDate, this.dates.lastPickedIndex);
                     if (!this.optionsStore.options.display.inline) {
                         this.display.hide();
                     }
@@ -2991,14 +2995,14 @@ class Actions {
                 if (this.optionsStore.options.multipleDates) {
                     index = this.dates.pickedIndex(day, Unit.date);
                     if (index !== -1) {
-                        this.dates._setValue(null, index); //deselect multi-date
+                        this.dates.setValue(null, index); //deselect multi-date
                     }
                     else {
-                        this.dates._setValue(day, this.dates.lastPickedIndex + 1);
+                        this.dates.setValue(day, this.dates.lastPickedIndex + 1);
                     }
                 }
                 else {
-                    this.dates._setValue(day, this.dates.lastPickedIndex);
+                    this.dates.setValue(day, this.dates.lastPickedIndex);
                 }
                 if (!this.display._hasTime &&
                     !this.optionsStore.options.display.keepOpen &&
@@ -3013,17 +3017,17 @@ class Actions {
                     !this.optionsStore.options.display.components.useTwentyfourHour)
                     hour += 12;
                 lastPicked.hours = hour;
-                this.dates._setValue(lastPicked, this.dates.lastPickedIndex);
+                this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
                 this.hideOrClock(e);
                 break;
             case ActionTypes.selectMinute:
                 lastPicked.minutes = +currentTarget.dataset.value;
-                this.dates._setValue(lastPicked, this.dates.lastPickedIndex);
+                this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
                 this.hideOrClock(e);
                 break;
             case ActionTypes.selectSecond:
                 lastPicked.seconds = +currentTarget.dataset.value;
-                this.dates._setValue(lastPicked, this.dates.lastPickedIndex);
+                this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
                 this.hideOrClock(e);
                 break;
             case ActionTypes.incrementHours:
@@ -3095,7 +3099,7 @@ class Actions {
                 (this.display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
                 break;
             case ActionTypes.clear:
-                this.dates._setValue(null);
+                this.dates.setValue(null);
                 this.display._updateCalendarHeader();
                 break;
             case ActionTypes.close:
@@ -3105,7 +3109,7 @@ class Actions {
                 const today = new DateTime().setLocale(this.optionsStore.options.localization.locale);
                 this.optionsStore.viewDate = today;
                 if (this.validation.isValid(today, Unit.date))
-                    this.dates._setValue(today, this.dates.lastPickedIndex);
+                    this.dates.setValue(today, this.dates.lastPickedIndex);
                 break;
         }
     }
@@ -3143,7 +3147,7 @@ class Actions {
     manipulateAndSet(lastPicked, unit, value = 1) {
         const newDate = lastPicked.manipulate(value, unit);
         if (this.validation.isValid(newDate, unit)) {
-            this.dates._setValue(newDate, this.dates.lastPickedIndex);
+            this.dates.setValue(newDate, this.dates.lastPickedIndex);
         }
     }
 }
@@ -3171,7 +3175,7 @@ class TempusDominus {
                 try {
                     const valueSplit = value.split(this.optionsStore.options.multipleDatesSeparator);
                     for (let i = 0; i < valueSplit.length; i++) {
-                        this.dates.set(valueSplit[i], i, 'input');
+                        this.dates.setFromInput(valueSplit[i], i);
                     }
                     setViewDate();
                 }
@@ -3180,7 +3184,7 @@ class TempusDominus {
                 }
             }
             else {
-                this.dates.set(value, 0, 'input');
+                this.dates.setFromInput(value, 0);
                 setViewDate();
             }
         };
@@ -3562,7 +3566,7 @@ const locale = (locale) => {
 };
 const extend = function (plugin, option) {
     if (!plugin.$i) { // install plugin only once
-        plugin.load(option, TempusDominus, this);
+        plugin.load(option, { TempusDominus, Dates, Display }, this);
         plugin.$i = true;
     }
     return this;

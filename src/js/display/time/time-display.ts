@@ -1,10 +1,10 @@
 import { Unit } from '../../datetime';
-import Namespace from '../../namespace';
-import { OptionsStore } from '../../options';
+import Namespace from '../../utilities/namespace';
+import { OptionsStore } from '../../utilities/options';
 import Validation from '../../validation';
 import Dates from '../../dates';
-import { ActionTypes } from '../../actionTypes';
-import { serviceLocator } from '../../service-locator';
+import { ActionTypes } from '../../utilities/actionTypes';
+import { serviceLocator } from '../../utilities/service-locator';
 
 /**
  * Creates the clock display
@@ -301,7 +301,10 @@ export default class TimeDisplay {
       );
       button.setAttribute('data-action', ActionTypes.toggleMeridiem);
       button.setAttribute('tabindex', '-1');
-      button.classList.add(Namespace.css.toggleMeridiem);
+      if (Namespace.css.toggleMeridiem.includes(',')) { //todo move this to paint function?
+        button.classList.add(...Namespace.css.toggleMeridiem.split(','));
+      }
+      else button.classList.add(Namespace.css.toggleMeridiem);
 
       divElement = document.createElement('div');
       divElement.classList.add(Namespace.css.noHighlight);

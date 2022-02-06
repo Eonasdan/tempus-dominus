@@ -7,17 +7,17 @@ import HourDisplay from './time/hour-display';
 import MinuteDisplay from './time/minute-display';
 import SecondDisplay from './time/second-display';
 import { DateTime, Unit } from '../datetime';
-import { DatePickerModes } from '../conts';
+import { DatePickerModes } from '../utilities/conts';
 import { createPopper } from '@popperjs/core';
-import Namespace from '../namespace';
-import { HideEvent } from '../event-types';
+import Namespace from '../utilities/namespace';
+import { HideEvent } from '../utilities/event-types';
 import Collapse from './collapse';
-import { OptionsStore } from '../options';
+import { OptionsStore } from '../utilities/options';
 import Validation from '../validation';
 import Dates from '../dates';
-import { EventEmitters, ViewUpdateValues } from '../event-emitter';
-import { ActionTypes } from '../actionTypes';
-import { serviceLocator } from '../service-locator';
+import { EventEmitters, ViewUpdateValues } from '../utilities/event-emitter';
+import { ActionTypes } from '../utilities/actionTypes';
+import { serviceLocator } from '../utilities/service-locator';
 
 /**
  * Main class for all things display related.
@@ -163,11 +163,11 @@ export default class Display {
             tries++;
           }
         }
-        this.dates._setValue(date);
+        this.dates.setValue(date);
       }
 
       if (this.optionsStore.options.defaultDate) {
-        this.dates._setValue(this.optionsStore.options.defaultDate);
+        this.dates.setValue(this.optionsStore.options.defaultDate);
       }
 
       this._buildWidget();

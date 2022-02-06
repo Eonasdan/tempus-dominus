@@ -1,10 +1,10 @@
 import { DateTime, getFormatByUnit, Unit } from './datetime';
-import Namespace from './namespace';
-import { ChangeEvent, FailEvent } from './event-types';
-import { OptionConverter, OptionsStore } from './options';
+import Namespace from './utilities/namespace';
+import { ChangeEvent, FailEvent } from './utilities/event-types';
+import { OptionConverter, OptionsStore } from './utilities/options';
 import Validation from './validation';
-import { serviceLocator } from './service-locator';
-import { EventEmitters } from './event-emitter';
+import { serviceLocator } from './utilities/service-locator';
+import { EventEmitters } from './utilities/event-emitter';
 
 export default class Dates {
   private _dates: DateTime[] = [];
@@ -40,7 +40,7 @@ export default class Dates {
     return this._dates.length - 1;
   }
 
-  formatInput(date: DateTime) {
+  formatInput(date: DateTime): string {
     const components = this.optionsStore.options.display.components;
     if (!date) return '';
     return date.format({
@@ -77,12 +77,12 @@ export default class Dates {
    * @param index When using multidates this is the index in the array
    * @param from Used in the warning message, useful for debugging.
    */
-  set(value: any, index?: number, from: string = 'date.set') {
-    if (!value) this._setValue(value, index);
-    const converted = OptionConverter._dateConversion(value, from);
+  setFromInput(value: any, index?: number) {
+    if (!value) this.setValue(value, index);
+    const converted = OptionConverter.dateConversion(value, 'input');
     if (converted) {
       converted.setLocale(this.optionsStore.options.localization.locale);
-      this._setValue(converted, index);
+      this.setValue(converted, index);
     }
   }
 
@@ -133,7 +133,7 @@ export default class Dates {
       date: undefined,
       oldDate: this.lastPicked,
       isClear: true,
-      isValid: true,
+      isValid: true
     } as ChangeEvent);
     this._dates = [];
   }
@@ -163,7 +163,7 @@ export default class Dates {
    * @param target
    * @param index
    */
-  _setValue(target?: DateTime, index?: number): void {
+  setValue(target?: DateTime, index?: number): void {
     const noIndex = typeof index === 'undefined',
       isClear = !target && noIndex;
     let oldDate = this.optionsStore.unset ? null : this._dates[index];
@@ -204,12 +204,12 @@ export default class Dates {
         this._dates.splice(index, 1);
       }
 
-       this._eventEmitters.triggerEvent.emit({
+      this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: undefined,
         oldDate,
         isClear,
-        isValid: true,
+        isValid: true
       } as ChangeEvent);
 
       updateInput();
@@ -236,12 +236,12 @@ export default class Dates {
 
       this.optionsStore.unset = false;
       this._eventEmitters.updateDisplay.emit('all');
-       this._eventEmitters.triggerEvent.emit({
+      this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: target,
         oldDate,
         isClear,
-        isValid: true,
+        isValid: true
       } as ChangeEvent);
       return;
     }
@@ -252,19 +252,19 @@ export default class Dates {
 
       updateInput();
 
-       this._eventEmitters.triggerEvent.emit({
+      this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: target,
         oldDate,
         isClear,
-        isValid: false,
+        isValid: false
       } as ChangeEvent);
     }
-     this._eventEmitters.triggerEvent.emit({
+    this._eventEmitters.triggerEvent.emit({
       type: Namespace.events.error,
       reason: Namespace.errorMessages.failedToSetInvalidDate,
       date: target,
-      oldDate,
+      oldDate
     } as FailEvent);
   }
 }

@@ -1,14 +1,14 @@
-import { DatePickerModes } from './conts.js';
+import { DatePickerModes } from './utilities/conts.js';
 import { DateTime, Unit } from './datetime';
 import Collapse from './display/collapse';
-import Namespace from './namespace';
-import { OptionsStore } from './options';
+import Namespace from './utilities/namespace';
+import { OptionsStore } from './utilities/options';
 import Dates from './dates';
 import Validation from './validation';
 import Display from './display';
-import { EventEmitters } from './event-emitter';
-import { ActionTypes } from './actionTypes';
-import { serviceLocator } from './service-locator.js';
+import { EventEmitters } from './utilities/event-emitter';
+import { ActionTypes } from './utilities/actionTypes';
+import { serviceLocator } from './utilities/service-locator.js';
 
 /**
  *
@@ -77,7 +77,7 @@ export default class Actions {
         if (
           this.optionsStore.currentViewMode === this.optionsStore.minViewModeNumber
         ) {
-          this.dates._setValue(
+          this.dates.setValue(
             this.optionsStore.viewDate,
             this.dates.lastPickedIndex
           );
@@ -102,15 +102,15 @@ export default class Actions {
         if (this.optionsStore.options.multipleDates) {
           index = this.dates.pickedIndex(day, Unit.date);
           if (index !== -1) {
-            this.dates._setValue(null, index); //deselect multi-date
+            this.dates.setValue(null, index); //deselect multi-date
           } else {
-            this.dates._setValue(
+            this.dates.setValue(
               day,
               this.dates.lastPickedIndex + 1
             );
           }
         } else {
-          this.dates._setValue(
+          this.dates.setValue(
             day,
             this.dates.lastPickedIndex
           );
@@ -133,7 +133,7 @@ export default class Actions {
         )
           hour += 12;
         lastPicked.hours = hour;
-        this.dates._setValue(
+        this.dates.setValue(
           lastPicked,
           this.dates.lastPickedIndex
         );
@@ -141,7 +141,7 @@ export default class Actions {
         break;
       case ActionTypes.selectMinute:
         lastPicked.minutes = +currentTarget.dataset.value;
-        this.dates._setValue(
+        this.dates.setValue(
           lastPicked,
           this.dates.lastPickedIndex
         );
@@ -149,7 +149,7 @@ export default class Actions {
         break;
       case ActionTypes.selectSecond:
         lastPicked.seconds = +currentTarget.dataset.value;
-        this.dates._setValue(
+        this.dates.setValue(
           lastPicked,
           this.dates.lastPickedIndex
         );
@@ -247,7 +247,7 @@ export default class Actions {
         )).style.display = 'grid';
         break;
       case ActionTypes.clear:
-        this.dates._setValue(null);
+        this.dates.setValue(null);
         this.display._updateCalendarHeader();
         break;
       case ActionTypes.close:
@@ -259,7 +259,7 @@ export default class Actions {
         );
         this.optionsStore.viewDate = today;
         if (this.validation.isValid(today, Unit.date))
-          this.dates._setValue(
+          this.dates.setValue(
             today,
             this.dates.lastPickedIndex
           );
@@ -304,7 +304,7 @@ export default class Actions {
   private manipulateAndSet(lastPicked: DateTime, unit: Unit, value = 1) {
     const newDate = lastPicked.manipulate(value, unit);
     if (this.validation.isValid(newDate, unit)) {
-      this.dates._setValue(
+      this.dates.setValue(
         newDate,
         this.dates.lastPickedIndex
       );

@@ -1,4 +1,4 @@
-import { DateTime, DateTimeFormatOptions } from './datetime';
+import { DateTime, DateTimeFormatOptions } from '../datetime';
 import Namespace from './namespace';
 import { DefaultOptions } from './conts';
 
@@ -120,7 +120,7 @@ export class OptionConverter {
     const processKey = (key, value, providedType, defaultType) => {
       switch (key) {
         case 'defaultDate': {
-          const dateTime = this._dateConversion(value, 'defaultDate');
+          const dateTime = this.dateConversion(value, 'defaultDate');
           if (dateTime !== undefined) {
             dateTime.setLocale(locale);
             return dateTime;
@@ -132,7 +132,7 @@ export class OptionConverter {
           );
         }
         case 'viewDate': {
-          const dateTime = this._dateConversion(value, 'viewDate');
+          const dateTime = this.dateConversion(value, 'viewDate');
           if (dateTime !== undefined) {
             dateTime.setLocale(locale);
             return dateTime;
@@ -147,7 +147,7 @@ export class OptionConverter {
           if (value === undefined) {
             return value;
           }
-          const dateTime = this._dateConversion(value, 'restrictions.minDate');
+          const dateTime = this.dateConversion(value, 'restrictions.minDate');
           if (dateTime !== undefined) {
             dateTime.setLocale(locale);
             return dateTime;
@@ -162,7 +162,7 @@ export class OptionConverter {
           if (value === undefined) {
             return value;
           }
-          const dateTime = this._dateConversion(value, 'restrictions.maxDate');
+          const dateTime = this.dateConversion(value, 'restrictions.maxDate');
           if (dateTime !== undefined) {
             dateTime.setLocale(locale);
             return dateTime;
@@ -259,7 +259,7 @@ export class OptionConverter {
             Object.keys(valueObject[i]).forEach((vk) => {
               const subOptionName = `${key}[${i}].${vk}`;
               let d = valueObject[i][vk];
-              const dateTime = this._dateConversion(d, subOptionName);
+              const dateTime = this.dateConversion(d, subOptionName);
               if (!dateTime) {
                 Namespace.errorMessages.typeMismatch(
                   subOptionName,
@@ -514,7 +514,7 @@ export class OptionConverter {
     }
     for (let i = 0; i < value.length; i++) {
       let d = value[i];
-      const dateTime = this._dateConversion(d, optionName);
+      const dateTime = this.dateConversion(d, optionName);
       if (!dateTime) {
         Namespace.errorMessages.typeMismatch(
           optionName,
@@ -553,7 +553,7 @@ export class OptionConverter {
    * @param d value to convert
    * @param optionName Provides text to error messages e.g. disabledDates
    */
-  static _dateConversion(d: any, optionName: string) {
+  static dateConversion(d: any, optionName: string): DateTime {
     if (typeof d === typeof '' && optionName !== 'input') {
       Namespace.errorMessages.dateString();
     }

@@ -2,19 +2,19 @@ import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
 import Actions from './actions';
-import { DatePickerModes, DefaultOptions } from './conts';
+import { DatePickerModes, DefaultOptions } from './utilities/conts';
 import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
-import Namespace from './namespace';
-import Options, { OptionConverter, OptionsStore } from './options';
+import Namespace from './utilities/namespace';
+import Options, { OptionConverter, OptionsStore } from './utilities/options';
 import {
   BaseEvent,
   ChangeEvent,
   ViewUpdateEvent,
   FailEvent
-} from './event-types';
-import { EventEmitters } from './event-emitter';
-import { ActionTypes } from './actionTypes';
-import { serviceLocator, setupServiceLocator } from './service-locator';
+} from './utilities/event-types';
+import { EventEmitters } from './utilities/event-emitter';
+import { ActionTypes } from './utilities/actionTypes';
+import { serviceLocator, setupServiceLocator } from './utilities/service-locator';
 
 /**
  * A robust and powerful date/time picker component.
@@ -226,7 +226,7 @@ class TempusDominus {
    * @param event Accepts a BaseEvent object.
    * @private
    */
-  _triggerEvent(event: BaseEvent) {
+  private _triggerEvent(event: BaseEvent) {
     // checking hasOwnProperty because the BasicEvent also falls through here otherwise
     if ((event as ChangeEvent) && event.hasOwnProperty('date')) {
       const { date, oldDate, isClear } = event as ChangeEvent;
@@ -276,7 +276,7 @@ class TempusDominus {
    * @param {Unit} unit
    * @private
    */
-  _viewUpdate(unit: Unit) {
+  private _viewUpdate(unit: Unit) {
     this._triggerEvent({
       type: Namespace.events.update,
       change: unit,
@@ -453,7 +453,7 @@ class TempusDominus {
       try {
         const valueSplit = value.split(this.optionsStore.options.multipleDatesSeparator);
         for (let i = 0; i < valueSplit.length; i++) {
-          this.dates.set(valueSplit[i], i, 'input');
+          this.dates.setFromInput(valueSplit[i], i);
         }
         setViewDate();
       } catch {
@@ -462,7 +462,7 @@ class TempusDominus {
         );
       }
     } else {
-      this.dates.set(value, 0, 'input');
+      this.dates.setFromInput(value, 0);
       setViewDate();
     }
   };
@@ -506,7 +506,7 @@ const locale = (locale: string) => {
 
 const extend = function(plugin, option) {
   if (!plugin.$i) { // install plugin only once
-    plugin.load(option, TempusDominus, this);
+    plugin.load(option, { TempusDominus, Dates, Display }, this);
     plugin.$i = true;
   }
   return this;

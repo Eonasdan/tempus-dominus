@@ -1,4 +1,4 @@
-import { DateTime, Unit } from './datetime';
+import { DateTime, Unit } from '../datetime';
 import Namespace from './namespace';
 import Options from './options';
 
@@ -128,4 +128,4 @@ const DatePickerModes: {
   },
 ];
 
-export { DefaultOptions, DatePickerModes, Namespace };
+export { DefaultOptions, DatePickerModes };

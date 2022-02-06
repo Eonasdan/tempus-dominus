@@ -1,11 +1,11 @@
 import { DateTime, Unit } from '../../datetime';
-import Namespace from '../../namespace';
+import Namespace from '../../utilities/namespace';
 import Dates from '../../dates';
-import { OptionsStore } from '../../options';
+import { OptionsStore } from '../../utilities/options';
 import Validation from '../../validation';
 import { Paint } from '../index';
-import { ActionTypes } from '../../actionTypes';
-import { serviceLocator } from '../../service-locator';
+import { ActionTypes } from '../../utilities/actionTypes';
+import { serviceLocator } from '../../utilities/service-locator';
 
 /**
  * Creates and updates the grid for `year`
