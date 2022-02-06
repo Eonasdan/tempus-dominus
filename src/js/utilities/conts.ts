@@ -1,4 +1,4 @@
-import { DateTime, Unit } from './datetime';
+import { DateTime, Unit } from '../datetime';
 import Namespace from './namespace';
 import Options from './options';
 
@@ -92,10 +92,6 @@ const DefaultOptions: Options = {
   multipleDatesSeparator: '; ',
   promptTimeOnDateChange: false,
   promptTimeOnDateChangeTransitionDelay: 200,
-  hooks: {
-    inputParse: undefined,
-    inputFormat: undefined,
-  },
   meta: {},
   container: undefined
 };
@@ -132,4 +128,4 @@ const DatePickerModes: {
   },
 ];
 
-export { DefaultOptions, DatePickerModes, Namespace };
+export { DefaultOptions, DatePickerModes };

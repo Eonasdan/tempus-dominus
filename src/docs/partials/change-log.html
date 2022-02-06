@@ -1,6 +1,29 @@
 <page-body>
   <section>
     <h1>Version 6</h1>
+    <h2>Version 6-beta4</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Wrote a tiny service locator/di container in an effort to make plugins better</li>
+      <li>Added a momentjs plugin</li>
+      <li>Added DE, ES, IT, NL, RO locales thanks to @jcompagner<a
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2484'>via #2484</a>.</li>
+      <li><code>toggleMeridiem</code> supports a comma separated list. <a
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2399'>via #2399.</a>
+      </li>
+    </ul>
+    <h3>Breaking changes</h3>
+    <ul>
+      <li>Plugins work a little differently now. Hopefully they are a bit cleaner to work with now</li>
+      <li>Hooks have been removed. Plugins are a better way to handle this. You can look at the momentjs plugin for a guide.</li>
+      <li>Locale loading and authoring has changed a bit as well.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed dataset deletion issue. <a
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2483'>via #2483.</a>
+      </li>
+    </ul>
     <h2>Version 6-beta3</h2>
     <h3>New</h3>
     <ul>

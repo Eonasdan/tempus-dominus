@@ -1,10 +1,14 @@
-import { TempusDominus } from './tempus-dominus';
+import { ActionTypes } from './utilities/actionTypes';
 /**
  *
  */
 export default class Actions {
-    private _context;
-    constructor(context: TempusDominus);
+    private optionsStore;
+    private validation;
+    private dates;
+    private display;
+    private _eventEmitters;
+    constructor();
     /**
      * Performs the selected `action`. See ActionTypes
      * @param e This is normally a click event
@@ -25,31 +29,4 @@ export default class Actions {
      * @param value Value to change by
      */
     private manipulateAndSet;
-}
-export declare enum ActionTypes {
-    next = "next",
-    previous = "previous",
-    pickerSwitch = "pickerSwitch",
-    selectMonth = "selectMonth",
-    selectYear = "selectYear",
-    selectDecade = "selectDecade",
-    selectDay = "selectDay",
-    selectHour = "selectHour",
-    selectMinute = "selectMinute",
-    selectSecond = "selectSecond",
-    incrementHours = "incrementHours",
-    incrementMinutes = "incrementMinutes",
-    incrementSeconds = "incrementSeconds",
-    decrementHours = "decrementHours",
-    decrementMinutes = "decrementMinutes",
-    decrementSeconds = "decrementSeconds",
-    toggleMeridiem = "toggleMeridiem",
-    togglePicker = "togglePicker",
-    showClock = "showClock",
-    showHours = "showHours",
-    showMinutes = "showMinutes",
-    showSeconds = "showSeconds",
-    clear = "clear",
-    close = "close",
-    today = "today"
 }

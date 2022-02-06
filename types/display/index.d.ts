@@ -1,22 +1,34 @@
+import DateDisplay from './calendar/date-display';
+import MonthDisplay from './calendar/month-display';
+import YearDisplay from './calendar/year-display';
+import DecadeDisplay from './calendar/decade-display';
+import TimeDisplay from './time/time-display';
+import HourDisplay from './time/hour-display';
+import MinuteDisplay from './time/minute-display';
+import SecondDisplay from './time/second-display';
 import { DateTime, Unit } from '../datetime';
-import { TempusDominus } from '../tempus-dominus';
+import { ViewUpdateValues } from '../utilities/event-emitter';
 /**
  * Main class for all things display related.
  */
 export default class Display {
-    private _context;
-    private _dateDisplay;
-    private _monthDisplay;
-    private _yearDisplay;
-    private _decadeDisplay;
-    private _timeDisplay;
     private _widget;
-    private _hourDisplay;
-    private _minuteDisplay;
-    private _secondDisplay;
     private _popperInstance;
     private _isVisible;
-    constructor(context: TempusDominus);
+    private optionsStore;
+    private validation;
+    private dates;
+    private display;
+    dateDisplay: DateDisplay;
+    monthDisplay: MonthDisplay;
+    yearDisplay: YearDisplay;
+    decadeDisplay: DecadeDisplay;
+    timeDisplay: TimeDisplay;
+    hourDisplay: HourDisplay;
+    minuteDisplay: MinuteDisplay;
+    secondDisplay: SecondDisplay;
+    private _eventEmitters;
+    constructor();
     /**
      * Returns the widget body or undefined
      * @private
@@ -32,8 +44,8 @@ export default class Display {
      * @param unit
      * @private
      */
-    _update(unit: Unit | 'clock' | 'calendar' | 'all'): void;
-    paint(unit: Unit, date: DateTime, classes: string[]): void;
+    _update(unit: ViewUpdateValues): void;
+    paint(unit: Unit | 'decade', date: DateTime, classes: string[]): void;
     /**
      * Shows the picker and creates a Popper instance if needed.
      * Add document click event to hide when clicking outside the picker.
@@ -79,12 +91,12 @@ export default class Display {
      * Get the toolbar html based on options like buttons.today
      * @private
      */
-    get _toolbar(): HTMLElement[];
+    getToolbarElements(): HTMLElement[];
     /***
      * Builds the base header template with next and previous icons
      * @private
      */
-    get _headTemplate(): HTMLElement;
+    getHeadTemplate(): HTMLElement;
     /**
      * Builds an icon tag as either an `<i>`
      * or with icons.type is `sprites` then an svg tag instead
@@ -111,3 +123,4 @@ export default class Display {
      */
     _rebuild(): void;
 }
+export declare type Paint = (unit: Unit | 'decade', innerDate: DateTime, classes: string[]) => void;

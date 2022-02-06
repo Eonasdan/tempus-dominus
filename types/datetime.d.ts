@@ -11,6 +11,7 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
     dateStyle?: 'short' | 'medium' | 'long' | 'full';
     numberingSystem?: string;
 }
+export declare const getFormatByUnit: (unit: Unit) => object;
 /**
  * For the most part this object behaves exactly the same way
  * as the native Date object with a little extra spice.

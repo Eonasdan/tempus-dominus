@@ -1,4 +1,4 @@
-import { DateTime, Unit } from './datetime';
+import { DateTime, Unit } from '../datetime';
 interface BaseEvent {
     type: string;
 }

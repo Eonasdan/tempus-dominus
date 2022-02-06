@@ -1,4 +1,4 @@
-import Namespace from '../namespace';
+import Namespace from '../utilities/namespace';
 
 /**
  * Provides a collapse functionality to the view changes

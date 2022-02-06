@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta3 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta4 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -17,6 +17,6 @@ const faSixIcons = {
     close: 'fa-solid fa-xmark'
 };
 // noinspection JSUnusedGlobalSymbols
-const setDefaults = (_, __, tdFactory) => {
+const load = (_, __, tdFactory) => {
     tdFactory.DefaultOptions.display.icons = faSixIcons;
-};exports.faSixIcons=faSixIcons;exports.setDefaults=setDefaults;Object.defineProperty(exports,'__esModule',{value:true});}));
+};exports.faSixIcons=faSixIcons;exports.load=load;Object.defineProperty(exports,'__esModule',{value:true});}));

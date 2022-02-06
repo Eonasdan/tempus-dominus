@@ -274,34 +274,35 @@
            <code class='language-javascript'>
  new tempusDominus.TempusDominus(document.getElementById('datetimepicker2'), {
      localization: {
-       today: 'Перейти сегодня&quot',
-       clear: 'Очистить выделение',
-       close: 'Закрыть сборщик',
-       selectMonth: 'Выбрать месяц',
-       previousMonth: &quot;Предыдущий месяц&quot;,
-       nextMonth: &quot;В следующем месяце&quot;,
-       selectYear: 'Выбрать год',
-       previousYear: 'Предыдущий год',
-       nextYear: 'В следующем году',
-       selectDecade: 'Выбрать десятилетие',
-       previousDecade: 'Предыдущее десятилетие',
-       nextDecade: 'Следующее десятилетие',
-       previousCentury: 'Предыдущий век',
-       nextCentury: 'Следующий век',
-       pickHour: &quot;Выберите час&quot;,
-       incrementHour: 'Время увеличения',
-       decrementHour: 'Уменьшить час',
-       pickMinute: 'Выбрать минуту',
-       incrementMinute: 'Минута приращения',
-       decrementMinute: 'Уменьшить минуту',
-       pickSecond: 'Выбрать второй',
-       incrementSecond: 'Увеличение секунды',
-       decrementSecond: 'Уменьшение секунды',
-       toggleMeridiem: 'Переключить период',
-       selectTime: 'Выбрать время',
-       selectDate: 'Выбрать дату',
-       dayViewHeaderFormat: 'long',
-       locale: 'ru'
+        today: 'Перейти сегодня',
+        clear: 'Очистить выделение',
+        close: 'Закрыть сборщик',
+        selectMonth: 'Выбрать месяц',
+        previousMonth: 'Предыдущий месяц',
+        nextMonth: 'В следующем месяце',
+        selectYear: 'Выбрать год',
+        previousYear: 'Предыдущий год',
+        nextYear: 'В следующем году',
+        selectDecade: 'Выбрать десятилетие',
+        previousDecade: 'Предыдущее десятилетие',
+        nextDecade: 'Следующее десятилетие',
+        previousCentury: 'Предыдущий век',
+        nextCentury: 'Следующий век',
+        pickHour: 'Выберите час',
+        incrementHour: 'Время увеличения',
+        decrementHour: 'Уменьшить час',
+        pickMinute: 'Выбрать минуту',
+        incrementMinute: 'Минута приращения',
+        decrementMinute: 'Уменьшить минуту',
+        pickSecond: 'Выбрать второй',
+        incrementSecond: 'Увеличение секунды',
+        decrementSecond: 'Уменьшение секунды',
+        toggleMeridiem: 'Переключить период',
+        selectTime: 'Выбрать время',
+        selectDate: 'Выбрать дату',
+        dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+        locale: 'ru',
+        startOfTheWeek: 1
      }
  });
            </code>
@@ -372,8 +373,9 @@
           toggleMeridiem: 'Переключить период',
           selectTime: 'Выбрать время',
           selectDate: 'Выбрать дату',
-          dayViewHeaderFormat: 'long',
-          locale: 'ru'
+          dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+          locale: 'ru',
+          startOfTheWeek: 1
         }
       });
     </script>
@@ -2130,12 +2132,13 @@ loadPluginButton.addEventListener(&#39;click&#39;, () =&gt; {
       loadPluginButton.addEventListener('click', () => {
         const script = document.createElement('script');
         script.onload = function () {
-          tempusDominus.extend(window.tempusDominus_plugin_example);
+          tempusDominus.extend(window.tempusDominus.plugins.sample);
           tempusDominus.example('hi', doLog);
           plugins.someFunction('world', doLog);
           plugins.show('hello world', doLog);
+          loadPluginButton.disabled = true
         };
-        script.src = '/6/js/plugins/example.js';
+        script.src = '/6/js/plugins/examples/sample.js';
 
         document.body.appendChild(script);
       });
@@ -2148,7 +2151,7 @@ loadPluginButton.addEventListener(&#39;click&#39;, () =&gt; {
 <page-meta>
   <title>Examples</title>
   <post-date>07/08/2021</post-date>
-  <update-date>1/18/2022</update-date>
+  <update-date>02/05/20222</update-date>
   <excerpt>How to use Tempus Dominus datetime picker
   </excerpt>
   <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>

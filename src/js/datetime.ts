@@ -13,6 +13,20 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
   numberingSystem?: string;
 }
 
+export const getFormatByUnit = (unit: Unit): object => {
+  switch (unit) {
+    case 'date':
+      return { dateStyle: 'short' };
+    case 'month':
+      return {
+        month: 'numeric',
+        year: 'numeric',
+      };
+    case 'year':
+      return { year: 'numeric' };
+  }
+}
+
 /**
  * For the most part this object behaves exactly the same way
  * as the native Date object with a little extra spice.

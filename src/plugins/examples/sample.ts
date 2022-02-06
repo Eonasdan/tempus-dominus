@@ -1,7 +1,9 @@
-export default (option, tdClass, tdFactory) => {
+// noinspection JSUnusedGlobalSymbols
+
+export const load = (option, tdClasses, tdFactory) => {
   // extend the picker
   // e.g. add new tempusDominus.TempusDominus(...).someFunction()
-  tdClass.prototype.someFunction = (a, logger) => {
+  tdClasses.TempusDominus.prototype.someFunction = (a, logger) => {
     logger = logger || console.log
     logger(a);
   }
@@ -15,8 +17,8 @@ export default (option, tdClass, tdFactory) => {
 
   // overriding existing API
   // e.g. extend new tempusDominus.TempusDominus(...).show()
-  const oldShow = tdClass.prototype.show;
-  tdClass.prototype.show = function(a, logger) {
+  const oldShow = tdClasses.TempusDominus.prototype.show;
+  tdClasses.TempusDominus.prototype.show = function(a, logger) {
     logger = logger || console.log
     alert('from plugin');
     logger(a);
