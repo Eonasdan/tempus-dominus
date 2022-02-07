@@ -212,7 +212,7 @@ class TempusDominus {
    * THe language file must be loaded first.
    * @param language
    */
-  loacle(language: string) {
+  locale(language: string) {
     let asked = loadedLocales[language];
     if (!asked) return;
     this.updateOptions({

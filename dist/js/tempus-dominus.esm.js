@@ -3354,7 +3354,7 @@ class TempusDominus {
      * THe language file must be loaded first.
      * @param language
      */
-    loacle(language) {
+    locale(language) {
         let asked = loadedLocales[language];
         if (!asked)
             return;

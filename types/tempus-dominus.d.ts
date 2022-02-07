@@ -79,7 +79,7 @@ declare class TempusDominus {
      * THe language file must be loaded first.
      * @param language
      */
-    loacle(language: string): void;
+    locale(language: string): void;
     /**
      * Triggers an event like ChangeEvent when the picker has updated the value
      * of a selected date.
