@@ -359,6 +359,12 @@ class DateTime extends Date {
      * Shortcut to Date.setMonth()
      */
     set month(value) {
+        const targetMonth = new Date(this.year, value + 1);
+        targetMonth.setDate(0);
+        const endOfMonth = targetMonth.getDate();
+        if (this.date > endOfMonth) {
+            this.date = endOfMonth;
+        }
         this.setMonth(value);
     }
     /**

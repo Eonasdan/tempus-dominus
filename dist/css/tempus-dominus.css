@@ -193,6 +193,11 @@ todo look at how bootstrap loops through their vars to make a --root section
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
+.tempus-dominus-widget .date-container-decades div:not(.no-highlight).active.old, .tempus-dominus-widget .date-container-decades div:not(.no-highlight).active.new, .tempus-dominus-widget .date-container-years div:not(.no-highlight).active.old, .tempus-dominus-widget .date-container-years div:not(.no-highlight).active.new, .tempus-dominus-widget .date-container-months div:not(.no-highlight).active.old, .tempus-dominus-widget .date-container-months div:not(.no-highlight).active.new, .tempus-dominus-widget .date-container-days div:not(.no-highlight).active.old, .tempus-dominus-widget .date-container-days div:not(.no-highlight).active.new,
+.tempus-dominus-widget .time-container-clock div:not(.no-highlight).active.old,
+.tempus-dominus-widget .time-container-clock div:not(.no-highlight).active.new, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).active.old, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).active.new, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).active.old, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).active.new, .tempus-dominus-widget .time-container-second div:not(.no-highlight).active.old, .tempus-dominus-widget .time-container-second div:not(.no-highlight).active.new {
+  color: #fff;
+}
 .tempus-dominus-widget .date-container-decades div:not(.no-highlight).active.today:before, .tempus-dominus-widget .date-container-years div:not(.no-highlight).active.today:before, .tempus-dominus-widget .date-container-months div:not(.no-highlight).active.today:before, .tempus-dominus-widget .date-container-days div:not(.no-highlight).active.today:before,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).active.today:before, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).active.today:before, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).active.today:before, .tempus-dominus-widget .time-container-second div:not(.no-highlight).active.today:before {
   border-bottom-color: #fff;

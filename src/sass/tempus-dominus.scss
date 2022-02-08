@@ -240,6 +240,11 @@ todo look at how bootstrap loops through their vars to make a --root section
         background-color: $td-active-bg;
         color: $td-active-color;
         text-shadow: $td-text-shadow;
+
+        &.old,
+        &.new  {
+          color: $td-active-color;
+        }
       }
 
       &.active.today:before {
