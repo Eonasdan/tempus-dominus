@@ -25,7 +25,7 @@
             case 'month':
                 return {
                     month: 'numeric',
-                    year: 'numeric',
+                    year: 'numeric'
                 };
             case 'year':
                 return { year: 'numeric' };
@@ -94,7 +94,12 @@
                     break;
                 case 'weekDay':
                     this.startOf(exports.Unit.date);
-                    this.manipulate(startOfTheWeek - this.weekDay, exports.Unit.date);
+                    if (this.weekDay === startOfTheWeek)
+                        break;
+                    let goBack = this.weekDay;
+                    if (startOfTheWeek !== 0 && this.weekDay === 0)
+                        goBack = 8 - startOfTheWeek;
+                    this.manipulate(startOfTheWeek - goBack, exports.Unit.date);
                     break;
                 case 'month':
                     this.startOf(exports.Unit.date);
@@ -113,7 +118,7 @@
          * would return April 30, 2021, 11:59:59.999 PM
          * @param unit
          */
-        endOf(unit) {
+        endOf(unit, startOfTheWeek = 0) {
             if (this[unit] === undefined)
                 throw new Error(`Unit '${unit}' is not valid`);
             switch (unit) {
@@ -130,8 +135,8 @@
                     this.setHours(23, 59, 59, 999);
                     break;
                 case 'weekDay':
-                    this.startOf(exports.Unit.date);
-                    this.manipulate(6 - this.weekDay, exports.Unit.date);
+                    this.endOf(exports.Unit.date);
+                    this.manipulate((6 + startOfTheWeek) - this.weekDay, exports.Unit.date);
                     break;
                 case 'month':
                     this.endOf(exports.Unit.date);
@@ -324,7 +329,7 @@
             var _a;
             return (_a = new Intl.DateTimeFormat(locale, {
                 hour: 'numeric',
-                hour12: true,
+                hour12: true
             })
                 .formatToParts(this)
                 .find((p) => p.type === 'dayPeriod')) === null || _a === void 0 ? void 0 : _a.value;

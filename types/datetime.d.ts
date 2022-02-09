@@ -50,7 +50,7 @@ export declare class DateTime extends Date {
      * would return April 30, 2021, 11:59:59.999 PM
      * @param unit
      */
-    endOf(unit: Unit | 'weekDay'): this;
+    endOf(unit: Unit | 'weekDay', startOfTheWeek?: number): this;
     /**
      * Change a {@link unit} value. Value can be positive or negative
      * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).manipulate(1, 'month')

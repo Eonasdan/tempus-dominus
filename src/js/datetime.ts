@@ -20,12 +20,12 @@ export const getFormatByUnit = (unit: Unit): object => {
     case 'month':
       return {
         month: 'numeric',
-        year: 'numeric',
+        year: 'numeric'
       };
     case 'year':
       return { year: 'numeric' };
   }
-}
+};
 
 /**
  * For the most part this object behaves exactly the same way
@@ -103,7 +103,10 @@ export class DateTime extends Date {
         break;
       case 'weekDay':
         this.startOf(Unit.date);
-        this.manipulate(startOfTheWeek - this.weekDay, Unit.date);
+        if (this.weekDay === startOfTheWeek) break;
+        let goBack = this.weekDay;
+        if (startOfTheWeek !== 0 && this.weekDay === 0) goBack = 8 - startOfTheWeek;
+        this.manipulate(startOfTheWeek - goBack, Unit.date);
         break;
       case 'month':
         this.startOf(Unit.date);
@@ -123,7 +126,7 @@ export class DateTime extends Date {
    * would return April 30, 2021, 11:59:59.999 PM
    * @param unit
    */
-  endOf(unit: Unit | 'weekDay'): this {
+  endOf(unit: Unit | 'weekDay', startOfTheWeek = 0): this {
     if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
       case 'seconds':
@@ -139,8 +142,8 @@ export class DateTime extends Date {
         this.setHours(23, 59, 59, 999);
         break;
       case 'weekDay':
-        this.startOf(Unit.date);
-        this.manipulate(6 - this.weekDay, Unit.date);
+        this.endOf(Unit.date);
+        this.manipulate((6 + startOfTheWeek) - this.weekDay, Unit.date);
         break;
       case 'month':
         this.endOf(Unit.date);
@@ -243,14 +246,14 @@ export class DateTime extends Date {
 
     return (
       ((leftInclusivity
-        ? this.isAfter(left, unit)
-        : !this.isBefore(left, unit)) &&
+          ? this.isAfter(left, unit)
+          : !this.isBefore(left, unit)) &&
         (rightInclusivity
           ? this.isBefore(right, unit)
           : !this.isAfter(right, unit))) ||
       ((leftInclusivity
-        ? this.isBefore(left, unit)
-        : !this.isAfter(left, unit)) &&
+          ? this.isBefore(left, unit)
+          : !this.isAfter(left, unit)) &&
         (rightInclusivity
           ? this.isAfter(right, unit)
           : !this.isBefore(right, unit)))
@@ -357,7 +360,7 @@ export class DateTime extends Date {
   meridiem(locale: string = this.locale): string {
     return new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
-      hour12: true,
+      hour12: true
     } as any)
       .formatToParts(this)
       .find((p) => p.type === 'dayPeriod')?.value;
@@ -402,7 +405,7 @@ export class DateTime extends Date {
    * Shortcut to Date.setMonth()
    */
   set month(value: number) {
-    const targetMonth = new Date(this.year, value+1);
+    const targetMonth = new Date(this.year, value + 1);
     targetMonth.setDate(0);
     const endOfMonth = targetMonth.getDate();
     if (this.date > endOfMonth) {
@@ -443,8 +446,8 @@ export class DateTime extends Date {
     let weekNumber = Math.floor((ordinal - weekday + 10) / 7);
 
     if (weekNumber < 1) {
-      weekNumber = this.weeksInWeekYear( this.year - 1);
-    } else if (weekNumber > this. weeksInWeekYear(this.year)) {
+      weekNumber = this.weeksInWeekYear(this.year - 1);
+    } else if (weekNumber > this.weeksInWeekYear(this.year)) {
       weekNumber = 1;
     }
 

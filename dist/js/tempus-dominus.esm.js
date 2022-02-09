@@ -21,7 +21,7 @@ const getFormatByUnit = (unit) => {
         case 'month':
             return {
                 month: 'numeric',
-                year: 'numeric',
+                year: 'numeric'
             };
         case 'year':
             return { year: 'numeric' };
@@ -90,7 +90,12 @@ class DateTime extends Date {
                 break;
             case 'weekDay':
                 this.startOf(Unit.date);
-                this.manipulate(startOfTheWeek - this.weekDay, Unit.date);
+                if (this.weekDay === startOfTheWeek)
+                    break;
+                let goBack = this.weekDay;
+                if (startOfTheWeek !== 0 && this.weekDay === 0)
+                    goBack = 8 - startOfTheWeek;
+                this.manipulate(startOfTheWeek - goBack, Unit.date);
                 break;
             case 'month':
                 this.startOf(Unit.date);
@@ -109,7 +114,7 @@ class DateTime extends Date {
      * would return April 30, 2021, 11:59:59.999 PM
      * @param unit
      */
-    endOf(unit) {
+    endOf(unit, startOfTheWeek = 0) {
         if (this[unit] === undefined)
             throw new Error(`Unit '${unit}' is not valid`);
         switch (unit) {
@@ -126,8 +131,8 @@ class DateTime extends Date {
                 this.setHours(23, 59, 59, 999);
                 break;
             case 'weekDay':
-                this.startOf(Unit.date);
-                this.manipulate(6 - this.weekDay, Unit.date);
+                this.endOf(Unit.date);
+                this.manipulate((6 + startOfTheWeek) - this.weekDay, Unit.date);
                 break;
             case 'month':
                 this.endOf(Unit.date);
@@ -320,7 +325,7 @@ class DateTime extends Date {
         var _a;
         return (_a = new Intl.DateTimeFormat(locale, {
             hour: 'numeric',
-            hour12: true,
+            hour12: true
         })
             .formatToParts(this)
             .find((p) => p.type === 'dayPeriod')) === null || _a === void 0 ? void 0 : _a.value;
