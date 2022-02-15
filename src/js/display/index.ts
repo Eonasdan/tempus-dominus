@@ -181,7 +181,9 @@ export default class Display {
       }
 
       // otherwise return to the calendar view
-      this.optionsStore.currentViewMode = this.optionsStore.minViewModeNumber;
+      if(!this.optionsStore.currentViewMode) {
+        this.optionsStore.currentViewMode = this.optionsStore.minViewModeNumber;
+      }
 
       if (!onlyClock) {
         if (this._hasTime) {
