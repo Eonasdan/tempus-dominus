@@ -785,15 +785,15 @@ const DefaultOptions = {
     display: {
         icons: {
             type: 'icons',
-            time: 'fas fa-clock',
-            date: 'fas fa-calendar',
-            up: 'fas fa-arrow-up',
-            down: 'fas fa-arrow-down',
-            previous: 'fas fa-chevron-left',
-            next: 'fas fa-chevron-right',
-            today: 'fas fa-calendar-check',
-            clear: 'fas fa-trash',
-            close: 'fas fa-times',
+            time: 'fa-solid fa-clock',
+            date: 'fa-solid fa-calendar',
+            up: 'fa-solid fa-arrow-up',
+            down: 'fa-solid fa-arrow-down',
+            previous: 'fa-solid fa-chevron-left',
+            next: 'fa-solid fa-chevron-right',
+            today: 'fa-solid fa-calendar-check',
+            clear: 'fa-solid fa-trash',
+            close: 'fa-solid fa-xmark',
         },
         sideBySide: false,
         calendarWeeks: false,
@@ -862,7 +862,7 @@ const DefaultOptions = {
     promptTimeOnDateChange: false,
     promptTimeOnDateChangeTransitionDelay: 200,
     meta: {},
-    container: undefined
+    container: undefined,
 };
 const DatePickerModes = [
     {
@@ -1456,6 +1456,10 @@ class Dates {
             return 0;
         return this._dates.length - 1;
     }
+    /**
+     * Formats a DateTime object to a string. Used when setting the input value.
+     * @param date
+     */
     formatInput(date) {
         const components = this.optionsStore.options.display.components;
         if (!date)
@@ -1471,15 +1475,8 @@ class Dates {
                 : undefined,
             minute: components.clock && components.minutes ? '2-digit' : undefined,
             second: components.clock && components.seconds ? '2-digit' : undefined,
-            hour12: !components.useTwentyfourHour
+            hour12: !components.useTwentyfourHour,
         });
-    }
-    /**
-     * Adds a new DateTime to selected dates array
-     * @param date
-     */
-    add(date) {
-        this._dates.push(date);
     }
     /**
      * Tries to convert the provided value to a DateTime object.
@@ -1496,6 +1493,13 @@ class Dates {
             converted.setLocale(this.optionsStore.options.localization.locale);
             this.setValue(converted, index);
         }
+    }
+    /**
+     * Adds a new DateTime to selected dates array
+     * @param date
+     */
+    add(date) {
+        this._dates.push(date);
     }
     /**
      * Returns true if the `targetDate` is part of the selected dates array.
@@ -1536,7 +1540,7 @@ class Dates {
             date: undefined,
             oldDate: this.lastPicked,
             isClear: true,
-            isValid: true
+            isValid: true,
         });
         this._dates = [];
     }
@@ -1550,7 +1554,7 @@ class Dates {
         return [startYear, endYear, focusValue];
     }
     /**
-     * Do not use direectly. Attempts to either clear or set the `target` date at `index`.
+     * Attempts to either clear or set the `target` date at `index`.
      * If the `target` is null then the date will be cleared.
      * If multi-date is being used then it will be removed from the array.
      * If `target` is valid and multi-date is used then if `index` is
@@ -1596,7 +1600,7 @@ class Dates {
                 date: undefined,
                 oldDate,
                 isClear,
-                isValid: true
+                isValid: true,
             });
             updateInput();
             this._eventEmitters.updateDisplay.emit('all');
@@ -1622,7 +1626,7 @@ class Dates {
                 date: target,
                 oldDate,
                 isClear,
-                isValid: true
+                isValid: true,
             });
             return;
         }
@@ -1635,14 +1639,14 @@ class Dates {
                 date: target,
                 oldDate,
                 isClear,
-                isValid: false
+                isValid: false,
             });
         }
         this._eventEmitters.triggerEvent.emit({
             type: Namespace.events.error,
             reason: Namespace.errorMessages.failedToSetInvalidDate,
             date: target,
-            oldDate
+            oldDate,
         });
     }
 }
@@ -2585,7 +2589,9 @@ class Display {
                 this._eventEmitters.action.emit({ e: null, action: ActionTypes.showClock });
             }
             // otherwise return to the calendar view
-            this.optionsStore.currentViewMode = this.optionsStore.minViewModeNumber;
+            if (!this.optionsStore.currentViewMode) {
+                this.optionsStore.currentViewMode = this.optionsStore.minViewModeNumber;
+            }
             if (!onlyClock) {
                 if (this._hasTime) {
                     Collapse.hide(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));

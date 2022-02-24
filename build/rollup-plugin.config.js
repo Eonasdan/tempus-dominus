@@ -1,4 +1,6 @@
 const typescript = require('rollup-plugin-typescript2');
+import { terser } from "rollup-plugin-terser";
+
 const banner = require('./banner.js');
 const globals = {
   '@popperjs/core': 'Popper',

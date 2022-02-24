@@ -40,13 +40,16 @@ export default class Dates {
     return this._dates.length - 1;
   }
 
+  /**
+   * Formats a DateTime object to a string. Used when setting the input value.
+   * @param date
+   */
   formatInput(date: DateTime): string {
     const components = this.optionsStore.options.display.components;
     if (!date) return '';
     return date.format({
       year: components.calendar && components.year ? 'numeric' : undefined,
-      month:
-        components.calendar && components.month ? '2-digit' : undefined,
+      month: components.calendar && components.month ? '2-digit' : undefined,
       day: components.calendar && components.date ? '2-digit' : undefined,
       hour:
         components.clock && components.hours
@@ -54,20 +57,10 @@ export default class Dates {
             ? '2-digit'
             : 'numeric'
           : undefined,
-      minute:
-        components.clock && components.minutes ? '2-digit' : undefined,
-      second:
-        components.clock && components.seconds ? '2-digit' : undefined,
-      hour12: !components.useTwentyfourHour
+      minute: components.clock && components.minutes ? '2-digit' : undefined,
+      second: components.clock && components.seconds ? '2-digit' : undefined,
+      hour12: !components.useTwentyfourHour,
     });
-  }
-
-  /**
-   * Adds a new DateTime to selected dates array
-   * @param date
-   */
-  add(date: DateTime): void {
-    this._dates.push(date);
   }
 
   /**
@@ -84,6 +77,14 @@ export default class Dates {
       converted.setLocale(this.optionsStore.options.localization.locale);
       this.setValue(converted, index);
     }
+  }
+
+  /**
+   * Adds a new DateTime to selected dates array
+   * @param date
+   */
+  add(date: DateTime): void {
+    this._dates.push(date);
   }
 
   /**
@@ -133,7 +134,7 @@ export default class Dates {
       date: undefined,
       oldDate: this.lastPicked,
       isClear: true,
-      isValid: true
+      isValid: true,
     } as ChangeEvent);
     this._dates = [];
   }
@@ -155,7 +156,7 @@ export default class Dates {
   }
 
   /**
-   * Do not use direectly. Attempts to either clear or set the `target` date at `index`.
+   * Attempts to either clear or set the `target` date at `index`.
    * If the `target` is null then the date will be cleared.
    * If multi-date is being used then it will be removed from the array.
    * If `target` is valid and multi-date is used then if `index` is
@@ -177,9 +178,7 @@ export default class Dates {
       let newValue = this.formatInput(target);
       if (this.optionsStore.options.multipleDates) {
         newValue = this._dates
-          .map((d) =>
-            this.formatInput(d)
-          )
+          .map((d) => this.formatInput(d))
           .join(this.optionsStore.options.multipleDatesSeparator);
       }
       if (this.optionsStore.input.value != newValue)
@@ -209,7 +208,7 @@ export default class Dates {
         date: undefined,
         oldDate,
         isClear,
-        isValid: true
+        isValid: true,
       } as ChangeEvent);
 
       updateInput();
@@ -241,7 +240,7 @@ export default class Dates {
         date: target,
         oldDate,
         isClear,
-        isValid: true
+        isValid: true,
       } as ChangeEvent);
       return;
     }
@@ -257,14 +256,14 @@ export default class Dates {
         date: target,
         oldDate,
         isClear,
-        isValid: false
+        isValid: false,
       } as ChangeEvent);
     }
     this._eventEmitters.triggerEvent.emit({
       type: Namespace.events.error,
       reason: Namespace.errorMessages.failedToSetInvalidDate,
       date: target,
-      oldDate
+      oldDate,
     } as FailEvent);
   }
 }

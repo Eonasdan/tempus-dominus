@@ -1,5 +1,6 @@
-import typescript from '@rollup/plugin-typescript';
+const typescript = require('rollup-plugin-typescript2');
 import postcss from 'rollup-plugin-postcss';
+import { terser } from "rollup-plugin-terser";
 
 const pkg = require('../package.json');
 const banner = require('./banner.js');
@@ -27,6 +28,22 @@ export default [
         name: 'tempusDominus',
         sourcemap: true,
         globals
+      },
+      {
+        banner,
+        file: `${pkg.main.replace('.js','')}.min.js`,
+        format: 'umd',
+        name: 'tempusDominus',
+        globals, 
+        plugins: [terser()]
+      },
+      {
+        banner,
+        file: `${pkg.module.replace('.js','')}.min.js`,
+        format: 'es',
+        name: 'tempusDominus',
+        globals,
+        plugins: [terser()]
       }
     ],
     external: ['@popperjs/core'],
@@ -36,6 +53,15 @@ export default [
         declarationDir: 'types'
       })
     ]
+  },
+  {
+    input: 'dist/js/jQuery-provider.js',
+    output: [
+      {
+        file: 'dist/js/jQuery-provider.min.js',
+      }
+    ],
+    plugins: [terser()]
   },
   {
     input: 'src/sass/tempus-dominus.scss',
@@ -51,18 +77,20 @@ export default [
         extract: true
       })
     ]
-  }
-  /*{
+  },
+  {
     input: 'src/sass/tempus-dominus.scss',
-    output: {
-      banner,
-      file: 'dist/css/tempus-dominus.min.css'
-    },
+    output: [
+      {
+        banner,
+        file: 'dist/css/tempus-dominus.min.css'
+      }
+    ],
     plugins: [
       postcss({
         extract: true,
         minimize: true
       })
     ]
-  }*/
+  }
 ];

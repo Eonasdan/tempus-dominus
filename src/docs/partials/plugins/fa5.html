@@ -1,10 +1,9 @@
 <page-body>
   <section>
-    <h3>Font Awesome 6</h3>
+    <h3>Font Awesome 5</h3>
     <p>
-      You can use this plugin to set the global default icons to FA6. This plugin requires the FA6 resources to be
-      loaded. Note, this plugin is an example and will be obsolete when FA6 is released.
-      The picker will be updated to default to FA6 at that time.
+      You can use this plugin to set the global default icons to FA5. This plugin requires the FA5 resources to be
+      loaded.
     </p>
     <section>
       <div class='container'>
@@ -34,9 +33,9 @@
           </div>
         </div>
       </div>
-      <script src='/6/js/plugins/fa-six.js'></script>
+      <script src='/6/js/plugins/fa-five.js'></script>
       <script type='text/javascript'>
-        tempusDominus.extend(window.tempusDominus.plugins.fa_six);
+        tempusDominus.extend(window.tempusDominus.plugins.fa_five);
         const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
       </script>
     </section>
@@ -46,15 +45,15 @@
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
 
 //to set globally
-tempusDominus.extend(window.tempusDominus.plugins.fa_six);
+tempusDominus.extend(window.tempusDominus.plugins.fa_five);
 //or
-import {load, faSixIcons} from 'tempusDominus/plugins/fa-six'
+import {load, fa-solidixIcons} from 'tempusDominus/plugins/fa-five'
 tempusDominus.extend(load);
 
 // otherwise to set icons to an individual picker
-datetimepicker1.updateOptions({ display: icons: window.tempusDominus.plugins.fa_six.faSixIcons});
+datetimepicker1.updateOptions({ display: icons: window.tempusDominus.plugins.fa_five.fa-solidixIcons});
 //or
-datetimepicker1.updateOptions({ display: icons: faSixIcons});
+datetimepicker1.updateOptions({ display: icons: faFiveIcons});
 </code>
     </pre>
   </section>
@@ -117,12 +116,8 @@ datetimepicker1.updateOptions({ display: icons: faSixIcons});
       </tr>
     </table>
   </section>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta4/js/fontawesome.min.js'
-          integrity='sha512-vF2g7ozd8M2AA8re3eCrfJT2vvrOmIbW9JhodInQHN5Xjg6ec6nJpMJQcwuXm+aOhQze+CrM2rFQLftMtQA+bA=='
-          crossorigin='anonymous' referrerpolicy='no-referrer'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta4/js/solid.min.js'
-          integrity='sha512-3RL8b8DzLgnLRl3QbkLVPu3d2rRa9WZyEWOHMjQlh4CZ9QWKNX06ugUS79SeAgO1/qs5JpqkJWLU5GD3V/yTRA=='
-          crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/solid.min.js" integrity="sha512-Qc+cBMt/4/KXJ1F6nNQahXIsgPygHM4S2XWChoumV8qkpZ9oO+gBDBEpOxgbkQQ/6DlHx6cUxa5nBhEbuiR8xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/fontawesome.min.js" integrity="sha512-KCwrxBJebca0PPOaHELfqGtqkUlFUCuqCnmtydvBSTnJrBirJ55hRG5xcP4R9Rdx9Fz9IF3Yw6Rx40uhuAHR8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </page-body>
 
 <page-meta>

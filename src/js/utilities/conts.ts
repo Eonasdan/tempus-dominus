@@ -16,15 +16,15 @@ const DefaultOptions: Options = {
   display: {
     icons: {
       type: 'icons',
-      time: 'fas fa-clock',
-      date: 'fas fa-calendar',
-      up: 'fas fa-arrow-up',
-      down: 'fas fa-arrow-down',
-      previous: 'fas fa-chevron-left',
-      next: 'fas fa-chevron-right',
-      today: 'fas fa-calendar-check',
-      clear: 'fas fa-trash',
-      close: 'fas fa-times',
+      time: 'fa-solid fa-clock',
+      date: 'fa-solid fa-calendar',
+      up: 'fa-solid fa-arrow-up',
+      down: 'fa-solid fa-arrow-down',
+      previous: 'fa-solid fa-chevron-left',
+      next: 'fa-solid fa-chevron-right',
+      today: 'fa-solid fa-calendar-check',
+      clear: 'fa-solid fa-trash',
+      close: 'fa-solid fa-xmark',
     },
     sideBySide: false,
     calendarWeeks: false,
@@ -93,7 +93,7 @@ const DefaultOptions: Options = {
   promptTimeOnDateChange: false,
   promptTimeOnDateChangeTransitionDelay: 200,
   meta: {},
-  container: undefined
+  container: undefined,
 };
 
 const DatePickerModes: {

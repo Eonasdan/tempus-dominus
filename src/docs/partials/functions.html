@@ -28,12 +28,12 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
               data-td-target='#datetimepicker1'
               data-td-toggle='datetimepicker'
             >
-               <span class='fas fa-calendar'></span>
+               <span class='fa-solid fa-calendar'></span>
              </span>
           </div>
         </div>
         <script type='text/javascript'>
-          const picker = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'));
+          const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
         </script>
       </div>
     </div>
@@ -41,43 +41,43 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
 
   <section>
     <h2 id='dates'>Dates
-      <a class='anchorjs-link' aria-label='Anchor' href='#dates'><i class='fas fa-anchor'></i></a>
+      <a class='anchorjs-link' aria-label='Anchor' href='#dates'><i class='fa-solid fa-anchor'></i></a>
     </h2>
     <div class='row'>
       <div class='col offset-1'>
         <h3 id='viewDate'>Getting the View Date
-          <a class='anchorjs-link' aria-label='Anchor' href='#viewDate'><i class='fas fa-anchor'></i></a>
+          <a class='anchorjs-link' aria-label='Anchor' href='#viewDate'><i class='fa-solid fa-anchor'></i></a>
         </h3>
         <p>
           <code>picker.viewDate</code> returns the pickers current view date.
         </p>
         <h4 id='picker.dates'>picker.dates
-          <a class='anchorjs-link' aria-label='Anchor' href='#picker.dates'><i class='fas fa-anchor'></i></a>
+          <a class='anchorjs-link' aria-label='Anchor' href='#picker.dates'><i class='fa-solid fa-anchor'></i></a>
         </h4>
         <p>
           There are a number of function here that allow for retrieving the selected dates or adding to them.
         </p>
         <div class='col offset-1'>
           <h5 id='picked'>picked
-            <a class='anchorjs-link' aria-label='Anchor' href='#picked'><i class='fas fa-anchor'></i></a>
+            <a class='anchorjs-link' aria-label='Anchor' href='#picked'><i class='fa-solid fa-anchor'></i></a>
           </h5>
           <p>
             Returns an array of <code>DateTime</code> of the selected date(s).
           </p>
           <h5 id='lastPicked'>lastPicked
-            <a class='anchorjs-link' aria-label='Anchor' href='#lastPicked'><i class='fas fa-anchor'></i></a>
+            <a class='anchorjs-link' aria-label='Anchor' href='#lastPicked'><i class='fa-solid fa-anchor'></i></a>
           </h5>
           <p>
             Returns the last picked <code>DateTime</code> of the selected date(s).
           </p>
           <h5 id='lastPickedIndex'>lastPickedIndex
-            <a class='anchorjs-link' aria-label='Anchor' href='#lastPickedIndex'><i class='fas fa-anchor'></i></a>
+            <a class='anchorjs-link' aria-label='Anchor' href='#lastPickedIndex'><i class='fa-solid fa-anchor'></i></a>
           </h5>
           <p>
             Returns the length of picked dates -1 or 0 if none are selected.
           </p>
           <h5 id='datesAdd'>add(DateTime)
-            <a class='anchorjs-link' aria-label='Anchor' href='#datesAdd'><i class='fas fa-anchor'></i></a>
+            <a class='anchorjs-link' aria-label='Anchor' href='#datesAdd'><i class='fa-solid fa-anchor'></i></a>
           </h5>
           <p>
             Adds a new DateTime to selected dates array. Use this function with caution. It will not automatically
@@ -85,30 +85,48 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
             the
             widget or do any validation.
           </p>
-          <h5 id='datesSet'>set(value, index, frrom)
-            <a class='anchorjs-link' aria-label='Anchor' href='#datesSet'><i class='fas fa-anchor'></i></a>
+          <h5 id='datesSet'>setValue(value: DateTime, index?: number)
+            <a class='anchorjs-link' aria-label='Anchor' href='#datesSet'><i class='fa-solid fa-anchor'></i></a>
           </h5>
           <p>
-            Tries to convert the provided value to a DateTime object. If value is null|undefined then clear the value of the provided index (or 0).
+            Sets the select date index (or the first, if not provided) to the provided DateTime object.
           </p>
+          
+          <h5 id='formatInput'>formatInput(value: DateTime): string
+            <a class='anchorjs-link' aria-label='Anchor' href='#formatInput'><i class='fa-solid fa-anchor'></i></a>
+          </h5>
+          <p>
+            Formats a DateTime object to a string. Used when setting the input value. It is possible to overwrite this
+            to provide more complex formatting with moment/dayjs or by hand.
+          </p>
+
+          <h5 id='setFromInput'>setFromInput(value: any, index?: number)
+            <a class='anchorjs-link' aria-label='Anchor' href='#setFromInput'><i class='fa-solid fa-anchor'></i></a>
+          </h5>
+          <p>
+            Tries to convert the provided value to a DateTime object.
+            If value is null|undefined then clear the value of the provided index (or 0). It is possible to overwrite
+            this
+            to provide more complex formatting with moment/dayjs or by hand.
+          </p>
+          
           <h5 id='isPicked'>isPicked(DateTime, Unit?)
-            <a class='anchorjs-link' aria-label='Anchor' href='#isPicked'><i class='fas fa-anchor'></i></a>
+            <a class='anchorjs-link' aria-label='Anchor' href='#isPicked'><i class='fa-solid fa-anchor'></i></a>
           </h5>
           <p>
             Returns true if the target date is part of the selected dates array. If unit is provided then a granularity
-            to
-            that unit will be used.
+            to that unit will be used.
           </p>
           <h5 id='pickedIndex'>pickedIndex(DateTime, Unit?)
             <a class='anchorjs-link' aria-label='Anchor' href='#pickedIndex'><i
-              class='fas fa-anchor'></i></a>
+              class='fa-solid fa-anchor'></i></a>
           </h5>
           <p>
             Returns the index at which target date is in the array. This is used for updating or removing a date when
             multi-date is used. If unit is provided then a granularity to that unit will be used.
           </p>
           <h5 id='dateClear'>clear
-            <a class='anchorjs-link' aria-label='Anchor' href='#dateClear'><i class='fas fa-anchor'></i></a>
+            <a class='anchorjs-link' aria-label='Anchor' href='#dateClear'><i class='fa-solid fa-anchor'></i></a>
           </h5>
           <p>
             Clears all selected dates.
@@ -124,7 +142,7 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
 
   <section>
     <h2 id='updateOptions'>updateOptions(object, boolean?)
-      <a class='anchorjs-link' aria-label='Anchor' href='#updateOptions'><i class='fas fa-anchor'></i></a>
+      <a class='anchorjs-link' aria-label='Anchor' href='#updateOptions'><i class='fa-solid fa-anchor'></i></a>
     </h2>
     <p>
       In previous version there was a function to read/write to each of the provided options. This made it easy to use
@@ -139,7 +157,7 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
 
   <section>
     <h2 id='display'>Display
-      <a class='anchorjs-link' aria-label='Anchor' href='#display'><i class='fas fa-anchor'></i></a>
+      <a class='anchorjs-link' aria-label='Anchor' href='#display'><i class='fa-solid fa-anchor'></i></a>
     </h2>
     <div class='row'>
       <div class='col offset-1'>
@@ -155,13 +173,12 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
           </li>
           <li>
             <p><code>Namespace.events.change</code> - if the widget is opened for the first time and the input element
-              is
-              empty and <code>options.useCurrent != false</code></p>
+              is empty and <code>options.useCurrent != false</code></p>
           </li>
         </ul>
 
         <h3 id='show'>show
-          <a class='anchorjs-link' aria-label='Anchor' href='#show'><i class='fas fa-anchor'></i></a></h3>
+          <a class='anchorjs-link' aria-label='Anchor' href='#show'><i class='fa-solid fa-anchor'></i></a></h3>
         <p>Shows the widget</p>
         <h4>Emits</h4>
         <ul>
@@ -175,7 +192,7 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
           </li>
         </ul>
         <h3 id='hide'>hide
-          <a class='anchorjs-link' aria-label='Anchor' href='#hide'><i class='fas fa-anchor'></i></a></h3>
+          <a class='anchorjs-link' aria-label='Anchor' href='#hide'><i class='fa-solid fa-anchor'></i></a></h3>
         <p>Hides the widget</p>
         <h4>Emits</h4>
         <ul>
@@ -186,13 +203,13 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
   </section>
   <section>
     <h2 id='dispose'>dispose
-      <a class='anchorjs-link' aria-label='Anchor' href='#dispose'><i class='fas fa-anchor'></i></a></h2>
+      <a class='anchorjs-link' aria-label='Anchor' href='#dispose'><i class='fa-solid fa-anchor'></i></a></h2>
     <p>Destroys the widget and removes all attached event listeners. If the picker is open it will be hidden and the
       event fired.</p>
   </section>
   <section>
     <h2 id='disable'>disable
-      <a class='anchorjs-link' aria-label='Anchor' href='#disable'><i class='fas fa-anchor'></i></a></h2>
+      <a class='anchorjs-link' aria-label='Anchor' href='#disable'><i class='fa-solid fa-anchor'></i></a></h2>
     <p>Disables the input element and the component is attached to, by adding a <code>disabled="true"</code> attribute
       to
       it. If the widget was visible before that call it is hidden.</p>
@@ -203,18 +220,18 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
   </section>
   <section>
     <h2 id='enable'>enable
-      <a class='anchorjs-link' aria-label='Anchor' href='#enable'><i class='fas fa-anchor'></i></a></h2>
+      <a class='anchorjs-link' aria-label='Anchor' href='#enable'><i class='fa-solid fa-anchor'></i></a></h2>
     <p>Enables the input element and the component is attached to, by removing <code>disabled</code> attribute from it.
     </p>
   </section>
   <section>
     <h2 id='clear'>clear
-      <a class='anchorjs-link' aria-label='Anchor' href='#clear'><i class='fas fa-anchor'></i></a></h2>
+      <a class='anchorjs-link' aria-label='Anchor' href='#clear'><i class='fa-solid fa-anchor'></i></a></h2>
     <p>Clears all selected dates. This is a short cut to <code>picker.dates.clear()</code></p>
   </section>
   <section>
     <h2 id='subscribe'>subscribe(event | events[], callback | callbacks[])
-      <a class='anchorjs-link' aria-label='Anchor' href='#subscribe'><i class='fas fa-anchor'></i></a></h2>
+      <a class='anchorjs-link' aria-label='Anchor' href='#subscribe'><i class='fa-solid fa-anchor'></i></a></h2>
     <p>
       Instead of adding event listeners to the pickers element, you can use the subscribe method. You can provide a
       single event to listen for or an array of events. When providing an array the number of callbacks must be the
