@@ -72,10 +72,12 @@ export default class Dates {
    */
   setFromInput(value: any, index?: number) {
     if (!value) this.setValue(value, index);
-    const converted = OptionConverter.dateConversion(value, 'input');
-    if (converted) {
-      converted.setLocale(this.optionsStore.options.localization.locale);
-      this.setValue(converted, index);
+    else {
+        const converted = OptionConverter.dateConversion(value, 'input');
+        if (converted) {
+          converted.setLocale(this.optionsStore.options.localization.locale);
+          this.setValue(converted, index);
+     }
     }
   }
 
