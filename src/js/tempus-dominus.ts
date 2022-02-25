@@ -203,7 +203,7 @@ class TempusDominus {
     if (this.optionsStore.options.allowInputToggle) {
       this.optionsStore.input?.removeEventListener('click', this._toggleClickEvent);
     }
-    this._toggle.removeEventListener('click', this._toggleClickEvent);
+    this._toggle?.removeEventListener('click', this._toggleClickEvent);
     this._subscribers = {};
   }
 
