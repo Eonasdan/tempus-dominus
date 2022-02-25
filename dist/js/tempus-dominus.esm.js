@@ -1486,8 +1486,10 @@ class Dates {
      * @param from Used in the warning message, useful for debugging.
      */
     setFromInput(value, index) {
-        if (!value)
-            this.setValue(value, index);
+        if (!value) {
+            this.setValue(undefined, index);
+            return;
+        }
         const converted = OptionConverter.dateConversion(value, 'input');
         if (converted) {
             converted.setLocale(this.optionsStore.options.localization.locale);
@@ -3176,7 +3178,6 @@ class TempusDominus {
     constructor(element, options = {}) {
         this._subscribers = {};
         this._isDisabled = false;
-        this._notifyChangeEventContext = 0;
         /**
          * Event for when the input field changes. This is a class level method so there's
          * something for the remove listener function.
@@ -3388,17 +3389,11 @@ class TempusDominus {
     _triggerEvent(event) {
         var _a;
         // checking hasOwnProperty because the BasicEvent also falls through here otherwise
-        const isChangeEvent = event && event.hasOwnProperty('date');
+        const isChangeEvent = event.type === Namespace.events.change;
         if (isChangeEvent) {
             const { date, oldDate, isClear } = event;
-            // this was to prevent a max call stack error
-            // https://github.com/tempusdominus/core/commit/15a280507f5277b31b0b3319ab1edc7c19a000fb
-            // todo see if this is still needed or if there's a cleaner way
-            this._notifyChangeEventContext++;
             if ((date && oldDate && date.isSame(oldDate)) ||
-                (!isClear && !date && !oldDate) ||
-                this._notifyChangeEventContext > 1) {
-                this._notifyChangeEventContext = 0;
+                (!isClear && !date && !oldDate)) {
                 return;
             }
             this._handleAfterChangeEvent(event);
@@ -3415,7 +3410,6 @@ class TempusDominus {
             }
         }
         this._publish(event);
-        this._notifyChangeEventContext = 0;
     }
     _publish(event) {
         // return if event is not subscribed

@@ -25,7 +25,6 @@ import {
 class TempusDominus {
   _subscribers: { [key: string]: ((event: any) => {})[] } = {};
   private _isDisabled = false;
-  private _notifyChangeEventContext = 0;
   private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: any;
   private actions: Actions;
@@ -239,20 +238,12 @@ class TempusDominus {
    */
   private _triggerEvent(event: BaseEvent) {
     // checking hasOwnProperty because the BasicEvent also falls through here otherwise
-    const isChangeEvent =
-      (event as ChangeEvent) && event.hasOwnProperty('date');
+    const isChangeEvent = event.type === Namespace.events.change;
     if (isChangeEvent) {
       const { date, oldDate, isClear } = event as ChangeEvent;
-      // this was to prevent a max call stack error
-      // https://github.com/tempusdominus/core/commit/15a280507f5277b31b0b3319ab1edc7c19a000fb
-      // todo see if this is still needed or if there's a cleaner way
-      this._notifyChangeEventContext++;
       if (
         (date && oldDate && date.isSame(oldDate)) ||
-        (!isClear && !date && !oldDate) ||
-        this._notifyChangeEventContext > 1
-      ) {
-        this._notifyChangeEventContext = 0;
+        (!isClear && !date && !oldDate)) {
         return;
       }
       this._handleAfterChangeEvent(event as ChangeEvent);
@@ -278,8 +269,6 @@ class TempusDominus {
     }
 
     this._publish(event);
-
-    this._notifyChangeEventContext = 0;
   }
 
   private _publish(event: BaseEvent) {

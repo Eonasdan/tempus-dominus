@@ -17,12 +17,11 @@ export default class Dates {
      * Returns the length of picked dates -1 or 0 if none are selected.
      */
     get lastPickedIndex(): number;
-    formatInput(date: DateTime): string;
     /**
-     * Adds a new DateTime to selected dates array
+     * Formats a DateTime object to a string. Used when setting the input value.
      * @param date
      */
-    add(date: DateTime): void;
+    formatInput(date: DateTime): string;
     /**
      * Tries to convert the provided value to a DateTime object.
      * If value is null|undefined then clear the value of the provided index (or 0).
@@ -31,6 +30,11 @@ export default class Dates {
      * @param from Used in the warning message, useful for debugging.
      */
     setFromInput(value: any, index?: number): void;
+    /**
+     * Adds a new DateTime to selected dates array
+     * @param date
+     */
+    add(date: DateTime): void;
     /**
      * Returns true if the `targetDate` is part of the selected dates array.
      * If `unit` is provided then a granularity to that unit will be used.
@@ -57,7 +61,7 @@ export default class Dates {
      */
     static getStartEndYear(factor: number, year: number): [number, number, number];
     /**
-     * Do not use direectly. Attempts to either clear or set the `target` date at `index`.
+     * Attempts to either clear or set the `target` date at `index`.
      * If the `target` is null then the date will be cleared.
      * If multi-date is being used then it will be removed from the array.
      * If `target` is valid and multi-date is used then if `index` is

@@ -71,7 +71,10 @@ export default class Dates {
    * @param from Used in the warning message, useful for debugging.
    */
   setFromInput(value: any, index?: number) {
-    if (!value) this.setValue(value, index);
+    if (!value) {
+      this.setValue(undefined, index);
+      return;
+    }
     const converted = OptionConverter.dateConversion(value, 'input');
     if (converted) {
       converted.setLocale(this.optionsStore.options.localization.locale);

@@ -12,7 +12,6 @@ declare class TempusDominus {
         [key: string]: ((event: any) => {})[];
     };
     private _isDisabled;
-    private _notifyChangeEventContext;
     private _toggle;
     private _currentPromptTimeTimeout;
     private actions;
@@ -146,4 +145,4 @@ declare const loadLocale: (locale: any) => void;
  */
 declare const locale: (locale: string) => void;
 declare const extend: (plugin: any, option: any) => any;
-export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions };
+export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions, };
