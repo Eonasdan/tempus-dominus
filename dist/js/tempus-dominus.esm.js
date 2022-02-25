@@ -3342,7 +3342,7 @@ class TempusDominus {
             }
             this._subscribers[eventType].push(callBackArray[i]);
             returnArray.push({
-                unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1)
+                unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1),
             });
             if (eventTypes.length === 1) {
                 return returnArray[0];
@@ -3376,7 +3376,7 @@ class TempusDominus {
         if (!asked)
             return;
         this.updateOptions({
-            localization: asked
+            localization: asked,
         });
     }
     /**
@@ -3386,8 +3386,10 @@ class TempusDominus {
      * @private
      */
     _triggerEvent(event) {
+        var _a;
         // checking hasOwnProperty because the BasicEvent also falls through here otherwise
-        if (event && event.hasOwnProperty('date')) {
+        const isChangeEvent = event && event.hasOwnProperty('date');
+        if (isChangeEvent) {
             const { date, oldDate, isClear } = event;
             // this was to prevent a max call stack error
             // https://github.com/tempusdominus/core/commit/15a280507f5277b31b0b3319ab1edc7c19a000fb
@@ -3400,11 +3402,17 @@ class TempusDominus {
                 return;
             }
             this._handleAfterChangeEvent(event);
+            (_a = this.optionsStore.input) === null || _a === void 0 ? void 0 : _a.dispatchEvent(new CustomEvent(event.type, { detail: event }));
         }
         this.optionsStore.element.dispatchEvent(new CustomEvent(event.type, { detail: event }));
         if (window.jQuery) {
             const $ = window.jQuery;
-            $(this.optionsStore.element).trigger(event);
+            if (isChangeEvent && this.optionsStore.input) {
+                $(this.optionsStore.input).trigger(event);
+            }
+            else {
+                $(this.optionsStore.element).trigger(event);
+            }
         }
         this._publish(event);
         this._notifyChangeEventContext = 0;
@@ -3428,7 +3436,7 @@ class TempusDominus {
         this._triggerEvent({
             type: Namespace.events.update,
             change: unit,
-            viewDate: this.optionsStore.viewDate.clone
+            viewDate: this.optionsStore.viewDate.clone,
         });
     }
     _unsubscribe(eventName, index) {
@@ -3466,7 +3474,8 @@ class TempusDominus {
         }
         this.optionsStore.currentViewMode = Math.max(this.optionsStore.minViewModeNumber, this.optionsStore.currentViewMode);
         // Update view mode if needed
-        if (DatePickerModes[this.optionsStore.currentViewMode].name !== config.display.viewMode) {
+        if (DatePickerModes[this.optionsStore.currentViewMode].name !==
+            config.display.viewMode) {
             this.optionsStore.currentViewMode = Math.max(DatePickerModes.findIndex((x) => x.name === config.display.viewMode), this.optionsStore.minViewModeNumber);
         }
         if ((_a = this.display) === null || _a === void 0 ? void 0 : _a.isVisible) {
@@ -3486,10 +3495,12 @@ class TempusDominus {
         else {
             let query = this.optionsStore.element.dataset.tdTargetInput;
             if (query == undefined || query == 'nearest') {
-                this.optionsStore.input = this.optionsStore.element.querySelector('input');
+                this.optionsStore.input =
+                    this.optionsStore.element.querySelector('input');
             }
             else {
-                this.optionsStore.input = this.optionsStore.element.querySelector(query);
+                this.optionsStore.input =
+                    this.optionsStore.element.querySelector(query);
             }
         }
         if (!this.optionsStore.input)
@@ -3514,7 +3525,9 @@ class TempusDominus {
             query = '[data-td-toggle="datetimepicker"]';
         }
         this._toggle =
-            query == undefined ? this.optionsStore.element : this.optionsStore.element.querySelector(query);
+            query == undefined
+                ? this.optionsStore.element
+                : this.optionsStore.element.querySelector(query);
         this._toggle.addEventListener('click', this._toggleClickEvent);
     }
     /**
@@ -3547,9 +3560,9 @@ class TempusDominus {
             if (this.display.widget) {
                 this._eventEmitters.action.emit({
                     e: {
-                        currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`)
+                        currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`),
                     },
-                    action: ActionTypes.togglePicker
+                    action: ActionTypes.togglePicker,
                 });
             }
         }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
@@ -3582,7 +3595,8 @@ const locale = (locale) => {
     DefaultOptions.localization = asked;
 };
 const extend = function (plugin, option) {
-    if (!plugin.$i) { // install plugin only once
+    if (!plugin.$i) {
+        // install plugin only once
         plugin.load(option, { TempusDominus, Dates, Display }, this);
         plugin.$i = true;
     }

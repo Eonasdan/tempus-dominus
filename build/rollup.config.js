@@ -1,4 +1,5 @@
-const typescript = require('rollup-plugin-typescript2');
+//const typescript = require('rollup-plugin-typescript2'); //this doesn't produce map files correctly ...sigh
+const typescript = require('@rollup/plugin-typescript');
 import postcss from 'rollup-plugin-postcss';
 import { terser } from "rollup-plugin-terser";
 
