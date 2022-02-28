@@ -214,7 +214,7 @@ class TempusDominus {
         this._toggleClickEvent
       );
     }
-    this._toggle.removeEventListener('click', this._toggleClickEvent);
+    this._toggle?.removeEventListener('click', this._toggleClickEvent);
     this._subscribers = {};
   }
 
