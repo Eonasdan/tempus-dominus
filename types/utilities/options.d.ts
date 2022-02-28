@@ -1,12 +1,16 @@
 import { DateTime, DateTimeFormatOptions } from '../datetime';
+import ViewMode from './view-mode';
 export declare class OptionsStore {
     options: Options;
     element: HTMLElement;
     viewDate: DateTime;
-    currentViewMode: number;
     input: HTMLInputElement;
     unset: boolean;
-    minViewModeNumber: number;
+    private _currentCalendarViewMode;
+    get currentCalendarViewMode(): number;
+    set currentCalendarViewMode(value: number);
+    minimumCalendarViewMode: number;
+    currentView: keyof ViewMode;
 }
 export default interface Options {
     restrictions?: {
@@ -54,7 +58,7 @@ export default interface Options {
             down?: string;
             close?: string;
         };
-        viewMode?: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
+        viewMode?: keyof ViewMode | undefined;
         sideBySide?: boolean;
         inline?: boolean;
         keepOpen?: boolean;

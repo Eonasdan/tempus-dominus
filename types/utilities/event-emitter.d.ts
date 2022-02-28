@@ -1,6 +1,6 @@
 import { Unit } from '../datetime';
+import ActionTypes from './action-types';
 import { BaseEvent } from './event-types';
-import { ActionTypes } from './actionTypes';
 export declare type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
 export declare class EventEmitter<T> {
     private subscribers;
@@ -11,7 +11,7 @@ export declare class EventEmitter<T> {
 }
 export declare class EventEmitters {
     triggerEvent: EventEmitter<BaseEvent>;
-    viewUpdate: EventEmitter<Unit>;
+    viewUpdate: EventEmitter<unknown>;
     updateDisplay: EventEmitter<ViewUpdateValues>;
     action: EventEmitter<{
         e: any;
