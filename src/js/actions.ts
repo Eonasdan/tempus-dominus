@@ -1,4 +1,3 @@
-import { DatePickerModes } from './utilities/conts.js';
 import { DateTime, Unit } from './datetime';
 import Collapse from './display/collapse';
 import Namespace from './utilities/namespace';
@@ -7,8 +6,9 @@ import Dates from './dates';
 import Validation from './validation';
 import Display from './display';
 import { EventEmitters } from './utilities/event-emitter';
-import { ActionTypes } from './utilities/actionTypes';
 import { serviceLocator } from './utilities/service-locator.js';
+import ActionTypes from './utilities/action-types';
+import CalendarModes from './utilities/calendar-modes';
 
 /**
  *
@@ -29,7 +29,7 @@ export default class Actions {
 
     this._eventEmitters.action.subscribe((result) => {
       this.do(result.e, result.action);
-    })
+    });
   }
 
   /**
@@ -42,20 +42,16 @@ export default class Actions {
     if (currentTarget?.classList?.contains(Namespace.css.disabled))
       return false;
     action = action || currentTarget?.dataset?.action;
-    const lastPicked = (
-      this.dates.lastPicked || this.optionsStore.viewDate
-    ).clone;
+    const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
+      .clone;
 
     switch (action) {
       case ActionTypes.next:
       case ActionTypes.previous:
         this.handleNextPrevious(action);
         break;
-      case ActionTypes.pickerSwitch:
+      case ActionTypes.changeCalendarView:
         this.display._showMode(1);
-        this._eventEmitters.viewUpdate.emit(
-          DatePickerModes[this.optionsStore.currentViewMode].unit
-        );
         this.display._updateCalendarHeader();
         break;
       case ActionTypes.selectMonth:
@@ -65,17 +61,16 @@ export default class Actions {
         switch (action) {
           case ActionTypes.selectMonth:
             this.optionsStore.viewDate.month = value;
-            this._eventEmitters.viewUpdate.emit(Unit.month);
             break;
           case ActionTypes.selectYear:
           case ActionTypes.selectDecade:
             this.optionsStore.viewDate.year = value;
-            this._eventEmitters.viewUpdate.emit(Unit.year);
             break;
         }
 
         if (
-          this.optionsStore.currentViewMode === this.optionsStore.minViewModeNumber
+          this.optionsStore.currentCalendarViewMode ===
+          this.optionsStore.minimumCalendarViewMode
         ) {
           this.dates.setValue(
             this.optionsStore.viewDate,
@@ -104,16 +99,10 @@ export default class Actions {
           if (index !== -1) {
             this.dates.setValue(null, index); //deselect multi-date
           } else {
-            this.dates.setValue(
-              day,
-              this.dates.lastPickedIndex + 1
-            );
+            this.dates.setValue(day, this.dates.lastPickedIndex + 1);
           }
         } else {
-          this.dates.setValue(
-            day,
-            this.dates.lastPickedIndex
-          );
+          this.dates.setValue(day, this.dates.lastPickedIndex);
         }
 
         if (
@@ -133,33 +122,28 @@ export default class Actions {
         )
           hour += 12;
         lastPicked.hours = hour;
-        this.dates.setValue(
-          lastPicked,
-          this.dates.lastPickedIndex
-        );
+        this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         this.hideOrClock(e);
         break;
       case ActionTypes.selectMinute:
         lastPicked.minutes = +currentTarget.dataset.value;
-        this.dates.setValue(
-          lastPicked,
-          this.dates.lastPickedIndex
-        );
+        this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         this.hideOrClock(e);
         break;
       case ActionTypes.selectSecond:
         lastPicked.seconds = +currentTarget.dataset.value;
-        this.dates.setValue(
-          lastPicked,
-          this.dates.lastPickedIndex
-        );
+        this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         this.hideOrClock(e);
         break;
       case ActionTypes.incrementHours:
-       this.manipulateAndSet(lastPicked, Unit.hours);
+        this.manipulateAndSet(lastPicked, Unit.hours);
         break;
       case ActionTypes.incrementMinutes:
-        this.manipulateAndSet(lastPicked, Unit.minutes, this.optionsStore.options.stepping);
+        this.manipulateAndSet(
+          lastPicked,
+          Unit.minutes,
+          this.optionsStore.options.stepping
+        );
         break;
       case ActionTypes.incrementSeconds:
         this.manipulateAndSet(lastPicked, Unit.seconds);
@@ -168,13 +152,18 @@ export default class Actions {
         this.manipulateAndSet(lastPicked, Unit.hours, -1);
         break;
       case ActionTypes.decrementMinutes:
-        this.manipulateAndSet(lastPicked, Unit.minutes, this.optionsStore.options.stepping * -1);
+        this.manipulateAndSet(
+          lastPicked,
+          Unit.minutes,
+          this.optionsStore.options.stepping * -1
+        );
         break;
       case ActionTypes.decrementSeconds:
         this.manipulateAndSet(lastPicked, Unit.seconds, -1);
         break;
       case ActionTypes.toggleMeridiem:
-        this.manipulateAndSet(lastPicked,
+        this.manipulateAndSet(
+          lastPicked,
           Unit.hours,
           this.dates.lastPicked.hours >= 12 ? -12 : 12
         );
@@ -193,7 +182,10 @@ export default class Actions {
           ).outerHTML;
 
           this.display._updateCalendarHeader();
-        } else {
+          // this is here to set the "currentView" to the correct calendar view
+          this.optionsStore.currentCalendarViewMode = this.optionsStore.currentCalendarViewMode;
+        } 
+        else {
           currentTarget.setAttribute(
             'title',
             this.optionsStore.options.localization.selectDate
@@ -211,11 +203,13 @@ export default class Actions {
             `.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`
           )
           .forEach((htmlElement: HTMLElement) => Collapse.toggle(htmlElement));
+        this._eventEmitters.viewUpdate.emit();
         break;
       case ActionTypes.showClock:
       case ActionTypes.showHours:
       case ActionTypes.showMinutes:
       case ActionTypes.showSeconds:
+        this.optionsStore.currentView = 'clock';
         this.display.widget
           .querySelectorAll(`.${Namespace.css.timeContainer} > div`)
           .forEach(
@@ -259,20 +253,18 @@ export default class Actions {
         );
         this.optionsStore.viewDate = today;
         if (this.validation.isValid(today, Unit.date))
-          this.dates.setValue(
-            today,
-            this.dates.lastPickedIndex
-          );
+          this.dates.setValue(today, this.dates.lastPickedIndex);
         break;
     }
   }
 
   private handleNextPrevious(action: ActionTypes) {
-    const { unit, step } = DatePickerModes[this.optionsStore.currentViewMode];
+    const { unit, step } =
+      CalendarModes[this.optionsStore.currentCalendarViewMode];
     if (action === ActionTypes.next)
       this.optionsStore.viewDate.manipulate(step, unit);
     else this.optionsStore.viewDate.manipulate(step * -1, unit);
-    this._eventEmitters.viewUpdate.emit(unit);
+    this._eventEmitters.viewUpdate.emit();
 
     this.display._showMode();
   }
@@ -304,11 +296,7 @@ export default class Actions {
   private manipulateAndSet(lastPicked: DateTime, unit: Unit, value = 1) {
     const newDate = lastPicked.manipulate(value, unit);
     if (this.validation.isValid(newDate, unit)) {
-      this.dates.setValue(
-        newDate,
-        this.dates.lastPickedIndex
-      );
+      this.dates.setValue(newDate, this.dates.lastPickedIndex);
     }
   }
 }
-

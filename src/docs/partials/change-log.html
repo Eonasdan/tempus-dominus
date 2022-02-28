@@ -13,6 +13,13 @@
       <li><code>toggleMeridiem</code> supports a comma separated list. <a
         href='https://github.com/Eonasdan/tempus-dominus/issues/2399'>#2399.</a>
       </li>
+      <li>
+        All event types now provide <code>viewMode</code> which provides
+        'clock' | 'calendar' | 'months' | 'years' | 'decades' depending what view
+        the event occurred.
+        <a
+          href='https://github.com/Eonasdan/tempus-dominus/issues/2428'>#2428.</a>
+      </li>
     </ul>
     <h3>Breaking changes</h3>
     <ul>
@@ -21,6 +28,7 @@
         guide.
       </li>
       <li>Locale loading and authoring has changed a bit as well.</li>
+      <li><code>ViewUpdateEvent</code> no longer provides <code>change: Unit</code>.</li>
     </ul>
     <h3>Bug fixes</h3>
     <ul>

@@ -4,8 +4,8 @@ import { OptionsStore } from '../../utilities/options';
 import Validation from '../../validation';
 import Dates from '../../dates';
 import { Paint } from '../index';
-import { ActionTypes } from '../../utilities/actionTypes';
 import { serviceLocator } from '../../utilities/service-locator';
+import ActionTypes from '../../utilities/action-types';
 
 /**
  * Creates and updates the grid for `month`

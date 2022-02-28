@@ -2,7 +2,6 @@ import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
 import Actions from './actions';
-import { DatePickerModes, DefaultOptions } from './utilities/conts';
 import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
 import Namespace from './utilities/namespace';
 import Options, { OptionConverter, OptionsStore } from './utilities/options';
@@ -13,11 +12,13 @@ import {
   FailEvent,
 } from './utilities/event-types';
 import { EventEmitters } from './utilities/event-emitter';
-import { ActionTypes } from './utilities/actionTypes';
 import {
   serviceLocator,
   setupServiceLocator,
 } from './utilities/service-locator';
+import CalendarModes from './utilities/calendar-modes';
+import DefaultOptions from './utilities/default-options';
+import ActionTypes from './utilities/action-types';
 
 /**
  * A robust and powerful date/time picker component.
@@ -61,8 +62,8 @@ class TempusDominus {
       this._triggerEvent(e);
     });
 
-    this._eventEmitters.viewUpdate.subscribe((unit) => {
-      this._viewUpdate(unit);
+    this._eventEmitters.viewUpdate.subscribe(() => {
+      this._viewUpdate();
     });
   }
 
@@ -237,13 +238,15 @@ class TempusDominus {
    * @private
    */
   private _triggerEvent(event: BaseEvent) {
-    // checking hasOwnProperty because the BasicEvent also falls through here otherwise
+    event.viewMode = this.optionsStore.currentView;
+
     const isChangeEvent = event.type === Namespace.events.change;
     if (isChangeEvent) {
       const { date, oldDate, isClear } = event as ChangeEvent;
       if (
         (date && oldDate && date.isSame(oldDate)) ||
-        (!isClear && !date && !oldDate)) {
+        (!isClear && !date && !oldDate)
+      ) {
         return;
       }
       this._handleAfterChangeEvent(event as ChangeEvent);
@@ -262,9 +265,8 @@ class TempusDominus {
 
       if (isChangeEvent && this.optionsStore.input) {
         $(this.optionsStore.input).trigger(event);
-      }
-      else {
-        $(this.optionsStore.element).trigger(event);        
+      } else {
+        $(this.optionsStore.element).trigger(event);
       }
     }
 
@@ -288,10 +290,9 @@ class TempusDominus {
    * @param {Unit} unit
    * @private
    */
-  private _viewUpdate(unit: Unit) {
+  private _viewUpdate() {
     this._triggerEvent({
       type: Namespace.events.update,
-      change: unit,
       viewDate: this.optionsStore.viewDate.clone,
     } as ViewUpdateEvent);
   }
@@ -332,28 +333,28 @@ class TempusDominus {
      * allowing year and month to be selected but not date.
      */
     if (config.display.components.year) {
-      this.optionsStore.minViewModeNumber = 2;
+      this.optionsStore.minimumCalendarViewMode = 2;
     }
     if (config.display.components.month) {
-      this.optionsStore.minViewModeNumber = 1;
+      this.optionsStore.minimumCalendarViewMode = 1;
     }
     if (config.display.components.date) {
-      this.optionsStore.minViewModeNumber = 0;
+      this.optionsStore.minimumCalendarViewMode = 0;
     }
 
-    this.optionsStore.currentViewMode = Math.max(
-      this.optionsStore.minViewModeNumber,
-      this.optionsStore.currentViewMode
+    this.optionsStore.currentCalendarViewMode = Math.max(
+      this.optionsStore.minimumCalendarViewMode,
+      this.optionsStore.currentCalendarViewMode
     );
 
     // Update view mode if needed
     if (
-      DatePickerModes[this.optionsStore.currentViewMode].name !==
+      CalendarModes[this.optionsStore.currentCalendarViewMode].name !==
       config.display.viewMode
     ) {
-      this.optionsStore.currentViewMode = Math.max(
-        DatePickerModes.findIndex((x) => x.name === config.display.viewMode),
-        this.optionsStore.minViewModeNumber
+      this.optionsStore.currentCalendarViewMode = Math.max(
+        CalendarModes.findIndex((x) => x.name === config.display.viewMode),
+        this.optionsStore.minimumCalendarViewMode
       );
     }
 

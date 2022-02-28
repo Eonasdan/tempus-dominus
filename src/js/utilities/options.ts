@@ -1,15 +1,27 @@
 import { DateTime, DateTimeFormatOptions } from '../datetime';
 import Namespace from './namespace';
-import { DefaultOptions } from './conts';
+import ViewMode from './view-mode';
+import CalendarModes from './calendar-modes';
+import DefaultOptions from './default-options';
 
 export class OptionsStore {
   options: Options;
   element: HTMLElement;
   viewDate = new DateTime();
-  currentViewMode = 0;
   input: HTMLInputElement;
   unset: boolean;
-  minViewModeNumber = 0;
+  private _currentCalendarViewMode = 0;
+  get currentCalendarViewMode() {
+    return this._currentCalendarViewMode;
+  }
+
+  set currentCalendarViewMode(value) {
+    this._currentCalendarViewMode = value;
+    this.currentView = CalendarModes[value].name;
+  }
+
+  minimumCalendarViewMode = 0;
+  currentView: keyof ViewMode = 'calendar';
 }
 
 export default interface Options {
@@ -51,7 +63,7 @@ export default interface Options {
       down?: string;
       close?: string;
     };
-    viewMode?: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
+    viewMode?: keyof ViewMode | undefined;
     sideBySide?: boolean;
     inline?: boolean;
     keepOpen?: boolean;
@@ -106,16 +118,13 @@ export class OptionConverter {
   static _mergeOptions(providedOptions: Options, mergeTo: Options): Options {
     const newOptions = {} as Options;
     let path = '';
-    const ignoreProperties = [
-      'meta',
-      'dayViewHeaderFormat',
-      'container'
-    ];
+    const ignoreProperties = ['meta', 'dayViewHeaderFormat', 'container'];
 
     //see if the options specify a locale
     const locale =
-      mergeTo.localization.locale !== 'default' ? mergeTo.localization.locale :
-        providedOptions?.localization?.locale || 'default';
+      mergeTo.localization.locale !== 'default'
+        ? mergeTo.localization.locale
+        : providedOptions?.localization?.locale || 'default';
 
     const processKey = (key, value, providedType, defaultType) => {
       switch (key) {
@@ -278,7 +287,7 @@ export class OptionConverter {
           const optionValues = {
             toolbarPlacement: ['top', 'bottom', 'default'],
             type: ['icons', 'sprites'],
-            viewMode: ['clock', 'calendar', 'months', 'years', 'decades']
+            viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
           };
           const keyOptions = optionValues[key];
           if (!keyOptions.includes(value))
@@ -293,7 +302,14 @@ export class OptionConverter {
         case 'dayViewHeaderFormat':
           return value;
         case 'container':
-          if (value && !(value instanceof HTMLElement || value instanceof Element || value?.appendChild)) {
+          if (
+            value &&
+            !(
+              value instanceof HTMLElement ||
+              value instanceof Element ||
+              value?.appendChild
+            )
+          ) {
             Namespace.errorMessages.typeMismatch(
               path.substring(1),
               typeof value,
@@ -578,8 +594,8 @@ export class OptionConverter {
       Array.isArray(t)
         ? []
         : Object(t) === t
-          ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
-          : pre.join('.');
+        ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
+        : pre.join('.');
 
     this._flatback = deepKeys(DefaultOptions);
 
@@ -592,16 +608,19 @@ export class OptionConverter {
    * @param config
    */
   static _validateConflcits(config: Options) {
-    if (config.display.sideBySide && (!config.display.components.clock ||
-      !(config.display.components.hours ||
-        config.display.components.minutes ||
-        config.display.components.seconds)
-    )) {
+    if (
+      config.display.sideBySide &&
+      (!config.display.components.clock ||
+        !(
+          config.display.components.hours ||
+          config.display.components.minutes ||
+          config.display.components.seconds
+        ))
+    ) {
       Namespace.errorMessages.conflictingConfiguration(
         'Cannot use side by side mode without the clock components'
       );
     }
-
 
     if (config.restrictions.minDate && config.restrictions.maxDate) {
       if (config.restrictions.minDate.isAfter(config.restrictions.maxDate)) {

@@ -1,7 +1,7 @@
-export enum ActionTypes {
+enum ActionTypes {
   next = 'next',
   previous = 'previous',
-  pickerSwitch = 'pickerSwitch',
+  changeCalendarView = 'changeCalendarView',
   selectMonth = 'selectMonth',
   selectYear = 'selectYear',
   selectDecade = 'selectDecade',
@@ -25,3 +25,5 @@ export enum ActionTypes {
   close = 'close',
   today = 'today',
 }
+
+export default ActionTypes;

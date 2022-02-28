@@ -124,4 +124,10 @@ section h2 {
   .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
     border-color: rgb(56, 61, 63) rgb(56, 61, 63) rgb(48, 52, 54);
   }
+
+  .btn-bd-download:hover, .btn-bd-download:active {
+    color: rgb(205, 200, 194);
+    background-color: rgb(125, 97, 0);
+    border-color: rgb(139, 108, 0);
+  }
 }

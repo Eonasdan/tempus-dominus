@@ -2,9 +2,9 @@ import { Unit } from '../../datetime';
 import Namespace from '../../utilities/namespace';
 import { OptionsStore } from '../../utilities/options';
 import Validation from '../../validation';
-import { ActionTypes } from '../../utilities/actionTypes';
 import { serviceLocator } from '../../utilities/service-locator';
 import { Paint } from '../index';
+import ActionTypes from '../../utilities/action-types';
 
 /**
  * Creates and updates the grid for `hours`

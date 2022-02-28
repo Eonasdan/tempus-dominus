@@ -12,6 +12,7 @@
     <code class='language-javascript'>
 interface BaseEvent {
   type: string; //e.g. change.td
+  viewMode?: keyof ViewMode //'clock' | 'calendar' | 'months' | 'years' | 'decades'
 }
     </code>
   </pre>
@@ -38,7 +39,6 @@ interface ChangeEvent extends BaseEvent {
     <pre>
     <code class='language-javascript'>
 interface ViewUpdateEvent extends BaseEvent {
-  change: Unit;
   viewDate: DateTime;
 }
     </code>

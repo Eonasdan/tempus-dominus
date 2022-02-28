@@ -7,7 +7,6 @@ import HourDisplay from './time/hour-display';
 import MinuteDisplay from './time/minute-display';
 import SecondDisplay from './time/second-display';
 import { DateTime, Unit } from '../datetime';
-import { DatePickerModes } from '../utilities/conts';
 import { createPopper } from '@popperjs/core';
 import Namespace from '../utilities/namespace';
 import { HideEvent } from '../utilities/event-types';
@@ -16,8 +15,9 @@ import { OptionsStore } from '../utilities/options';
 import Validation from '../validation';
 import Dates from '../dates';
 import { EventEmitters, ViewUpdateValues } from '../utilities/event-emitter';
-import { ActionTypes } from '../utilities/actionTypes';
 import { serviceLocator } from '../utilities/service-locator';
+import ActionTypes from '../utilities/action-types';
+import CalendarModes from '../utilities/calendar-modes';
 
 /**
  * Main class for all things display related.
@@ -41,9 +41,7 @@ export default class Display {
   secondDisplay: SecondDisplay;
   private _eventEmitters: EventEmitters;
 
-
   constructor() {
-
     this.optionsStore = serviceLocator.locate(OptionsStore);
     this.validation = serviceLocator.locate(Validation);
     this.dates = serviceLocator.locate(Dates);
@@ -131,7 +129,6 @@ export default class Display {
     }
   }
 
-
   paint(unit: Unit | 'decade', date: DateTime, classes: string[]) {
     // implemented in plugin
   }
@@ -177,19 +174,28 @@ export default class Display {
 
       // reset the view to the clock if there's no date components
       if (onlyClock) {
-        this._eventEmitters.action.emit({ e: null, action: ActionTypes.showClock });
+        this.optionsStore.currentView = 'clock';
+        this._eventEmitters.action.emit({
+          e: null,
+          action: ActionTypes.showClock,
+        });
       }
 
       // otherwise return to the calendar view
-      if(!this.optionsStore.currentViewMode) {
-        this.optionsStore.currentViewMode = this.optionsStore.minViewModeNumber;
+      if (!this.optionsStore.currentCalendarViewMode) {
+        this.optionsStore.currentCalendarViewMode =
+          this.optionsStore.minimumCalendarViewMode;
       }
 
       if (!onlyClock) {
         if (this._hasTime) {
-          Collapse.hide(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+          Collapse.hide(
+            this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
+          );
         }
-        Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+        Collapse.show(
+          this.widget.querySelector(`div.${Namespace.css.dateContainer}`)
+        );
       }
 
       if (this._hasDate) {
@@ -210,7 +216,7 @@ export default class Display {
             placement:
               document.documentElement.dir === 'rtl'
                 ? 'bottom-end'
-                : 'bottom-start'
+                : 'bottom-start',
           }
         );
       } else {
@@ -218,7 +224,10 @@ export default class Display {
       }
 
       if (this.optionsStore.options.display.viewMode == 'clock') {
-        this._eventEmitters.action.emit({ e: null, action: ActionTypes.showClock });
+        this._eventEmitters.action.emit({
+          e: null,
+          action: ActionTypes.showClock,
+        });
       }
 
       this.widget
@@ -258,11 +267,11 @@ export default class Display {
     }
     if (direction) {
       const max = Math.max(
-        this.optionsStore.minViewModeNumber,
-        Math.min(3, this.optionsStore.currentViewMode + direction)
+        this.optionsStore.minimumCalendarViewMode,
+        Math.min(3, this.optionsStore.currentCalendarViewMode + direction)
       );
-      if (this.optionsStore.currentViewMode == max) return;
-      this.optionsStore.currentViewMode = max;
+      if (this.optionsStore.currentCalendarViewMode == max) return;
+      this.optionsStore.currentCalendarViewMode = max;
     }
 
     this.widget
@@ -271,7 +280,8 @@ export default class Display {
       )
       .forEach((e: HTMLElement) => (e.style.display = 'none'));
 
-    const datePickerMode = DatePickerModes[this.optionsStore.currentViewMode];
+    const datePickerMode =
+      CalendarModes[this.optionsStore.currentCalendarViewMode];
     let picker: HTMLElement = this.widget.querySelector(
       `.${datePickerMode.className}`
     );
@@ -293,13 +303,14 @@ export default class Display {
 
     picker.style.display = 'grid';
     this._updateCalendarHeader();
+    this._eventEmitters.viewUpdate.emit();
   }
 
   _updateCalendarHeader() {
     const showing = [
       ...this.widget.querySelector(
         `.${Namespace.css.dateContainer} div[style*="display: grid"]`
-      ).classList
+      ).classList,
     ].find((x) => x.startsWith(Namespace.css.dateContainer));
 
     const [previous, switcher, next] = this.widget
@@ -359,7 +370,9 @@ export default class Display {
           'title',
           this.optionsStore.options.localization.nextMonth
         );
-        switcher.innerText = this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat);
+        switcher.innerText = this.optionsStore.viewDate.format(
+          this.optionsStore.options.localization.dayViewHeaderFormat
+        );
         break;
     }
     switcher.innerText = switcher.getAttribute(showing);
@@ -381,8 +394,8 @@ export default class Display {
         date: this.optionsStore.unset
           ? null
           : this.dates.lastPicked
-            ? this.dates.lastPicked.clone
-            : void 0
+          ? this.dates.lastPicked.clone
+          : void 0,
       } as HideEvent);
       this._isVisible = false;
     }
@@ -611,12 +624,14 @@ export default class Display {
 
     const switcher = document.createElement('div');
     switcher.classList.add(Namespace.css.switch);
-    switcher.setAttribute('data-action', ActionTypes.pickerSwitch);
+    switcher.setAttribute('data-action', ActionTypes.changeCalendarView);
 
     const next = document.createElement('div');
     next.classList.add(Namespace.css.next);
     next.setAttribute('data-action', ActionTypes.next);
-    next.appendChild(this._iconTag(this.optionsStore.options.display.icons.next));
+    next.appendChild(
+      this._iconTag(this.optionsStore.options.display.icons.next)
+    );
 
     calendarHeader.append(previous, switcher, next);
     return calendarHeader;
@@ -680,4 +695,8 @@ export default class Display {
   }
 }
 
-export type Paint = (unit: Unit | 'decade', innerDate: DateTime, classes: string[]) => void;
+export type Paint = (
+  unit: Unit | 'decade',
+  innerDate: DateTime,
+  classes: string[]
+) => void;

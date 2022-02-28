@@ -1,6 +1,6 @@
 import { Unit } from '../datetime';
+import ActionTypes from './action-types';
 import { BaseEvent } from './event-types';
-import { ActionTypes } from './actionTypes';
 
 export type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
 
@@ -9,10 +9,7 @@ export class EventEmitter<T> {
 
   subscribe(callback: (value: T) => void) {
     this.subscribers.push(callback);
-    return this.unsubscribe.bind(
-      this,
-      this.subscribers.length - 1
-    )
+    return this.unsubscribe.bind(this, this.subscribers.length - 1);
   }
 
   unsubscribe(index: number) {
@@ -33,9 +30,9 @@ export class EventEmitter<T> {
 
 export class EventEmitters {
   triggerEvent = new EventEmitter<BaseEvent>();
-  viewUpdate = new EventEmitter<Unit>();
+  viewUpdate = new EventEmitter();
   updateDisplay = new EventEmitter<ViewUpdateValues>();
-  action = new EventEmitter<{e:any, action?: ActionTypes}>();
+  action = new EventEmitter<{ e: any; action?: ActionTypes }>();
 
   destory() {
     this.triggerEvent.destory();

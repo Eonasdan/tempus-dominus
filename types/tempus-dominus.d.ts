@@ -1,9 +1,9 @@
 import Display from './display/index';
 import Dates from './dates';
-import { DefaultOptions } from './utilities/conts';
 import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
+import DefaultOptions from './utilities/default-options';
 /**
  * A robust and powerful date/time picker component.
  */
