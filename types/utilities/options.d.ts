@@ -9,6 +9,11 @@ export declare class OptionsStore {
     private _currentCalendarViewMode;
     get currentCalendarViewMode(): number;
     set currentCalendarViewMode(value: number);
+    /**
+     * When switching back to the calendar from the clock,
+     * this sets currentView to the correct calendar view.
+     */
+    refreshCurrentView(): void;
     minimumCalendarViewMode: number;
     currentView: keyof ViewMode;
 }
@@ -122,6 +127,7 @@ export declare class OptionConverter {
      * @param optionName Provides text to error messages e.g. disabledDates
      * @param value Option value
      * @param providedType Used to provide text to error messages
+     * @param locale
      */
     static _typeCheckDateArray(optionName: string, value: any, providedType: string, locale?: string): void;
     /**

@@ -17,14 +17,13 @@ export default class Actions {
     do(e: any, action?: ActionTypes): boolean;
     private handleNextPrevious;
     /**
-     * Common function to manipulate {@link lastPicked} by `unit`.
      * After setting the value it will either show the clock or hide the widget.
-     * @param unit
-     * @param value Value to change by
+     * @param e
      */
     private hideOrClock;
     /**
      * Common function to manipulate {@link lastPicked} by `unit`.
+     * @param lastPicked
      * @param unit
      * @param value Value to change by
      */
