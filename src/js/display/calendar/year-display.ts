@@ -72,7 +72,7 @@ export default class YearDisplay {
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectYear}"]`)
-      .forEach((containerClone: HTMLElement, index) => {
+      .forEach((containerClone: HTMLElement) => {
         let classes = [];
         classes.push(Namespace.css.year);
 
@@ -86,7 +86,7 @@ export default class YearDisplay {
           classes.push(Namespace.css.disabled);
         }
 
-        paint(Unit.year, innerDate, classes);
+        paint(Unit.year, innerDate, classes, containerClone);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

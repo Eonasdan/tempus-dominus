@@ -35,7 +35,7 @@
       </div>
       <script type='text/javascript'>
         const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
-        datetimepicker1.display.paint = (unit, date, classes) => {
+        datetimepicker1.display.paint = (unit, date, classes, element) => {
           if (unit === tempusDominus.Unit.date) {
             if (date.isSame(new tempusDominus.DateTime().manipulate(1, 'date'), unit)) {
               classes.push('special-day');
@@ -54,7 +54,7 @@
 //example picker
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
 
-datetimepicker1.display.paint = (unit, date, classes) => {
+datetimepicker1.display.paint = (unit, date, classes, element) => {
   if (unit === tempusDominus.Unit.date) {
     //highlight tomorrow
     if (date.isSame(new tempusDominus.DateTime().manipulate(1, 'date'), unit)) {
@@ -70,7 +70,7 @@ datetimepicker1.display.paint = (unit, date, classes) => {
 <page-meta>
   <title>Plugins - Paint</title>
   <post-date>02/05/2022</post-date>
-  <update-date>02/05/2022</update-date>
+  <update-date>03/21/2022</update-date>
   <excerpt>How to use add custom classes with Tempus Dominus.
   </excerpt>
   <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>

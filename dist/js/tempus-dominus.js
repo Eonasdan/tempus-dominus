@@ -1784,7 +1784,7 @@
                 if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
                     classes.push(Namespace.css.weekend);
                 }
-                paint(exports.Unit.date, innerDate, classes);
+                paint(exports.Unit.date, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
@@ -1872,7 +1872,7 @@
                 if (!this.validation.isValid(innerDate, exports.Unit.month)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.month, innerDate, classes);
+                paint(exports.Unit.month, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${index}`);
@@ -1938,7 +1938,7 @@
                 if (!this.validation.isValid(innerDate, exports.Unit.year)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.year, innerDate, classes);
+                paint(exports.Unit.year, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.year}`);
@@ -2020,7 +2020,7 @@
                         .length > 0) {
                     classes.push(Namespace.css.active);
                 }
-                paint('decade', this._startDecade, classes);
+                paint('decade', this._startDecade, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${this._startDecade.year}`);
@@ -2258,7 +2258,7 @@
                 if (!this.validation.isValid(innerDate, exports.Unit.hours)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.hours, innerDate, classes);
+                paint(exports.Unit.hours, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.hours}`);
@@ -2314,7 +2314,7 @@
                 if (!this.validation.isValid(innerDate, exports.Unit.minutes)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.minutes, innerDate, classes);
+                paint(exports.Unit.minutes, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.minutesFormatted}`);
@@ -2361,7 +2361,7 @@
                 if (!this.validation.isValid(innerDate, exports.Unit.seconds)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.seconds, innerDate, classes);
+                paint(exports.Unit.seconds, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.seconds}`);
@@ -2565,7 +2565,15 @@
                     }
             }
         }
-        paint(unit, date, classes) {
+        // noinspection JSUnusedLocalSymbols
+        /**
+         * Allows developers to add/remove classes from an element.
+         * @param _unit
+         * @param _date
+         * @param _classes
+         * @param _element
+         */
+        paint(_unit, _date, _classes, _element) {
             // implemented in plugin
         }
         /**

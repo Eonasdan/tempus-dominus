@@ -86,7 +86,7 @@ export default class MonthDisplay {
           classes.push(Namespace.css.disabled);
         }
 
-        paint(Unit.month, innerDate, classes);
+        paint(Unit.month, innerDate, classes, containerClone);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

@@ -46,7 +46,7 @@ export default class secondDisplay {
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectSecond}"]`)
-      .forEach((containerClone: HTMLElement, index) => {
+      .forEach((containerClone: HTMLElement) => {
         let classes = [];
         classes.push(Namespace.css.second);
 
@@ -54,7 +54,7 @@ export default class secondDisplay {
           classes.push(Namespace.css.disabled);
         }
 
-        paint(Unit.seconds, innerDate, classes);
+        paint(Unit.seconds, innerDate, classes, containerClone);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

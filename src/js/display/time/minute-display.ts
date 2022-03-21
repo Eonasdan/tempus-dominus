@@ -54,7 +54,7 @@ export default class MinuteDisplay {
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectMinute}"]`)
-      .forEach((containerClone: HTMLElement, index) => {
+      .forEach((containerClone: HTMLElement) => {
         let classes = [];
         classes.push(Namespace.css.minute);
 
@@ -62,7 +62,7 @@ export default class MinuteDisplay {
           classes.push(Namespace.css.disabled);
         }
 
-        paint(Unit.minutes, innerDate, classes);
+        paint(Unit.minutes, innerDate, classes, containerClone);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

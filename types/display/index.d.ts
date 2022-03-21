@@ -18,7 +18,6 @@ export default class Display {
     private optionsStore;
     private validation;
     private dates;
-    private display;
     dateDisplay: DateDisplay;
     monthDisplay: MonthDisplay;
     yearDisplay: YearDisplay;
@@ -45,7 +44,14 @@ export default class Display {
      * @private
      */
     _update(unit: ViewUpdateValues): void;
-    paint(unit: Unit | 'decade', date: DateTime, classes: string[]): void;
+    /**
+     * Allows developers to add/remove classes from an element.
+     * @param _unit
+     * @param _date
+     * @param _classes
+     * @param _element
+     */
+    paint(_unit: Unit | 'decade', _date: DateTime, _classes: string[], _element: HTMLElement): void;
     /**
      * Shows the picker and creates a Popper instance if needed.
      * Add document click event to hide when clicking outside the picker.
@@ -123,4 +129,4 @@ export default class Display {
      */
     _rebuild(): void;
 }
-export declare type Paint = (unit: Unit | 'decade', innerDate: DateTime, classes: string[]) => void;
+export declare type Paint = (unit: Unit | 'decade', innerDate: DateTime, classes: string[], element: HTMLElement) => void;

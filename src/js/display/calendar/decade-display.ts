@@ -108,7 +108,7 @@ export default class DecadeDisplay {
           classes.push(Namespace.css.active);
         }
 
-        paint('decade', this._startDecade, classes);
+        paint('decade', this._startDecade, classes, containerClone);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

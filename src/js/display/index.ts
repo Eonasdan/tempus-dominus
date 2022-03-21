@@ -29,7 +29,6 @@ export default class Display {
   private optionsStore: OptionsStore;
   private validation: Validation;
   private dates: Dates;
-  private display: Display;
 
   dateDisplay: DateDisplay;
   monthDisplay: MonthDisplay;
@@ -129,7 +128,15 @@ export default class Display {
     }
   }
 
-  paint(unit: Unit | 'decade', date: DateTime, classes: string[]) {
+  // noinspection JSUnusedLocalSymbols
+  /**
+   * Allows developers to add/remove classes from an element.
+   * @param _unit
+   * @param _date
+   * @param _classes
+   * @param _element
+   */
+  paint(_unit: Unit | 'decade', _date: DateTime, _classes: string[], _element: HTMLElement) {
     // implemented in plugin
   }
 
@@ -698,5 +705,6 @@ export default class Display {
 export type Paint = (
   unit: Unit | 'decade',
   innerDate: DateTime,
-  classes: string[]
+  classes: string[],
+  element: HTMLElement
 ) => void;

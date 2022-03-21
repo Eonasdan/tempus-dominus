@@ -199,7 +199,7 @@ declare class Css {
 }
 export default class Namespace {
     static NAME: string;
-    static version: any;
+    static version: string;
     static dataKey: string;
     static events: Events;
     static css: Css;

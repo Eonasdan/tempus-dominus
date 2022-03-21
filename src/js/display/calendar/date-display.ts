@@ -99,7 +99,7 @@ export default class DateDisplay {
       .querySelectorAll(
         `[data-action="${ActionTypes.selectDay}"], .${Namespace.css.calendarWeeks}`
       )
-      .forEach((containerClone: HTMLElement, index) => {
+      .forEach((containerClone: HTMLElement) => {
         if (
           this.optionsStore.options.display.calendarWeeks &&
           containerClone.classList.contains(Namespace.css.calendarWeeks)
@@ -135,7 +135,7 @@ export default class DateDisplay {
           classes.push(Namespace.css.weekend);
         }
 
-        paint(Unit.date, innerDate, classes);
+        paint(Unit.date, innerDate, classes, containerClone);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

@@ -1780,7 +1780,7 @@ class DateDisplay {
             if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
                 classes.push(Namespace.css.weekend);
             }
-            paint(Unit.date, innerDate, classes);
+            paint(Unit.date, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
@@ -1868,7 +1868,7 @@ class MonthDisplay {
             if (!this.validation.isValid(innerDate, Unit.month)) {
                 classes.push(Namespace.css.disabled);
             }
-            paint(Unit.month, innerDate, classes);
+            paint(Unit.month, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${index}`);
@@ -1934,7 +1934,7 @@ class YearDisplay {
             if (!this.validation.isValid(innerDate, Unit.year)) {
                 classes.push(Namespace.css.disabled);
             }
-            paint(Unit.year, innerDate, classes);
+            paint(Unit.year, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.year}`);
@@ -2016,7 +2016,7 @@ class DecadeDisplay {
                     .length > 0) {
                 classes.push(Namespace.css.active);
             }
-            paint('decade', this._startDecade, classes);
+            paint('decade', this._startDecade, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${this._startDecade.year}`);
@@ -2254,7 +2254,7 @@ class HourDisplay {
             if (!this.validation.isValid(innerDate, Unit.hours)) {
                 classes.push(Namespace.css.disabled);
             }
-            paint(Unit.hours, innerDate, classes);
+            paint(Unit.hours, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.hours}`);
@@ -2310,7 +2310,7 @@ class MinuteDisplay {
             if (!this.validation.isValid(innerDate, Unit.minutes)) {
                 classes.push(Namespace.css.disabled);
             }
-            paint(Unit.minutes, innerDate, classes);
+            paint(Unit.minutes, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.minutesFormatted}`);
@@ -2357,7 +2357,7 @@ class secondDisplay {
             if (!this.validation.isValid(innerDate, Unit.seconds)) {
                 classes.push(Namespace.css.disabled);
             }
-            paint(Unit.seconds, innerDate, classes);
+            paint(Unit.seconds, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.seconds}`);
@@ -2561,7 +2561,15 @@ class Display {
                 }
         }
     }
-    paint(unit, date, classes) {
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * Allows developers to add/remove classes from an element.
+     * @param _unit
+     * @param _date
+     * @param _classes
+     * @param _element
+     */
+    paint(_unit, _date, _classes, _element) {
         // implemented in plugin
     }
     /**
