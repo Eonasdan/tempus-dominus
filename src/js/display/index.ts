@@ -147,31 +147,32 @@ export default class Display {
    */
   show(): void {
     if (this.widget == undefined) {
-      if (
-        this.optionsStore.options.useCurrent &&
-        !this.optionsStore.options.defaultDate &&
-        !this.optionsStore.input?.value
-      ) {
-        const date = new DateTime().setLocale(
-          this.optionsStore.options.localization.locale
-        );
-        if (!this.optionsStore.options.keepInvalid) {
-          let tries = 0;
-          let direction = 1;
-          if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
-            direction = -1;
+     if (this.dates.picked.length == 0) {
+          if (
+            this.optionsStore.options.useCurrent &&
+            !this.optionsStore.options.defaultDate
+          ) {
+            const date = new DateTime().setLocale(
+              this.optionsStore.options.localization.locale
+            );
+            if (!this.optionsStore.options.keepInvalid) {
+              let tries = 0;
+              let direction = 1;
+              if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
+                direction = -1;
+              }
+              while (!this.validation.isValid(date)) {
+                date.manipulate(direction, Unit.date);
+                if (tries > 31) break;
+                tries++;
+              }
+            }
+            this.dates.setValue(date);
           }
-          while (!this.validation.isValid(date)) {
-            date.manipulate(direction, Unit.date);
-            if (tries > 31) break;
-            tries++;
+    
+          if (this.optionsStore.options.defaultDate) {
+            this.dates.setValue(this.optionsStore.options.defaultDate);
           }
-        }
-        this.dates.setValue(date);
-      }
-
-      if (this.optionsStore.options.defaultDate) {
-        this.dates.setValue(this.optionsStore.options.defaultDate);
       }
 
       this._buildWidget();
