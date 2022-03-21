@@ -20,6 +20,14 @@ export class OptionsStore {
     this.currentView = CalendarModes[value].name;
   }
 
+  /**
+   * When switching back to the calendar from the clock,
+   * this sets currentView to the correct calendar view.
+   */
+  refreshCurrentView() {
+    this.currentView = CalendarModes[this.currentCalendarViewMode].name;
+  }
+
   minimumCalendarViewMode = 0;
   currentView: keyof ViewMode = 'calendar';
 }
@@ -139,6 +147,7 @@ export class OptionConverter {
             providedType,
             'DateTime or Date'
           );
+          break;
         }
         case 'viewDate': {
           const dateTime = this.dateConversion(value, 'viewDate');
@@ -151,6 +160,7 @@ export class OptionConverter {
             providedType,
             'DateTime or Date'
           );
+          break;
         }
         case 'minDate': {
           if (value === undefined) {
@@ -166,6 +176,7 @@ export class OptionConverter {
             providedType,
             'DateTime or Date'
           );
+          break;
         }
         case 'maxDate': {
           if (value === undefined) {
@@ -181,6 +192,7 @@ export class OptionConverter {
             providedType,
             'DateTime or Date'
           );
+          break;
         }
         case 'disabledHours':
           if (value === undefined) {
@@ -514,6 +526,7 @@ export class OptionConverter {
    * @param optionName Provides text to error messages e.g. disabledDates
    * @param value Option value
    * @param providedType Used to provide text to error messages
+   * @param locale
    */
   static _typeCheckDateArray(
     optionName: string,

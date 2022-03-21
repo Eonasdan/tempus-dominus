@@ -182,8 +182,7 @@ export default class Actions {
           ).outerHTML;
 
           this.display._updateCalendarHeader();
-          // this is here to set the "currentView" to the correct calendar view
-          this.optionsStore.currentCalendarViewMode = this.optionsStore.currentCalendarViewMode;
+          this.optionsStore.refreshCurrentView();
         } 
         else {
           currentTarget.setAttribute(
@@ -270,10 +269,8 @@ export default class Actions {
   }
 
   /**
-   * Common function to manipulate {@link lastPicked} by `unit`.
    * After setting the value it will either show the clock or hide the widget.
-   * @param unit
-   * @param value Value to change by
+   * @param e
    */
   private hideOrClock(e) {
     if (
@@ -290,6 +287,7 @@ export default class Actions {
 
   /**
    * Common function to manipulate {@link lastPicked} by `unit`.
+   * @param lastPicked
    * @param unit
    * @param value Value to change by
    */

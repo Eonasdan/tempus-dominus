@@ -910,6 +910,13 @@
             this._currentCalendarViewMode = value;
             this.currentView = CalendarModes[value].name;
         }
+        /**
+         * When switching back to the calendar from the clock,
+         * this sets currentView to the correct calendar view.
+         */
+        refreshCurrentView() {
+            this.currentView = CalendarModes[this.currentCalendarViewMode].name;
+        }
     }
     class OptionConverter {
         static _mergeOptions(providedOptions, mergeTo) {
@@ -930,6 +937,7 @@
                             return dateTime;
                         }
                         Namespace.errorMessages.typeMismatch('defaultDate', providedType, 'DateTime or Date');
+                        break;
                     }
                     case 'viewDate': {
                         const dateTime = this.dateConversion(value, 'viewDate');
@@ -938,6 +946,7 @@
                             return dateTime;
                         }
                         Namespace.errorMessages.typeMismatch('viewDate', providedType, 'DateTime or Date');
+                        break;
                     }
                     case 'minDate': {
                         if (value === undefined) {
@@ -949,6 +958,7 @@
                             return dateTime;
                         }
                         Namespace.errorMessages.typeMismatch('restrictions.minDate', providedType, 'DateTime or Date');
+                        break;
                     }
                     case 'maxDate': {
                         if (value === undefined) {
@@ -960,6 +970,7 @@
                             return dateTime;
                         }
                         Namespace.errorMessages.typeMismatch('restrictions.maxDate', providedType, 'DateTime or Date');
+                        break;
                     }
                     case 'disabledHours':
                         if (value === undefined) {
@@ -1197,6 +1208,7 @@
          * @param optionName Provides text to error messages e.g. disabledDates
          * @param value Option value
          * @param providedType Used to provide text to error messages
+         * @param locale
          */
         static _typeCheckDateArray(optionName, value, providedType, locale = 'default') {
             if (!Array.isArray(value)) {
@@ -1755,7 +1767,7 @@
                 .manipulate(12, exports.Unit.hours);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectDay}"], .${Namespace.css.calendarWeeks}`)
-                .forEach((containerClone, index) => {
+                .forEach((containerClone) => {
                 if (this.optionsStore.options.display.calendarWeeks &&
                     containerClone.classList.contains(Namespace.css.calendarWeeks)) {
                     if (containerClone.innerText === '#')
@@ -1928,7 +1940,7 @@
                 .manipulate(-1, exports.Unit.year);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectYear}"]`)
-                .forEach((containerClone, index) => {
+                .forEach((containerClone) => {
                 let classes = [];
                 classes.push(Namespace.css.year);
                 if (!this.optionsStore.unset &&
@@ -2252,7 +2264,7 @@
             let innerDate = this.optionsStore.viewDate.clone.startOf(exports.Unit.date);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectHour}"]`)
-                .forEach((containerClone, index) => {
+                .forEach((containerClone) => {
                 let classes = [];
                 classes.push(Namespace.css.hour);
                 if (!this.validation.isValid(innerDate, exports.Unit.hours)) {
@@ -2308,7 +2320,7 @@
                 : this.optionsStore.options.stepping;
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectMinute}"]`)
-                .forEach((containerClone, index) => {
+                .forEach((containerClone) => {
                 let classes = [];
                 classes.push(Namespace.css.minute);
                 if (!this.validation.isValid(innerDate, exports.Unit.minutes)) {
@@ -2355,7 +2367,7 @@
             let innerDate = this.optionsStore.viewDate.clone.startOf(exports.Unit.minutes);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectSecond}"]`)
-                .forEach((containerClone, index) => {
+                .forEach((containerClone) => {
                 let classes = [];
                 classes.push(Namespace.css.second);
                 if (!this.validation.isValid(innerDate, exports.Unit.seconds)) {
@@ -2582,29 +2594,30 @@
          * @fires Events#show
          */
         show() {
-            var _a, _b, _c;
+            var _a, _b;
             if (this.widget == undefined) {
-                if (this.optionsStore.options.useCurrent &&
-                    !this.optionsStore.options.defaultDate &&
-                    !((_a = this.optionsStore.input) === null || _a === void 0 ? void 0 : _a.value)) {
-                    const date = new DateTime().setLocale(this.optionsStore.options.localization.locale);
-                    if (!this.optionsStore.options.keepInvalid) {
-                        let tries = 0;
-                        let direction = 1;
-                        if ((_b = this.optionsStore.options.restrictions.maxDate) === null || _b === void 0 ? void 0 : _b.isBefore(date)) {
-                            direction = -1;
+                if (this.dates.picked.length == 0) {
+                    if (this.optionsStore.options.useCurrent &&
+                        !this.optionsStore.options.defaultDate) {
+                        const date = new DateTime().setLocale(this.optionsStore.options.localization.locale);
+                        if (!this.optionsStore.options.keepInvalid) {
+                            let tries = 0;
+                            let direction = 1;
+                            if ((_a = this.optionsStore.options.restrictions.maxDate) === null || _a === void 0 ? void 0 : _a.isBefore(date)) {
+                                direction = -1;
+                            }
+                            while (!this.validation.isValid(date)) {
+                                date.manipulate(direction, exports.Unit.date);
+                                if (tries > 31)
+                                    break;
+                                tries++;
+                            }
                         }
-                        while (!this.validation.isValid(date)) {
-                            date.manipulate(direction, exports.Unit.date);
-                            if (tries > 31)
-                                break;
-                            tries++;
-                        }
+                        this.dates.setValue(date);
                     }
-                    this.dates.setValue(date);
-                }
-                if (this.optionsStore.options.defaultDate) {
-                    this.dates.setValue(this.optionsStore.options.defaultDate);
+                    if (this.optionsStore.options.defaultDate) {
+                        this.dates.setValue(this.optionsStore.options.defaultDate);
+                    }
                 }
                 this._buildWidget();
                 // If modeView is only clock
@@ -2633,7 +2646,7 @@
                 }
                 if (!this.optionsStore.options.display.inline) {
                     // If needed to change the parent container
-                    const container = ((_c = this.optionsStore.options) === null || _c === void 0 ? void 0 : _c.container) || document.body;
+                    const container = ((_b = this.optionsStore.options) === null || _b === void 0 ? void 0 : _b.container) || document.body;
                     container.appendChild(this.widget);
                     this._popperInstance = core.createPopper(this.optionsStore.element, this.widget, {
                         modifiers: [{ name: 'eventListeners', enabled: true }],
@@ -3107,8 +3120,7 @@
                         currentTarget.setAttribute('title', this.optionsStore.options.localization.selectTime);
                         currentTarget.innerHTML = this.display._iconTag(this.optionsStore.options.display.icons.time).outerHTML;
                         this.display._updateCalendarHeader();
-                        // this is here to set the "currentView" to the correct calendar view
-                        this.optionsStore.currentCalendarViewMode = this.optionsStore.currentCalendarViewMode;
+                        this.optionsStore.refreshCurrentView();
                     }
                     else {
                         currentTarget.setAttribute('title', this.optionsStore.options.localization.selectDate);
@@ -3177,10 +3189,8 @@
             this.display._showMode();
         }
         /**
-         * Common function to manipulate {@link lastPicked} by `unit`.
          * After setting the value it will either show the clock or hide the widget.
-         * @param unit
-         * @param value Value to change by
+         * @param e
          */
         hideOrClock(e) {
             if (this.optionsStore.options.display.components.useTwentyfourHour &&
@@ -3195,6 +3205,7 @@
         }
         /**
          * Common function to manipulate {@link lastPicked} by `unit`.
+         * @param lastPicked
          * @param unit
          * @param value Value to change by
          */
@@ -3391,7 +3402,7 @@
          * Hides the picker and removes event listeners
          */
         dispose() {
-            var _a, _b;
+            var _a, _b, _c;
             this.display.hide();
             // this will clear the document click event listener
             this.display._dispose();
@@ -3399,7 +3410,7 @@
             if (this.optionsStore.options.allowInputToggle) {
                 (_b = this.optionsStore.input) === null || _b === void 0 ? void 0 : _b.removeEventListener('click', this._toggleClickEvent);
             }
-            this._toggle.removeEventListener('click', this._toggleClickEvent);
+            (_c = this._toggle) === null || _c === void 0 ? void 0 : _c.removeEventListener('click', this._toggleClickEvent);
             this._subscribers = {};
         }
         /**
