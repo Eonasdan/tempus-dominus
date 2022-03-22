@@ -1505,7 +1505,6 @@ class Dates {
      * If value is null|undefined then clear the value of the provided index (or 0).
      * @param value Value to convert or null|undefined
      * @param index When using multidates this is the index in the array
-     * @param from Used in the warning message, useful for debugging.
      */
     setFromInput(value, index) {
         if (!value) {
