@@ -1,30 +1,34 @@
-import { TempusDominus } from '../../tempus-dominus';
 import { Unit } from '../../datetime';
-import { ActionTypes } from '../../actions';
-import Namespace from '../../namespace';
+import Namespace from '../../utilities/namespace';
+import { OptionsStore } from '../../utilities/options';
+import Validation from '../../validation';
+import { serviceLocator } from '../../utilities/service-locator';
+import { Paint } from '../index';
+import ActionTypes from '../../utilities/action-types';
 
 /**
  * Creates and updates the grid for `hours`
  */
 export default class HourDisplay {
-  private _context: TempusDominus;
+  private optionsStore: OptionsStore;
+  private validation: Validation;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.validation = serviceLocator.locate(Validation);
   }
-
   /**
    * Build the container html for the display
    * @private
    */
-  get _picker(): HTMLElement {
+  getPicker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.hourContainer);
 
     for (
       let i = 0;
       i <
-      (this._context._options.display.components.useTwentyfourHour ? 24 : 12);
+      (this.optionsStore.options.display.components.useTwentyfourHour ? 24 : 12);
       i++
     ) {
       const div = document.createElement('div');
@@ -39,26 +43,28 @@ export default class HourDisplay {
    * Populates the grid and updates enabled states
    * @private
    */
-  _update(): void {
-    const container = this._context._display.widget.getElementsByClassName(
+  _update(widget: HTMLElement, paint: Paint): void {
+    const container = widget.getElementsByClassName(
       Namespace.css.hourContainer
     )[0];
-    let innerDate = this._context._viewDate.clone.startOf(Unit.date);
+    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
-      .forEach((containerClone: HTMLElement, index) => {
+      .forEach((containerClone: HTMLElement) => {
         let classes = [];
         classes.push(Namespace.css.hour);
 
-        if (!this._context._validation.isValid(innerDate, Unit.hours)) {
+        if (!this.validation.isValid(innerDate, Unit.hours)) {
           classes.push(Namespace.css.disabled);
         }
+
+        paint(Unit.hours, innerDate, classes, containerClone);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${innerDate.hours}`);
-        containerClone.innerText = this._context._options.display.components
+        containerClone.innerText = this.optionsStore.options.display.components
           .useTwentyfourHour
           ? innerDate.hoursFormatted
           : innerDate.twelveHoursFormatted;

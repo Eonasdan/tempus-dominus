@@ -1,15 +1,21 @@
-import { TempusDominus } from './tempus-dominus';
-import { DateTime, Unit } from './datetime';
-import Namespace from './namespace';
-import { ChangeEvent, FailEvent } from './event-types';
-import { OptionConverter } from './options';
+import { DateTime, getFormatByUnit, Unit } from './datetime';
+import Namespace from './utilities/namespace';
+import { ChangeEvent, FailEvent } from './utilities/event-types';
+import { OptionConverter, OptionsStore } from './utilities/options';
+import Validation from './validation';
+import { serviceLocator } from './utilities/service-locator';
+import { EventEmitters } from './utilities/event-emitter';
 
 export default class Dates {
   private _dates: DateTime[] = [];
-  private _context: TempusDominus;
+  private optionsStore: OptionsStore;
+  private validation: Validation;
+  private _eventEmitters: EventEmitters;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.validation = serviceLocator.locate(Validation);
+    this._eventEmitters = serviceLocator.locate(EventEmitters);
   }
 
   /**
@@ -35,11 +41,26 @@ export default class Dates {
   }
 
   /**
-   * Adds a new DateTime to selected dates array
+   * Formats a DateTime object to a string. Used when setting the input value.
    * @param date
    */
-  add(date: DateTime): void {
-    this._dates.push(date);
+  formatInput(date: DateTime): string {
+    const components = this.optionsStore.options.display.components;
+    if (!date) return '';
+    return date.format({
+      year: components.calendar && components.year ? 'numeric' : undefined,
+      month: components.calendar && components.month ? '2-digit' : undefined,
+      day: components.calendar && components.date ? '2-digit' : undefined,
+      hour:
+        components.clock && components.hours
+          ? components.useTwentyfourHour
+            ? '2-digit'
+            : 'numeric'
+          : undefined,
+      minute: components.clock && components.minutes ? '2-digit' : undefined,
+      second: components.clock && components.seconds ? '2-digit' : undefined,
+      hour12: !components.useTwentyfourHour,
+    });
   }
 
   /**
@@ -47,15 +68,25 @@ export default class Dates {
    * If value is null|undefined then clear the value of the provided index (or 0).
    * @param value Value to convert or null|undefined
    * @param index When using multidates this is the index in the array
-   * @param from Used in the warning message, useful for debugging.
    */
-  set(value: any, index?: number, from: string = 'date.set') {
-    if (!value) this._setValue(value, index);
-    const converted = OptionConverter._dateConversion(value, from);
-    if (converted) {
-      converted.setLocale(this._context._options.localization.locale);
-      this._setValue(converted, index);
+  setFromInput(value: any, index?: number) {
+    if (!value) {
+      this.setValue(undefined, index);
+      return;
     }
+    const converted = OptionConverter.dateConversion(value, 'input');
+    if (converted) {
+      converted.setLocale(this.optionsStore.options.localization.locale);
+      this.setValue(converted, index);
+    }
+  }
+
+  /**
+   * Adds a new DateTime to selected dates array
+   * @param date
+   */
+  add(date: DateTime): void {
+    this._dates.push(date);
   }
 
   /**
@@ -67,7 +98,7 @@ export default class Dates {
   isPicked(targetDate: DateTime, unit?: Unit): boolean {
     if (!unit) return this._dates.find((x) => x === targetDate) !== undefined;
 
-    const format = Dates.getFormatByUnit(unit);
+    const format = getFormatByUnit(unit);
 
     let innerDateFormatted = targetDate.format(format);
 
@@ -88,7 +119,7 @@ export default class Dates {
   pickedIndex(targetDate: DateTime, unit?: Unit): number {
     if (!unit) return this._dates.indexOf(targetDate);
 
-    const format = Dates.getFormatByUnit(unit);
+    const format = getFormatByUnit(unit);
 
     let innerDateFormatted = targetDate.format(format);
 
@@ -99,8 +130,8 @@ export default class Dates {
    * Clears all selected dates.
    */
   clear() {
-    this._context._unset = true;
-    this._context._triggerEvent({
+    this.optionsStore.unset = true;
+    this._eventEmitters.triggerEvent.emit({
       type: Namespace.events.change,
       date: undefined,
       oldDate: this.lastPicked,
@@ -127,7 +158,7 @@ export default class Dates {
   }
 
   /**
-   * Do not use direectly. Attempts to either clear or set the `target` date at `index`.
+   * Attempts to either clear or set the `target` date at `index`.
    * If the `target` is null then the date will be cleared.
    * If multi-date is being used then it will be removed from the array.
    * If `target` is valid and multi-date is used then if `index` is
@@ -135,30 +166,25 @@ export default class Dates {
    * @param target
    * @param index
    */
-  _setValue(target?: DateTime, index?: number): void {
+  setValue(target?: DateTime, index?: number): void {
     const noIndex = typeof index === 'undefined',
       isClear = !target && noIndex;
-    let oldDate = this._context._unset ? null : this._dates[index];
-    if (!oldDate && !this._context._unset && noIndex && isClear) {
+    let oldDate = this.optionsStore.unset ? null : this._dates[index];
+    if (!oldDate && !this.optionsStore.unset && noIndex && isClear) {
       oldDate = this.lastPicked;
     }
 
     const updateInput = () => {
-      if (!this._context._input) return;
+      if (!this.optionsStore.input) return;
 
-      let newValue = this._context._options.hooks.inputFormat(
-        this._context,
-        target
-      );
-      if (this._context._options.multipleDates) {
+      let newValue = this.formatInput(target);
+      if (this.optionsStore.options.multipleDates) {
         newValue = this._dates
-          .map((d) =>
-            this._context._options.hooks.inputFormat(this._context, d)
-          )
-          .join(this._context._options.multipleDatesSeparator);
+          .map((d) => this.formatInput(d))
+          .join(this.optionsStore.options.multipleDatesSeparator);
       }
-      if (this._context._input.value != newValue)
-        this._context._input.value = newValue;
+      if (this.optionsStore.input.value != newValue)
+        this.optionsStore.input.value = newValue;
     };
 
     if (target && oldDate?.isSame(target)) {
@@ -169,16 +195,17 @@ export default class Dates {
     // case of calling setValue(null)
     if (!target) {
       if (
-        !this._context._options.multipleDates ||
+        !this.optionsStore.options.multipleDates ||
         this._dates.length === 1 ||
         isClear
       ) {
-        this._context._unset = true;
+        this.optionsStore.unset = true;
         this._dates = [];
       } else {
         this._dates.splice(index, 1);
       }
-      this._context._triggerEvent({
+
+      this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: undefined,
         oldDate,
@@ -187,7 +214,7 @@ export default class Dates {
       } as ChangeEvent);
 
       updateInput();
-      this._context._display._update('all');
+      this._eventEmitters.updateDisplay.emit('all');
       return;
     }
 
@@ -195,22 +222,22 @@ export default class Dates {
     target = target.clone;
 
     // minute stepping is being used, force the minute to the closest value
-    if (this._context._options.stepping !== 1) {
+    if (this.optionsStore.options.stepping !== 1) {
       target.minutes =
-        Math.round(target.minutes / this._context._options.stepping) *
-        this._context._options.stepping;
+        Math.round(target.minutes / this.optionsStore.options.stepping) *
+        this.optionsStore.options.stepping;
       target.seconds = 0;
     }
 
-    if (this._context._validation.isValid(target)) {
+    if (this.validation.isValid(target)) {
       this._dates[index] = target;
-      this._context._viewDate = target.clone;
+      this.optionsStore.viewDate = target.clone;
 
       updateInput();
 
-      this._context._unset = false;
-      this._context._display._update('all');
-      this._context._triggerEvent({
+      this.optionsStore.unset = false;
+      this._eventEmitters.updateDisplay.emit('all');
+      this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: target,
         oldDate,
@@ -220,13 +247,13 @@ export default class Dates {
       return;
     }
 
-    if (this._context._options.keepInvalid) {
+    if (this.optionsStore.options.keepInvalid) {
       this._dates[index] = target;
-      this._context._viewDate = target.clone;
+      this.optionsStore.viewDate = target.clone;
 
       updateInput();
 
-      this._context._triggerEvent({
+      this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: target,
         oldDate,
@@ -234,29 +261,11 @@ export default class Dates {
         isValid: false,
       } as ChangeEvent);
     }
-    this._context._triggerEvent({
+    this._eventEmitters.triggerEvent.emit({
       type: Namespace.events.error,
       reason: Namespace.errorMessages.failedToSetInvalidDate,
       date: target,
       oldDate,
     } as FailEvent);
-  }
-
-  /**
-   * Returns a format object based on the granularity of `unit`
-   * @param unit
-   */
-  static getFormatByUnit(unit: Unit): object {
-    switch (unit) {
-      case 'date':
-        return { dateStyle: 'short' };
-      case 'month':
-        return {
-          month: 'numeric',
-          year: 'numeric',
-        };
-      case 'year':
-        return { year: 'numeric' };
-    }
   }
 }

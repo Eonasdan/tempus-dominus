@@ -1,5 +1,4 @@
-import { Unit } from './datetime';
-import Namespace from './namespace';
+import { Unit } from '../datetime';
 import Options from './options';
 declare const DefaultOptions: Options;
 declare const DatePickerModes: {
@@ -8,4 +7,4 @@ declare const DatePickerModes: {
     unit: Unit;
     step: number;
 }[];
-export { DefaultOptions, DatePickerModes, Namespace };
+export { DefaultOptions, DatePickerModes };

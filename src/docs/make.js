@@ -174,8 +174,14 @@ class Build {
 
       entry.isDirectory()
         ? this.copyDirectory(sourcePath, destinationPath)
-        : fs.copyFileSync(sourcePath, destinationPath);
+        : this.copyFileAndEnsurePathExists(sourcePath, destinationPath);
     });
+  }
+
+  copyFileAndEnsurePathExists(filePath, content) {
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+
+    fs.copyFileSync(filePath, content);
   }
 
   writeFileAndEnsurePathExists(filePath, content) {
@@ -567,6 +573,8 @@ ${this.siteMap}
   updateDist() {
     this.copyDirectory(path.join('.','dist', 'js'), path.join('.', siteConfig.output, 'js'));
     this.copyDirectory(path.join('.','dist', 'css'), path.join('.', siteConfig.output, 'css'));
+    this.copyDirectory(path.join('.','dist', 'plugins'), path.join('.', siteConfig.output, 'js', 'plugins'));
+    this.copyDirectory(path.join('.','dist', 'locales'), path.join('.', siteConfig.output, 'js', 'locales'));
   }
 
   /**
@@ -626,11 +634,11 @@ builder.updateAll();
 if (process.argv.slice(2)[0] === '--watch') {
   const watcher = chokidar.watch(
     [
-      'src/docs/partials',
-      'src/docs/styles',
-      'src/docs/templates',
-      'src/docs/js',
-      'src/docs/assets',
+      path.join('src', 'docs', 'partials'),
+      path.join('src', 'docs', 'styles'),
+      path.join('src', 'docs', 'templates'),
+      path.join('src', 'docs', 'js'),
+      path.join('src', 'docs', 'assets'),
       'dist/',
     ],
     {
@@ -643,39 +651,39 @@ if (process.argv.slice(2)[0] === '--watch') {
   let lastChange = '';
   let lastChangeFile = '';
 
-  const handleChange = (event, path) => {
-    if (path.includes('.map.')) return;
-    log(`${event}: ${path}`);
+  const handleChange = (event, file) => {
+    if (file.includes('.map.')) return;
+    log(`${event}: ${file}`);
     try {
-      if (path.startsWith('dist')) {
+      if (file.startsWith('dist')) {
         builder.updateDist();
       }
-      if (path.startsWith('src/docs/assets')) {
+      if (file.startsWith(path.join('src', 'docs', 'assets'))) {
         builder.copyAssets();
       }
-      if (path.startsWith('src/docs/partials')) {
+      if (file.startsWith(path.join('src', 'docs', 'partials'))) {
         //reading the file stats seems to trigger this twice, so if the same file changed in less then a second, ignore
         if (
           lastChange === formatter.format(new Date()) &&
-          lastChangeFile === path
+          lastChangeFile === file
         ) {
           log(`Skipping duplicate trigger`);
           return;
         }
         builder.updatePages();
       }
-      if (path.startsWith('src/docs/styles')) {
+      if (file.startsWith(path.join('src', 'docs', 'styles'))) {
         builder.updateCss();
       }
-      if (path.startsWith('src/docs/templates')) {
+      if (file.startsWith(path.join('src', 'docs', 'templates'))) {
         builder.updateAll();
       }
-      if (path.startsWith('src/docs/js')) {
+      if (file.startsWith(path.join('src', 'docs', 'js'))) {
         builder.minifyJs().then();
       }
       log('\x1b[32m Update successful');
       lastChange = formatter.format(new Date());
-      lastChangeFile = path;
+      lastChangeFile = file;
       console.log('');
     } catch (e) {
       log('Something went wrong');

@@ -1,11 +1,63 @@
 <page-body>
   <section>
     <h1>Version 6</h1>
+    <h2>Version 6-beta4</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Dark mode! The picker now has dark mode when the user's preference is dark.</li>
+      <li>Wrote a tiny service locator/di container in an effort to make plugins better</li>
+      <li>Added a momentjs plugin</li>
+      <li>Added DE, ES, IT, NL, RO locales thanks to @jcompagner <a
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2484'>via #2484</a>.
+      </li>
+      <li><code>toggleMeridiem</code> supports a comma separated list. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2399'>#2399.</a>
+      </li>
+      <li>
+        All event types now provide <code>viewMode</code> which provides
+        'clock' | 'calendar' | 'months' | 'years' | 'decades' depending what view
+        the event occurred.
+        <a
+          href='https://github.com/Eonasdan/tempus-dominus/issues/2428'>#2428.</a>
+      </li>
+    </ul>
+    <h3>Breaking changes</h3>
+    <ul>
+      <li>Plugins work a little differently now. Hopefully they are a bit cleaner to work with now</li>
+      <li>Hooks have been removed. Plugins are a better way to handle this. You can look at the momentjs plugin for a
+        guide.
+      </li>
+      <li>Locale loading and authoring has changed a bit as well.</li>
+      <li><code>ViewUpdateEvent</code> no longer provides <code>change: Unit</code>.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed event 'hide.td' not triggered when input is empty. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2424'>#2424.</a>
+      </li>
+      <li>Fixed input change event trigger. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2401'>#2401.</a>
+      </li>
+      <li>Fixed dataset deletion issue. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2483'>#2483.</a>
+      </li>
+      <li>Fixed month manipulation issue <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2474'>#2474.</a> <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2486'>2486.</a>
+      </li>
+      <li>Fixed Wrong calendar rendering when startOfTheWeek <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2473'>#2473.</a>
+      </li>
+      <li>Fixed viewMode option not respected (#2466) thanks @jmolinap <a
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2494'>via #2494.</a>
+      </li>
+    </ul>
     <h2>Version 6-beta3</h2>
     <h3>New</h3>
     <ul>
       <li>Allow to change parent container for the widget <a
-        href='https://github.com/Eonasdan/tempus-dominus/pull/2462'>via #2462</a>.</li>
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2462'>via #2462</a>.
+      </li>
       <li>Moved docs to gh-pages and setup a github action to move compiled docs to that branch.</li>
     </ul>
     <h3>Bug fixes</h3>

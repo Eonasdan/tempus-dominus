@@ -1,7 +1,9 @@
-import { DateTime, Unit } from './datetime';
+import { DateTime, Unit } from '../datetime';
+import ViewMode from './view-mode';
 
 interface BaseEvent {
   type: string;
+  viewMode?: keyof ViewMode;
 }
 
 /**
@@ -35,7 +37,6 @@ interface ChangeEvent extends BaseEvent {
  * Triggers when the view is changed for instance from month to year.
  */
 interface ViewUpdateEvent extends BaseEvent {
-  change: Unit;
   viewDate: DateTime;
 }
 

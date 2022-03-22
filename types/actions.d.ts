@@ -1,41 +1,31 @@
-import { TempusDominus } from './tempus-dominus';
+import ActionTypes from './utilities/action-types';
 /**
  *
  */
 export default class Actions {
-    private _context;
-    constructor(context: TempusDominus);
+    private optionsStore;
+    private validation;
+    private dates;
+    private display;
+    private _eventEmitters;
+    constructor();
     /**
      * Performs the selected `action`. See ActionTypes
      * @param e This is normally a click event
      * @param action If not provided, then look for a [data-action]
      */
     do(e: any, action?: ActionTypes): boolean;
-}
-export declare enum ActionTypes {
-    next = "next",
-    previous = "previous",
-    pickerSwitch = "pickerSwitch",
-    selectMonth = "selectMonth",
-    selectYear = "selectYear",
-    selectDecade = "selectDecade",
-    selectDay = "selectDay",
-    selectHour = "selectHour",
-    selectMinute = "selectMinute",
-    selectSecond = "selectSecond",
-    incrementHours = "incrementHours",
-    incrementMinutes = "incrementMinutes",
-    incrementSeconds = "incrementSeconds",
-    decrementHours = "decrementHours",
-    decrementMinutes = "decrementMinutes",
-    decrementSeconds = "decrementSeconds",
-    toggleMeridiem = "toggleMeridiem",
-    togglePicker = "togglePicker",
-    showClock = "showClock",
-    showHours = "showHours",
-    showMinutes = "showMinutes",
-    showSeconds = "showSeconds",
-    clear = "clear",
-    close = "close",
-    today = "today"
+    private handleNextPrevious;
+    /**
+     * After setting the value it will either show the clock or hide the widget.
+     * @param e
+     */
+    private hideOrClock;
+    /**
+     * Common function to manipulate {@link lastPicked} by `unit`.
+     * @param lastPicked
+     * @param unit
+     * @param value Value to change by
+     */
+    private manipulateAndSet;
 }

@@ -1,18 +1,4 @@
-$td-timepicker-font-size: 1.2em !default;
-$td-active-bg: #0d6efd !default;
-$td-active-color: #fff !default;
-$td-border-radius: 999px !default;
-$td-btn-hover-bg: #e9ecef !default;
-$td-disabled-color: #6c757d !default;
-$td-alternate-color: rgba(0,0,0,.38) !default;
-$td-secondary-border-color: #ccc !default;
-$td-secondary-border-color-rgba: rgba(0, 0, 0, 0.2) !default;
-$td-primary-border-color: white !default;
-$td-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
-
-/*
-todo look at how bootstrap loops through their vars to make a --root section
- */
+@import 'variables';
 
 .visually-hidden {
   position: absolute !important;
@@ -32,16 +18,16 @@ todo look at how bootstrap loops through their vars to make a --root section
   width: 19rem;
   border-radius: 4px;
   display: none;
-  background-color: white;
-  /*border: 1px solid black;*/
+  background-color: $td-widget-background;
   z-index: 9999;
-  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
 
   &.calendarWeeks {
     width: 21rem;
 
-    &  .date-container-days {
+    & .date-container-days {
       grid-auto-columns: 12.5%;
+      grid-template-areas: "a a a a a a a a";
     }
   }
 
@@ -66,7 +52,7 @@ todo look at how bootstrap loops through their vars to make a --root section
     display: none;
   }
 
-   //end popper
+  //end popper
 
   &.show {
     display: block;
@@ -126,7 +112,6 @@ todo look at how bootstrap loops through their vars to make a --root section
 
   .toggleMeridiem {
     text-align: center;
-    /*width: 38px;*/
     height: 38px;
   }
 
@@ -140,10 +125,12 @@ todo look at how bootstrap loops through their vars to make a --root section
       text-align: right;
       padding-right: 10px;
     }
+
     & .previous {
       text-align: left;
       padding-left: 10px;
     }
+
     & .picker-switch {
       text-align: center;
     }
@@ -174,7 +161,7 @@ todo look at how bootstrap loops through their vars to make a --root section
     grid-auto-columns: calc(100% / 7);
 
     & .dow {
-      color: rgba(0,0,0,.50);
+      color: $td-dow-color;
       align-items: center;
       justify-content: center;
       text-align: center;
@@ -191,10 +178,6 @@ todo look at how bootstrap loops through their vars to make a --root section
       color: $td-alternate-color;
       cursor: default;
     }
-  }
-
-  &.calendarWeeks .date-container-days {
-    grid-template-areas: "a a a a a a a a";
   }
 
   .date-container-decades, .date-container-years, .date-container-months {
@@ -241,10 +224,15 @@ todo look at how bootstrap loops through their vars to make a --root section
         background-color: $td-active-bg;
         color: $td-active-color;
         text-shadow: $td-text-shadow;
+
+        &.old,
+        &.new {
+          color: $td-active-color;
+        }
       }
 
       &.active.today:before {
-        border-bottom-color: #fff;
+        border-bottom-color: $td-active-border-color;
       }
 
       &.old,
@@ -257,9 +245,6 @@ todo look at how bootstrap loops through their vars to make a --root section
         background: none;
         color: $td-disabled-color;
         cursor: not-allowed;
-      }
-
-      &.day {
       }
 
       &.today {
@@ -285,9 +270,9 @@ todo look at how bootstrap loops through their vars to make a --root section
   }
 
   button {
-    color: #fff;
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    color: $td-active-color;
+    background-color: $td-active-bg;
+    border-color: $td-active-bg;
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
@@ -302,7 +287,7 @@ todo look at how bootstrap loops through their vars to make a --root section
     font-size: 1rem;
     border-radius: 0.25rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-      border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
 
   &.tempus-dominus-widget-readonly {
@@ -326,6 +311,86 @@ todo look at how bootstrap loops through their vars to make a --root section
       &:hover {
         background: none;
       }
+    }
+  }
+}
+
+
+@media (prefers-color-scheme: dark) {
+  .tempus-dominus-widget {
+    color: $td-dark-font-color;
+    background-color: $td-dark-widget-background;
+    
+    [data-action] {
+      &.disabled,
+      &.disabled:hover {
+        color: $td-dark-disabled-color;
+      }
+    }
+
+    .toolbar {
+      & div {
+        &:hover {
+          background: $td-dark-btn-hover-bg;
+        }
+      }
+    }
+
+    .date-container-days {
+      & .dow {
+        color: $td-dark-dow-color;
+      }
+      
+      & .cw {
+        color: $td-dark-alternate-color;
+      }
+    }
+
+    .date-container-decades, .date-container-years, .date-container-months, .date-container-days,
+    .time-container-clock, .time-container-hour, .time-container-minute, .time-container-second {
+      div:not(.no-highlight) {
+       &:hover {
+          background: $td-dark-btn-hover-bg;
+        }
+
+        &.active {
+          background-color: $td-dark-active-bg;
+          color: $td-dark-active-color;
+          text-shadow: $td-dark-text-shadow;
+
+          &.old,
+          &.new {
+            color: $td-dark-active-color;
+          }
+        }
+
+        &.active.today:before {
+          border-bottom-color: $td-dark-active-border-color;
+        }
+
+        &.old,
+        &.new {
+          color: $td-dark-alternate-color;
+        }
+
+        &.disabled,
+        &.disabled:hover {
+          color: $td-dark-disabled-color;
+        }
+
+        &.today {
+          &:before {
+            border-bottom-color: $td-dark-active-bg;
+            border-top-color: $td-dark-secondary-border-color-rgba;
+          }
+        }
+      }
+    }
+
+    button {
+      color: $td-dark-active-color;
+      background-color: $td-dark-active-bg;
+      border-color: $td-dark-active-bg;
     }
   }
 }

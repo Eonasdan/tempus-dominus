@@ -1,9 +1,10 @@
-import { TempusDominus } from './tempus-dominus';
 import { DateTime, Unit } from './datetime';
 export default class Dates {
     private _dates;
-    private _context;
-    constructor(context: TempusDominus);
+    private optionsStore;
+    private validation;
+    private _eventEmitters;
+    constructor();
     /**
      * Returns the array of selected dates
      */
@@ -17,18 +18,22 @@ export default class Dates {
      */
     get lastPickedIndex(): number;
     /**
-     * Adds a new DateTime to selected dates array
+     * Formats a DateTime object to a string. Used when setting the input value.
      * @param date
      */
-    add(date: DateTime): void;
+    formatInput(date: DateTime): string;
     /**
      * Tries to convert the provided value to a DateTime object.
      * If value is null|undefined then clear the value of the provided index (or 0).
      * @param value Value to convert or null|undefined
      * @param index When using multidates this is the index in the array
-     * @param from Used in the warning message, useful for debugging.
      */
-    set(value: any, index?: number, from?: string): void;
+    setFromInput(value: any, index?: number): void;
+    /**
+     * Adds a new DateTime to selected dates array
+     * @param date
+     */
+    add(date: DateTime): void;
     /**
      * Returns true if the `targetDate` is part of the selected dates array.
      * If `unit` is provided then a granularity to that unit will be used.
@@ -55,7 +60,7 @@ export default class Dates {
      */
     static getStartEndYear(factor: number, year: number): [number, number, number];
     /**
-     * Do not use direectly. Attempts to either clear or set the `target` date at `index`.
+     * Attempts to either clear or set the `target` date at `index`.
      * If the `target` is null then the date will be cleared.
      * If multi-date is being used then it will be removed from the array.
      * If `target` is valid and multi-date is used then if `index` is
@@ -63,10 +68,5 @@ export default class Dates {
      * @param target
      * @param index
      */
-    _setValue(target?: DateTime, index?: number): void;
-    /**
-     * Returns a format object based on the granularity of `unit`
-     * @param unit
-     */
-    static getFormatByUnit(unit: Unit): object;
+    setValue(target?: DateTime, index?: number): void;
 }

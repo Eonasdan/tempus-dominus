@@ -1,0 +1,79 @@
+<page-body>
+  <section>
+    <h3>Introduction</h3>
+    <p>
+      Plugins allow you to extend the picker by adding new functionality to either Tempus Dominus globally,
+      a single picker or by overwritting existing functionality.
+    </p>
+  </section>
+  <section>
+    <h3>Creating plugins</h3>
+    <p>
+      There are a few examples in the source like this
+    </p>
+    <pre>
+      <code class='language-javascript'>
+export const load = (option, tdClasses, tdFactory) => {
+  // extend the picker
+  // e.g. add new tempusDominus.TempusDominus(...).someFunction()
+  tdClasses.TempusDominus.prototype.someFunction = (a, logger) => {
+    logger = logger || console.log
+    logger(a);
+  }
+
+  // extend tempusDominus
+  // e.g. add tempusDominus.example()
+  tdFactory.example = (a, logger) => {
+    logger = logger || console.log
+    logger(a);
+  }
+
+  // overriding existing API
+  // e.g. extend new tempusDominus.TempusDominus(...).show()
+  const oldShow = tdClasses.TempusDominus.prototype.show;
+  tdClasses.TempusDominus.prototype.show = function(a, logger) {
+    logger = logger || console.log
+    alert('from plugin');
+    logger(a);
+    oldShow.bind(this)()
+    // return modified result
+  }
+}
+      </code>
+    </pre>
+    <h3>Using a plugin</h3>
+    <p>
+      Using a plugin is easy. Load the plugin script file after you load Tempus Dominus
+    </p>
+    <pre>
+      <code class='language-html'>
+&lt;script src=&quot;/path/to/plugin.js&quot;&gt;&lt;/script&gt;
+      </code>
+      <code class='language-js'>
+tempusDominus.extend(window.tempusDominus.plugins.PLUGINNAME);
+      </code>
+    </pre>
+
+    <p>
+      You can also use plugins in Typescript or Node.
+    </p>
+    <pre>
+      <code class='language-js'>
+const example = require('tempusDominus/plugins/examples/sample')
+// or
+import example from 'tempusDominus/plugins/examples/sample'
+
+tempusDominus.extend(example) // use plugin
+      </code>
+    </pre>
+  </section>
+</page-body>
+
+<page-meta>
+  <title>Plugins</title>
+  <post-date>01/19/2022</post-date>
+  <update-date>02/05/2022</update-date>
+  <excerpt>How to use plugins with Tempus Dominus.
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

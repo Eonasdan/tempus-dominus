@@ -1,35 +1,25 @@
 import Display from './display/index';
-import Validation from './validation';
 import Dates from './dates';
-import Actions from './actions';
-import { DefaultOptions } from './conts';
 import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
-import Namespace from './namespace';
-import Options from './options';
-import { BaseEvent } from './event-types';
+import Namespace from './utilities/namespace';
+import Options from './utilities/options';
+import DefaultOptions from './utilities/default-options';
 /**
  * A robust and powerful date/time picker component.
  */
 declare class TempusDominus {
-    dates: Dates;
-    _options: Options;
-    _currentViewMode: number;
     _subscribers: {
         [key: string]: ((event: any) => {})[];
     };
-    _element: HTMLElement;
-    _input: HTMLInputElement;
-    _unset: boolean;
-    _minViewModeNumber: number;
-    _display: Display;
-    _validation: Validation;
-    _action: Actions;
     private _isDisabled;
-    private _notifyChangeEventContext;
     private _toggle;
     private _currentPromptTimeTimeout;
+    private actions;
+    private optionsStore;
+    private _eventEmitters;
+    display: Display;
+    dates: Dates;
     constructor(element: HTMLElement, options?: Options);
-    _viewDate: DateTime;
     get viewDate(): DateTime;
     /**
      * Update the picker options. If `reset` is provide `options` will be merged with DefaultOptions instead.
@@ -84,18 +74,25 @@ declare class TempusDominus {
      */
     dispose(): void;
     /**
+     * Updates the options to use the provided language.
+     * THe language file must be loaded first.
+     * @param language
+     */
+    locale(language: string): void;
+    /**
      * Triggers an event like ChangeEvent when the picker has updated the value
      * of a selected date.
      * @param event Accepts a BaseEvent object.
      * @private
      */
-    _triggerEvent(event: BaseEvent): void;
+    private _triggerEvent;
+    private _publish;
     /**
      * Fires a ViewUpdate event when, for example, the month view is changed.
      * @param {Unit} unit
      * @private
      */
-    _viewUpdate(unit: Unit): void;
+    private _viewUpdate;
     private _unsubscribe;
     /**
      * Merges two Option objects together and validates options type
@@ -135,4 +132,17 @@ declare class TempusDominus {
      */
     private _toggleClickEvent;
 }
-export { TempusDominus, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions, };
+/**
+ * Called from a locale plugin.
+ * @param locale locale object for localization options
+ * @param name name of the language e.g 'ru', 'en-gb'
+ */
+declare const loadLocale: (locale: any) => void;
+/**
+ * A sets the global localization options to the provided locale name.
+ * `locadLocale` MUST be called first.
+ * @param locale
+ */
+declare const locale: (locale: string) => void;
+declare const extend: (plugin: any, option: any) => any;
+export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions, };

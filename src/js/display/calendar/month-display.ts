@@ -1,23 +1,30 @@
-import { TempusDominus } from '../../tempus-dominus';
 import { Unit } from '../../datetime';
-import { ActionTypes } from '../../actions';
-import Namespace from '../../namespace';
+import Namespace from '../../utilities/namespace';
+import { OptionsStore } from '../../utilities/options';
+import Validation from '../../validation';
+import Dates from '../../dates';
+import { Paint } from '../index';
+import { serviceLocator } from '../../utilities/service-locator';
+import ActionTypes from '../../utilities/action-types';
 
 /**
  * Creates and updates the grid for `month`
  */
 export default class MonthDisplay {
-  private _context: TempusDominus;
+  private optionsStore: OptionsStore;
+  private dates: Dates;
+  private validation: Validation;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.dates = serviceLocator.locate(Dates);
+    this.validation = serviceLocator.locate(Validation);
   }
-
   /**
    * Build the container html for the display
    * @private
    */
-  get _picker(): HTMLElement {
+  getPicker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.monthsContainer);
 
@@ -34,8 +41,8 @@ export default class MonthDisplay {
    * Populates the grid and updates enabled states
    * @private
    */
-  _update(): void {
-    const container = this._context._display.widget.getElementsByClassName(
+  _update(widget: HTMLElement, paint: Paint): void {
+    const container = widget.getElementsByClassName(
       Namespace.css.monthsContainer
     )[0];
     const [previous, switcher, next] = container.parentElement
@@ -44,24 +51,24 @@ export default class MonthDisplay {
 
     switcher.setAttribute(
       Namespace.css.monthsContainer,
-      this._context._viewDate.format({ year: 'numeric' })
+      this.optionsStore.viewDate.format({ year: 'numeric' })
     );
 
-    this._context._validation.isValid(
-      this._context._viewDate.clone.manipulate(-1, Unit.year),
+    this.validation.isValid(
+      this.optionsStore.viewDate.clone.manipulate(-1, Unit.year),
       Unit.year
     )
       ? previous.classList.remove(Namespace.css.disabled)
       : previous.classList.add(Namespace.css.disabled);
 
-    this._context._validation.isValid(
-      this._context._viewDate.clone.manipulate(1, Unit.year),
+    this.validation.isValid(
+      this.optionsStore.viewDate.clone.manipulate(1, Unit.year),
       Unit.year
     )
       ? next.classList.remove(Namespace.css.disabled)
       : next.classList.add(Namespace.css.disabled);
 
-    let innerDate = this._context._viewDate.clone.startOf(Unit.year);
+    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.year);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectMonth}"]`)
@@ -70,14 +77,16 @@ export default class MonthDisplay {
         classes.push(Namespace.css.month);
 
         if (
-          !this._context._unset &&
-          this._context.dates.isPicked(innerDate, Unit.month)
+          !this.optionsStore.unset &&
+          this.dates.isPicked(innerDate, Unit.month)
         ) {
           classes.push(Namespace.css.active);
         }
-        if (!this._context._validation.isValid(innerDate, Unit.month)) {
+        if (!this.validation.isValid(innerDate, Unit.month)) {
           classes.push(Namespace.css.disabled);
         }
+
+        paint(Unit.month, innerDate, classes, containerClone);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);

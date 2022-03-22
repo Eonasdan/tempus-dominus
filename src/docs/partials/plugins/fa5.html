@@ -1,0 +1,131 @@
+<page-body>
+  <section>
+    <h3>Font Awesome 5</h3>
+    <p>
+      You can use this plugin to set the global default icons to FA5. This plugin requires the FA5 resources to be
+      loaded.
+    </p>
+    <section>
+      <div class='container'>
+        <div class='row'>
+          <div class='col-sm-6'>
+            <label for='datetimepicker1Input' class='form-label'>Simple picker</label>
+            <div
+              class='input-group'
+              id='datetimepicker1'
+              data-td-target-input='nearest'
+              data-td-target-toggle='nearest'
+            >
+              <input
+                id='datetimepicker1Input'
+                type='text'
+                class='form-control'
+                data-td-target='#datetimepicker1'
+              />
+              <span
+                class='input-group-text'
+                data-td-target='#datetimepicker1'
+                data-td-toggle='datetimepicker'
+              >
+               <span class='fas fa-calendar'></span>
+             </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src='/6/js/plugins/fa-five.js'></script>
+      <script type='text/javascript'>
+        tempusDominus.extend(window.tempusDominus.plugins.fa_five);
+        const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+      </script>
+    </section>
+    <pre>
+<code class='language-js'>
+//example picker
+const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
+
+//to set globally
+tempusDominus.extend(window.tempusDominus.plugins.fa_five);
+//or
+import {load, fasixIcons} from 'tempusDominus/plugins/fa-five'
+tempusDominus.extend(load);
+
+// otherwise to set icons to an individual picker
+datetimepicker1.updateOptions({ display: icons: window.tempusDominus.plugins.fa_five.fasixIcons});
+//or
+datetimepicker1.updateOptions({ display: icons: faFiveIcons});
+</code>
+    </pre>
+  </section>
+  <section>
+    <table class='table table-striped'>
+      <caption>FA icons</caption>
+      <tr>
+        <th>Option</th>
+        <th>Value</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>icons</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>time</td>
+        <td>fas fa-clock</td>
+        <td><i class="fas fa-clock" aria-hidden="true"></i></td>
+      </tr>
+      <tr>
+        <td>date</td>
+        <td>fas fa-calendar</td>
+        <td><i class="fas fa-calendar" aria-hidden="true"></i></td>
+      </tr>
+      <tr>
+        <td>up</td>
+        <td>fas fa-arrow-up</td>
+        <td><i class="fas fa-arrow-up" aria-hidden="true"></i></td>
+      </tr>
+      <tr>
+        <td>down</td>
+        <td>fas fa-arrow-down</td>
+        <td><i class="fas fa-arrow-down" aria-hidden="true"></i></td>
+      </tr>
+      <tr>
+        <td>previous</td>
+        <td>fas fa-chevron-left</td>
+        <td><i class="fas fa-chevron-left" aria-hidden="true"></i></td>
+      </tr>
+      <tr>
+        <td>next</td>
+        <td>fas fa-chevron-right</td>
+        <td><i class="fas fa-chevron-right" aria-hidden="true"></i></td>
+      </tr>
+      <tr>
+        <td>today</td>
+        <td>fas fa-calendar-check</td>
+        <td><i class="fas fa-calendar-check" aria-hidden="true"></i></td>
+      </tr>
+      <tr>
+        <td>clear</td>
+        <td>fas fa-trash</td>
+        <td><i class="fas fa-trash" aria-hidden="true"></i></td>
+      </tr>
+      <tr>
+        <td>close</td>
+        <td>fas fa-xmark</td>
+        <td><i class="fas fa-xmark" aria-hidden="true"></i></td>
+      </tr>
+    </table>
+  </section>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/solid.min.js" integrity="sha512-Qc+cBMt/4/KXJ1F6nNQahXIsgPygHM4S2XWChoumV8qkpZ9oO+gBDBEpOxgbkQQ/6DlHx6cUxa5nBhEbuiR8xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/fontawesome.min.js" integrity="sha512-KCwrxBJebca0PPOaHELfqGtqkUlFUCuqCnmtydvBSTnJrBirJ55hRG5xcP4R9Rdx9Fz9IF3Yw6Rx40uhuAHR8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</page-body>
+
+<page-meta>
+  <title>Plugins - Font Awesome 6</title>
+  <post-date>01/19/2022</post-date>
+  <update-date>01/19/2022</update-date>
+  <excerpt>How to use font awesome 6 plugin with Tempus Dominus.
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

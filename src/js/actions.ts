@@ -1,17 +1,35 @@
-import { DatePickerModes } from './conts.js';
 import { DateTime, Unit } from './datetime';
-import { TempusDominus } from './tempus-dominus';
 import Collapse from './display/collapse';
-import Namespace from './namespace';
+import Namespace from './utilities/namespace';
+import { OptionsStore } from './utilities/options';
+import Dates from './dates';
+import Validation from './validation';
+import Display from './display';
+import { EventEmitters } from './utilities/event-emitter';
+import { serviceLocator } from './utilities/service-locator.js';
+import ActionTypes from './utilities/action-types';
+import CalendarModes from './utilities/calendar-modes';
 
 /**
  *
  */
 export default class Actions {
-  private _context: TempusDominus;
+  private optionsStore: OptionsStore;
+  private validation: Validation;
+  private dates: Dates;
+  private display: Display;
+  private _eventEmitters: EventEmitters;
 
-  constructor(context: TempusDominus) {
-    this._context = context;
+  constructor() {
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.dates = serviceLocator.locate(Dates);
+    this.validation = serviceLocator.locate(Validation);
+    this.display = serviceLocator.locate(Display);
+    this._eventEmitters = serviceLocator.locate(EventEmitters);
+
+    this._eventEmitters.action.subscribe((result) => {
+      this.do(result.e, result.action);
+    });
   }
 
   /**
@@ -24,21 +42,17 @@ export default class Actions {
     if (currentTarget?.classList?.contains(Namespace.css.disabled))
       return false;
     action = action || currentTarget?.dataset?.action;
-    const lastPicked = (
-      this._context.dates.lastPicked || this._context._viewDate
-    ).clone;
+    const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
+      .clone;
 
     switch (action) {
       case ActionTypes.next:
       case ActionTypes.previous:
         this.handleNextPrevious(action);
         break;
-      case ActionTypes.pickerSwitch:
-        this._context._display._showMode(1);
-        this._context._viewUpdate(
-          DatePickerModes[this._context._currentViewMode].unit
-        );
-        this._context._display._updateCalendarHeader();
+      case ActionTypes.changeCalendarView:
+        this.display._showMode(1);
+        this.display._updateCalendarHeader();
         break;
       case ActionTypes.selectMonth:
       case ActionTypes.selectYear:
@@ -46,32 +60,31 @@ export default class Actions {
         const value = +currentTarget.dataset.value;
         switch (action) {
           case ActionTypes.selectMonth:
-            this._context._viewDate.month = value;
-            this._context._viewUpdate(Unit.month);
+            this.optionsStore.viewDate.month = value;
             break;
           case ActionTypes.selectYear:
           case ActionTypes.selectDecade:
-            this._context._viewDate.year = value;
-            this._context._viewUpdate(Unit.year);
+            this.optionsStore.viewDate.year = value;
             break;
         }
 
         if (
-          this._context._currentViewMode === this._context._minViewModeNumber
+          this.optionsStore.currentCalendarViewMode ===
+          this.optionsStore.minimumCalendarViewMode
         ) {
-          this._context.dates._setValue(
-            this._context._viewDate,
-            this._context.dates.lastPickedIndex
+          this.dates.setValue(
+            this.optionsStore.viewDate,
+            this.dates.lastPickedIndex
           );
-          if (!this._context._options.display.inline) {
-            this._context._display.hide();
+          if (!this.optionsStore.options.display.inline) {
+            this.display.hide();
           }
         } else {
-          this._context._display._showMode(-1);
+          this.display._showMode(-1);
         }
         break;
       case ActionTypes.selectDay:
-        const day = this._context._viewDate.clone;
+        const day = this.optionsStore.viewDate.clone;
         if (currentTarget.classList.contains(Namespace.css.old)) {
           day.manipulate(-1, Unit.month);
         }
@@ -81,67 +94,56 @@ export default class Actions {
 
         day.date = +currentTarget.dataset.day;
         let index = 0;
-        if (this._context._options.multipleDates) {
-          index = this._context.dates.pickedIndex(day, Unit.date);
+        if (this.optionsStore.options.multipleDates) {
+          index = this.dates.pickedIndex(day, Unit.date);
           if (index !== -1) {
-            this._context.dates._setValue(null, index); //deselect multi-date
+            this.dates.setValue(null, index); //deselect multi-date
           } else {
-            this._context.dates._setValue(
-              day,
-              this._context.dates.lastPickedIndex + 1
-            );
+            this.dates.setValue(day, this.dates.lastPickedIndex + 1);
           }
         } else {
-          this._context.dates._setValue(
-            day,
-            this._context.dates.lastPickedIndex
-          );
+          this.dates.setValue(day, this.dates.lastPickedIndex);
         }
 
         if (
-          !this._context._display._hasTime &&
-          !this._context._options.display.keepOpen &&
-          !this._context._options.display.inline &&
-          !this._context._options.multipleDates
+          !this.display._hasTime &&
+          !this.optionsStore.options.display.keepOpen &&
+          !this.optionsStore.options.display.inline &&
+          !this.optionsStore.options.multipleDates
         ) {
-          this._context._display.hide();
+          this.display.hide();
         }
         break;
       case ActionTypes.selectHour:
         let hour = +currentTarget.dataset.value;
         if (
           lastPicked.hours >= 12 &&
-          !this._context._options.display.components.useTwentyfourHour
+          !this.optionsStore.options.display.components.useTwentyfourHour
         )
           hour += 12;
         lastPicked.hours = hour;
-        this._context.dates._setValue(
-          lastPicked,
-          this._context.dates.lastPickedIndex
-        );
+        this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         this.hideOrClock(e);
         break;
       case ActionTypes.selectMinute:
         lastPicked.minutes = +currentTarget.dataset.value;
-        this._context.dates._setValue(
-          lastPicked,
-          this._context.dates.lastPickedIndex
-        );
+        this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         this.hideOrClock(e);
         break;
       case ActionTypes.selectSecond:
         lastPicked.seconds = +currentTarget.dataset.value;
-        this._context.dates._setValue(
-          lastPicked,
-          this._context.dates.lastPickedIndex
-        );
+        this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         this.hideOrClock(e);
         break;
       case ActionTypes.incrementHours:
-       this.manipulateAndSet(lastPicked, Unit.hours);
+        this.manipulateAndSet(lastPicked, Unit.hours);
         break;
       case ActionTypes.incrementMinutes:
-        this.manipulateAndSet(lastPicked, Unit.minutes, this._context._options.stepping);
+        this.manipulateAndSet(
+          lastPicked,
+          Unit.minutes,
+          this.optionsStore.options.stepping
+        );
         break;
       case ActionTypes.incrementSeconds:
         this.manipulateAndSet(lastPicked, Unit.seconds);
@@ -150,55 +152,64 @@ export default class Actions {
         this.manipulateAndSet(lastPicked, Unit.hours, -1);
         break;
       case ActionTypes.decrementMinutes:
-        this.manipulateAndSet(lastPicked, Unit.minutes, this._context._options.stepping * -1);
+        this.manipulateAndSet(
+          lastPicked,
+          Unit.minutes,
+          this.optionsStore.options.stepping * -1
+        );
         break;
       case ActionTypes.decrementSeconds:
         this.manipulateAndSet(lastPicked, Unit.seconds, -1);
         break;
       case ActionTypes.toggleMeridiem:
-        this.manipulateAndSet(lastPicked,
+        this.manipulateAndSet(
+          lastPicked,
           Unit.hours,
-          this._context.dates.lastPicked.hours >= 12 ? -12 : 12
+          this.dates.lastPicked.hours >= 12 ? -12 : 12
         );
         break;
       case ActionTypes.togglePicker:
         if (
           currentTarget.getAttribute('title') ===
-          this._context._options.localization.selectDate
+          this.optionsStore.options.localization.selectDate
         ) {
           currentTarget.setAttribute(
             'title',
-            this._context._options.localization.selectTime
+            this.optionsStore.options.localization.selectTime
           );
-          currentTarget.innerHTML = this._context._display._iconTag(
-            this._context._options.display.icons.time
+          currentTarget.innerHTML = this.display._iconTag(
+            this.optionsStore.options.display.icons.time
           ).outerHTML;
 
-          this._context._display._updateCalendarHeader();
-        } else {
+          this.display._updateCalendarHeader();
+          this.optionsStore.refreshCurrentView();
+        } 
+        else {
           currentTarget.setAttribute(
             'title',
-            this._context._options.localization.selectDate
+            this.optionsStore.options.localization.selectDate
           );
-          currentTarget.innerHTML = this._context._display._iconTag(
-            this._context._options.display.icons.date
+          currentTarget.innerHTML = this.display._iconTag(
+            this.optionsStore.options.display.icons.date
           ).outerHTML;
-          if (this._context._display._hasTime) {
+          if (this.display._hasTime) {
             this.do(e, ActionTypes.showClock);
-            this._context._display._update('clock');
+            this.display._update('clock');
           }
         }
-        this._context._display.widget
+        this.display.widget
           .querySelectorAll(
             `.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`
           )
           .forEach((htmlElement: HTMLElement) => Collapse.toggle(htmlElement));
+        this._eventEmitters.viewUpdate.emit();
         break;
       case ActionTypes.showClock:
       case ActionTypes.showHours:
       case ActionTypes.showMinutes:
       case ActionTypes.showSeconds:
-        this._context._display.widget
+        this.optionsStore.currentView = 'clock';
+        this.display.widget
           .querySelectorAll(`.${Namespace.css.timeContainer} > div`)
           .forEach(
             (htmlElement: HTMLElement) => (htmlElement.style.display = 'none')
@@ -208,71 +219,67 @@ export default class Actions {
         switch (action) {
           case ActionTypes.showClock:
             classToUse = Namespace.css.clockContainer;
-            this._context._display._update('clock');
+            this.display._update('clock');
             break;
           case ActionTypes.showHours:
             classToUse = Namespace.css.hourContainer;
-            this._context._display._update(Unit.hours);
+            this.display._update(Unit.hours);
             break;
           case ActionTypes.showMinutes:
             classToUse = Namespace.css.minuteContainer;
-            this._context._display._update(Unit.minutes);
+            this.display._update(Unit.minutes);
             break;
           case ActionTypes.showSeconds:
             classToUse = Namespace.css.secondContainer;
-            this._context._display._update(Unit.seconds);
+            this.display._update(Unit.seconds);
             break;
         }
 
         (<HTMLElement>(
-          this._context._display.widget.getElementsByClassName(classToUse)[0]
+          this.display.widget.getElementsByClassName(classToUse)[0]
         )).style.display = 'grid';
         break;
       case ActionTypes.clear:
-        this._context.dates._setValue(null);
-        this._context._display._updateCalendarHeader();
+        this.dates.setValue(null);
+        this.display._updateCalendarHeader();
         break;
       case ActionTypes.close:
-        this._context._display.hide();
+        this.display.hide();
         break;
       case ActionTypes.today:
         const today = new DateTime().setLocale(
-          this._context._options.localization.locale
+          this.optionsStore.options.localization.locale
         );
-        this._context._viewDate = today;
-        if (this._context._validation.isValid(today, Unit.date))
-          this._context.dates._setValue(
-            today,
-            this._context.dates.lastPickedIndex
-          );
+        this.optionsStore.viewDate = today;
+        if (this.validation.isValid(today, Unit.date))
+          this.dates.setValue(today, this.dates.lastPickedIndex);
         break;
     }
   }
 
   private handleNextPrevious(action: ActionTypes) {
-    const { unit, step } = DatePickerModes[this._context._currentViewMode];
+    const { unit, step } =
+      CalendarModes[this.optionsStore.currentCalendarViewMode];
     if (action === ActionTypes.next)
-      this._context._viewDate.manipulate(step, unit);
-    else this._context._viewDate.manipulate(step * -1, unit);
-    this._context._viewUpdate(unit);
+      this.optionsStore.viewDate.manipulate(step, unit);
+    else this.optionsStore.viewDate.manipulate(step * -1, unit);
+    this._eventEmitters.viewUpdate.emit();
 
-    this._context._display._showMode();
+    this.display._showMode();
   }
 
   /**
-   * Common function to manipulate {@link lastPicked} by `unit`.
    * After setting the value it will either show the clock or hide the widget.
-   * @param unit
-   * @param value Value to change by
+   * @param e
    */
   private hideOrClock(e) {
     if (
-      this._context._options.display.components.useTwentyfourHour &&
-      !this._context._options.display.components.minutes &&
-      !this._context._options.display.keepOpen &&
-      !this._context._options.display.inline
+      this.optionsStore.options.display.components.useTwentyfourHour &&
+      !this.optionsStore.options.display.components.minutes &&
+      !this.optionsStore.options.display.keepOpen &&
+      !this.optionsStore.options.display.inline
     ) {
-      this._context._display.hide();
+      this.display.hide();
     } else {
       this.do(e, ActionTypes.showClock);
     }
@@ -280,44 +287,14 @@ export default class Actions {
 
   /**
    * Common function to manipulate {@link lastPicked} by `unit`.
+   * @param lastPicked
    * @param unit
    * @param value Value to change by
    */
   private manipulateAndSet(lastPicked: DateTime, unit: Unit, value = 1) {
     const newDate = lastPicked.manipulate(value, unit);
-    if (this._context._validation.isValid(newDate, unit)) {
-      this._context.dates._setValue(
-        newDate,
-        this._context.dates.lastPickedIndex
-      );
+    if (this.validation.isValid(newDate, unit)) {
+      this.dates.setValue(newDate, this.dates.lastPickedIndex);
     }
   }
-}
-
-export enum ActionTypes {
-  next = 'next',
-  previous = 'previous',
-  pickerSwitch = 'pickerSwitch',
-  selectMonth = 'selectMonth',
-  selectYear = 'selectYear',
-  selectDecade = 'selectDecade',
-  selectDay = 'selectDay',
-  selectHour = 'selectHour',
-  selectMinute = 'selectMinute',
-  selectSecond = 'selectSecond',
-  incrementHours = 'incrementHours',
-  incrementMinutes = 'incrementMinutes',
-  incrementSeconds = 'incrementSeconds',
-  decrementHours = 'decrementHours',
-  decrementMinutes = 'decrementMinutes',
-  decrementSeconds = 'decrementSeconds',
-  toggleMeridiem = 'toggleMeridiem',
-  togglePicker = 'togglePicker',
-  showClock = 'showClock',
-  showHours = 'showHours',
-  showMinutes = 'showMinutes',
-  showSeconds = 'showSeconds',
-  clear = 'clear',
-  close = 'close',
-  today = 'today',
 }

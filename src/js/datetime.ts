@@ -13,6 +13,20 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
   numberingSystem?: string;
 }
 
+export const getFormatByUnit = (unit: Unit): object => {
+  switch (unit) {
+    case 'date':
+      return { dateStyle: 'short' };
+    case 'month':
+      return {
+        month: 'numeric',
+        year: 'numeric'
+      };
+    case 'year':
+      return { year: 'numeric' };
+  }
+};
+
 /**
  * For the most part this object behaves exactly the same way
  * as the native Date object with a little extra spice.
@@ -38,7 +52,7 @@ export class DateTime extends Date {
    * @param  date
    */
   static convert(date: Date, locale: string = 'default'): DateTime {
-    if (!date) throw `A date is required`;
+    if (!date) throw new Error(`A date is required`);
     return new DateTime(
       date.getFullYear(),
       date.getMonth(),
@@ -73,7 +87,7 @@ export class DateTime extends Date {
    * @param startOfTheWeek Allows for the changing the start of the week.
    */
   startOf(unit: Unit | 'weekDay', startOfTheWeek = 0): this {
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
       case 'seconds':
         this.setMilliseconds(0);
@@ -89,7 +103,10 @@ export class DateTime extends Date {
         break;
       case 'weekDay':
         this.startOf(Unit.date);
-        this.manipulate(startOfTheWeek - this.weekDay, Unit.date);
+        if (this.weekDay === startOfTheWeek) break;
+        let goBack = this.weekDay;
+        if (startOfTheWeek !== 0 && this.weekDay === 0) goBack = 8 - startOfTheWeek;
+        this.manipulate(startOfTheWeek - goBack, Unit.date);
         break;
       case 'month':
         this.startOf(Unit.date);
@@ -109,8 +126,8 @@ export class DateTime extends Date {
    * would return April 30, 2021, 11:59:59.999 PM
    * @param unit
    */
-  endOf(unit: Unit | 'weekDay'): this {
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+  endOf(unit: Unit | 'weekDay', startOfTheWeek = 0): this {
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
       case 'seconds':
         this.setMilliseconds(999);
@@ -125,8 +142,8 @@ export class DateTime extends Date {
         this.setHours(23, 59, 59, 999);
         break;
       case 'weekDay':
-        this.startOf(Unit.date);
-        this.manipulate(6 - this.weekDay, Unit.date);
+        this.endOf(Unit.date);
+        this.manipulate((6 + startOfTheWeek) - this.weekDay, Unit.date);
         break;
       case 'month':
         this.endOf(Unit.date);
@@ -150,7 +167,7 @@ export class DateTime extends Date {
    * @param unit
    */
   manipulate(value: number, unit: Unit): this {
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     this[unit] += value;
     return this;
   }
@@ -174,7 +191,7 @@ export class DateTime extends Date {
    */
   isBefore(compare: DateTime, unit?: Unit): boolean {
     if (!unit) return this.valueOf() < compare.valueOf();
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     return (
       this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf()
     );
@@ -188,7 +205,7 @@ export class DateTime extends Date {
    */
   isAfter(compare: DateTime, unit?: Unit): boolean {
     if (!unit) return this.valueOf() > compare.valueOf();
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     return (
       this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf()
     );
@@ -202,7 +219,7 @@ export class DateTime extends Date {
    */
   isSame(compare: DateTime, unit?: Unit): boolean {
     if (!unit) return this.valueOf() === compare.valueOf();
-    if (this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     compare = DateTime.convert(compare);
     return (
       this.clone.startOf(unit).valueOf() === compare.startOf(unit).valueOf()
@@ -223,20 +240,20 @@ export class DateTime extends Date {
     unit?: Unit,
     inclusivity: '()' | '[]' | '(]' | '[)' = '()'
   ): boolean {
-    if (unit && this[unit] === undefined) throw `Unit '${unit}' is not valid`;
+    if (unit && this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
     const leftInclusivity = inclusivity[0] === '(';
     const rightInclusivity = inclusivity[1] === ')';
 
     return (
       ((leftInclusivity
-        ? this.isAfter(left, unit)
-        : !this.isBefore(left, unit)) &&
+          ? this.isAfter(left, unit)
+          : !this.isBefore(left, unit)) &&
         (rightInclusivity
           ? this.isBefore(right, unit)
           : !this.isAfter(right, unit))) ||
       ((leftInclusivity
-        ? this.isBefore(left, unit)
-        : !this.isAfter(left, unit)) &&
+          ? this.isBefore(left, unit)
+          : !this.isAfter(left, unit)) &&
         (rightInclusivity
           ? this.isAfter(right, unit)
           : !this.isBefore(right, unit)))
@@ -343,7 +360,7 @@ export class DateTime extends Date {
   meridiem(locale: string = this.locale): string {
     return new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
-      hour12: true,
+      hour12: true
     } as any)
       .formatToParts(this)
       .find((p) => p.type === 'dayPeriod')?.value;
@@ -388,6 +405,12 @@ export class DateTime extends Date {
    * Shortcut to Date.setMonth()
    */
   set month(value: number) {
+    const targetMonth = new Date(this.year, value + 1);
+    targetMonth.setDate(0);
+    const endOfMonth = targetMonth.getDate();
+    if (this.date > endOfMonth) {
+      this.date = endOfMonth;
+    }
     this.setMonth(value);
   }
 
@@ -423,8 +446,8 @@ export class DateTime extends Date {
     let weekNumber = Math.floor((ordinal - weekday + 10) / 7);
 
     if (weekNumber < 1) {
-      weekNumber = this.weeksInWeekYear( this.year - 1);
-    } else if (weekNumber > this. weeksInWeekYear(this.year)) {
+      weekNumber = this.weeksInWeekYear(this.year - 1);
+    } else if (weekNumber > this.weeksInWeekYear(this.year)) {
       weekNumber = 1;
     }
 

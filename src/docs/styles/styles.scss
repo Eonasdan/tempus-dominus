@@ -61,3 +61,73 @@ section h2 {
     overflow-y: initial;
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  $dark-background: #171717;
+  $dark-font:#e3e3e3;
+  $dark-background-alt: #2d2d2d;
+  $dark-font-alt: #4db2ff;
+  
+  body, .form-control {
+    background-color: $dark-background;
+    color: $dark-font;
+  }
+  
+  a, .show-code, .nav-link {
+    color: $dark-font-alt;
+  }
+
+  .bd-links .btn, .bd-links .btn[aria-expanded=true], .bd-links .active, .bd-links a, .bd-footer a, .bd-masthead .lead,
+  .table > :not(caption) > * > * {
+    color: $dark-font;
+  }
+
+  .bd-links a:hover, .bd-links a:focus, .bd-links .btn:hover, .bd-links .btn:focus, .input-group-text, .form-control:disabled, .form-control[readonly]  {
+    background-color: $dark-background-alt;
+    color: $dark-font;
+  }
+
+  .input-group-text {
+    border-color: $dark-background-alt;
+  }
+
+  .bd-links .btn:focus {
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 5%);
+  }
+
+  .form-control {
+    border-color: rgb(60, 65, 68);
+  }
+
+  .bd-subnavbar {
+    background-color: rgba(24, 26, 27, 0.95);
+    box-shadow: rgb(0 0 0 / 5%) 0 0.5rem 1rem, rgb(0 0 0 / 15%) 0px -1px 0px inset;
+  }
+  
+  .btn {
+    color: $dark-font;
+    
+    &:hover {
+      color: $dark-font;      
+    }
+  }
+
+  .bd-links .btn::before {
+    content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28227, 227, 227,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  }
+
+  .bg-light, .text-muted, .table-striped > tbody > tr:nth-of-type(odd) > *, .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    background-color: $dark-background-alt !important;
+    color: $dark-font !important;
+  }
+
+  .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    border-color: rgb(56, 61, 63) rgb(56, 61, 63) rgb(48, 52, 54);
+  }
+
+  .btn-bd-download:hover, .btn-bd-download:active {
+    color: rgb(205, 200, 194);
+    background-color: rgb(125, 97, 0);
+    border-color: rgb(139, 108, 0);
+  }
+}

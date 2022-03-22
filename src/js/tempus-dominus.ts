@@ -1,63 +1,74 @@
 import Display from './display/index';
 import Validation from './validation';
 import Dates from './dates';
-import Actions, { ActionTypes } from './actions';
-import { DatePickerModes, DefaultOptions } from './conts';
+import Actions from './actions';
 import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
-import Namespace from './namespace';
-import Options, { OptionConverter } from './options';
+import Namespace from './utilities/namespace';
+import Options, { OptionConverter, OptionsStore } from './utilities/options';
 import {
   BaseEvent,
   ChangeEvent,
   ViewUpdateEvent,
   FailEvent,
-} from './event-types';
+} from './utilities/event-types';
+import { EventEmitters } from './utilities/event-emitter';
+import {
+  serviceLocator,
+  setupServiceLocator,
+} from './utilities/service-locator';
+import CalendarModes from './utilities/calendar-modes';
+import DefaultOptions from './utilities/default-options';
+import ActionTypes from './utilities/action-types';
 
 /**
  * A robust and powerful date/time picker component.
  */
 class TempusDominus {
-  dates: Dates;
-
-  _options: Options;
-  _currentViewMode = 0;
   _subscribers: { [key: string]: ((event: any) => {})[] } = {};
-  _element: HTMLElement;
-  _input: HTMLInputElement;
-  _unset: boolean;
-  _minViewModeNumber = 0;
-  _display: Display;
-  _validation: Validation;
-  _action: Actions;
   private _isDisabled = false;
-  private _notifyChangeEventContext = 0;
   private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: any;
+  private actions: Actions;
+  private optionsStore: OptionsStore;
+  private _eventEmitters: EventEmitters;
+  display: Display;
+  dates: Dates;
 
   constructor(element: HTMLElement, options: Options = {} as Options) {
+    setupServiceLocator();
+    this._eventEmitters = serviceLocator.locate(EventEmitters);
+    this.optionsStore = serviceLocator.locate(OptionsStore);
+    this.display = serviceLocator.locate(Display);
+    this.dates = serviceLocator.locate(Dates);
+    this.actions = serviceLocator.locate(Actions);
+
     if (!element) {
       Namespace.errorMessages.mustProvideElement();
     }
-    this._element = element;
-    this._options = this._initializeOptions(options, DefaultOptions, true);
-    this._viewDate.setLocale(this._options.localization.locale);
-    this._unset = true;
 
-    this._display = new Display(this);
-    this._validation = new Validation(this);
-    this.dates = new Dates(this);
-    this._action = new Actions(this);
+    this.optionsStore.element = element;
+    this._initializeOptions(options, DefaultOptions, true);
+    this.optionsStore.viewDate.setLocale(
+      this.optionsStore.options.localization.locale
+    );
+    this.optionsStore.unset = true;
 
     this._initializeInput();
     this._initializeToggle();
 
-    if (this._options.display.inline) this._display.show();
+    if (this.optionsStore.options.display.inline) this.display.show();
+
+    this._eventEmitters.triggerEvent.subscribe((e) => {
+      this._triggerEvent(e);
+    });
+
+    this._eventEmitters.viewUpdate.subscribe(() => {
+      this._viewUpdate();
+    });
   }
 
-  _viewDate = new DateTime();
-
   get viewDate() {
-    return this._viewDate;
+    return this.optionsStore.viewDate;
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -68,9 +79,9 @@ class TempusDominus {
    * @public
    */
   updateOptions(options, reset = false): void {
-    if (reset) this._options = this._initializeOptions(options, DefaultOptions);
-    else this._options = this._initializeOptions(options, this._options);
-    this._display._rebuild();
+    if (reset) this._initializeOptions(options, DefaultOptions);
+    else this._initializeOptions(options, this.optionsStore.options);
+    this.display._rebuild();
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -80,7 +91,7 @@ class TempusDominus {
    */
   toggle(): void {
     if (this._isDisabled) return;
-    this._display.toggle();
+    this.display.toggle();
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -90,7 +101,7 @@ class TempusDominus {
    */
   show(): void {
     if (this._isDisabled) return;
-    this._display.show();
+    this.display.show();
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -99,7 +110,7 @@ class TempusDominus {
    * @public
    */
   hide(): void {
-    this._display.hide();
+    this.display.hide();
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -111,8 +122,8 @@ class TempusDominus {
     this._isDisabled = true;
     // todo this might be undesired. If a dev disables the input field to
     // only allow using the picker, this will break that.
-    this._input?.setAttribute('disabled', 'disabled');
-    this._display.hide();
+    this.optionsStore.input?.setAttribute('disabled', 'disabled');
+    this.display.hide();
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -122,7 +133,7 @@ class TempusDominus {
    */
   enable(): void {
     this._isDisabled = false;
-    this._input?.removeAttribute('disabled');
+    this.optionsStore.input?.removeAttribute('disabled');
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -190,15 +201,34 @@ class TempusDominus {
    * Hides the picker and removes event listeners
    */
   dispose() {
-    this._display.hide();
+    this.display.hide();
     // this will clear the document click event listener
-    this._display._dispose();
-    this._input?.removeEventListener('change', this._inputChangeEvent);
-    if (this._options.allowInputToggle) {
-      this._input?.removeEventListener('click', this._toggleClickEvent);
+    this.display._dispose();
+    this.optionsStore.input?.removeEventListener(
+      'change',
+      this._inputChangeEvent
+    );
+    if (this.optionsStore.options.allowInputToggle) {
+      this.optionsStore.input?.removeEventListener(
+        'click',
+        this._toggleClickEvent
+      );
     }
-    this._toggle.removeEventListener('click', this._toggleClickEvent);
+    this._toggle?.removeEventListener('click', this._toggleClickEvent);
     this._subscribers = {};
+  }
+
+  /**
+   * Updates the options to use the provided language.
+   * THe language file must be loaded first.
+   * @param language
+   */
+  locale(language: string) {
+    let asked = loadedLocales[language];
+    if (!asked) return;
+    this.updateOptions({
+      localization: asked,
+    });
   }
 
   /**
@@ -207,49 +237,52 @@ class TempusDominus {
    * @param event Accepts a BaseEvent object.
    * @private
    */
-  _triggerEvent(event: BaseEvent) {
-    // checking hasOwnProperty because the BasicEvent also falls through here otherwise
-    if ((event as ChangeEvent) && event.hasOwnProperty('date')) {
+  private _triggerEvent(event: BaseEvent) {
+    event.viewMode = this.optionsStore.currentView;
+
+    const isChangeEvent = event.type === Namespace.events.change;
+    if (isChangeEvent) {
       const { date, oldDate, isClear } = event as ChangeEvent;
-      // this was to prevent a max call stack error
-      // https://github.com/tempusdominus/core/commit/15a280507f5277b31b0b3319ab1edc7c19a000fb
-      // todo see if this is still needed or if there's a cleaner way
-      this._notifyChangeEventContext++;
       if (
         (date && oldDate && date.isSame(oldDate)) ||
-        (!isClear && !date && !oldDate) ||
-        this._notifyChangeEventContext > 1
+        (!isClear && !date && !oldDate)
       ) {
-        this._notifyChangeEventContext = 0;
         return;
       }
       this._handleAfterChangeEvent(event as ChangeEvent);
+
+      this.optionsStore.input?.dispatchEvent(
+        new CustomEvent(event.type, { detail: event as any })
+      );
     }
 
-    this._element.dispatchEvent(
+    this.optionsStore.element.dispatchEvent(
       new CustomEvent(event.type, { detail: event as any })
     );
 
     if ((window as any).jQuery) {
       const $ = (window as any).jQuery;
-      $(this._element).trigger(event);
+
+      if (isChangeEvent && this.optionsStore.input) {
+        $(this.optionsStore.input).trigger(event);
+      } else {
+        $(this.optionsStore.element).trigger(event);
+      }
     }
 
-    const publish = () => {
-      // return if event is not subscribed
-      if (!Array.isArray(this._subscribers[event.type])) {
-        return;
-      }
+    this._publish(event);
+  }
 
-      // Trigger callback for each subscriber
-      this._subscribers[event.type].forEach((callback) => {
-        callback(event);
-      });
-    };
+  private _publish(event: BaseEvent) {
+    // return if event is not subscribed
+    if (!Array.isArray(this._subscribers[event.type])) {
+      return;
+    }
 
-    publish();
-
-    this._notifyChangeEventContext = 0;
+    // Trigger callback for each subscriber
+    this._subscribers[event.type].forEach((callback) => {
+      callback(event);
+    });
   }
 
   /**
@@ -257,11 +290,10 @@ class TempusDominus {
    * @param {Unit} unit
    * @private
    */
-  _viewUpdate(unit: Unit) {
+  private _viewUpdate() {
     this._triggerEvent({
       type: Namespace.events.update,
-      change: unit,
-      viewDate: this._viewDate.clone,
+      viewDate: this.optionsStore.viewDate.clone,
     } as ViewUpdateEvent);
   }
 
@@ -280,17 +312,20 @@ class TempusDominus {
     config: Options,
     mergeTo: Options,
     includeDataset = false
-  ): Options {
+  ): void {
     config = OptionConverter._mergeOptions(config, mergeTo);
     if (includeDataset)
-      config = OptionConverter._dataToOptions(this._element, config);
+      config = OptionConverter._dataToOptions(
+        this.optionsStore.element,
+        config
+      );
 
     OptionConverter._validateConflcits(config);
 
     config.viewDate = config.viewDate.setLocale(config.localization.locale);
 
-    if (!this._viewDate.isSame(config.viewDate)) {
-      this._viewDate = config.viewDate;
+    if (!this.optionsStore.viewDate.isSame(config.viewDate)) {
+      this.optionsStore.viewDate = config.viewDate;
     }
 
     /**
@@ -298,60 +333,36 @@ class TempusDominus {
      * allowing year and month to be selected but not date.
      */
     if (config.display.components.year) {
-      this._minViewModeNumber = 2;
+      this.optionsStore.minimumCalendarViewMode = 2;
     }
     if (config.display.components.month) {
-      this._minViewModeNumber = 1;
+      this.optionsStore.minimumCalendarViewMode = 1;
     }
     if (config.display.components.date) {
-      this._minViewModeNumber = 0;
+      this.optionsStore.minimumCalendarViewMode = 0;
     }
 
-    this._currentViewMode = Math.max(
-      this._minViewModeNumber,
-      this._currentViewMode
+    this.optionsStore.currentCalendarViewMode = Math.max(
+      this.optionsStore.minimumCalendarViewMode,
+      this.optionsStore.currentCalendarViewMode
     );
 
     // Update view mode if needed
     if (
-      DatePickerModes[this._currentViewMode].name !== config.display.viewMode
+      CalendarModes[this.optionsStore.currentCalendarViewMode].name !==
+      config.display.viewMode
     ) {
-      this._currentViewMode = Math.max(
-        DatePickerModes.findIndex((x) => x.name === config.display.viewMode),
-        this._minViewModeNumber
+      this.optionsStore.currentCalendarViewMode = Math.max(
+        CalendarModes.findIndex((x) => x.name === config.display.viewMode),
+        this.optionsStore.minimumCalendarViewMode
       );
     }
 
-    // defaults the input format based on the components enabled
-    if (config.hooks.inputFormat === undefined) {
-      const components = config.display.components;
-      config.hooks.inputFormat = (_, date: DateTime) => {
-        if (!date) return '';
-        return date.format({
-          year: components.calendar && components.year ? 'numeric' : undefined,
-          month:
-            components.calendar && components.month ? '2-digit' : undefined,
-          day: components.calendar && components.date ? '2-digit' : undefined,
-          hour:
-            components.clock && components.hours
-              ? components.useTwentyfourHour
-                ? '2-digit'
-                : 'numeric'
-              : undefined,
-          minute:
-            components.clock && components.minutes ? '2-digit' : undefined,
-          second:
-            components.clock && components.seconds ? '2-digit' : undefined,
-          hour12: !components.useTwentyfourHour,
-        });
-      };
+    if (this.display?.isVisible) {
+      this.display._update('all');
     }
 
-    if (this._display?.isVisible) {
-      this._display._update('all');
-    }
-
-    return config;
+    this.optionsStore.options = config;
   }
 
   /**
@@ -360,25 +371,27 @@ class TempusDominus {
    * @private
    */
   private _initializeInput() {
-    if (this._element.tagName == 'INPUT') {
-      this._input = this._element as HTMLInputElement;
+    if (this.optionsStore.element.tagName == 'INPUT') {
+      this.optionsStore.input = this.optionsStore.element as HTMLInputElement;
     } else {
-      let query = this._element.dataset.tdTargetInput;
+      let query = this.optionsStore.element.dataset.tdTargetInput;
       if (query == undefined || query == 'nearest') {
-        this._input = this._element.querySelector('input');
+        this.optionsStore.input =
+          this.optionsStore.element.querySelector('input');
       } else {
-        this._input = this._element.querySelector(query);
+        this.optionsStore.input =
+          this.optionsStore.element.querySelector(query);
       }
     }
 
-    if (!this._input) return;
+    if (!this.optionsStore.input) return;
 
-    this._input.addEventListener('change', this._inputChangeEvent);
-    if (this._options.allowInputToggle) {
-      this._input.addEventListener('click', this._toggleClickEvent);
+    this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
+    if (this.optionsStore.options.allowInputToggle) {
+      this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
     }
 
-    if (this._input.value) {
+    if (this.optionsStore.input.value) {
       this._inputChangeEvent();
     }
   }
@@ -388,13 +401,15 @@ class TempusDominus {
    * @private
    */
   private _initializeToggle() {
-    if (this._options.display.inline) return;
-    let query = this._element.dataset.tdTargetToggle;
+    if (this.optionsStore.options.display.inline) return;
+    let query = this.optionsStore.element.dataset.tdTargetToggle;
     if (query == 'nearest') {
       query = '[data-td-toggle="datetimepicker"]';
     }
     this._toggle =
-      query == undefined ? this._element : this._element.querySelector(query);
+      query == undefined
+        ? this.optionsStore.element
+        : this.optionsStore.element.querySelector(query);
     this._toggle.addEventListener('click', this._toggleClickEvent);
   }
 
@@ -406,13 +421,13 @@ class TempusDominus {
   private _handleAfterChangeEvent(e: ChangeEvent) {
     if (
       // options is disabled
-      !this._options.promptTimeOnDateChange ||
-      this._options.display.inline ||
-      this._options.display.sideBySide ||
+      !this.optionsStore.options.promptTimeOnDateChange ||
+      this.optionsStore.options.display.inline ||
+      this.optionsStore.options.display.sideBySide ||
       // time is disabled
-      !this._display._hasTime ||
+      !this.display._hasTime ||
       // clock component is already showing
-      this._display.widget
+      this.display.widget
         ?.getElementsByClassName(Namespace.css.show)[0]
         .classList.contains(Namespace.css.timeContainer)
     )
@@ -422,7 +437,7 @@ class TempusDominus {
     // because the first date is selected automatically.
     // or date didn't change (time did) or date changed because time did.
     if (
-      (!e.oldDate && this._options.useCurrent) ||
+      (!e.oldDate && this.optionsStore.options.useCurrent) ||
       (e.oldDate && e.date?.isSame(e.oldDate))
     ) {
       return;
@@ -430,17 +445,17 @@ class TempusDominus {
 
     clearTimeout(this._currentPromptTimeTimeout);
     this._currentPromptTimeTimeout = setTimeout(() => {
-      if (this._display.widget) {
-        this._action.do(
-          {
-            currentTarget: this._display.widget.querySelector(
+      if (this.display.widget) {
+        this._eventEmitters.action.emit({
+          e: {
+            currentTarget: this.display.widget.querySelector(
               `.${Namespace.css.switch} div`
             ),
           },
-          ActionTypes.togglePicker
-        );
+          action: ActionTypes.togglePicker,
+        });
       }
-    }, this._options.promptTimeOnDateChangeTransitionDelay);
+    }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
   }
 
   /**
@@ -450,23 +465,18 @@ class TempusDominus {
    */
   private _inputChangeEvent = () => {
     const setViewDate = () => {
-      if (this.dates.lastPicked) this._viewDate = this.dates.lastPicked;
+      if (this.dates.lastPicked)
+        this.optionsStore.viewDate = this.dates.lastPicked;
     };
 
-    const value = this._input.value;
-    if (this._options.multipleDates) {
+    const value = this.optionsStore.input.value;
+    if (this.optionsStore.options.multipleDates) {
       try {
-        const valueSplit = value.split(this._options.multipleDatesSeparator);
+        const valueSplit = value.split(
+          this.optionsStore.options.multipleDatesSeparator
+        );
         for (let i = 0; i < valueSplit.length; i++) {
-          if (this._options.hooks.inputParse) {
-            this.dates.set(
-              this._options.hooks.inputParse(this, valueSplit[i]),
-              i,
-              'input'
-            );
-          } else {
-            this.dates.set(valueSplit[i], i, 'input');
-          }
+          this.dates.setFromInput(valueSplit[i], i);
         }
         setViewDate();
       } catch {
@@ -475,11 +485,7 @@ class TempusDominus {
         );
       }
     } else {
-      if (this._options.hooks.inputParse) {
-        this.dates.set(this._options.hooks.inputParse(this, value), 0, 'input');
-      } else {
-        this.dates.set(value, 0, 'input');
-      }
+      this.dates.setFromInput(value, 0);
       setViewDate();
     }
   };
@@ -494,8 +500,47 @@ class TempusDominus {
   };
 }
 
+/**
+ * Whenever a locale is loaded via a plugin then store it here based on the
+ * locale name. E.g. loadedLocales['ru']
+ */
+const loadedLocales = {};
+
+/**
+ * Called from a locale plugin.
+ * @param locale locale object for localization options
+ * @param name name of the language e.g 'ru', 'en-gb'
+ */
+const loadLocale = (locale) => {
+  if (loadedLocales[locale.name]) return;
+  loadedLocales[locale.name] = locale.localization;
+};
+
+/**
+ * A sets the global localization options to the provided locale name.
+ * `locadLocale` MUST be called first.
+ * @param locale
+ */
+const locale = (locale: string) => {
+  let asked = loadedLocales[locale];
+  if (!asked) return;
+  DefaultOptions.localization = asked;
+};
+
+const extend = function (plugin, option) {
+  if (!plugin.$i) {
+    // install plugin only once
+    plugin.load(option, { TempusDominus, Dates, Display }, this);
+    plugin.$i = true;
+  }
+  return this;
+};
+
 export {
   TempusDominus,
+  extend,
+  loadLocale,
+  locale,
   Namespace,
   DefaultOptions,
   DateTime,

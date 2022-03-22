@@ -1,7 +1,36 @@
-import { DateTime, DateTimeFormatOptions } from './datetime';
+import { DateTime, DateTimeFormatOptions } from '../datetime';
 import Namespace from './namespace';
-import { DefaultOptions } from './conts';
-import { TempusDominus } from './tempus-dominus';
+import ViewMode from './view-mode';
+import CalendarModes from './calendar-modes';
+import DefaultOptions from './default-options';
+
+export class OptionsStore {
+  options: Options;
+  element: HTMLElement;
+  viewDate = new DateTime();
+  input: HTMLInputElement;
+  unset: boolean;
+  private _currentCalendarViewMode = 0;
+  get currentCalendarViewMode() {
+    return this._currentCalendarViewMode;
+  }
+
+  set currentCalendarViewMode(value) {
+    this._currentCalendarViewMode = value;
+    this.currentView = CalendarModes[value].name;
+  }
+
+  /**
+   * When switching back to the calendar from the clock,
+   * this sets currentView to the correct calendar view.
+   */
+  refreshCurrentView() {
+    this.currentView = CalendarModes[this.currentCalendarViewMode].name;
+  }
+
+  minimumCalendarViewMode = 0;
+  currentView: keyof ViewMode = 'calendar';
+}
 
 export default interface Options {
   restrictions?: {
@@ -42,7 +71,7 @@ export default interface Options {
       down?: string;
       close?: string;
     };
-    viewMode?: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
+    viewMode?: keyof ViewMode | undefined;
     sideBySide?: boolean;
     inline?: boolean;
     keepOpen?: boolean;
@@ -89,10 +118,6 @@ export default interface Options {
   multipleDatesSeparator?: string;
   promptTimeOnDateChange?: boolean;
   promptTimeOnDateChangeTransitionDelay?: number;
-  hooks?: {
-    inputParse?: (context: TempusDominus, value: any) => DateTime;
-    inputFormat?: (context: TempusDominus, date: DateTime) => string;
-  };
   meta?: {};
   container?: HTMLElement;
 }
@@ -101,23 +126,18 @@ export class OptionConverter {
   static _mergeOptions(providedOptions: Options, mergeTo: Options): Options {
     const newOptions = {} as Options;
     let path = '';
-    const ignoreProperties = [
-      'inputParse',
-      'inputFormat',
-      'meta',
-      'dayViewHeaderFormat',
-      'container'
-    ];
+    const ignoreProperties = ['meta', 'dayViewHeaderFormat', 'container'];
 
     //see if the options specify a locale
     const locale =
-      mergeTo.localization.locale !== 'default' ? mergeTo.localization.locale :
-      providedOptions?.localization?.locale || 'default';
+      mergeTo.localization.locale !== 'default'
+        ? mergeTo.localization.locale
+        : providedOptions?.localization?.locale || 'default';
 
     const processKey = (key, value, providedType, defaultType) => {
       switch (key) {
         case 'defaultDate': {
-          const dateTime = this._dateConversion(value, 'defaultDate');
+          const dateTime = this.dateConversion(value, 'defaultDate');
           if (dateTime !== undefined) {
             dateTime.setLocale(locale);
             return dateTime;
@@ -127,9 +147,10 @@ export class OptionConverter {
             providedType,
             'DateTime or Date'
           );
+          break;
         }
         case 'viewDate': {
-          const dateTime = this._dateConversion(value, 'viewDate');
+          const dateTime = this.dateConversion(value, 'viewDate');
           if (dateTime !== undefined) {
             dateTime.setLocale(locale);
             return dateTime;
@@ -139,12 +160,13 @@ export class OptionConverter {
             providedType,
             'DateTime or Date'
           );
+          break;
         }
         case 'minDate': {
           if (value === undefined) {
             return value;
           }
-          const dateTime = this._dateConversion(value, 'restrictions.minDate');
+          const dateTime = this.dateConversion(value, 'restrictions.minDate');
           if (dateTime !== undefined) {
             dateTime.setLocale(locale);
             return dateTime;
@@ -154,12 +176,13 @@ export class OptionConverter {
             providedType,
             'DateTime or Date'
           );
+          break;
         }
         case 'maxDate': {
           if (value === undefined) {
             return value;
           }
-          const dateTime = this._dateConversion(value, 'restrictions.maxDate');
+          const dateTime = this.dateConversion(value, 'restrictions.maxDate');
           if (dateTime !== undefined) {
             dateTime.setLocale(locale);
             return dateTime;
@@ -169,6 +192,7 @@ export class OptionConverter {
             providedType,
             'DateTime or Date'
           );
+          break;
         }
         case 'disabledHours':
           if (value === undefined) {
@@ -256,7 +280,7 @@ export class OptionConverter {
             Object.keys(valueObject[i]).forEach((vk) => {
               const subOptionName = `${key}[${i}].${vk}`;
               let d = valueObject[i][vk];
-              const dateTime = this._dateConversion(d, subOptionName);
+              const dateTime = this.dateConversion(d, subOptionName);
               if (!dateTime) {
                 Namespace.errorMessages.typeMismatch(
                   subOptionName,
@@ -286,13 +310,18 @@ export class OptionConverter {
             );
 
           return value;
-        case 'inputParse':
-        case 'inputFormat':
         case 'meta':
         case 'dayViewHeaderFormat':
           return value;
         case 'container':
-          if (value && !(value instanceof HTMLElement || value instanceof Element || value?.appendChild)) {
+          if (
+            value &&
+            !(
+              value instanceof HTMLElement ||
+              value instanceof Element ||
+              value?.appendChild
+            )
+          ) {
             Namespace.errorMessages.typeMismatch(
               path.substring(1),
               typeof value,
@@ -335,7 +364,7 @@ export class OptionConverter {
         (x) => !Object.keys(mergeOption).includes(x)
       );
       if (unsupportedOptions.length > 0) {
-        const flattenedOptions = OptionConverter._flattenDefaultOptions;
+        const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
 
         const errors = unsupportedOptions.map((x) => {
           let error = `"${path.substring(1)}.${x}" in not a known option.`;
@@ -384,7 +413,7 @@ export class OptionConverter {
   }
 
   static _dataToOptions(element, options: Options): Options {
-    const eData = element.dataset;
+    const eData = JSON.parse(JSON.stringify(element.dataset));
 
     if (eData?.tdTargetInput) delete eData.tdTargetInput;
     if (eData?.tdTargetToggle) delete eData.tdTargetToggle;
@@ -497,6 +526,7 @@ export class OptionConverter {
    * @param optionName Provides text to error messages e.g. disabledDates
    * @param value Option value
    * @param providedType Used to provide text to error messages
+   * @param locale
    */
   static _typeCheckDateArray(
     optionName: string,
@@ -513,7 +543,7 @@ export class OptionConverter {
     }
     for (let i = 0; i < value.length; i++) {
       let d = value[i];
-      const dateTime = this._dateConversion(d, optionName);
+      const dateTime = this.dateConversion(d, optionName);
       if (!dateTime) {
         Namespace.errorMessages.typeMismatch(
           optionName,
@@ -552,7 +582,7 @@ export class OptionConverter {
    * @param d value to convert
    * @param optionName Provides text to error messages e.g. disabledDates
    */
-  static _dateConversion(d: any, optionName: string) {
+  static dateConversion(d: any, optionName: string): DateTime {
     if (typeof d === typeof '' && optionName !== 'input') {
       Namespace.errorMessages.dateString();
     }
@@ -571,7 +601,7 @@ export class OptionConverter {
 
   private static _flatback: string[];
 
-  private static get _flattenDefaultOptions(): string[] {
+  private static getFlattenDefaultOptions(): string[] {
     if (this._flatback) return this._flatback;
     const deepKeys = (t, pre = []) =>
       Array.isArray(t)
@@ -591,16 +621,19 @@ export class OptionConverter {
    * @param config
    */
   static _validateConflcits(config: Options) {
-    if (config.display.sideBySide && (!config.display.components.clock ||
-      !(config.display.components.hours ||
-        config.display.components.minutes ||
-        config.display.components.seconds)
-    )) {
+    if (
+      config.display.sideBySide &&
+      (!config.display.components.clock ||
+        !(
+          config.display.components.hours ||
+          config.display.components.minutes ||
+          config.display.components.seconds
+        ))
+    ) {
       Namespace.errorMessages.conflictingConfiguration(
         'Cannot use side by side mode without the clock components'
       );
     }
-
 
     if (config.restrictions.minDate && config.restrictions.maxDate) {
       if (config.restrictions.minDate.isAfter(config.restrictions.maxDate)) {

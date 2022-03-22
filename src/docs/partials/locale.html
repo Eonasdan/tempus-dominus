@@ -1,0 +1,98 @@
+<page-body>
+  <section>
+    <h3>Introduction</h3>
+    <p>
+      The locale files offer a simple way to globally or individually set the localization options without the need to
+      hand code that everytime.
+    </p>
+  </section>
+  <section>
+    <div class='container'>
+      <div class='row'>
+        <div class='col-sm-6'>
+          <label for='datetimepicker1Input' class='form-label'>Simple picker</label>
+          <div
+            class='input-group'
+            id='datetimepicker1'
+            data-td-target-input='nearest'
+            data-td-target-toggle='nearest'
+          >
+            <input
+              id='datetimepicker1Input'
+              type='text'
+              class='form-control'
+              data-td-target='#datetimepicker1'
+            />
+            <span
+              class='input-group-text'
+              data-td-target='#datetimepicker1'
+              data-td-toggle='datetimepicker'
+            >
+               <span class='fas fa-calendar'></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src='/6/js/locales/ru.js'></script>
+    <script type='text/javascript'>
+      tempusDominus.loadLocale(tempusDominus.locales.ru);
+      tempusDominus.locale(tempusDominus.locales.ru.name);
+      const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+    </script>
+  </section>
+  <section>
+    <h3>Creating plugins</h3>
+    <p>
+      There are a few examples in the source like this
+    </p>
+    <pre>
+      <code class='language-javascript'>
+const name = 'ru';
+
+const localization = {
+  today: 'Перейти сегодня',
+  //...
+  locale: 'ru',
+  startOfTheWeek: 1
+};
+
+export { localization, name };
+      </code>
+    </pre>
+  </section>
+  <section>
+    <h3>Using a locale</h3>
+    <p>Load the locale file.</p>
+    <pre>
+      <code class='language-html'>
+&lt;script src=&quot;/path/to/locale.js&quot;&gt;&lt;/script&gt;
+      </code>
+    </pre>
+    <p>
+      You can then either set the global default or you can it indvidually.
+    </p>
+    <pre>
+      <code class='language-js'>
+//load the RU locale
+tempusDominus.loadLocale(tempusDominus.locales.ru);
+
+//globally
+tempusDominus.locale(tempusDominus.locales.ru.name);//set the default options to use Russian from the plugin
+
+//picker
+const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
+datetimepicker1.locale(tempusDominus.locales.ru.name);
+      </code>
+    </pre>
+  </section>
+</page-body>
+
+<page-meta>
+  <title>Locales</title>
+  <post-date>01/19/2022</post-date>
+  <update-date>02/05/2022</update-date>
+  <excerpt>How to use plugins with Tempus Dominus.
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

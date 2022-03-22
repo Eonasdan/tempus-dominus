@@ -18,7 +18,7 @@ const DRY_RUN = process.argv.includes('--dry') || process.argv.includes('--dry-r
 
 // These are the filetypes we only care about replacing the version
 const GLOB = [
-  '**/*.{css,html,js,json,md,scss,txt,yml}'
+  '**/*.{css,html,js,json,md,scss,txt,yml,ts}'
 ]
 const GLOBBY_OPTIONS = {
   cwd: path.join(__dirname, '..'),

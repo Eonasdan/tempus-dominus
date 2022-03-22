@@ -1,5 +1,22 @@
-import { DateTime, DateTimeFormatOptions } from './datetime';
-import { TempusDominus } from './tempus-dominus';
+import { DateTime, DateTimeFormatOptions } from '../datetime';
+import ViewMode from './view-mode';
+export declare class OptionsStore {
+    options: Options;
+    element: HTMLElement;
+    viewDate: DateTime;
+    input: HTMLInputElement;
+    unset: boolean;
+    private _currentCalendarViewMode;
+    get currentCalendarViewMode(): number;
+    set currentCalendarViewMode(value: number);
+    /**
+     * When switching back to the calendar from the clock,
+     * this sets currentView to the correct calendar view.
+     */
+    refreshCurrentView(): void;
+    minimumCalendarViewMode: number;
+    currentView: keyof ViewMode;
+}
 export default interface Options {
     restrictions?: {
         minDate?: DateTime;
@@ -46,7 +63,7 @@ export default interface Options {
             down?: string;
             close?: string;
         };
-        viewMode?: 'clock' | 'calendar' | 'months' | 'years' | 'decades';
+        viewMode?: keyof ViewMode | undefined;
         sideBySide?: boolean;
         inline?: boolean;
         keepOpen?: boolean;
@@ -93,10 +110,6 @@ export default interface Options {
     multipleDatesSeparator?: string;
     promptTimeOnDateChange?: boolean;
     promptTimeOnDateChangeTransitionDelay?: number;
-    hooks?: {
-        inputParse?: (context: TempusDominus, value: any) => DateTime;
-        inputFormat?: (context: TempusDominus, date: DateTime) => string;
-    };
     meta?: {};
     container?: HTMLElement;
 }
@@ -114,6 +127,7 @@ export declare class OptionConverter {
      * @param optionName Provides text to error messages e.g. disabledDates
      * @param value Option value
      * @param providedType Used to provide text to error messages
+     * @param locale
      */
     static _typeCheckDateArray(optionName: string, value: any, providedType: string, locale?: string): void;
     /**
@@ -128,9 +142,9 @@ export declare class OptionConverter {
      * @param d value to convert
      * @param optionName Provides text to error messages e.g. disabledDates
      */
-    static _dateConversion(d: any, optionName: string): DateTime;
+    static dateConversion(d: any, optionName: string): DateTime;
     private static _flatback;
-    private static get _flattenDefaultOptions();
+    private static getFlattenDefaultOptions;
     /**
      * Some options conflict like min/max date. Verify that these kinds of options
      * are set correctly.

@@ -1,6 +1,5 @@
-import { DateTime, Unit } from './datetime';
-import Namespace from './namespace';
 import Options from './options';
+import { DateTime } from '../datetime';
 
 const DefaultOptions: Options = {
   restrictions: {
@@ -11,20 +10,20 @@ const DefaultOptions: Options = {
     daysOfWeekDisabled: [],
     disabledTimeIntervals: [],
     disabledHours: [],
-    enabledHours: [],
+    enabledHours: []
   },
   display: {
     icons: {
       type: 'icons',
-      time: 'fas fa-clock',
-      date: 'fas fa-calendar',
-      up: 'fas fa-arrow-up',
-      down: 'fas fa-arrow-down',
-      previous: 'fas fa-chevron-left',
-      next: 'fas fa-chevron-right',
-      today: 'fas fa-calendar-check',
-      clear: 'fas fa-trash',
-      close: 'fas fa-times',
+      time: 'fa-solid fa-clock',
+      date: 'fa-solid fa-calendar',
+      up: 'fa-solid fa-arrow-up',
+      down: 'fa-solid fa-arrow-down',
+      previous: 'fa-solid fa-chevron-left',
+      next: 'fa-solid fa-chevron-right',
+      today: 'fa-solid fa-calendar-check',
+      clear: 'fa-solid fa-trash',
+      close: 'fa-solid fa-xmark'
     },
     sideBySide: false,
     calendarWeeks: false,
@@ -34,7 +33,7 @@ const DefaultOptions: Options = {
     buttons: {
       today: false,
       clear: false,
-      close: false,
+      close: false
     },
     components: {
       calendar: true,
@@ -46,9 +45,9 @@ const DefaultOptions: Options = {
       hours: true,
       minutes: true,
       seconds: false,
-      useTwentyfourHour: false,
+      useTwentyfourHour: false
     },
-    inline: false,
+    inline: false
   },
   stepping: 1,
   useCurrent: true,
@@ -82,7 +81,7 @@ const DefaultOptions: Options = {
     selectDate: 'Select Date',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'default',
-    startOfTheWeek: 0,
+    startOfTheWeek: 0
   },
   keepInvalid: false,
   debug: false,
@@ -92,44 +91,8 @@ const DefaultOptions: Options = {
   multipleDatesSeparator: '; ',
   promptTimeOnDateChange: false,
   promptTimeOnDateChangeTransitionDelay: 200,
-  hooks: {
-    inputParse: undefined,
-    inputFormat: undefined,
-  },
   meta: {},
   container: undefined
 };
 
-const DatePickerModes: {
-  name: string;
-  className: string;
-  unit: Unit;
-  step: number;
-}[] = [
-  {
-    name: 'calendar',
-    className: Namespace.css.daysContainer,
-    unit: Unit.month,
-    step: 1,
-  },
-  {
-    name: 'months',
-    className: Namespace.css.monthsContainer,
-    unit: Unit.year,
-    step: 1,
-  },
-  {
-    name: 'years',
-    className: Namespace.css.yearsContainer,
-    unit: Unit.year,
-    step: 10,
-  },
-  {
-    name: 'decades',
-    className: Namespace.css.decadesContainer,
-    unit: Unit.year,
-    step: 100,
-  },
-];
-
-export { DefaultOptions, DatePickerModes, Namespace };
+export default DefaultOptions;
