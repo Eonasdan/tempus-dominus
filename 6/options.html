@@ -66,7 +66,7 @@
     </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
-      <i class="fas fa-bars"></i>
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
     </button>
 
     <div class="collapse navbar-collapse" id="bdNavbar">
@@ -93,25 +93,25 @@
       <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
         <li class="nav-item col-6 col-md-auto">
           <a class="nav-link p-2" href="https://github.com/Eonasdan/tempus-dominus" target="_blank" rel="noopener">
-            <i class="fab fa-github"></i>
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
             <small class="d-md-none ms-2">GitHub</small>
           </a>
         </li>
         <li class="nav-item col-6 col-md-auto">
           <a class="nav-link p-2" href="https://twitter.com/eonasdan" target="_blank" rel="noopener">
-            <i class="fab fa-twitter"></i>
+            <i class="fa-brands fa-twitter" aria-hidden="true"></i>
             <small class="d-md-none ms-2">Twitter</small>
           </a>
         </li>
         <li class="nav-item col-6 col-md-auto">
           <a class="nav-link p-2" href="https://discord.gg/BHS9jw9YPf" target="_blank" rel="noopener">
-            <i class="fab fa-discord"></i>
+            <i class="fa-brands fa-discord" aria-hidden="true"></i>
             <small class="d-md-none ms-2">Discord</small>
           </a>
         </li>
         <li class="nav-item col-6 col-md-auto">
           <a class="nav-link p-2" href="https://ko-fi.com/eonasdan" target="_blank" rel="noopener">
-            <i class="fas fa-coffee"></i>
+            <i class="fa-solid fa-coffee" aria-hidden="true"></i>
             <small class="d-md-none ms-2">Ko-fi</small>
           </a>
         </li>
@@ -125,8 +125,6 @@
 
 <nav class="bd-subnavbar py-2" aria-label="Secondary navigation">
   <div class="container-xxl d-flex align-items-md-center">
-    
-
     <div class="dropdown ms-3">
       <button class="btn btn-bd-light dropdown-toggle" id="bd-versions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
         <span class="d-none d-lg-inline">Tempus Dominus</span> v6.0
@@ -148,9 +146,8 @@
 
 
     <button class="btn bd-sidebar-toggle d-md-none py-0 px-1 ms-3 order-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bd-docs-nav" aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation">
-      <i class="fas fa-expand-arrows-alt"></i>
-      <i class="fas fa-compress-arrows-alt"></i>
-
+      <i class="fa-solid fa-expand-arrows-alt" aria-hidden="true"></i>
+      <i class="fa-solid fa-compress-arrows-alt" aria-hidden="true"></i>
     </button>
   </div>
 </nav>
@@ -172,6 +169,7 @@
             <li><a href="/6/functions.html" class="d-inline-flex align-items-center rounded" aria-current="page">Functions</a></li>
             <li><a href="/6/options.html" class="d-inline-flex align-items-center rounded" aria-current="page">Options</a></li>
             <li><a href="/6/datetime.html" class="d-inline-flex align-items-center rounded" aria-current="page">DateTime</a></li>
+            <li><a href="/6/locale.html" class="d-inline-flex align-items-center rounded" aria-current="page">Locales</a></li>
           </ul>
         </div>
       </li>
@@ -188,6 +186,7 @@
             <li><a href="/6/namespace/errors.html" class="d-inline-flex align-items-center rounded">Errors</a>
             </li>
             <li><a href="/6/namespace/events.html" class="d-inline-flex align-items-center rounded">Events</a></li>
+            <li><a href="/6/namespace/unit.html" class="d-inline-flex align-items-center rounded">Unit</a></li>
           </ul>
         </div>
       </li>
@@ -203,6 +202,21 @@
             <li><a href="/6/examples/jquery.html" class="d-inline-flex align-items-center rounded">jQuery</a></li>
             <li><a href="/6/examples/no-styles.html" class="d-inline-flex align-items-center rounded">No Styles</a>
             </li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#plugins-collapse" aria-expanded="false">
+          Plugins
+        </button>
+
+        <div class="collapse" id="plugins-collapse">
+          <ul class="list-unstyled fw-normal pb-1 small">
+            <li><a href="/6/plugins/" class="d-inline-flex align-items-center rounded">Overview</a>
+            </li>
+            <li><a href="/6/plugins/fa5.html" class="d-inline-flex align-items-center rounded">Font Awesome 5</a></li>
+            <li><a href="/6/plugins/paint.html" class="d-inline-flex align-items-center rounded">Paint (Custom classes)</a></li>
+            <li><a href="/6/plugins/moment.html" class="d-inline-flex align-items-center rounded">Momentjs</a></li>
           </ul>
         </div>
       </li>
@@ -245,14 +259,14 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <h2 id="restrictions">restrictions<a class="anchorjs-link" aria-label="Anchor" href="#restrictions"><i class="fas fa-anchor"></i></a></h2>
+          <h2 id="restrictions">restrictions<a class="anchorjs-link" aria-label="Anchor" href="#restrictions"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
         </div>
       </div>
       <div class="row">
         <div class="col offset-1 border-start border-dark">
           <div>
             <h3 id="restrictionsMinDate">minDate
-              <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsMinDate"><i class="fas fa-anchor"></i></a>
+              <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsMinDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h3>
             <p>
               <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
@@ -266,7 +280,7 @@
             </p>
           </div>
           <div>
-            <h3 id="restrictionsMaxDate">maxDate <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsMaxDate"><i class="fas fa-anchor"></i></a></h3>
+            <h3 id="restrictionsMaxDate">maxDate <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsMaxDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
             <p>
               <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
               Prevents the user from selecting a date/time after this value. Set to <code>undefined</code> to remove the
@@ -278,7 +292,7 @@
             </p>
           </div>
           <h3 id="restrictionsEnabledDates">enabledDates/disabledDates
-            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsEnabledDates"><i class="fas fa-anchor"></i></a>
+            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsEnabledDates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <div>
             <strong>Accepts:</strong> array of string | Date | DateTime <strong>Defaults:</strong> undefined<br>
@@ -303,7 +317,7 @@
             </div>
           </div>
           <h3 id="restrictionsEnabledHours">enabledHours/disabledHours
-            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsEnabledHours"><i class="fas fa-anchor"></i></a>
+            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsEnabledHours"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <div>
             <strong>Accepts:</strong> array of number from 0-24 <strong>Defaults:</strong> undefined<br>
@@ -328,7 +342,7 @@
           </div>
 
           <h3 id="restrictionsDisabledTimeIntervals">disabledTimeIntervals
-            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsDisabledTimeIntervals"><i class="fas fa-anchor"></i></a>
+            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsDisabledTimeIntervals"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <p>
             <strong>Accepts:</strong> array of an object with from: DateTime, to: DateTime <strong>Defaults:</strong>
@@ -346,7 +360,7 @@ new tempusDominus.TempusDominus(..., {
 </code>
           </pre>
           <h3 id="restrictionsDaysOfWeekDisabled">daysOfWeekDisabled
-            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsDaysOfWeekDisabled"><i class="fas fa-anchor"></i></a>
+            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsDaysOfWeekDisabled"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <p>
             <strong>Accepts:</strong> array of numbers from 0-6<br>
@@ -361,12 +375,12 @@ new tempusDominus.TempusDominus(..., {
     </div>
   </section>
   <section>
-    <h2 id="display">display<a class="anchorjs-link" aria-label="Anchor" href="#display"><i class="fas fa-anchor"></i></a>
+    <h2 id="display">display<a class="anchorjs-link" aria-label="Anchor" href="#display"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
 
     <div class="row">
       <div class="col offset-1 border-start border-dark">
-        <h3 id="displayToolbarPlacement">toolbarPlacement<a class="anchorjs-link" aria-label="Anchor" href="#displayToolbarPlacement"><i class="fas fa-anchor"></i></a></h3>
+        <h3 id="displayToolbarPlacement">toolbarPlacement<a class="anchorjs-link" aria-label="Anchor" href="#displayToolbarPlacement"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
         <div>
           <p>
             <strong>Accepts:</strong> 'top' | 'bottom' <strong>Defaults:</strong> bottom<br>
@@ -378,7 +392,7 @@ new tempusDominus.TempusDominus(..., {
           </p>
         </div>
 
-        <h3 id="displayComponents">components<a class="anchorjs-link" aria-label="Anchor" href="#displayComponents"><i class="fas fa-anchor"></i></a></h3>
+        <h3 id="displayComponents">components<a class="anchorjs-link" aria-label="Anchor" href="#displayComponents"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
         <p><strong>Accepts: true|false</strong></p>
 
         <p>
@@ -389,7 +403,7 @@ new tempusDominus.TempusDominus(..., {
 
         <div class="row">
           <div class="col offset-1 border-start border-dark">
-            <h4 id="displayComponentsCalendar">calendar<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsCalendar"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayComponentsCalendar">calendar<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsCalendar"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
               <strong>Defaults:</strong> true<br>
               A convenience flag that can enable or disable all of the calendar components like date, month, year,
@@ -397,13 +411,13 @@ new tempusDominus.TempusDominus(..., {
               This flag must be true for any of the calendar components to be visible, even if those options are true.
             </p>
 
-            <h4 id="displayComponentsDate">date<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsDate"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayComponentsDate">date<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
               <strong>Defaults:</strong> true<br>
               <img src="images/calendar-view.png" class="img-fluid img-thumbnail d-block" alt="Date View">
             </p>
 
-            <h4 id="displayComponentsMonth">month<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsMonth"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayComponentsMonth">month<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
               <strong>Defaults:</strong> true<br>
@@ -411,20 +425,20 @@ new tempusDominus.TempusDominus(..., {
               Turns on or off the month selection view.
             </p>
 
-            <h4 id="displayComponentsYear">year<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsYear"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayComponentsYear">year<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
               <strong>Defaults:</strong> true<br>
               <img src="images/year-view.png" class="img-fluid img-thumbnail d-block" alt="Year View">
             </p>
 
-            <h4 id="displayComponentsDecades">decades<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsDecades"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayComponentsDecades">decades<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsDecades"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
               <strong>Defaults:</strong> true<br>
               <img src="images/decade-view.png" class="img-fluid img-thumbnail d-block" alt="Decade View">
             </p>
 
-            <h4 id="displayComponentsClock">clock<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsClock"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayComponentsClock">clock<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsClock"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
               <img src="images/time-view.png" class="img-fluid img-thumbnail d-block" alt="Time View">
@@ -436,28 +450,28 @@ new tempusDominus.TempusDominus(..., {
               This flag must be true for any of the calendar components to be visible, even if those options are true.
             </p>
 
-            <h4 id="displayComponentsHours">hours<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsHours"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayComponentsHours">hours<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsHours"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
               <strong>Defaults:</strong> true<br>
               Displayed above in <span style="color:#FC4242;">red</span>
             </p>
 
-            <h4 id="displayComponentsMinutes">minutes<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsMinutes"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayComponentsMinutes">minutes<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsMinutes"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
               <strong>Defaults:</strong> true<br>
               Displayed above in <span style="color:#632289;">purple</span>
             </p>
 
-            <h4 id="displayComponentsSeconds">seconds<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsSeconds"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayComponentsSeconds">seconds<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsSeconds"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
               <strong>Defaults:</strong> false<br>
               Displayed above in <span style="color:#06AF8F;">green</span>
             </p>
 
-            <h4 id="displayComponentsUseTwentyfourHour">useTwentyfourHour<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsUseTwentyfourHour"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayComponentsUseTwentyfourHour">useTwentyfourHour<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsUseTwentyfourHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
               <strong>Defaults:</strong> false<br>
               <img src="images/24hour.png" class="img-fluid img-thumbnail d-block" alt="Twenty-four View">
@@ -465,7 +479,7 @@ new tempusDominus.TempusDominus(..., {
           </div>
         </div>
 
-        <h3 id="displayButtons">buttons<a class="anchorjs-link" aria-label="Anchor" href="#displayButtons"><i class="fas fa-anchor"></i></a>
+        <h3 id="displayButtons">buttons<a class="anchorjs-link" aria-label="Anchor" href="#displayButtons"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
         </h3>
         <p><strong>Accepts: true|false</strong></p>
         <p>
@@ -473,21 +487,21 @@ new tempusDominus.TempusDominus(..., {
         </p>
         <div class="row">
           <div class="col offset-1 border-start border-dark">
-            <h4 id="displayButtonsToday">today<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsToday"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayButtonsToday">today<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsToday"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
               <strong>Defaults:</strong> false<br>
               Displayed above in <span style="color:#FC4242;">red</span>
             </p>
 
-            <h4 id="displayButtonsClose">close<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsClose"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayButtonsClose">close<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsClose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
               <strong>Defaults:</strong> false<br>
               Displayed above in <span style="color:#632289;">purple</span>
             </p>
 
-            <h4 id="displayButtonsClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsClear"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayButtonsClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
               <strong>Defaults:</strong> false<br>
@@ -496,14 +510,14 @@ new tempusDominus.TempusDominus(..., {
 
           </div>
         </div>
-        <h3 id="displayCalendarWeeks">calendarWeeks<a class="anchorjs-link" aria-label="Anchor" href="#displayCalendarWeeks"><i class="fas fa-anchor"></i></a></h3>
+        <h3 id="displayCalendarWeeks">calendarWeeks<a class="anchorjs-link" aria-label="Anchor" href="#displayCalendarWeeks"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
         <p>
           <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
           <img src="images/calendar-weeks.png" class="img-fluid img-thumbnail d-block" alt="Calendar View">
           Displays an additional column with the calendar week for that week.
         </p>
 
-        <h3 id="displayIcons">icons<a class="anchorjs-link" aria-label="Anchor" href="#displayIcons"><i class="fas fa-anchor"></i></a>
+        <h3 id="displayIcons">icons<a class="anchorjs-link" aria-label="Anchor" href="#displayIcons"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
         </h3>
         <p>
           <strong>Accepts:</strong> string
@@ -516,7 +530,7 @@ new tempusDominus.TempusDominus(..., {
         <p>Icon sprites are also supported.</p>
         <div class="row">
           <div class="col offset-1 border-start border-dark">
-            <h4 id="displayIconsType">type<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsType"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayIconsType">type<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsType"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
               <strong>Accepts either "icons" or "sprites"</strong><br>
               Defaults to "icons". If "sprites" is used as the value, the icons will be render with an svg element
@@ -524,84 +538,84 @@ new tempusDominus.TempusDominus(..., {
               of an "i" element. If you don't know which you should use, leave it as "icons".
             </p>
 
-            <h4 id="displayIconsTime">time<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsTime"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayIconsTime">time<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsTime"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
-              <strong>Defaults:</strong> <i class="fas fa-clock"></i> (fas fa-clock)<br>
+              <strong>Defaults:</strong> <i class="fa-solid fa-clock" aria-hidden="true"></i> (fas fa-clock)<br>
               This icon is used to change the view from the calendar view to the clock view.
             </p>
 
-            <h4 id="displayIconsDate">date<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsDate"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayIconsDate">date<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
-              <strong>Defaults:</strong> <i class="fas fa-calendar"></i> (fas fa-calendar)<br>
+              <strong>Defaults:</strong> <i class="fa-solid fa-calendar" aria-hidden="true"></i> (fas fa-calendar)<br>
               This icon is used to change the view from the clock view to the calendar view.
             </p>
 
-            <h4 id="displayIconsUp">up<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsUp"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayIconsUp">up<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsUp"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
-              <strong>Defaults:</strong> <i class="fas fa-arrow-up"></i> (fas fa-arrow-up)<br>
+              <strong>Defaults:</strong> <i class="fa-solid fa-arrow-up" aria-hidden="true"></i> (fas fa-arrow-up)<br>
               This icon is used to incremeant hours, minutes and seconds in the clock view.
             </p>
 
-            <h4 id="displayIconsDown">down<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsDown"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayIconsDown">down<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsDown"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
-              <strong>Defaults:</strong> <i class="fas fa-arrow-down"></i> (fas fa-arrow-down)<br>
+              <strong>Defaults:</strong> <i class="fa-solid fa-arrow-down" aria-hidden="true"></i> (fas fa-arrow-down)<br>
               This icon is used to decremeant hours, minutes and seconds in the clock view.
             </p>
 
-            <h4 id="displayIconsNext">next<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsNext"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayIconsNext">next<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsNext"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
-              <strong>Defaults:</strong> <i class="fas fa-chevron-right"></i> (fas fa-chevron-right)<br>
+              <strong>Defaults:</strong> <i class="fa-solid fa-chevron-right" aria-hidden="true"></i> (fas fa-chevron-right)<br>
               This icon is used to navigation forward in the calendar, month, year, and decade views.
             </p>
 
-            <h4 id="displayIconsPrevious">previous<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsPrevious"><i class="fas fa-anchor"></i></a></h4>
+            <h4 id="displayIconsPrevious">previous<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsPrevious"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
             <p>
-              <strong>Defaults:</strong> <i class="fas fa-chevron-left"></i> (fas fa-chevron-left)<br>
+              <strong>Defaults:</strong> <i class="fa-solid fa-chevron-left" aria-hidden="true"></i> (fas fa-chevron-left)<br>
               This icon is used to navigation backwards in the calendar, month, year, and decade views.
             </p>
 
-            <h4 id="displayIconsToday">today<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsToday"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayIconsToday">today<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsToday"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
-              <strong>Defaults:</strong> <i class="fas fa-calendar-check"></i> (fas fa-calendar-check)<br>
+              <strong>Defaults:</strong> <i class="fa-solid fa-calendar-check" aria-hidden="true"></i> (fas fa-calendar-check)<br>
               This icon is used to change the date and view to now.
             </p>
 
-            <h4 id="displayIconsClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsClear"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayIconsClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
-              <strong>Defaults:</strong> <i class="fas fa-trash"></i> (fas fa-trash)<br>
+              <strong>Defaults:</strong> <i class="fa-solid fa-trash" aria-hidden="true"></i> (fas fa-trash)<br>
               This icon is used to clear the currently selected date.
             </p>
 
-            <h4 id="displayIconsClose">close<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsClose"><i class="fas fa-anchor"></i></a>
+            <h4 id="displayIconsClose">close<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsClose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
             </h4>
             <p>
-              <strong>Defaults:</strong> <i class="fas fa-times"></i> (fas fa-times)<br>
+              <strong>Defaults:</strong> <i class="fa-solid fa-times" aria-hidden="true"></i> (fas fa-times)<br>
               This icon is used to close the picker.
             </p>
           </div>
         </div>
-        <h3 id="displayViewMode">viewMode<a class="anchorjs-link" aria-label="Anchor" href="#displayViewMode"><i class="fas fa-anchor"></i></a></h3>
+        <h3 id="displayViewMode">viewMode<a class="anchorjs-link" aria-label="Anchor" href="#displayViewMode"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
         <p>
           <strong>Accepts:</strong> 'clock' | 'calendar' | 'months' | 'years' | 'decades' <strong>Defaults:</strong>
           calendar<br>
           The default view when the picker is displayed. Set to "years" for a date of birth picker.
         </p>
 
-        <h3 id="displaySideBySide">sideBySide<a class="anchorjs-link" aria-label="Anchor" href="#displaySideBySide"><i class="fas fa-anchor"></i></a></h3>
+        <h3 id="displaySideBySide">sideBySide<a class="anchorjs-link" aria-label="Anchor" href="#displaySideBySide"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
         <p>
           <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
           <img src="images/side-by-side.png" class="img-fluid img-thumbnail d-block" alt="Side by Side View">
           Displays the date and time pickers side by side.
         </p>
-        <h3 id="displayInline">inline<a class="anchorjs-link" aria-label="Anchor" href="#displayInline"><i class="fas fa-anchor"></i></a>
+        <h3 id="displayInline">inline<a class="anchorjs-link" aria-label="Anchor" href="#displayInline"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
         </h3>
         <p>
           <strong>Accepts:</strong> <strong>Defaults:boolean</strong> <br>
           Displays the picker in a inline div instead of a popup.
         </p>
-        <h3 id="keepOpen">keepOpen<a class="anchorjs-link" aria-label="Anchor" href="#keepOpen"><i class="fas fa-anchor"></i></a></h3>
+        <h3 id="keepOpen">keepOpen<a class="anchorjs-link" aria-label="Anchor" href="#keepOpen"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
         <p>
           <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
           Keep the picker window open even after a date selection. The picker can still be closed by the target or
@@ -611,12 +625,12 @@ new tempusDominus.TempusDominus(..., {
     </div>
   </section>
   <section>
-    <h2 id="hooks">hooks<a class="anchorjs-link" aria-label="Anchor" href="#hooks"><i class="fas fa-anchor"></i></a>
+    <h2 id="hooks">hooks<a class="anchorjs-link" aria-label="Anchor" href="#hooks"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
 
     <div class="row">
       <div class="col offset-1 border-start border-dark">
-        <h3 id="hooksInputFormat">inputFormat<a class="anchorjs-link" aria-label="Anchor" href="#hooksInputFormat"><i class="fas fa-anchor"></i></a>
+        <h3 id="hooksInputFormat">inputFormat<a class="anchorjs-link" aria-label="Anchor" href="#hooksInputFormat"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
         </h3>
         <p>
           <strong>Accepts:</strong> <code>(context: TempusDominus, date: DateTime) =&gt; string</code> or undefined
@@ -634,7 +648,7 @@ new tempusDominus.TempusDominus(..., {
 inputFormat:(context, date) =&gt; { return date.toISOString() }
 </code>
         </pre>
-        <h3 id="hooksInputParse" class="mt-3">inputParse<a class="anchorjs-link" aria-label="Anchor" href="#hooksInputParse"><i class="fas fa-anchor"></i></a>
+        <h3 id="hooksInputParse" class="mt-3">inputParse<a class="anchorjs-link" aria-label="Anchor" href="#hooksInputParse"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
         </h3>
         <p>
           <strong>Accepts:</strong> <code>(context: TempusDominus, value: any) =&gt; DateTime</code> or undefined <strong>Defaults:</strong>
@@ -654,20 +668,20 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
       </div>
     </div>
   </section>
-  <h2 id="stepping">stepping<a class="anchorjs-link" aria-label="Anchor" href="#stepping"><i class="fas fa-anchor"></i></a>
+  <h2 id="stepping">stepping<a class="anchorjs-link" aria-label="Anchor" href="#stepping"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
   </h2>
   <p>
     <strong>Accepts</strong> number <strong>Defaults:</strong> 1<br>
     Controls how much the minutes are changed by. This also changes the minute selection grid to step by this amount.
   </p>
 
-  <h2 id="useCurrent">useCurrent<a class="anchorjs-link" aria-label="Anchor" href="#useCurrent"><i class="fas fa-anchor"></i></a></h2>
+  <h2 id="useCurrent">useCurrent<a class="anchorjs-link" aria-label="Anchor" href="#useCurrent"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
   <p>
     <strong>Accepts</strong> true|false <strong>Defaults:</strong> true<br>
     Determines if the current date/time should be used as the default value when the picker is opened.
   </p>
 
-  <h2 id="defaultDate">defaultDate<a class="anchorjs-link" aria-label="Anchor" href="#defaultDate"><i class="fas fa-anchor"></i></a></h2>
+  <h2 id="defaultDate">defaultDate<a class="anchorjs-link" aria-label="Anchor" href="#defaultDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
   <p>
     <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
     Sets the picker default date/time. Overrides <code>useCurrent</code>
@@ -677,7 +691,7 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
     <div class="container">
       <div class="row">
         <div class="col">
-          <h2 id="localization">localization<a class="anchorjs-link" aria-label="Anchor" href="#localization"><i class="fas fa-anchor"></i></a></h2>
+          <h2 id="localization">localization<a class="anchorjs-link" aria-label="Anchor" href="#localization"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
           <p>
             <strong>Accepts:</strong> string
             Most of the localization options are for title tooltips over icons.
@@ -700,140 +714,140 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
       </div>
       <div class="row">
         <div class="col offset-1 border-start border-dark">
-          <h3 id="localizationToday">today<a class="anchorjs-link" aria-label="Anchor" href="#localizationToday"><i class="fas fa-anchor"></i></a>
+          <h3 id="localizationToday">today<a class="anchorjs-link" aria-label="Anchor" href="#localizationToday"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <p>
             <strong>Defaults:</strong> Go to today<br>
           </p>
 
-          <h3 id="localizationClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#localizationClear"><i class="fas fa-anchor"></i></a>
+          <h3 id="localizationClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#localizationClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <p>
             <strong>Defaults:</strong> Clear selection<br>
           </p>
 
-          <h3 id="localizationClose">close<a class="anchorjs-link" aria-label="Anchor" href="#localizationClose"><i class="fas fa-anchor"></i></a>
+          <h3 id="localizationClose">close<a class="anchorjs-link" aria-label="Anchor" href="#localizationClose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <p>
             <strong>Defaults:</strong> Close the picker<br>
           </p>
 
-          <h3 id="localizationSelectMonth">selectMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectMonth"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationSelectMonth">selectMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Select Month<br>
           </p>
 
-          <h3 id="localizationPreviousMonth">previousMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousMonth"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationPreviousMonth">previousMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Previous Month<br>
           </p>
 
-          <h3 id="localizationNextMonth">nextMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextMonth"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationNextMonth">nextMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Next Month<br>
           </p>
 
-          <h3 id="localizationSelectYear">selectYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectYear"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationSelectYear">selectYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Select Year<br>
           </p>
 
-          <h3 id="localizationPreviousYear">previousYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousYear"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationPreviousYear">previousYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Previous Year<br>
           </p>
 
-          <h3 id="localizationNextYear">nextYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextYear"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationNextYear">nextYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Next Year<br>
           </p>
 
-          <h3 id="localizationSelectDecade">selectDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectDecade"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationSelectDecade">selectDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Select Decade<br>
           </p>
 
-          <h3 id="localizationPreviousDecade">previousDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousDecade"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationPreviousDecade">previousDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Previous Decade<br>
           </p>
 
-          <h3 id="localizationNextDecade">nextDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextDecade"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationNextDecade">nextDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Next Decade<br>
           </p>
 
-          <h3 id="localizationPreviousCentury">previousCentury<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousCentury"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationPreviousCentury">previousCentury<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousCentury"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Previous Century<br>
           </p>
 
-          <h3 id="localizationNextCentury">nextCentury<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextCentury"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationNextCentury">nextCentury<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextCentury"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Next Century<br>
           </p>
 
-          <h3 id="localizationPickHour">pickHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickHour"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationPickHour">pickHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Pick Hour<br>
           </p>
 
-          <h3 id="localizationIncrementHour">incrementHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementHour"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationIncrementHour">incrementHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Increment Hour<br>
           </p>
 
-          <h3 id="localizationDecrementHour">decrementHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementHour"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationDecrementHour">decrementHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Decrement Hour<br>
           </p>
 
-          <h3 id="localizationPickMinute">pickMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickMinute"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationPickMinute">pickMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Pick Minute<br>
           </p>
 
-          <h3 id="localizationIncrementMinute">incrementMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementMinute"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationIncrementMinute">incrementMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Increment Minute<br>
           </p>
 
-          <h3 id="localizationDecrementMinute">decrementMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementMinute"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationDecrementMinute">decrementMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Decrement Minute<br>
           </p>
 
-          <h3 id="localizationPickSecond">pickSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickSecond"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationPickSecond">pickSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Pick Second<br>
           </p>
 
-          <h3 id="localizationIncrementSecond">incrementSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementSecond"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationIncrementSecond">incrementSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Increment Second<br>
           </p>
 
-          <h3 id="localizationDecrementSecond">decrementSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementSecond"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationDecrementSecond">decrementSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Decrement Second<br>
           </p>
 
-          <h3 id="localizationTogglePeriod">togglePeriod<a class="anchorjs-link" aria-label="Anchor" href="#localizationTogglePeriod"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationTogglePeriod">togglePeriod<a class="anchorjs-link" aria-label="Anchor" href="#localizationTogglePeriod"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Toggle Period<br>
           </p>
 
-          <h3 id="localizationSelectTime">selectTime<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectTime"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationSelectTime">selectTime<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectTime"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Select Time<br>
           </p>
 
-          <h3 id="localizationSelectDate">selectDate<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectDate"><i class="fas fa-anchor"></i></a></h3>
+          <h3 id="localizationSelectDate">selectDate<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
           <p>
             <strong>Defaults:</strong> Select Date<br>
           </p>
 
-          <h3 id="localizationDayViewHeaderFormat">dayViewHeaderFormat<a class="anchorjs-link" aria-label="Anchor" href="#localizationDayViewHeaderFormat"><i class="fas fa-anchor"></i></a>
+          <h3 id="localizationDayViewHeaderFormat">dayViewHeaderFormat<a class="anchorjs-link" aria-label="Anchor" href="#localizationDayViewHeaderFormat"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <p>
             <strong>Accepts:</strong> DateTimeFormatOptions <strong>Defaults:</strong>
@@ -841,14 +855,14 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
             This should be an appropriate value from the Intl.DateFormat options.
           </p>
 
-          <h3 id="localizationLocale">locale<a class="anchorjs-link" aria-label="Anchor" href="#localizationLocale"><i class="fas fa-anchor"></i></a>
+          <h3 id="localizationLocale">locale<a class="anchorjs-link" aria-label="Anchor" href="#localizationLocale"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <p>
             <strong>Defaults:</strong> default<br>
             This should be a BCP 47 language tag or a value supported by Intl.
           </p>
 
-          <h3 id="localizationStartOfTheWeek">startOfTheWeek<a class="anchorjs-link" aria-label="Anchor" href="#localizationStartOfTheWeek"><i class="fas fa-anchor"></i></a>
+          <h3 id="localizationStartOfTheWeek">startOfTheWeek<a class="anchorjs-link" aria-label="Anchor" href="#localizationStartOfTheWeek"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
           </h3>
           <p>
             <strong>Accepts:</strong> 0-6 <strong>Defaults:</strong> 0<br>
@@ -861,14 +875,14 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
     </div>
   </section>
 
-  <h2 id="keepInvalid">keepInvalid<a class="anchorjs-link" aria-label="Anchor" href="#keepInvalid"><i class="fas fa-anchor"></i></a></h2>
+  <h2 id="keepInvalid">keepInvalid<a class="anchorjs-link" aria-label="Anchor" href="#keepInvalid"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
   <p>
     <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
     Allows for the user to select a date that is invalid coording to the rules. For instance, if a user enters a date
     pasted the <code>maxDate</code>.
   </p>
 
-  <h2 id="debug">debug<a class="anchorjs-link" aria-label="Anchor" href="#debug"><i class="fas fa-anchor"></i></a></h2>
+  <h2 id="debug">debug<a class="anchorjs-link" aria-label="Anchor" href="#debug"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
   <p>
     <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
     Similar to <code>display.keepOpen</code>, if true the picker won't close during any event where that would normally
@@ -877,26 +891,26 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
     requiring a configuration change.
   </p>
 
-  <h2 id="allowInputToggle">allowInputToggle<a class="anchorjs-link" aria-label="Anchor" href="#allowInputToggle"><i class="fas fa-anchor"></i></a></h2>
+  <h2 id="allowInputToggle">allowInputToggle<a class="anchorjs-link" aria-label="Anchor" href="#allowInputToggle"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
   <p>
     <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
     If true, the picker will show on textbox focus.
   </p>
 
-  <h2 id="viewDate">viewDate<a class="anchorjs-link" aria-label="Anchor" href="#viewDate"><i class="fas fa-anchor"></i></a>
+  <h2 id="viewDate">viewDate<a class="anchorjs-link" aria-label="Anchor" href="#viewDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
   </h2>
   <p>
     <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> now<br>
     Set the view date of the picer. Setting this will not change the selected date(s).
   </p>
 
-  <h2 id="multipleDates">multipleDates<a class="anchorjs-link" aria-label="Anchor" href="#multipleDates"><i class="fas fa-anchor"></i></a></h2>
+  <h2 id="multipleDates">multipleDates<a class="anchorjs-link" aria-label="Anchor" href="#multipleDates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
   <p>
     <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
     Allows multiple dates to be selected.
   </p>
 
-  <h2 id="multipleDatesSeparator">multipleDatesSeparator<a class="anchorjs-link" aria-label="Anchor" href="#multipleDatesSeparator"><i class="fas fa-anchor"></i></a>
+  <h2 id="multipleDatesSeparator">multipleDatesSeparator<a class="anchorjs-link" aria-label="Anchor" href="#multipleDatesSeparator"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
   </h2>
   <p>
     <strong>Accepts:</strong> string <strong>Defaults:</strong> <code>;</code><br>
@@ -904,7 +918,7 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
     12:00 AM; 08/30/2021, 12:00 AM; 08/23/2021, 12:00 AM</code>
   </p>
 
-  <h2 id="promptTimeOnDateChange">promptTimeOnDateChange<a class="anchorjs-link" aria-label="Anchor" href="#promptTimeOnDateChange"><i class="fas fa-anchor"></i></a>
+  <h2 id="promptTimeOnDateChange">promptTimeOnDateChange<a class="anchorjs-link" aria-label="Anchor" href="#promptTimeOnDateChange"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
   </h2>
   <p>
     <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
@@ -914,7 +928,7 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
 
   <h2 id="promptTimeOnDateChangeTransitionDelay">promptTimeOnDateChangeTransitionDelay
     <a class="anchorjs-link" aria-label="Anchor" href="#promptTimeOnDateChangeTransitionDelay">
-      <i class="fas fa-anchor"></i>
+      <i class="fa-solid fa-anchor" aria-hidden="true"></i>
     </a>
   </h2>
   <p>
@@ -925,7 +939,7 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
 
   <h2 id="meta">meta
     <a class="anchorjs-link" aria-label="Anchor" href="#meta">
-      <i class="fas fa-anchor"></i>
+      <i class="fa-solid fa-anchor" aria-hidden="true"></i>
     </a>
   </h2>
   <p>
@@ -935,7 +949,7 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
 
   <h2 id="container">container
     <a class="anchorjs-link" aria-label="Anchor" href="#container">
-      <i class="fas fa-anchor"></i>
+      <i class="fa-solid fa-anchor" aria-hidden="true"></i>
     </a>
   </h2>
   <p>
@@ -944,7 +958,8 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
   </p>
 
 </div>
-</main></div>
+</main>
+</div>
 
 <footer class="bd-footer py-5 mt-5 bg-light">
   <div class="container py-5">
@@ -955,7 +970,7 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
           <span class="fs-5">Tempus Dominus</span>
         </a>
         <ul class="list-unstyled small text-muted">
-          <li class="mb-2">Created by the <a href="https://eonasdan.com">Eonasdan (Jonathan Peterson</a> with the help of <a href="https://github.com/Eonasdan/tempus-dominus/graphs/contributors">our contributors</a>.</li>
+          <li class="mb-2">Created by the <a href="https://eonasdan.com">Eonasdan (Jonathan Peterson)</a> with the help of <a href="https://github.com/Eonasdan/tempus-dominus/graphs/contributors">our contributors</a>.</li>
           <li class="mb-2">Code licensed <a href="https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE" target="_blank" rel="license noopener">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY 3.0</a>.</li>
           <li class="mb-2">Currently v6.0.0-alpha1.</li>
         </ul>
@@ -968,7 +983,6 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
           <li class="mb-2"><a href="https://eonasdan.com">Blog</a></li>
         </ul>
       </div>
-      
       <div class="col-6 col-lg-2 mb-3">
         <h5>Community</h5>
         <ul class="list-unstyled">
@@ -976,15 +990,15 @@ inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
           <li class="mb-2"><a href="https://github.com/Eonasdan/tempus-dominus/discussions" target="_blank" rel="noopener">Discussions</a></li>
           <li class="mb-2"><a href="https://ko-fi.com/eonasdan" target="_blank" rel="noopener">Support me on Ko-fi</a></li>
           <li class="mb-2"><a href="https://discord.gg/BHS9jw9YPf" target="_blank" rel="noopener">Discord</a></li>
-          
         </ul>
       </div>
     </div>
   </div>
 </footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/solid.min.js" integrity="sha512-Qc+cBMt/4/KXJ1F6nNQahXIsgPygHM4S2XWChoumV8qkpZ9oO+gBDBEpOxgbkQQ/6DlHx6cUxa5nBhEbuiR8xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/brands.min.js" integrity="sha512-vefaKmSAX3XohXhN50vLfnK12TPIO+4uRpHjXVkX726CqbicEiAQGRzsMTE+EpLkBk4noUcUYu6AQ5af2vfRLA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/fontawesome.min.js" integrity="sha512-KCwrxBJebca0PPOaHELfqGtqkUlFUCuqCnmtydvBSTnJrBirJ55hRG5xcP4R9Rdx9Fz9IF3Yw6Rx40uhuAHR8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/solid.min.js" integrity="sha512-wabaor0DW08KSK5TQlRIyYOpDrAfJxl5J0FRzH0dNNhGJbeUpHaNj7up3Kr2Bwz/abLvVcJvDrJL+RLFcyGIkg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/brands.min.js" integrity="sha512-oPuIMrT4JN6Cw359VQkuI0OPn1reFOKJm1YUOjXxgIzMmNMY7g4jenNcJdYcF3dt90WyNajzivr3vZFSzgqLow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/fontawesome.min.js" integrity="sha512-PoFg70xtc+rAkD9xsjaZwIMkhkgbl1TkoaRrgucfsct7SVy9KvTj5LtECit+ZjQ3ts+7xWzgfHOGzdolfWEgrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
 <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" integrity="sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==" crossorigin="anonymous"></script>
 <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-javascript.min.js" integrity="sha512-I4ZWqUpk7wqHcm7Gkv7k4IdgrDUTlGm1a7xeqyduqZLWeoGOn2E9us4XNBEDGclpk+6d1CmqIHYwmoyyL59zeA==" crossorigin="anonymous"></script>

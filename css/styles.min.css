@@ -11556,7 +11556,6 @@ textarea.form-control-lg {
 .anchorjs-link {
   font-size: 1.4rem;
   font-weight: 400;
-  color: rgba(13, 110, 253, 0.5);
   transition: color 0.15s ease-in-out;
   padding-left: 0.375em;
 }
@@ -11623,4 +11622,68 @@ section h2 {
   min-height: initial;
   max-height: initial;
   overflow-y: initial;
+}
+
+@media (prefers-color-scheme: dark) {
+  body, .form-control {
+    background-color: #171717;
+    color: #e3e3e3;
+  }
+
+  a, .show-code, .nav-link {
+    color: #4db2ff;
+  }
+
+  .bd-links .btn, .bd-links .btn[aria-expanded=true], .bd-links .active, .bd-links a, .bd-footer a, .bd-masthead .lead,
+.table > :not(caption) > * > * {
+    color: #e3e3e3;
+  }
+
+  .bd-links a:hover, .bd-links a:focus, .bd-links .btn:hover, .bd-links .btn:focus, .input-group-text, .form-control:disabled, .form-control[readonly] {
+    background-color: #2d2d2d;
+    color: #e3e3e3;
+  }
+
+  .input-group-text {
+    border-color: #2d2d2d;
+  }
+
+  .bd-links .btn:focus {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .form-control {
+    border-color: #3c4144;
+  }
+
+  .bd-subnavbar {
+    background-color: rgba(24, 26, 27, 0.95);
+    box-shadow: rgba(0, 0, 0, 0.05) 0 0.5rem 1rem, rgba(0, 0, 0, 0.15) 0px -1px 0px inset;
+  }
+
+  .btn {
+    color: #e3e3e3;
+  }
+  .btn:hover {
+    color: #e3e3e3;
+  }
+
+  .bd-links .btn::before {
+    content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28227, 227, 227,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  }
+
+  .bg-light, .text-muted, .table-striped > tbody > tr:nth-of-type(odd) > *, .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    background-color: #2d2d2d !important;
+    color: #e3e3e3 !important;
+  }
+
+  .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    border-color: #383d3f #383d3f #303436;
+  }
+
+  .btn-bd-download:hover, .btn-bd-download:active {
+    color: #cdc8c2;
+    background-color: #7d6100;
+    border-color: #8b6c00;
+  }
 }
