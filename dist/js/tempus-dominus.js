@@ -57,6 +57,7 @@
          * Converts a plain JS date object to a DateTime object.
          * Doing this allows access to format, etc.
          * @param  date
+         * @param locale
          */
         static convert(date, locale = 'default') {
             if (!date)
@@ -117,6 +118,7 @@
          * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).endOf('month')
          * would return April 30, 2021, 11:59:59.999 PM
          * @param unit
+         * @param startOfTheWeek
          */
         endOf(unit, startOfTheWeek = 0) {
             if (this[unit] === undefined)
@@ -380,7 +382,8 @@
          * Return two digit, human expected month. E.g. January = 1, December = 12
          */
         get monthFormatted() {
-            return this.month + 1 < 10 ? `0${this.month}` : `${this.month}`;
+            const humanMonth = this.month + 1;
+            return humanMonth < 10 ? `0${humanMonth}` : `${humanMonth}`;
         }
         /**
          * Shortcut to Date.getFullYear()
@@ -550,6 +553,11 @@
          */
         dateString() {
             console.warn(`${this.base} Using a string for date options is not recommended unless you specify an ISO string.`);
+        }
+        throwError(message) {
+            const error = new TdError(`${this.base} ${message}`);
+            error.code = 9;
+            throw error;
         }
     }
 
@@ -1622,6 +1630,7 @@
                 else {
                     this._dates.splice(index, 1);
                 }
+                updateInput();
                 this._eventEmitters.triggerEvent.emit({
                     type: Namespace.events.change,
                     date: undefined,
@@ -1629,7 +1638,6 @@
                     isClear,
                     isValid: true,
                 });
-                updateInput();
                 this._eventEmitters.updateDisplay.emit('all');
                 return;
             }
@@ -2954,7 +2962,7 @@
         }
         /**
          * Builds an icon tag as either an `<i>`
-         * or with icons.type is `sprites` then an svg tag instead
+         * or with icons.type is `sprites` then a svg tag instead
          * @param iconClass
          * @private
          */
@@ -2965,7 +2973,7 @@
                 return svg;
             }
             const icon = document.createElement('i');
-            DOMTokenList.prototype.add.apply(icon.classList, iconClass.split(' '));
+            icon.classList.add(...iconClass.split(' '));
             return icon;
         }
         /**
@@ -3138,30 +3146,7 @@
                 case ActionTypes$1.showHours:
                 case ActionTypes$1.showMinutes:
                 case ActionTypes$1.showSeconds:
-                    this.optionsStore.currentView = 'clock';
-                    this.display.widget
-                        .querySelectorAll(`.${Namespace.css.timeContainer} > div`)
-                        .forEach((htmlElement) => (htmlElement.style.display = 'none'));
-                    let classToUse = '';
-                    switch (action) {
-                        case ActionTypes$1.showClock:
-                            classToUse = Namespace.css.clockContainer;
-                            this.display._update('clock');
-                            break;
-                        case ActionTypes$1.showHours:
-                            classToUse = Namespace.css.hourContainer;
-                            this.display._update(exports.Unit.hours);
-                            break;
-                        case ActionTypes$1.showMinutes:
-                            classToUse = Namespace.css.minuteContainer;
-                            this.display._update(exports.Unit.minutes);
-                            break;
-                        case ActionTypes$1.showSeconds:
-                            classToUse = Namespace.css.secondContainer;
-                            this.display._update(exports.Unit.seconds);
-                            break;
-                    }
-                    (this.display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
+                    this.handleShowClockContainers(action);
                     break;
                 case ActionTypes$1.clear:
                     this.dates.setValue(null);
@@ -3177,6 +3162,36 @@
                         this.dates.setValue(today, this.dates.lastPickedIndex);
                     break;
             }
+        }
+        handleShowClockContainers(action) {
+            if (!this.display._hasTime) {
+                Namespace.errorMessages.throwError('Cannot show clock containers when time is disabled.');
+                return;
+            }
+            this.optionsStore.currentView = 'clock';
+            this.display.widget
+                .querySelectorAll(`.${Namespace.css.timeContainer} > div`)
+                .forEach((htmlElement) => (htmlElement.style.display = 'none'));
+            let classToUse = '';
+            switch (action) {
+                case ActionTypes$1.showClock:
+                    classToUse = Namespace.css.clockContainer;
+                    this.display._update('clock');
+                    break;
+                case ActionTypes$1.showHours:
+                    classToUse = Namespace.css.hourContainer;
+                    this.display._update(exports.Unit.hours);
+                    break;
+                case ActionTypes$1.showMinutes:
+                    classToUse = Namespace.css.minuteContainer;
+                    this.display._update(exports.Unit.minutes);
+                    break;
+                case ActionTypes$1.showSeconds:
+                    classToUse = Namespace.css.secondContainer;
+                    this.display._update(exports.Unit.seconds);
+                    break;
+            }
+            (this.display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
         }
         handleNextPrevious(action) {
             const { unit, step } = CalendarModes[this.optionsStore.currentCalendarViewMode];
@@ -3357,6 +3372,7 @@
          * @public
          */
         clear() {
+            this.optionsStore.input.value = '';
             this.dates.clear();
         }
         // noinspection JSUnusedGlobalSymbols
@@ -3370,7 +3386,7 @@
             if (typeof eventTypes === 'string') {
                 eventTypes = [eventTypes];
             }
-            let callBackArray = [];
+            let callBackArray;
             if (!Array.isArray(callbacks)) {
                 callBackArray = [callbacks];
             }
@@ -3468,7 +3484,6 @@
         }
         /**
          * Fires a ViewUpdate event when, for example, the month view is changed.
-         * @param {Unit} unit
          * @private
          */
         _viewUpdate() {
@@ -3611,27 +3626,33 @@
      * locale name. E.g. loadedLocales['ru']
      */
     const loadedLocales = {};
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Called from a locale plugin.
-     * @param locale locale object for localization options
-     * @param name name of the language e.g 'ru', 'en-gb'
+     * @param l locale object for localization options
      */
-    const loadLocale = (locale) => {
-        if (loadedLocales[locale.name])
+    const loadLocale = (l) => {
+        if (loadedLocales[l.name])
             return;
-        loadedLocales[locale.name] = locale.localization;
+        loadedLocales[l.name] = l.localization;
     };
     /**
      * A sets the global localization options to the provided locale name.
-     * `locadLocale` MUST be called first.
-     * @param locale
+     * `loadLocale` MUST be called first.
+     * @param l
      */
-    const locale = (locale) => {
-        let asked = loadedLocales[locale];
+    const locale = (l) => {
+        let asked = loadedLocales[l];
         if (!asked)
             return;
         DefaultOptions.localization = asked;
     };
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Called from a plugin to extend or override picker defaults.
+     * @param plugin
+     * @param option
+     */
     const extend = function (plugin, option) {
         if (!plugin.$i) {
             // install plugin only once

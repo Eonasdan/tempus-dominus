@@ -647,7 +647,7 @@ export default class Display {
 
   /**
    * Builds an icon tag as either an `<i>`
-   * or with icons.type is `sprites` then an svg tag instead
+   * or with icons.type is `sprites` then a svg tag instead
    * @param iconClass
    * @private
    */
@@ -658,7 +658,7 @@ export default class Display {
       return svg;
     }
     const icon = document.createElement('i');
-    DOMTokenList.prototype.add.apply(icon.classList, iconClass.split(' '));
+    icon.classList.add(...iconClass.split(' '));
     return icon;
   }
 

@@ -50,6 +50,7 @@ export class DateTime extends Date {
    * Converts a plain JS date object to a DateTime object.
    * Doing this allows access to format, etc.
    * @param  date
+   * @param locale
    */
   static convert(date: Date, locale: string = 'default'): DateTime {
     if (!date) throw new Error(`A date is required`);
@@ -125,6 +126,7 @@ export class DateTime extends Date {
    * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).endOf('month')
    * would return April 30, 2021, 11:59:59.999 PM
    * @param unit
+   * @param startOfTheWeek
    */
   endOf(unit: Unit | 'weekDay', startOfTheWeek = 0): this {
     if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
@@ -418,7 +420,8 @@ export class DateTime extends Date {
    * Return two digit, human expected month. E.g. January = 1, December = 12
    */
   get monthFormatted(): string {
-    return this.month + 1 < 10 ? `0${this.month}` : `${this.month}`;
+    const humanMonth = this.month + 1;
+    return humanMonth < 10 ? `0${humanMonth}` : `${humanMonth}`;
   }
 
   /**
