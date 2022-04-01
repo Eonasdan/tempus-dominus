@@ -147,112 +147,7 @@ export default class Display {
    */
   show(): void {
     if (this.widget == undefined) {
-     if (this.dates.picked.length == 0) {
-          if (
-            this.optionsStore.options.useCurrent &&
-            !this.optionsStore.options.defaultDate
-          ) {
-            const date = new DateTime().setLocale(
-              this.optionsStore.options.localization.locale
-            );
-            if (!this.optionsStore.options.keepInvalid) {
-              let tries = 0;
-              let direction = 1;
-              if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
-                direction = -1;
-              }
-              while (!this.validation.isValid(date)) {
-                date.manipulate(direction, Unit.date);
-                if (tries > 31) break;
-                tries++;
-              }
-            }
-            this.dates.setValue(date);
-          }
-    
-          if (this.optionsStore.options.defaultDate) {
-            this.dates.setValue(this.optionsStore.options.defaultDate);
-          }
-      }
-
-      this._buildWidget();
-
-      // If modeView is only clock
-      const onlyClock = this._hasTime && !this._hasDate;
-
-      // reset the view to the clock if there's no date components
-      if (onlyClock) {
-        this.optionsStore.currentView = 'clock';
-        this._eventEmitters.action.emit({
-          e: null,
-          action: ActionTypes.showClock,
-        });
-      }
-
-      // otherwise return to the calendar view
-      if (!this.optionsStore.currentCalendarViewMode) {
-        this.optionsStore.currentCalendarViewMode =
-          this.optionsStore.minimumCalendarViewMode;
-      }
-
-      if (!onlyClock) {
-        if (this._hasTime) {
-          Collapse.hide(
-            this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
-          );
-        }
-        Collapse.show(
-          this.widget.querySelector(`div.${Namespace.css.dateContainer}`)
-        );
-      }
-
-      if (this._hasDate) {
-        this._showMode();
-      }
-
-      if (!this.optionsStore.options.display.inline) {
-        // If needed to change the parent container
-        const container = this.optionsStore.options?.container || document.body;
-        container.appendChild(this.widget);
-
-        this._popperInstance = createPopper(
-          this.optionsStore.element,
-          this.widget,
-          {
-            modifiers: [{ name: 'eventListeners', enabled: true }],
-            //#2400
-            placement:
-              document.documentElement.dir === 'rtl'
-                ? 'bottom-end'
-                : 'bottom-start',
-          }
-        );
-      } else {
-        this.optionsStore.element.appendChild(this.widget);
-      }
-
-      if (this.optionsStore.options.display.viewMode == 'clock') {
-        this._eventEmitters.action.emit({
-          e: null,
-          action: ActionTypes.showClock,
-        });
-      }
-
-      this.widget
-        .querySelectorAll('[data-action]')
-        .forEach((element) =>
-          element.addEventListener('click', this._actionsClickEvent)
-        );
-
-      // show the clock when using sideBySide
-      if (this._hasTime && this.optionsStore.options.display.sideBySide) {
-        this.timeDisplay._update(this.widget);
-        (
-          this.widget.getElementsByClassName(
-            Namespace.css.clockContainer
-          )[0] as HTMLElement
-        ).style.display = 'grid';
-      }
+      this._handleFirstShow();
     }
 
     this.widget.classList.add(Namespace.css.show);
@@ -262,6 +157,7 @@ export default class Display {
     }
     this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
     this._isVisible = true;
+    this.widget.focus();
   }
 
   /**
@@ -441,6 +337,7 @@ export default class Display {
   private _buildWidget(): HTMLElement {
     const template = document.createElement('div');
     template.classList.add(Namespace.css.widget);
+    template.setAttribute('tabindex', '0');
 
     const dateView = document.createElement('div');
     dateView.classList.add(Namespace.css.dateContainer);
@@ -699,6 +596,123 @@ export default class Display {
     this._dispose();
     if (wasVisible) {
       this.show();
+    }
+  }
+
+  /**
+   * Build the widget and figure out which view to show.
+   * @private
+   */
+  private _handleFirstShow() {
+    this._findAndSetFirstDate();
+
+    this._buildWidget();
+
+    // If modeView is only clock
+    const onlyClock = this._hasTime && !this._hasDate;
+
+    // reset the view to the clock if there's no date components
+    if (onlyClock) {
+      this.optionsStore.currentView = 'clock';
+      this._eventEmitters.action.emit({
+        e: null,
+        action: ActionTypes.showClock,
+      });
+    }
+
+    // otherwise, return to the calendar view
+    if (!this.optionsStore.currentCalendarViewMode) {
+      this.optionsStore.currentCalendarViewMode =
+          this.optionsStore.minimumCalendarViewMode;
+    }
+
+    if (!onlyClock) {
+      if (this._hasTime) {
+        Collapse.hide(
+            this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
+        );
+      }
+      Collapse.show(
+          this.widget.querySelector(`div.${Namespace.css.dateContainer}`)
+      );
+    }
+
+    if (this._hasDate) {
+      this._showMode();
+    }
+
+    if (!this.optionsStore.options.display.inline) {
+      // If needed to change the parent container
+      const container = this.optionsStore.options?.container || document.body;
+      container.appendChild(this.widget);
+
+      this._popperInstance = createPopper(
+          this.optionsStore.element,
+          this.widget,
+          {
+            modifiers: [{ name: 'eventListeners', enabled: true }],
+            //#2400
+            placement:
+                document.documentElement.dir === 'rtl'
+                    ? 'bottom-end'
+                    : 'bottom-start',
+          }
+      );
+    } else {
+      this.optionsStore.element.appendChild(this.widget);
+    }
+
+    if (this.optionsStore.options.display.viewMode == 'clock') {
+      this._eventEmitters.action.emit({
+        e: null,
+        action: ActionTypes.showClock,
+      });
+    }
+
+    this.widget
+        .querySelectorAll('[data-action]')
+        .forEach((element) =>
+            element.addEventListener('click', this._actionsClickEvent)
+        );
+
+    // show the clock when using sideBySide
+    if (this._hasTime && this.optionsStore.options.display.sideBySide) {
+      this.timeDisplay._update(this.widget);
+      (
+          this.widget.getElementsByClassName(
+              Namespace.css.clockContainer
+          )[0] as HTMLElement
+      ).style.display = 'grid';
+    }
+  }
+
+  /**
+   * Checks if the picker should set a date on first showing.
+   * @private
+   */
+  private _findAndSetFirstDate() {
+    if (this.dates.picked.length != 0) return;
+    if (this.optionsStore.options.defaultDate) {
+      this.dates.setValue(this.optionsStore.options.defaultDate);
+      return;
+    }
+    if (this.optionsStore.options.useCurrent) {
+      const date = new DateTime().setLocale(
+          this.optionsStore.options.localization.locale
+      );
+      if (!this.optionsStore.options.keepInvalid) {
+        let tries = 0;
+        let direction = 1;
+        if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
+          direction = -1;
+        }
+        while (!this.validation.isValid(date)) {
+          date.manipulate(direction, Unit.date);
+          if (tries > 31) break;
+          tries++;
+        }
+      }
+      this.dates.setValue(date);
     }
   }
 }

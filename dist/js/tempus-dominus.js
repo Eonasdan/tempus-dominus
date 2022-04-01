@@ -802,6 +802,169 @@
         },
     ];
 
+    var ActionTypes;
+    (function (ActionTypes) {
+        ActionTypes["next"] = "next";
+        ActionTypes["previous"] = "previous";
+        ActionTypes["changeCalendarView"] = "changeCalendarView";
+        ActionTypes["selectMonth"] = "selectMonth";
+        ActionTypes["selectYear"] = "selectYear";
+        ActionTypes["selectDecade"] = "selectDecade";
+        ActionTypes["selectDay"] = "selectDay";
+        ActionTypes["selectHour"] = "selectHour";
+        ActionTypes["selectMinute"] = "selectMinute";
+        ActionTypes["selectSecond"] = "selectSecond";
+        ActionTypes["incrementHours"] = "incrementHours";
+        ActionTypes["incrementMinutes"] = "incrementMinutes";
+        ActionTypes["incrementSeconds"] = "incrementSeconds";
+        ActionTypes["decrementHours"] = "decrementHours";
+        ActionTypes["decrementMinutes"] = "decrementMinutes";
+        ActionTypes["decrementSeconds"] = "decrementSeconds";
+        ActionTypes["toggleMeridiem"] = "toggleMeridiem";
+        ActionTypes["togglePicker"] = "togglePicker";
+        ActionTypes["showClock"] = "showClock";
+        ActionTypes["showHours"] = "showHours";
+        ActionTypes["showMinutes"] = "showMinutes";
+        ActionTypes["showSeconds"] = "showSeconds";
+        ActionTypes["clear"] = "clear";
+        ActionTypes["close"] = "close";
+        ActionTypes["today"] = "today";
+    })(ActionTypes || (ActionTypes = {}));
+    var ActionTypes$1 = ActionTypes;
+
+    function lastDateOrNew() {
+        return (this.dates.lastPicked || new DateTime().setLocale(this.optionsStore.options.localization.locale)).clone;
+    }
+    function manipulateAndSet(value, unit) {
+        const d = lastDateOrNew.call(this);
+        d.manipulate(value, unit);
+        this.dates.setValue(d, this.dates.lastPickedIndex);
+    }
+    const defaultKeybindings = {
+        ArrowUp: function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            if (this.optionsStore.currentView === 'clock') {
+                manipulateAndSet.call(this, this.optionsStore.options.stepping, exports.Unit.minutes);
+            }
+            else {
+                manipulateAndSet.call(this, -7, exports.Unit.date);
+            }
+            return true;
+        },
+        ArrowDown: function () {
+            if (!this.display.isVisible) {
+                this.display.show();
+                return false;
+            }
+            if (this.optionsStore.currentView === 'clock') {
+                manipulateAndSet.call(this, this.optionsStore.options.stepping * -1, exports.Unit.minutes);
+            }
+            else {
+                manipulateAndSet.call(this, 7, exports.Unit.date);
+            }
+            return true;
+        },
+        'Control ArrowUp': function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            if (this.optionsStore.currentView === 'clock') {
+                manipulateAndSet.call(this, this.optionsStore.options.stepping, exports.Unit.hours);
+            }
+            else {
+                manipulateAndSet.call(this, -1, exports.Unit.year);
+            }
+            return true;
+        },
+        'Control ArrowDown': function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            if (this.optionsStore.currentView === 'clock') {
+                manipulateAndSet.call(this, this.optionsStore.options.stepping * -1, exports.Unit.hours);
+            }
+            else {
+                manipulateAndSet.call(this, 1, exports.Unit.year);
+            }
+            return true;
+        },
+        ArrowLeft: function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            if (this.optionsStore.currentView !== 'clock') {
+                manipulateAndSet.call(this, -1, exports.Unit.date);
+            }
+            return true;
+        },
+        ArrowRight: function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            if (this.optionsStore.currentView !== 'clock') {
+                manipulateAndSet.call(this, 1, exports.Unit.date);
+            }
+            return true;
+        },
+        PageUp: function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            if (this.optionsStore.currentView !== 'clock') {
+                manipulateAndSet.call(this, -1, exports.Unit.month);
+            }
+            return true;
+        },
+        PageDown: function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            if (this.optionsStore.currentView !== 'clock') {
+                manipulateAndSet.call(this, 1, exports.Unit.month);
+            }
+            return true;
+        },
+        Enter: function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            this.display.hide();
+            return true;
+        },
+        Escape: function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            this.display.hide();
+            return true;
+        },
+        'Control Space': function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            if (this.optionsStore.currentView === 'clock') {
+                this._eventEmitters.action.emit({ e: undefined, action: ActionTypes$1.toggleMeridiem });
+            }
+            return true;
+        },
+        t: function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            this.dates.setValue(new DateTime(), this.dates.lastPickedIndex);
+            return true;
+        },
+        Delete: function () {
+            if (!this.display.widget) {
+                return false;
+            }
+            this.dates.clear();
+            return true;
+        }
+    };
+
     const DefaultOptions = {
         restrictions: {
             minDate: undefined,
@@ -893,7 +1056,8 @@
         promptTimeOnDateChange: false,
         promptTimeOnDateChangeTransitionDelay: 200,
         meta: {},
-        container: undefined
+        container: undefined,
+        keybindings: defaultKeybindings
     };
 
     class OptionsStore {
@@ -1234,7 +1398,6 @@
             if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
                 Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of numbers');
             }
-            return;
         }
         /**
          * Attempts to convert `d` to a DateTime object
@@ -1435,7 +1598,7 @@
                 callback(value);
             });
         }
-        destory() {
+        destroy() {
             this.subscribers = null;
             this.subscribers = [];
         }
@@ -1446,12 +1609,14 @@
             this.viewUpdate = new EventEmitter();
             this.updateDisplay = new EventEmitter();
             this.action = new EventEmitter();
+            this.registerKeydown = new EventEmitter();
         }
-        destory() {
-            this.triggerEvent.destory();
-            this.viewUpdate.destory();
-            this.updateDisplay.destory();
-            this.action.destory();
+        destroy() {
+            this.triggerEvent.destroy();
+            this.viewUpdate.destroy();
+            this.updateDisplay.destroy();
+            this.action.destroy();
+            this.registerKeydown.destroy();
         }
     }
 
@@ -1677,36 +1842,6 @@
             });
         }
     }
-
-    var ActionTypes;
-    (function (ActionTypes) {
-        ActionTypes["next"] = "next";
-        ActionTypes["previous"] = "previous";
-        ActionTypes["changeCalendarView"] = "changeCalendarView";
-        ActionTypes["selectMonth"] = "selectMonth";
-        ActionTypes["selectYear"] = "selectYear";
-        ActionTypes["selectDecade"] = "selectDecade";
-        ActionTypes["selectDay"] = "selectDay";
-        ActionTypes["selectHour"] = "selectHour";
-        ActionTypes["selectMinute"] = "selectMinute";
-        ActionTypes["selectSecond"] = "selectSecond";
-        ActionTypes["incrementHours"] = "incrementHours";
-        ActionTypes["incrementMinutes"] = "incrementMinutes";
-        ActionTypes["incrementSeconds"] = "incrementSeconds";
-        ActionTypes["decrementHours"] = "decrementHours";
-        ActionTypes["decrementMinutes"] = "decrementMinutes";
-        ActionTypes["decrementSeconds"] = "decrementSeconds";
-        ActionTypes["toggleMeridiem"] = "toggleMeridiem";
-        ActionTypes["togglePicker"] = "togglePicker";
-        ActionTypes["showClock"] = "showClock";
-        ActionTypes["showHours"] = "showHours";
-        ActionTypes["showMinutes"] = "showMinutes";
-        ActionTypes["showSeconds"] = "showSeconds";
-        ActionTypes["clear"] = "clear";
-        ActionTypes["close"] = "close";
-        ActionTypes["today"] = "today";
-    })(ActionTypes || (ActionTypes = {}));
-    var ActionTypes$1 = ActionTypes;
 
     /**
      * Creates and updates the grid for `date`
@@ -2593,85 +2728,8 @@
          * @fires Events#show
          */
         show() {
-            var _a, _b;
             if (this.widget == undefined) {
-                if (this.dates.picked.length == 0) {
-                    if (this.optionsStore.options.useCurrent &&
-                        !this.optionsStore.options.defaultDate) {
-                        const date = new DateTime().setLocale(this.optionsStore.options.localization.locale);
-                        if (!this.optionsStore.options.keepInvalid) {
-                            let tries = 0;
-                            let direction = 1;
-                            if ((_a = this.optionsStore.options.restrictions.maxDate) === null || _a === void 0 ? void 0 : _a.isBefore(date)) {
-                                direction = -1;
-                            }
-                            while (!this.validation.isValid(date)) {
-                                date.manipulate(direction, exports.Unit.date);
-                                if (tries > 31)
-                                    break;
-                                tries++;
-                            }
-                        }
-                        this.dates.setValue(date);
-                    }
-                    if (this.optionsStore.options.defaultDate) {
-                        this.dates.setValue(this.optionsStore.options.defaultDate);
-                    }
-                }
-                this._buildWidget();
-                // If modeView is only clock
-                const onlyClock = this._hasTime && !this._hasDate;
-                // reset the view to the clock if there's no date components
-                if (onlyClock) {
-                    this.optionsStore.currentView = 'clock';
-                    this._eventEmitters.action.emit({
-                        e: null,
-                        action: ActionTypes$1.showClock,
-                    });
-                }
-                // otherwise return to the calendar view
-                if (!this.optionsStore.currentCalendarViewMode) {
-                    this.optionsStore.currentCalendarViewMode =
-                        this.optionsStore.minimumCalendarViewMode;
-                }
-                if (!onlyClock) {
-                    if (this._hasTime) {
-                        Collapse.hide(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
-                    }
-                    Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
-                }
-                if (this._hasDate) {
-                    this._showMode();
-                }
-                if (!this.optionsStore.options.display.inline) {
-                    // If needed to change the parent container
-                    const container = ((_b = this.optionsStore.options) === null || _b === void 0 ? void 0 : _b.container) || document.body;
-                    container.appendChild(this.widget);
-                    this._popperInstance = core.createPopper(this.optionsStore.element, this.widget, {
-                        modifiers: [{ name: 'eventListeners', enabled: true }],
-                        //#2400
-                        placement: document.documentElement.dir === 'rtl'
-                            ? 'bottom-end'
-                            : 'bottom-start',
-                    });
-                }
-                else {
-                    this.optionsStore.element.appendChild(this.widget);
-                }
-                if (this.optionsStore.options.display.viewMode == 'clock') {
-                    this._eventEmitters.action.emit({
-                        e: null,
-                        action: ActionTypes$1.showClock,
-                    });
-                }
-                this.widget
-                    .querySelectorAll('[data-action]')
-                    .forEach((element) => element.addEventListener('click', this._actionsClickEvent));
-                // show the clock when using sideBySide
-                if (this._hasTime && this.optionsStore.options.display.sideBySide) {
-                    this.timeDisplay._update(this.widget);
-                    this.widget.getElementsByClassName(Namespace.css.clockContainer)[0].style.display = 'grid';
-                }
+                this._handleFirstShow();
             }
             this.widget.classList.add(Namespace.css.show);
             if (!this.optionsStore.options.display.inline) {
@@ -2680,6 +2738,7 @@
             }
             this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
             this._isVisible = true;
+            this.widget.focus();
         }
         /**
          * Changes the calendar view mode. E.g. month <-> year
@@ -2800,6 +2859,7 @@
         _buildWidget() {
             const template = document.createElement('div');
             template.classList.add(Namespace.css.widget);
+            template.setAttribute('tabindex', '0');
             const dateView = document.createElement('div');
             dateView.classList.add(Namespace.css.dateContainer);
             dateView.append(this.getHeadTemplate(), this.decadeDisplay.getPicker(), this.yearDisplay.getPicker(), this.monthDisplay.getPicker(), this.dateDisplay.getPicker());
@@ -2980,6 +3040,98 @@
             this._dispose();
             if (wasVisible) {
                 this.show();
+            }
+        }
+        /**
+         * Build the widget and figure out which view to show.
+         * @private
+         */
+        _handleFirstShow() {
+            var _a;
+            this._findAndSetFirstDate();
+            this._buildWidget();
+            // If modeView is only clock
+            const onlyClock = this._hasTime && !this._hasDate;
+            // reset the view to the clock if there's no date components
+            if (onlyClock) {
+                this.optionsStore.currentView = 'clock';
+                this._eventEmitters.action.emit({
+                    e: null,
+                    action: ActionTypes$1.showClock,
+                });
+            }
+            // otherwise, return to the calendar view
+            if (!this.optionsStore.currentCalendarViewMode) {
+                this.optionsStore.currentCalendarViewMode =
+                    this.optionsStore.minimumCalendarViewMode;
+            }
+            if (!onlyClock) {
+                if (this._hasTime) {
+                    Collapse.hide(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                }
+                Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+            }
+            if (this._hasDate) {
+                this._showMode();
+            }
+            if (!this.optionsStore.options.display.inline) {
+                // If needed to change the parent container
+                const container = ((_a = this.optionsStore.options) === null || _a === void 0 ? void 0 : _a.container) || document.body;
+                container.appendChild(this.widget);
+                this._popperInstance = core.createPopper(this.optionsStore.element, this.widget, {
+                    modifiers: [{ name: 'eventListeners', enabled: true }],
+                    //#2400
+                    placement: document.documentElement.dir === 'rtl'
+                        ? 'bottom-end'
+                        : 'bottom-start',
+                });
+            }
+            else {
+                this.optionsStore.element.appendChild(this.widget);
+            }
+            if (this.optionsStore.options.display.viewMode == 'clock') {
+                this._eventEmitters.action.emit({
+                    e: null,
+                    action: ActionTypes$1.showClock,
+                });
+            }
+            this.widget
+                .querySelectorAll('[data-action]')
+                .forEach((element) => element.addEventListener('click', this._actionsClickEvent));
+            // show the clock when using sideBySide
+            if (this._hasTime && this.optionsStore.options.display.sideBySide) {
+                this.timeDisplay._update(this.widget);
+                this.widget.getElementsByClassName(Namespace.css.clockContainer)[0].style.display = 'grid';
+            }
+        }
+        /**
+         * Checks if the picker should set a date on first showing.
+         * @private
+         */
+        _findAndSetFirstDate() {
+            var _a;
+            if (this.dates.picked.length != 0)
+                return;
+            if (this.optionsStore.options.defaultDate) {
+                this.dates.setValue(this.optionsStore.options.defaultDate);
+                return;
+            }
+            if (this.optionsStore.options.useCurrent) {
+                const date = new DateTime().setLocale(this.optionsStore.options.localization.locale);
+                if (!this.optionsStore.options.keepInvalid) {
+                    let tries = 0;
+                    let direction = 1;
+                    if ((_a = this.optionsStore.options.restrictions.maxDate) === null || _a === void 0 ? void 0 : _a.isBefore(date)) {
+                        direction = -1;
+                    }
+                    while (!this.validation.isValid(date)) {
+                        date.manipulate(direction, exports.Unit.date);
+                        if (tries > 31)
+                            break;
+                        tries++;
+                    }
+                }
+                this.dates.setValue(date);
             }
         }
     }
@@ -3259,6 +3411,33 @@
             this._toggleClickEvent = () => {
                 this.toggle();
             };
+            /**
+             * When a key is pressed, check if the combination of keys is something we care about then execute that function.
+             * @param e
+             */
+            this._keydownEvent = (e) => {
+                var _a, _b;
+                if (((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this.display.widget)) || // inside the widget
+                    ((_b = e.composedPath()) === null || _b === void 0 ? void 0 : _b.includes(this.optionsStore.input)) // on the input
+                ) {
+                    let combo = '';
+                    if (e.ctrlKey)
+                        combo = 'Control ';
+                    if (e.shiftKey)
+                        combo += 'Shift ';
+                    if (e.code !== "Space") {
+                        combo += e.key;
+                    }
+                    else {
+                        combo += 'Space';
+                    }
+                    const binding = this.optionsStore.options.keybindings[combo];
+                    if (binding === null || binding === void 0 ? void 0 : binding.call(this)) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                }
+            };
             setupServiceLocator();
             this._eventEmitters = serviceLocator.locate(EventEmitters);
             this.optionsStore = serviceLocator.locate(OptionsStore);
@@ -3281,6 +3460,9 @@
             });
             this._eventEmitters.viewUpdate.subscribe(() => {
                 this._viewUpdate();
+            });
+            this._eventEmitters.registerKeydown.subscribe(() => {
+                this._registerKeybindings();
             });
         }
         get viewDate() {
@@ -3370,7 +3552,7 @@
             if (typeof eventTypes === 'string') {
                 eventTypes = [eventTypes];
             }
-            let callBackArray = [];
+            let callBackArray;
             if (!Array.isArray(callbacks)) {
                 callBackArray = [callbacks];
             }
@@ -3410,7 +3592,11 @@
                 (_b = this.optionsStore.input) === null || _b === void 0 ? void 0 : _b.removeEventListener('click', this._toggleClickEvent);
             }
             (_c = this._toggle) === null || _c === void 0 ? void 0 : _c.removeEventListener('click', this._toggleClickEvent);
+            if (this.optionsStore.options.keybindings) {
+                document.removeEventListener('keydown', this._keydownEvent);
+            }
             this._subscribers = {};
+            this._eventEmitters.destroy();
         }
         /**
          * Updates the options to use the provided language.
@@ -3468,7 +3654,6 @@
         }
         /**
          * Fires a ViewUpdate event when, for example, the month view is changed.
-         * @param {Unit} unit
          * @private
          */
         _viewUpdate() {
@@ -3543,6 +3728,11 @@
             }
             if (!this.optionsStore.input)
                 return;
+            if (!this.optionsStore.options.keybindings)
+                return;
+            if (this.optionsStore.input) {
+                this.optionsStore.input.addEventListener('keydown', this._keydownEvent);
+            }
             this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
             if (this.optionsStore.options.allowInputToggle) {
                 this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
@@ -3605,33 +3795,43 @@
                 }
             }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
         }
+        /**
+         * If Keybindings option is provided then register the event listener.
+         * @private
+         */
+        _registerKeybindings() {
+            if (!this.optionsStore.options.keybindings)
+                return;
+            this.display.widget.addEventListener('keydown', this._keydownEvent);
+        }
     }
     /**
      * Whenever a locale is loaded via a plugin then store it here based on the
      * locale name. E.g. loadedLocales['ru']
      */
     const loadedLocales = {};
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Called from a locale plugin.
-     * @param locale locale object for localization options
-     * @param name name of the language e.g 'ru', 'en-gb'
+     * @param l locale object for localization options
      */
-    const loadLocale = (locale) => {
-        if (loadedLocales[locale.name])
+    const loadLocale = (l) => {
+        if (loadedLocales[l.name])
             return;
-        loadedLocales[locale.name] = locale.localization;
+        loadedLocales[l.name] = l.localization;
     };
     /**
      * A sets the global localization options to the provided locale name.
-     * `locadLocale` MUST be called first.
-     * @param locale
+     * `loadLocale` MUST be called first.
+     * @param l locale name
      */
-    const locale = (locale) => {
-        let asked = loadedLocales[locale];
+    const locale = (l) => {
+        let asked = loadedLocales[l];
         if (!asked)
             return;
         DefaultOptions.localization = asked;
     };
+    // noinspection JSUnusedGlobalSymbols
     const extend = function (plugin, option) {
         if (!plugin.$i) {
             // install plugin only once

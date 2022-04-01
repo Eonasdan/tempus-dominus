@@ -71,7 +71,7 @@ export default interface Options {
       down?: string;
       close?: string;
     };
-    viewMode?: keyof ViewMode | undefined;
+    viewMode: keyof ViewMode | undefined;
     sideBySide?: boolean;
     inline?: boolean;
     keepOpen?: boolean;
@@ -120,6 +120,7 @@ export default interface Options {
   promptTimeOnDateChangeTransitionDelay?: number;
   meta?: {};
   container?: HTMLElement;
+  keybindings?: {[key: string]: () => boolean}
 }
 
 export class OptionConverter {
@@ -574,7 +575,6 @@ export class OptionConverter {
         'array of numbers'
       );
     }
-    return;
   }
 
   /**

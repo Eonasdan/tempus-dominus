@@ -1,5 +1,6 @@
 import Options from './options';
 import { DateTime } from '../datetime';
+import {defaultKeybindings} from "./default-keybindings";
 
 const DefaultOptions: Options = {
   restrictions: {
@@ -92,7 +93,8 @@ const DefaultOptions: Options = {
   promptTimeOnDateChange: false,
   promptTimeOnDateChangeTransitionDelay: 200,
   meta: {},
-  container: undefined
+  container: undefined,
+  keybindings: defaultKeybindings
 };
 
 export default DefaultOptions;
