@@ -253,6 +253,10 @@ class TempusDominus {
       this.optionsStore.input?.dispatchEvent(
         new CustomEvent(event.type, { detail: event as any })
       );
+
+      this.optionsStore.input?.dispatchEvent(
+          new CustomEvent('change', { detail: event as any })
+      );
     }
 
     this.optionsStore.element.dispatchEvent(
@@ -461,7 +465,10 @@ class TempusDominus {
    * something for the remove listener function.
    * @private
    */
-  private _inputChangeEvent = () => {
+  private _inputChangeEvent = (event?: any) => {
+    const internallyTriggered = event?.detail;
+    if (internallyTriggered) return;
+
     const setViewDate = () => {
       if (this.dates.lastPicked)
         this.optionsStore.viewDate = this.dates.lastPicked;
