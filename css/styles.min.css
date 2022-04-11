@@ -11686,4 +11686,8 @@ section h2 {
     background-color: #7d6100;
     border-color: #8b6c00;
   }
+
+  code {
+    color: #A3E170;
+  }
 }

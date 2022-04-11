@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta4 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta5 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -18,6 +18,18 @@
         Unit["month"] = "month";
         Unit["year"] = "year";
     })(exports.Unit || (exports.Unit = {}));
+    const twoDigitTemplate = {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+    };
+    const twoDigitTwentyForTemplate = {
+        hour12: false
+    };
     const getFormatByUnit = (unit) => {
         switch (unit) {
             case 'date':
@@ -57,6 +69,7 @@
          * Converts a plain JS date object to a DateTime object.
          * Doing this allows access to format, etc.
          * @param  date
+         * @param locale
          */
         static convert(date, locale = 'default') {
             if (!date)
@@ -117,6 +130,7 @@
          * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).endOf('month')
          * would return April 30, 2021, 11:59:59.999 PM
          * @param unit
+         * @param startOfTheWeek
          */
         endOf(unit, startOfTheWeek = 0) {
             if (this[unit] === undefined)
@@ -269,7 +283,7 @@
          * Returns two digit hours
          */
         get secondsFormatted() {
-            return this.seconds < 10 ? `0${this.seconds}` : `${this.seconds}`;
+            return this.parts(undefined, twoDigitTemplate).seconds;
         }
         /**
          * Shortcut to Date.getMinutes()
@@ -287,7 +301,7 @@
          * Returns two digit minutes
          */
         get minutesFormatted() {
-            return this.minutes < 10 ? `0${this.minutes}` : `${this.minutes}`;
+            return this.parts(undefined, twoDigitTemplate).minute;
         }
         /**
          * Shortcut to Date.getHours()
@@ -305,7 +319,7 @@
          * Returns two digit hours
          */
         get hoursFormatted() {
-            let formatted = this.format({ hour: '2-digit', hour12: false });
+            let formatted = this.parts(undefined, twoDigitTwentyForTemplate).hour;
             if (formatted === '24')
                 formatted = '00';
             return formatted;
@@ -314,10 +328,7 @@
          * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
          */
         get twelveHoursFormatted() {
-            let hour = this.parts().hour;
-            if (hour.length === 1)
-                hour = `0${hour}`;
-            return hour;
+            return this.parts(undefined, twoDigitTemplate).hour;
         }
         /**
          * Get the meridiem of the date. E.g. AM or PM.
@@ -350,7 +361,7 @@
          * Return two digit date
          */
         get dateFormatted() {
-            return this.date < 10 ? `0${this.date}` : `${this.date}`;
+            return this.parts(undefined, twoDigitTemplate).day;
         }
         /**
          * Shortcut to Date.getDay()
@@ -380,7 +391,7 @@
          * Return two digit, human expected month. E.g. January = 1, December = 12
          */
         get monthFormatted() {
-            return this.month + 1 < 10 ? `0${this.month}` : `${this.month}`;
+            return this.parts(undefined, twoDigitTemplate).month;
         }
         /**
          * Shortcut to Date.getFullYear()
@@ -551,10 +562,15 @@
         dateString() {
             console.warn(`${this.base} Using a string for date options is not recommended unless you specify an ISO string.`);
         }
+        throwError(message) {
+            const error = new TdError(`${this.base} ${message}`);
+            error.code = 9;
+            throw error;
+        }
     }
 
     // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-    const NAME = 'tempus-dominus', version = '6.0.0-beta4', dataKey = 'td';
+    const NAME = 'tempus-dominus', version = '6.0.0-beta5', dataKey = 'td';
     /**
      * Events
      */
@@ -1075,7 +1091,7 @@
              * Also handles complex options like disabledDates
              * @param provided An option from new providedOptions
              * @param mergeOption Default option to compare types against
-             * @param copyTo Destination object. This was add to prevent reference copies
+             * @param copyTo Destination object. This was added to prevent reference copies
              */
             const spread = (provided, mergeOption, copyTo) => {
                 const unsupportedOptions = Object.keys(provided).filter((x) => !Object.keys(mergeOption).includes(x));
@@ -1234,7 +1250,6 @@
             if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
                 Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of numbers');
             }
-            return;
         }
         /**
          * Attempts to convert `d` to a DateTime object
@@ -1252,22 +1267,22 @@
             return converted;
         }
         static getFlattenDefaultOptions() {
-            if (this._flatback)
-                return this._flatback;
+            if (this._flattenDefaults)
+                return this._flattenDefaults;
             const deepKeys = (t, pre = []) => Array.isArray(t)
                 ? []
                 : Object(t) === t
                     ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
                     : pre.join('.');
-            this._flatback = deepKeys(DefaultOptions);
-            return this._flatback;
+            this._flattenDefaults = deepKeys(DefaultOptions);
+            return this._flattenDefaults;
         }
         /**
          * Some options conflict like min/max date. Verify that these kinds of options
          * are set correctly.
          * @param config
          */
-        static _validateConflcits(config) {
+        static _validateConflicts(config) {
             if (config.display.sideBySide &&
                 (!config.display.components.clock ||
                     !(config.display.components.hours ||
@@ -1622,6 +1637,7 @@
                 else {
                     this._dates.splice(index, 1);
                 }
+                updateInput();
                 this._eventEmitters.triggerEvent.emit({
                     type: Namespace.events.change,
                     date: undefined,
@@ -1629,7 +1645,6 @@
                     isClear,
                     isValid: true,
                 });
-                updateInput();
                 this._eventEmitters.updateDisplay.emit('all');
                 return;
             }
@@ -2954,18 +2969,21 @@
         }
         /**
          * Builds an icon tag as either an `<i>`
-         * or with icons.type is `sprites` then an svg tag instead
+         * or with icons.type is `sprites` then a svg tag instead
          * @param iconClass
          * @private
          */
         _iconTag(iconClass) {
             if (this.optionsStore.options.display.icons.type === 'sprites') {
-                const svg = document.createElement('svg');
-                svg.innerHTML = `<use xlink:href='${iconClass}'></use>`;
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                const icon = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                icon.setAttribute('xlink:href', iconClass); // Deprecated. Included for backward compatibility
+                icon.setAttribute('href', iconClass);
+                svg.appendChild(icon);
                 return svg;
             }
             const icon = document.createElement('i');
-            DOMTokenList.prototype.add.apply(icon.classList, iconClass.split(' '));
+            icon.classList.add(...iconClass.split(' '));
             return icon;
         }
         /**
@@ -3138,30 +3156,7 @@
                 case ActionTypes$1.showHours:
                 case ActionTypes$1.showMinutes:
                 case ActionTypes$1.showSeconds:
-                    this.optionsStore.currentView = 'clock';
-                    this.display.widget
-                        .querySelectorAll(`.${Namespace.css.timeContainer} > div`)
-                        .forEach((htmlElement) => (htmlElement.style.display = 'none'));
-                    let classToUse = '';
-                    switch (action) {
-                        case ActionTypes$1.showClock:
-                            classToUse = Namespace.css.clockContainer;
-                            this.display._update('clock');
-                            break;
-                        case ActionTypes$1.showHours:
-                            classToUse = Namespace.css.hourContainer;
-                            this.display._update(exports.Unit.hours);
-                            break;
-                        case ActionTypes$1.showMinutes:
-                            classToUse = Namespace.css.minuteContainer;
-                            this.display._update(exports.Unit.minutes);
-                            break;
-                        case ActionTypes$1.showSeconds:
-                            classToUse = Namespace.css.secondContainer;
-                            this.display._update(exports.Unit.seconds);
-                            break;
-                    }
-                    (this.display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
+                    this.handleShowClockContainers(action);
                     break;
                 case ActionTypes$1.clear:
                     this.dates.setValue(null);
@@ -3177,6 +3172,36 @@
                         this.dates.setValue(today, this.dates.lastPickedIndex);
                     break;
             }
+        }
+        handleShowClockContainers(action) {
+            if (!this.display._hasTime) {
+                Namespace.errorMessages.throwError('Cannot show clock containers when time is disabled.');
+                return;
+            }
+            this.optionsStore.currentView = 'clock';
+            this.display.widget
+                .querySelectorAll(`.${Namespace.css.timeContainer} > div`)
+                .forEach((htmlElement) => (htmlElement.style.display = 'none'));
+            let classToUse = '';
+            switch (action) {
+                case ActionTypes$1.showClock:
+                    classToUse = Namespace.css.clockContainer;
+                    this.display._update('clock');
+                    break;
+                case ActionTypes$1.showHours:
+                    classToUse = Namespace.css.hourContainer;
+                    this.display._update(exports.Unit.hours);
+                    break;
+                case ActionTypes$1.showMinutes:
+                    classToUse = Namespace.css.minuteContainer;
+                    this.display._update(exports.Unit.minutes);
+                    break;
+                case ActionTypes$1.showSeconds:
+                    classToUse = Namespace.css.secondContainer;
+                    this.display._update(exports.Unit.seconds);
+                    break;
+            }
+            (this.display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
         }
         handleNextPrevious(action) {
             const { unit, step } = CalendarModes[this.optionsStore.currentCalendarViewMode];
@@ -3228,7 +3253,10 @@
              * something for the remove listener function.
              * @private
              */
-            this._inputChangeEvent = () => {
+            this._inputChangeEvent = (event) => {
+                const internallyTriggered = event === null || event === void 0 ? void 0 : event.detail;
+                if (internallyTriggered)
+                    return;
                 const setViewDate = () => {
                     if (this.dates.lastPicked)
                         this.optionsStore.viewDate = this.dates.lastPicked;
@@ -3357,6 +3385,7 @@
          * @public
          */
         clear() {
+            this.optionsStore.input.value = '';
             this.dates.clear();
         }
         // noinspection JSUnusedGlobalSymbols
@@ -3370,7 +3399,7 @@
             if (typeof eventTypes === 'string') {
                 eventTypes = [eventTypes];
             }
-            let callBackArray = [];
+            let callBackArray;
             if (!Array.isArray(callbacks)) {
                 callBackArray = [callbacks];
             }
@@ -3432,7 +3461,7 @@
          * @private
          */
         _triggerEvent(event) {
-            var _a;
+            var _a, _b;
             event.viewMode = this.optionsStore.currentView;
             const isChangeEvent = event.type === Namespace.events.change;
             if (isChangeEvent) {
@@ -3443,6 +3472,7 @@
                 }
                 this._handleAfterChangeEvent(event);
                 (_a = this.optionsStore.input) === null || _a === void 0 ? void 0 : _a.dispatchEvent(new CustomEvent(event.type, { detail: event }));
+                (_b = this.optionsStore.input) === null || _b === void 0 ? void 0 : _b.dispatchEvent(new CustomEvent('change', { detail: event }));
             }
             this.optionsStore.element.dispatchEvent(new CustomEvent(event.type, { detail: event }));
             if (window.jQuery) {
@@ -3468,7 +3498,6 @@
         }
         /**
          * Fires a ViewUpdate event when, for example, the month view is changed.
-         * @param {Unit} unit
          * @private
          */
         _viewUpdate() {
@@ -3492,7 +3521,7 @@
             config = OptionConverter._mergeOptions(config, mergeTo);
             if (includeDataset)
                 config = OptionConverter._dataToOptions(this.optionsStore.element, config);
-            OptionConverter._validateConflcits(config);
+            OptionConverter._validateConflicts(config);
             config.viewDate = config.viewDate.setLocale(config.localization.locale);
             if (!this.optionsStore.viewDate.isSame(config.viewDate)) {
                 this.optionsStore.viewDate = config.viewDate;
@@ -3611,27 +3640,33 @@
      * locale name. E.g. loadedLocales['ru']
      */
     const loadedLocales = {};
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Called from a locale plugin.
-     * @param locale locale object for localization options
-     * @param name name of the language e.g 'ru', 'en-gb'
+     * @param l locale object for localization options
      */
-    const loadLocale = (locale) => {
-        if (loadedLocales[locale.name])
+    const loadLocale = (l) => {
+        if (loadedLocales[l.name])
             return;
-        loadedLocales[locale.name] = locale.localization;
+        loadedLocales[l.name] = l.localization;
     };
     /**
      * A sets the global localization options to the provided locale name.
-     * `locadLocale` MUST be called first.
-     * @param locale
+     * `loadLocale` MUST be called first.
+     * @param l
      */
-    const locale = (locale) => {
-        let asked = loadedLocales[locale];
+    const locale = (l) => {
+        let asked = loadedLocales[l];
         if (!asked)
             return;
         DefaultOptions.localization = asked;
     };
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Called from a plugin to extend or override picker defaults.
+     * @param plugin
+     * @param option
+     */
     const extend = function (plugin, option) {
         if (!plugin.$i) {
             // install plugin only once

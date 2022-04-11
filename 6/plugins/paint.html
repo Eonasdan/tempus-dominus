@@ -17,14 +17,14 @@
 
   <meta name="title" content="Plugins - Paint">
   <meta name="description" content="How to use add custom classes with Tempus Dominus.
-  ">
+    ">
 
   
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://getdatepicker.com/docs/6//plugins/paint.html">
   <meta property="og:title" content="Plugins - Paint">
   <meta property="og:description" content="How to use add custom classes with Tempus Dominus.
-  ">
+    ">
   <meta class="metaImage" property="og:image" content="">
 
   <meta property="article:published_time" content="2022-02-05T00:00:00.000Z">
@@ -40,7 +40,7 @@
   <meta property="twitter:url" content="https://getdatepicker.com/docs/6//plugins/paint.html">
   <meta property="twitter:title" content="Plugins - Paint">
   <meta property="twitter:description" content="How to use add custom classes with Tempus Dominus.
-  ">
+    ">
   <meta class="metaImage" property="twitter:image" content="">
   <link rel="stylesheet" href="/css/styles.min.css">
 
@@ -237,43 +237,43 @@
     </div>
   </div>
   <div id="mainContent" class="bd-content ps-lg-4">
-  <section>
-    <p>
-      You can customize the css classes applied to dates by overwritting the <code>display.paint</code>.
-      The fuunction provides a <a href="../namespace/unit.html">Unit</a> value (extended to include "decade"),
-      the date involved and an array of string that represents the classes that will be applied.
-    </p>
     <section>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6">
-            <label for="datetimepicker1Input" class="form-label">Simple picker</label>
-            <div class="input-group log-event" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
-              <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1">
-              <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
+        <p>
+            You can customize the css classes applied to dates by overwritting the <code>display.paint</code>.
+            The fuunction provides a <a href="../namespace/unit.html">Unit</a> value (extended to include "decade"),
+            the date involved and an array of string that represents the classes that will be applied.
+        </p>
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="datetimepicker1Input" class="form-label">Simple picker</label>
+                        <div class="input-group log-event" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                            <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1">
+                            <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
                <span class="fas fa-calendar"></span>
              </span>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <script type="text/javascript">
-        const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
-        datetimepicker1.display.paint = (unit, date, classes, element) => {
-          if (unit === tempusDominus.Unit.date) {
-            if (date.isSame(new tempusDominus.DateTime().manipulate(1, 'date'), unit)) {
-              classes.push('special-day');
-            }
-          }
-        }
-      </script>
-      <style>
-          .special-day {
-              background-color: deeppink !important;
-          }
-      </style>
-    </section>
-    <pre><code class="language-js">
+            <script type="text/javascript">
+                const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+                datetimepicker1.display.paint = (unit, date, classes, element) => {
+                    if (unit === tempusDominus.Unit.date) {
+                        if (date.isSame(new tempusDominus.DateTime().manipulate(1, 'date'), unit)) {
+                            classes.push('special-day');
+                        }
+                    }
+                }
+            </script>
+            <style>
+                .special-day {
+                    background-color: deeppink !important;
+                }
+            </style>
+        </section>
+        <pre><code class="language-js">
 //example picker
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
 
@@ -287,7 +287,7 @@ datetimepicker1.display.paint = (unit, date, classes, element) =&gt; {
 }
 </code>
     </pre>
-  </section>
+    </section>
 </div>
 </main>
 </div>

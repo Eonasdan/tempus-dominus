@@ -17,14 +17,14 @@
 
   <meta name="title" content="Functions">
   <meta name="description" content="How to use Tempus Dominus datetime picker
-  ">
+    ">
 
   
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://getdatepicker.com/docs/6//functions.html">
   <meta property="og:title" content="Functions">
   <meta property="og:description" content="How to use Tempus Dominus datetime picker
-  ">
+    ">
   <meta class="metaImage" property="og:image" content="">
 
   <meta property="article:published_time" content="2021-07-08T00:00:00.000Z">
@@ -40,7 +40,7 @@
   <meta property="twitter:url" content="https://getdatepicker.com/docs/6//functions.html">
   <meta property="twitter:title" content="Functions">
   <meta property="twitter:description" content="How to use Tempus Dominus datetime picker
-  ">
+    ">
   <meta class="metaImage" property="twitter:image" content="">
   <link rel="stylesheet" href="/css/styles.min.css">
 
@@ -237,234 +237,258 @@
     </div>
   </div>
   <div id="mainContent" class="bd-content ps-lg-4">
-  <section>
-    For the sake of the following documentation, assume there's a picker setup like this:
-    <pre>  <code class="language-javascript">
+    <section>
+        For the sake of the following documentation, assume there's a picker setup like this:
+        <pre>  <code class="language-javascript">
 const picker = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'));
   </code>
 </pre>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-6">
-          <label for="datetimepicker1Input" class="form-label">Simple picker</label>
-          <div class="input-group" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
-            <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1">
-            <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="datetimepicker1Input" class="form-label">Simple picker</label>
+                    <div class="input-group" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                        <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1">
+                        <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
                <span class="fa-solid fa-calendar"></span>
              </span>
-          </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+                </script>
+            </div>
         </div>
-        <script type="text/javascript">
-          const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
-        </script>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <h2 id="dates">Dates
-      <a class="anchorjs-link" aria-label="Anchor" href="#dates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <div class="row">
-      <div class="col offset-1">
-        <h3 id="viewDate">Getting the View Date
-          <a class="anchorjs-link" aria-label="Anchor" href="#viewDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-        </h3>
+    <section>
+        <h2 id="dates">Dates
+            <a class="anchorjs-link" aria-label="Anchor" href="#dates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+        </h2>
+        <div class="row">
+            <div class="col offset-1">
+                <h3 id="viewDate">Getting the View Date
+                    <a class="anchorjs-link" aria-label="Anchor" href="#viewDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                </h3>
+                <p>
+                    <code>picker.viewDate</code> returns the pickers current view date.
+                </p>
+                <h4 id="picker.dates">picker.dates
+                    <a class="anchorjs-link" aria-label="Anchor" href="#picker.dates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                </h4>
+                <p>
+                    There are a number of function here that allow for retrieving the selected dates or adding to them.
+                </p>
+                <div class="col offset-1">
+                    <h5 id="picked">picked
+                        <a class="anchorjs-link" aria-label="Anchor" href="#picked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Returns an array of <code>DateTime</code> of the selected date(s).
+                    </p>
+                    <h5 id="lastPicked">lastPicked
+                        <a class="anchorjs-link" aria-label="Anchor" href="#lastPicked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Returns the last picked <code>DateTime</code> of the selected date(s).
+                    </p>
+                    <h5 id="lastPickedIndex">lastPickedIndex
+                        <a class="anchorjs-link" aria-label="Anchor" href="#lastPickedIndex"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Returns the length of picked dates -1 or 0 if none are selected.
+                    </p>
+                    <h5 id="datesAdd">add(DateTime)
+                        <a class="anchorjs-link" aria-label="Anchor" href="#datesAdd"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Adds a new DateTime to selected dates array. Use this function with caution. It will not
+                        automatically
+                        refresh
+                        the
+                        widget or do any validation.
+                    </p>
+                    <h5 id="datesSet">setValue(value: DateTime, index?: number)
+                        <a class="anchorjs-link" aria-label="Anchor" href="#datesSet"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Sets the select date index (or the first, if not provided) to the provided DateTime object.
+                    </p>
+
+                    <h5 id="formatInput">formatInput(value: DateTime): string
+                        <a class="anchorjs-link" aria-label="Anchor" href="#formatInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Formats a DateTime object to a string. Used when setting the input value. It is possible to
+                        overwrite this
+                        to provide more complex formatting with moment/dayjs or by hand.
+                    </p>
+
+                    <h5 id="setFromInput">setFromInput(value: any, index?: number)
+                        <a class="anchorjs-link" aria-label="Anchor" href="#setFromInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Tries to convert the provided value to a DateTime object.
+                        If value is null|undefined then clear the value of the provided index (or 0). It is possible to
+                        overwrite
+                        this
+                        to provide more complex formatting with moment/dayjs or by hand.
+                    </p>
+
+                    <h5 id="isPicked">isPicked(DateTime, Unit?)
+                        <a class="anchorjs-link" aria-label="Anchor" href="#isPicked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Returns true if the target date is part of the selected dates array. If unit is provided then a
+                        granularity
+                        to that unit will be used.
+                    </p>
+                    <h5 id="pickedIndex">pickedIndex(DateTime, Unit?)
+                        <a class="anchorjs-link" aria-label="Anchor" href="#pickedIndex"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Returns the index at which target date is in the array. This is used for updating or removing a
+                        date when
+                        multi-date is used. If unit is provided then a granularity to that unit will be used.
+                    </p>
+                    <h5 id="dateClear">clear
+                        <a class="anchorjs-link" aria-label="Anchor" href="#dateClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h5>
+                    <p>
+                        Clears all selected dates.
+                    </p>
+                    <p>
+                        <strong>Emits</strong> <code>Namespace.events.change</code> with the last picked date.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section>
+        <h2 id="updateOptions">updateOptions(object, boolean?)
+            <a class="anchorjs-link" aria-label="Anchor" href="#updateOptions"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+        </h2>
         <p>
-          <code>picker.viewDate</code> returns the pickers current view date.
+            In previous version there was a function to read/write to each of the provided options. This made it easy to
+            use
+            but made the code bulky and harder to maintain. <code>updateOptions</code> replaces those functions and
+            takes an
+            object of new options. This allows for multiple options to be set at the same time and works the same way as
+            when
+            setting up the picker.
         </p>
-        <h4 id="picker.dates">picker.dates
-          <a class="anchorjs-link" aria-label="Anchor" href="#picker.dates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-        </h4>
         <p>
-          There are a number of function here that allow for retrieving the selected dates or adding to them.
+            If the optional <code>reset</code> flag is provided then new options will be merged with the default values.
         </p>
-        <div class="col offset-1">
-          <h5 id="picked">picked
-            <a class="anchorjs-link" aria-label="Anchor" href="#picked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Returns an array of <code>DateTime</code> of the selected date(s).
-          </p>
-          <h5 id="lastPicked">lastPicked
-            <a class="anchorjs-link" aria-label="Anchor" href="#lastPicked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Returns the last picked <code>DateTime</code> of the selected date(s).
-          </p>
-          <h5 id="lastPickedIndex">lastPickedIndex
-            <a class="anchorjs-link" aria-label="Anchor" href="#lastPickedIndex"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Returns the length of picked dates -1 or 0 if none are selected.
-          </p>
-          <h5 id="datesAdd">add(DateTime)
-            <a class="anchorjs-link" aria-label="Anchor" href="#datesAdd"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Adds a new DateTime to selected dates array. Use this function with caution. It will not automatically
-            refresh
+    </section>
+
+    <section>
+        <h2 id="display">Display
+            <a class="anchorjs-link" aria-label="Anchor" href="#display"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+        </h2>
+        <div class="row">
+            <div class="col offset-1">
+                <h3 id="toggle">toggle</h3>
+                <p>Shows or hides the widget</p>
+                <h4 id="emits">Emits</h4>
+                <ul>
+                    <li>
+                        <p><code>Namespace.events.hide</code> - if the widget is hidden after the toggle call</p>
+                    </li>
+                    <li>
+                        <p><code>Namespace.events.show</code> - if the widget is show after the toggle call</p>
+                    </li>
+                    <li>
+                        <p><code>Namespace.events.change</code> - if the widget is opened for the first time and the
+                            input element
+                            is empty and <code>options.useCurrent != false</code></p>
+                    </li>
+                </ul>
+
+                <h3 id="show">show
+                    <a class="anchorjs-link" aria-label="Anchor" href="#show"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                <p>Shows the widget</p>
+                <h4>Emits</h4>
+                <ul>
+                    <li>
+                        <p><code>Namespace.events.show</code> - if the widget was hidden before that call</p>
+                    </li>
+                    <li>
+                        <p><code>Namespace.events.change</code> - if the widget is opened for the first time and the
+                            <code>useCurrent</code> is set to true or to a granularity value and the input element the
+                            component is
+                            attached to has an empty value</p>
+                    </li>
+                </ul>
+                <h3 id="hide">hide
+                    <a class="anchorjs-link" aria-label="Anchor" href="#hide"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                <p>Hides the widget</p>
+                <h4>Emits</h4>
+                <ul>
+                    <li><code>Namespace.events.hide</code> - if the widget was visible before that call</li>
+                </ul>
+                <h3 id="paint">paint(Unit | 'decade', DateTime, string[], HTMLElement)</h3>
+                <p>
+                    Allows developers to add/remove classes from an element. During the grid generation code, this function is called.
+                </p>
+                <p>
+                    It provides the unit that is being generated (i.e. displaying the main date view), the date time object
+                    being effected, the current set of css classes and the container element.
+                </p>
+                <p>Check out the <a href="6/plugins/paint.html">example paint plugin</a>.</p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2 id="dispose">dispose
+            <a class="anchorjs-link" aria-label="Anchor" href="#dispose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+        <p>Destroys the widget and removes all attached event listeners. If the picker is open it will be hidden and the
+            event fired.</p>
+    </section>
+    <section>
+        <h2 id="disable">disable
+            <a class="anchorjs-link" aria-label="Anchor" href="#disable"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+        <p>Disables the input element and the component is attached to, by adding a <code>disabled="true"</code>
+            attribute
+            to
+            it. If the widget was visible before that call it is hidden.</p>
+        <h3>Emits</h3>
+        <ul>
+            <li><code>Namespace.events.hide</code> - if the widget was visible before this call</li>
+        </ul>
+    </section>
+    <section>
+        <h2 id="enable">enable
+            <a class="anchorjs-link" aria-label="Anchor" href="#enable"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+        <p>Enables the input element and the component is attached to, by removing <code>disabled</code> attribute from
+            it.
+        </p>
+    </section>
+    <section>
+        <h2 id="clear">clear
+            <a class="anchorjs-link" aria-label="Anchor" href="#clear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+        <p>Clears all selected dates. This is a short cut to <code>picker.dates.clear()</code></p>
+    </section>
+    <section>
+        <h2 id="subscribe">subscribe(event | events[], callback | callbacks[])
+            <a class="anchorjs-link" aria-label="Anchor" href="#subscribe"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+        <p>
+            Instead of adding event listeners to the pickers element, you can use the subscribe method. You can provide
+            a
+            single event to listen for or an array of events. When providing an array the number of callbacks must be
             the
-            widget or do any validation.
-          </p>
-          <h5 id="datesSet">setValue(value: DateTime, index?: number)
-            <a class="anchorjs-link" aria-label="Anchor" href="#datesSet"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Sets the select date index (or the first, if not provided) to the provided DateTime object.
-          </p>
-          
-          <h5 id="formatInput">formatInput(value: DateTime): string
-            <a class="anchorjs-link" aria-label="Anchor" href="#formatInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Formats a DateTime object to a string. Used when setting the input value. It is possible to overwrite this
-            to provide more complex formatting with moment/dayjs or by hand.
-          </p>
-
-          <h5 id="setFromInput">setFromInput(value: any, index?: number)
-            <a class="anchorjs-link" aria-label="Anchor" href="#setFromInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Tries to convert the provided value to a DateTime object.
-            If value is null|undefined then clear the value of the provided index (or 0). It is possible to overwrite
-            this
-            to provide more complex formatting with moment/dayjs or by hand.
-          </p>
-          
-          <h5 id="isPicked">isPicked(DateTime, Unit?)
-            <a class="anchorjs-link" aria-label="Anchor" href="#isPicked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Returns true if the target date is part of the selected dates array. If unit is provided then a granularity
-            to that unit will be used.
-          </p>
-          <h5 id="pickedIndex">pickedIndex(DateTime, Unit?)
-            <a class="anchorjs-link" aria-label="Anchor" href="#pickedIndex"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Returns the index at which target date is in the array. This is used for updating or removing a date when
-            multi-date is used. If unit is provided then a granularity to that unit will be used.
-          </p>
-          <h5 id="dateClear">clear
-            <a class="anchorjs-link" aria-label="Anchor" href="#dateClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h5>
-          <p>
-            Clears all selected dates.
-          </p>
-          <p>
-            <strong>Emits</strong> <code>Namespace.events.change</code> with the last picked date.
-          </p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <section>
-    <h2 id="updateOptions">updateOptions(object, boolean?)
-      <a class="anchorjs-link" aria-label="Anchor" href="#updateOptions"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      In previous version there was a function to read/write to each of the provided options. This made it easy to use
-      but made the code bulky and harder to maintain. <code>updateOptions</code> replaces those functions and takes an
-      object of new options. This allows for multiple options to be set at the same time and works the same way as when
-      setting up the picker.
-    </p>
-    <p>
-      If the optional <code>reset</code> flag is provided then new options will be merged with the default values.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="display">Display
-      <a class="anchorjs-link" aria-label="Anchor" href="#display"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <div class="row">
-      <div class="col offset-1">
-        <h3 id="toggle">toggle</h3>
-        <p>Shows or hides the widget</p>
-        <h4 id="emits">Emits</h4>
-        <ul>
-          <li>
-            <p><code>Namespace.events.hide</code> - if the widget is hidden after the toggle call</p>
-          </li>
-          <li>
-            <p><code>Namespace.events.show</code> - if the widget is show after the toggle call</p>
-          </li>
-          <li>
-            <p><code>Namespace.events.change</code> - if the widget is opened for the first time and the input element
-              is empty and <code>options.useCurrent != false</code></p>
-          </li>
-        </ul>
-
-        <h3 id="show">show
-          <a class="anchorjs-link" aria-label="Anchor" href="#show"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-        <p>Shows the widget</p>
-        <h4>Emits</h4>
-        <ul>
-          <li>
-            <p><code>Namespace.events.show</code> - if the widget was hidden before that call</p>
-          </li>
-          <li>
-            <p><code>Namespace.events.change</code> - if the widget is opened for the first time and the
-              <code>useCurrent</code> is set to true or to a granularity value and the input element the component is
-              attached to has an empty value</p>
-          </li>
-        </ul>
-        <h3 id="hide">hide
-          <a class="anchorjs-link" aria-label="Anchor" href="#hide"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-        <p>Hides the widget</p>
-        <h4>Emits</h4>
-        <ul>
-          <li><code>Namespace.events.hide</code> - if the widget was visible before that call</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-  <section>
-    <h2 id="dispose">dispose
-      <a class="anchorjs-link" aria-label="Anchor" href="#dispose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>Destroys the widget and removes all attached event listeners. If the picker is open it will be hidden and the
-      event fired.</p>
-  </section>
-  <section>
-    <h2 id="disable">disable
-      <a class="anchorjs-link" aria-label="Anchor" href="#disable"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>Disables the input element and the component is attached to, by adding a <code>disabled="true"</code> attribute
-      to
-      it. If the widget was visible before that call it is hidden.</p>
-    <h3>Emits</h3>
-    <ul>
-      <li><code>Namespace.events.hide</code> - if the widget was visible before this call</li>
-    </ul>
-  </section>
-  <section>
-    <h2 id="enable">enable
-      <a class="anchorjs-link" aria-label="Anchor" href="#enable"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>Enables the input element and the component is attached to, by removing <code>disabled</code> attribute from it.
-    </p>
-  </section>
-  <section>
-    <h2 id="clear">clear
-      <a class="anchorjs-link" aria-label="Anchor" href="#clear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>Clears all selected dates. This is a short cut to <code>picker.dates.clear()</code></p>
-  </section>
-  <section>
-    <h2 id="subscribe">subscribe(event | events[], callback | callbacks[])
-      <a class="anchorjs-link" aria-label="Anchor" href="#subscribe"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Instead of adding event listeners to the pickers element, you can use the subscribe method. You can provide a
-      single event to listen for or an array of events. When providing an array the number of callbacks must be the
-      same as the number of events.
-    </p>
-    <p>
-      The subscribe method returns an unsubscribe method or an array of methods if multiple events are provided. Calling
-      unsubscribe remove the callback from the event listeners. Unsubscribing will not prevent
-      <code>addEventListener()</code> from working.
-    </p>
-    <pre>      <code class="language-javascript">
+            same as the number of events.
+        </p>
+        <p>
+            The subscribe method returns an unsubscribe method or an array of methods if multiple events are provided.
+            Calling
+            unsubscribe remove the callback from the event listeners. Unsubscribing will not prevent
+            <code>addEventListener()</code> from working.
+        </p>
+        <pre>      <code class="language-javascript">
 const subscription = picker.subscribe(tempusdominus.Namespace.events.change, (e) =&gt; {
   console.log(e);
 });
@@ -479,7 +503,7 @@ const subscriptions = picker.subscribe(
 )
       </code>
     </pre>
-  </section>
+    </section>
 </div>
 </main>
 </div>

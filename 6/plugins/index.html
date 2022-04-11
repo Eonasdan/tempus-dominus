@@ -17,14 +17,14 @@
 
   <meta name="title" content="Plugins">
   <meta name="description" content="How to use plugins with Tempus Dominus.
-  ">
+    ">
 
   
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://getdatepicker.com/docs/6//plugins/index.html">
   <meta property="og:title" content="Plugins">
   <meta property="og:description" content="How to use plugins with Tempus Dominus.
-  ">
+    ">
   <meta class="metaImage" property="og:image" content="">
 
   <meta property="article:published_time" content="2022-01-19T00:00:00.000Z">
@@ -40,7 +40,7 @@
   <meta property="twitter:url" content="https://getdatepicker.com/docs/6//plugins/index.html">
   <meta property="twitter:title" content="Plugins">
   <meta property="twitter:description" content="How to use plugins with Tempus Dominus.
-  ">
+    ">
   <meta class="metaImage" property="twitter:image" content="">
   <link rel="stylesheet" href="/css/styles.min.css">
 
@@ -237,19 +237,19 @@
     </div>
   </div>
   <div id="mainContent" class="bd-content ps-lg-4">
-  <section>
-    <h3>Introduction</h3>
-    <p>
-      Plugins allow you to extend the picker by adding new functionality to either Tempus Dominus globally,
-      a single picker or by overwritting existing functionality.
-    </p>
-  </section>
-  <section>
-    <h3>Creating plugins</h3>
-    <p>
-      There are a few examples in the source like this
-    </p>
-    <pre>      <code class="language-javascript">
+    <section>
+        <h3>Introduction</h3>
+        <p>
+            Plugins allow you to extend the picker by adding new functionality to either Tempus Dominus globally,
+            a single picker or by overwritting existing functionality.
+        </p>
+    </section>
+    <section>
+        <h3>Creating plugins</h3>
+        <p>
+            There are a few examples in the source like this
+        </p>
+        <pre>      <code class="language-javascript">
 export const load = (option, tdClasses, tdFactory) =&gt; {
   // extend the picker
   // e.g. add new tempusDominus.TempusDominus(...).someFunction()
@@ -278,11 +278,11 @@ export const load = (option, tdClasses, tdFactory) =&gt; {
 }
       </code>
     </pre>
-    <h3>Using a plugin</h3>
-    <p>
-      Using a plugin is easy. Load the plugin script file after you load Tempus Dominus
-    </p>
-    <pre>      <code class="language-html">
+        <h3>Using a plugin</h3>
+        <p>
+            Using a plugin is easy. Load the plugin script file after you load Tempus Dominus
+        </p>
+        <pre>      <code class="language-html">
 &lt;script src="/path/to/plugin.js"&gt;&lt;/script&gt;
       </code>
       <code class="language-js">
@@ -290,10 +290,10 @@ tempusDominus.extend(window.tempusDominus.plugins.PLUGINNAME);
       </code>
     </pre>
 
-    <p>
-      You can also use plugins in Typescript or Node.
-    </p>
-    <pre>      <code class="language-js">
+        <p>
+            You can also use plugins in Typescript or Node.
+        </p>
+        <pre>      <code class="language-js">
 const example = require('tempusDominus/plugins/examples/sample')
 // or
 import example from 'tempusDominus/plugins/examples/sample'
@@ -301,7 +301,23 @@ import example from 'tempusDominus/plugins/examples/sample'
 tempusDominus.extend(example) // use plugin
       </code>
     </pre>
-  </section>
+    </section>
+    <section>
+        <h2 id="perPicker">Per Picker</h2>
+        <p>
+            It is possible to use this system per picker. For instance:
+        </p>
+<pre><code class="language-js">
+const td = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+
+td.dates.formatInput = function(date) { {return moment(date).format('MM/DD/YYYY') } }
+</code>
+</pre>
+        <p>
+            The code above would affect a single picker but not globally. You could easily adapt this code to
+            have a common formatting function taking in a format string.
+        </p>
+    </section>
 </div>
 </main>
 </div>
