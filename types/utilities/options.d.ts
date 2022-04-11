@@ -63,7 +63,7 @@ export default interface Options {
             down?: string;
             close?: string;
         };
-        viewMode?: keyof ViewMode | undefined;
+        viewMode: keyof ViewMode | undefined;
         sideBySide?: boolean;
         inline?: boolean;
         keepOpen?: boolean;
@@ -143,12 +143,12 @@ export declare class OptionConverter {
      * @param optionName Provides text to error messages e.g. disabledDates
      */
     static dateConversion(d: any, optionName: string): DateTime;
-    private static _flatback;
+    private static _flattenDefaults;
     private static getFlattenDefaultOptions;
     /**
      * Some options conflict like min/max date. Verify that these kinds of options
      * are set correctly.
      * @param config
      */
-    static _validateConflcits(config: Options): void;
+    static _validateConflicts(config: Options): void;
 }

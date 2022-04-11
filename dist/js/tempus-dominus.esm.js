@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta4 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta5 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -14,6 +14,18 @@ var Unit;
     Unit["month"] = "month";
     Unit["year"] = "year";
 })(Unit || (Unit = {}));
+const twoDigitTemplate = {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+};
+const twoDigitTwentyForTemplate = {
+    hour12: false
+};
 const getFormatByUnit = (unit) => {
     switch (unit) {
         case 'date':
@@ -267,7 +279,7 @@ class DateTime extends Date {
      * Returns two digit hours
      */
     get secondsFormatted() {
-        return this.seconds < 10 ? `0${this.seconds}` : `${this.seconds}`;
+        return this.parts(undefined, twoDigitTemplate).seconds;
     }
     /**
      * Shortcut to Date.getMinutes()
@@ -285,7 +297,7 @@ class DateTime extends Date {
      * Returns two digit minutes
      */
     get minutesFormatted() {
-        return this.minutes < 10 ? `0${this.minutes}` : `${this.minutes}`;
+        return this.parts(undefined, twoDigitTemplate).minute;
     }
     /**
      * Shortcut to Date.getHours()
@@ -303,7 +315,7 @@ class DateTime extends Date {
      * Returns two digit hours
      */
     get hoursFormatted() {
-        let formatted = this.format({ hour: '2-digit', hour12: false });
+        let formatted = this.parts(undefined, twoDigitTwentyForTemplate).hour;
         if (formatted === '24')
             formatted = '00';
         return formatted;
@@ -312,10 +324,7 @@ class DateTime extends Date {
      * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
      */
     get twelveHoursFormatted() {
-        let hour = this.parts().hour;
-        if (hour.length === 1)
-            hour = `0${hour}`;
-        return hour;
+        return this.parts(undefined, twoDigitTemplate).hour;
     }
     /**
      * Get the meridiem of the date. E.g. AM or PM.
@@ -348,7 +357,7 @@ class DateTime extends Date {
      * Return two digit date
      */
     get dateFormatted() {
-        return this.date < 10 ? `0${this.date}` : `${this.date}`;
+        return this.parts(undefined, twoDigitTemplate).day;
     }
     /**
      * Shortcut to Date.getDay()
@@ -378,8 +387,7 @@ class DateTime extends Date {
      * Return two digit, human expected month. E.g. January = 1, December = 12
      */
     get monthFormatted() {
-        const humanMonth = this.month + 1;
-        return humanMonth < 10 ? `0${humanMonth}` : `${humanMonth}`;
+        return this.parts(undefined, twoDigitTemplate).month;
     }
     /**
      * Shortcut to Date.getFullYear()
@@ -558,7 +566,7 @@ class ErrorMessages {
 }
 
 // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-const NAME = 'tempus-dominus', version = '6.0.0-beta4', dataKey = 'td';
+const NAME = 'tempus-dominus', version = '6.0.0-beta5', dataKey = 'td';
 /**
  * Events
  */
@@ -1079,7 +1087,7 @@ class OptionConverter {
          * Also handles complex options like disabledDates
          * @param provided An option from new providedOptions
          * @param mergeOption Default option to compare types against
-         * @param copyTo Destination object. This was add to prevent reference copies
+         * @param copyTo Destination object. This was added to prevent reference copies
          */
         const spread = (provided, mergeOption, copyTo) => {
             const unsupportedOptions = Object.keys(provided).filter((x) => !Object.keys(mergeOption).includes(x));
@@ -1238,7 +1246,6 @@ class OptionConverter {
         if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
             Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of numbers');
         }
-        return;
     }
     /**
      * Attempts to convert `d` to a DateTime object
@@ -1256,22 +1263,22 @@ class OptionConverter {
         return converted;
     }
     static getFlattenDefaultOptions() {
-        if (this._flatback)
-            return this._flatback;
+        if (this._flattenDefaults)
+            return this._flattenDefaults;
         const deepKeys = (t, pre = []) => Array.isArray(t)
             ? []
             : Object(t) === t
                 ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
                 : pre.join('.');
-        this._flatback = deepKeys(DefaultOptions);
-        return this._flatback;
+        this._flattenDefaults = deepKeys(DefaultOptions);
+        return this._flattenDefaults;
     }
     /**
      * Some options conflict like min/max date. Verify that these kinds of options
      * are set correctly.
      * @param config
      */
-    static _validateConflcits(config) {
+    static _validateConflicts(config) {
         if (config.display.sideBySide &&
             (!config.display.components.clock ||
                 !(config.display.components.hours ||
@@ -2964,8 +2971,11 @@ class Display {
      */
     _iconTag(iconClass) {
         if (this.optionsStore.options.display.icons.type === 'sprites') {
-            const svg = document.createElement('svg');
-            svg.innerHTML = `<use xlink:href='${iconClass}'></use>`;
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            const icon = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+            icon.setAttribute('xlink:href', iconClass); // Deprecated. Included for backward compatibility
+            icon.setAttribute('href', iconClass);
+            svg.appendChild(icon);
             return svg;
         }
         const icon = document.createElement('i');
@@ -3239,7 +3249,10 @@ class TempusDominus {
          * something for the remove listener function.
          * @private
          */
-        this._inputChangeEvent = () => {
+        this._inputChangeEvent = (event) => {
+            const internallyTriggered = event === null || event === void 0 ? void 0 : event.detail;
+            if (internallyTriggered)
+                return;
             const setViewDate = () => {
                 if (this.dates.lastPicked)
                     this.optionsStore.viewDate = this.dates.lastPicked;
@@ -3444,7 +3457,7 @@ class TempusDominus {
      * @private
      */
     _triggerEvent(event) {
-        var _a;
+        var _a, _b;
         event.viewMode = this.optionsStore.currentView;
         const isChangeEvent = event.type === Namespace.events.change;
         if (isChangeEvent) {
@@ -3455,6 +3468,7 @@ class TempusDominus {
             }
             this._handleAfterChangeEvent(event);
             (_a = this.optionsStore.input) === null || _a === void 0 ? void 0 : _a.dispatchEvent(new CustomEvent(event.type, { detail: event }));
+            (_b = this.optionsStore.input) === null || _b === void 0 ? void 0 : _b.dispatchEvent(new CustomEvent('change', { detail: event }));
         }
         this.optionsStore.element.dispatchEvent(new CustomEvent(event.type, { detail: event }));
         if (window.jQuery) {
@@ -3503,7 +3517,7 @@ class TempusDominus {
         config = OptionConverter._mergeOptions(config, mergeTo);
         if (includeDataset)
             config = OptionConverter._dataToOptions(this.optionsStore.element, config);
-        OptionConverter._validateConflcits(config);
+        OptionConverter._validateConflicts(config);
         config.viewDate = config.viewDate.setLocale(config.localization.locale);
         if (!this.optionsStore.viewDate.isSame(config.viewDate)) {
             this.optionsStore.viewDate = config.viewDate;
