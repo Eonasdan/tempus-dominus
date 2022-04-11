@@ -205,6 +205,8 @@ export default class Dates {
         this._dates.splice(index, 1);
       }
 
+      updateInput();
+
       this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
         date: undefined,
@@ -213,7 +215,6 @@ export default class Dates {
         isValid: true,
       } as ChangeEvent);
 
-      updateInput();
       this._eventEmitters.updateDisplay.emit('all');
       return;
     }

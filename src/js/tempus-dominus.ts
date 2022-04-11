@@ -1,5 +1,4 @@
 import Display from './display/index';
-import Validation from './validation';
 import Dates from './dates';
 import Actions from './actions';
 import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
@@ -9,7 +8,6 @@ import {
   BaseEvent,
   ChangeEvent,
   ViewUpdateEvent,
-  FailEvent,
 } from './utilities/event-types';
 import { EventEmitters } from './utilities/event-emitter';
 import {
@@ -142,6 +140,7 @@ class TempusDominus {
    * @public
    */
   clear(): void {
+    this.optionsStore.input.value = '';
     this.dates.clear();
   }
 
@@ -159,7 +158,7 @@ class TempusDominus {
     if (typeof eventTypes === 'string') {
       eventTypes = [eventTypes];
     }
-    let callBackArray = [];
+    let callBackArray: any[];
     if (!Array.isArray(callbacks)) {
       callBackArray = [callbacks];
     } else {
@@ -254,6 +253,10 @@ class TempusDominus {
       this.optionsStore.input?.dispatchEvent(
         new CustomEvent(event.type, { detail: event as any })
       );
+
+      this.optionsStore.input?.dispatchEvent(
+          new CustomEvent('change', { detail: event as any })
+      );
     }
 
     this.optionsStore.element.dispatchEvent(
@@ -287,7 +290,6 @@ class TempusDominus {
 
   /**
    * Fires a ViewUpdate event when, for example, the month view is changed.
-   * @param {Unit} unit
    * @private
    */
   private _viewUpdate() {
@@ -320,7 +322,7 @@ class TempusDominus {
         config
       );
 
-    OptionConverter._validateConflcits(config);
+    OptionConverter._validateConflicts(config);
 
     config.viewDate = config.viewDate.setLocale(config.localization.locale);
 
@@ -463,7 +465,10 @@ class TempusDominus {
    * something for the remove listener function.
    * @private
    */
-  private _inputChangeEvent = () => {
+  private _inputChangeEvent = (event?: any) => {
+    const internallyTriggered = event?.detail;
+    if (internallyTriggered) return;
+
     const setViewDate = () => {
       if (this.dates.lastPicked)
         this.optionsStore.viewDate = this.dates.lastPicked;
@@ -506,27 +511,33 @@ class TempusDominus {
  */
 const loadedLocales = {};
 
+// noinspection JSUnusedGlobalSymbols
 /**
  * Called from a locale plugin.
- * @param locale locale object for localization options
- * @param name name of the language e.g 'ru', 'en-gb'
+ * @param l locale object for localization options
  */
-const loadLocale = (locale) => {
-  if (loadedLocales[locale.name]) return;
-  loadedLocales[locale.name] = locale.localization;
+const loadLocale = (l) => {
+  if (loadedLocales[l.name]) return;
+  loadedLocales[l.name] = l.localization;
 };
 
 /**
  * A sets the global localization options to the provided locale name.
- * `locadLocale` MUST be called first.
- * @param locale
+ * `loadLocale` MUST be called first.
+ * @param l
  */
-const locale = (locale: string) => {
-  let asked = loadedLocales[locale];
+const locale = (l: string) => {
+  let asked = loadedLocales[l];
   if (!asked) return;
   DefaultOptions.localization = asked;
 };
 
+// noinspection JSUnusedGlobalSymbols
+/**
+ * Called from a plugin to extend or override picker defaults.
+ * @param plugin
+ * @param option
+ */
 const extend = function (plugin, option) {
   if (!plugin.$i) {
     // install plugin only once

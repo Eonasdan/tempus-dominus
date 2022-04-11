@@ -647,18 +647,23 @@ export default class Display {
 
   /**
    * Builds an icon tag as either an `<i>`
-   * or with icons.type is `sprites` then an svg tag instead
+   * or with icons.type is `sprites` then a svg tag instead
    * @param iconClass
    * @private
    */
-  _iconTag(iconClass: string): HTMLElement {
+  _iconTag(iconClass: string): HTMLElement|SVGElement {
     if (this.optionsStore.options.display.icons.type === 'sprites') {
-      const svg = document.createElement('svg');
-      svg.innerHTML = `<use xlink:href='${iconClass}'></use>`;
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      icon.setAttribute('xlink:href', iconClass); // Deprecated. Included for backward compatibility
+      icon.setAttribute('href', iconClass);
+      svg.appendChild(icon);
+      
       return svg;
     }
     const icon = document.createElement('i');
-    DOMTokenList.prototype.add.apply(icon.classList, iconClass.split(' '));
+    icon.classList.add(...iconClass.split(' '));
     return icon;
   }
 

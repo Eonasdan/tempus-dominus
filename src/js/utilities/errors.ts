@@ -1,5 +1,3 @@
-import Namespace from './namespace';
-
 export class TdError extends Error {
   code: number;
 }
@@ -142,6 +140,14 @@ export class ErrorMessages {
     console.warn(
       `${this.base} Using a string for date options is not recommended unless you specify an ISO string.`
     );
+  }
+
+  throwError(message) {
+    const error = new TdError(
+        `${this.base} ${message}`
+    );
+    error.code = 9;
+    throw error;
   }
 
   //#endregion

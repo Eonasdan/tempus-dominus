@@ -105,11 +105,11 @@ export default class Display {
     getHeadTemplate(): HTMLElement;
     /**
      * Builds an icon tag as either an `<i>`
-     * or with icons.type is `sprites` then an svg tag instead
+     * or with icons.type is `sprites` then a svg tag instead
      * @param iconClass
      * @private
      */
-    _iconTag(iconClass: string): HTMLElement;
+    _iconTag(iconClass: string): HTMLElement | SVGElement;
     /**
      * A document click event to hide the widget if click is outside
      * @private
