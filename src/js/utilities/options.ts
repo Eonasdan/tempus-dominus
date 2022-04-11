@@ -71,7 +71,7 @@ export default interface Options {
       down?: string;
       close?: string;
     };
-    viewMode?: keyof ViewMode | undefined;
+    viewMode: keyof ViewMode | undefined;
     sideBySide?: boolean;
     inline?: boolean;
     keepOpen?: boolean;
@@ -357,7 +357,7 @@ export class OptionConverter {
      * Also handles complex options like disabledDates
      * @param provided An option from new providedOptions
      * @param mergeOption Default option to compare types against
-     * @param copyTo Destination object. This was add to prevent reference copies
+     * @param copyTo Destination object. This was added to prevent reference copies
      */
     const spread = (provided, mergeOption, copyTo) => {
       const unsupportedOptions = Object.keys(provided).filter(
@@ -574,7 +574,6 @@ export class OptionConverter {
         'array of numbers'
       );
     }
-    return;
   }
 
   /**
@@ -599,10 +598,10 @@ export class OptionConverter {
     return converted;
   }
 
-  private static _flatback: string[];
+  private static _flattenDefaults: string[];
 
   private static getFlattenDefaultOptions(): string[] {
-    if (this._flatback) return this._flatback;
+    if (this._flattenDefaults) return this._flattenDefaults;
     const deepKeys = (t, pre = []) =>
       Array.isArray(t)
         ? []
@@ -610,9 +609,9 @@ export class OptionConverter {
         ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
         : pre.join('.');
 
-    this._flatback = deepKeys(DefaultOptions);
+    this._flattenDefaults = deepKeys(DefaultOptions);
 
-    return this._flatback;
+    return this._flattenDefaults;
   }
 
   /**
@@ -620,7 +619,7 @@ export class OptionConverter {
    * are set correctly.
    * @param config
    */
-  static _validateConflcits(config: Options) {
+  static _validateConflicts(config: Options) {
     if (
       config.display.sideBySide &&
       (!config.display.components.clock ||

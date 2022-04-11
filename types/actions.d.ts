@@ -15,6 +15,7 @@ export default class Actions {
      * @param action If not provided, then look for a [data-action]
      */
     do(e: any, action?: ActionTypes): boolean;
+    private handleShowClockContainers;
     private handleNextPrevious;
     /**
      * After setting the value it will either show the clock or hide the widget.

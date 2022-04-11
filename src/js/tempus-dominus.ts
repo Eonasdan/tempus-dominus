@@ -322,7 +322,7 @@ class TempusDominus {
         config
       );
 
-    OptionConverter._validateConflcits(config);
+    OptionConverter._validateConflicts(config);
 
     config.viewDate = config.viewDate.setLocale(config.localization.locale);
 
