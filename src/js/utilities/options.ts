@@ -120,6 +120,7 @@ export default interface Options {
   promptTimeOnDateChangeTransitionDelay?: number;
   meta?: {};
   container?: HTMLElement;
+  keybindings?: {[key: string]: () => boolean}
 }
 
 export class OptionConverter {
