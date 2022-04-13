@@ -63,6 +63,10 @@ class TempusDominus {
         this._eventEmitters.viewUpdate.subscribe(() => {
             this._viewUpdate();
         });
+
+        this._eventEmitters.registerKeydown.subscribe(() => {
+            this._registerKeybindings();
+        });
     }
 
     get viewDate() {
@@ -218,6 +222,7 @@ class TempusDominus {
             document.removeEventListener('keydown', this._keydownEvent)
         }
         this._subscribers = {};
+        this._eventEmitters.destroy();
     }
 
     /**
@@ -404,6 +409,7 @@ class TempusDominus {
 
         if (this.optionsStore.input) {
             this.optionsStore.input.addEventListener('keydown', this._keydownEvent);
+        }
     }
 
     /**

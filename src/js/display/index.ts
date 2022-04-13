@@ -552,10 +552,10 @@ export default class Display {
     if (this.optionsStore.options.display.icons.type === 'sprites') {
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
-      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-      icon.setAttribute('xlink:href', iconClass); // Deprecated. Included for backward compatibility
-      icon.setAttribute('href', iconClass);
-      svg.appendChild(icon);
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttribute('xlink:href', iconClass); // Deprecated. Included for backward compatibility
+      use.setAttribute('href', iconClass);
+      svg.appendChild(use);
 
       return svg;
     }
@@ -721,13 +721,6 @@ export default class Display {
     }
   }
 }
-
-export type Paint = (
-  unit: Unit | 'decade',
-  innerDate: DateTime,
-  classes: string[],
-  element: HTMLElement
-) => void;
 
 export type Paint = (
   unit: Unit | 'decade',
