@@ -82,7 +82,8 @@ const DefaultOptions: Options = {
     selectDate: 'Select Date',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'default',
-    startOfTheWeek: 0
+    startOfTheWeek: 0,
+    calendarWeekPrefix: 'Week number'
   },
   keepInvalid: false,
   debug: false,

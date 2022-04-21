@@ -8,7 +8,7 @@
 
 .bd-navbar {
   padding: .75rem 0;
-  background-color: var(--bs-primary);
+  background-color: #0250c5;
 
   .navbar-toggler {
     padding: 0;
@@ -18,7 +18,7 @@
   .navbar-nav .nav-link {
     padding-right: .25rem;
     padding-left: .25rem;
-    color: rgba(255, 255, 255, 0.85);
+    color: #fff;
 
     &:hover, &:focus {
       color: #fff;

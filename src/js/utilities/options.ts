@@ -80,6 +80,7 @@ export default interface Options {
   useCurrent?: boolean;
   defaultDate?: DateTime;
   localization?: {
+    calendarWeekPrefix?: string;
     nextMonth?: string;
     pickHour?: string;
     incrementSecond?: string;
@@ -109,6 +110,7 @@ export default interface Options {
     previousDecade?: string;
     locale?: string;
     startOfTheWeek?: number;
+
   };
   keepInvalid?: boolean;
   debug?: boolean;

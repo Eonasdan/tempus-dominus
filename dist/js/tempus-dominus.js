@@ -625,7 +625,7 @@
              */
             this.switch = 'picker-switch';
             /**
-             * The elements for all of the toolbar options
+             * The elements for all the toolbar options
              */
             this.toolbar = 'toolbar';
             /**
@@ -650,6 +650,10 @@
              */
             this.disabled = 'disabled';
             /**
+             * shh!!
+             */
+            this.hidden = 'visually-hidden';
+            /**
              * Applied to any date that is less than requested view,
              * e.g. the last day of the previous month.
              */
@@ -665,11 +669,11 @@
             this.active = 'active';
             //#region date element
             /**
-             * The outer most element for the calendar view.
+             * The outermost element for the calendar view.
              */
             this.dateContainer = 'date-container';
             /**
-             * The outer most element for the decades view.
+             * The outermost element for the decades view.
              */
             this.decadesContainer = `${this.dateContainer}-decades`;
             /**
@@ -677,15 +681,15 @@
              */
             this.decade = 'decade';
             /**
-             * The outer most element for the years view.
+             * The outermost element for the years view.
              */
             this.yearsContainer = `${this.dateContainer}-years`;
             /**
-             * Applied to elements within the years container, e.g. 2021, 2021
+             * Applied to elements within the years' container, e.g. 2021, 2021
              */
             this.year = 'year';
             /**
-             * The outer most element for the month view.
+             * The outermost element for the month view.
              */
             this.monthsContainer = `${this.dateContainer}-months`;
             /**
@@ -693,7 +697,7 @@
              */
             this.month = 'month';
             /**
-             * The outer most element for the calendar view.
+             * The outermost element for the calendar view.
              */
             this.daysContainer = `${this.dateContainer}-days`;
             /**
@@ -720,7 +724,7 @@
             //#endregion
             //#region time element
             /**
-             * The outer most element for all time related elements.
+             * The outermost element for all time related elements.
              */
             this.timeContainer = 'time-container';
             /**
@@ -728,31 +732,31 @@
              */
             this.separator = 'separator';
             /**
-             * The outer most element for the clock view.
+             * The outermost element for the clock view.
              */
             this.clockContainer = `${this.timeContainer}-clock`;
             /**
-             * The outer most element for the hours selection view.
+             * The outermost element for the hours' selection view.
              */
             this.hourContainer = `${this.timeContainer}-hour`;
             /**
-             * The outer most element for the minutes selection view.
+             * The outermost element for the minutes' selection view.
              */
             this.minuteContainer = `${this.timeContainer}-minute`;
             /**
-             * The outer most element for the seconds selection view.
+             * The outermost element for the seconds' selection view.
              */
             this.secondContainer = `${this.timeContainer}-second`;
             /**
-             * Applied to each element in the hours selection view.
+             * Applied to each element in the hours' selection view.
              */
             this.hour = 'hour';
             /**
-             * Applied to each element in the minutes selection view.
+             * Applied to each element in the minutes' selection view.
              */
             this.minute = 'minute';
             /**
-             * Applied to each element in the seconds selection view.
+             * Applied to each element in the seconds' selection view.
              */
             this.second = 'second';
             /**
@@ -1952,11 +1956,12 @@
                 containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
                 containerClone.setAttribute('data-day', `${innerDate.date}`);
                 containerClone.innerText = innerDate.format({ day: 'numeric' });
+                containerClone.ariaLabel = innerDate.format({ dateStyle: 'long' });
                 innerDate.manipulate(1, exports.Unit.date);
             });
         }
         /***
-         * Generates an html row that contains the days of the week.
+         * Generates a html row that contains the days of the week.
          * @private
          */
         _daysOfTheWeek() {
@@ -1974,7 +1979,14 @@
             for (let i = 0; i < 7; i++) {
                 const htmlDivElement = document.createElement('div');
                 htmlDivElement.classList.add(Namespace.css.dayOfTheWeek, Namespace.css.noHighlight);
-                htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
+                let span = document.createElement('span');
+                span.ariaHidden = 'true';
+                span.innerText = innerDate.format({ weekday: 'short' });
+                htmlDivElement.appendChild(span);
+                span = document.createElement('span');
+                span.classList.add(Namespace.css.hidden);
+                span.innerText = innerDate.format({ weekday: 'long' });
+                htmlDivElement.appendChild(span);
                 innerDate.manipulate(1, exports.Unit.date);
                 row.push(htmlDivElement);
             }
@@ -2223,58 +2235,70 @@
             timesDiv
                 .querySelectorAll('.disabled')
                 .forEach((element) => element.classList.remove(Namespace.css.disabled));
-            if (this.optionsStore.options.display.components.hours) {
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.hours), exports.Unit.hours)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes$1.incrementHours}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.hours), exports.Unit.hours)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                timesDiv.querySelector(`[data-time-component=${exports.Unit.hours}]`).innerText = this.optionsStore.options.display.components.useTwentyfourHour
-                    ? lastPicked.hoursFormatted
-                    : lastPicked.twelveHoursFormatted;
-            }
-            if (this.optionsStore.options.display.components.minutes) {
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.minutes), exports.Unit.minutes)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes$1.incrementMinutes}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.minutes), exports.Unit.minutes)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes$1.decrementMinutes}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                timesDiv.querySelector(`[data-time-component=${exports.Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
-            }
-            if (this.optionsStore.options.display.components.seconds) {
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.seconds), exports.Unit.seconds)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes$1.incrementSeconds}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.seconds), exports.Unit.seconds)) {
-                    timesDiv
-                        .querySelector(`[data-action=${ActionTypes$1.decrementSeconds}]`)
-                        .classList.add(Namespace.css.disabled);
-                }
-                timesDiv.querySelector(`[data-time-component=${exports.Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
-            }
-            if (!this.optionsStore.options.display.components.useTwentyfourHour) {
-                const toggle = timesDiv.querySelector(`[data-action=${ActionTypes$1.toggleMeridiem}]`);
-                toggle.innerText = lastPicked.meridiem();
-                if (!this.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, exports.Unit.hours))) {
-                    toggle.classList.add(Namespace.css.disabled);
-                }
-                else {
-                    toggle.classList.remove(Namespace.css.disabled);
-                }
-            }
+            this._updateHour(timesDiv, lastPicked);
+            this._updateMinute(timesDiv, lastPicked);
+            this._updateSecond(timesDiv, lastPicked);
+            this._updateTwentyfour(timesDiv, lastPicked);
             timesDiv.style.gridTemplateAreas = `"${this._gridColumns}"`;
+        }
+        _updateHour(timesDiv, lastPicked) {
+            if (!this.optionsStore.options.display.components.hours)
+                return;
+            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.hours), exports.Unit.hours)) {
+                timesDiv
+                    .querySelector(`[data-action=${ActionTypes$1.incrementHours}]`)
+                    .classList.add(Namespace.css.disabled);
+            }
+            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.hours), exports.Unit.hours)) {
+                timesDiv
+                    .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
+                    .classList.add(Namespace.css.disabled);
+            }
+            timesDiv.querySelector(`[data-time-component=${exports.Unit.hours}]`).innerText = this.optionsStore.options.display.components.useTwentyfourHour
+                ? lastPicked.hoursFormatted
+                : lastPicked.twelveHoursFormatted;
+        }
+        _updateMinute(timesDiv, lastPicked) {
+            if (!this.optionsStore.options.display.components.minutes)
+                return;
+            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.minutes), exports.Unit.minutes)) {
+                timesDiv
+                    .querySelector(`[data-action=${ActionTypes$1.incrementMinutes}]`)
+                    .classList.add(Namespace.css.disabled);
+            }
+            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.minutes), exports.Unit.minutes)) {
+                timesDiv
+                    .querySelector(`[data-action=${ActionTypes$1.decrementMinutes}]`)
+                    .classList.add(Namespace.css.disabled);
+            }
+            timesDiv.querySelector(`[data-time-component=${exports.Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
+        }
+        _updateSecond(timesDiv, lastPicked) {
+            if (!this.optionsStore.options.display.components.seconds)
+                return;
+            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.seconds), exports.Unit.seconds)) {
+                timesDiv
+                    .querySelector(`[data-action=${ActionTypes$1.incrementSeconds}]`)
+                    .classList.add(Namespace.css.disabled);
+            }
+            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.seconds), exports.Unit.seconds)) {
+                timesDiv
+                    .querySelector(`[data-action=${ActionTypes$1.decrementSeconds}]`)
+                    .classList.add(Namespace.css.disabled);
+            }
+            timesDiv.querySelector(`[data-time-component=${exports.Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
+        }
+        _updateTwentyfour(timesDiv, lastPicked) {
+            if (this.optionsStore.options.display.components.useTwentyfourHour)
+                return;
+            const toggle = timesDiv.querySelector(`[data-action=${ActionTypes$1.toggleMeridiem}]`);
+            toggle.innerText = lastPicked.meridiem();
+            if (!this.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, exports.Unit.hours))) {
+                toggle.classList.add(Namespace.css.disabled);
+            }
+            else {
+                toggle.classList.remove(Namespace.css.disabled);
+            }
         }
         /**
          * Creates the table for the clock display depending on what options are selected.
@@ -2754,7 +2778,6 @@
             }
             this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
             this._isVisible = true;
-            this.widget.focus();
         }
         /**
          * Changes the calendar view mode. E.g. month <-> year

@@ -131,7 +131,7 @@
   grid-auto-columns: 14.2857142857%;
 }
 .tempus-dominus-widget .date-container-days .dow {
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.67);
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -144,7 +144,7 @@
   display: flex;
   font-size: 0.8em;
   line-height: 20px;
-  color: rgba(0, 0, 0, 0.38);
+  color: rgba(74, 74, 74, 0.93);
   cursor: default;
 }
 .tempus-dominus-widget .date-container-decades, .tempus-dominus-widget .date-container-years, .tempus-dominus-widget .date-container-months {
@@ -200,7 +200,7 @@
 .tempus-dominus-widget .date-container-decades div:not(.no-highlight).old, .tempus-dominus-widget .date-container-decades div:not(.no-highlight).new, .tempus-dominus-widget .date-container-years div:not(.no-highlight).old, .tempus-dominus-widget .date-container-years div:not(.no-highlight).new, .tempus-dominus-widget .date-container-months div:not(.no-highlight).old, .tempus-dominus-widget .date-container-months div:not(.no-highlight).new, .tempus-dominus-widget .date-container-days div:not(.no-highlight).old, .tempus-dominus-widget .date-container-days div:not(.no-highlight).new,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).old,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).new, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).old, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).new, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).old, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).new, .tempus-dominus-widget .time-container-second div:not(.no-highlight).old, .tempus-dominus-widget .time-container-second div:not(.no-highlight).new {
-  color: rgba(0, 0, 0, 0.38);
+  color: rgba(74, 74, 74, 0.93);
 }
 .tempus-dominus-widget .date-container-decades div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-decades div:not(.no-highlight).disabled:hover, .tempus-dominus-widget .date-container-years div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-years div:not(.no-highlight).disabled:hover, .tempus-dominus-widget .date-container-months div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-months div:not(.no-highlight).disabled:hover, .tempus-dominus-widget .date-container-days div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-days div:not(.no-highlight).disabled:hover,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).disabled,
@@ -293,10 +293,10 @@
     background: #232627;
   }
   .tempus-dominus-widget .date-container-days .dow {
-    color: rgba(232, 230, 227, 0.5);
+    color: rgba(239, 237, 233, 0.67);
   }
   .tempus-dominus-widget .date-container-days .cw {
-    color: rgba(232, 230, 227, 0.38);
+    color: rgba(239, 237, 233, 0.67);
   }
   .tempus-dominus-widget .date-container-decades div:not(.no-highlight):hover, .tempus-dominus-widget .date-container-years div:not(.no-highlight):hover, .tempus-dominus-widget .date-container-months div:not(.no-highlight):hover, .tempus-dominus-widget .date-container-days div:not(.no-highlight):hover,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight):hover, .tempus-dominus-widget .time-container-hour div:not(.no-highlight):hover, .tempus-dominus-widget .time-container-minute div:not(.no-highlight):hover, .tempus-dominus-widget .time-container-second div:not(.no-highlight):hover {
@@ -305,13 +305,13 @@
   .tempus-dominus-widget .date-container-decades div:not(.no-highlight).active, .tempus-dominus-widget .date-container-years div:not(.no-highlight).active, .tempus-dominus-widget .date-container-months div:not(.no-highlight).active, .tempus-dominus-widget .date-container-days div:not(.no-highlight).active,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).active, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).active, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).active, .tempus-dominus-widget .time-container-second div:not(.no-highlight).active {
     background-color: #4db2ff;
-    color: #fff;
-    text-shadow: 0 -1px 0 rgba(232, 230, 227, 0.25);
+    color: #202020;
+    text-shadow: 0 -1px 0 rgba(32, 32, 32, 0.67);
   }
   .tempus-dominus-widget .date-container-decades div:not(.no-highlight).active.old, .tempus-dominus-widget .date-container-decades div:not(.no-highlight).active.new, .tempus-dominus-widget .date-container-years div:not(.no-highlight).active.old, .tempus-dominus-widget .date-container-years div:not(.no-highlight).active.new, .tempus-dominus-widget .date-container-months div:not(.no-highlight).active.old, .tempus-dominus-widget .date-container-months div:not(.no-highlight).active.new, .tempus-dominus-widget .date-container-days div:not(.no-highlight).active.old, .tempus-dominus-widget .date-container-days div:not(.no-highlight).active.new,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).active.old,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).active.new, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).active.old, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).active.new, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).active.old, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).active.new, .tempus-dominus-widget .time-container-second div:not(.no-highlight).active.old, .tempus-dominus-widget .time-container-second div:not(.no-highlight).active.new {
-    color: #fff;
+    color: #202020;
   }
   .tempus-dominus-widget .date-container-decades div:not(.no-highlight).active.today:before, .tempus-dominus-widget .date-container-years div:not(.no-highlight).active.today:before, .tempus-dominus-widget .date-container-months div:not(.no-highlight).active.today:before, .tempus-dominus-widget .date-container-days div:not(.no-highlight).active.today:before,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).active.today:before, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).active.today:before, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).active.today:before, .tempus-dominus-widget .time-container-second div:not(.no-highlight).active.today:before {
@@ -320,7 +320,7 @@
   .tempus-dominus-widget .date-container-decades div:not(.no-highlight).old, .tempus-dominus-widget .date-container-decades div:not(.no-highlight).new, .tempus-dominus-widget .date-container-years div:not(.no-highlight).old, .tempus-dominus-widget .date-container-years div:not(.no-highlight).new, .tempus-dominus-widget .date-container-months div:not(.no-highlight).old, .tempus-dominus-widget .date-container-months div:not(.no-highlight).new, .tempus-dominus-widget .date-container-days div:not(.no-highlight).old, .tempus-dominus-widget .date-container-days div:not(.no-highlight).new,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).old,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).new, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).old, .tempus-dominus-widget .time-container-hour div:not(.no-highlight).new, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).old, .tempus-dominus-widget .time-container-minute div:not(.no-highlight).new, .tempus-dominus-widget .time-container-second div:not(.no-highlight).old, .tempus-dominus-widget .time-container-second div:not(.no-highlight).new {
-    color: rgba(232, 230, 227, 0.38);
+    color: rgba(239, 237, 233, 0.67);
   }
   .tempus-dominus-widget .date-container-decades div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-decades div:not(.no-highlight).disabled:hover, .tempus-dominus-widget .date-container-years div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-years div:not(.no-highlight).disabled:hover, .tempus-dominus-widget .date-container-months div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-months div:not(.no-highlight).disabled:hover, .tempus-dominus-widget .date-container-days div:not(.no-highlight).disabled, .tempus-dominus-widget .date-container-days div:not(.no-highlight).disabled:hover,
 .tempus-dominus-widget .time-container-clock div:not(.no-highlight).disabled,
@@ -333,7 +333,7 @@
     border-top-color: rgba(232, 230, 227, 0.2);
   }
   .tempus-dominus-widget button {
-    color: #fff;
+    color: #202020;
     background-color: #4db2ff;
     border-color: #4db2ff;
   }

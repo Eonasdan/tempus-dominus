@@ -66,7 +66,7 @@ class Css {
   switch = 'picker-switch';
 
   /**
-   * The elements for all of the toolbar options
+   * The elements for all the toolbar options
    */
   toolbar = 'toolbar';
 
@@ -97,6 +97,11 @@ class Css {
   disabled = 'disabled';
 
   /**
+   * shh!!
+   */
+  hidden = 'visually-hidden';
+
+  /**
    * Applied to any date that is less than requested view,
    * e.g. the last day of the previous month.
    */
@@ -116,12 +121,12 @@ class Css {
   //#region date element
 
   /**
-   * The outer most element for the calendar view.
+   * The outermost element for the calendar view.
    */
   dateContainer = 'date-container';
 
   /**
-   * The outer most element for the decades view.
+   * The outermost element for the decades view.
    */
   decadesContainer = `${this.dateContainer}-decades`;
 
@@ -131,17 +136,17 @@ class Css {
   decade = 'decade';
 
   /**
-   * The outer most element for the years view.
+   * The outermost element for the years view.
    */
   yearsContainer = `${this.dateContainer}-years`;
 
   /**
-   * Applied to elements within the years container, e.g. 2021, 2021
+   * Applied to elements within the years' container, e.g. 2021, 2021
    */
   year = 'year';
 
   /**
-   * The outer most element for the month view.
+   * The outermost element for the month view.
    */
   monthsContainer = `${this.dateContainer}-months`;
 
@@ -151,7 +156,7 @@ class Css {
   month = 'month';
 
   /**
-   * The outer most element for the calendar view.
+   * The outermost element for the calendar view.
    */
   daysContainer = `${this.dateContainer}-days`;
 
@@ -186,7 +191,7 @@ class Css {
   //#region time element
 
   /**
-   * The outer most element for all time related elements.
+   * The outermost element for all time related elements.
    */
   timeContainer = 'time-container';
 
@@ -196,37 +201,37 @@ class Css {
   separator = 'separator';
 
   /**
-   * The outer most element for the clock view.
+   * The outermost element for the clock view.
    */
   clockContainer = `${this.timeContainer}-clock`;
 
   /**
-   * The outer most element for the hours selection view.
+   * The outermost element for the hours' selection view.
    */
   hourContainer = `${this.timeContainer}-hour`;
 
   /**
-   * The outer most element for the minutes selection view.
+   * The outermost element for the minutes' selection view.
    */
   minuteContainer = `${this.timeContainer}-minute`;
 
   /**
-   * The outer most element for the seconds selection view.
+   * The outermost element for the seconds' selection view.
    */
   secondContainer = `${this.timeContainer}-second`;
 
   /**
-   * Applied to each element in the hours selection view.
+   * Applied to each element in the hours' selection view.
    */
   hour = 'hour';
 
   /**
-   * Applied to each element in the minutes selection view.
+   * Applied to each element in the minutes' selection view.
    */
   minute = 'minute';
 
   /**
-   * Applied to each element in the seconds selection view.
+   * Applied to each element in the seconds' selection view.
    */
   second = 'second';
 

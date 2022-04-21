@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta4 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta5 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -14,6 +14,18 @@ var Unit;
     Unit["month"] = "month";
     Unit["year"] = "year";
 })(Unit || (Unit = {}));
+const twoDigitTemplate = {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+};
+const twoDigitTwentyForTemplate = {
+    hour12: false
+};
 const getFormatByUnit = (unit) => {
     switch (unit) {
         case 'date':
@@ -267,7 +279,7 @@ class DateTime extends Date {
      * Returns two digit hours
      */
     get secondsFormatted() {
-        return this.seconds < 10 ? `0${this.seconds}` : `${this.seconds}`;
+        return this.parts(undefined, twoDigitTemplate).seconds;
     }
     /**
      * Shortcut to Date.getMinutes()
@@ -285,7 +297,7 @@ class DateTime extends Date {
      * Returns two digit minutes
      */
     get minutesFormatted() {
-        return this.minutes < 10 ? `0${this.minutes}` : `${this.minutes}`;
+        return this.parts(undefined, twoDigitTemplate).minute;
     }
     /**
      * Shortcut to Date.getHours()
@@ -303,7 +315,7 @@ class DateTime extends Date {
      * Returns two digit hours
      */
     get hoursFormatted() {
-        let formatted = this.format({ hour: '2-digit', hour12: false });
+        let formatted = this.parts(undefined, twoDigitTwentyForTemplate).hour;
         if (formatted === '24')
             formatted = '00';
         return formatted;
@@ -312,10 +324,7 @@ class DateTime extends Date {
      * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
      */
     get twelveHoursFormatted() {
-        let hour = this.parts().hour;
-        if (hour.length === 1)
-            hour = `0${hour}`;
-        return hour;
+        return this.parts(undefined, twoDigitTemplate).hour;
     }
     /**
      * Get the meridiem of the date. E.g. AM or PM.
@@ -348,7 +357,7 @@ class DateTime extends Date {
      * Return two digit date
      */
     get dateFormatted() {
-        return this.date < 10 ? `0${this.date}` : `${this.date}`;
+        return this.parts(undefined, twoDigitTemplate).day;
     }
     /**
      * Shortcut to Date.getDay()
@@ -378,8 +387,7 @@ class DateTime extends Date {
      * Return two digit, human expected month. E.g. January = 1, December = 12
      */
     get monthFormatted() {
-        const humanMonth = this.month + 1;
-        return humanMonth < 10 ? `0${humanMonth}` : `${humanMonth}`;
+        return this.parts(undefined, twoDigitTemplate).month;
     }
     /**
      * Shortcut to Date.getFullYear()
@@ -558,7 +566,7 @@ class ErrorMessages {
 }
 
 // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-const NAME = 'tempus-dominus', version = '6.0.0-beta4', dataKey = 'td';
+const NAME = 'tempus-dominus', version = '6.0.0-beta5', dataKey = 'td';
 /**
  * Events
  */
@@ -613,7 +621,7 @@ class Css {
          */
         this.switch = 'picker-switch';
         /**
-         * The elements for all of the toolbar options
+         * The elements for all the toolbar options
          */
         this.toolbar = 'toolbar';
         /**
@@ -638,6 +646,10 @@ class Css {
          */
         this.disabled = 'disabled';
         /**
+         * shh!!
+         */
+        this.hidden = 'visually-hidden';
+        /**
          * Applied to any date that is less than requested view,
          * e.g. the last day of the previous month.
          */
@@ -653,11 +665,11 @@ class Css {
         this.active = 'active';
         //#region date element
         /**
-         * The outer most element for the calendar view.
+         * The outermost element for the calendar view.
          */
         this.dateContainer = 'date-container';
         /**
-         * The outer most element for the decades view.
+         * The outermost element for the decades view.
          */
         this.decadesContainer = `${this.dateContainer}-decades`;
         /**
@@ -665,15 +677,15 @@ class Css {
          */
         this.decade = 'decade';
         /**
-         * The outer most element for the years view.
+         * The outermost element for the years view.
          */
         this.yearsContainer = `${this.dateContainer}-years`;
         /**
-         * Applied to elements within the years container, e.g. 2021, 2021
+         * Applied to elements within the years' container, e.g. 2021, 2021
          */
         this.year = 'year';
         /**
-         * The outer most element for the month view.
+         * The outermost element for the month view.
          */
         this.monthsContainer = `${this.dateContainer}-months`;
         /**
@@ -681,7 +693,7 @@ class Css {
          */
         this.month = 'month';
         /**
-         * The outer most element for the calendar view.
+         * The outermost element for the calendar view.
          */
         this.daysContainer = `${this.dateContainer}-days`;
         /**
@@ -708,7 +720,7 @@ class Css {
         //#endregion
         //#region time element
         /**
-         * The outer most element for all time related elements.
+         * The outermost element for all time related elements.
          */
         this.timeContainer = 'time-container';
         /**
@@ -716,31 +728,31 @@ class Css {
          */
         this.separator = 'separator';
         /**
-         * The outer most element for the clock view.
+         * The outermost element for the clock view.
          */
         this.clockContainer = `${this.timeContainer}-clock`;
         /**
-         * The outer most element for the hours selection view.
+         * The outermost element for the hours' selection view.
          */
         this.hourContainer = `${this.timeContainer}-hour`;
         /**
-         * The outer most element for the minutes selection view.
+         * The outermost element for the minutes' selection view.
          */
         this.minuteContainer = `${this.timeContainer}-minute`;
         /**
-         * The outer most element for the seconds selection view.
+         * The outermost element for the seconds' selection view.
          */
         this.secondContainer = `${this.timeContainer}-second`;
         /**
-         * Applied to each element in the hours selection view.
+         * Applied to each element in the hours' selection view.
          */
         this.hour = 'hour';
         /**
-         * Applied to each element in the minutes selection view.
+         * Applied to each element in the minutes' selection view.
          */
         this.minute = 'minute';
         /**
-         * Applied to each element in the seconds selection view.
+         * Applied to each element in the seconds' selection view.
          */
         this.second = 'second';
         /**
@@ -805,6 +817,169 @@ const CalendarModes = [
         step: 100,
     },
 ];
+
+var ActionTypes;
+(function (ActionTypes) {
+    ActionTypes["next"] = "next";
+    ActionTypes["previous"] = "previous";
+    ActionTypes["changeCalendarView"] = "changeCalendarView";
+    ActionTypes["selectMonth"] = "selectMonth";
+    ActionTypes["selectYear"] = "selectYear";
+    ActionTypes["selectDecade"] = "selectDecade";
+    ActionTypes["selectDay"] = "selectDay";
+    ActionTypes["selectHour"] = "selectHour";
+    ActionTypes["selectMinute"] = "selectMinute";
+    ActionTypes["selectSecond"] = "selectSecond";
+    ActionTypes["incrementHours"] = "incrementHours";
+    ActionTypes["incrementMinutes"] = "incrementMinutes";
+    ActionTypes["incrementSeconds"] = "incrementSeconds";
+    ActionTypes["decrementHours"] = "decrementHours";
+    ActionTypes["decrementMinutes"] = "decrementMinutes";
+    ActionTypes["decrementSeconds"] = "decrementSeconds";
+    ActionTypes["toggleMeridiem"] = "toggleMeridiem";
+    ActionTypes["togglePicker"] = "togglePicker";
+    ActionTypes["showClock"] = "showClock";
+    ActionTypes["showHours"] = "showHours";
+    ActionTypes["showMinutes"] = "showMinutes";
+    ActionTypes["showSeconds"] = "showSeconds";
+    ActionTypes["clear"] = "clear";
+    ActionTypes["close"] = "close";
+    ActionTypes["today"] = "today";
+})(ActionTypes || (ActionTypes = {}));
+var ActionTypes$1 = ActionTypes;
+
+function lastDateOrNew() {
+    return (this.dates.lastPicked || new DateTime().setLocale(this.optionsStore.options.localization.locale)).clone;
+}
+function manipulateAndSet(value, unit) {
+    const d = lastDateOrNew.call(this);
+    d.manipulate(value, unit);
+    this.dates.setValue(d, this.dates.lastPickedIndex);
+}
+const defaultKeybindings = {
+    ArrowUp: function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        if (this.optionsStore.currentView === 'clock') {
+            manipulateAndSet.call(this, this.optionsStore.options.stepping, Unit.minutes);
+        }
+        else {
+            manipulateAndSet.call(this, -7, Unit.date);
+        }
+        return true;
+    },
+    ArrowDown: function () {
+        if (!this.display.isVisible) {
+            this.display.show();
+            return false;
+        }
+        if (this.optionsStore.currentView === 'clock') {
+            manipulateAndSet.call(this, this.optionsStore.options.stepping * -1, Unit.minutes);
+        }
+        else {
+            manipulateAndSet.call(this, 7, Unit.date);
+        }
+        return true;
+    },
+    'Control ArrowUp': function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        if (this.optionsStore.currentView === 'clock') {
+            manipulateAndSet.call(this, this.optionsStore.options.stepping, Unit.hours);
+        }
+        else {
+            manipulateAndSet.call(this, -1, Unit.year);
+        }
+        return true;
+    },
+    'Control ArrowDown': function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        if (this.optionsStore.currentView === 'clock') {
+            manipulateAndSet.call(this, this.optionsStore.options.stepping * -1, Unit.hours);
+        }
+        else {
+            manipulateAndSet.call(this, 1, Unit.year);
+        }
+        return true;
+    },
+    ArrowLeft: function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        if (this.optionsStore.currentView !== 'clock') {
+            manipulateAndSet.call(this, -1, Unit.date);
+        }
+        return true;
+    },
+    ArrowRight: function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        if (this.optionsStore.currentView !== 'clock') {
+            manipulateAndSet.call(this, 1, Unit.date);
+        }
+        return true;
+    },
+    PageUp: function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        if (this.optionsStore.currentView !== 'clock') {
+            manipulateAndSet.call(this, -1, Unit.month);
+        }
+        return true;
+    },
+    PageDown: function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        if (this.optionsStore.currentView !== 'clock') {
+            manipulateAndSet.call(this, 1, Unit.month);
+        }
+        return true;
+    },
+    Enter: function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        this.display.hide();
+        return true;
+    },
+    Escape: function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        this.display.hide();
+        return true;
+    },
+    'Control Space': function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        if (this.optionsStore.currentView === 'clock') {
+            this._eventEmitters.action.emit({ e: undefined, action: ActionTypes$1.toggleMeridiem });
+        }
+        return true;
+    },
+    t: function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        this.dates.setValue(new DateTime(), this.dates.lastPickedIndex);
+        return true;
+    },
+    Delete: function () {
+        if (!this.display.widget) {
+            return false;
+        }
+        this.dates.clear();
+        return true;
+    }
+};
 
 const DefaultOptions = {
     restrictions: {
@@ -897,7 +1072,8 @@ const DefaultOptions = {
     promptTimeOnDateChange: false,
     promptTimeOnDateChangeTransitionDelay: 200,
     meta: {},
-    container: undefined
+    container: undefined,
+    keybindings: defaultKeybindings
 };
 
 class OptionsStore {
@@ -1079,7 +1255,7 @@ class OptionConverter {
          * Also handles complex options like disabledDates
          * @param provided An option from new providedOptions
          * @param mergeOption Default option to compare types against
-         * @param copyTo Destination object. This was add to prevent reference copies
+         * @param copyTo Destination object. This was added to prevent reference copies
          */
         const spread = (provided, mergeOption, copyTo) => {
             const unsupportedOptions = Object.keys(provided).filter((x) => !Object.keys(mergeOption).includes(x));
@@ -1238,7 +1414,6 @@ class OptionConverter {
         if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
             Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of numbers');
         }
-        return;
     }
     /**
      * Attempts to convert `d` to a DateTime object
@@ -1256,22 +1431,22 @@ class OptionConverter {
         return converted;
     }
     static getFlattenDefaultOptions() {
-        if (this._flatback)
-            return this._flatback;
+        if (this._flattenDefaults)
+            return this._flattenDefaults;
         const deepKeys = (t, pre = []) => Array.isArray(t)
             ? []
             : Object(t) === t
                 ? Object.entries(t).flatMap(([k, v]) => deepKeys(v, [...pre, k]))
                 : pre.join('.');
-        this._flatback = deepKeys(DefaultOptions);
-        return this._flatback;
+        this._flattenDefaults = deepKeys(DefaultOptions);
+        return this._flattenDefaults;
     }
     /**
      * Some options conflict like min/max date. Verify that these kinds of options
      * are set correctly.
      * @param config
      */
-    static _validateConflcits(config) {
+    static _validateConflicts(config) {
         if (config.display.sideBySide &&
             (!config.display.components.clock ||
                 !(config.display.components.hours ||
@@ -1439,7 +1614,7 @@ class EventEmitter {
             callback(value);
         });
     }
-    destory() {
+    destroy() {
         this.subscribers = null;
         this.subscribers = [];
     }
@@ -1450,12 +1625,14 @@ class EventEmitters {
         this.viewUpdate = new EventEmitter();
         this.updateDisplay = new EventEmitter();
         this.action = new EventEmitter();
+        this.registerKeydown = new EventEmitter();
     }
-    destory() {
-        this.triggerEvent.destory();
-        this.viewUpdate.destory();
-        this.updateDisplay.destory();
-        this.action.destory();
+    destroy() {
+        this.triggerEvent.destroy();
+        this.viewUpdate.destroy();
+        this.updateDisplay.destroy();
+        this.action.destroy();
+        this.registerKeydown.destroy();
     }
 }
 
@@ -1682,36 +1859,6 @@ class Dates {
     }
 }
 
-var ActionTypes;
-(function (ActionTypes) {
-    ActionTypes["next"] = "next";
-    ActionTypes["previous"] = "previous";
-    ActionTypes["changeCalendarView"] = "changeCalendarView";
-    ActionTypes["selectMonth"] = "selectMonth";
-    ActionTypes["selectYear"] = "selectYear";
-    ActionTypes["selectDecade"] = "selectDecade";
-    ActionTypes["selectDay"] = "selectDay";
-    ActionTypes["selectHour"] = "selectHour";
-    ActionTypes["selectMinute"] = "selectMinute";
-    ActionTypes["selectSecond"] = "selectSecond";
-    ActionTypes["incrementHours"] = "incrementHours";
-    ActionTypes["incrementMinutes"] = "incrementMinutes";
-    ActionTypes["incrementSeconds"] = "incrementSeconds";
-    ActionTypes["decrementHours"] = "decrementHours";
-    ActionTypes["decrementMinutes"] = "decrementMinutes";
-    ActionTypes["decrementSeconds"] = "decrementSeconds";
-    ActionTypes["toggleMeridiem"] = "toggleMeridiem";
-    ActionTypes["togglePicker"] = "togglePicker";
-    ActionTypes["showClock"] = "showClock";
-    ActionTypes["showHours"] = "showHours";
-    ActionTypes["showMinutes"] = "showMinutes";
-    ActionTypes["showSeconds"] = "showSeconds";
-    ActionTypes["clear"] = "clear";
-    ActionTypes["close"] = "close";
-    ActionTypes["today"] = "today";
-})(ActionTypes || (ActionTypes = {}));
-var ActionTypes$1 = ActionTypes;
-
 /**
  * Creates and updates the grid for `date`
  */
@@ -1805,11 +1952,12 @@ class DateDisplay {
             containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
             containerClone.setAttribute('data-day', `${innerDate.date}`);
             containerClone.innerText = innerDate.format({ day: 'numeric' });
+            containerClone.ariaLabel = innerDate.format({ dateStyle: 'long' });
             innerDate.manipulate(1, Unit.date);
         });
     }
     /***
-     * Generates an html row that contains the days of the week.
+     * Generates a html row that contains the days of the week.
      * @private
      */
     _daysOfTheWeek() {
@@ -1827,7 +1975,14 @@ class DateDisplay {
         for (let i = 0; i < 7; i++) {
             const htmlDivElement = document.createElement('div');
             htmlDivElement.classList.add(Namespace.css.dayOfTheWeek, Namespace.css.noHighlight);
-            htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
+            let span = document.createElement('span');
+            span.ariaHidden = 'true';
+            span.innerText = innerDate.format({ weekday: 'short' });
+            htmlDivElement.appendChild(span);
+            span = document.createElement('span');
+            span.classList.add(Namespace.css.hidden);
+            span.innerText = innerDate.format({ weekday: 'long' });
+            htmlDivElement.appendChild(span);
             innerDate.manipulate(1, Unit.date);
             row.push(htmlDivElement);
         }
@@ -2076,58 +2231,70 @@ class TimeDisplay {
         timesDiv
             .querySelectorAll('.disabled')
             .forEach((element) => element.classList.remove(Namespace.css.disabled));
-        if (this.optionsStore.options.display.components.hours) {
-            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
-                timesDiv
-                    .querySelector(`[data-action=${ActionTypes$1.incrementHours}]`)
-                    .classList.add(Namespace.css.disabled);
-            }
-            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
-                timesDiv
-                    .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
-                    .classList.add(Namespace.css.disabled);
-            }
-            timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = this.optionsStore.options.display.components.useTwentyfourHour
-                ? lastPicked.hoursFormatted
-                : lastPicked.twelveHoursFormatted;
-        }
-        if (this.optionsStore.options.display.components.minutes) {
-            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
-                timesDiv
-                    .querySelector(`[data-action=${ActionTypes$1.incrementMinutes}]`)
-                    .classList.add(Namespace.css.disabled);
-            }
-            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
-                timesDiv
-                    .querySelector(`[data-action=${ActionTypes$1.decrementMinutes}]`)
-                    .classList.add(Namespace.css.disabled);
-            }
-            timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
-        }
-        if (this.optionsStore.options.display.components.seconds) {
-            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
-                timesDiv
-                    .querySelector(`[data-action=${ActionTypes$1.incrementSeconds}]`)
-                    .classList.add(Namespace.css.disabled);
-            }
-            if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
-                timesDiv
-                    .querySelector(`[data-action=${ActionTypes$1.decrementSeconds}]`)
-                    .classList.add(Namespace.css.disabled);
-            }
-            timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
-        }
-        if (!this.optionsStore.options.display.components.useTwentyfourHour) {
-            const toggle = timesDiv.querySelector(`[data-action=${ActionTypes$1.toggleMeridiem}]`);
-            toggle.innerText = lastPicked.meridiem();
-            if (!this.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
-                toggle.classList.add(Namespace.css.disabled);
-            }
-            else {
-                toggle.classList.remove(Namespace.css.disabled);
-            }
-        }
+        this._updateHour(timesDiv, lastPicked);
+        this._updateMinute(timesDiv, lastPicked);
+        this._updateSecond(timesDiv, lastPicked);
+        this._updateTwentyfour(timesDiv, lastPicked);
         timesDiv.style.gridTemplateAreas = `"${this._gridColumns}"`;
+    }
+    _updateHour(timesDiv, lastPicked) {
+        if (!this.optionsStore.options.display.components.hours)
+            return;
+        if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
+            timesDiv
+                .querySelector(`[data-action=${ActionTypes$1.incrementHours}]`)
+                .classList.add(Namespace.css.disabled);
+        }
+        if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
+            timesDiv
+                .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
+                .classList.add(Namespace.css.disabled);
+        }
+        timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = this.optionsStore.options.display.components.useTwentyfourHour
+            ? lastPicked.hoursFormatted
+            : lastPicked.twelveHoursFormatted;
+    }
+    _updateMinute(timesDiv, lastPicked) {
+        if (!this.optionsStore.options.display.components.minutes)
+            return;
+        if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
+            timesDiv
+                .querySelector(`[data-action=${ActionTypes$1.incrementMinutes}]`)
+                .classList.add(Namespace.css.disabled);
+        }
+        if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
+            timesDiv
+                .querySelector(`[data-action=${ActionTypes$1.decrementMinutes}]`)
+                .classList.add(Namespace.css.disabled);
+        }
+        timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
+    }
+    _updateSecond(timesDiv, lastPicked) {
+        if (!this.optionsStore.options.display.components.seconds)
+            return;
+        if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
+            timesDiv
+                .querySelector(`[data-action=${ActionTypes$1.incrementSeconds}]`)
+                .classList.add(Namespace.css.disabled);
+        }
+        if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
+            timesDiv
+                .querySelector(`[data-action=${ActionTypes$1.decrementSeconds}]`)
+                .classList.add(Namespace.css.disabled);
+        }
+        timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
+    }
+    _updateTwentyfour(timesDiv, lastPicked) {
+        if (this.optionsStore.options.display.components.useTwentyfourHour)
+            return;
+        const toggle = timesDiv.querySelector(`[data-action=${ActionTypes$1.toggleMeridiem}]`);
+        toggle.innerText = lastPicked.meridiem();
+        if (!this.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
+            toggle.classList.add(Namespace.css.disabled);
+        }
+        else {
+            toggle.classList.remove(Namespace.css.disabled);
+        }
     }
     /**
      * Creates the table for the clock display depending on what options are selected.
@@ -2597,85 +2764,8 @@ class Display {
      * @fires Events#show
      */
     show() {
-        var _a, _b;
         if (this.widget == undefined) {
-            if (this.dates.picked.length == 0) {
-                if (this.optionsStore.options.useCurrent &&
-                    !this.optionsStore.options.defaultDate) {
-                    const date = new DateTime().setLocale(this.optionsStore.options.localization.locale);
-                    if (!this.optionsStore.options.keepInvalid) {
-                        let tries = 0;
-                        let direction = 1;
-                        if ((_a = this.optionsStore.options.restrictions.maxDate) === null || _a === void 0 ? void 0 : _a.isBefore(date)) {
-                            direction = -1;
-                        }
-                        while (!this.validation.isValid(date)) {
-                            date.manipulate(direction, Unit.date);
-                            if (tries > 31)
-                                break;
-                            tries++;
-                        }
-                    }
-                    this.dates.setValue(date);
-                }
-                if (this.optionsStore.options.defaultDate) {
-                    this.dates.setValue(this.optionsStore.options.defaultDate);
-                }
-            }
-            this._buildWidget();
-            // If modeView is only clock
-            const onlyClock = this._hasTime && !this._hasDate;
-            // reset the view to the clock if there's no date components
-            if (onlyClock) {
-                this.optionsStore.currentView = 'clock';
-                this._eventEmitters.action.emit({
-                    e: null,
-                    action: ActionTypes$1.showClock,
-                });
-            }
-            // otherwise return to the calendar view
-            if (!this.optionsStore.currentCalendarViewMode) {
-                this.optionsStore.currentCalendarViewMode =
-                    this.optionsStore.minimumCalendarViewMode;
-            }
-            if (!onlyClock) {
-                if (this._hasTime) {
-                    Collapse.hide(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
-                }
-                Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
-            }
-            if (this._hasDate) {
-                this._showMode();
-            }
-            if (!this.optionsStore.options.display.inline) {
-                // If needed to change the parent container
-                const container = ((_b = this.optionsStore.options) === null || _b === void 0 ? void 0 : _b.container) || document.body;
-                container.appendChild(this.widget);
-                this._popperInstance = createPopper(this.optionsStore.element, this.widget, {
-                    modifiers: [{ name: 'eventListeners', enabled: true }],
-                    //#2400
-                    placement: document.documentElement.dir === 'rtl'
-                        ? 'bottom-end'
-                        : 'bottom-start',
-                });
-            }
-            else {
-                this.optionsStore.element.appendChild(this.widget);
-            }
-            if (this.optionsStore.options.display.viewMode == 'clock') {
-                this._eventEmitters.action.emit({
-                    e: null,
-                    action: ActionTypes$1.showClock,
-                });
-            }
-            this.widget
-                .querySelectorAll('[data-action]')
-                .forEach((element) => element.addEventListener('click', this._actionsClickEvent));
-            // show the clock when using sideBySide
-            if (this._hasTime && this.optionsStore.options.display.sideBySide) {
-                this.timeDisplay._update(this.widget);
-                this.widget.getElementsByClassName(Namespace.css.clockContainer)[0].style.display = 'grid';
-            }
+            this._handleFirstShow();
         }
         this.widget.classList.add(Namespace.css.show);
         if (!this.optionsStore.options.display.inline) {
@@ -2804,6 +2894,7 @@ class Display {
     _buildWidget() {
         const template = document.createElement('div');
         template.classList.add(Namespace.css.widget);
+        template.setAttribute('tabindex', '0');
         const dateView = document.createElement('div');
         dateView.classList.add(Namespace.css.dateContainer);
         dateView.append(this.getHeadTemplate(), this.decadeDisplay.getPicker(), this.yearDisplay.getPicker(), this.monthDisplay.getPicker(), this.dateDisplay.getPicker());
@@ -2964,8 +3055,11 @@ class Display {
      */
     _iconTag(iconClass) {
         if (this.optionsStore.options.display.icons.type === 'sprites') {
-            const svg = document.createElement('svg');
-            svg.innerHTML = `<use xlink:href='${iconClass}'></use>`;
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+            use.setAttribute('xlink:href', iconClass); // Deprecated. Included for backward compatibility
+            use.setAttribute('href', iconClass);
+            svg.appendChild(use);
             return svg;
         }
         const icon = document.createElement('i');
@@ -2984,6 +3078,98 @@ class Display {
         this._dispose();
         if (wasVisible) {
             this.show();
+        }
+    }
+    /**
+     * Build the widget and figure out which view to show.
+     * @private
+     */
+    _handleFirstShow() {
+        var _a;
+        this._findAndSetFirstDate();
+        this._buildWidget();
+        // If modeView is only clock
+        const onlyClock = this._hasTime && !this._hasDate;
+        // reset the view to the clock if there's no date components
+        if (onlyClock) {
+            this.optionsStore.currentView = 'clock';
+            this._eventEmitters.action.emit({
+                e: null,
+                action: ActionTypes$1.showClock,
+            });
+        }
+        // otherwise, return to the calendar view
+        if (!this.optionsStore.currentCalendarViewMode) {
+            this.optionsStore.currentCalendarViewMode =
+                this.optionsStore.minimumCalendarViewMode;
+        }
+        if (!onlyClock) {
+            if (this._hasTime) {
+                Collapse.hide(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+            }
+            Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+        }
+        if (this._hasDate) {
+            this._showMode();
+        }
+        if (!this.optionsStore.options.display.inline) {
+            // If needed to change the parent container
+            const container = ((_a = this.optionsStore.options) === null || _a === void 0 ? void 0 : _a.container) || document.body;
+            container.appendChild(this.widget);
+            this._popperInstance = createPopper(this.optionsStore.element, this.widget, {
+                modifiers: [{ name: 'eventListeners', enabled: true }],
+                //#2400
+                placement: document.documentElement.dir === 'rtl'
+                    ? 'bottom-end'
+                    : 'bottom-start',
+            });
+        }
+        else {
+            this.optionsStore.element.appendChild(this.widget);
+        }
+        if (this.optionsStore.options.display.viewMode == 'clock') {
+            this._eventEmitters.action.emit({
+                e: null,
+                action: ActionTypes$1.showClock,
+            });
+        }
+        this.widget
+            .querySelectorAll('[data-action]')
+            .forEach((element) => element.addEventListener('click', this._actionsClickEvent));
+        // show the clock when using sideBySide
+        if (this._hasTime && this.optionsStore.options.display.sideBySide) {
+            this.timeDisplay._update(this.widget);
+            this.widget.getElementsByClassName(Namespace.css.clockContainer)[0].style.display = 'grid';
+        }
+    }
+    /**
+     * Checks if the picker should set a date on first showing.
+     * @private
+     */
+    _findAndSetFirstDate() {
+        var _a;
+        if (this.dates.picked.length != 0)
+            return;
+        if (this.optionsStore.options.defaultDate) {
+            this.dates.setValue(this.optionsStore.options.defaultDate);
+            return;
+        }
+        if (this.optionsStore.options.useCurrent) {
+            const date = new DateTime().setLocale(this.optionsStore.options.localization.locale);
+            if (!this.optionsStore.options.keepInvalid) {
+                let tries = 0;
+                let direction = 1;
+                if ((_a = this.optionsStore.options.restrictions.maxDate) === null || _a === void 0 ? void 0 : _a.isBefore(date)) {
+                    direction = -1;
+                }
+                while (!this.validation.isValid(date)) {
+                    date.manipulate(direction, Unit.date);
+                    if (tries > 31)
+                        break;
+                    tries++;
+                }
+            }
+            this.dates.setValue(date);
         }
     }
 }
@@ -3239,7 +3425,10 @@ class TempusDominus {
          * something for the remove listener function.
          * @private
          */
-        this._inputChangeEvent = () => {
+        this._inputChangeEvent = (event) => {
+            const internallyTriggered = event === null || event === void 0 ? void 0 : event.detail;
+            if (internallyTriggered)
+                return;
             const setViewDate = () => {
                 if (this.dates.lastPicked)
                     this.optionsStore.viewDate = this.dates.lastPicked;
@@ -3270,6 +3459,33 @@ class TempusDominus {
         this._toggleClickEvent = () => {
             this.toggle();
         };
+        /**
+         * When a key is pressed, check if the combination of keys is something we care about then execute that function.
+         * @param e
+         */
+        this._keydownEvent = (e) => {
+            var _a, _b;
+            if (((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this.display.widget)) || // inside the widget
+                ((_b = e.composedPath()) === null || _b === void 0 ? void 0 : _b.includes(this.optionsStore.input)) // on the input
+            ) {
+                let combo = '';
+                if (e.ctrlKey)
+                    combo = 'Control ';
+                if (e.shiftKey)
+                    combo += 'Shift ';
+                if (e.code !== "Space") {
+                    combo += e.key;
+                }
+                else {
+                    combo += 'Space';
+                }
+                const binding = this.optionsStore.options.keybindings[combo];
+                if (binding === null || binding === void 0 ? void 0 : binding.call(this)) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            }
+        };
         setupServiceLocator();
         this._eventEmitters = serviceLocator.locate(EventEmitters);
         this.optionsStore = serviceLocator.locate(OptionsStore);
@@ -3292,6 +3508,9 @@ class TempusDominus {
         });
         this._eventEmitters.viewUpdate.subscribe(() => {
             this._viewUpdate();
+        });
+        this._eventEmitters.registerKeydown.subscribe(() => {
+            this._registerKeybindings();
         });
     }
     get viewDate() {
@@ -3422,7 +3641,11 @@ class TempusDominus {
             (_b = this.optionsStore.input) === null || _b === void 0 ? void 0 : _b.removeEventListener('click', this._toggleClickEvent);
         }
         (_c = this._toggle) === null || _c === void 0 ? void 0 : _c.removeEventListener('click', this._toggleClickEvent);
+        if (this.optionsStore.options.keybindings) {
+            document.removeEventListener('keydown', this._keydownEvent);
+        }
         this._subscribers = {};
+        this._eventEmitters.destroy();
     }
     /**
      * Updates the options to use the provided language.
@@ -3444,7 +3667,7 @@ class TempusDominus {
      * @private
      */
     _triggerEvent(event) {
-        var _a;
+        var _a, _b;
         event.viewMode = this.optionsStore.currentView;
         const isChangeEvent = event.type === Namespace.events.change;
         if (isChangeEvent) {
@@ -3455,6 +3678,7 @@ class TempusDominus {
             }
             this._handleAfterChangeEvent(event);
             (_a = this.optionsStore.input) === null || _a === void 0 ? void 0 : _a.dispatchEvent(new CustomEvent(event.type, { detail: event }));
+            (_b = this.optionsStore.input) === null || _b === void 0 ? void 0 : _b.dispatchEvent(new CustomEvent('change', { detail: event }));
         }
         this.optionsStore.element.dispatchEvent(new CustomEvent(event.type, { detail: event }));
         if (window.jQuery) {
@@ -3503,7 +3727,7 @@ class TempusDominus {
         config = OptionConverter._mergeOptions(config, mergeTo);
         if (includeDataset)
             config = OptionConverter._dataToOptions(this.optionsStore.element, config);
-        OptionConverter._validateConflcits(config);
+        OptionConverter._validateConflicts(config);
         config.viewDate = config.viewDate.setLocale(config.localization.locale);
         if (!this.optionsStore.viewDate.isSame(config.viewDate)) {
             this.optionsStore.viewDate = config.viewDate;
@@ -3561,6 +3785,11 @@ class TempusDominus {
         if (this.optionsStore.input.value) {
             this._inputChangeEvent();
         }
+        if (!this.optionsStore.options.keybindings)
+            return;
+        if (this.optionsStore.input) {
+            this.optionsStore.input.addEventListener('keydown', this._keydownEvent);
+        }
     }
     /**
      * Attempts to locate a toggle for the picker and sets an event listener
@@ -3615,6 +3844,15 @@ class TempusDominus {
                 });
             }
         }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
+    }
+    /**
+     * If Keybindings option is provided then register the event listener.
+     * @private
+     */
+    _registerKeybindings() {
+        if (!this.optionsStore.options.keybindings)
+            return;
+        this.display.widget.addEventListener('keydown', this._keydownEvent);
     }
 }
 /**

@@ -3,7 +3,7 @@
         For the sake of the following documentation, assume there's a picker setup like this:
         <pre>
   <code class='language-javascript'>
-const picker = new tempusdominus.TempusDominus(document.getElementById('datetimepicker1'));
+const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
   </code>
 </pre>
 
@@ -289,7 +289,7 @@ const picker = new tempusdominus.TempusDominus(document.getElementById('datetime
         </p>
         <pre>
       <code class='language-javascript'>
-const subscription = picker.subscribe(tempusdominus.Namespace.events.change, (e) => {
+const subscription = picker.subscribe(tempusDominus.Namespace.events.change, (e) => {
   console.log(e);
 });
 
@@ -298,7 +298,7 @@ subscription.unsubscribe();
 
 //you can also provide multiple events:
 const subscriptions = picker.subscribe(
-        [tempusdominus.Namespace.events.show,tempusdominus.Namespace.events.hide],
+        [tempusDominus.Namespace.events.show,tempusDominus.Namespace.events.hide],
         [(e)=> console.log(e), (e) => console.log(e)]
 )
       </code>

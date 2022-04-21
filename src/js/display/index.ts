@@ -157,7 +157,6 @@ export default class Display {
     }
     this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
     this._isVisible = true;
-    this.widget.focus();
   }
 
   /**
