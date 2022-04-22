@@ -80,6 +80,7 @@ export default interface Options {
   useCurrent?: boolean;
   defaultDate?: DateTime;
   localization?: {
+    disabled: string;
     calendarWeekPrefix?: string;
     nextMonth?: string;
     pickHour?: string;

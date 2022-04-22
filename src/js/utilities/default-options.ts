@@ -83,7 +83,8 @@ const DefaultOptions: Options = {
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'default',
     startOfTheWeek: 0,
-    calendarWeekPrefix: 'Week number'
+    calendarWeekPrefix: 'Week number',
+    disabled: 'Disabled'
   },
   keepInvalid: false,
   debug: false,

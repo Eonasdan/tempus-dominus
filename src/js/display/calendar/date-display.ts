@@ -6,6 +6,7 @@ import Dates from '../../dates';
 import {Paint} from '../index';
 import {serviceLocator} from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
+import AriaHelpers from "../../utilities/aria-helpers";
 
 /**
  * Creates and updates the grid for `date`
@@ -63,30 +64,8 @@ export default class DateDisplay {
         const container = widget.getElementsByClassName(
             Namespace.css.daysContainer
         )[0];
-        const [previous, switcher, next] = container.parentElement
-            .getElementsByClassName(Namespace.css.calendarHeader)[0]
-            .getElementsByTagName('div');
 
-        switcher.setAttribute(
-            Namespace.css.daysContainer,
-            this.optionsStore.viewDate.format(
-                this.optionsStore.options.localization.dayViewHeaderFormat
-            )
-        );
-
-        this.validation.isValid(
-            this.optionsStore.viewDate.clone.manipulate(-1, Unit.month),
-            Unit.month
-        )
-            ? previous.classList.remove(Namespace.css.disabled)
-            : previous.classList.add(Namespace.css.disabled);
-
-        this.validation.isValid(
-            this.optionsStore.viewDate.clone.manipulate(1, Unit.month),
-            Unit.month
-        )
-            ? next.classList.remove(Namespace.css.disabled)
-            : next.classList.add(Namespace.css.disabled);
+        this._updateHeader(container);
 
         let innerDate = this.optionsStore.viewDate.clone
             .startOf(Unit.month)
@@ -104,16 +83,9 @@ export default class DateDisplay {
                 ) {
                     if (containerClone.innerText === '#') return;
 
-                    let span = document.createElement('span');
-                    span.ariaHidden = 'true';
-                    span.innerText = `${innerDate.week}`;
-
-                    containerClone.appendChild(span);
-
-                    span = document.createElement('span');
-                    span.classList.add(Namespace.css.hidden);
-                    span.innerText = `${this.optionsStore.options.localization.calendarWeekPrefix} ${innerDate.week}`;
-                    containerClone.appendChild(span);
+                    AriaHelpers.createAriaElements(`${innerDate.week}`,
+                        `${this.optionsStore.options.localization.calendarWeekPrefix} ${innerDate.week}`,
+                        containerClone);
 
                     return;
                 }
@@ -154,7 +126,10 @@ export default class DateDisplay {
                 );
                 containerClone.setAttribute('data-day', `${innerDate.date}`);
                 containerClone.innerText = innerDate.format({day: 'numeric'});
-                containerClone.ariaLabel = innerDate.format({dateStyle: 'long'});
+                if (classes.includes(Namespace.css.disabled)) {
+                    containerClone.ariaLabel = this.optionsStore.options.localization.disabled;
+                }
+                else containerClone.ariaLabel = innerDate.format({dateStyle: 'long'});
                 innerDate.manipulate(1, Unit.date);
             });
     }
@@ -186,21 +161,42 @@ export default class DateDisplay {
                 Namespace.css.dayOfTheWeek,
                 Namespace.css.noHighlight
             );
-            let span = document.createElement('span');
-            span.ariaHidden = 'true';
-            span.innerText = innerDate.format({weekday: 'short'});
 
-            htmlDivElement.appendChild(span);
-
-            span = document.createElement('span');
-            span.classList.add(Namespace.css.hidden);
-            span.innerText = innerDate.format({weekday: 'long'});
-            htmlDivElement.appendChild(span);
+            AriaHelpers.createAriaElements(innerDate.format({weekday: 'short'}),
+                innerDate.format({weekday: 'long'}),
+                htmlDivElement);
 
             innerDate.manipulate(1, Unit.date);
             row.push(htmlDivElement);
         }
 
         return row;
+    }
+
+    private _updateHeader(container: Element) {
+        const [previous, switcher, next] = container.parentElement
+            .getElementsByClassName(Namespace.css.calendarHeader)[0]
+            .getElementsByTagName('div');
+
+        switcher.setAttribute(
+            Namespace.css.daysContainer,
+            this.optionsStore.viewDate.format(
+                this.optionsStore.options.localization.dayViewHeaderFormat
+            )
+        );
+
+        this.validation.isValid(
+            this.optionsStore.viewDate.clone.manipulate(-1, Unit.month),
+            Unit.month
+        )
+            ? previous.classList.remove(Namespace.css.disabled)
+            : previous.classList.add(Namespace.css.disabled);
+
+        this.validation.isValid(
+            this.optionsStore.viewDate.clone.manipulate(1, Unit.month),
+            Unit.month
+        )
+            ? next.classList.remove(Namespace.css.disabled)
+            : next.classList.add(Namespace.css.disabled);
     }
 }

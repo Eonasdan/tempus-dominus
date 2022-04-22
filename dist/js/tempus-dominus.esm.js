@@ -1061,7 +1061,9 @@ const DefaultOptions = {
         selectDate: 'Select Date',
         dayViewHeaderFormat: { month: 'long', year: '2-digit' },
         locale: 'default',
-        startOfTheWeek: 0
+        startOfTheWeek: 0,
+        calendarWeekPrefix: 'Week number',
+        disabled: 'Disabled'
     },
     keepInvalid: false,
     debug: false,
@@ -1859,6 +1861,19 @@ class Dates {
     }
 }
 
+class AriaHelpers {
+    static createAriaElements(visibleText, readerText, container) {
+        let span = document.createElement('span');
+        span.ariaHidden = 'true';
+        span.innerText = visibleText;
+        container.appendChild(span);
+        span = document.createElement('span');
+        span.classList.add(Namespace.css.hidden);
+        span.innerText = readerText;
+        container.appendChild(span);
+    }
+}
+
 /**
  * Creates and updates the grid for `date`
  */
@@ -1882,12 +1897,10 @@ class DateDisplay {
             container.appendChild(div);
         }
         for (let i = 0; i < 42; i++) {
-            if (i !== 0 && i % 7 === 0) {
-                if (this.optionsStore.options.display.calendarWeeks) {
-                    const div = document.createElement('div');
-                    div.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
-                    container.appendChild(div);
-                }
+            if (this.optionsStore.options.display.calendarWeeks && i !== 0 && i % 7 === 0) {
+                const weeksDiv = document.createElement('div');
+                weeksDiv.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
+                container.appendChild(weeksDiv);
             }
             const div = document.createElement('div');
             div.setAttribute('data-action', ActionTypes$1.selectDay);
@@ -1901,16 +1914,7 @@ class DateDisplay {
      */
     _update(widget, paint) {
         const container = widget.getElementsByClassName(Namespace.css.daysContainer)[0];
-        const [previous, switcher, next] = container.parentElement
-            .getElementsByClassName(Namespace.css.calendarHeader)[0]
-            .getElementsByTagName('div');
-        switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
-        this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.month), Unit.month)
-            ? previous.classList.remove(Namespace.css.disabled)
-            : previous.classList.add(Namespace.css.disabled);
-        this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.month), Unit.month)
-            ? next.classList.remove(Namespace.css.disabled)
-            : next.classList.add(Namespace.css.disabled);
+        this._updateHeader(container);
         let innerDate = this.optionsStore.viewDate.clone
             .startOf(Unit.month)
             .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
@@ -1922,7 +1926,7 @@ class DateDisplay {
                 containerClone.classList.contains(Namespace.css.calendarWeeks)) {
                 if (containerClone.innerText === '#')
                     return;
-                containerClone.innerText = `${innerDate.week}`;
+                AriaHelpers.createAriaElements(`${innerDate.week}`, `${this.optionsStore.options.localization.calendarWeekPrefix} ${innerDate.week}`, containerClone);
                 return;
             }
             let classes = [];
@@ -1952,7 +1956,11 @@ class DateDisplay {
             containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
             containerClone.setAttribute('data-day', `${innerDate.date}`);
             containerClone.innerText = innerDate.format({ day: 'numeric' });
-            containerClone.ariaLabel = innerDate.format({ dateStyle: 'long' });
+            if (classes.includes(Namespace.css.disabled)) {
+                containerClone.ariaLabel = this.optionsStore.options.localization.disabled;
+            }
+            else
+                containerClone.ariaLabel = innerDate.format({ dateStyle: 'long' });
             innerDate.manipulate(1, Unit.date);
         });
     }
@@ -1975,18 +1983,23 @@ class DateDisplay {
         for (let i = 0; i < 7; i++) {
             const htmlDivElement = document.createElement('div');
             htmlDivElement.classList.add(Namespace.css.dayOfTheWeek, Namespace.css.noHighlight);
-            let span = document.createElement('span');
-            span.ariaHidden = 'true';
-            span.innerText = innerDate.format({ weekday: 'short' });
-            htmlDivElement.appendChild(span);
-            span = document.createElement('span');
-            span.classList.add(Namespace.css.hidden);
-            span.innerText = innerDate.format({ weekday: 'long' });
-            htmlDivElement.appendChild(span);
+            AriaHelpers.createAriaElements(innerDate.format({ weekday: 'short' }), innerDate.format({ weekday: 'long' }), htmlDivElement);
             innerDate.manipulate(1, Unit.date);
             row.push(htmlDivElement);
         }
         return row;
+    }
+    _updateHeader(container) {
+        const [previous, switcher, next] = container.parentElement
+            .getElementsByClassName(Namespace.css.calendarHeader)[0]
+            .getElementsByTagName('div');
+        switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
+        this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.month), Unit.month)
+            ? previous.classList.remove(Namespace.css.disabled)
+            : previous.classList.add(Namespace.css.disabled);
+        this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.month), Unit.month)
+            ? next.classList.remove(Namespace.css.disabled)
+            : next.classList.add(Namespace.css.disabled);
     }
 }
 
@@ -2166,6 +2179,7 @@ class DecadeDisplay {
         container
             .querySelectorAll(`[data-action="${ActionTypes$1.selectDecade}"]`)
             .forEach((containerClone, index) => {
+            const year = `${this._startDecade.year}`;
             if (index === 0) {
                 containerClone.classList.add(Namespace.css.old);
                 if (this._startDecade.year - 10 < 0) {
@@ -2173,11 +2187,13 @@ class DecadeDisplay {
                     previous.classList.add(Namespace.css.disabled);
                     containerClone.classList.add(Namespace.css.disabled);
                     containerClone.setAttribute('data-value', ``);
+                    containerClone.ariaLabel = this.optionsStore.options.localization.disabled;
                     return;
                 }
                 else {
                     containerClone.innerText = this._startDecade.clone.manipulate(-10, Unit.year).format({ year: 'numeric' });
-                    containerClone.setAttribute('data-value', `${this._startDecade.year}`);
+                    containerClone.setAttribute('data-value', year);
+                    containerClone.ariaLabel = year;
                     return;
                 }
             }
@@ -2193,8 +2209,9 @@ class DecadeDisplay {
             paint('decade', this._startDecade, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
-            containerClone.setAttribute('data-value', `${this._startDecade.year}`);
+            containerClone.setAttribute('data-value', year);
             containerClone.innerText = `${this._startDecade.format({ year: 'numeric' })}`;
+            containerClone.ariaLabel = year;
             this._startDecade.manipulate(10, Unit.year);
         });
     }
@@ -2820,29 +2837,39 @@ class Display {
         const [previous, switcher, next] = this.widget
             .getElementsByClassName(Namespace.css.calendarHeader)[0]
             .getElementsByTagName('div');
+        let previousTitle = '', switcherTitle = '', nextTitle = '';
         switch (showing) {
             case Namespace.css.decadesContainer:
-                previous.setAttribute('title', this.optionsStore.options.localization.previousCentury);
-                switcher.setAttribute('title', '');
-                next.setAttribute('title', this.optionsStore.options.localization.nextCentury);
+                previousTitle = this.optionsStore.options.localization.previousCentury;
+                nextTitle = this.optionsStore.options.localization.nextCentury;
                 break;
             case Namespace.css.yearsContainer:
-                previous.setAttribute('title', this.optionsStore.options.localization.previousDecade);
-                switcher.setAttribute('title', this.optionsStore.options.localization.selectDecade);
-                next.setAttribute('title', this.optionsStore.options.localization.nextDecade);
+                previousTitle = this.optionsStore.options.localization.previousDecade;
+                switcherTitle = this.optionsStore.options.localization.selectDecade;
+                nextTitle = this.optionsStore.options.localization.nextDecade;
                 break;
             case Namespace.css.monthsContainer:
-                previous.setAttribute('title', this.optionsStore.options.localization.previousYear);
-                switcher.setAttribute('title', this.optionsStore.options.localization.selectYear);
-                next.setAttribute('title', this.optionsStore.options.localization.nextYear);
+                previousTitle = this.optionsStore.options.localization.previousYear;
+                switcherTitle = this.optionsStore.options.localization.selectYear;
+                nextTitle = this.optionsStore.options.localization.nextYear;
                 break;
             case Namespace.css.daysContainer:
-                previous.setAttribute('title', this.optionsStore.options.localization.previousMonth);
-                switcher.setAttribute('title', this.optionsStore.options.localization.selectMonth);
-                next.setAttribute('title', this.optionsStore.options.localization.nextMonth);
+                previousTitle = this.optionsStore.options.localization.previousMonth;
+                switcherTitle = this.optionsStore.options.localization.selectMonth;
+                nextTitle = this.optionsStore.options.localization.nextMonth;
                 switcher.innerText = this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat);
                 break;
         }
+        const setTitles = (container, title) => {
+            container.setAttribute('title', title);
+            container.ariaLabel = title;
+            const icons = [...container.getElementsByTagName('svg'), ...container.getElementsByTagName('i')];
+            if (icons.length > 0)
+                icons[0].ariaLabel = title;
+        };
+        setTitles(previous, previousTitle);
+        setTitles(switcher, switcherTitle);
+        setTitles(next, nextTitle);
         switcher.innerText = switcher.getAttribute(showing);
     }
     /**
@@ -2895,15 +2922,8 @@ class Display {
         const template = document.createElement('div');
         template.classList.add(Namespace.css.widget);
         template.setAttribute('tabindex', '0');
-        const dateView = document.createElement('div');
-        dateView.classList.add(Namespace.css.dateContainer);
-        dateView.append(this.getHeadTemplate(), this.decadeDisplay.getPicker(), this.yearDisplay.getPicker(), this.monthDisplay.getPicker(), this.dateDisplay.getPicker());
-        const timeView = document.createElement('div');
-        timeView.classList.add(Namespace.css.timeContainer);
-        timeView.appendChild(this.timeDisplay.getPicker(this._iconTag.bind(this)));
-        timeView.appendChild(this.hourDisplay.getPicker());
-        timeView.appendChild(this.minuteDisplay.getPicker());
-        timeView.appendChild(this.secondDisplay.getPicker());
+        const dateView = this._buildDateView();
+        const timeView = this._buildTimeView();
         const toolbar = document.createElement('div');
         toolbar.classList.add(Namespace.css.toolbar);
         toolbar.append(...this.getToolbarElements());
@@ -2916,21 +2936,7 @@ class Display {
         if (this.optionsStore.options.display.sideBySide &&
             this._hasDate &&
             this._hasTime) {
-            template.classList.add(Namespace.css.sideBySide);
-            if (this.optionsStore.options.display.toolbarPlacement === 'top') {
-                template.appendChild(toolbar);
-            }
-            const row = document.createElement('div');
-            row.classList.add('td-row');
-            dateView.classList.add('td-half');
-            timeView.classList.add('td-half');
-            row.appendChild(dateView);
-            row.appendChild(timeView);
-            template.appendChild(row);
-            if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
-                template.appendChild(toolbar);
-            }
-            this._widget = template;
+            this._buildSideBySide(template, dateView, timeView, toolbar);
             return;
         }
         if (this.optionsStore.options.display.toolbarPlacement === 'top') {
@@ -2955,10 +2961,6 @@ class Display {
         if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
             template.appendChild(toolbar);
         }
-        const arrow = document.createElement('div');
-        arrow.classList.add('arrow');
-        arrow.setAttribute('data-popper-arrow', '');
-        template.appendChild(arrow);
         this._widget = template;
     }
     /**
@@ -2989,7 +2991,9 @@ class Display {
             const div = document.createElement('div');
             div.setAttribute('data-action', ActionTypes$1.today);
             div.setAttribute('title', this.optionsStore.options.localization.today);
-            div.appendChild(this._iconTag(this.optionsStore.options.display.icons.today));
+            const todayIcon = this._iconTag(this.optionsStore.options.display.icons.today);
+            todayIcon.ariaLabel = this.optionsStore.options.localization.today;
+            div.appendChild(todayIcon);
             toolbar.push(div);
         }
         if (!this.optionsStore.options.display.sideBySide &&
@@ -3007,21 +3011,27 @@ class Display {
             const div = document.createElement('div');
             div.setAttribute('data-action', ActionTypes$1.togglePicker);
             div.setAttribute('title', title);
-            div.appendChild(this._iconTag(icon));
+            const iconTag = this._iconTag(icon);
+            iconTag.ariaLabel = title;
+            div.appendChild(iconTag);
             toolbar.push(div);
         }
         if (this.optionsStore.options.display.buttons.clear) {
             const div = document.createElement('div');
             div.setAttribute('data-action', ActionTypes$1.clear);
             div.setAttribute('title', this.optionsStore.options.localization.clear);
-            div.appendChild(this._iconTag(this.optionsStore.options.display.icons.clear));
+            const clearIcon = this._iconTag(this.optionsStore.options.display.icons.clear);
+            clearIcon.ariaLabel = this.optionsStore.options.localization.clear;
+            div.appendChild(clearIcon);
             toolbar.push(div);
         }
         if (this.optionsStore.options.display.buttons.close) {
             const div = document.createElement('div');
             div.setAttribute('data-action', ActionTypes$1.close);
             div.setAttribute('title', this.optionsStore.options.localization.close);
-            div.appendChild(this._iconTag(this.optionsStore.options.display.icons.close));
+            const closeIcon = this._iconTag(this.optionsStore.options.display.icons.close);
+            closeIcon.ariaLabel = this.optionsStore.options.localization.close;
+            div.appendChild(closeIcon);
             toolbar.push(div);
         }
         return toolbar;
@@ -3171,6 +3181,38 @@ class Display {
             }
             this.dates.setValue(date);
         }
+    }
+    _buildSideBySide(template, dateView, timeView, toolbar) {
+        template.classList.add(Namespace.css.sideBySide);
+        if (this.optionsStore.options.display.toolbarPlacement === 'top') {
+            template.appendChild(toolbar);
+        }
+        const row = document.createElement('div');
+        row.classList.add('td-row');
+        dateView.classList.add('td-half');
+        timeView.classList.add('td-half');
+        row.appendChild(dateView);
+        row.appendChild(timeView);
+        template.appendChild(row);
+        if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
+            template.appendChild(toolbar);
+        }
+        this._widget = template;
+    }
+    _buildDateView() {
+        const dateView = document.createElement('div');
+        dateView.classList.add(Namespace.css.dateContainer);
+        dateView.append(this.getHeadTemplate(), this.decadeDisplay.getPicker(), this.yearDisplay.getPicker(), this.monthDisplay.getPicker(), this.dateDisplay.getPicker());
+        return dateView;
+    }
+    _buildTimeView() {
+        const timeView = document.createElement('div');
+        timeView.classList.add(Namespace.css.timeContainer);
+        timeView.appendChild(this.timeDisplay.getPicker(this._iconTag.bind(this)));
+        timeView.appendChild(this.hourDisplay.getPicker());
+        timeView.appendChild(this.minuteDisplay.getPicker());
+        timeView.appendChild(this.secondDisplay.getPicker());
+        return timeView;
     }
 }
 
