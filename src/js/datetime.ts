@@ -18,6 +18,7 @@ const twoDigitTemplate = {
 }
 
 const twoDigitTwentyForTemplate = {
+  hour: '2-digit',
   hour12: false
 }
 
