@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta5 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta5.1 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -27,7 +27,8 @@
         second: '2-digit',
         hour12: true,
     };
-    const twoDigitTwentyForTemplate = {
+    const twoDigitTwentyFourTemplate = {
+        hour: '2-digit',
         hour12: false
     };
     const getFormatByUnit = (unit) => {
@@ -283,7 +284,7 @@
          * Returns two digit hours
          */
         get secondsFormatted() {
-            return this.parts(undefined, twoDigitTemplate).seconds;
+            return this.parts(undefined, twoDigitTemplate).second;
         }
         /**
          * Shortcut to Date.getMinutes()
@@ -319,7 +320,7 @@
          * Returns two digit hours
          */
         get hoursFormatted() {
-            let formatted = this.parts(undefined, twoDigitTwentyForTemplate).hour;
+            let formatted = this.parts(undefined, twoDigitTwentyFourTemplate).hour;
             if (formatted === '24')
                 formatted = '00';
             return formatted;
@@ -570,7 +571,7 @@
     }
 
     // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-    const NAME = 'tempus-dominus', version = '6.0.0-beta5', dataKey = 'td';
+    const NAME = 'tempus-dominus', version = '6.0.0-beta5.1', dataKey = 'td';
     /**
      * Events
      */
