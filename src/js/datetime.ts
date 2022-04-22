@@ -17,7 +17,7 @@ const twoDigitTemplate = {
   hour12: true,
 }
 
-const twoDigitTwentyForTemplate = {
+const twoDigitTwentyFourTemplate = {
   hour: '2-digit',
   hour12: false
 }
@@ -312,7 +312,7 @@ export class DateTime extends Date {
    * Returns two digit hours
    */
   get secondsFormatted(): string {
-    return this.parts(undefined, twoDigitTemplate).seconds;
+    return this.parts(undefined, twoDigitTemplate).second;
   }
 
   /**
@@ -354,7 +354,7 @@ export class DateTime extends Date {
    * Returns two digit hours
    */
   get hoursFormatted(): string {
-    let formatted =this.parts(undefined, twoDigitTwentyForTemplate).hour;
+    let formatted =this.parts(undefined, twoDigitTwentyFourTemplate).hour;
     if (formatted === '24') formatted = '00';
     return formatted;
   }
