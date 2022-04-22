@@ -65,6 +65,7 @@ export declare class ErrorMessages {
      * a date/datetime object.
      */
     dateString(): void;
+    throwError(message: any): void;
     /**
      * Used with an Error Event type if the user selects a date that
      * fails restriction validation.
