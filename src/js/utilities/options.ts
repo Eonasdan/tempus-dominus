@@ -71,7 +71,7 @@ export default interface Options {
       down?: string;
       close?: string;
     };
-    viewMode: keyof ViewMode | undefined;
+    viewMode?: keyof ViewMode | undefined;
     sideBySide?: boolean;
     inline?: boolean;
     keepOpen?: boolean;
