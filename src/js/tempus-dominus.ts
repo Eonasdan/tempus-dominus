@@ -3,7 +3,7 @@ import Dates from './dates';
 import Actions from './actions';
 import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
 import Namespace from './utilities/namespace';
-import Options, { OptionConverter, OptionsStore } from './utilities/options';
+import Options from './utilities/options';
 import {
   BaseEvent,
   ChangeEvent,
@@ -17,6 +17,8 @@ import {
 import CalendarModes from './utilities/calendar-modes';
 import DefaultOptions from './utilities/default-options';
 import ActionTypes from './utilities/action-types';
+import {OptionsStore} from "./utilities/optionsStore";
+import {OptionConverter} from "./utilities/optionConverter";
 
 /**
  * A robust and powerful date/time picker component.
@@ -315,32 +317,33 @@ class TempusDominus {
     mergeTo: Options,
     includeDataset = false
   ): void {
-    config = OptionConverter._mergeOptions(config, mergeTo);
+    let newConfig = OptionConverter.deepCopy(config);
+    newConfig = OptionConverter._mergeOptions(newConfig, mergeTo);
     if (includeDataset)
-      config = OptionConverter._dataToOptions(
+      newConfig = OptionConverter._dataToOptions(
         this.optionsStore.element,
-        config
+        newConfig
       );
 
-    OptionConverter._validateConflicts(config);
+    OptionConverter._validateConflicts(newConfig);
 
-    config.viewDate = config.viewDate.setLocale(config.localization.locale);
+    newConfig.viewDate = newConfig.viewDate.setLocale(newConfig.localization.locale);
 
-    if (!this.optionsStore.viewDate.isSame(config.viewDate)) {
-      this.optionsStore.viewDate = config.viewDate;
+    if (!this.optionsStore.viewDate.isSame(newConfig.viewDate)) {
+      this.optionsStore.viewDate = newConfig.viewDate;
     }
 
     /**
      * Sets the minimum view allowed by the picker. For example the case of only
      * allowing year and month to be selected but not date.
      */
-    if (config.display.components.year) {
+    if (newConfig.display.components.year) {
       this.optionsStore.minimumCalendarViewMode = 2;
     }
-    if (config.display.components.month) {
+    if (newConfig.display.components.month) {
       this.optionsStore.minimumCalendarViewMode = 1;
     }
-    if (config.display.components.date) {
+    if (newConfig.display.components.date) {
       this.optionsStore.minimumCalendarViewMode = 0;
     }
 
@@ -352,10 +355,10 @@ class TempusDominus {
     // Update view mode if needed
     if (
       CalendarModes[this.optionsStore.currentCalendarViewMode].name !==
-      config.display.viewMode
+      newConfig.display.viewMode
     ) {
       this.optionsStore.currentCalendarViewMode = Math.max(
-        CalendarModes.findIndex((x) => x.name === config.display.viewMode),
+        CalendarModes.findIndex((x) => x.name === newConfig.display.viewMode),
         this.optionsStore.minimumCalendarViewMode
       );
     }
@@ -364,7 +367,7 @@ class TempusDominus {
       this.display._update('all');
     }
 
-    this.optionsStore.options = config;
+    this.optionsStore.options = newConfig;
   }
 
   /**
@@ -486,7 +489,7 @@ class TempusDominus {
         setViewDate();
       } catch {
         console.warn(
-          'TD: Something went wrong trying to set the multidate values from the input field.'
+          'TD: Something went wrong trying to set the multipleDates values from the input field.'
         );
       }
     } else {
@@ -501,6 +504,7 @@ class TempusDominus {
    * @private
    */
   private _toggleClickEvent = () => {
+    if ((this.optionsStore.element as any)?.disabled || this.optionsStore.input?.disabled) return
     this.toggle();
   };
 }

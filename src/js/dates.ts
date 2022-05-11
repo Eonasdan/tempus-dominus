@@ -1,10 +1,11 @@
 import { DateTime, getFormatByUnit, Unit } from './datetime';
 import Namespace from './utilities/namespace';
 import { ChangeEvent, FailEvent } from './utilities/event-types';
-import { OptionConverter, OptionsStore } from './utilities/options';
 import Validation from './validation';
 import { serviceLocator } from './utilities/service-locator';
 import { EventEmitters } from './utilities/event-emitter';
+import {OptionsStore} from "./utilities/optionsStore";
+import {OptionConverter} from "./utilities/optionConverter";
 
 export default class Dates {
   private _dates: DateTime[] = [];
@@ -270,6 +271,7 @@ export default class Dates {
         isValid: false,
       } as ChangeEvent);
     }
+
     this._eventEmitters.triggerEvent.emit({
       type: Namespace.events.error,
       reason: Namespace.errorMessages.failedToSetInvalidDate,

@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     events.forEach((listen) => {
       element.addEventListener(listen, (e) => {
         logger(element.closest('section').getElementsByClassName('logger')[0],
-          'log',
+          listen === 'error.td' ? 'error' : 'log',
           `${element.getAttribute('id')} -> ${listen}:`, JSON.stringify(e.detail, null, 2));
       });
     });

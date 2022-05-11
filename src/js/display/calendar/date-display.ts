@@ -1,11 +1,11 @@
 import { DateTime, Unit } from '../../datetime';
 import Namespace from '../../utilities/namespace';
-import { OptionsStore } from '../../utilities/options';
 import Validation from '../../validation';
 import Dates from '../../dates';
 import { Paint } from '../index';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
+import {OptionsStore} from "../../utilities/optionsStore";
 
 /**
  * Creates and updates the grid for `date`

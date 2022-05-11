@@ -1,10 +1,10 @@
 import { Unit } from '../../datetime';
 import Namespace from '../../utilities/namespace';
-import { OptionsStore } from '../../utilities/options';
 import Validation from '../../validation';
 import Dates from '../../dates';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
+import {OptionsStore} from "../../utilities/optionsStore";
 
 /**
  * Creates the clock display

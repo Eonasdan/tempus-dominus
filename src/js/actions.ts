@@ -1,7 +1,6 @@
 import {DateTime, Unit} from './datetime';
 import Collapse from './display/collapse';
 import Namespace from './utilities/namespace';
-import {OptionsStore} from './utilities/options';
 import Dates from './dates';
 import Validation from './validation';
 import Display from './display';
@@ -9,6 +8,7 @@ import {EventEmitters} from './utilities/event-emitter';
 import {serviceLocator} from './utilities/service-locator.js';
 import ActionTypes from './utilities/action-types';
 import CalendarModes from './utilities/calendar-modes';
+import {OptionsStore} from "./utilities/optionsStore";
 
 /**
  *

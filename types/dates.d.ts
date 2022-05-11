@@ -23,6 +23,11 @@ export default class Dates {
      */
     formatInput(date: DateTime): string;
     /**
+     * parse the value into a DateTime object.
+     * this can be overwritten to supply your own parsing.
+     */
+    parseInput(value: any): DateTime;
+    /**
      * Tries to convert the provided value to a DateTime object.
      * If value is null|undefined then clear the value of the provided index (or 0).
      * @param value Value to convert or null|undefined
