@@ -3,6 +3,13 @@ import Options from "./options";
 export declare class OptionConverter {
     private static ignoreProperties;
     static deepCopy(input: any): Options;
+    private static isValue;
+    /**
+     * Finds value out of an object based on a string, period delimited, path
+     * @param paths
+     * @param obj
+     */
+    static objectPath(paths: string, obj: any): any;
     /**
      * The spread operator caused sub keys to be missing after merging.
      * This is to fix that issue by using spread on the child objects first.
