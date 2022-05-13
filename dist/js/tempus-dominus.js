@@ -1114,7 +1114,6 @@
                 if (typeof inputElement !== 'object' ||
                     inputElement instanceof HTMLElement ||
                     inputElement instanceof Element ||
-                    inputElement instanceof DateTime ||
                     inputElement instanceof Date)
                     return;
                 if (!Array.isArray(inputElement)) {
@@ -1122,6 +1121,19 @@
                 }
             });
             return o;
+        }
+        /**
+         * Finds value out of an object based on a string, period delimited, path
+         * @param paths
+         * @param obj
+         */
+        static objectPath(paths, obj) {
+            if (paths.charAt(0) === '.')
+                paths = paths.slice(1);
+            return paths.split('.')
+                .reduce((value, key) => (OptionConverter.isValue(value) || OptionConverter.isValue(value[key]) ?
+                value[key] :
+                undefined), obj);
         }
         /**
          * The spread operator caused sub keys to be missing after merging.
@@ -1138,7 +1150,7 @@
             if (unsupportedOptions.length > 0) {
                 const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
                 const errors = unsupportedOptions.map((x) => {
-                    let error = `"${path.substring(1)}.${x}" in not a known option.`;
+                    let error = `"${path}.${x}" in not a known option.`;
                     let didYouMean = flattenedOptions.find((y) => y.includes(x));
                     if (didYouMean)
                         error += `Did you mean "${didYouMean}"?`;
@@ -1147,7 +1159,10 @@
                 Namespace.errorMessages.unexpectedOptions(errors);
             }
             Object.keys(mergeOption).forEach((key) => {
-                const defaultOptionValue = mergeOption[key];
+                path += `.${key}`;
+                if (path.charAt(0) === '.')
+                    path = path.slice(1);
+                const defaultOptionValue = OptionConverter.objectPath(path, DefaultOptions);
                 let providedType = typeof provided[key];
                 let defaultType = typeof defaultOptionValue;
                 let value = provided[key];
@@ -1155,21 +1170,21 @@
                     if (defaultType === 'undefined' ||
                         ((value === null || value === void 0 ? void 0 : value.length) === 0 && Array.isArray(defaultOptionValue))) {
                         copyTo[key] = defaultOptionValue;
+                        path = path.substring(0, path.lastIndexOf(`.${key}`));
                         return;
                     }
                     provided[key] = defaultOptionValue;
                     value = provided[key];
                 }
-                path += `.${key}`;
                 copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
                 if (typeof defaultOptionValue !== 'object' ||
+                    defaultOptionValue instanceof Date ||
                     OptionConverter.ignoreProperties.includes(key)) {
                     path = path.substring(0, path.lastIndexOf(`.${key}`));
                     return;
                 }
                 if (!Array.isArray(provided[key])) {
                     OptionConverter.spread(provided[key], defaultOptionValue, copyTo[key], path, locale);
-                    path = path.substring(0, path.lastIndexOf(`.${key}`));
                 }
                 path = path.substring(0, path.lastIndexOf(`.${key}`));
             });
@@ -1311,7 +1326,7 @@
                         case 'function':
                             return value;
                         default:
-                            Namespace.errorMessages.typeMismatch(path.substring(1), providedType, defaultType);
+                            Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
                     }
             }
         }
@@ -1494,6 +1509,7 @@
         }
     }
     OptionConverter.ignoreProperties = ['meta', 'dayViewHeaderFormat', 'container'];
+    OptionConverter.isValue = a => a != null; // everything except undefined + null
 
     class Dates {
         constructor() {

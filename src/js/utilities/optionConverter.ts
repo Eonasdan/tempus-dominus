@@ -16,7 +16,6 @@ export class OptionConverter {
             if (typeof inputElement !== 'object' ||
                 inputElement instanceof HTMLElement ||
                 inputElement instanceof Element ||
-                inputElement instanceof DateTime ||
                 inputElement instanceof Date) return;
             if (!Array.isArray(inputElement)) {
                 o[key] = OptionConverter.deepCopy(inputElement);
@@ -24,6 +23,22 @@ export class OptionConverter {
         });
 
         return o;
+    }
+
+    private static isValue = a => a != null; // everything except undefined + null
+
+    /**
+     * Finds value out of an object based on a string, period delimited, path
+     * @param paths
+     * @param obj
+     */
+    static objectPath(paths: string, obj) {
+        if (paths.charAt(0) === '.')
+            paths = paths.slice(1);
+        return paths.split('.')
+            .reduce((value, key) => (OptionConverter.isValue(value) || OptionConverter.isValue(value[key]) ?
+                value[key] :
+                undefined), obj);
     }
 
     /**
@@ -45,7 +60,7 @@ export class OptionConverter {
             const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
 
             const errors = unsupportedOptions.map((x) => {
-                let error = `"${path.substring(1)}.${x}" in not a known option.`;
+                let error = `"${path}.${x}" in not a known option.`;
                 let didYouMean = flattenedOptions.find((y) => y.includes(x));
                 if (didYouMean) error += `Did you mean "${didYouMean}"?`;
                 return error;
@@ -54,26 +69,32 @@ export class OptionConverter {
         }
 
         Object.keys(mergeOption).forEach((key) => {
-            const defaultOptionValue = mergeOption[key];
+            path += `.${key}`;
+            if (path.charAt(0) === '.') path = path.slice(1);
+
+            const defaultOptionValue = OptionConverter.objectPath(path, DefaultOptions);
             let providedType = typeof provided[key];
             let defaultType = typeof defaultOptionValue;
             let value = provided[key];
+
             if (!provided.hasOwnProperty(key)) {
                 if (
                     defaultType === 'undefined' ||
                     (value?.length === 0 && Array.isArray(defaultOptionValue))
                 ) {
                     copyTo[key] = defaultOptionValue;
+                    path = path.substring(0, path.lastIndexOf(`.${key}`));
                     return;
                 }
                 provided[key] = defaultOptionValue;
                 value = provided[key];
             }
-            path += `.${key}`;
+
             copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
 
             if (
                 typeof defaultOptionValue !== 'object' ||
+                defaultOptionValue instanceof Date ||
                 OptionConverter.ignoreProperties.includes(key)
             ) {
                 path = path.substring(0, path.lastIndexOf(`.${key}`));
@@ -82,7 +103,6 @@ export class OptionConverter {
 
             if (!Array.isArray(provided[key])) {
                 OptionConverter.spread(provided[key], defaultOptionValue, copyTo[key], path, locale);
-                path = path.substring(0, path.lastIndexOf(`.${key}`));
             }
             path = path.substring(0, path.lastIndexOf(`.${key}`));
         });
@@ -297,7 +317,7 @@ export class OptionConverter {
                         return value;
                     default:
                         Namespace.errorMessages.typeMismatch(
-                            path.substring(1),
+                            path,
                             providedType,
                             defaultType
                         );
