@@ -11,13 +11,13 @@ import { createPopper } from '@popperjs/core';
 import Namespace from '../utilities/namespace';
 import { HideEvent } from '../utilities/event-types';
 import Collapse from './collapse';
-import { OptionsStore } from '../utilities/options';
 import Validation from '../validation';
 import Dates from '../dates';
 import { EventEmitters, ViewUpdateValues } from '../utilities/event-emitter';
 import { serviceLocator } from '../utilities/service-locator';
 import ActionTypes from '../utilities/action-types';
 import CalendarModes from '../utilities/calendar-modes';
+import {OptionsStore} from "../utilities/optionsStore";
 
 /**
  * Main class for all things display related.

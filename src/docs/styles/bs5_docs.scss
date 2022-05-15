@@ -506,7 +506,7 @@
   }
 }
 
-.anchorjs-link {
+.anchor-link {
   font-size: 1.4rem;
   font-weight: 400;
   transition: color 0.15s ease-in-out;
@@ -519,7 +519,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .anchorjs-link {
+  .anchor-link {
     transition: none;
   }
 }

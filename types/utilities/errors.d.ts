@@ -41,7 +41,7 @@ export declare class ErrorMessages {
     numbersOutOfRage(optionName: string, lower: number, upper: number): void;
     /**
      * Throws an error when a value for a date options couldn't be parsed. Either
-     * the option was an invalide string or an invalid Date object.
+     * the option was an invalid string or an invalid Date object.
      * @param optionName
      * @param date
      * @param soft If true, logs a warning instead of an error.
