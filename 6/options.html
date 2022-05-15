@@ -17,14 +17,14 @@
 
   <meta name="title" content="Options">
   <meta name="description" content="How to use Tempus Dominus datetime picker
-  ">
+    ">
 
   
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://getdatepicker.com/docs/6//options.html">
   <meta property="og:title" content="Options">
   <meta property="og:description" content="How to use Tempus Dominus datetime picker
-  ">
+    ">
   <meta class="metaImage" property="og:image" content="">
 
   <meta property="article:published_time" content="2021-07-08T00:00:00.000Z">
@@ -40,7 +40,7 @@
   <meta property="twitter:url" content="https://getdatepicker.com/docs/6//options.html">
   <meta property="twitter:title" content="Options">
   <meta property="twitter:description" content="How to use Tempus Dominus datetime picker
-  ">
+    ">
   <meta class="metaImage" property="twitter:image" content="">
   <link rel="stylesheet" href="/css/styles.min.css">
 
@@ -237,119 +237,129 @@
     </div>
   </div>
   <div id="mainContent" class="bd-content ps-lg-4">
-  <p>
-    Options can be provided during the inital setup through the constructor <code>new tempusDominus.TempusDominus(...,
-    options);</code>. Take a look at the examples for more information.
-  </p>
-  <p>
-    Options can be updated through the <a href="functions.html#updateOptions"><code>updateOptions</code> function</a>.
-  </p>
-  <p>
-    All options will throw <a href="namespace/errors.html#typeMismatch">typeMismatch</a> if the
-    provided type
-    does not match the expected type, e.g. a string instead of a boolean.
-  </p>
-  <div class="alert alert-info">
-    While most of the date options accept string values it wil throw a warning. JavaScript's Date objects will be
-    converted
-    to the pickers <a href="datetime.html">DateTime object</a>.
-  </div>
+    <p>
+        Options can be provided during the inital setup through the constructor <code>new
+        tempusDominus.TempusDominus(...,
+        options);</code>. Take a look at the examples for more information.
+    </p>
+    <p>
+        Options can be updated through the <a href="functions.html#updateOptions"><code>updateOptions</code>
+        function</a>.
+    </p>
+    <p>
+        All options will throw <a href="namespace/errors.html#typeMismatch">typeMismatch</a> if the
+        provided type
+        does not match the expected type, e.g. a string instead of a boolean.
+    </p>
+    <div class="alert alert-info">
+        While most of the date options accept string values it wil throw a warning. JavaScript's Date objects will be
+        converted
+        to the pickers <a href="datetime.html">DateTime object</a>.
+    </div>
 
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <h2 id="restrictions">restrictions<a class="anchorjs-link" aria-label="Anchor" href="#restrictions"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col offset-1 border-start border-dark">
-          <div>
-            <h3 id="restrictionsMinDate">minDate
-              <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsMinDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h3>
-            <p>
-              <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
-              Prevents the user from selecting a date/time before this value. Set to <code>undefined</code> to remove
-              the
-              restriction.
-            </p>
-            <p>
-              Throws <a href="namespace/errors.html#conflictingConfiguration">conflictingConfiguration</a> if value is
-              after maxDate.
-            </p>
-          </div>
-          <div>
-            <h3 id="restrictionsMaxDate">maxDate <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsMaxDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-            <p>
-              <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
-              Prevents the user from selecting a date/time after this value. Set to <code>undefined</code> to remove the
-              restriction.
-            </p>
-            <p>
-              Throws <a href="namespace/errors.html#conflictingConfiguration">conflictingConfiguration</a> if value is
-              after maxDate.
-            </p>
-          </div>
-          <h3 id="restrictionsEnabledDates">enabledDates/disabledDates
-            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsEnabledDates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <div>
-            <strong>Accepts:</strong> array of string | Date | DateTime <strong>Defaults:</strong> undefined<br>
-            <div class="alert alert-warning">
-              Use one or the other, don't provide both enabledDates and disabledDates.
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2 id="restrictions">restrictions<a class="anchor-link" aria-label="Anchor" href="#restrictions"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+                </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col offset-1 border-start border-dark">
-              <h4>enabledDates</h4>
-              <p>
-                Allows the user to select only from the provided days. Setting this takes precedence over
-                options.minDate,
-                options.maxDate configuration.
-              </p>
-              <h4>disabledDates</h4>
-              <p>
-                Disallows the user to select any of the provided days. Setting this takes precedence over
-                options.minDate,
-                options.maxDate configuration.
-              </p>
-            </div>
-          </div>
-          <h3 id="restrictionsEnabledHours">enabledHours/disabledHours
-            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsEnabledHours"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <div>
-            <strong>Accepts:</strong> array of number from 0-24 <strong>Defaults:</strong> undefined<br>
-            <div class="alert alert-warning">
-              Use one or the other, don't provide both enabledHours and disabledHours.
-            </div>
-            <p>
-              Throws <a href="namespace/errors.html#numbersOutOfRage">numbersOutOfRage</a> any value is not between 0-23
-            </p>
-          </div>
-          <div class="row">
-            <div class="col offset-1 border-start border-dark">
-              <h4>enabledHours</h4>
-              <p>
-                Allows the user to select only from the provided hours.
-              </p>
-              <h4>disabledHours</h4>
-              <p>
-                Disallows the user to select any of the provided hours.
-              </p>
-            </div>
-          </div>
+            <div class="row">
+                <div class="col offset-1 border-start border-dark">
+                    <div>
+                        <h3 id="restrictionsMinDate">minDate
+                            <a class="anchor-link" aria-label="Anchor" href="#restrictionsMinDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h3>
+                        <p>
+                            <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
+                            Prevents the user from selecting a date/time before this value. Set to
+                            <code>undefined</code> to remove
+                            the
+                            restriction.
+                        </p>
+                        <p>
+                            Throws <a href="namespace/errors.html#conflictingConfiguration">conflictingConfiguration</a>
+                            if value is
+                            after maxDate.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 id="restrictionsMaxDate">maxDate <a class="anchor-link" aria-label="Anchor" href="#restrictionsMaxDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                        <p>
+                            <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
+                            Prevents the user from selecting a date/time after this value. Set to <code>undefined</code>
+                            to remove the
+                            restriction.
+                        </p>
+                        <p>
+                            Throws <a href="namespace/errors.html#conflictingConfiguration">conflictingConfiguration</a>
+                            if value is
+                            after maxDate.
+                        </p>
+                    </div>
+                    <h3 id="restrictionsEnabledDates">enabledDates/disabledDates
+                        <a class="anchor-link" aria-label="Anchor" href="#restrictionsEnabledDates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <div>
+                        <strong>Accepts:</strong> array of string | Date | DateTime <strong>Defaults:</strong> undefined<br>
+                        <div class="alert alert-warning">
+                            Use one or the other, don't provide both enabledDates and disabledDates.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col offset-1 border-start border-dark">
+                            <h4>enabledDates</h4>
+                            <p>
+                                Allows the user to select only from the provided days. Setting this takes precedence
+                                over
+                                options.minDate,
+                                options.maxDate configuration.
+                            </p>
+                            <h4>disabledDates</h4>
+                            <p>
+                                Disallows the user to select any of the provided days. Setting this takes precedence
+                                over
+                                options.minDate,
+                                options.maxDate configuration.
+                            </p>
+                        </div>
+                    </div>
+                    <h3 id="restrictionsEnabledHours">enabledHours/disabledHours
+                        <a class="anchor-link" aria-label="Anchor" href="#restrictionsEnabledHours"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <div>
+                        <strong>Accepts:</strong> array of number from 0-24 <strong>Defaults:</strong> undefined<br>
+                        <div class="alert alert-warning">
+                            Use one or the other, don't provide both enabledHours and disabledHours.
+                        </div>
+                        <p>
+                            Throws <a href="namespace/errors.html#numbersOutOfRage">numbersOutOfRage</a> any value is
+                            not between 0-23
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="col offset-1 border-start border-dark">
+                            <h4>enabledHours</h4>
+                            <p>
+                                Allows the user to select only from the provided hours.
+                            </p>
+                            <h4>disabledHours</h4>
+                            <p>
+                                Disallows the user to select any of the provided hours.
+                            </p>
+                        </div>
+                    </div>
 
-          <h3 id="restrictionsDisabledTimeIntervals">disabledTimeIntervals
-            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsDisabledTimeIntervals"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <p>
-            <strong>Accepts:</strong> array of an object with from: DateTime, to: DateTime <strong>Defaults:</strong>
-            undefined<br>
-            Disables time selection between the given DateTimes.
-          </p>
-          <pre><code class="language-javascript">
+                    <h3 id="restrictionsDisabledTimeIntervals">disabledTimeIntervals
+                        <a class="anchor-link" aria-label="Anchor" href="#restrictionsDisabledTimeIntervals"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <p>
+                        <strong>Accepts:</strong> array of an object with from: DateTime, to: DateTime
+                        <strong>Defaults:</strong>
+                        undefined<br>
+                        Disables time selection between the given DateTimes.
+                    </p>
+                    <pre><code class="language-javascript">
 const later = new tempusDominus.DateTime();
 later.hours = 8;
 new tempusDominus.TempusDominus(..., {
@@ -359,603 +369,592 @@ new tempusDominus.TempusDominus(..., {
 });
 </code>
           </pre>
-          <h3 id="restrictionsDaysOfWeekDisabled">daysOfWeekDisabled
-            <a class="anchorjs-link" aria-label="Anchor" href="#restrictionsDaysOfWeekDisabled"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <p>
-            <strong>Accepts:</strong> array of numbers from 0-6<br>
-            Disallow the user to select weekdays that exist in this array. This has lower priority over the
-            options.minDate, options.maxDate, options.disabledDates and options.enabledDates configuration settings.
-          </p>
-          <p>
-            Throws <a href="namespace/errors.html#numbersOutOfRage">numbersOutOfRage</a> any value is not between 0-6.
-          </p>
+                    <h3 id="restrictionsDaysOfWeekDisabled">daysOfWeekDisabled
+                        <a class="anchor-link" aria-label="Anchor" href="#restrictionsDaysOfWeekDisabled"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <p>
+                        <strong>Accepts:</strong> array of numbers from 0-6<br>
+                        Disallow the user to select weekdays that exist in this array. This has lower priority over the
+                        options.minDate, options.maxDate, options.disabledDates and options.enabledDates configuration
+                        settings.
+                    </p>
+                    <p>
+                        Throws <a href="namespace/errors.html#numbersOutOfRage">numbersOutOfRage</a> any value is not
+                        between 0-6.
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
-  <section>
-    <h2 id="display">display<a class="anchorjs-link" aria-label="Anchor" href="#display"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </section>
+    <section>
+        <h2 id="display">display<a class="anchor-link" aria-label="Anchor" href="#display"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+        </h2>
+
+        <div class="row">
+            <div class="col offset-1 border-start border-dark">
+                <h3 id="displayToolbarPlacement">toolbarPlacement<a class="anchor-link" aria-label="Anchor" href="#displayToolbarPlacement"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                <div>
+                    <p>
+                        <strong>Accepts:</strong> 'top' | 'bottom' <strong>Defaults:</strong> bottom<br>
+                        Changes the placement of the toolbar where the today, clear, component switch icon are located.
+                    </p>
+                    <p>
+                        Throws <a href="namespace/errors.html#unexpectedOptionValue">unexpectedOptionValue</a> if value
+                        is not one
+                        of the accepted values.
+                    </p>
+                </div>
+
+                <h3 id="displayComponents">components<a class="anchor-link" aria-label="Anchor" href="#displayComponents"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                <p><strong>Accepts: true|false</strong></p>
+
+                <p>
+                    These options turns on or off the particular views. If option is false for <code>date</code> the
+                    user would
+                    only be able to select month and year
+                    for instance.
+                </p>
+
+                <div class="row">
+                    <div class="col offset-1 border-start border-dark">
+                        <h4 id="displayComponentsCalendar">calendar<a class="anchor-link" aria-label="Anchor" href="#displayComponentsCalendar"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> true<br>
+                            A convenience flag that can enable or disable all of the calendar components like date,
+                            month, year,
+                            decades, century.
+                            This flag must be true for any of the calendar components to be visible, even if those
+                            options are true.
+                        </p>
+
+                        <h4 id="displayComponentsDate">date<a class="anchor-link" aria-label="Anchor" href="#displayComponentsDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> true<br>
+                            <img src="images/calendar-view.png" class="img-fluid img-thumbnail d-block" alt="Date View">
+                        </p>
+
+                        <h4 id="displayComponentsMonth">month<a class="anchor-link" aria-label="Anchor" href="#displayComponentsMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> true<br>
+                            <img src="images/month-view.png" class="img-fluid img-thumbnail d-block" alt="Month View">
+                            Turns on or off the month selection view.
+                        </p>
+
+                        <h4 id="displayComponentsYear">year<a class="anchor-link" aria-label="Anchor" href="#displayComponentsYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> true<br>
+                            <img src="images/year-view.png" class="img-fluid img-thumbnail d-block" alt="Year View">
+                        </p>
+
+                        <h4 id="displayComponentsDecades">decades<a class="anchor-link" aria-label="Anchor" href="#displayComponentsDecades"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> true<br>
+                            <img src="images/decade-view.png" class="img-fluid img-thumbnail d-block" alt="Decade View">
+                        </p>
+
+                        <h4 id="displayComponentsClock">clock<a class="anchor-link" aria-label="Anchor" href="#displayComponentsClock"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <img src="images/time-view.png" class="img-fluid img-thumbnail d-block" alt="Time View">
+                        </p>
+                        <p>
+                            <strong>Defaults:</strong> true<br>
+                            A convenience flag that can enable or disable all the calendar components like date,
+                            month, year,
+                            decades, century.
+                            This flag must be true for any of the calendar components to be visible, even if those
+                            options are true.
+                        </p>
+
+                        <h4 id="displayComponentsHours">hours<a class="anchor-link" aria-label="Anchor" href="#displayComponentsHours"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> true<br>
+                            Displayed above in <span style="color:#FC4242;">red</span>
+                        </p>
+
+                        <h4 id="displayComponentsMinutes">minutes<a class="anchor-link" aria-label="Anchor" href="#displayComponentsMinutes"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> true<br>
+                            Displayed above in <span style="color:#632289;">purple</span>
+                        </p>
+
+                        <h4 id="displayComponentsSeconds">seconds<a class="anchor-link" aria-label="Anchor" href="#displayComponentsSeconds"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> false<br>
+                            Displayed above in <span style="color:#06AF8F;">green</span>
+                        </p>
+
+                        <h4 id="displayComponentsUseTwentyfourHour">useTwentyfourHour<a class="anchor-link" aria-label="Anchor" href="#displayComponentsUseTwentyfourHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> false<br>
+                            <img src="images/24hour.png" class="img-fluid img-thumbnail d-block" alt="Twenty-four View">
+                        </p>
+                    </div>
+                </div>
+
+                <h3 id="displayButtons">buttons<a class="anchor-link" aria-label="Anchor" href="#displayButtons"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                </h3>
+                <p><strong>Accepts: true|false</strong></p>
+                <p>
+                    <img src="images/buttons.png" class="img-fluid img-thumbnail d-block" alt="Buttons">
+                </p>
+                <div class="row">
+                    <div class="col offset-1 border-start border-dark">
+                        <h4 id="displayButtonsToday">today<a class="anchor-link" aria-label="Anchor" href="#displayButtonsToday"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> false<br>
+                            Displayed above in <span style="color:#FC4242;">red</span>
+                        </p>
+
+                        <h4 id="displayButtonsClose">close<a class="anchor-link" aria-label="Anchor" href="#displayButtonsClose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> false<br>
+                            Displayed above in <span style="color:#632289;">purple</span>
+                        </p>
+
+                        <h4 id="displayButtonsClear">clear<a class="anchor-link" aria-label="Anchor" href="#displayButtonsClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> false<br>
+                            Displayed above in <span style="color:#06AF8F;">green</span>
+                        </p>
+
+                    </div>
+                </div>
+                <h3 id="displayCalendarWeeks">calendarWeeks<a class="anchor-link" aria-label="Anchor" href="#displayCalendarWeeks"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                <p>
+                    <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
+                    <img src="images/calendar-weeks.png" class="img-fluid img-thumbnail d-block" alt="Calendar View">
+                    Displays an additional column with the calendar week for that week.
+                </p>
+
+                <h3 id="displayIcons">icons<a class="anchor-link" aria-label="Anchor" href="#displayIcons"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                </h3>
+                <p>
+                    <strong>Accepts:</strong> string
+                </p>
+                <p>
+                    Any icon library that expects icons to be used like
+                    <code>&lt;i class='fas fa-calendar'&gt;&lt;/i&gt;</code> will work, provided you include the
+                    correct
+                    styles and scripts needed.
+                </p>
+                <p>Icon sprites are also supported.</p>
+                <div class="row">
+                    <div class="col offset-1 border-start border-dark">
+                        <h4 id="displayIconsType">type<a class="anchor-link" aria-label="Anchor" href="#displayIconsType"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Accepts either "icons" or "sprites"</strong><br>
+                            Defaults to "icons". If "sprites" is used as the value, the icons will be render with an svg
+                            element
+                            instead
+                            of an "i" element. If you don't know which you should use, leave it as "icons".
+                        </p>
+
+                        <h4 id="displayIconsTime">time<a class="anchor-link" aria-label="Anchor" href="#displayIconsTime"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> <i class="fa-solid fa-clock" aria-hidden="true"></i> (fas
+                            fa-clock)<br>
+                            This icon is used to change the view from the calendar view to the clock view.
+                        </p>
+
+                        <h4 id="displayIconsDate">date<a class="anchor-link" aria-label="Anchor" href="#displayIconsDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> <i class="fa-solid fa-calendar" aria-hidden="true"></i> (fas
+                            fa-calendar)<br>
+                            This icon is used to change the view from the clock view to the calendar view.
+                        </p>
+
+                        <h4 id="displayIconsUp">up<a class="anchor-link" aria-label="Anchor" href="#displayIconsUp"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> <i class="fa-solid fa-arrow-up" aria-hidden="true"></i> (fas
+                            fa-arrow-up)<br>
+                            This icon is used to incremeant hours, minutes and seconds in the clock view.
+                        </p>
+
+                        <h4 id="displayIconsDown">down<a class="anchor-link" aria-label="Anchor" href="#displayIconsDown"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> <i class="fa-solid fa-arrow-down" aria-hidden="true"></i> (fas
+                            fa-arrow-down)<br>
+                            This icon is used to decremeant hours, minutes and seconds in the clock view.
+                        </p>
+
+                        <h4 id="displayIconsNext">next<a class="anchor-link" aria-label="Anchor" href="#displayIconsNext"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> <i class="fa-solid fa-chevron-right" aria-hidden="true"></i> (fas
+                            fa-chevron-right)<br>
+                            This icon is used to navigation forward in the calendar, month, year, and decade views.
+                        </p>
+
+                        <h4 id="displayIconsPrevious">previous<a class="anchor-link" aria-label="Anchor" href="#displayIconsPrevious"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+                        <p>
+                            <strong>Defaults:</strong> <i class="fa-solid fa-chevron-left" aria-hidden="true"></i> (fas
+                            fa-chevron-left)<br>
+                            This icon is used to navigation backwards in the calendar, month, year, and decade views.
+                        </p>
+
+                        <h4 id="displayIconsToday">today<a class="anchor-link" aria-label="Anchor" href="#displayIconsToday"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+                            (fas fa-calendar-check)<br>
+                            This icon is used to change the date and view to now.
+                        </p>
+
+                        <h4 id="displayIconsClear">clear<a class="anchor-link" aria-label="Anchor" href="#displayIconsClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> <i class="fa-solid fa-trash" aria-hidden="true"></i> (fas
+                            fa-trash)<br>
+                            This icon is used to clear the currently selected date.
+                        </p>
+
+                        <h4 id="displayIconsClose">close<a class="anchor-link" aria-label="Anchor" href="#displayIconsClose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                        </h4>
+                        <p>
+                            <strong>Defaults:</strong> <i class="fa-solid fa-times" aria-hidden="true"></i> (fas
+                            fa-times)<br>
+                            This icon is used to close the picker.
+                        </p>
+                    </div>
+                </div>
+                <h3 id="displayViewMode">viewMode<a class="anchor-link" aria-label="Anchor" href="#displayViewMode"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                <p>
+                    <strong>Accepts:</strong> 'clock' | 'calendar' | 'months' | 'years' | 'decades'
+                    <strong>Defaults:</strong>
+                    calendar<br>
+                    The default view when the picker is displayed. Set to "years" for a date of birth picker.
+                </p>
+
+                <h3 id="displaySideBySide">sideBySide<a class="anchor-link" aria-label="Anchor" href="#displaySideBySide"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                <p>
+                    <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
+                    <img src="images/side-by-side.png" class="img-fluid img-thumbnail d-block" alt="Side by Side View">
+                    Displays the date and time pickers side by side.
+                </p>
+                <h3 id="displayInline">inline<a class="anchor-link" aria-label="Anchor" href="#displayInline"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                </h3>
+                <p>
+                    <strong>Accepts:</strong> <strong>Defaults:boolean</strong> <br>
+                    Displays the picker in a inline div instead of a popup.
+                </p>
+                <h3 id="keepOpen">keepOpen<a class="anchor-link" aria-label="Anchor" href="#keepOpen"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                <p>
+                    <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
+                    Keep the picker window open even after a date selection. The picker can still be closed by the
+                    target or
+                    clicking on on an outside element. This option will only work when time components are disabled.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <h2 id="stepping">stepping<a class="anchor-link" aria-label="Anchor" href="#stepping"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
+    <p>
+        <strong>Accepts</strong> number <strong>Defaults:</strong> 1<br>
+        Controls how much the minutes are changed by. This also changes the minute selection grid to step by this
+        amount.
+    </p>
 
-    <div class="row">
-      <div class="col offset-1 border-start border-dark">
-        <h3 id="displayToolbarPlacement">toolbarPlacement<a class="anchorjs-link" aria-label="Anchor" href="#displayToolbarPlacement"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-        <div>
-          <p>
-            <strong>Accepts:</strong> 'top' | 'bottom' <strong>Defaults:</strong> bottom<br>
-            Changes the placement of the toolbar where the today, clear, component switch icon are located.
-          </p>
-          <p>
-            Throws <a href="namespace/errors.html#unexpectedOptionValue">unexpectedOptionValue</a> if value is not one
-            of the accepted values.
-          </p>
-        </div>
+    <h2 id="useCurrent">useCurrent<a class="anchor-link" aria-label="Anchor" href="#useCurrent"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+        <strong>Accepts</strong> true|false <strong>Defaults:</strong> true<br>
+        Determines if the current date/time should be used as the default value when the picker is opened.
+    </p>
 
-        <h3 id="displayComponents">components<a class="anchorjs-link" aria-label="Anchor" href="#displayComponents"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-        <p><strong>Accepts: true|false</strong></p>
+    <h2 id="defaultDate">defaultDate<a class="anchor-link" aria-label="Anchor" href="#defaultDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+        <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
+        Sets the picker default date/time. Overrides <code>useCurrent</code>
+    </p>
 
-        <p>
-          These options turns on or off the particular views. If option is false for <code>date</code> the user would
-          only be able to select month and year
-          for instance.
-        </p>
-
-        <div class="row">
-          <div class="col offset-1 border-start border-dark">
-            <h4 id="displayComponentsCalendar">calendar<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsCalendar"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> true<br>
-              A convenience flag that can enable or disable all of the calendar components like date, month, year,
-              decades, century.
-              This flag must be true for any of the calendar components to be visible, even if those options are true.
-            </p>
-
-            <h4 id="displayComponentsDate">date<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> true<br>
-              <img src="images/calendar-view.png" class="img-fluid img-thumbnail d-block" alt="Date View">
-            </p>
-
-            <h4 id="displayComponentsMonth">month<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> true<br>
-              <img src="images/month-view.png" class="img-fluid img-thumbnail d-block" alt="Month View">
-              Turns on or off the month selection view.
-            </p>
-
-            <h4 id="displayComponentsYear">year<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> true<br>
-              <img src="images/year-view.png" class="img-fluid img-thumbnail d-block" alt="Year View">
-            </p>
-
-            <h4 id="displayComponentsDecades">decades<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsDecades"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> true<br>
-              <img src="images/decade-view.png" class="img-fluid img-thumbnail d-block" alt="Decade View">
-            </p>
-
-            <h4 id="displayComponentsClock">clock<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsClock"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <img src="images/time-view.png" class="img-fluid img-thumbnail d-block" alt="Time View">
-            </p>
-            <p>
-              <strong>Defaults:</strong> true<br>
-              A convenience flag that can enable or disable all of the calendar components like date, month, year,
-              decades, century.
-              This flag must be true for any of the calendar components to be visible, even if those options are true.
-            </p>
-
-            <h4 id="displayComponentsHours">hours<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsHours"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> true<br>
-              Displayed above in <span style="color:#FC4242;">red</span>
-            </p>
-
-            <h4 id="displayComponentsMinutes">minutes<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsMinutes"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> true<br>
-              Displayed above in <span style="color:#632289;">purple</span>
-            </p>
-
-            <h4 id="displayComponentsSeconds">seconds<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsSeconds"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> false<br>
-              Displayed above in <span style="color:#06AF8F;">green</span>
-            </p>
-
-            <h4 id="displayComponentsUseTwentyfourHour">useTwentyfourHour<a class="anchorjs-link" aria-label="Anchor" href="#displayComponentsUseTwentyfourHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> false<br>
-              <img src="images/24hour.png" class="img-fluid img-thumbnail d-block" alt="Twenty-four View">
-            </p>
-          </div>
-        </div>
-
-        <h3 id="displayButtons">buttons<a class="anchorjs-link" aria-label="Anchor" href="#displayButtons"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-        </h3>
-        <p><strong>Accepts: true|false</strong></p>
-        <p>
-          <img src="images/buttons.png" class="img-fluid img-thumbnail d-block" alt="Buttons">
-        </p>
-        <div class="row">
-          <div class="col offset-1 border-start border-dark">
-            <h4 id="displayButtonsToday">today<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsToday"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> false<br>
-              Displayed above in <span style="color:#FC4242;">red</span>
-            </p>
-
-            <h4 id="displayButtonsClose">close<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsClose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> false<br>
-              Displayed above in <span style="color:#632289;">purple</span>
-            </p>
-
-            <h4 id="displayButtonsClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#displayButtonsClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> false<br>
-              Displayed above in <span style="color:#06AF8F;">green</span>
-            </p>
-
-          </div>
-        </div>
-        <h3 id="displayCalendarWeeks">calendarWeeks<a class="anchorjs-link" aria-label="Anchor" href="#displayCalendarWeeks"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-        <p>
-          <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
-          <img src="images/calendar-weeks.png" class="img-fluid img-thumbnail d-block" alt="Calendar View">
-          Displays an additional column with the calendar week for that week.
-        </p>
-
-        <h3 id="displayIcons">icons<a class="anchorjs-link" aria-label="Anchor" href="#displayIcons"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-        </h3>
-        <p>
-          <strong>Accepts:</strong> string
-        </p>
-        <p>
-          Any icon library that expects icons to be used like
-          <code>&lt;i class='fas fa-calendar'&gt;&lt;/i&gt;</code> will work, provided you include the correct
-          styles and scripts needed.
-        </p>
-        <p>Icon sprites are also supported.</p>
-        <div class="row">
-          <div class="col offset-1 border-start border-dark">
-            <h4 id="displayIconsType">type<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsType"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Accepts either "icons" or "sprites"</strong><br>
-              Defaults to "icons". If "sprites" is used as the value, the icons will be render with an svg element
-              instead
-              of an "i" element. If you don't know which you should use, leave it as "icons".
-            </p>
-
-            <h4 id="displayIconsTime">time<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsTime"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> <i class="fa-solid fa-clock" aria-hidden="true"></i> (fas fa-clock)<br>
-              This icon is used to change the view from the calendar view to the clock view.
-            </p>
-
-            <h4 id="displayIconsDate">date<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> <i class="fa-solid fa-calendar" aria-hidden="true"></i> (fas fa-calendar)<br>
-              This icon is used to change the view from the clock view to the calendar view.
-            </p>
-
-            <h4 id="displayIconsUp">up<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsUp"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> <i class="fa-solid fa-arrow-up" aria-hidden="true"></i> (fas fa-arrow-up)<br>
-              This icon is used to incremeant hours, minutes and seconds in the clock view.
-            </p>
-
-            <h4 id="displayIconsDown">down<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsDown"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> <i class="fa-solid fa-arrow-down" aria-hidden="true"></i> (fas fa-arrow-down)<br>
-              This icon is used to decremeant hours, minutes and seconds in the clock view.
-            </p>
-
-            <h4 id="displayIconsNext">next<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsNext"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> <i class="fa-solid fa-chevron-right" aria-hidden="true"></i> (fas fa-chevron-right)<br>
-              This icon is used to navigation forward in the calendar, month, year, and decade views.
-            </p>
-
-            <h4 id="displayIconsPrevious">previous<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsPrevious"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-            <p>
-              <strong>Defaults:</strong> <i class="fa-solid fa-chevron-left" aria-hidden="true"></i> (fas fa-chevron-left)<br>
-              This icon is used to navigation backwards in the calendar, month, year, and decade views.
-            </p>
-
-            <h4 id="displayIconsToday">today<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsToday"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> <i class="fa-solid fa-calendar-check" aria-hidden="true"></i> (fas fa-calendar-check)<br>
-              This icon is used to change the date and view to now.
-            </p>
-
-            <h4 id="displayIconsClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> <i class="fa-solid fa-trash" aria-hidden="true"></i> (fas fa-trash)<br>
-              This icon is used to clear the currently selected date.
-            </p>
-
-            <h4 id="displayIconsClose">close<a class="anchorjs-link" aria-label="Anchor" href="#displayIconsClose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-            </h4>
-            <p>
-              <strong>Defaults:</strong> <i class="fa-solid fa-times" aria-hidden="true"></i> (fas fa-times)<br>
-              This icon is used to close the picker.
-            </p>
-          </div>
-        </div>
-        <h3 id="displayViewMode">viewMode<a class="anchorjs-link" aria-label="Anchor" href="#displayViewMode"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-        <p>
-          <strong>Accepts:</strong> 'clock' | 'calendar' | 'months' | 'years' | 'decades' <strong>Defaults:</strong>
-          calendar<br>
-          The default view when the picker is displayed. Set to "years" for a date of birth picker.
-        </p>
-
-        <h3 id="displaySideBySide">sideBySide<a class="anchorjs-link" aria-label="Anchor" href="#displaySideBySide"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-        <p>
-          <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
-          <img src="images/side-by-side.png" class="img-fluid img-thumbnail d-block" alt="Side by Side View">
-          Displays the date and time pickers side by side.
-        </p>
-        <h3 id="displayInline">inline<a class="anchorjs-link" aria-label="Anchor" href="#displayInline"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-        </h3>
-        <p>
-          <strong>Accepts:</strong> <strong>Defaults:boolean</strong> <br>
-          Displays the picker in a inline div instead of a popup.
-        </p>
-        <h3 id="keepOpen">keepOpen<a class="anchorjs-link" aria-label="Anchor" href="#keepOpen"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-        <p>
-          <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br>
-          Keep the picker window open even after a date selection. The picker can still be closed by the target or
-          clicking on on an outside element. This option will only work when time components are disabled.
-        </p>
-      </div>
-    </div>
-  </section>
-  <section>
-    <h2 id="hooks">hooks<a class="anchorjs-link" aria-label="Anchor" href="#hooks"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-
-    <div class="row">
-      <div class="col offset-1 border-start border-dark">
-        <h3 id="hooksInputFormat">inputFormat<a class="anchorjs-link" aria-label="Anchor" href="#hooksInputFormat"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-        </h3>
-        <p>
-          <strong>Accepts:</strong> <code>(context: TempusDominus, date: DateTime) =&gt; string</code> or undefined
-          <strong>Defaults:</strong>
-          undefined<br>
-          Takes a function that turns the selected date(s) into a string. If not provided, Intl formatting will be
-          used based on configured components. The complete context is provided so you can access the input field itself
-          via <code>context.input</code> or any of the validation methods and so on.
-        </p>
-        <p>
-          Whenever the picker attempts to set the input value from a selection, it will call this function. An example
-          that would set the value to an ISO string. Obviously, it's up to you how you want the results to be displayed.
-        </p>
-        <pre><code class="language-js">
-inputFormat:(context, date) =&gt; { return date.toISOString() }
-</code>
-        </pre>
-        <h3 id="hooksInputParse" class="mt-3">inputParse<a class="anchorjs-link" aria-label="Anchor" href="#hooksInputParse"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-        </h3>
-        <p>
-          <strong>Accepts:</strong> <code>(context: TempusDominus, value: any) =&gt; DateTime</code> or undefined <strong>Defaults:</strong>
-          undefined<br>
-          Takes a function that turns the input value into a DateTime object. If not provided, the internal parsing
-          method will be used. The complete context is provided so you can access the input field itself
-          via <code>context.input</code> or any of the validation methods and so on.
-        </p>
-        <p>
-          Whenever the input value changes, this function will be called. The most simple example is just to attempt to
-          parse the string.
-        </p>
-        <pre><code class="language-js">
-inputParse: (context, value) =&gt; { return new tempusDominus.DateTime(value) }
-</code>
-        </pre>
-      </div>
-    </div>
-  </section>
-  <h2 id="stepping">stepping<a class="anchorjs-link" aria-label="Anchor" href="#stepping"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-  </h2>
-  <p>
-    <strong>Accepts</strong> number <strong>Defaults:</strong> 1<br>
-    Controls how much the minutes are changed by. This also changes the minute selection grid to step by this amount.
-  </p>
-
-  <h2 id="useCurrent">useCurrent<a class="anchorjs-link" aria-label="Anchor" href="#useCurrent"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-  <p>
-    <strong>Accepts</strong> true|false <strong>Defaults:</strong> true<br>
-    Determines if the current date/time should be used as the default value when the picker is opened.
-  </p>
-
-  <h2 id="defaultDate">defaultDate<a class="anchorjs-link" aria-label="Anchor" href="#defaultDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-  <p>
-    <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
-    Sets the picker default date/time. Overrides <code>useCurrent</code>
-  </p>
-
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <h2 id="localization">localization<a class="anchorjs-link" aria-label="Anchor" href="#localization"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-          <p>
-            <strong>Accepts:</strong> string
-            Most of the localization options are for title tooltips over icons.
-          </p>
-          <p>
-            You can provide localization options to override the tooltips as well as the day/month display.
-          </p>
-          <p>
-            You could also set this globally via <code>tempusDominus.DefaultOptions.localization = { ... }</code> or by
-            creating a variable e.g. <code>const ru = { today:'Перейти сегодня' ... };</code> then provide the options
-            as
-          </p>
-          <pre>         <code class="language-javascript">
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2 id="localization">localization<a class="anchor-link" aria-label="Anchor" href="#localization"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+                    <p>
+                        <strong>Accepts:</strong> string
+                        Most of the localization options are for title tooltips over icons.
+                    </p>
+                    <p>
+                        You can provide localization options to override the tooltips as well as the day/month display.
+                    </p>
+                    <p>
+                        You could also set this globally via <code>tempusDominus.DefaultOptions.localization = { ...
+                        }</code> or by
+                        creating a variable e.g. <code>const ru = { today:'Перейти сегодня' ... };</code> then provide
+                        the options
+                        as
+                    </p>
+                    <pre>         <code class="language-javascript">
  new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
    localization: ru
  }
          </code>
      </pre>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col offset-1 border-start border-dark">
+                    <h3 id="localizationToday">today<a class="anchor-link" aria-label="Anchor" href="#localizationToday"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <p>
+                        <strong>Defaults:</strong> Go to today<br>
+                    </p>
+
+                    <h3 id="localizationClear">clear<a class="anchor-link" aria-label="Anchor" href="#localizationClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <p>
+                        <strong>Defaults:</strong> Clear selection<br>
+                    </p>
+
+                    <h3 id="localizationClose">close<a class="anchor-link" aria-label="Anchor" href="#localizationClose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <p>
+                        <strong>Defaults:</strong> Close the picker<br>
+                    </p>
+
+                    <h3 id="localizationSelectMonth">selectMonth<a class="anchor-link" aria-label="Anchor" href="#localizationSelectMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Select Month<br>
+                    </p>
+
+                    <h3 id="localizationPreviousMonth">previousMonth<a class="anchor-link" aria-label="Anchor" href="#localizationPreviousMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Previous Month<br>
+                    </p>
+
+                    <h3 id="localizationNextMonth">nextMonth<a class="anchor-link" aria-label="Anchor" href="#localizationNextMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Next Month<br>
+                    </p>
+
+                    <h3 id="localizationSelectYear">selectYear<a class="anchor-link" aria-label="Anchor" href="#localizationSelectYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Select Year<br>
+                    </p>
+
+                    <h3 id="localizationPreviousYear">previousYear<a class="anchor-link" aria-label="Anchor" href="#localizationPreviousYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Previous Year<br>
+                    </p>
+
+                    <h3 id="localizationNextYear">nextYear<a class="anchor-link" aria-label="Anchor" href="#localizationNextYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Next Year<br>
+                    </p>
+
+                    <h3 id="localizationSelectDecade">selectDecade<a class="anchor-link" aria-label="Anchor" href="#localizationSelectDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Select Decade<br>
+                    </p>
+
+                    <h3 id="localizationPreviousDecade">previousDecade<a class="anchor-link" aria-label="Anchor" href="#localizationPreviousDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Previous Decade<br>
+                    </p>
+
+                    <h3 id="localizationNextDecade">nextDecade<a class="anchor-link" aria-label="Anchor" href="#localizationNextDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Next Decade<br>
+                    </p>
+
+                    <h3 id="localizationPreviousCentury">previousCentury<a class="anchor-link" aria-label="Anchor" href="#localizationPreviousCentury"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Previous Century<br>
+                    </p>
+
+                    <h3 id="localizationNextCentury">nextCentury<a class="anchor-link" aria-label="Anchor" href="#localizationNextCentury"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Next Century<br>
+                    </p>
+
+                    <h3 id="localizationPickHour">pickHour<a class="anchor-link" aria-label="Anchor" href="#localizationPickHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Pick Hour<br>
+                    </p>
+
+                    <h3 id="localizationIncrementHour">incrementHour<a class="anchor-link" aria-label="Anchor" href="#localizationIncrementHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Increment Hour<br>
+                    </p>
+
+                    <h3 id="localizationDecrementHour">decrementHour<a class="anchor-link" aria-label="Anchor" href="#localizationDecrementHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Decrement Hour<br>
+                    </p>
+
+                    <h3 id="localizationPickMinute">pickMinute<a class="anchor-link" aria-label="Anchor" href="#localizationPickMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Pick Minute<br>
+                    </p>
+
+                    <h3 id="localizationIncrementMinute">incrementMinute<a class="anchor-link" aria-label="Anchor" href="#localizationIncrementMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Increment Minute<br>
+                    </p>
+
+                    <h3 id="localizationDecrementMinute">decrementMinute<a class="anchor-link" aria-label="Anchor" href="#localizationDecrementMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Decrement Minute<br>
+                    </p>
+
+                    <h3 id="localizationPickSecond">pickSecond<a class="anchor-link" aria-label="Anchor" href="#localizationPickSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Pick Second<br>
+                    </p>
+
+                    <h3 id="localizationIncrementSecond">incrementSecond<a class="anchor-link" aria-label="Anchor" href="#localizationIncrementSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Increment Second<br>
+                    </p>
+
+                    <h3 id="localizationDecrementSecond">decrementSecond<a class="anchor-link" aria-label="Anchor" href="#localizationDecrementSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Decrement Second<br>
+                    </p>
+
+                    <h3 id="localizationTogglePeriod">togglePeriod<a class="anchor-link" aria-label="Anchor" href="#localizationTogglePeriod"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Toggle Period<br>
+                    </p>
+
+                    <h3 id="localizationSelectTime">selectTime<a class="anchor-link" aria-label="Anchor" href="#localizationSelectTime"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Select Time<br>
+                    </p>
+
+                    <h3 id="localizationSelectDate">selectDate<a class="anchor-link" aria-label="Anchor" href="#localizationSelectDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                    <p>
+                        <strong>Defaults:</strong> Select Date<br>
+                    </p>
+
+                    <h3 id="localizationDayViewHeaderFormat">dayViewHeaderFormat<a class="anchor-link" aria-label="Anchor" href="#localizationDayViewHeaderFormat"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <p>
+                        <strong>Accepts:</strong> DateTimeFormatOptions <strong>Defaults:</strong>
+                        <code>{ month: 'long', year: '2-digit' }</code><br>
+                        This should be an appropriate value from the Intl.DateFormat options.
+                    </p>
+
+                    <h3 id="localizationLocale">locale<a class="anchor-link" aria-label="Anchor" href="#localizationLocale"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <p>
+                        <strong>Defaults:</strong> default<br>
+                        This should be a BCP 47 language tag or a value supported by Intl.
+                    </p>
+
+                    <h3 id="localizationStartOfTheWeek">startOfTheWeek<a class="anchor-link" aria-label="Anchor" href="#localizationStartOfTheWeek"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+                    </h3>
+                    <p>
+                        <strong>Accepts:</strong> 0-6 <strong>Defaults:</strong> 0<br>
+                        Changes the start of the week to the provided index. Intl/Date does not provide apis to get the
+                        locale's
+                        start of the week. 0 = Sunday, 6 = Saturday. If you want the calendar view to start on Monday,
+                        set this
+                        option to 1.
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col offset-1 border-start border-dark">
-          <h3 id="localizationToday">today<a class="anchorjs-link" aria-label="Anchor" href="#localizationToday"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <p>
-            <strong>Defaults:</strong> Go to today<br>
-          </p>
+    </section>
 
-          <h3 id="localizationClear">clear<a class="anchorjs-link" aria-label="Anchor" href="#localizationClear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <p>
-            <strong>Defaults:</strong> Clear selection<br>
-          </p>
+    <h2 id="keepInvalid">keepInvalid<a class="anchor-link" aria-label="Anchor" href="#keepInvalid"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+        <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
+        Allows for the user to select a date that is invalid coording to the rules. For instance, if a user enters a
+        date
+        pasted the <code>maxDate</code>.
+    </p>
 
-          <h3 id="localizationClose">close<a class="anchorjs-link" aria-label="Anchor" href="#localizationClose"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <p>
-            <strong>Defaults:</strong> Close the picker<br>
-          </p>
+    <h2 id="debug">debug<a class="anchor-link" aria-label="Anchor" href="#debug"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+        <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
+        Similar to <code>display.keepOpen</code>, if true the picker won't close during any event where that would
+        normally
+        occur. This is useful when trying to debug rules or css changes. Note you can also use <code>window.debug =
+        true</code> in the dev tools console. Using the window object is useful for debugging deployed code without
+        requiring a configuration change.
+    </p>
 
-          <h3 id="localizationSelectMonth">selectMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Select Month<br>
-          </p>
+    <h2 id="allowInputToggle">allowInputToggle<a class="anchor-link" aria-label="Anchor" href="#allowInputToggle"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+        <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
+        If true, the picker will show on textbox focus.
+    </p>
 
-          <h3 id="localizationPreviousMonth">previousMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Previous Month<br>
-          </p>
+    <h2 id="viewDate">viewDate<a class="anchor-link" aria-label="Anchor" href="#viewDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+        <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> now<br>
+        Set the view date of the picer. Setting this will not change the selected date(s).
+    </p>
 
-          <h3 id="localizationNextMonth">nextMonth<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Next Month<br>
-          </p>
+    <h2 id="multipleDates">multipleDates<a class="anchor-link" aria-label="Anchor" href="#multipleDates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+        <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
+        Allows multiple dates to be selected.
+    </p>
 
-          <h3 id="localizationSelectYear">selectYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Select Year<br>
-          </p>
+    <h2 id="multipleDatesSeparator">multipleDatesSeparator<a class="anchor-link" aria-label="Anchor" href="#multipleDatesSeparator"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+        <strong>Accepts:</strong> string <strong>Defaults:</strong> <code>;</code><br>
+        When <code>multipleDates</code> is enabled, this value wil be used to separate the selected dates. E.g. <code>08/29/2021,
+        12:00 AM; 08/30/2021, 12:00 AM; 08/23/2021, 12:00 AM</code>
+    </p>
 
-          <h3 id="localizationPreviousYear">previousYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Previous Year<br>
-          </p>
+    <h2 id="promptTimeOnDateChange">promptTimeOnDateChange<a class="anchor-link" aria-label="Anchor" href="#promptTimeOnDateChange"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+        <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
+        If enabled and any of the time components are enabled, when a user selects a date the picker will automatically
+        display the clock view after <code>promptTimeOnDateChangeTransitionDelay</code>.
+    </p>
 
-          <h3 id="localizationNextYear">nextYear<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Next Year<br>
-          </p>
+    <h2 id="promptTimeOnDateChangeTransitionDelay">promptTimeOnDateChangeTransitionDelay
+        <a class="anchor-link" aria-label="Anchor" href="#promptTimeOnDateChangeTransitionDelay">
+            <i class="fa-solid fa-anchor" aria-hidden="true"></i>
+        </a>
+    </h2>
+    <p>
+        <strong>Accepts</strong> number <strong>Defaults:</strong> 200<br>
+        Used with <code>promptTimeOnDateChange</code>. The number of milliseconds before the picker will display the
+        clock
+        view.
+    </p>
 
-          <h3 id="localizationSelectDecade">selectDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Select Decade<br>
-          </p>
+    <h2 id="meta">meta
+        <a class="anchor-link" aria-label="Anchor" href="#meta">
+            <i class="fa-solid fa-anchor" aria-hidden="true"></i>
+        </a>
+    </h2>
+    <p>
+        <strong>Accepts</strong> object <strong>Defaults:</strong> {}<br>
+        This property is to provide developers a place to store extra information about the picker. You can use this to
+        store database format strings for instance. There are no rules on what you add to this object and the picker
+        will not reference it.
+    </p>
 
-          <h3 id="localizationPreviousDecade">previousDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Previous Decade<br>
-          </p>
-
-          <h3 id="localizationNextDecade">nextDecade<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Next Decade<br>
-          </p>
-
-          <h3 id="localizationPreviousCentury">previousCentury<a class="anchorjs-link" aria-label="Anchor" href="#localizationPreviousCentury"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Previous Century<br>
-          </p>
-
-          <h3 id="localizationNextCentury">nextCentury<a class="anchorjs-link" aria-label="Anchor" href="#localizationNextCentury"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Next Century<br>
-          </p>
-
-          <h3 id="localizationPickHour">pickHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Pick Hour<br>
-          </p>
-
-          <h3 id="localizationIncrementHour">incrementHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Increment Hour<br>
-          </p>
-
-          <h3 id="localizationDecrementHour">decrementHour<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Decrement Hour<br>
-          </p>
-
-          <h3 id="localizationPickMinute">pickMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Pick Minute<br>
-          </p>
-
-          <h3 id="localizationIncrementMinute">incrementMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Increment Minute<br>
-          </p>
-
-          <h3 id="localizationDecrementMinute">decrementMinute<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Decrement Minute<br>
-          </p>
-
-          <h3 id="localizationPickSecond">pickSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationPickSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Pick Second<br>
-          </p>
-
-          <h3 id="localizationIncrementSecond">incrementSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationIncrementSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Increment Second<br>
-          </p>
-
-          <h3 id="localizationDecrementSecond">decrementSecond<a class="anchorjs-link" aria-label="Anchor" href="#localizationDecrementSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Decrement Second<br>
-          </p>
-
-          <h3 id="localizationTogglePeriod">togglePeriod<a class="anchorjs-link" aria-label="Anchor" href="#localizationTogglePeriod"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Toggle Period<br>
-          </p>
-
-          <h3 id="localizationSelectTime">selectTime<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectTime"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Select Time<br>
-          </p>
-
-          <h3 id="localizationSelectDate">selectDate<a class="anchorjs-link" aria-label="Anchor" href="#localizationSelectDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
-          <p>
-            <strong>Defaults:</strong> Select Date<br>
-          </p>
-
-          <h3 id="localizationDayViewHeaderFormat">dayViewHeaderFormat<a class="anchorjs-link" aria-label="Anchor" href="#localizationDayViewHeaderFormat"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <p>
-            <strong>Accepts:</strong> DateTimeFormatOptions <strong>Defaults:</strong>
-            <code>{ month: 'long', year: '2-digit' }</code><br>
-            This should be an appropriate value from the Intl.DateFormat options.
-          </p>
-
-          <h3 id="localizationLocale">locale<a class="anchorjs-link" aria-label="Anchor" href="#localizationLocale"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <p>
-            <strong>Defaults:</strong> default<br>
-            This should be a BCP 47 language tag or a value supported by Intl.
-          </p>
-
-          <h3 id="localizationStartOfTheWeek">startOfTheWeek<a class="anchorjs-link" aria-label="Anchor" href="#localizationStartOfTheWeek"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-          </h3>
-          <p>
-            <strong>Accepts:</strong> 0-6 <strong>Defaults:</strong> 0<br>
-            Changes the start of the week to the provided index. Intl/Date does not provide apis to get the locale's
-            start of the week. 0 = Sunday, 6 = Saturday. If you want the calendar view to start on Monday, set this
-            option to 1.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <h2 id="keepInvalid">keepInvalid<a class="anchorjs-link" aria-label="Anchor" href="#keepInvalid"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-  <p>
-    <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
-    Allows for the user to select a date that is invalid coording to the rules. For instance, if a user enters a date
-    pasted the <code>maxDate</code>.
-  </p>
-
-  <h2 id="debug">debug<a class="anchorjs-link" aria-label="Anchor" href="#debug"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-  <p>
-    <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
-    Similar to <code>display.keepOpen</code>, if true the picker won't close during any event where that would normally
-    occur. This is useful when trying to debug rules or css changes. Note you can also use <code>window.debug =
-    true</code> in the dev tools console. Using the window object is useful for debugging deployed code without
-    requiring a configuration change.
-  </p>
-
-  <h2 id="allowInputToggle">allowInputToggle<a class="anchorjs-link" aria-label="Anchor" href="#allowInputToggle"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-  <p>
-    <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
-    If true, the picker will show on textbox focus.
-  </p>
-
-  <h2 id="viewDate">viewDate<a class="anchorjs-link" aria-label="Anchor" href="#viewDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-  </h2>
-  <p>
-    <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> now<br>
-    Set the view date of the picer. Setting this will not change the selected date(s).
-  </p>
-
-  <h2 id="multipleDates">multipleDates<a class="anchorjs-link" aria-label="Anchor" href="#multipleDates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-  <p>
-    <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
-    Allows multiple dates to be selected.
-  </p>
-
-  <h2 id="multipleDatesSeparator">multipleDatesSeparator<a class="anchorjs-link" aria-label="Anchor" href="#multipleDatesSeparator"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-  </h2>
-  <p>
-    <strong>Accepts:</strong> string <strong>Defaults:</strong> <code>;</code><br>
-    When <code>multipleDates</code> is enabled, this value wil be used to separate the selected dates. E.g. <code>08/29/2021,
-    12:00 AM; 08/30/2021, 12:00 AM; 08/23/2021, 12:00 AM</code>
-  </p>
-
-  <h2 id="promptTimeOnDateChange">promptTimeOnDateChange<a class="anchorjs-link" aria-label="Anchor" href="#promptTimeOnDateChange"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-  </h2>
-  <p>
-    <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br>
-    If enabled and any of the time components are enabled, when a user selects a date the picker will automatically
-    display the clock view after <code>promptTimeOnDateChangeTransitionDelay</code>.
-  </p>
-
-  <h2 id="promptTimeOnDateChangeTransitionDelay">promptTimeOnDateChangeTransitionDelay
-    <a class="anchorjs-link" aria-label="Anchor" href="#promptTimeOnDateChangeTransitionDelay">
-      <i class="fa-solid fa-anchor" aria-hidden="true"></i>
-    </a>
-  </h2>
-  <p>
-    <strong>Accepts</strong> number <strong>Defaults:</strong> 200<br>
-    Used with <code>promptTimeOnDateChange</code>. The number of milliseconds before the picker will display the clock
-    view.
-  </p>
-
-  <h2 id="meta">meta
-    <a class="anchorjs-link" aria-label="Anchor" href="#meta">
-      <i class="fa-solid fa-anchor" aria-hidden="true"></i>
-    </a>
-  </h2>
-  <p>
-    <strong>Accepts</strong> object <strong>Defaults:</strong> {}<br>
-   This property is to provide developers a place to store extra information about the picker. You can use this to store database format strings for instance. There are no rules on what you add to this object and the picker will not reference it.
-  </p>
-
-  <h2 id="container">container
-    <a class="anchorjs-link" aria-label="Anchor" href="#container">
-      <i class="fa-solid fa-anchor" aria-hidden="true"></i>
-    </a>
-  </h2>
-  <p>
-    <strong>Accepts</strong> <code>HTMLElement</code> <strong>Defaults:</strong> undefined<br>
-    Change the target container to use for the widget instead of <code>body</code> (In case of application using shadow DOM for example).
-  </p>
+    <h2 id="container">container
+        <a class="anchor-link" aria-label="Anchor" href="#container">
+            <i class="fa-solid fa-anchor" aria-hidden="true"></i>
+        </a>
+    </h2>
+    <p>
+        <strong>Accepts</strong> <code>HTMLElement</code> <strong>Defaults:</strong> undefined<br>
+        Change the target container to use for the widget instead of <code>body</code> (In case of application using
+        shadow DOM for example).
+    </p>
 
 </div>
 </main>

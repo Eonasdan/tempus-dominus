@@ -11553,19 +11553,19 @@ textarea.form-control-lg {
   box-shadow: 0 0 0 3px rgba(255, 228, 132, 0.25);
 }
 
-.anchorjs-link {
+.anchor-link {
   font-size: 1.4rem;
   font-weight: 400;
   transition: color 0.15s ease-in-out;
   padding-left: 0.375em;
 }
-.anchorjs-link:focus, .anchorjs-link:hover {
+.anchor-link:focus, .anchor-link:hover {
   color: #0d6efd;
   text-decoration: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .anchorjs-link {
+  .anchor-link {
     transition: none;
   }
 }
