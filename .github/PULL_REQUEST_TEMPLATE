@@ -4,6 +4,7 @@ PRs relating to the v4 will be closed and locked.
 - [ ] The PR is against the `development` branch
 - [ ] Tests for the changes have been added (for bug fixes / features)
 - [ ] Docs have been added / updated (for bug fixes / features)
+- [ ] Does NOT modify files under the "dist" folder.
 
 
 * **What kind of change does this PR introduce?** (Bug fix, feature, docs update, ...). If this is a fix, please tag a bug.
