@@ -177,11 +177,11 @@ export default class Display {
 
       this._buildWidget();
 
-      // If modeView is only clock
-      const onlyClock = this._hasTime && !this._hasDate;
+      // If there are no date components or the "clock" view mode is configured.
+      const clockViewMode = (this._hasTime && !this._hasDate) || this.optionsStore.options.display.viewMode == 'clock';
 
-      // reset the view to the clock if there's no date components
-      if (onlyClock) {
+      // Reset the view to clock if in "clock" view mode.
+      if (clockViewMode) {
         this.optionsStore.currentView = 'clock';
         this._eventEmitters.action.emit({
           e: null,
@@ -195,7 +195,7 @@ export default class Display {
           this.optionsStore.minimumCalendarViewMode;
       }
 
-      if (!onlyClock) {
+      if (!clockViewMode) {
         if (this._hasTime) {
           Collapse.hide(
             this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
