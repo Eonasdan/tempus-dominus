@@ -195,15 +195,11 @@ export default class Display {
           this.optionsStore.minimumCalendarViewMode;
       }
 
-      if (!onlyClock) {
+      if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
         if (this._hasTime) {
-          Collapse.hide(
-            this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
-          );
+          Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
         }
-        Collapse.show(
-          this.widget.querySelector(`div.${Namespace.css.dateContainer}`)
-        );
+        Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
       }
 
       if (this._hasDate) {

@@ -35,11 +35,79 @@ export class OptionConverter {
     static objectPath(paths: string, obj) {
         if (paths.charAt(0) === '.')
             paths = paths.slice(1);
+        if (!paths) return obj;
         return paths.split('.')
             .reduce((value, key) => (OptionConverter.isValue(value) || OptionConverter.isValue(value[key]) ?
                 value[key] :
                 undefined), obj);
     }
+
+    // /**
+    //  * The spread operator caused sub keys to be missing after merging.
+    //  * This is to fix that issue by using spread on the child objects first.
+    //  * Also handles complex options like disabledDates
+    //  * @param provided An option from new providedOptions
+    //  * @param mergeOption Default option to compare types against
+    //  * @param copyTo Destination object. This was added to prevent reference copies
+    //  * @param path
+    //  * @param locale
+    //  */
+    // static spread(provided, mergeOption, copyTo, path = '', locale = '') {
+    //     const unsupportedOptions = Object.keys(provided).filter(
+    //         (x) => !Object.keys(mergeOption).includes(x)
+    //     );
+    //
+    //     if (unsupportedOptions.length > 0) {
+    //         const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
+    //
+    //         const errors = unsupportedOptions.map((x) => {
+    //             let error = `"${path}.${x}" in not a known option.`;
+    //             let didYouMean = flattenedOptions.find((y) => y.includes(x));
+    //             if (didYouMean) error += ` Did you mean "${didYouMean}"?`;
+    //             return error;
+    //         });
+    //         Namespace.errorMessages.unexpectedOptions(errors);
+    //     }
+    //
+    //     Object.keys(mergeOption).forEach((key) => {
+    //         path += `.${key}`;
+    //         if (path.charAt(0) === '.') path = path.slice(1);
+    //
+    //         const defaultOptionValue = OptionConverter.objectPath(path, DefaultOptions);
+    //         let providedType = typeof provided[key];
+    //         let defaultType = typeof defaultOptionValue;
+    //         let value = provided[key];
+    //
+    //         if (!provided.hasOwnProperty(key)) {
+    //             if (
+    //                 defaultType === 'undefined' ||
+    //                 (value?.length === 0 && Array.isArray(defaultOptionValue))
+    //             ) {
+    //                 copyTo[key] = defaultOptionValue;
+    //                 path = path.substring(0, path.lastIndexOf(`.${key}`));
+    //                 return;
+    //             }
+    //             provided[key] = defaultOptionValue;
+    //             value = provided[key];
+    //         }
+    //
+    //         copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
+    //
+    //         if (
+    //             typeof defaultOptionValue !== 'object' ||
+    //             defaultOptionValue instanceof Date ||
+    //             OptionConverter.ignoreProperties.includes(key)
+    //         ) {
+    //             path = path.substring(0, path.lastIndexOf(`.${key}`));
+    //             return;
+    //         }
+    //
+    //         if (!Array.isArray(provided[key])) {
+    //             OptionConverter.spread(provided[key], mergeOption[key], copyTo[key], path, locale);
+    //         }
+    //         path = path.substring(0, path.lastIndexOf(`.${key}`));
+    //     });
+    // }
 
     /**
      * The spread operator caused sub keys to be missing after merging.
@@ -51,9 +119,11 @@ export class OptionConverter {
      * @param path
      * @param locale
      */
-    static spread(provided, mergeOption, copyTo, path = '', locale = '') {
+    static spread(provided, copyTo, path = '', locale = '') {
+        const defaultOptions = OptionConverter.objectPath(path, DefaultOptions);
+
         const unsupportedOptions = Object.keys(provided).filter(
-            (x) => !Object.keys(mergeOption).includes(x)
+            (x) => !Object.keys(defaultOptions).includes(x)
         );
 
         if (unsupportedOptions.length > 0) {
@@ -62,48 +132,37 @@ export class OptionConverter {
             const errors = unsupportedOptions.map((x) => {
                 let error = `"${path}.${x}" in not a known option.`;
                 let didYouMean = flattenedOptions.find((y) => y.includes(x));
-                if (didYouMean) error += `Did you mean "${didYouMean}"?`;
+                if (didYouMean) error += ` Did you mean "${didYouMean}"?`;
                 return error;
             });
             Namespace.errorMessages.unexpectedOptions(errors);
         }
 
-        Object.keys(mergeOption).forEach((key) => {
+        Object.keys(provided).forEach((key) => {
             path += `.${key}`;
             if (path.charAt(0) === '.') path = path.slice(1);
 
-            const defaultOptionValue = OptionConverter.objectPath(path, DefaultOptions);
+            const defaultOptionValue = defaultOptions[key];
             let providedType = typeof provided[key];
             let defaultType = typeof defaultOptionValue;
             let value = provided[key];
 
-            if (!provided.hasOwnProperty(key)) {
-                if (
-                    defaultType === 'undefined' ||
-                    (value?.length === 0 && Array.isArray(defaultOptionValue))
-                ) {
-                    copyTo[key] = defaultOptionValue;
-                    path = path.substring(0, path.lastIndexOf(`.${key}`));
-                    return;
-                }
-                provided[key] = defaultOptionValue;
-                value = provided[key];
-            }
-
-            copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
-
-            if (
-                typeof defaultOptionValue !== 'object' ||
-                defaultOptionValue instanceof Date ||
-                OptionConverter.ignoreProperties.includes(key)
-            ) {
+            if (value === undefined || value === null) {
+                copyTo[key] = value;
                 path = path.substring(0, path.lastIndexOf(`.${key}`));
                 return;
             }
 
-            if (!Array.isArray(provided[key])) {
-                OptionConverter.spread(provided[key], defaultOptionValue, copyTo[key], path, locale);
+            if (typeof defaultOptionValue === 'object' &&
+                !Array.isArray(provided[key]) &&
+                !(defaultOptionValue instanceof Date || OptionConverter.ignoreProperties.includes(key)))
+            {
+                OptionConverter.spread(provided[key], copyTo[key], path, locale);
             }
+            else {
+                copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
+            }
+
             path = path.substring(0, path.lastIndexOf(`.${key}`));
         });
     }
@@ -326,17 +385,16 @@ export class OptionConverter {
     }
 
     static _mergeOptions(providedOptions: Options, mergeTo: Options): Options {
-        const newOptions = {} as Options;
-
+        const newConfig = OptionConverter.deepCopy(mergeTo);
         //see if the options specify a locale
         const locale =
             mergeTo.localization.locale !== 'default'
                 ? mergeTo.localization.locale
                 : providedOptions?.localization?.locale || 'default';
 
-        OptionConverter.spread(providedOptions, mergeTo, newOptions, '', locale);
+        OptionConverter.spread(providedOptions, newConfig, '', locale);
 
-        return newOptions;
+        return newConfig;
     }
 
     static _dataToOptions(element, options: Options): Options {

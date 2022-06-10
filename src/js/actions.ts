@@ -207,6 +207,13 @@ export default class Actions {
             case ActionTypes.showHours:
             case ActionTypes.showMinutes:
             case ActionTypes.showSeconds:
+                //make sure the clock is actually displaying
+                if (!this.optionsStore.options.display.sideBySide && this.optionsStore.currentView !== 'clock') {
+                    //hide calendar
+                    Collapse.hideImmediately(this.display.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+                    //show clock
+                    Collapse.showImmediately(this.display.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                }
                 this.handleShowClockContainers(action);
                 break;
             case ActionTypes.clear:
@@ -229,9 +236,10 @@ export default class Actions {
 
     private handleShowClockContainers(action: ActionTypes) {
         if (!this.display._hasTime) {
-          Namespace.errorMessages.throwError('Cannot show clock containers when time is disabled.');
+            Namespace.errorMessages.throwError('Cannot show clock containers when time is disabled.');
             return;
         }
+
         this.optionsStore.currentView = 'clock';
         this.display.widget
             .querySelectorAll(`.${Namespace.css.timeContainer} > div`)

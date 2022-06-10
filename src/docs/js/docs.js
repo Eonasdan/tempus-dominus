@@ -53,14 +53,4 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
-
-  const sideBar = document.getElementById('mainToc');
-
-  if (sideBar) {
-    const activeLink = [...sideBar
-      .getElementsByTagName('a')]
-      .find(x => x.href === window.location.href);
-    activeLink?.closest('div').parentElement.children[0].click();
-    activeLink?.classList.add('active');
-  }
 });
