@@ -17,6 +17,16 @@ export default class Collapse {
   }
 
   /**
+   * Skips any animation or timeouts and immediately set the element to show.
+   * @param target
+   */
+  static showImmediately(target: HTMLElement) {
+    target.classList.remove(Namespace.css.collapsing);
+    target.classList.add(Namespace.css.collapse, Namespace.css.show);
+    target.style.height = '';
+  }
+
+  /**
    * If `target` is not already showing, then show after the animation.
    * @param target
    */
@@ -29,9 +39,7 @@ export default class Collapse {
 
     let timeOut = null;
     const complete = () => {
-      target.classList.remove(Namespace.css.collapsing);
-      target.classList.add(Namespace.css.collapse, Namespace.css.show);
-      target.style.height = '';
+      Collapse.showImmediately(target);
       timeOut = null;
     };
 
@@ -47,6 +55,15 @@ export default class Collapse {
   }
 
   /**
+   * Skips any animation or timeouts and immediately set the element to hide.
+   * @param target
+   */
+  static hideImmediately(target: HTMLElement) {
+    target.classList.remove(Namespace.css.collapsing, Namespace.css.show);
+    target.classList.add(Namespace.css.collapse);
+  }
+
+  /**
    * If `target` is not already hidden, then hide after the animation.
    * @param target HTML Element
    */
@@ -59,8 +76,7 @@ export default class Collapse {
 
     let timeOut = null;
     const complete = () => {
-      target.classList.remove(Namespace.css.collapsing);
-      target.classList.add(Namespace.css.collapse);
+      Collapse.hideImmediately(target);
       timeOut = null;
     };
 

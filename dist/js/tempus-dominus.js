@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta7 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta8 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -571,7 +571,7 @@
     }
 
     // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-    const NAME = 'tempus-dominus', version = '6.0.0-beta7', dataKey = 'td';
+    const NAME = 'tempus-dominus', version = '6.0.0-beta8', dataKey = 'td';
     /**
      * Events
      */
@@ -1130,11 +1130,79 @@
         static objectPath(paths, obj) {
             if (paths.charAt(0) === '.')
                 paths = paths.slice(1);
+            if (!paths)
+                return obj;
             return paths.split('.')
                 .reduce((value, key) => (OptionConverter.isValue(value) || OptionConverter.isValue(value[key]) ?
                 value[key] :
                 undefined), obj);
         }
+        // /**
+        //  * The spread operator caused sub keys to be missing after merging.
+        //  * This is to fix that issue by using spread on the child objects first.
+        //  * Also handles complex options like disabledDates
+        //  * @param provided An option from new providedOptions
+        //  * @param mergeOption Default option to compare types against
+        //  * @param copyTo Destination object. This was added to prevent reference copies
+        //  * @param path
+        //  * @param locale
+        //  */
+        // static spread(provided, mergeOption, copyTo, path = '', locale = '') {
+        //     const unsupportedOptions = Object.keys(provided).filter(
+        //         (x) => !Object.keys(mergeOption).includes(x)
+        //     );
+        //
+        //     if (unsupportedOptions.length > 0) {
+        //         const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
+        //
+        //         const errors = unsupportedOptions.map((x) => {
+        //             let error = `"${path}.${x}" in not a known option.`;
+        //             let didYouMean = flattenedOptions.find((y) => y.includes(x));
+        //             if (didYouMean) error += ` Did you mean "${didYouMean}"?`;
+        //             return error;
+        //         });
+        //         Namespace.errorMessages.unexpectedOptions(errors);
+        //     }
+        //
+        //     Object.keys(mergeOption).forEach((key) => {
+        //         path += `.${key}`;
+        //         if (path.charAt(0) === '.') path = path.slice(1);
+        //
+        //         const defaultOptionValue = OptionConverter.objectPath(path, DefaultOptions);
+        //         let providedType = typeof provided[key];
+        //         let defaultType = typeof defaultOptionValue;
+        //         let value = provided[key];
+        //
+        //         if (!provided.hasOwnProperty(key)) {
+        //             if (
+        //                 defaultType === 'undefined' ||
+        //                 (value?.length === 0 && Array.isArray(defaultOptionValue))
+        //             ) {
+        //                 copyTo[key] = defaultOptionValue;
+        //                 path = path.substring(0, path.lastIndexOf(`.${key}`));
+        //                 return;
+        //             }
+        //             provided[key] = defaultOptionValue;
+        //             value = provided[key];
+        //         }
+        //
+        //         copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
+        //
+        //         if (
+        //             typeof defaultOptionValue !== 'object' ||
+        //             defaultOptionValue instanceof Date ||
+        //             OptionConverter.ignoreProperties.includes(key)
+        //         ) {
+        //             path = path.substring(0, path.lastIndexOf(`.${key}`));
+        //             return;
+        //         }
+        //
+        //         if (!Array.isArray(provided[key])) {
+        //             OptionConverter.spread(provided[key], mergeOption[key], copyTo[key], path, locale);
+        //         }
+        //         path = path.substring(0, path.lastIndexOf(`.${key}`));
+        //     });
+        // }
         /**
          * The spread operator caused sub keys to be missing after merging.
          * This is to fix that issue by using spread on the child objects first.
@@ -1145,46 +1213,40 @@
          * @param path
          * @param locale
          */
-        static spread(provided, mergeOption, copyTo, path = '', locale = '') {
-            const unsupportedOptions = Object.keys(provided).filter((x) => !Object.keys(mergeOption).includes(x));
+        static spread(provided, copyTo, path = '', locale = '') {
+            const defaultOptions = OptionConverter.objectPath(path, DefaultOptions);
+            const unsupportedOptions = Object.keys(provided).filter((x) => !Object.keys(defaultOptions).includes(x));
             if (unsupportedOptions.length > 0) {
                 const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
                 const errors = unsupportedOptions.map((x) => {
                     let error = `"${path}.${x}" in not a known option.`;
                     let didYouMean = flattenedOptions.find((y) => y.includes(x));
                     if (didYouMean)
-                        error += `Did you mean "${didYouMean}"?`;
+                        error += ` Did you mean "${didYouMean}"?`;
                     return error;
                 });
                 Namespace.errorMessages.unexpectedOptions(errors);
             }
-            Object.keys(mergeOption).forEach((key) => {
+            Object.keys(provided).forEach((key) => {
                 path += `.${key}`;
                 if (path.charAt(0) === '.')
                     path = path.slice(1);
-                const defaultOptionValue = OptionConverter.objectPath(path, DefaultOptions);
+                const defaultOptionValue = defaultOptions[key];
                 let providedType = typeof provided[key];
                 let defaultType = typeof defaultOptionValue;
                 let value = provided[key];
-                if (!provided.hasOwnProperty(key)) {
-                    if (defaultType === 'undefined' ||
-                        ((value === null || value === void 0 ? void 0 : value.length) === 0 && Array.isArray(defaultOptionValue))) {
-                        copyTo[key] = defaultOptionValue;
-                        path = path.substring(0, path.lastIndexOf(`.${key}`));
-                        return;
-                    }
-                    provided[key] = defaultOptionValue;
-                    value = provided[key];
-                }
-                copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
-                if (typeof defaultOptionValue !== 'object' ||
-                    defaultOptionValue instanceof Date ||
-                    OptionConverter.ignoreProperties.includes(key)) {
+                if (value === undefined || value === null) {
+                    copyTo[key] = value;
                     path = path.substring(0, path.lastIndexOf(`.${key}`));
                     return;
                 }
-                if (!Array.isArray(provided[key])) {
-                    OptionConverter.spread(provided[key], defaultOptionValue, copyTo[key], path, locale);
+                if (typeof defaultOptionValue === 'object' &&
+                    !Array.isArray(provided[key]) &&
+                    !(defaultOptionValue instanceof Date || OptionConverter.ignoreProperties.includes(key))) {
+                    OptionConverter.spread(provided[key], copyTo[key], path, locale);
+                }
+                else {
+                    copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
                 }
                 path = path.substring(0, path.lastIndexOf(`.${key}`));
             });
@@ -1332,13 +1394,13 @@
         }
         static _mergeOptions(providedOptions, mergeTo) {
             var _a;
-            const newOptions = {};
+            const newConfig = OptionConverter.deepCopy(mergeTo);
             //see if the options specify a locale
             const locale = mergeTo.localization.locale !== 'default'
                 ? mergeTo.localization.locale
                 : ((_a = providedOptions === null || providedOptions === void 0 ? void 0 : providedOptions.localization) === null || _a === void 0 ? void 0 : _a.locale) || 'default';
-            OptionConverter.spread(providedOptions, mergeTo, newOptions, '', locale);
-            return newOptions;
+            OptionConverter.spread(providedOptions, newConfig, '', locale);
+            return newConfig;
         }
         static _dataToOptions(element, options) {
             const eData = JSON.parse(JSON.stringify(element.dataset));
@@ -2462,6 +2524,15 @@
             }
         }
         /**
+         * Skips any animation or timeouts and immediately set the element to show.
+         * @param target
+         */
+        static showImmediately(target) {
+            target.classList.remove(Namespace.css.collapsing);
+            target.classList.add(Namespace.css.collapse, Namespace.css.show);
+            target.style.height = '';
+        }
+        /**
          * If `target` is not already showing, then show after the animation.
          * @param target
          */
@@ -2470,15 +2541,21 @@
                 target.classList.contains(Namespace.css.show))
                 return;
             const complete = () => {
-                target.classList.remove(Namespace.css.collapsing);
-                target.classList.add(Namespace.css.collapse, Namespace.css.show);
-                target.style.height = '';
+                Collapse.showImmediately(target);
             };
             target.style.height = '0';
             target.classList.remove(Namespace.css.collapse);
             target.classList.add(Namespace.css.collapsing);
             setTimeout(complete, this.getTransitionDurationFromElement(target));
             target.style.height = `${target.scrollHeight}px`;
+        }
+        /**
+         * Skips any animation or timeouts and immediately set the element to hide.
+         * @param target
+         */
+        static hideImmediately(target) {
+            target.classList.remove(Namespace.css.collapsing, Namespace.css.show);
+            target.classList.add(Namespace.css.collapse);
         }
         /**
          * If `target` is not already hidden, then hide after the animation.
@@ -2489,8 +2566,7 @@
                 !target.classList.contains(Namespace.css.show))
                 return;
             const complete = () => {
-                target.classList.remove(Namespace.css.collapsing);
-                target.classList.add(Namespace.css.collapse);
+                Collapse.hideImmediately(target);
             };
             target.style.height = `${target.getBoundingClientRect()['height']}px`;
             const reflow = (element) => element.offsetHeight;
@@ -2697,9 +2773,9 @@
                     this.optionsStore.currentCalendarViewMode =
                         this.optionsStore.minimumCalendarViewMode;
                 }
-                if (!onlyClock) {
+                if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
                     if (this._hasTime) {
-                        Collapse.hide(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                        Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
                     }
                     Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
                 }
@@ -3204,6 +3280,13 @@
                 case ActionTypes$1.showHours:
                 case ActionTypes$1.showMinutes:
                 case ActionTypes$1.showSeconds:
+                    //make sure the clock is actually displaying
+                    if (!this.optionsStore.options.display.sideBySide && this.optionsStore.currentView !== 'clock') {
+                        //hide calendar
+                        Collapse.hideImmediately(this.display.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+                        //show clock
+                        Collapse.showImmediately(this.display.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                    }
                     this.handleShowClockContainers(action);
                     break;
                 case ActionTypes$1.clear:

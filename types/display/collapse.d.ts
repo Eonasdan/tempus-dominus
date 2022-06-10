@@ -8,10 +8,20 @@ export default class Collapse {
      */
     static toggle(target: HTMLElement): void;
     /**
+     * Skips any animation or timeouts and immediately set the element to show.
+     * @param target
+     */
+    static showImmediately(target: HTMLElement): void;
+    /**
      * If `target` is not already showing, then show after the animation.
      * @param target
      */
     static show(target: HTMLElement): void;
+    /**
+     * Skips any animation or timeouts and immediately set the element to hide.
+     * @param target
+     */
+    static hideImmediately(target: HTMLElement): void;
     /**
      * If `target` is not already hidden, then hide after the animation.
      * @param target HTML Element
