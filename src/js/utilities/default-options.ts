@@ -47,7 +47,8 @@ const DefaultOptions: Options = {
       seconds: false,
       useTwentyfourHour: false
     },
-    inline: false
+    inline: false,
+    theme: 'auto'
   },
   stepping: 1,
   useCurrent: true,

@@ -1687,6 +1687,137 @@ const subscription = linked2.subscribe(tempusDominus.Namespace.events.change, (e
     </section>
 
     <section>
+        <h3 id='theme'>Theme <a class='anchor-link ' aria-label='Anchor' href='#theme'><i
+                class="fa-solid fa-anchor" aria-hidden="true"></i></a> <small class='show-code' title='View Code'><i
+                class="fa-solid fa-code" aria-hidden="true"></i></small></h3>
+
+        <p>
+            You can also specify the theme for the picker.
+        </p>
+
+        <div class='code-blocks d-none'>
+            <ul class='nav nav-tabs' role='tablist'>
+                <li class='nav-item' role='presentation'>
+                    <button class='nav-link active' id='themeHtml-tab' data-bs-toggle='tab'
+                            data-bs-target='#themeHtml' type='button'
+                            role='tab' aria-controls='themeHtml' aria-selected='true'>HTML
+                    </button>
+                </li>
+                <li class='nav-item' role='presentation'>
+                    <button class='nav-link' id='themeJs-tab' data-bs-toggle='tab' data-bs-target='#themeJs'
+                            type='button'
+                            role='tab' aria-controls='themeJs' aria-selected='false'>Javascript
+                    </button>
+                </li>
+                <li class='nav-item' role='presentation'>
+                    <button class='nav-link' id='themeLog-tab' data-bs-toggle='tab' data-bs-target='#themeLog'
+                            type='button'
+                            role='tab' aria-controls='themeLog' aria-selected='false'>Events
+                    </button>
+                </li>
+            </ul>
+            <div class='tab-content'>
+                <div class='tab-pane fade show active' id='themeHtml' role='tabpanel'
+                     aria-labelledby='themeHtml-tab'>
+         <pre>
+           <code class='language-html'>
+ &lt;div
+    class='input-group'
+    id='themePicker'
+    data-td-target-input='nearest'
+    data-td-target-toggle='nearest'
+&gt;
+&lt;input
+    id='themePickerInput'
+    type='text'
+    class='form-control'
+    data-td-target='#themePicker'
+/&gt;
+&lt;span
+    class='input-group-text'
+    data-td-target='#themePicker'
+    data-td-toggle='datetimepicker'
+&gt;
+    &lt;span class='fa-solid fa-calendar'&gt;&lt;/span&gt;
+&lt;/span&gt;
+&lt;/div&gt;
+           </code>
+         </pre>
+                </div>
+                <div class='tab-pane fade' id='themeJs' role='tabpanel' aria-labelledby='themeJs-tab'>
+         <pre>
+           <code class='language-javascript'>
+ new tempusDominus.TempusDominus(document.getElementById('themePicker'), {
+   display: {
+     theme: 'dark'
+   }
+ });
+           </code>
+         </pre>
+                </div>
+                <div class='tab-pane fade logger' id='themeLog' role='tabpanel'
+                     aria-labelledby='themeLog-tab'>
+                    <div class='alert alert-info'>
+                        Events will display as you manipulate the picker.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='container'>
+            <div class='row'>
+                <div class='col-sm-6'>
+                    <label for='themePicker' class='form-label'>Theme</label>
+                    <div
+                        class='input-group'
+                        id='themePicker'
+                        data-td-target-input='nearest'
+                        data-td-target-toggle='nearest'
+                    >
+                    <input
+                        id='themePickerInput'
+                        type='text'
+                        class='form-control'
+                        data-td-target='#themePicker'
+                    />
+                    <span
+                        class='input-group-text'
+                        data-td-target='#themePicker'
+                        data-td-toggle='datetimepicker'
+                    >
+                        <span class='fa-solid fa-calendar'></span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <div class='row mt-3'>
+                <div class='col-sm-6'>
+                    <button id='setThemeLight' class='btn btn-primary'>Set to Light</button>
+                    <button id='setThemeDark' class='btn btn-primary'>Set to Dark</button>
+                    <button id='setThemeAuto' class='btn btn-primary'>Set to Auto</button>
+                </div>
+            </div>
+        </div>
+        <script type='text/javascript'>
+            const themePicker = new tempusDominus.TempusDominus(document.getElementById('themePicker'), {
+                display: {
+                    theme: 'dark'
+                }
+            });
+
+            const updateTheme = theme => themePicker.updateOptions({ display: { theme }});
+
+            const setThemeLightButton = document.getElementById('setThemeLight');
+            const setThemeDarkButton = document.getElementById('setThemeDark');
+            const setThemeAutoButton = document.getElementById('setThemeAuto');
+
+            setThemeLightButton.addEventListener('click', () => updateTheme('light'));
+            setThemeDarkButton.addEventListener('click', () => updateTheme('dark'));
+            setThemeAutoButton.addEventListener('click', () => updateTheme('auto'));
+        </script>
+    </section>
+
+    <section>
         <h3 id='multidate'>Multiple Dates <a class='anchor-link ' aria-label='Anchor' href='#multidate'><i
                 class="fa-solid fa-anchor" aria-hidden="true"></i></a> <small class='show-code' title='View Code'><i
                 class="fa-solid fa-code" aria-hidden="true"></i></small></h3>
