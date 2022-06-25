@@ -780,18 +780,6 @@
              * Applied to the widget when the option display.inline is enabled.
              */
             this.inline = 'inline';
-            /**
-             * Applied to the widget when the option display.theme is light.
-             */
-            this.lightTheme = 'light';
-            /**
-            * Applied to the widget when the option display.theme is dark.
-            */
-            this.darkTheme = 'dark';
-            /**
-            * Used for detecting if the system color preference is dark mode
-            */
-            this.isDarkPreferedQuery = '(prefers-color-scheme: dark)';
         }
     }
     class Namespace {
@@ -1069,8 +1057,7 @@
                 seconds: false,
                 useTwentyfourHour: false
             },
-            inline: false,
-            theme: 'auto'
+            inline: false
         },
         stepping: 1,
         useCurrent: true,
@@ -1368,12 +1355,10 @@
                 case 'toolbarPlacement':
                 case 'type':
                 case 'viewMode':
-                case 'theme':
                     const optionValues = {
                         toolbarPlacement: ['top', 'bottom', 'default'],
                         type: ['icons', 'sprites'],
                         viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
-                        theme: ['light', 'dark', 'auto'],
                     };
                     const keyOptions = optionValues[key];
                     if (!keyOptions.includes(value))
@@ -2773,7 +2758,6 @@
                     }
                 }
                 this._buildWidget();
-                this._updateTheme();
                 // If modeView is only clock
                 const onlyClock = this._hasTime && !this._hasDate;
                 // reset the view to the clock if there's no date components
@@ -2789,8 +2773,7 @@
                     this.optionsStore.currentCalendarViewMode =
                         this.optionsStore.minimumCalendarViewMode;
                 }
-                if (!onlyClock &&
-                    this.optionsStore.options.display.viewMode !== 'clock') {
+                if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
                     if (this._hasTime) {
                         Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
                     }
@@ -2874,46 +2857,6 @@
             picker.style.display = 'grid';
             this._updateCalendarHeader();
             this._eventEmitters.viewUpdate.emit();
-        }
-        /**
-         * Changes the theme. E.g. light, dark or auto
-         * @param theme the theme name
-         * @private
-         */
-        _updateTheme(theme) {
-            if (!this.widget) {
-                return;
-            }
-            if (theme) {
-                if (this.optionsStore.options.display.theme === theme)
-                    return;
-                this.optionsStore.options.display.theme = theme;
-            }
-            this.widget.classList.remove('light', 'dark');
-            this.widget.classList.add(this._getThemeClass());
-            if (this.optionsStore.options.display.theme === 'auto') {
-                window
-                    .matchMedia(Namespace.css.isDarkPreferedQuery)
-                    .addEventListener('change', () => this._updateTheme());
-            }
-            else {
-                window
-                    .matchMedia(Namespace.css.isDarkPreferedQuery)
-                    .removeEventListener('change', () => this._updateTheme());
-            }
-        }
-        _getThemeClass() {
-            const currentTheme = this.optionsStore.options.display.theme || 'auto';
-            const isDarkMode = window.matchMedia &&
-                window.matchMedia(Namespace.css.isDarkPreferedQuery).matches;
-            switch (currentTheme) {
-                case 'light':
-                    return Namespace.css.lightTheme;
-                case 'dark':
-                    return Namespace.css.darkTheme;
-                case 'auto':
-                    return isDarkMode ? Namespace.css.darkTheme : Namespace.css.lightTheme;
-            }
         }
         _updateCalendarHeader() {
             const showing = [
