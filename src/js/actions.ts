@@ -192,7 +192,7 @@ export default class Actions {
                         this.optionsStore.options.display.icons.date
                     ).outerHTML;
                     if (this.display._hasTime) {
-                        this.do(e, ActionTypes.showClock);
+                        this.handleShowClockContainers(ActionTypes.showClock);
                         this.display._update('clock');
                     }
                 }
