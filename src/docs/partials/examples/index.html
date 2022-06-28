@@ -206,6 +206,125 @@
     </section>
 
     <section>
+        <h3 id='side-by-side'>Side-by-Side
+            <a class='anchor-link ' aria-label='Anchor' href='#side-by-side'>
+                <i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+            <small class='show-code' title='View Code'><i class="fa-solid fa-code" aria-hidden="true"></i></small>
+        </h3>
+
+        <p>
+            This demonstrates the side-by-side option.
+        </p>
+
+        <div class='code-blocks d-none'>
+            <ul class='nav nav-tabs' role='tablist'>
+                <li class='nav-item' role='presentation'>
+                    <button class='nav-link active' id='pickerSideBySideHtml-tab' data-bs-toggle='tab'
+                            data-bs-target='#pickerSideBySideHtml' type='button'
+                            role='tab' aria-controls='pickerSideBySideHtml' aria-selected='true'>HTML
+                    </button>
+                </li>
+                <li class='nav-item' role='presentation'>
+                    <button class='nav-link' id='pickerSideBySideJs-tab' data-bs-toggle='tab'
+                            data-bs-target='#pickerSideBySideJs'
+                            type='button'
+                            role='tab' aria-controls='pickerSideBySideJs' aria-selected='false'>Javascript
+                    </button>
+                </li>
+                <li class='nav-item' role='presentation'>
+                    <button class='nav-link' id='pickerSideBySideLog-tab' data-bs-toggle='tab'
+                            data-bs-target='#pickerSideBySideLog'
+                            type='button'
+                            role='tab' aria-controls='pickerSideBySideLog' aria-selected='false'>Events
+                    </button>
+                </li>
+            </ul>
+            <div class='tab-content'>
+                <div class='tab-pane fade show active' id='pickerSideBySideHtml' role='tabpanel'
+                     aria-labelledby='pickerSideBySideHtml-tab'>
+         <pre>
+           <code class='language-html'>
+ &lt;div
+     class='input-group'
+     id='pickerSideBySide'
+     data-td-target-input='nearest'
+     data-td-target-toggle='nearest'
+ &gt;
+   &lt;input
+     id='pickerSideBySideInput'
+     type='text'
+     class='form-control'
+     data-td-target='#pickerSideBySide'
+   /&gt;
+   &lt;span
+     class='input-group-text'
+     data-td-target='#pickerSideBySide'
+     data-td-toggle='datetimepicker'
+   &gt;
+     &lt;span class='fa-solid fa-calendar'&gt;&lt;/span&gt;
+   &lt;/span&gt;
+ &lt;/div&gt;
+           </code>
+         </pre>
+                </div>
+                <div class='tab-pane fade' id='pickerSideBySideJs' role='tabpanel'
+                     aria-labelledby='pickerSideBySideJs-tab'>
+         <pre>
+           <code class='language-javascript'>
+ new tempusDominus.TempusDominus(document.getElementById('pickerSideBySide', {
+    display: {
+        sideBySide: true
+    }
+ }));
+           </code>
+         </pre>
+                </div>
+                <div class='tab-pane fade logger' id='pickerSideBySideLog' role='tabpanel'
+                     aria-labelledby='pickerSideBySideLog-tab'>
+                    <div class='alert alert-info'>
+                        Events will display as you manipulate the picker.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='container'>
+            <div class='row'>
+                <div class='col-sm-6'>
+                    <label for='pickerSideBySideInput' class='form-label'>Side-by-Side picker</label>
+                    <div
+                            class='input-group log-event'
+                            id='pickerSideBySide'
+                            data-td-target-input='nearest'
+                            data-td-target-toggle='nearest'
+                    >
+                        <input
+                                id='pickerSideBySideInput'
+                                type='text'
+                                class='form-control'
+                                data-td-target='#pickerSideBySide'
+                        />
+                        <span
+                                class='input-group-text'
+                                data-td-target='#pickerSideBySide'
+                                data-td-toggle='datetimepicker'
+                        >
+               <span class='fa-solid fa-calendar'></span>
+             </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type='text/javascript'>
+            const pickerSideBySide = new tempusDominus.TempusDominus(document.getElementById('pickerSideBySide'), {
+                display: {
+                    sideBySide: true
+                }
+            });
+        </script>
+    </section>
+
+    <section>
         <h3 id='locales'>Using Locales <a class='anchor-link ' aria-label='Anchor' href='#locales'><i
                 class='fa-solid fa-anchor' aria-hidden="true"></i></a> <small class='show-code'><i
                 class="fa-solid fa-code" aria-hidden="true"></i></small></h3>
