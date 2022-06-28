@@ -329,10 +329,12 @@ export class OptionConverter {
             case 'toolbarPlacement':
             case 'type':
             case 'viewMode':
+            case 'theme':
                 const optionValues = {
                     toolbarPlacement: ['top', 'bottom', 'default'],
                     type: ['icons', 'sprites'],
                     viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
+                    theme: ['light', 'dark', 'auto'],
                 };
                 const keyOptions = optionValues[key];
                 if (!keyOptions.includes(value))
