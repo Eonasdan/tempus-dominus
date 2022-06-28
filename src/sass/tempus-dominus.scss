@@ -18,16 +18,16 @@
   width: 19rem;
   border-radius: 4px;
   display: none;
-  background-color: $td-widget-background;
   z-index: 9999;
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+    0 1px 10px 0 rgba(0, 0, 0, 0.12);
 
   &.calendarWeeks {
     width: 21rem;
 
     & .date-container-days {
       grid-auto-columns: 12.5%;
-      grid-template-areas: "a a a a a a a a";
+      grid-template-areas: 'a a a a a a a a';
     }
   }
 
@@ -42,7 +42,6 @@
     &.disabled,
     &.disabled:hover {
       background: none;
-      color: $td-disabled-color;
       cursor: not-allowed;
     }
   }
@@ -117,7 +116,7 @@
 
   .calendar-header {
     display: grid;
-    grid-template-areas: "a a a";
+    grid-template-areas: 'a a a';
     margin-bottom: 10px;
     font-weight: bold;
 
@@ -147,21 +146,16 @@
       justify-content: center;
       box-sizing: border-box;
       display: flex;
-
-      &:hover {
-        background: $td-btn-hover-bg;
-      }
     }
   }
 
   .date-container-days {
     display: grid;
-    grid-template-areas: "a a a a a a a";
+    grid-template-areas: 'a a a a a a a';
     grid-auto-rows: 40px;
     grid-auto-columns: calc(100% / 7);
 
     & .dow {
-      color: $td-dow-color;
       align-items: center;
       justify-content: center;
       text-align: center;
@@ -175,20 +169,23 @@
       display: flex;
       font-size: 0.8em;
       line-height: 20px;
-      color: $td-alternate-color;
       cursor: default;
     }
   }
 
-  .date-container-decades, .date-container-years, .date-container-months {
+  .date-container-decades,
+  .date-container-years,
+  .date-container-months {
     display: grid;
-    grid-template-areas: "a a a";
+    grid-template-areas: 'a a a';
     grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
   }
 
-  .time-container-hour, .time-container-minute, .time-container-second {
+  .time-container-hour,
+  .time-container-minute,
+  .time-container-second {
     display: grid;
-    grid-template-areas: "a a a a";
+    grid-template-areas: 'a a a a';
     grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
   }
 
@@ -205,8 +202,14 @@
     }
   }
 
-  .date-container-decades, .date-container-years, .date-container-months, .date-container-days,
-  .time-container-clock, .time-container-hour, .time-container-minute, .time-container-second {
+  .date-container-decades,
+  .date-container-years,
+  .date-container-months,
+  .date-container-days,
+  .time-container-clock,
+  .time-container-hour,
+  .time-container-minute,
+  .time-container-second {
     div:not(.no-highlight) {
       width: 90%;
       height: 90%;
@@ -216,34 +219,9 @@
       box-sizing: border-box;
       display: flex;
 
-      &:hover {
-        background: $td-btn-hover-bg;
-      }
-
-      &.active {
-        background-color: $td-active-bg;
-        color: $td-active-color;
-        text-shadow: $td-text-shadow;
-
-        &.old,
-        &.new {
-          color: $td-active-color;
-        }
-      }
-
-      &.active.today:before {
-        border-bottom-color: $td-active-border-color;
-      }
-
-      &.old,
-      &.new {
-        color: $td-alternate-color;
-      }
-
       &.disabled,
       &.disabled:hover {
         background: none;
-        color: $td-disabled-color;
         cursor: not-allowed;
       }
 
@@ -255,8 +233,6 @@
           display: inline-block;
           border: solid transparent;
           border-width: 0 0 7px 7px;
-          border-bottom-color: $td-active-bg;
-          border-top-color: $td-secondary-border-color-rgba;
           position: absolute;
           bottom: 6px;
           right: 6px;
@@ -270,9 +246,6 @@
   }
 
   button {
-    color: $td-active-color;
-    background-color: $td-active-bg;
-    border-color: $td-active-bg;
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
@@ -287,7 +260,7 @@
     font-size: 1rem;
     border-radius: 0.25rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
 
   &.tempus-dominus-widget-readonly {
@@ -313,14 +286,94 @@
       }
     }
   }
-}
 
+  &.light {
+    color: $td-font-color;
+    background-color: $td-widget-background;
 
-@media (prefers-color-scheme: dark) {
-  .tempus-dominus-widget {
+    [data-action] {
+      &.disabled,
+      &.disabled:hover {
+        color: $td-disabled-color;
+      }
+    }
+
+    .toolbar {
+      & div {
+        &:hover {
+          background: $td-btn-hover-bg;
+        }
+      }
+    }
+
+    .date-container-days {
+      & .dow {
+        color: $td-dow-color;
+      }
+
+      & .cw {
+        color: $td-alternate-color;
+      }
+    }
+
+    .date-container-decades,
+    .date-container-years,
+    .date-container-months,
+    .date-container-days,
+    .time-container-clock,
+    .time-container-hour,
+    .time-container-minute,
+    .time-container-second {
+      div:not(.no-highlight) {
+        &:hover {
+          background: $td-btn-hover-bg;
+        }
+
+        &.active {
+          background-color: $td-active-bg;
+          color: $td-active-color;
+          text-shadow: $td-text-shadow;
+
+          &.old,
+          &.new {
+            color: $td-active-color;
+          }
+        }
+
+        &.active.today:before {
+          border-bottom-color: $td-active-border-color;
+        }
+
+        &.old,
+        &.new {
+          color: $td-alternate-color;
+        }
+
+        &.disabled,
+        &.disabled:hover {
+          color: $td-disabled-color;
+        }
+
+        &.today {
+          &:before {
+            border-bottom-color: $td-active-bg;
+            border-top-color: $td-secondary-border-color-rgba;
+          }
+        }
+      }
+    }
+
+    button {
+      color: $td-active-color;
+      background-color: $td-active-bg;
+      border-color: $td-active-bg;
+    }
+  }
+
+  &.dark {
     color: $td-dark-font-color;
     background-color: $td-dark-widget-background;
-    
+
     [data-action] {
       &.disabled,
       &.disabled:hover {
@@ -340,16 +393,22 @@
       & .dow {
         color: $td-dark-dow-color;
       }
-      
+
       & .cw {
         color: $td-dark-alternate-color;
       }
     }
 
-    .date-container-decades, .date-container-years, .date-container-months, .date-container-days,
-    .time-container-clock, .time-container-hour, .time-container-minute, .time-container-second {
+    .date-container-decades,
+    .date-container-years,
+    .date-container-months,
+    .date-container-days,
+    .time-container-clock,
+    .time-container-hour,
+    .time-container-minute,
+    .time-container-second {
       div:not(.no-highlight) {
-       &:hover {
+        &:hover {
           background: $td-dark-btn-hover-bg;
         }
 
