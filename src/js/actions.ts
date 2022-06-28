@@ -1,14 +1,14 @@
-import {DateTime, Unit} from './datetime';
-import Collapse from './display/collapse';
-import Namespace from './utilities/namespace';
-import Dates from './dates';
-import Validation from './validation';
-import Display from './display';
-import {EventEmitters} from './utilities/event-emitter';
-import {serviceLocator} from './utilities/service-locator.js';
-import ActionTypes from './utilities/action-types';
-import CalendarModes from './utilities/calendar-modes';
-import {OptionsStore} from "./utilities/optionsStore";
+import { DateTime, Unit } from "./datetime";
+import Collapse from "./display/collapse";
+import Namespace from "./utilities/namespace";
+import Dates from "./dates";
+import Validation from "./validation";
+import Display from "./display";
+import { EventEmitters } from "./utilities/event-emitter";
+import { serviceLocator } from "./utilities/service-locator.js";
+import ActionTypes from "./utilities/action-types";
+import CalendarModes from "./utilities/calendar-modes";
+import { OptionsStore } from "./utilities/optionsStore";
 
 /**
  *
@@ -192,15 +192,16 @@ export default class Actions {
                         this.optionsStore.options.display.icons.date
                     ).outerHTML;
                     if (this.display._hasTime) {
-                        this.do(e, ActionTypes.showClock);
+                        this.handleShowClockContainers(ActionTypes.showClock);
                         this.display._update('clock');
                     }
                 }
+
                 this.display.widget
-                    .querySelectorAll(
-                        `.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`
-                    )
-                    .forEach((htmlElement: HTMLElement) => Collapse.toggle(htmlElement));
+                  .querySelectorAll(
+                    `.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`
+                  )
+                  .forEach((htmlElement: HTMLElement) => Collapse.toggle(htmlElement));
                 this._eventEmitters.viewUpdate.emit();
                 break;
             case ActionTypes.showClock:

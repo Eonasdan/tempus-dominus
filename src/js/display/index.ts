@@ -208,7 +208,7 @@ export default class Display {
         this.optionsStore.options.display.viewMode !== 'clock'
       ) {
         if (this._hasTime) {
-          if(this.optionsStore.options.display.sideBySide !== true) {
+          if(!this.optionsStore.options.display.sideBySide) {
             Collapse.hideImmediately(
               this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
             );

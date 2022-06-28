@@ -2569,6 +2569,8 @@
          * @param target
          */
         static hideImmediately(target) {
+            if (!target)
+                return;
             target.classList.remove(Namespace.css.collapsing, Namespace.css.show);
             target.classList.add(Namespace.css.collapse);
         }
@@ -2792,7 +2794,12 @@
                 if (!onlyClock &&
                     this.optionsStore.options.display.viewMode !== 'clock') {
                     if (this._hasTime) {
-                        Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                        if (!this.optionsStore.options.display.sideBySide) {
+                            Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                        }
+                        else {
+                            Collapse.show(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                        }
                     }
                     Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
                 }
@@ -3324,7 +3331,7 @@
                         currentTarget.setAttribute('title', this.optionsStore.options.localization.selectDate);
                         currentTarget.innerHTML = this.display._iconTag(this.optionsStore.options.display.icons.date).outerHTML;
                         if (this.display._hasTime) {
-                            this.do(e, ActionTypes$1.showClock);
+                            this.handleShowClockContainers(ActionTypes$1.showClock);
                             this.display._update('clock');
                         }
                     }
