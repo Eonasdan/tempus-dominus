@@ -208,9 +208,15 @@ export default class Display {
         this.optionsStore.options.display.viewMode !== 'clock'
       ) {
         if (this._hasTime) {
-          Collapse.hideImmediately(
-            this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
-          );
+          if(this.optionsStore.options.display.sideBySide !== true) {
+            Collapse.hideImmediately(
+              this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
+            );
+          } else {
+            Collapse.show(
+              this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
+            );
+          }
         }
         Collapse.show(
           this.widget.querySelector(`div.${Namespace.css.dateContainer}`)
