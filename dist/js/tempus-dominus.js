@@ -881,7 +881,7 @@
         }
         /**
          * Checks to see if the target date is valid based on the rules provided in the options.
-         * Granularity can be provide to chek portions of the date instead of the whole.
+         * Granularity can be provided to check portions of the date instead of the whole.
          * @param targetDate
          * @param granularity
          */
@@ -2000,16 +2000,18 @@
          */
         _update(widget, paint) {
             const container = widget.getElementsByClassName(Namespace.css.monthsContainer)[0];
-            const [previous, switcher, next] = container.parentElement
-                .getElementsByClassName(Namespace.css.calendarHeader)[0]
-                .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.monthsContainer, this.optionsStore.viewDate.format({ year: 'numeric' }));
-            this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.year), exports.Unit.year)
-                ? previous.classList.remove(Namespace.css.disabled)
-                : previous.classList.add(Namespace.css.disabled);
-            this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.year), exports.Unit.year)
-                ? next.classList.remove(Namespace.css.disabled)
-                : next.classList.add(Namespace.css.disabled);
+            if (this.optionsStore.currentView === 'months') {
+                const [previous, switcher, next] = container.parentElement
+                    .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                    .getElementsByTagName('div');
+                switcher.setAttribute(Namespace.css.monthsContainer, this.optionsStore.viewDate.format({ year: 'numeric' }));
+                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.year), exports.Unit.year)
+                    ? previous.classList.remove(Namespace.css.disabled)
+                    : previous.classList.add(Namespace.css.disabled);
+                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.year), exports.Unit.year)
+                    ? next.classList.remove(Namespace.css.disabled)
+                    : next.classList.add(Namespace.css.disabled);
+            }
             let innerDate = this.optionsStore.viewDate.clone.startOf(exports.Unit.year);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectMonth}"]`)
@@ -2047,11 +2049,11 @@
          * @private
          */
         getPicker() {
-            const container = document.createElement('div');
+            const container = document.createElement("div");
             container.classList.add(Namespace.css.yearsContainer);
             for (let i = 0; i < 12; i++) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes$1.selectYear);
+                const div = document.createElement("div");
+                div.setAttribute("data-action", ActionTypes$1.selectYear);
                 container.appendChild(div);
             }
             return container;
@@ -2064,16 +2066,18 @@
             this._startYear = this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.year);
             this._endYear = this.optionsStore.viewDate.clone.manipulate(10, exports.Unit.year);
             const container = widget.getElementsByClassName(Namespace.css.yearsContainer)[0];
-            const [previous, switcher, next] = container.parentElement
-                .getElementsByClassName(Namespace.css.calendarHeader)[0]
-                .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.format({ year: 'numeric' })}-${this._endYear.format({ year: 'numeric' })}`);
-            this.validation.isValid(this._startYear, exports.Unit.year)
-                ? previous.classList.remove(Namespace.css.disabled)
-                : previous.classList.add(Namespace.css.disabled);
-            this.validation.isValid(this._endYear, exports.Unit.year)
-                ? next.classList.remove(Namespace.css.disabled)
-                : next.classList.add(Namespace.css.disabled);
+            if (this.optionsStore.currentView === "years") {
+                const [previous, switcher, next] = container.parentElement
+                    .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                    .getElementsByTagName("div");
+                switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.format({ year: "numeric" })}-${this._endYear.format({ year: "numeric" })}`);
+                this.validation.isValid(this._startYear, exports.Unit.year)
+                    ? previous.classList.remove(Namespace.css.disabled)
+                    : previous.classList.add(Namespace.css.disabled);
+                this.validation.isValid(this._endYear, exports.Unit.year)
+                    ? next.classList.remove(Namespace.css.disabled)
+                    : next.classList.add(Namespace.css.disabled);
+            }
             let innerDate = this.optionsStore.viewDate.clone
                 .startOf(exports.Unit.year)
                 .manipulate(-1, exports.Unit.year);
@@ -2092,7 +2096,7 @@
                 paint(exports.Unit.year, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${innerDate.year}`);
+                containerClone.setAttribute("data-value", `${innerDate.year}`);
                 containerClone.innerText = innerDate.format({ year: "numeric" });
                 innerDate.manipulate(1, exports.Unit.year);
             });
@@ -2113,11 +2117,11 @@
          * @private
          */
         getPicker() {
-            const container = document.createElement('div');
+            const container = document.createElement("div");
             container.classList.add(Namespace.css.decadesContainer);
             for (let i = 0; i < 12; i++) {
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes$1.selectDecade);
+                const div = document.createElement("div");
+                div.setAttribute("data-action", ActionTypes$1.selectDecade);
                 container.appendChild(div);
             }
             return container;
@@ -2127,57 +2131,7 @@
          * @private
          */
         _update(widget, paint) {
-            const [start, end] = Dates.getStartEndYear(100, this.optionsStore.viewDate.year);
-            this._startDecade = this.optionsStore.viewDate.clone.startOf(exports.Unit.year);
-            this._startDecade.year = start;
-            this._endDecade = this.optionsStore.viewDate.clone.startOf(exports.Unit.year);
-            this._endDecade.year = end;
-            const container = widget.getElementsByClassName(Namespace.css.decadesContainer)[0];
-            const [previous, switcher, next] = container.parentElement
-                .getElementsByClassName(Namespace.css.calendarHeader)[0]
-                .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.format({ year: 'numeric' })}-${this._endDecade.format({ year: 'numeric' })}`);
-            this.validation.isValid(this._startDecade, exports.Unit.year)
-                ? previous.classList.remove(Namespace.css.disabled)
-                : previous.classList.add(Namespace.css.disabled);
-            this.validation.isValid(this._endDecade, exports.Unit.year)
-                ? next.classList.remove(Namespace.css.disabled)
-                : next.classList.add(Namespace.css.disabled);
-            const pickedYears = this.dates.picked.map((x) => x.year);
-            container
-                .querySelectorAll(`[data-action="${ActionTypes$1.selectDecade}"]`)
-                .forEach((containerClone, index) => {
-                if (index === 0) {
-                    containerClone.classList.add(Namespace.css.old);
-                    if (this._startDecade.year - 10 < 0) {
-                        containerClone.textContent = ' ';
-                        previous.classList.add(Namespace.css.disabled);
-                        containerClone.classList.add(Namespace.css.disabled);
-                        containerClone.setAttribute('data-value', ``);
-                        return;
-                    }
-                    else {
-                        containerClone.innerText = this._startDecade.clone.manipulate(-10, exports.Unit.year).format({ year: 'numeric' });
-                        containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-                        return;
-                    }
-                }
-                let classes = [];
-                classes.push(Namespace.css.decade);
-                const startDecadeYear = this._startDecade.year;
-                const endDecadeYear = this._startDecade.year + 9;
-                if (!this.optionsStore.unset &&
-                    pickedYears.filter((x) => x >= startDecadeYear && x <= endDecadeYear)
-                        .length > 0) {
-                    classes.push(Namespace.css.active);
-                }
-                paint('decade', this._startDecade, classes, containerClone);
-                containerClone.classList.remove(...containerClone.classList);
-                containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-                containerClone.innerText = `${this._startDecade.format({ year: 'numeric' })}`;
-                this._startDecade.manipulate(10, exports.Unit.year);
-            });
+            return;
         }
     }
 

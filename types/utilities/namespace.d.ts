@@ -196,6 +196,18 @@ declare class Css {
      * Applied to the widget when the option display.inline is enabled.
      */
     inline: string;
+    /**
+     * Applied to the widget when the option display.theme is light.
+     */
+    lightTheme: string;
+    /**
+    * Applied to the widget when the option display.theme is dark.
+    */
+    darkTheme: string;
+    /**
+    * Used for detecting if the system color preference is dark mode
+    */
+    isDarkPreferedQuery: string;
 }
 export default class Namespace {
     static NAME: string;

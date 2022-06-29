@@ -64,6 +64,13 @@ export default class Display {
      * @private
      */
     _showMode(direction?: number): void;
+    /**
+     * Changes the theme. E.g. light, dark or auto
+     * @param theme the theme name
+     * @private
+     */
+    _updateTheme(theme?: 'light' | 'dark' | 'auto'): void;
+    _getThemeClass(): string;
     _updateCalendarHeader(): void;
     /**
      * Hides the picker if needed.

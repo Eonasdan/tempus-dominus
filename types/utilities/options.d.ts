@@ -50,6 +50,7 @@ export default interface Options {
         sideBySide?: boolean;
         inline?: boolean;
         keepOpen?: boolean;
+        theme?: 'light' | 'dark' | 'auto';
     };
     stepping?: number;
     useCurrent?: boolean;
