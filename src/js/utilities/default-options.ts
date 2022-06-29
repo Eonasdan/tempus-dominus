@@ -45,7 +45,7 @@ const DefaultOptions: Options = {
       hours: true,
       minutes: true,
       seconds: false,
-      useTwentyfourHour: false
+      useTwentyfourHour: undefined
     },
     inline: false,
     theme: 'auto'

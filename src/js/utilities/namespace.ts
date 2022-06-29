@@ -1,7 +1,7 @@
 import { ErrorMessages } from './errors';
 // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
 const NAME = 'tempus-dominus',
-  version = '6.0.0-beta8',
+  version = '6.0.0-beta9',
   dataKey = 'td';
 
 /**

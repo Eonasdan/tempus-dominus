@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta8 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta9 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -321,8 +321,7 @@
          */
         get hoursFormatted() {
             let formatted = this.parts(undefined, twoDigitTwentyFourTemplate).hour;
-            if (formatted === '24')
-                formatted = '00';
+            //if (formatted === '24') formatted = '00';
             return formatted;
         }
         /**
@@ -571,7 +570,7 @@
     }
 
     // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-    const NAME = 'tempus-dominus', version = '6.0.0-beta8', dataKey = 'td';
+    const NAME = 'tempus-dominus', version$1 = '6.0.0-beta9', dataKey = 'td';
     /**
      * Events
      */
@@ -798,7 +797,7 @@
     }
     Namespace.NAME = NAME;
     // noinspection JSUnusedGlobalSymbols
-    Namespace.version = version;
+    Namespace.version = version$1;
     Namespace.dataKey = dataKey;
     Namespace.events = new Events();
     Namespace.css = new Css();
@@ -1067,7 +1066,7 @@
                 hours: true,
                 minutes: true,
                 seconds: false,
-                useTwentyfourHour: false
+                useTwentyfourHour: undefined
             },
             inline: false,
             theme: 'auto'
@@ -1150,72 +1149,6 @@
                 value[key] :
                 undefined), obj);
         }
-        // /**
-        //  * The spread operator caused sub keys to be missing after merging.
-        //  * This is to fix that issue by using spread on the child objects first.
-        //  * Also handles complex options like disabledDates
-        //  * @param provided An option from new providedOptions
-        //  * @param mergeOption Default option to compare types against
-        //  * @param copyTo Destination object. This was added to prevent reference copies
-        //  * @param path
-        //  * @param locale
-        //  */
-        // static spread(provided, mergeOption, copyTo, path = '', locale = '') {
-        //     const unsupportedOptions = Object.keys(provided).filter(
-        //         (x) => !Object.keys(mergeOption).includes(x)
-        //     );
-        //
-        //     if (unsupportedOptions.length > 0) {
-        //         const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
-        //
-        //         const errors = unsupportedOptions.map((x) => {
-        //             let error = `"${path}.${x}" in not a known option.`;
-        //             let didYouMean = flattenedOptions.find((y) => y.includes(x));
-        //             if (didYouMean) error += ` Did you mean "${didYouMean}"?`;
-        //             return error;
-        //         });
-        //         Namespace.errorMessages.unexpectedOptions(errors);
-        //     }
-        //
-        //     Object.keys(mergeOption).forEach((key) => {
-        //         path += `.${key}`;
-        //         if (path.charAt(0) === '.') path = path.slice(1);
-        //
-        //         const defaultOptionValue = OptionConverter.objectPath(path, DefaultOptions);
-        //         let providedType = typeof provided[key];
-        //         let defaultType = typeof defaultOptionValue;
-        //         let value = provided[key];
-        //
-        //         if (!provided.hasOwnProperty(key)) {
-        //             if (
-        //                 defaultType === 'undefined' ||
-        //                 (value?.length === 0 && Array.isArray(defaultOptionValue))
-        //             ) {
-        //                 copyTo[key] = defaultOptionValue;
-        //                 path = path.substring(0, path.lastIndexOf(`.${key}`));
-        //                 return;
-        //             }
-        //             provided[key] = defaultOptionValue;
-        //             value = provided[key];
-        //         }
-        //
-        //         copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
-        //
-        //         if (
-        //             typeof defaultOptionValue !== 'object' ||
-        //             defaultOptionValue instanceof Date ||
-        //             OptionConverter.ignoreProperties.includes(key)
-        //         ) {
-        //             path = path.substring(0, path.lastIndexOf(`.${key}`));
-        //             return;
-        //         }
-        //
-        //         if (!Array.isArray(provided[key])) {
-        //             OptionConverter.spread(provided[key], mergeOption[key], copyTo[key], path, locale);
-        //         }
-        //         path = path.substring(0, path.lastIndexOf(`.${key}`));
-        //     });
-        // }
         /**
          * The spread operator caused sub keys to be missing after merging.
          * This is to fix that issue by using spread on the child objects first.
@@ -1862,24 +1795,24 @@
          * @private
          */
         getPicker() {
-            const container = document.createElement('div');
+            const container = document.createElement("div");
             container.classList.add(Namespace.css.daysContainer);
             container.append(...this._daysOfTheWeek());
             if (this.optionsStore.options.display.calendarWeeks) {
-                const div = document.createElement('div');
+                const div = document.createElement("div");
                 div.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
                 container.appendChild(div);
             }
             for (let i = 0; i < 42; i++) {
                 if (i !== 0 && i % 7 === 0) {
                     if (this.optionsStore.options.display.calendarWeeks) {
-                        const div = document.createElement('div');
+                        const div = document.createElement("div");
                         div.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
                         container.appendChild(div);
                     }
                 }
-                const div = document.createElement('div');
-                div.setAttribute('data-action', ActionTypes$1.selectDay);
+                const div = document.createElement("div");
+                div.setAttribute("data-action", ActionTypes$1.selectDay);
                 container.appendChild(div);
             }
             return container;
@@ -1890,26 +1823,31 @@
          */
         _update(widget, paint) {
             const container = widget.getElementsByClassName(Namespace.css.daysContainer)[0];
-            const [previous, switcher, next] = container.parentElement
-                .getElementsByClassName(Namespace.css.calendarHeader)[0]
-                .getElementsByTagName('div');
-            switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
-            this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.month), exports.Unit.month)
-                ? previous.classList.remove(Namespace.css.disabled)
-                : previous.classList.add(Namespace.css.disabled);
-            this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.month), exports.Unit.month)
-                ? next.classList.remove(Namespace.css.disabled)
-                : next.classList.add(Namespace.css.disabled);
+            if (this.optionsStore.currentView === "calendar") {
+                const [previous, switcher, next] = container.parentElement
+                    .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                    .getElementsByTagName("div");
+                switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
+                this.optionsStore.options.display.components.month
+                    ? switcher.classList.remove(Namespace.css.disabled)
+                    : switcher.classList.add(Namespace.css.disabled);
+                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.month), exports.Unit.month)
+                    ? previous.classList.remove(Namespace.css.disabled)
+                    : previous.classList.add(Namespace.css.disabled);
+                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.month), exports.Unit.month)
+                    ? next.classList.remove(Namespace.css.disabled)
+                    : next.classList.add(Namespace.css.disabled);
+            }
             let innerDate = this.optionsStore.viewDate.clone
                 .startOf(exports.Unit.month)
-                .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
+                .startOf("weekDay", this.optionsStore.options.localization.startOfTheWeek)
                 .manipulate(12, exports.Unit.hours);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectDay}"], .${Namespace.css.calendarWeeks}`)
                 .forEach((containerClone) => {
                 if (this.optionsStore.options.display.calendarWeeks &&
                     containerClone.classList.contains(Namespace.css.calendarWeeks)) {
-                    if (containerClone.innerText === '#')
+                    if (containerClone.innerText === "#")
                         return;
                     containerClone.innerText = `${innerDate.week}`;
                     return;
@@ -1938,9 +1876,9 @@
                 paint(exports.Unit.date, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
-                containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
-                containerClone.setAttribute('data-day', `${innerDate.date}`);
-                containerClone.innerText = innerDate.format({ day: 'numeric' });
+                containerClone.setAttribute("data-value", `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
+                containerClone.setAttribute("data-day", `${innerDate.date}`);
+                containerClone.innerText = innerDate.format({ day: "numeric" });
                 innerDate.manipulate(1, exports.Unit.date);
             });
         }
@@ -1950,20 +1888,20 @@
          */
         _daysOfTheWeek() {
             let innerDate = this.optionsStore.viewDate.clone
-                .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
+                .startOf("weekDay", this.optionsStore.options.localization.startOfTheWeek)
                 .startOf(exports.Unit.date);
             const row = [];
-            document.createElement('div');
+            document.createElement("div");
             if (this.optionsStore.options.display.calendarWeeks) {
-                const htmlDivElement = document.createElement('div');
+                const htmlDivElement = document.createElement("div");
                 htmlDivElement.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
-                htmlDivElement.innerText = '#';
+                htmlDivElement.innerText = "#";
                 row.push(htmlDivElement);
             }
             for (let i = 0; i < 7; i++) {
-                const htmlDivElement = document.createElement('div');
+                const htmlDivElement = document.createElement("div");
                 htmlDivElement.classList.add(Namespace.css.dayOfTheWeek, Namespace.css.noHighlight);
-                htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
+                htmlDivElement.innerText = innerDate.format({ weekday: "short" });
                 innerDate.manipulate(1, exports.Unit.date);
                 row.push(htmlDivElement);
             }
@@ -2005,6 +1943,9 @@
                     .getElementsByClassName(Namespace.css.calendarHeader)[0]
                     .getElementsByTagName('div');
                 switcher.setAttribute(Namespace.css.monthsContainer, this.optionsStore.viewDate.format({ year: 'numeric' }));
+                this.optionsStore.options.display.components.year
+                    ? switcher.classList.remove(Namespace.css.disabled)
+                    : switcher.classList.add(Namespace.css.disabled);
                 this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.year), exports.Unit.year)
                     ? previous.classList.remove(Namespace.css.disabled)
                     : previous.classList.add(Namespace.css.disabled);
@@ -2071,6 +2012,9 @@
                     .getElementsByClassName(Namespace.css.calendarHeader)[0]
                     .getElementsByTagName("div");
                 switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.format({ year: "numeric" })}-${this._endYear.format({ year: "numeric" })}`);
+                this.optionsStore.options.display.components.decades
+                    ? switcher.classList.remove(Namespace.css.disabled)
+                    : switcher.classList.add(Namespace.css.disabled);
                 this.validation.isValid(this._startYear, exports.Unit.year)
                     ? previous.classList.remove(Namespace.css.disabled)
                     : previous.classList.add(Namespace.css.disabled);
@@ -3669,7 +3613,7 @@
          * @private
          */
         _initializeOptions(config, mergeTo, includeDataset = false) {
-            var _a;
+            var _a, _b;
             let newConfig = OptionConverter.deepCopy(config);
             newConfig = OptionConverter._mergeOptions(newConfig, mergeTo);
             if (includeDataset)
@@ -3700,6 +3644,9 @@
             }
             if ((_a = this.display) === null || _a === void 0 ? void 0 : _a.isVisible) {
                 this.display._update('all');
+            }
+            if (newConfig.display.components.useTwentyfourHour === undefined) {
+                newConfig.display.components.useTwentyfourHour = !!!((_b = newConfig.viewDate.parts()) === null || _b === void 0 ? void 0 : _b.dayPeriod);
             }
             this.optionsStore.options = newConfig;
         }
@@ -3828,6 +3775,7 @@
         }
         return this;
     };
+    const version = '6.0.0-beta9';
 
     exports.DateTime = DateTime;
     exports.DefaultOptions = DefaultOptions;
@@ -3836,6 +3784,7 @@
     exports.extend = extend;
     exports.loadLocale = loadLocale;
     exports.locale = locale;
+    exports.version = version;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

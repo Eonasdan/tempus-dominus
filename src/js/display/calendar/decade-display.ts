@@ -62,7 +62,7 @@ export default class DecadeDisplay {
       .getElementsByClassName(Namespace.css.calendarHeader)[0]
       .getElementsByTagName("div");
 
-    if (this.optionsStore.currentView === "decades") {
+    if (this.optionsStore.currentView === 'decades') {
       switcher.setAttribute(
         Namespace.css.decadesContainer,
         `${this._startDecade.format({ year: "numeric" })}-${this._endDecade.format({ year: "numeric" })}`

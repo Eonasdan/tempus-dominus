@@ -354,8 +354,8 @@ export class DateTime extends Date {
    * Returns two digit hours
    */
   get hoursFormatted(): string {
-    let formatted =this.parts(undefined, twoDigitTwentyFourTemplate).hour;
-    if (formatted === '24') formatted = '00';
+    let formatted = this.parts(undefined, twoDigitTwentyFourTemplate).hour;
+    //if (formatted === '24') formatted = '00';
     return formatted;
   }
 

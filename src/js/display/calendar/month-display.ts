@@ -56,6 +56,10 @@ export default class MonthDisplay {
         this.optionsStore.viewDate.format({ year: 'numeric' })
       );
 
+      this.optionsStore.options.display.components.year
+        ? switcher.classList.remove(Namespace.css.disabled)
+        : switcher.classList.add(Namespace.css.disabled);
+
       this.validation.isValid(
         this.optionsStore.viewDate.clone.manipulate(-1, Unit.year),
         Unit.year

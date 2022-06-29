@@ -367,6 +367,11 @@ class TempusDominus {
       this.display._update('all');
     }
 
+    if (newConfig.display.components.useTwentyfourHour === undefined) {
+      newConfig.display.components.useTwentyfourHour = !!!newConfig.viewDate.parts()?.dayPeriod;
+    }
+
+
     this.optionsStore.options = newConfig;
   }
 
@@ -551,6 +556,8 @@ const extend = function (plugin, option) {
   return this;
 };
 
+const version = '6.0.0-beta9';
+
 export {
   TempusDominus,
   extend,
@@ -562,4 +569,5 @@ export {
   Options,
   Unit,
   DateTimeFormatOptions,
+  version
 };

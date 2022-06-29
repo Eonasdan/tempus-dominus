@@ -62,6 +62,10 @@ export default class YearDisplay {
         `${this._startYear.format({ year: "numeric" })}-${this._endYear.format({ year: "numeric" })}`
       );
 
+      this.optionsStore.options.display.components.decades
+        ? switcher.classList.remove(Namespace.css.disabled)
+        : switcher.classList.add(Namespace.css.disabled);
+
       this.validation.isValid(this._startYear, Unit.year)
         ? previous.classList.remove(Namespace.css.disabled)
         : previous.classList.add(Namespace.css.disabled);
