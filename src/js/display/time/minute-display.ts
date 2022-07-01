@@ -68,7 +68,7 @@ export default class MinuteDisplay {
         containerClone.classList.add(...classes);
         containerClone.setAttribute(
           'data-value',
-          `${innerDate.minutesFormatted}`
+          `${innerDate.minutes}`
         );
         containerClone.innerText = innerDate.minutesFormatted;
         innerDate.manipulate(step, Unit.minutes);

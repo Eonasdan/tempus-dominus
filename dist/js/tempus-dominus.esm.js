@@ -2366,7 +2366,7 @@ class MinuteDisplay {
             paint(Unit.minutes, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
-            containerClone.setAttribute('data-value', `${innerDate.minutesFormatted}`);
+            containerClone.setAttribute('data-value', `${innerDate.minutes}`);
             containerClone.innerText = innerDate.minutesFormatted;
             innerDate.manipulate(step, Unit.minutes);
         });
