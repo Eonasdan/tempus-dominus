@@ -1150,7 +1150,6 @@ class OptionConverter {
      * This is to fix that issue by using spread on the child objects first.
      * Also handles complex options like disabledDates
      * @param provided An option from new providedOptions
-     * @param mergeOption Default option to compare types against
      * @param copyTo Destination object. This was added to prevent reference copies
      * @param path
      * @param locale
@@ -1319,6 +1318,11 @@ class OptionConverter {
                     Namespace.errorMessages.typeMismatch(path.substring(1), typeof value, 'HTMLElement');
                 }
                 return value;
+            case 'useTwentyfourHour':
+                if (value === undefined || providedType === 'boolean')
+                    return value;
+                Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
+                break;
             default:
                 switch (defaultType) {
                     case 'boolean':
