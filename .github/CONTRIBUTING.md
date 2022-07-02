@@ -39,5 +39,3 @@ git checkout development  # all patches against development branch, please!
 | docs | Builds the docs. |
 | docs-watch | Watches for changes to the docs files. |
 | release-version | Creates a new release version. |
-
-**All PR's MUST pass tests in place**

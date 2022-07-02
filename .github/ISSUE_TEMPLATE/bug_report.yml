@@ -1,0 +1,68 @@
+name: Report a bug
+description: Tell us about your issue.
+title: "Provide a general summary of the issue"
+assignees: "-"
+body:
+  - type: checkboxes
+    attributes:
+      label: Prerequisites
+      description: Take a couple minutes to help our maintainers work faster.
+      options:
+        - label: I have [searched](https://github.com/Eonasdan/tempus-dominus/issues?q=is%3Aissue) for duplicate or closed issues.
+          required: true
+        - label: I have validated my setup against the latest version on [StackBlitz](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup).
+          required: true
+        - label: I have read the [contributing guidelines](https://github.com/Eonasdan/tempus-dominus/blob/master/.github/CONTRIBUTING.md).
+          required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Describe the issue
+      description: Provide a summary of the issue and what you expected to happen, including specific steps to reproduce.
+    validations:
+      required: true
+  - type: textarea
+    id: reduced-test-case
+    attributes:
+      label: StackBlitz fork
+      description: You MUST provide an StackBlitz fork of one of the following examples:: [HTML](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup), [Dev branch](https://stackblitz.com/edit/tempus-dominus-v6-next), [Typescript](https://stackblitz.com/edit/v6-typescript), [Using import](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup-import), or [jQuery](https://stackblitz.com/edit/tempus-dominus-v6-simple-jquery-setup).
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: What operating system(s) are you seeing the problem on?
+      multiple: true
+      options:
+        - Windows
+        - macOS
+        - Android
+        - iOS
+        - Linux
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: What browser(s) are you seeing the problem on?
+      multiple: true
+      options:
+        - Chrome
+        - Safari
+        - Firefox
+        - Microsoft Edge
+        - Opera
+  - type: input
+    id: version
+    attributes:
+      label: What version of are you using? You can find this information from the sample StackBlitz.
+      placeholder: "e.g., v5.1.0 or v4.5.2"
+    validations:
+      required: true
+  - type: input
+    id: locale
+    attributes:
+      label: What your browser's locale? You can find this information from the sample StackBlitz.
+      placeholder: "e.g., 'en-US'"
+    validations:
+      required: true
