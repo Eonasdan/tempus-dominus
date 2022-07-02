@@ -1168,7 +1168,7 @@ class OptionConverter {
             });
             Namespace.errorMessages.unexpectedOptions(errors);
         }
-        Object.keys(provided).forEach((key) => {
+        Object.keys(provided).filter(key => key !== "__proto__" && key !== "constructor").forEach((key) => {
             path += `.${key}`;
             if (path.charAt(0) === '.')
                 path = path.slice(1);
@@ -3352,7 +3352,7 @@ class TempusDominus {
                 return;
             const setViewDate = () => {
                 if (this.dates.lastPicked)
-                    this.optionsStore.viewDate = this.dates.lastPicked;
+                    this.optionsStore.viewDate = this.dates.lastPicked.clone;
             };
             const value = this.optionsStore.input.value;
             if (this.optionsStore.options.multipleDates) {

@@ -70,7 +70,7 @@ export class OptionConverter {
             Namespace.errorMessages.unexpectedOptions(errors);
         }
 
-        Object.keys(provided).forEach((key) => {
+        Object.keys(provided).filter(key => key !== "__proto__" && key !== "constructor").forEach((key) => {
             path += `.${key}`;
             if (path.charAt(0) === '.') path = path.slice(1);
 

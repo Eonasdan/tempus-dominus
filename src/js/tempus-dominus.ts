@@ -479,7 +479,7 @@ class TempusDominus {
 
     const setViewDate = () => {
       if (this.dates.lastPicked)
-        this.optionsStore.viewDate = this.dates.lastPicked;
+        this.optionsStore.viewDate = this.dates.lastPicked.clone;
     };
 
     const value = this.optionsStore.input.value;
