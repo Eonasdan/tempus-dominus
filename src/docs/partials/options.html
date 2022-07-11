@@ -1,8 +1,11 @@
 <page-body>
     <p>
-        Options can be provided during the inital setup through the constructor <code>new
+        Options can be provided during the initial setup through the constructor <code>new
         tempusDominus.TempusDominus(...,
         options);</code>. Take a look at the examples for more information.
+    </p>
+    <p>
+        The current options can be retrieved e.g. <code>datetimepicker1.optionsStore.options</code>.
     </p>
     <p>
         Options can be updated through the <a href='functions.html#updateOptions'><code>updateOptions</code>
@@ -485,6 +488,12 @@ new tempusDominus.TempusDominus(..., {
                     Keep the picker window open even after a date selection. The picker can still be closed by the
                     target or
                     clicking on on an outside element. This option will only work when time components are disabled.
+                </p>
+                <h3 id='theme'>theme<a class='anchor-link' aria-label='Anchor' href='#theme'><i
+                        class="fa-solid fa-anchor" aria-hidden="true"></i></a></h3>
+                <p>
+                    <strong>Accepts:</strong> 'light' | 'dark' | 'auto' <strong>Defaults:</strong> 'auto'<br/>
+                    Specifies which theme to use, light mode or dark mode. When set to auto, it will auto detect based on settings of the user's system.
                 </p>
             </div>
         </div>

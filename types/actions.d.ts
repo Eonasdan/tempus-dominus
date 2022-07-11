@@ -1,4 +1,4 @@
-import ActionTypes from './utilities/action-types';
+import ActionTypes from "./utilities/action-types";
 /**
  *
  */

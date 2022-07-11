@@ -45,28 +45,35 @@ export default class MonthDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.monthsContainer
     )[0];
-    const [previous, switcher, next] = container.parentElement
-      .getElementsByClassName(Namespace.css.calendarHeader)[0]
-      .getElementsByTagName('div');
 
-    switcher.setAttribute(
-      Namespace.css.monthsContainer,
-      this.optionsStore.viewDate.format({ year: 'numeric' })
-    );
+    if(this.optionsStore.currentView === 'months') {
+      const [previous, switcher, next] = container.parentElement
+        .getElementsByClassName(Namespace.css.calendarHeader)[0]
+        .getElementsByTagName('div');
 
-    this.validation.isValid(
-      this.optionsStore.viewDate.clone.manipulate(-1, Unit.year),
-      Unit.year
-    )
-      ? previous.classList.remove(Namespace.css.disabled)
-      : previous.classList.add(Namespace.css.disabled);
+      switcher.setAttribute(
+        Namespace.css.monthsContainer,
+        this.optionsStore.viewDate.format({ year: 'numeric' })
+      );
 
-    this.validation.isValid(
-      this.optionsStore.viewDate.clone.manipulate(1, Unit.year),
-      Unit.year
-    )
-      ? next.classList.remove(Namespace.css.disabled)
-      : next.classList.add(Namespace.css.disabled);
+      this.optionsStore.options.display.components.year
+        ? switcher.classList.remove(Namespace.css.disabled)
+        : switcher.classList.add(Namespace.css.disabled);
+
+      this.validation.isValid(
+        this.optionsStore.viewDate.clone.manipulate(-1, Unit.year),
+        Unit.year
+      )
+        ? previous.classList.remove(Namespace.css.disabled)
+        : previous.classList.add(Namespace.css.disabled);
+
+      this.validation.isValid(
+        this.optionsStore.viewDate.clone.manipulate(1, Unit.year),
+        Unit.year
+      )
+        ? next.classList.remove(Namespace.css.disabled)
+        : next.classList.add(Namespace.css.disabled);
+    }
 
     let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.year);
 

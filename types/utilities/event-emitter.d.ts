@@ -7,7 +7,7 @@ export declare class EventEmitter<T> {
     subscribe(callback: (value: T) => void): any;
     unsubscribe(index: number): void;
     emit(value?: T): void;
-    destory(): void;
+    destroy(): void;
 }
 export declare class EventEmitters {
     triggerEvent: EventEmitter<BaseEvent>;
@@ -17,5 +17,5 @@ export declare class EventEmitters {
         e: any;
         action?: ActionTypes;
     }>;
-    destory(): void;
+    destroy(): void;
 }

@@ -17,7 +17,7 @@ import { EventEmitters, ViewUpdateValues } from '../utilities/event-emitter';
 import { serviceLocator } from '../utilities/service-locator';
 import ActionTypes from '../utilities/action-types';
 import CalendarModes from '../utilities/calendar-modes';
-import {OptionsStore} from "../utilities/optionsStore";
+import { OptionsStore } from '../utilities/optionsStore';
 
 /**
  * Main class for all things display related.
@@ -136,7 +136,12 @@ export default class Display {
    * @param _classes
    * @param _element
    */
-  paint(_unit: Unit | 'decade', _date: DateTime, _classes: string[], _element: HTMLElement) {
+  paint(
+    _unit: Unit | 'decade',
+    _date: DateTime,
+    _classes: string[],
+    _element: HTMLElement
+  ) {
     // implemented in plugin
   }
 
@@ -147,35 +152,38 @@ export default class Display {
    */
   show(): void {
     if (this.widget == undefined) {
-     if (this.dates.picked.length == 0) {
-          if (
-            this.optionsStore.options.useCurrent &&
-            !this.optionsStore.options.defaultDate
-          ) {
-            const date = new DateTime().setLocale(
-              this.optionsStore.options.localization.locale
-            );
-            if (!this.optionsStore.options.keepInvalid) {
-              let tries = 0;
-              let direction = 1;
-              if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
-                direction = -1;
-              }
-              while (!this.validation.isValid(date)) {
-                date.manipulate(direction, Unit.date);
-                if (tries > 31) break;
-                tries++;
-              }
+      if (this.dates.picked.length == 0) {
+        if (
+          this.optionsStore.options.useCurrent &&
+          !this.optionsStore.options.defaultDate
+        ) {
+          const date = new DateTime().setLocale(
+            this.optionsStore.options.localization.locale
+          );
+          if (!this.optionsStore.options.keepInvalid) {
+            let tries = 0;
+            let direction = 1;
+            if (
+              this.optionsStore.options.restrictions.maxDate?.isBefore(date)
+            ) {
+              direction = -1;
             }
-            this.dates.setValue(date);
+            while (!this.validation.isValid(date)) {
+              date.manipulate(direction, Unit.date);
+              if (tries > 31) break;
+              tries++;
+            }
           }
-    
-          if (this.optionsStore.options.defaultDate) {
-            this.dates.setValue(this.optionsStore.options.defaultDate);
-          }
+          this.dates.setValue(date);
+        }
+
+        if (this.optionsStore.options.defaultDate) {
+          this.dates.setValue(this.optionsStore.options.defaultDate);
+        }
       }
 
       this._buildWidget();
+      this._updateTheme();
 
       // If modeView is only clock
       const onlyClock = this._hasTime && !this._hasDate;
@@ -195,11 +203,24 @@ export default class Display {
           this.optionsStore.minimumCalendarViewMode;
       }
 
-      if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
+      if (
+        !onlyClock &&
+        this.optionsStore.options.display.viewMode !== 'clock'
+      ) {
         if (this._hasTime) {
-          Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+          if(!this.optionsStore.options.display.sideBySide) {
+            Collapse.hideImmediately(
+              this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
+            );
+          } else {
+            Collapse.show(
+              this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
+            );
+          }
         }
-        Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+        Collapse.show(
+          this.widget.querySelector(`div.${Namespace.css.dateContainer}`)
+        );
       }
 
       if (this._hasDate) {
@@ -308,6 +329,51 @@ export default class Display {
     picker.style.display = 'grid';
     this._updateCalendarHeader();
     this._eventEmitters.viewUpdate.emit();
+  }
+
+  /**
+   * Changes the theme. E.g. light, dark or auto
+   * @param theme the theme name
+   * @private
+   */
+  _updateTheme(theme?: 'light' | 'dark' | 'auto'): void {
+    if (!this.widget) {
+      return;
+    }
+    if (theme) {
+      if (this.optionsStore.options.display.theme === theme) return;
+      this.optionsStore.options.display.theme = theme;
+    }
+
+    this.widget.classList.remove('light', 'dark');
+    this.widget.classList.add(this._getThemeClass());
+
+    if (this.optionsStore.options.display.theme === 'auto') {
+      window
+        .matchMedia(Namespace.css.isDarkPreferedQuery)
+        .addEventListener('change', () => this._updateTheme());
+    } else {
+      window
+        .matchMedia(Namespace.css.isDarkPreferedQuery)
+        .removeEventListener('change', () => this._updateTheme());
+    }
+  }
+
+  _getThemeClass(): string {
+    const currentTheme = this.optionsStore.options.display.theme || 'auto';
+
+    const isDarkMode =
+      window.matchMedia &&
+      window.matchMedia(Namespace.css.isDarkPreferedQuery).matches;
+
+    switch (currentTheme) {
+      case 'light':
+        return Namespace.css.lightTheme;
+      case 'dark':
+        return Namespace.css.darkTheme;
+      case 'auto':
+        return isDarkMode ? Namespace.css.darkTheme : Namespace.css.lightTheme;
+    }
   }
 
   _updateCalendarHeader() {
@@ -647,15 +713,18 @@ export default class Display {
    * @param iconClass
    * @private
    */
-  _iconTag(iconClass: string): HTMLElement|SVGElement {
+  _iconTag(iconClass: string): HTMLElement | SVGElement {
     if (this.optionsStore.options.display.icons.type === 'sprites') {
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
-      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      const icon = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'use'
+      );
       icon.setAttribute('xlink:href', iconClass); // Deprecated. Included for backward compatibility
       icon.setAttribute('href', iconClass);
       svg.appendChild(icon);
-      
+
       return svg;
     }
     const icon = document.createElement('i');

@@ -1,6 +1,37 @@
 <page-body>
   <section>
     <h1>Version 6</h1>
+    <h2>Beta9</h2>
+    <h3>Bug Fixes</h3>
+    <ul>
+      <li>Fixed jQuery provider. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2547'>#2547</a></li>
+      <li>Adds options for theme to fix <a href='https://github.com/Eonasdan/tempus-dominus/issues/2522'>#2522</a>. Big thanks to @matholum.</li>
+      <li>Fixed date view next/back button disabling when it shouldn't. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2595'>#2595</a></li>
+      <li>Fixed component disabling issue <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2502'>#2502</a></li>
+      <li>Changed default useTwentyfourHour to undefined. Now using DateTime.parts() to check if the view date has a "dayPeriod" property <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2510'>#2510</a></li>
+      <li>Fixed 24-hour 24/0 formatting
+        <a href='https://github.com/Eonasdan/tempus-dominus/issues/2563'>#2563</a> | <a href='https://github.com/Eonasdan/tempus-dominus/issues/2563'>#2563</a>
+      </li>
+      <li>Fixed none latin number selection in the minute picker
+        <a href='https://github.com/Eonasdan/tempus-dominus/issues/2576'>#2576</a>
+      </li>
+      <li>Fixed input value to view date object reference
+        <a href='https://github.com/Eonasdan/tempus-dominus/issues/2568'>#2568</a>
+      </li>
+    </ul>
+    <h3>New</h3>
+    <ul>
+      <li>Add fr locale via #2581</li>
+      <li>Updated and published NuGet package.</li>
+    </ul>
+    <h3>Breaking changes</h3>
+    <ul>
+      <li>Renamed /src/sass to /src/scss to more accurately reflect code.</li>
+    </ul>
     <h2>Beta8</h2>
     <h3>Bug Fixes</h3>
     <ul>

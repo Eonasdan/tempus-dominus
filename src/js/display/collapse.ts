@@ -59,6 +59,7 @@ export default class Collapse {
    * @param target
    */
   static hideImmediately(target: HTMLElement) {
+    if (!target) return;
     target.classList.remove(Namespace.css.collapsing, Namespace.css.show);
     target.classList.add(Namespace.css.collapse);
   }

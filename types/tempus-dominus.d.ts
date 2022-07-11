@@ -148,4 +148,5 @@ declare const locale: (l: string) => void;
  * @param option
  */
 declare const extend: (plugin: any, option: any) => any;
-export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions, };
+declare const version = "6.0.0-beta9";
+export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions, version };

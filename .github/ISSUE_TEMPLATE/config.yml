@@ -1,4 +1,6 @@
 contact_links:
   - name: Ask a question
-    url: https://github.com/Eonasdan/tempus-dominus/discussions
+    url: https://github.com/Eonasdan/tempus-dominus/discussions/new
     about: Ask and discuss questions with other community members
+  - name: Join the discord
+    url: https://discord.gg/BHS9jw9YPf

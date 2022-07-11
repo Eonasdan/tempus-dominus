@@ -1,4 +1,4 @@
-import { Paint } from '../index';
+import { Paint } from "../index";
 /**
  * Creates and updates the grid for `date`
  */

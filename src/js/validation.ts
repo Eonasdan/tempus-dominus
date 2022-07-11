@@ -14,7 +14,7 @@ export default class Validation {
 
   /**
    * Checks to see if the target date is valid based on the rules provided in the options.
-   * Granularity can be provide to chek portions of the date instead of the whole.
+   * Granularity can be provided to check portions of the date instead of the whole.
    * @param targetDate
    * @param granularity
    */

@@ -1,7 +1,7 @@
 import { ErrorMessages } from './errors';
 // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
 const NAME = 'tempus-dominus',
-  version = '6.0.0-beta8',
+  version = '6.0.0-beta9',
   dataKey = 'td';
 
 /**
@@ -261,6 +261,21 @@ class Css {
    * Applied to the widget when the option display.inline is enabled.
    */
   inline = 'inline';
+
+  /**
+   * Applied to the widget when the option display.theme is light.
+   */
+  lightTheme = 'light';
+
+  /**
+  * Applied to the widget when the option display.theme is dark.
+  */
+  darkTheme = 'dark';
+
+  /**
+  * Used for detecting if the system color preference is dark mode
+  */
+  isDarkPreferedQuery = '(prefers-color-scheme: dark)';
 }
 
 export default class Namespace {

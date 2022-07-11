@@ -65,7 +65,7 @@ export default [
     plugins: [terser()]
   },
   {
-    input: 'src/sass/tempus-dominus.scss',
+    input: 'src/scss/tempus-dominus.scss',
     output: [
       {
         banner,
@@ -80,7 +80,7 @@ export default [
     ]
   },
   {
-    input: 'src/sass/tempus-dominus.scss',
+    input: 'src/scss/tempus-dominus.scss',
     output: [
       {
         banner,
