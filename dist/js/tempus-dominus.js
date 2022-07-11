@@ -1002,7 +1002,7 @@
                 callback(value);
             });
         }
-        destory() {
+        destroy() {
             this.subscribers = null;
             this.subscribers = [];
         }
@@ -1014,11 +1014,11 @@
             this.updateDisplay = new EventEmitter();
             this.action = new EventEmitter();
         }
-        destory() {
-            this.triggerEvent.destory();
-            this.viewUpdate.destory();
-            this.updateDisplay.destory();
-            this.action.destory();
+        destroy() {
+            this.triggerEvent.destroy();
+            this.viewUpdate.destroy();
+            this.updateDisplay.destroy();
+            this.action.destroy();
         }
     }
 
@@ -2079,7 +2079,59 @@
          * @private
          */
         _update(widget, paint) {
-            return;
+            const [start, end] = Dates.getStartEndYear(100, this.optionsStore.viewDate.year);
+            this._startDecade = this.optionsStore.viewDate.clone.startOf(exports.Unit.year);
+            this._startDecade.year = start;
+            this._endDecade = this.optionsStore.viewDate.clone.startOf(exports.Unit.year);
+            this._endDecade.year = end;
+            const container = widget.getElementsByClassName(Namespace.css.decadesContainer)[0];
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                .getElementsByTagName("div");
+            if (this.optionsStore.currentView === 'decades') {
+                switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.format({ year: "numeric" })}-${this._endDecade.format({ year: "numeric" })}`);
+                this.validation.isValid(this._startDecade, exports.Unit.year)
+                    ? previous.classList.remove(Namespace.css.disabled)
+                    : previous.classList.add(Namespace.css.disabled);
+                this.validation.isValid(this._endDecade, exports.Unit.year)
+                    ? next.classList.remove(Namespace.css.disabled)
+                    : next.classList.add(Namespace.css.disabled);
+            }
+            const pickedYears = this.dates.picked.map((x) => x.year);
+            container
+                .querySelectorAll(`[data-action="${ActionTypes$1.selectDecade}"]`)
+                .forEach((containerClone, index) => {
+                if (index === 0) {
+                    containerClone.classList.add(Namespace.css.old);
+                    if (this._startDecade.year - 10 < 0) {
+                        containerClone.textContent = " ";
+                        previous.classList.add(Namespace.css.disabled);
+                        containerClone.classList.add(Namespace.css.disabled);
+                        containerClone.setAttribute("data-value", ``);
+                        return;
+                    }
+                    else {
+                        containerClone.innerText = this._startDecade.clone.manipulate(-10, exports.Unit.year).format({ year: "numeric" });
+                        containerClone.setAttribute("data-value", `${this._startDecade.year}`);
+                        return;
+                    }
+                }
+                let classes = [];
+                classes.push(Namespace.css.decade);
+                const startDecadeYear = this._startDecade.year;
+                const endDecadeYear = this._startDecade.year + 9;
+                if (!this.optionsStore.unset &&
+                    pickedYears.filter((x) => x >= startDecadeYear && x <= endDecadeYear)
+                        .length > 0) {
+                    classes.push(Namespace.css.active);
+                }
+                paint("decade", this._startDecade, classes, containerClone);
+                containerClone.classList.remove(...containerClone.classList);
+                containerClone.classList.add(...classes);
+                containerClone.setAttribute("data-value", `${this._startDecade.year}`);
+                containerClone.innerText = `${this._startDecade.format({ year: "numeric" })}`;
+                this._startDecade.manipulate(10, exports.Unit.year);
+            });
         }
     }
 

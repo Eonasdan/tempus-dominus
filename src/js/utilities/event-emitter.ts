@@ -22,7 +22,7 @@ export class EventEmitter<T> {
     });
   }
 
-  destory() {
+  destroy() {
     this.subscribers = null;
     this.subscribers = [];
   }
@@ -34,10 +34,10 @@ export class EventEmitters {
   updateDisplay = new EventEmitter<ViewUpdateValues>();
   action = new EventEmitter<{ e: any; action?: ActionTypes }>();
 
-  destory() {
-    this.triggerEvent.destory();
-    this.viewUpdate.destory();
-    this.updateDisplay.destory();
-    this.action.destory();
+  destroy() {
+    this.triggerEvent.destroy();
+    this.viewUpdate.destroy();
+    this.updateDisplay.destroy();
+    this.action.destroy();
   }
 }

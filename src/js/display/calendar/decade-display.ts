@@ -44,7 +44,6 @@ export default class DecadeDisplay {
    * @private
    */
   _update(widget: HTMLElement, paint: Paint) {
-    return;
     const [start, end] = Dates.getStartEndYear(
       100,
       this.optionsStore.viewDate.year
