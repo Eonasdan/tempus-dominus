@@ -316,9 +316,7 @@ class DateTime extends Date {
      * Returns two digit hours
      */
     get hoursFormatted() {
-        let formatted = this.parts(undefined, twoDigitTwentyFourTemplate).hour;
-        //if (formatted === '24') formatted = '00';
-        return formatted;
+        return this.parts(undefined, twoDigitTwentyFourTemplate).hour;
     }
     /**
      * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
