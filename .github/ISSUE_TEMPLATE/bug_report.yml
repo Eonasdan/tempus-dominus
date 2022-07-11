@@ -25,7 +25,7 @@ body:
     id: reduced-test-case
     attributes:
       label: StackBlitz fork
-      description: You MUST provide an StackBlitz fork of one of the following examples: [HTML](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup), [Dev branch](https://stackblitz.com/edit/tempus-dominus-v6-next), [Typescript](https://stackblitz.com/edit/v6-typescript), [Using import](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup-import), or [jQuery](https://stackblitz.com/edit/tempus-dominus-v6-simple-jquery-setup).
+      description: You MUST provide an StackBlitz fork of one of the following examples\: [HTML](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup), [Dev branch](https://stackblitz.com/edit/tempus-dominus-v6-next), [Typescript](https://stackblitz.com/edit/v6-typescript), [Using import](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup-import), or [jQuery](https://stackblitz.com/edit/tempus-dominus-v6-simple-jquery-setup).
     validations:
       required: true
   - type: dropdown
