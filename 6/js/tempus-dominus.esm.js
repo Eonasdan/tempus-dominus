@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta8 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta9 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -317,8 +317,7 @@ class DateTime extends Date {
      */
     get hoursFormatted() {
         let formatted = this.parts(undefined, twoDigitTwentyFourTemplate).hour;
-        if (formatted === '24')
-            formatted = '00';
+        //if (formatted === '24') formatted = '00';
         return formatted;
     }
     /**
@@ -567,7 +566,7 @@ class ErrorMessages {
 }
 
 // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-const NAME = 'tempus-dominus', version = '6.0.0-beta8', dataKey = 'td';
+const NAME = 'tempus-dominus', version$1 = '6.0.0-beta9', dataKey = 'td';
 /**
  * Events
  */
@@ -776,13 +775,25 @@ class Css {
          * Applied to the widget when the option display.inline is enabled.
          */
         this.inline = 'inline';
+        /**
+         * Applied to the widget when the option display.theme is light.
+         */
+        this.lightTheme = 'light';
+        /**
+        * Applied to the widget when the option display.theme is dark.
+        */
+        this.darkTheme = 'dark';
+        /**
+        * Used for detecting if the system color preference is dark mode
+        */
+        this.isDarkPreferedQuery = '(prefers-color-scheme: dark)';
     }
 }
 class Namespace {
 }
 Namespace.NAME = NAME;
 // noinspection JSUnusedGlobalSymbols
-Namespace.version = version;
+Namespace.version = version$1;
 Namespace.dataKey = dataKey;
 Namespace.events = new Events();
 Namespace.css = new Css();
@@ -865,7 +876,7 @@ class Validation {
     }
     /**
      * Checks to see if the target date is valid based on the rules provided in the options.
-     * Granularity can be provide to chek portions of the date instead of the whole.
+     * Granularity can be provided to check portions of the date instead of the whole.
      * @param targetDate
      * @param granularity
      */
@@ -987,7 +998,7 @@ class EventEmitter {
             callback(value);
         });
     }
-    destory() {
+    destroy() {
         this.subscribers = null;
         this.subscribers = [];
     }
@@ -999,11 +1010,11 @@ class EventEmitters {
         this.updateDisplay = new EventEmitter();
         this.action = new EventEmitter();
     }
-    destory() {
-        this.triggerEvent.destory();
-        this.viewUpdate.destory();
-        this.updateDisplay.destory();
-        this.action.destory();
+    destroy() {
+        this.triggerEvent.destroy();
+        this.viewUpdate.destroy();
+        this.updateDisplay.destroy();
+        this.action.destroy();
     }
 }
 
@@ -1051,9 +1062,10 @@ const DefaultOptions = {
             hours: true,
             minutes: true,
             seconds: false,
-            useTwentyfourHour: false
+            useTwentyfourHour: undefined
         },
-        inline: false
+        inline: false,
+        theme: 'auto'
     },
     stepping: 1,
     useCurrent: true,
@@ -1133,78 +1145,11 @@ class OptionConverter {
             value[key] :
             undefined), obj);
     }
-    // /**
-    //  * The spread operator caused sub keys to be missing after merging.
-    //  * This is to fix that issue by using spread on the child objects first.
-    //  * Also handles complex options like disabledDates
-    //  * @param provided An option from new providedOptions
-    //  * @param mergeOption Default option to compare types against
-    //  * @param copyTo Destination object. This was added to prevent reference copies
-    //  * @param path
-    //  * @param locale
-    //  */
-    // static spread(provided, mergeOption, copyTo, path = '', locale = '') {
-    //     const unsupportedOptions = Object.keys(provided).filter(
-    //         (x) => !Object.keys(mergeOption).includes(x)
-    //     );
-    //
-    //     if (unsupportedOptions.length > 0) {
-    //         const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
-    //
-    //         const errors = unsupportedOptions.map((x) => {
-    //             let error = `"${path}.${x}" in not a known option.`;
-    //             let didYouMean = flattenedOptions.find((y) => y.includes(x));
-    //             if (didYouMean) error += ` Did you mean "${didYouMean}"?`;
-    //             return error;
-    //         });
-    //         Namespace.errorMessages.unexpectedOptions(errors);
-    //     }
-    //
-    //     Object.keys(mergeOption).forEach((key) => {
-    //         path += `.${key}`;
-    //         if (path.charAt(0) === '.') path = path.slice(1);
-    //
-    //         const defaultOptionValue = OptionConverter.objectPath(path, DefaultOptions);
-    //         let providedType = typeof provided[key];
-    //         let defaultType = typeof defaultOptionValue;
-    //         let value = provided[key];
-    //
-    //         if (!provided.hasOwnProperty(key)) {
-    //             if (
-    //                 defaultType === 'undefined' ||
-    //                 (value?.length === 0 && Array.isArray(defaultOptionValue))
-    //             ) {
-    //                 copyTo[key] = defaultOptionValue;
-    //                 path = path.substring(0, path.lastIndexOf(`.${key}`));
-    //                 return;
-    //             }
-    //             provided[key] = defaultOptionValue;
-    //             value = provided[key];
-    //         }
-    //
-    //         copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
-    //
-    //         if (
-    //             typeof defaultOptionValue !== 'object' ||
-    //             defaultOptionValue instanceof Date ||
-    //             OptionConverter.ignoreProperties.includes(key)
-    //         ) {
-    //             path = path.substring(0, path.lastIndexOf(`.${key}`));
-    //             return;
-    //         }
-    //
-    //         if (!Array.isArray(provided[key])) {
-    //             OptionConverter.spread(provided[key], mergeOption[key], copyTo[key], path, locale);
-    //         }
-    //         path = path.substring(0, path.lastIndexOf(`.${key}`));
-    //     });
-    // }
     /**
      * The spread operator caused sub keys to be missing after merging.
      * This is to fix that issue by using spread on the child objects first.
      * Also handles complex options like disabledDates
      * @param provided An option from new providedOptions
-     * @param mergeOption Default option to compare types against
      * @param copyTo Destination object. This was added to prevent reference copies
      * @param path
      * @param locale
@@ -1223,7 +1168,7 @@ class OptionConverter {
             });
             Namespace.errorMessages.unexpectedOptions(errors);
         }
-        Object.keys(provided).forEach((key) => {
+        Object.keys(provided).filter(key => key !== "__proto__" && key !== "constructor").forEach((key) => {
             path += `.${key}`;
             if (path.charAt(0) === '.')
                 path = path.slice(1);
@@ -1351,10 +1296,12 @@ class OptionConverter {
             case 'toolbarPlacement':
             case 'type':
             case 'viewMode':
+            case 'theme':
                 const optionValues = {
                     toolbarPlacement: ['top', 'bottom', 'default'],
                     type: ['icons', 'sprites'],
                     viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
+                    theme: ['light', 'dark', 'auto'],
                 };
                 const keyOptions = optionValues[key];
                 if (!keyOptions.includes(value))
@@ -1371,6 +1318,11 @@ class OptionConverter {
                     Namespace.errorMessages.typeMismatch(path.substring(1), typeof value, 'HTMLElement');
                 }
                 return value;
+            case 'useTwentyfourHour':
+                if (value === undefined || providedType === 'boolean')
+                    return value;
+                Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
+                break;
             default:
                 switch (defaultType) {
                     case 'boolean':
@@ -1843,24 +1795,24 @@ class DateDisplay {
      * @private
      */
     getPicker() {
-        const container = document.createElement('div');
+        const container = document.createElement("div");
         container.classList.add(Namespace.css.daysContainer);
         container.append(...this._daysOfTheWeek());
         if (this.optionsStore.options.display.calendarWeeks) {
-            const div = document.createElement('div');
+            const div = document.createElement("div");
             div.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
             container.appendChild(div);
         }
         for (let i = 0; i < 42; i++) {
             if (i !== 0 && i % 7 === 0) {
                 if (this.optionsStore.options.display.calendarWeeks) {
-                    const div = document.createElement('div');
+                    const div = document.createElement("div");
                     div.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
                     container.appendChild(div);
                 }
             }
-            const div = document.createElement('div');
-            div.setAttribute('data-action', ActionTypes$1.selectDay);
+            const div = document.createElement("div");
+            div.setAttribute("data-action", ActionTypes$1.selectDay);
             container.appendChild(div);
         }
         return container;
@@ -1871,26 +1823,31 @@ class DateDisplay {
      */
     _update(widget, paint) {
         const container = widget.getElementsByClassName(Namespace.css.daysContainer)[0];
-        const [previous, switcher, next] = container.parentElement
-            .getElementsByClassName(Namespace.css.calendarHeader)[0]
-            .getElementsByTagName('div');
-        switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
-        this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.month), Unit.month)
-            ? previous.classList.remove(Namespace.css.disabled)
-            : previous.classList.add(Namespace.css.disabled);
-        this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.month), Unit.month)
-            ? next.classList.remove(Namespace.css.disabled)
-            : next.classList.add(Namespace.css.disabled);
+        if (this.optionsStore.currentView === "calendar") {
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                .getElementsByTagName("div");
+            switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
+            this.optionsStore.options.display.components.month
+                ? switcher.classList.remove(Namespace.css.disabled)
+                : switcher.classList.add(Namespace.css.disabled);
+            this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.month), Unit.month)
+                ? previous.classList.remove(Namespace.css.disabled)
+                : previous.classList.add(Namespace.css.disabled);
+            this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.month), Unit.month)
+                ? next.classList.remove(Namespace.css.disabled)
+                : next.classList.add(Namespace.css.disabled);
+        }
         let innerDate = this.optionsStore.viewDate.clone
             .startOf(Unit.month)
-            .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
+            .startOf("weekDay", this.optionsStore.options.localization.startOfTheWeek)
             .manipulate(12, Unit.hours);
         container
             .querySelectorAll(`[data-action="${ActionTypes$1.selectDay}"], .${Namespace.css.calendarWeeks}`)
             .forEach((containerClone) => {
             if (this.optionsStore.options.display.calendarWeeks &&
                 containerClone.classList.contains(Namespace.css.calendarWeeks)) {
-                if (containerClone.innerText === '#')
+                if (containerClone.innerText === "#")
                     return;
                 containerClone.innerText = `${innerDate.week}`;
                 return;
@@ -1919,9 +1876,9 @@ class DateDisplay {
             paint(Unit.date, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
-            containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
-            containerClone.setAttribute('data-day', `${innerDate.date}`);
-            containerClone.innerText = innerDate.format({ day: 'numeric' });
+            containerClone.setAttribute("data-value", `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
+            containerClone.setAttribute("data-day", `${innerDate.date}`);
+            containerClone.innerText = innerDate.format({ day: "numeric" });
             innerDate.manipulate(1, Unit.date);
         });
     }
@@ -1931,20 +1888,20 @@ class DateDisplay {
      */
     _daysOfTheWeek() {
         let innerDate = this.optionsStore.viewDate.clone
-            .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
+            .startOf("weekDay", this.optionsStore.options.localization.startOfTheWeek)
             .startOf(Unit.date);
         const row = [];
-        document.createElement('div');
+        document.createElement("div");
         if (this.optionsStore.options.display.calendarWeeks) {
-            const htmlDivElement = document.createElement('div');
+            const htmlDivElement = document.createElement("div");
             htmlDivElement.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
-            htmlDivElement.innerText = '#';
+            htmlDivElement.innerText = "#";
             row.push(htmlDivElement);
         }
         for (let i = 0; i < 7; i++) {
-            const htmlDivElement = document.createElement('div');
+            const htmlDivElement = document.createElement("div");
             htmlDivElement.classList.add(Namespace.css.dayOfTheWeek, Namespace.css.noHighlight);
-            htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
+            htmlDivElement.innerText = innerDate.format({ weekday: "short" });
             innerDate.manipulate(1, Unit.date);
             row.push(htmlDivElement);
         }
@@ -1981,16 +1938,21 @@ class MonthDisplay {
      */
     _update(widget, paint) {
         const container = widget.getElementsByClassName(Namespace.css.monthsContainer)[0];
-        const [previous, switcher, next] = container.parentElement
-            .getElementsByClassName(Namespace.css.calendarHeader)[0]
-            .getElementsByTagName('div');
-        switcher.setAttribute(Namespace.css.monthsContainer, this.optionsStore.viewDate.format({ year: 'numeric' }));
-        this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.year), Unit.year)
-            ? previous.classList.remove(Namespace.css.disabled)
-            : previous.classList.add(Namespace.css.disabled);
-        this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.year), Unit.year)
-            ? next.classList.remove(Namespace.css.disabled)
-            : next.classList.add(Namespace.css.disabled);
+        if (this.optionsStore.currentView === 'months') {
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                .getElementsByTagName('div');
+            switcher.setAttribute(Namespace.css.monthsContainer, this.optionsStore.viewDate.format({ year: 'numeric' }));
+            this.optionsStore.options.display.components.year
+                ? switcher.classList.remove(Namespace.css.disabled)
+                : switcher.classList.add(Namespace.css.disabled);
+            this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.year), Unit.year)
+                ? previous.classList.remove(Namespace.css.disabled)
+                : previous.classList.add(Namespace.css.disabled);
+            this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.year), Unit.year)
+                ? next.classList.remove(Namespace.css.disabled)
+                : next.classList.add(Namespace.css.disabled);
+        }
         let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.year);
         container
             .querySelectorAll(`[data-action="${ActionTypes$1.selectMonth}"]`)
@@ -2028,11 +1990,11 @@ class YearDisplay {
      * @private
      */
     getPicker() {
-        const container = document.createElement('div');
+        const container = document.createElement("div");
         container.classList.add(Namespace.css.yearsContainer);
         for (let i = 0; i < 12; i++) {
-            const div = document.createElement('div');
-            div.setAttribute('data-action', ActionTypes$1.selectYear);
+            const div = document.createElement("div");
+            div.setAttribute("data-action", ActionTypes$1.selectYear);
             container.appendChild(div);
         }
         return container;
@@ -2045,16 +2007,21 @@ class YearDisplay {
         this._startYear = this.optionsStore.viewDate.clone.manipulate(-1, Unit.year);
         this._endYear = this.optionsStore.viewDate.clone.manipulate(10, Unit.year);
         const container = widget.getElementsByClassName(Namespace.css.yearsContainer)[0];
-        const [previous, switcher, next] = container.parentElement
-            .getElementsByClassName(Namespace.css.calendarHeader)[0]
-            .getElementsByTagName('div');
-        switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.format({ year: 'numeric' })}-${this._endYear.format({ year: 'numeric' })}`);
-        this.validation.isValid(this._startYear, Unit.year)
-            ? previous.classList.remove(Namespace.css.disabled)
-            : previous.classList.add(Namespace.css.disabled);
-        this.validation.isValid(this._endYear, Unit.year)
-            ? next.classList.remove(Namespace.css.disabled)
-            : next.classList.add(Namespace.css.disabled);
+        if (this.optionsStore.currentView === "years") {
+            const [previous, switcher, next] = container.parentElement
+                .getElementsByClassName(Namespace.css.calendarHeader)[0]
+                .getElementsByTagName("div");
+            switcher.setAttribute(Namespace.css.yearsContainer, `${this._startYear.format({ year: "numeric" })}-${this._endYear.format({ year: "numeric" })}`);
+            this.optionsStore.options.display.components.decades
+                ? switcher.classList.remove(Namespace.css.disabled)
+                : switcher.classList.add(Namespace.css.disabled);
+            this.validation.isValid(this._startYear, Unit.year)
+                ? previous.classList.remove(Namespace.css.disabled)
+                : previous.classList.add(Namespace.css.disabled);
+            this.validation.isValid(this._endYear, Unit.year)
+                ? next.classList.remove(Namespace.css.disabled)
+                : next.classList.add(Namespace.css.disabled);
+        }
         let innerDate = this.optionsStore.viewDate.clone
             .startOf(Unit.year)
             .manipulate(-1, Unit.year);
@@ -2073,7 +2040,7 @@ class YearDisplay {
             paint(Unit.year, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
-            containerClone.setAttribute('data-value', `${innerDate.year}`);
+            containerClone.setAttribute("data-value", `${innerDate.year}`);
             containerClone.innerText = innerDate.format({ year: "numeric" });
             innerDate.manipulate(1, Unit.year);
         });
@@ -2094,11 +2061,11 @@ class DecadeDisplay {
      * @private
      */
     getPicker() {
-        const container = document.createElement('div');
+        const container = document.createElement("div");
         container.classList.add(Namespace.css.decadesContainer);
         for (let i = 0; i < 12; i++) {
-            const div = document.createElement('div');
-            div.setAttribute('data-action', ActionTypes$1.selectDecade);
+            const div = document.createElement("div");
+            div.setAttribute("data-action", ActionTypes$1.selectDecade);
             container.appendChild(div);
         }
         return container;
@@ -2116,14 +2083,16 @@ class DecadeDisplay {
         const container = widget.getElementsByClassName(Namespace.css.decadesContainer)[0];
         const [previous, switcher, next] = container.parentElement
             .getElementsByClassName(Namespace.css.calendarHeader)[0]
-            .getElementsByTagName('div');
-        switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.format({ year: 'numeric' })}-${this._endDecade.format({ year: 'numeric' })}`);
-        this.validation.isValid(this._startDecade, Unit.year)
-            ? previous.classList.remove(Namespace.css.disabled)
-            : previous.classList.add(Namespace.css.disabled);
-        this.validation.isValid(this._endDecade, Unit.year)
-            ? next.classList.remove(Namespace.css.disabled)
-            : next.classList.add(Namespace.css.disabled);
+            .getElementsByTagName("div");
+        if (this.optionsStore.currentView === 'decades') {
+            switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.format({ year: "numeric" })}-${this._endDecade.format({ year: "numeric" })}`);
+            this.validation.isValid(this._startDecade, Unit.year)
+                ? previous.classList.remove(Namespace.css.disabled)
+                : previous.classList.add(Namespace.css.disabled);
+            this.validation.isValid(this._endDecade, Unit.year)
+                ? next.classList.remove(Namespace.css.disabled)
+                : next.classList.add(Namespace.css.disabled);
+        }
         const pickedYears = this.dates.picked.map((x) => x.year);
         container
             .querySelectorAll(`[data-action="${ActionTypes$1.selectDecade}"]`)
@@ -2131,15 +2100,15 @@ class DecadeDisplay {
             if (index === 0) {
                 containerClone.classList.add(Namespace.css.old);
                 if (this._startDecade.year - 10 < 0) {
-                    containerClone.textContent = ' ';
+                    containerClone.textContent = " ";
                     previous.classList.add(Namespace.css.disabled);
                     containerClone.classList.add(Namespace.css.disabled);
-                    containerClone.setAttribute('data-value', ``);
+                    containerClone.setAttribute("data-value", ``);
                     return;
                 }
                 else {
-                    containerClone.innerText = this._startDecade.clone.manipulate(-10, Unit.year).format({ year: 'numeric' });
-                    containerClone.setAttribute('data-value', `${this._startDecade.year}`);
+                    containerClone.innerText = this._startDecade.clone.manipulate(-10, Unit.year).format({ year: "numeric" });
+                    containerClone.setAttribute("data-value", `${this._startDecade.year}`);
                     return;
                 }
             }
@@ -2152,11 +2121,11 @@ class DecadeDisplay {
                     .length > 0) {
                 classes.push(Namespace.css.active);
             }
-            paint('decade', this._startDecade, classes, containerClone);
+            paint("decade", this._startDecade, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
-            containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-            containerClone.innerText = `${this._startDecade.format({ year: 'numeric' })}`;
+            containerClone.setAttribute("data-value", `${this._startDecade.year}`);
+            containerClone.innerText = `${this._startDecade.format({ year: "numeric" })}`;
             this._startDecade.manipulate(10, Unit.year);
         });
     }
@@ -2449,7 +2418,7 @@ class MinuteDisplay {
             paint(Unit.minutes, innerDate, classes, containerClone);
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
-            containerClone.setAttribute('data-value', `${innerDate.minutesFormatted}`);
+            containerClone.setAttribute('data-value', `${innerDate.minutes}`);
             containerClone.innerText = innerDate.minutesFormatted;
             innerDate.manipulate(step, Unit.minutes);
         });
@@ -2550,6 +2519,8 @@ class Collapse {
      * @param target
      */
     static hideImmediately(target) {
+        if (!target)
+            return;
         target.classList.remove(Namespace.css.collapsing, Namespace.css.show);
         target.classList.add(Namespace.css.collapse);
     }
@@ -2754,6 +2725,7 @@ class Display {
                 }
             }
             this._buildWidget();
+            this._updateTheme();
             // If modeView is only clock
             const onlyClock = this._hasTime && !this._hasDate;
             // reset the view to the clock if there's no date components
@@ -2769,9 +2741,15 @@ class Display {
                 this.optionsStore.currentCalendarViewMode =
                     this.optionsStore.minimumCalendarViewMode;
             }
-            if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
+            if (!onlyClock &&
+                this.optionsStore.options.display.viewMode !== 'clock') {
                 if (this._hasTime) {
-                    Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                    if (!this.optionsStore.options.display.sideBySide) {
+                        Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                    }
+                    else {
+                        Collapse.show(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                    }
                 }
                 Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
             }
@@ -2853,6 +2831,46 @@ class Display {
         picker.style.display = 'grid';
         this._updateCalendarHeader();
         this._eventEmitters.viewUpdate.emit();
+    }
+    /**
+     * Changes the theme. E.g. light, dark or auto
+     * @param theme the theme name
+     * @private
+     */
+    _updateTheme(theme) {
+        if (!this.widget) {
+            return;
+        }
+        if (theme) {
+            if (this.optionsStore.options.display.theme === theme)
+                return;
+            this.optionsStore.options.display.theme = theme;
+        }
+        this.widget.classList.remove('light', 'dark');
+        this.widget.classList.add(this._getThemeClass());
+        if (this.optionsStore.options.display.theme === 'auto') {
+            window
+                .matchMedia(Namespace.css.isDarkPreferedQuery)
+                .addEventListener('change', () => this._updateTheme());
+        }
+        else {
+            window
+                .matchMedia(Namespace.css.isDarkPreferedQuery)
+                .removeEventListener('change', () => this._updateTheme());
+        }
+    }
+    _getThemeClass() {
+        const currentTheme = this.optionsStore.options.display.theme || 'auto';
+        const isDarkMode = window.matchMedia &&
+            window.matchMedia(Namespace.css.isDarkPreferedQuery).matches;
+        switch (currentTheme) {
+            case 'light':
+                return Namespace.css.lightTheme;
+            case 'dark':
+                return Namespace.css.darkTheme;
+            case 'auto':
+                return isDarkMode ? Namespace.css.darkTheme : Namespace.css.lightTheme;
+        }
     }
     _updateCalendarHeader() {
         const showing = [
@@ -3263,7 +3281,7 @@ class Actions {
                     currentTarget.setAttribute('title', this.optionsStore.options.localization.selectDate);
                     currentTarget.innerHTML = this.display._iconTag(this.optionsStore.options.display.icons.date).outerHTML;
                     if (this.display._hasTime) {
-                        this.do(e, ActionTypes$1.showClock);
+                        this.handleShowClockContainers(ActionTypes$1.showClock);
                         this.display._update('clock');
                     }
                 }
@@ -3386,7 +3404,7 @@ class TempusDominus {
                 return;
             const setViewDate = () => {
                 if (this.dates.lastPicked)
-                    this.optionsStore.viewDate = this.dates.lastPicked;
+                    this.optionsStore.viewDate = this.dates.lastPicked.clone;
             };
             const value = this.optionsStore.input.value;
             if (this.optionsStore.options.multipleDates) {
@@ -3647,7 +3665,7 @@ class TempusDominus {
      * @private
      */
     _initializeOptions(config, mergeTo, includeDataset = false) {
-        var _a;
+        var _a, _b;
         let newConfig = OptionConverter.deepCopy(config);
         newConfig = OptionConverter._mergeOptions(newConfig, mergeTo);
         if (includeDataset)
@@ -3678,6 +3696,9 @@ class TempusDominus {
         }
         if ((_a = this.display) === null || _a === void 0 ? void 0 : _a.isVisible) {
             this.display._update('all');
+        }
+        if (newConfig.display.components.useTwentyfourHour === undefined) {
+            newConfig.display.components.useTwentyfourHour = !!!((_b = newConfig.viewDate.parts()) === null || _b === void 0 ? void 0 : _b.dayPeriod);
         }
         this.optionsStore.options = newConfig;
     }
@@ -3806,6 +3827,7 @@ const extend = function (plugin, option) {
     }
     return this;
 };
+const version = '6.0.0-beta9';
 
-export { DateTime, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale };
+export { DateTime, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale, version };
 //# sourceMappingURL=tempus-dominus.esm.js.map
