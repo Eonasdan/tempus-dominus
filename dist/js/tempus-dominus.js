@@ -78,6 +78,14 @@
             return new DateTime(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).setLocale(locale);
         }
         /**
+         * Attempts to create a DateTime from a string. A customDateFormat is required for non US dates.
+         * @param input
+         * @param localization
+         */
+        static fromString(input, localization) {
+            return new DateTime(input);
+        }
+        /**
          * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
          */
         get clone() {
@@ -554,11 +562,19 @@
             throw error;
         }
         /**
+         * customDateFormat errors
+         */
+        customDateFormatError(message) {
+            const error = new TdError(`${this.base} customDateFormat: ${message}`);
+            error.code = 9;
+            throw error;
+        }
+        /**
          * Logs a warning if a date option value is provided as a string, instead of
          * a date/datetime object.
          */
         dateString() {
-            console.warn(`${this.base} Using a string for date options is not recommended unless you specify an ISO string.`);
+            console.warn(`${this.base} Using a string for date options is not recommended unless you specify an ISO string or use the customDateFormat plugin.`);
         }
         throwError(message) {
             const error = new TdError(`${this.base} ${message}`);
@@ -568,7 +584,7 @@
     }
 
     // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-    const NAME = 'tempus-dominus', version$1 = '6.0.0-beta9', dataKey = 'td';
+    const NAME = 'tempus-dominus', dataKey = 'td';
     /**
      * Events
      */
@@ -788,14 +804,13 @@
             /**
             * Used for detecting if the system color preference is dark mode
             */
-            this.isDarkPreferedQuery = '(prefers-color-scheme: dark)';
+            this.isDarkPreferredQuery = '(prefers-color-scheme: dark)';
         }
     }
     class Namespace {
     }
     Namespace.NAME = NAME;
     // noinspection JSUnusedGlobalSymbols
-    Namespace.version = version$1;
     Namespace.dataKey = dataKey;
     Namespace.events = new Events();
     Namespace.css = new Css();
@@ -1101,7 +1116,26 @@
             selectDate: 'Select Date',
             dayViewHeaderFormat: { month: 'long', year: '2-digit' },
             locale: 'default',
-            startOfTheWeek: 0
+            startOfTheWeek: 0,
+            /**
+             * This is only used with the customDateFormat plugin
+             */
+            dateForms: {
+                LTS: 'h:mm:ss T',
+                LT: 'h:mm T',
+                L: 'MM/dd/yyyy',
+                LL: 'MMMM d, yyyy',
+                LLL: 'MMMM d, yyyy h:mm T',
+                LLLL: 'dddd, MMMM d, yyyy h:mm T',
+            },
+            /**
+             * This is only used with the customDateFormat plugin
+             */
+            ordinal: (n) => n,
+            /**
+             * This is only used with the customDateFormat plugin
+             */
+            format: 'L'
         },
         keepInvalid: false,
         debug: false,
@@ -1154,9 +1188,9 @@
          * @param provided An option from new providedOptions
          * @param copyTo Destination object. This was added to prevent reference copies
          * @param path
-         * @param locale
+         * @param localization
          */
-        static spread(provided, copyTo, path = '', locale = '') {
+        static spread(provided, copyTo, path = '', localization) {
             const defaultOptions = OptionConverter.objectPath(path, DefaultOptions);
             const unsupportedOptions = Object.keys(provided).filter((x) => !Object.keys(defaultOptions).includes(x));
             if (unsupportedOptions.length > 0) {
@@ -1170,7 +1204,7 @@
                 });
                 Namespace.errorMessages.unexpectedOptions(errors);
             }
-            Object.keys(provided).filter(key => key !== "__proto__" && key !== "constructor").forEach((key) => {
+            Object.keys(provided).filter(key => key !== '__proto__' && key !== 'constructor').forEach((key) => {
                 path += `.${key}`;
                 if (path.charAt(0) === '.')
                     path = path.slice(1);
@@ -1186,29 +1220,29 @@
                 if (typeof defaultOptionValue === 'object' &&
                     !Array.isArray(provided[key]) &&
                     !(defaultOptionValue instanceof Date || OptionConverter.ignoreProperties.includes(key))) {
-                    OptionConverter.spread(provided[key], copyTo[key], path, locale);
+                    OptionConverter.spread(provided[key], copyTo[key], path, localization);
                 }
                 else {
-                    copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
+                    copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, localization);
                 }
                 path = path.substring(0, path.lastIndexOf(`.${key}`));
             });
         }
-        static processKey(key, value, providedType, defaultType, path, locale) {
+        static processKey(key, value, providedType, defaultType, path, localization) {
             switch (key) {
                 case 'defaultDate': {
-                    const dateTime = this.dateConversion(value, 'defaultDate');
+                    const dateTime = this.dateConversion(value, 'defaultDate', localization);
                     if (dateTime !== undefined) {
-                        dateTime.setLocale(locale);
+                        dateTime.setLocale(localization.locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('defaultDate', providedType, 'DateTime or Date');
                     break;
                 }
                 case 'viewDate': {
-                    const dateTime = this.dateConversion(value, 'viewDate');
+                    const dateTime = this.dateConversion(value, 'viewDate', localization);
                     if (dateTime !== undefined) {
-                        dateTime.setLocale(locale);
+                        dateTime.setLocale(localization.locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('viewDate', providedType, 'DateTime or Date');
@@ -1218,9 +1252,9 @@
                     if (value === undefined) {
                         return value;
                     }
-                    const dateTime = this.dateConversion(value, 'restrictions.minDate');
+                    const dateTime = this.dateConversion(value, 'restrictions.minDate', localization);
                     if (dateTime !== undefined) {
-                        dateTime.setLocale(locale);
+                        dateTime.setLocale(localization.locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('restrictions.minDate', providedType, 'DateTime or Date');
@@ -1230,9 +1264,9 @@
                     if (value === undefined) {
                         return value;
                     }
-                    const dateTime = this.dateConversion(value, 'restrictions.maxDate');
+                    const dateTime = this.dateConversion(value, 'restrictions.maxDate', localization);
                     if (dateTime !== undefined) {
-                        dateTime.setLocale(locale);
+                        dateTime.setLocale(localization.locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('restrictions.maxDate', providedType, 'DateTime or Date');
@@ -1266,13 +1300,13 @@
                     if (value === undefined) {
                         return [];
                     }
-                    this._typeCheckDateArray('restrictions.enabledDates', value, providedType, locale);
+                    this._typeCheckDateArray('restrictions.enabledDates', value, providedType, localization);
                     return value;
                 case 'disabledDates':
                     if (value === undefined) {
                         return [];
                     }
-                    this._typeCheckDateArray('restrictions.disabledDates', value, providedType, locale);
+                    this._typeCheckDateArray('restrictions.disabledDates', value, providedType, localization);
                     return value;
                 case 'disabledTimeIntervals':
                     if (value === undefined) {
@@ -1286,11 +1320,11 @@
                         Object.keys(valueObject[i]).forEach((vk) => {
                             const subOptionName = `${key}[${i}].${vk}`;
                             let d = valueObject[i][vk];
-                            const dateTime = this.dateConversion(d, subOptionName);
+                            const dateTime = this.dateConversion(d, subOptionName, localization);
                             if (!dateTime) {
                                 Namespace.errorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
                             }
-                            dateTime.setLocale(locale);
+                            dateTime.setLocale(localization.locale);
                             valueObject[i][vk] = dateTime;
                         });
                     }
@@ -1303,7 +1337,7 @@
                         toolbarPlacement: ['top', 'bottom', 'default'],
                         type: ['icons', 'sprites'],
                         viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
-                        theme: ['light', 'dark', 'auto'],
+                        theme: ['light', 'dark', 'auto']
                     };
                     const keyOptions = optionValues[key];
                     if (!keyOptions.includes(value))
@@ -1346,10 +1380,10 @@
             var _a;
             const newConfig = OptionConverter.deepCopy(mergeTo);
             //see if the options specify a locale
-            const locale = mergeTo.localization.locale !== 'default'
-                ? mergeTo.localization.locale
-                : ((_a = providedOptions === null || providedOptions === void 0 ? void 0 : providedOptions.localization) === null || _a === void 0 ? void 0 : _a.locale) || 'default';
-            OptionConverter.spread(providedOptions, newConfig, '', locale);
+            const localization = ((_a = mergeTo.localization) === null || _a === void 0 ? void 0 : _a.locale) !== 'default'
+                ? mergeTo.localization
+                : (providedOptions === null || providedOptions === void 0 ? void 0 : providedOptions.localization) || DefaultOptions.localization;
+            OptionConverter.spread(providedOptions, newConfig, '', localization);
             return newConfig;
         }
         static _dataToOptions(element, options) {
@@ -1417,16 +1451,17 @@
         /**
          * Attempts to prove `d` is a DateTime or Date or can be converted into one.
          * @param d If a string will attempt creating a date from it.
+         * @param localization object containing locale and format settings. Only used with the custom formats
          * @private
          */
-        static _dateTypeCheck(d) {
+        static _dateTypeCheck(d, localization) {
             if (d.constructor.name === DateTime.name)
                 return d;
             if (d.constructor.name === Date.name) {
                 return DateTime.convert(d);
             }
             if (typeof d === typeof '') {
-                const dateTime = new DateTime(d);
+                const dateTime = DateTime.fromString(d, localization);
                 if (JSON.stringify(dateTime) === 'null') {
                     return null;
                 }
@@ -1439,19 +1474,20 @@
          * @param optionName Provides text to error messages e.g. disabledDates
          * @param value Option value
          * @param providedType Used to provide text to error messages
-         * @param locale
+         * @param localization
          */
-        static _typeCheckDateArray(optionName, value, providedType, locale = 'default') {
+        static _typeCheckDateArray(optionName, value, providedType, localization) {
+            var _a;
             if (!Array.isArray(value)) {
                 Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
             }
             for (let i = 0; i < value.length; i++) {
                 let d = value[i];
-                const dateTime = this.dateConversion(d, optionName);
+                const dateTime = this.dateConversion(d, optionName, localization);
                 if (!dateTime) {
                     Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
                 }
-                dateTime.setLocale(locale);
+                dateTime.setLocale((_a = localization === null || localization === void 0 ? void 0 : localization.locale) !== null && _a !== void 0 ? _a : 'default');
                 value[i] = dateTime;
             }
         }
@@ -1470,12 +1506,13 @@
          * Attempts to convert `d` to a DateTime object
          * @param d value to convert
          * @param optionName Provides text to error messages e.g. disabledDates
+         * @param localization object containing locale and format settings. Only used with the custom formats
          */
-        static dateConversion(d, optionName) {
+        static dateConversion(d, optionName, localization) {
             if (typeof d === typeof '' && optionName !== 'input') {
                 Namespace.errorMessages.dateString();
             }
-            const converted = this._dateTypeCheck(d);
+            const converted = this._dateTypeCheck(d, localization);
             if (!converted) {
                 Namespace.errorMessages.failedToParseDate(optionName, d, optionName === 'input');
             }
@@ -1520,7 +1557,8 @@
             }
         }
     }
-    OptionConverter.ignoreProperties = ['meta', 'dayViewHeaderFormat', 'container'];
+    OptionConverter.ignoreProperties = ['meta', 'dayViewHeaderFormat',
+        'container', 'dateForms', 'ordinal'];
     OptionConverter.isValue = a => a != null; // everything except undefined + null
 
     class Dates {
@@ -1577,7 +1615,7 @@
          * this can be overwritten to supply your own parsing.
          */
         parseInput(value) {
-            return OptionConverter.dateConversion(value, 'input');
+            return OptionConverter.dateConversion(value, 'input', this.optionsStore.options.localization);
         }
         /**
          * Tries to convert the provided value to a DateTime object.
@@ -2698,7 +2736,7 @@
         /**
          * Shows the picker and creates a Popper instance if needed.
          * Add document click event to hide when clicking outside the picker.
-         * @fires Events#show
+         * fires Events#show
          */
         show() {
             var _a, _b;
@@ -2852,19 +2890,19 @@
             this.widget.classList.add(this._getThemeClass());
             if (this.optionsStore.options.display.theme === 'auto') {
                 window
-                    .matchMedia(Namespace.css.isDarkPreferedQuery)
+                    .matchMedia(Namespace.css.isDarkPreferredQuery)
                     .addEventListener('change', () => this._updateTheme());
             }
             else {
                 window
-                    .matchMedia(Namespace.css.isDarkPreferedQuery)
+                    .matchMedia(Namespace.css.isDarkPreferredQuery)
                     .removeEventListener('change', () => this._updateTheme());
             }
         }
         _getThemeClass() {
             const currentTheme = this.optionsStore.options.display.theme || 'auto';
             const isDarkMode = window.matchMedia &&
-                window.matchMedia(Namespace.css.isDarkPreferedQuery).matches;
+                window.matchMedia(Namespace.css.isDarkPreferredQuery).matches;
             switch (currentTheme) {
                 case 'light':
                     return Namespace.css.lightTheme;
@@ -2909,7 +2947,7 @@
         /**
          * Hides the picker if needed.
          * Remove document click event to hide when clicking outside the picker.
-         * @fires Events#hide
+         * fires Events#hide
          */
         hide() {
             if (!this.widget || !this._isVisible)
@@ -3822,10 +3860,12 @@
      * @param option
      */
     const extend = function (plugin, option) {
-        if (!plugin.$i) {
+        if (!plugin)
+            return this;
+        if (!plugin.installed) {
             // install plugin only once
-            plugin.load(option, { TempusDominus, Dates, Display }, this);
-            plugin.$i = true;
+            plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, this);
+            plugin.installed = true;
         }
         return this;
     };

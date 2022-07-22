@@ -1,5 +1,5 @@
 // noinspection JSUnusedGlobalSymbols
-export const load = (option, tdClasses, tdFactory) => {
+export default (option, tdClasses, tdFactory) => {
   // noinspection JSUnusedLocalSymbols
   tdClasses.Display.prototype.paint = (unit, date, classes: string[], element: HTMLElement) => {
     if (unit === tdFactory.Unit.date) {

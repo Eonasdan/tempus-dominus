@@ -55,37 +55,7 @@ export default interface Options {
     stepping?: number;
     useCurrent?: boolean;
     defaultDate?: DateTime;
-    localization?: {
-        nextMonth?: string;
-        pickHour?: string;
-        incrementSecond?: string;
-        nextDecade?: string;
-        selectDecade?: string;
-        dayViewHeaderFormat?: DateTimeFormatOptions;
-        decrementHour?: string;
-        selectDate?: string;
-        incrementHour?: string;
-        previousCentury?: string;
-        decrementSecond?: string;
-        today?: string;
-        previousMonth?: string;
-        selectYear?: string;
-        pickSecond?: string;
-        nextCentury?: string;
-        close?: string;
-        incrementMinute?: string;
-        selectTime?: string;
-        clear?: string;
-        toggleMeridiem?: string;
-        selectMonth?: string;
-        decrementMinute?: string;
-        pickMinute?: string;
-        nextYear?: string;
-        previousYear?: string;
-        previousDecade?: string;
-        locale?: string;
-        startOfTheWeek?: number;
-    };
+    localization?: Localization;
     keepInvalid?: boolean;
     debug?: boolean;
     allowInputToggle?: boolean;
@@ -96,4 +66,47 @@ export default interface Options {
     promptTimeOnDateChangeTransitionDelay?: number;
     meta?: {};
     container?: HTMLElement;
+}
+export interface FormatLocalization {
+    locale?: string;
+    dateForms?: {
+        LTS?: string;
+        LT?: string;
+        L?: string;
+        LL?: string;
+        LLL?: string;
+        LLLL?: string;
+    };
+    ordinal?: (n: number) => any;
+    format?: string;
+}
+export interface Localization extends FormatLocalization {
+    nextMonth?: string;
+    pickHour?: string;
+    incrementSecond?: string;
+    nextDecade?: string;
+    selectDecade?: string;
+    dayViewHeaderFormat?: DateTimeFormatOptions;
+    decrementHour?: string;
+    selectDate?: string;
+    incrementHour?: string;
+    previousCentury?: string;
+    decrementSecond?: string;
+    today?: string;
+    previousMonth?: string;
+    selectYear?: string;
+    pickSecond?: string;
+    nextCentury?: string;
+    close?: string;
+    incrementMinute?: string;
+    selectTime?: string;
+    clear?: string;
+    toggleMeridiem?: string;
+    selectMonth?: string;
+    decrementMinute?: string;
+    pickMinute?: string;
+    nextYear?: string;
+    previousYear?: string;
+    previousDecade?: string;
+    startOfTheWeek?: number;
 }
