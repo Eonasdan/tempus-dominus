@@ -1,0 +1,192 @@
+<page-body>
+  <div id='embed'></div>
+  <script src='https://unpkg.com/@stackblitz/sdk/bundles/sdk.umd.js'></script>
+  <script src="https://cdn.jsdelivr.net/npm/@eonasdan/lz-string@1.0.3/dist/lz-string.min.js"
+          integrity="sha256-mu6oqL9lqHnCZ7uliJ0+a0z2VcMuzS7JgqZqV1jheTM=" crossorigin="anonymous"></script>
+  <script>
+    const sdk = StackBlitzSDK;
+    const targetJs = 'example.js';
+    const targetHtml = 'index.html';
+
+    const linkedPickersHtml = `<label for='linkedPickers1Input' class='form-label'>From</label>
+\t  <div
+\t\tclass='input-group log-event'
+\t\tid='linkedPickers1'
+\t\tdata-td-target-input='nearest'
+\t\tdata-td-target-toggle='nearest'
+\t  >
+\t\t<input
+\t\t  id='linkedPickers1Input'
+\t\t  type='text'
+\t\t  class='form-control'
+\t\t  data-td-target='#linkedPickers1'
+\t\t/>
+\t\t<span
+\t\t  class='input-group-text'
+\t\t  data-td-target='#linkedPickers1'
+\t\t  data-td-toggle='datetimepicker'
+\t\t>
+\t\t   <span class='fa-solid fa-calendar'></span>
+\t\t </span>
+\t  </div>
+\t</div>
+\t<div class='col-sm-6'>
+\t  <label for='linkedPickers2Input' class='form-label'>To</label>
+\t  <div
+\t\tclass='input-group log-event'
+\t\tid='linkedPickers2'
+\t\tdata-td-target-input='nearest'
+\t\tdata-td-target-toggle='nearest'
+\t  >
+\t\t<input
+\t\t  id='linkedPickers2Input'
+\t\t  type='text'
+\t\t  class='form-control'
+\t\t  data-td-target='#linkedPickers2'
+\t\t/>
+\t\t<span
+\t\t  class='input-group-text'
+\t\t  data-td-target='#linkedPickers2'
+\t\t  data-td-toggle='datetimepicker'
+\t\t>
+\t\t   <span class='fa-solid fa-calendar'></span>
+\t\t </span>
+\t  </div>`
+
+    const linkedPickerJs = `import { TempusDominus, Namespace } from '@eonasdan/tempus-dominus';
+
+    const linkedPicker1Element = document.getElementById('linkedPickers1');
+const linked1 = new TempusDominus(linkedPicker1Element);
+const linked2 = new TempusDominus(document.getElementById('linkedPickers2'), {
+  useCurrent: false
+});
+
+//using event listeners
+linkedPicker1Element.addEventListener(Namespace.events.change, (e) => {
+  linked2.updateOptions({
+    restrictions: {
+      minDate: e.detail.date
+    }
+  });
+});
+
+//using subscribe method
+const subscription = linked2.subscribe(Namespace.events.change, (e) => {
+  linked1.updateOptions({
+    restrictions: {
+      maxDate: e.date
+    }
+  });
+});`
+
+    class Repl {
+      projectId = 'tempus-dominus-v6-repl';
+      vm = undefined;
+
+      htmlToElement(html) {
+        const template = document.createElement('template');
+        html = html.trim(); // Never return a text node of whitespace as the result
+        template.innerHTML = html;
+        return template.content.firstChild;
+      }
+
+      async ready() {
+        this.snapshot = await this.vm.getFsSnapshot();
+        let example = this.snapshot[targetJs];
+        let html = this.htmlToElement(this.snapshot[targetHtml]);
+    //     example = example.replace('//put your config here', `localization: {
+    //   locale: 'pt-BR',
+    // }`);
+
+        html.querySelector('#htmlTarget').innerHTML = linkedPickersHtml;
+
+        this.update(targetHtml, html.innerHTML);
+        this.update(targetJs, linkedPickerJs, 3000);
+
+        // const delta = {
+        //   create: {},
+        //   destroy: [],
+        // };
+
+        // delta.create[targetJs] = linkedPickerJs;
+        // delta.create[targetHtml] = html.innerHTML;
+        //
+        // //feels bad but vm doesn't seem to be ready when it says it is.
+        // setTimeout(() => {
+        //   this.vm.applyFsDiff(delta);
+        // }, 1000);
+      }
+
+      update(id, value, wait = 1000) {
+        const delta = {
+          create: {},
+          destroy: [],
+        };
+
+        delta.create[id] = value;
+
+        setTimeout(() => {
+          this.vm.applyFsDiff(delta);
+        }, wait);
+      }
+    }
+
+    const repl = new Repl();
+
+    document.addEventListener('DOMContentLoaded', async () => {
+     repl.vm = await sdk
+        .embedProjectId('embed', repl.projectId, {
+          openFile: targetJs,
+          hideNavigation: true
+        });
+     await repl.ready();
+    });
+
+    document.getElementById('mainToc').innerHTML = ` <li class='mb-1'>
+                <strong>
+                    Examples
+                </strong>
+                <ul class='list-unstyled fw-normal pb-1 small'>
+                    <li><a href='void(0);'
+                           class='d-inline-flex align-items-center rounded' aria-current='page'>Introduction</a></li>
+                    <li><a href='/6/installing.html' class='d-inline-flex align-items-center rounded'>Download</a>
+                    </li>
+                    <li><a href='/6/change-log.html'
+                           class='d-inline-flex align-items-center rounded' aria-current='page'>Change Log</a></li>
+                    <li><a href='/6/functions.html'
+                           class='d-inline-flex align-items-center rounded' aria-current='page'>Functions</a></li>
+                    <li><a href='/6/options.html'
+                           class='d-inline-flex align-items-center rounded' aria-current='page'>Options</a></li>
+                    <li><a href='/6/datetime.html'
+                           class='d-inline-flex align-items-center rounded' aria-current='page'>DateTime</a></li>
+                    <li><a href='/6/locale.html'
+                           class='d-inline-flex align-items-center rounded' aria-current='page'>Locales</a></li>
+                </ul>
+            </li>`
+  </script>
+  <style>
+    #embed {
+        height: 80vh;
+    }
+
+    @media (min-width: 992px) {
+        .bd-main {
+            grid-template-areas:
+        "intro"
+        "content";
+            grid-template-columns: 4fr;
+            grid-template-rows: auto 1fr;
+        }
+    }
+  </style>
+
+</page-body>
+
+<page-meta>
+  <title>REPL</title>
+  <post-date>07/08/2021</post-date>
+  <update-date>07/08/2021</update-date>
+  <excerpt>How to use Tempus Dominus datetime picker
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>
