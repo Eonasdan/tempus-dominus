@@ -82,7 +82,26 @@ const DefaultOptions: Options = {
     selectDate: 'Select Date',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'default',
-    startOfTheWeek: 0
+    startOfTheWeek: 0,
+    /**
+     * This is only used with the customDateFormat plugin
+     */
+    dateForms: {
+      LTS: 'h:mm:ss T',
+      LT: 'h:mm T',
+      L: 'MM/dd/yyyy',
+      LL: 'MMMM d, yyyy',
+      LLL: 'MMMM d, yyyy h:mm T',
+      LLLL: 'dddd, MMMM d, yyyy h:mm T',
+    },
+    /**
+     * This is only used with the customDateFormat plugin
+     */
+    ordinal: (n) => n,
+    /**
+     * This is only used with the customDateFormat plugin
+     */
+    format: 'L'
   },
   keepInvalid: false,
   debug: false,

@@ -133,12 +133,23 @@ export class ErrorMessages {
   }
 
   /**
+   * customDateFormat errors
+   */
+  customDateFormatError(message?: string) {
+    const error = new TdError(
+      `${this.base} customDateFormat: ${message}`
+    );
+    error.code = 9;
+    throw error;
+  }
+
+  /**
    * Logs a warning if a date option value is provided as a string, instead of
    * a date/datetime object.
    */
   dateString() {
     console.warn(
-      `${this.base} Using a string for date options is not recommended unless you specify an ISO string.`
+      `${this.base} Using a string for date options is not recommended unless you specify an ISO string or use the customDateFormat plugin.`
     );
   }
 

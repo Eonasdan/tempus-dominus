@@ -207,11 +207,10 @@ declare class Css {
     /**
     * Used for detecting if the system color preference is dark mode
     */
-    isDarkPreferedQuery: string;
+    isDarkPreferredQuery: string;
 }
 export default class Namespace {
     static NAME: string;
-    static version: string;
     static dataKey: string;
     static events: Events;
     static css: Css;

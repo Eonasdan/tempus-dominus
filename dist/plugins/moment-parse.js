@@ -3,7 +3,7 @@
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
-(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f((g.tempusDominus=g.tempusDominus||{},g.tempusDominus.plugins=g.tempusDominus.plugins||{},g.tempusDominus.plugins.moment_parse={})));})(this,(function(exports){'use strict';const load = (option, tdClasses, tdFactory) => {
+(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?module.exports=f():typeof define==='function'&&define.amd?define(f):(g=typeof globalThis!=='undefined'?globalThis:g||self,(g.tempusDominus=g.tempusDominus||{},g.tempusDominus.plugins=g.tempusDominus.plugins||{},g.tempusDominus.plugins.moment_parse=f()));})(this,(function(){'use strict';var index = (option, tdClasses, tdFactory) => {
     tdClasses.Dates.prototype.setFromInput = function (value, index) {
         let converted = moment(value, option);
         if (converted.isValid()) {
@@ -17,4 +17,4 @@
     tdClasses.Dates.prototype.formatInput = function (date) {
         return moment(date).format(option);
     };
-};exports.load=load;Object.defineProperty(exports,'__esModule',{value:true});}));
+};return index;}));

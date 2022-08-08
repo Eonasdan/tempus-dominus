@@ -1,7 +1,6 @@
 import { ErrorMessages } from './errors';
 // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
 const NAME = 'tempus-dominus',
-  version = '6.0.0-beta9',
   dataKey = 'td';
 
 /**
@@ -275,13 +274,12 @@ class Css {
   /**
   * Used for detecting if the system color preference is dark mode
   */
-  isDarkPreferedQuery = '(prefers-color-scheme: dark)';
+  isDarkPreferredQuery = '(prefers-color-scheme: dark)';
 }
 
 export default class Namespace {
   static NAME = NAME;
   // noinspection JSUnusedGlobalSymbols
-  static version = version;
   static dataKey = dataKey;
 
   static events = new Events();
