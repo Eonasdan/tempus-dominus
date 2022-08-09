@@ -1,184 +1,212 @@
 <page-body>
   <div id='embed'></div>
   <script src='https://unpkg.com/@stackblitz/sdk/bundles/sdk.umd.js'></script>
-  <script src="https://cdn.jsdelivr.net/npm/@eonasdan/lz-string@1.0.3/dist/lz-string.min.js"
-          integrity="sha256-mu6oqL9lqHnCZ7uliJ0+a0z2VcMuzS7JgqZqV1jheTM=" crossorigin="anonymous"></script>
+  <script src='https://cdn.jsdelivr.net/npm/@eonasdan/lz-string@1.0.3/dist/lz-string.min.js'
+          integrity='sha256-mu6oqL9lqHnCZ7uliJ0+a0z2VcMuzS7JgqZqV1jheTM=' crossorigin='anonymous'></script>
+  </script>
+  <script src='https://unpkg.com/prettier@2.7.1/standalone.js'></script>
+  <script src='https://unpkg.com/prettier@2.7.1/parser-babel.js'></script>
+  <script src='https://unpkg.com/prettier@2.7.1/parser-html.js'></script>
   <script>
+    /**
+     * Code hash object
+     * @typedef {Object} Code-Hash
+     * @property {string} js - JS code for the VM.
+     * @property {string} html - HTML code for the VM.
+     * @property {boolean} jsConfigOnly - If this is true, then look at the JS snapshot and only update the config.
+     * @property {string} htmlNote - If this is true, then look at the JS snapshot and only update the config.
+     */
+
     const sdk = StackBlitzSDK;
     const targetJs = 'example.js';
     const targetHtml = 'index.html';
 
-    const linkedPickersHtml = `<label for='linkedPickers1Input' class='form-label'>From</label>
-\t  <div
-\t\tclass='input-group log-event'
-\t\tid='linkedPickers1'
-\t\tdata-td-target-input='nearest'
-\t\tdata-td-target-toggle='nearest'
-\t  >
-\t\t<input
-\t\t  id='linkedPickers1Input'
-\t\t  type='text'
-\t\t  class='form-control'
-\t\t  data-td-target='#linkedPickers1'
-\t\t/>
-\t\t<span
-\t\t  class='input-group-text'
-\t\t  data-td-target='#linkedPickers1'
-\t\t  data-td-toggle='datetimepicker'
-\t\t>
-\t\t   <span class='fa-solid fa-calendar'></span>
-\t\t </span>
-\t  </div>
-\t</div>
-\t<div class='col-sm-6'>
-\t  <label for='linkedPickers2Input' class='form-label'>To</label>
-\t  <div
-\t\tclass='input-group log-event'
-\t\tid='linkedPickers2'
-\t\tdata-td-target-input='nearest'
-\t\tdata-td-target-toggle='nearest'
-\t  >
-\t\t<input
-\t\t  id='linkedPickers2Input'
-\t\t  type='text'
-\t\t  class='form-control'
-\t\t  data-td-target='#linkedPickers2'
-\t\t/>
-\t\t<span
-\t\t  class='input-group-text'
-\t\t  data-td-target='#linkedPickers2'
-\t\t  data-td-toggle='datetimepicker'
-\t\t>
-\t\t   <span class='fa-solid fa-calendar'></span>
-\t\t </span>
-\t  </div>`
-
-    const linkedPickerJs = `import { TempusDominus, Namespace } from '@eonasdan/tempus-dominus';
-
-    const linkedPicker1Element = document.getElementById('linkedPickers1');
-const linked1 = new TempusDominus(linkedPicker1Element);
-const linked2 = new TempusDominus(document.getElementById('linkedPickers2'), {
-  useCurrent: false
-});
-
-//using event listeners
-linkedPicker1Element.addEventListener(Namespace.events.change, (e) => {
-  linked2.updateOptions({
-    restrictions: {
-      minDate: e.detail.date
-    }
-  });
-});
-
-//using subscribe method
-const subscription = linked2.subscribe(Namespace.events.change, (e) => {
-  linked1.updateOptions({
-    restrictions: {
-      maxDate: e.date
-    }
-  });
-});`
-
     class Repl {
       projectId = 'tempus-dominus-v6-repl';
       vm = undefined;
+      originalJs = undefined;
+      originalHtml = undefined;
+
+      prettify(code, parser) {
+        return prettier.format(code, {
+          parser: parser,
+          plugins: prettierPlugins,
+          singleQuote: true,
+          tabWidth: 2,
+          htmlWhitespaceSensitivity: 'ignore'
+        });
+      }
+
+      /**
+       *
+       * @return Code-Hash
+       */
+      getQueryCode() {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+          get: (searchParams, prop) => searchParams.get(prop.toString())
+        });
+
+        let value = (params.code || window.location.hash).replace('#code/', '');
+
+        if (!value) return { js: '', html: '', jsConfigOnly: false, htmlNote: '' };
+
+        try {
+          return JSON.parse(lzString.decompressFromURL(value));
+        } catch {
+          return { js: '', html: '', jsConfigOnly: false, htmlNote: '' };
+        }
+      }
 
       htmlToElement(html) {
         const template = document.createElement('template');
-        html = html.trim(); // Never return a text node of whitespace as the result
-        template.innerHTML = html;
+        // Never return a text node of whitespace as the result
+        template.innerHTML = html.trim();
         return template.content.firstChild;
       }
 
       async ready() {
         this.snapshot = await this.vm.getFsSnapshot();
-        let example = this.snapshot[targetJs];
-        let html = this.htmlToElement(this.snapshot[targetHtml]);
-    //     example = example.replace('//put your config here', `localization: {
-    //   locale: 'pt-BR',
-    // }`);
+        this.originalJs = this.snapshot[targetJs];
+        this.originalHtml = this.htmlToElement(this.snapshot[targetHtml]);
 
-        html.querySelector('#htmlTarget').innerHTML = linkedPickersHtml;
-
-        this.update(targetHtml, html.innerHTML);
-        this.update(targetJs, linkedPickerJs, 3000);
-
-        // const delta = {
-        //   create: {},
-        //   destroy: [],
-        // };
-
-        // delta.create[targetJs] = linkedPickerJs;
-        // delta.create[targetHtml] = html.innerHTML;
-        //
-        // //feels bad but vm doesn't seem to be ready when it says it is.
-        // setTimeout(() => {
-        //   this.vm.applyFsDiff(delta);
-        // }, 1000);
+        this.updateVm();
       }
 
-      update(id, value, wait = 1000) {
+      updateVm(code = '') {
+        if (!code) code = this.getQueryCode();
+        else code = JSON.parse(lzString.decompressFromURL(code));
+
+        if (!code.js && !code.html) return;
+
         const delta = {
           create: {},
-          destroy: [],
+          destroy: []
         };
 
-        delta.create[id] = value;
+        if (code.js) {
+          if (code.jsConfigOnly) {
+            delta.create[targetJs] = this.originalJs.replace('//put your config here', code.js);
+          } else delta.create[targetJs] = this.prettify(code.js, 'babel');
+        }
+        if (code.html || code.htmlNote) {
+          const newHtml = this.originalHtml.cloneNode(true);
+          if (code.html) newHtml.querySelector('#htmlTarget').innerHTML = code.html;
+          if (code.htmlNote) newHtml.querySelector('#noteTarget').innerHTML = code.htmlNote;
+          delta.create[targetHtml] = this.prettify(newHtml.outerHTML, 'html');
+        }
 
-        setTimeout(() => {
-          this.vm.applyFsDiff(delta);
-        }, wait);
+        this.vm.applyFsDiff(delta);
+        console.clear();
+      }
+
+      resetVm() {
+        const delta = {
+          create: {},
+          destroy: []
+        };
+        delta.create[targetJs] = this.originalJs;
+        delta.create[targetHtml] = this.originalHtml.outerHTML;
+
+        this.vm.applyFsDiff(delta);
+        console.clear();
       }
     }
 
     const repl = new Repl();
 
-    document.addEventListener('DOMContentLoaded', async () => {
-     repl.vm = await sdk
-        .embedProjectId('embed', repl.projectId, {
-          openFile: targetJs,
-          hideNavigation: true
-        });
-     await repl.ready();
-    });
+    const updateRepl = (hash) => {
+      const url = new URL(window.location);
+      url.hash = `#code/${hash}`;
+      window.history.pushState({}, '', url);
+      repl.updateVm(hash);
+    };
 
-    document.getElementById('mainToc').innerHTML = ` <li class='mb-1'>
-                <strong>
-                    Examples
-                </strong>
-                <ul class='list-unstyled fw-normal pb-1 small'>
-                    <li><a href='void(0);'
-                           class='d-inline-flex align-items-center rounded' aria-current='page'>Introduction</a></li>
-                    <li><a href='/6/installing.html' class='d-inline-flex align-items-center rounded'>Download</a>
-                    </li>
-                    <li><a href='/6/change-log.html'
-                           class='d-inline-flex align-items-center rounded' aria-current='page'>Change Log</a></li>
-                    <li><a href='/6/functions.html'
-                           class='d-inline-flex align-items-center rounded' aria-current='page'>Functions</a></li>
-                    <li><a href='/6/options.html'
-                           class='d-inline-flex align-items-center rounded' aria-current='page'>Options</a></li>
-                    <li><a href='/6/datetime.html'
-                           class='d-inline-flex align-items-center rounded' aria-current='page'>DateTime</a></li>
-                    <li><a href='/6/locale.html'
-                           class='d-inline-flex align-items-center rounded' aria-current='page'>Locales</a></li>
-                </ul>
-            </li>`
+    window.resetRepl = () => {
+      repl.resetVm();
+
+      const url = new URL(window.location);
+      url.hash = ``;
+      window.history.pushState({}, '', url);
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      repl.vm = await sdk
+        .embedProjectId('embed', repl.projectId, {
+          openFile: `${targetHtml},${targetJs}`,
+          hideNavigation: true,
+          settings: {
+            compile: { action: 'refresh' }
+          }
+        });
+      setTimeout(async () => {
+        await repl.ready();
+      }, 2000);
+
+      const mainToc = document.getElementById('mainToc');
+      mainToc.innerHTML = document.getElementById('replToc').innerHTML;
+      mainToc.style.display = 'block';
+    });
   </script>
   <style>
-    #embed {
-        height: 80vh;
-    }
+      .bd-intro, #mainToc {
+          display: none;
+      }
 
-    @media (min-width: 992px) {
-        .bd-main {
-            grid-template-areas:
-        "intro"
+      #outerContainer {
+          max-width: 90vw !important;
+      }
+
+      #embed {
+          height: 80vh;
+      }
+
+      @media (min-width: 992px) {
+          .bd-layout {
+              grid-template-columns: 1fr 10fr;
+          }
+
+          .bd-main {
+              grid-template-areas:
         "content";
-            grid-template-columns: 4fr;
-            grid-template-rows: auto 1fr;
-        }
-    }
+              grid-template-columns: 4fr;
+              grid-template-rows: auto 1fr;
+          }
+      }
   </style>
+
+  <div id='replToc' style='display: none;'>
+    <li class='mb-1'>
+      <strong>
+        Examples
+      </strong>
+      <ul class='list-unstyled fw-normal pb-1 small'>
+        <li><a href='javascript:resetRepl()' class='d-inline-flex align-items-center rounded'>Simple</a>
+        </li>
+
+        <li><a
+          href='javascript:updateRepl("N4IgVgziBcIgNCAFgFwLYBsYgDwQA4CGAdgDrEAEFAlgCYC8A5LYSgKYrVpv7UDGAazYAnAIyNyVPhkIQITDAHsA5gFo2ANzbEUEyhQgoAnhjZNa1AjKPQaxDNWJtVAIyWDGAPklUc1CtKy8owAZoSqEIoOtBRhqnyEpsQswrHhAGwAHowUhMLU4Uh0tNpMKMIArmxeOAD01N6UdQQkniAAvkA")'
+          class='d-inline-flex align-items-center rounded'>Icon Only</a>
+        </li>
+
+        <li><a
+          href='javascript:updateRepl("N4IgVgzgwg9gdgMwJYHMDycA2BPEAuAFwCcBXAUwBpwJ8QATJCAB0wENs8ACYAHTk4GcISOmQBC2AMoiyXYuT4CAviCoALAgFtMtADxMAfABU1jTqM3wIxVgTIROBNWSEyAtACNsb4aM4wmAiR4ADpdAHpDRU5dNg8yTE4EGCIAXgByOlsyIM0yJiQAYwBrMiIARgBJOCYSAnTOQrYICAzkok03OIT0g2lRT29+lwKSsojuzAM+XQYAN2im1haMpBq6txQiGBImTkwYFDcyObI4euiRDKy7XPyi0or06JvWNwI6d9YiFBy3NdqBAycDI33sF345lsbw+Xx+fwIhxQmDIwNBRHBzzg0zgugBdUudGu2Tuo0eVXWEIEBGwTFR6TsAA8qY1mq10u1OoV4MQYJgsQJXu9PgRvr8gekAMQ3HJIPJksrlLHhHG6ZisOCLNmrSmbba7d5kZkCqGi4Vw8UZaUkuX3MZPF7Q82IlDI+ky0kPMpYnGCNVMDWs5bshBvCB8kRJN6FVgouBZIi9CLq7GKZMB1O48LzX2cEBKIA")'
+          class='d-inline-flex align-items-center rounded' aria-current='page'>Side By Side</a></li>
+
+        <li><a
+          href='javascript:updateRepl("N4IgVgzgwg9gdgMwJYHMDycA2BPEAuAFwCcBXAUwBpwJ8RMYBjAQ0yQC8mCl48ACYADpwCMACZNsfAOSB8EECsIIAEQOYE4QQEIggDhBegQRA5gZhBAfCCAWEEC8IIHkQKRSENMZJkWmA8EEDiIOq0bVgGRBegJhBA0iCG5QG4QOWN1OQsreggyaUB0EEAGEEAuEAVfT21ARhB9BUBJEHVEiLhomwYCAFl4AgALaUAkEF90hXi0wB4QOS1TQDEQAoAHIjIAN24SCHLhat5ZJUN-QGEQXOVeVvauyzg4MgAPMorxqRrtYMMZwDkQbLlmxbbO8NWishKATVt7CbqGpq8DQx6+wZhhp52aQyKazea8L4FdZbQEvPYHORHU7nCFGGYFO4lAAi9yYohir3qjTSAXaGmCGhuQl6AyGEBxzHxwNBRzOcl4pNM5LklKhmwIDLxBKkgEIQQ4nNkcq7c3mrGl-YZQMjCEhESQTEGIsHqBbeOT5VbQghKlVq6RixESnU+fU9JAMADWAAl-nC3op1Kp2U54loCkg4Aw+gBbZUEF2q2pKZqmXgzPWBdROELqcyrfFBsih4QRuGAYhBWsYPIAJEE9Xh9frl9odpQDJAIwrexK8zXUxhmqnRqwDmezZTrDekgBwQNsd+K8QD8IAp1I0zqE00IMyGw7W4PXhQWQiWy4tR527Y6AMr3eCiWpEj4+VRZfTKf2B5fCY8MU-SPMJpMp9k6RIzYzTAolyzMNn1fCZNyLYsv20fU-wA1YRBQFAbFKMgiCQUQkCzYFFH1QJjhcNIJw9IwMTIYoCAAFSQUNz3eNJvGjBdCnI+4BU4RsLxJJou0XCQADUsIAdydWx8SIAAxGAiGDTg+GAXhgx2aR6DgFALF4bBnmkAAmABaTCUCQAgpF4ABfVZ6GYGxpFIDECDsAg0AQSjKjIAB1MgyAdPgAEYhHMkAqEqAhg0wWggpAEKwoAORgBtaAAHm6AA+IQHn+XhmDgXhehgQZ8V4KyWHYThuBymBui4eAIF4EReHytD0MKqoyDqmAYEwLhulqphaqE8jMF4Pq6rc3hxGwAB6JSxnGpAIG6TAJAAOiERLJtStbNrgVz5qypgcoAIza6ICF4ZCYEOlgcF4QYmF4RKX3xFKG2DbphixGBgzrCBlpxBAmBILq0Cq8rfuK1gOGqnKAF5+F4ZbEfM9anrIFKGqIXhDuwKw+jKtThtuuwkCYQ6bF4MhlpQZaHtRlKX0KM7SF4OGFJECa8FkXC1E0HQvjMUzEZpsyAG4UbENHRuVXKiHyjC2tahrQZqoQ+rWja0rgZK+k1x6JaypaIAgGGpCWtSSCYFAyD0sAmH6PqgyQKqpE19YhLqrN3vpL6fuWyjPY+n21wgAAKURGBIPsqbIAgAFEbD7AAhbAAElRBDqRxAbLhQ26as0J0qQAEoKH4IQIdK6G+FIIQzPVun1ZpXXttctC2rsNqIbaxaSCMwpRs4GW5ZatzoiKxgWDIX7G813heBAMygA")'
+          class='d-inline-flex align-items-center rounded' aria-current='page'>Localization</a></li>
+
+        <li><a href='/6/options.html'
+               class='d-inline-flex align-items-center rounded' aria-current='page'>Options</a></li>
+
+        <li><a href='/6/datetime.html'
+               class='d-inline-flex align-items-center rounded' aria-current='page'>DateTime</a></li>
+
+        <li><a href='/6/locale.html'
+               class='d-inline-flex align-items-center rounded' aria-current='page'>Locales</a></li>
+      </ul>
+    </li>
+  </div>
 
 </page-body>
 
