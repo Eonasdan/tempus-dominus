@@ -549,18 +549,18 @@ const locale = (l: string) => {
  * @param option
  */
 const extend = function (plugin, option) {
-  if (!plugin) return this;
+  if (!plugin) return tempusDominus;
   if (!plugin.installed) {
     // install plugin only once
-    plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, this);
+    plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, tempusDominus);
     plugin.installed = true;
   }
-  return this;
+  return tempusDominus;
 };
 
 const version = '6.0.0-beta9';
 
-export {
+const tempusDominus = {
   TempusDominus,
   extend,
   loadLocale,
@@ -568,8 +568,8 @@ export {
   Namespace,
   DefaultOptions,
   DateTime,
-  Options,
   Unit,
-  DateTimeFormatOptions,
   version
 };
+
+export default  tempusDominus

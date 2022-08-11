@@ -3857,15 +3857,26 @@ const locale = (l) => {
  */
 const extend = function (plugin, option) {
     if (!plugin)
-        return this;
+        return tempusDominus;
     if (!plugin.installed) {
         // install plugin only once
-        plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, this);
+        plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, tempusDominus);
         plugin.installed = true;
     }
-    return this;
+    return tempusDominus;
 };
 const version = '6.0.0-beta9';
+const tempusDominus = {
+    TempusDominus,
+    extend,
+    loadLocale,
+    locale,
+    Namespace,
+    DefaultOptions,
+    DateTime,
+    Unit,
+    version
+};
 
-export { DateTime, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale, version };
+export { tempusDominus as default };
 //# sourceMappingURL=tempus-dominus.esm.js.map
