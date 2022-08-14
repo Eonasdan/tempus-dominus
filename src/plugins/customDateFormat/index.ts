@@ -182,7 +182,7 @@ class CustomDateFormat {
   }
 
   private makeParser(format) {
-    format = this.replaceTokens(format, this.englishFormats);
+    format = this.replaceTokens(format, this.localization.dateFormats);
     const array = format.match(this.formattingTokens);
     const { length } = array;
     for (let i = 0; i < length; i += 1) {

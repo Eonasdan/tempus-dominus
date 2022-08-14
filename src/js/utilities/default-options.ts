@@ -86,7 +86,7 @@ const DefaultOptions: Options = {
     /**
      * This is only used with the customDateFormat plugin
      */
-    dateForms: {
+    dateFormats: {
       LTS: 'h:mm:ss T',
       LT: 'h:mm T',
       L: 'MM/dd/yyyy',

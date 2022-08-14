@@ -1,48 +1,44 @@
 <page-body>
-  <section>
-    <h3>Introduction</h3>
+  <div class='row'>
     <p>
       The locale files offer a simple way to globally or individually set the localization options without the need to
       hand code that everytime.
     </p>
-  </section>
-  <section>
-    <div class='container'>
-      <div class='row'>
-        <div class='col-sm-6'>
-          <label for='datetimepicker1Input' class='form-label'>Simple picker</label>
-          <div
-            class='input-group'
-            id='datetimepicker1'
-            data-td-target-input='nearest'
-            data-td-target-toggle='nearest'
-          >
-            <input
-              id='datetimepicker1Input'
-              type='text'
-              class='form-control'
-              data-td-target='#datetimepicker1'
-            />
-            <span
-              class='input-group-text'
-              data-td-target='#datetimepicker1'
-              data-td-toggle='datetimepicker'
-            >
+  </div>
+
+  <div class='row'>
+    <div class='col-sm-6'>
+      <label for='datetimepicker1Input' class='form-label'>Simple picker</label>
+      <div
+        class='input-group'
+        id='datetimepicker1'
+        data-td-target-input='nearest'
+        data-td-target-toggle='nearest'
+      >
+        <input
+          id='datetimepicker1Input'
+          type='text'
+          class='form-control'
+          data-td-target='#datetimepicker1'
+        />
+        <span
+          class='input-group-text'
+          data-td-target='#datetimepicker1'
+          data-td-toggle='datetimepicker'
+        >
                <span class='fas fa-calendar'></span>
              </span>
-          </div>
-        </div>
       </div>
     </div>
-    <script src='/6/js/locales/ru.js'></script>
-    <script type='text/javascript'>
-      tempusDominus.loadLocale(tempusDominus.locales.ru);
-      tempusDominus.locale(tempusDominus.locales.ru.name);
-      const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
-    </script>
-  </section>
-  <section>
-    <h3>Creating plugins</h3>
+  </div>
+  <script src='/6/js/locales/ru.js'></script>
+  <script type='text/javascript'>
+    tempusDominus.loadLocale(tempusDominus.locales.ru);
+    tempusDominus.locale(tempusDominus.locales.ru.name);
+    const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+  </script>
+  <div class='row'>
+    <h3>Creating Locales</h3>
     <p>
       There are a few examples in the source like this
     </p>
@@ -60,8 +56,8 @@ const localization = {
 export { localization, name };
       </code>
     </pre>
-  </section>
-  <section>
+  </div>
+  <div class='row'>
     <h3>Using a locale</h3>
     <p>Load the locale file.</p>
     <pre>
@@ -70,7 +66,7 @@ export { localization, name };
       </code>
     </pre>
     <p>
-      You can then either set the global default or you can it indvidually.
+      You can then either set the global default or you can it individually.
     </p>
     <pre>
       <code class='language-js'>
@@ -85,7 +81,7 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
 datetimepicker1.locale(tempusDominus.locales.ru.name);
       </code>
     </pre>
-  </section>
+  </div>
 </page-body>
 
 <page-meta>
