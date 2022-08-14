@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta9 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -1120,7 +1120,7 @@
             /**
              * This is only used with the customDateFormat plugin
              */
-            dateForms: {
+            dateFormats: {
                 LTS: 'h:mm:ss T',
                 LT: 'h:mm T',
                 L: 'MM/dd/yyyy',
@@ -3869,7 +3869,7 @@
         }
         return tempusDominus;
     };
-    const version = '6.0.0-beta9';
+    const version = '6.0.0';
     const tempusDominus = {
         TempusDominus,
         extend,

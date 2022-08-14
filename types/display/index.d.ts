@@ -55,7 +55,7 @@ export default class Display {
     /**
      * Shows the picker and creates a Popper instance if needed.
      * Add document click event to hide when clicking outside the picker.
-     * @fires Events#show
+     * fires Events#show
      */
     show(): void;
     /**
@@ -75,7 +75,7 @@ export default class Display {
     /**
      * Hides the picker if needed.
      * Remove document click event to hide when clicking outside the picker.
-     * @fires Events#hide
+     * fires Events#hide
      */
     hide(): void;
     /**

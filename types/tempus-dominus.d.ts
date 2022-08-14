@@ -1,9 +1,8 @@
 import Display from './display/index';
 import Dates from './dates';
-import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
+import { DateTime, Unit } from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
-import DefaultOptions from './utilities/default-options';
 /**
  * A robust and powerful date/time picker component.
  */
@@ -131,22 +130,15 @@ declare class TempusDominus {
      */
     private _toggleClickEvent;
 }
-/**
- * Called from a locale plugin.
- * @param l locale object for localization options
- */
-declare const loadLocale: (l: any) => void;
-/**
- * A sets the global localization options to the provided locale name.
- * `loadLocale` MUST be called first.
- * @param l
- */
-declare const locale: (l: string) => void;
-/**
- * Called from a plugin to extend or override picker defaults.
- * @param plugin
- * @param option
- */
-declare const extend: (plugin: any, option: any) => any;
-declare const version = "6.0.0-beta9";
-export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Options, Unit, DateTimeFormatOptions, version };
+declare const tempusDominus: {
+    TempusDominus: typeof TempusDominus;
+    extend: (plugin: any, option: any) => any;
+    loadLocale: (l: any) => void;
+    locale: (l: string) => void;
+    Namespace: typeof Namespace;
+    DefaultOptions: Options;
+    DateTime: typeof DateTime;
+    Unit: typeof Unit;
+    version: string;
+};
+export default tempusDominus;

@@ -69,7 +69,7 @@ export default interface Options {
 }
 export interface FormatLocalization {
     locale?: string;
-    dateForms?: {
+    dateFormats?: {
         LTS?: string;
         LT?: string;
         L?: string;
