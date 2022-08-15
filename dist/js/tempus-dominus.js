@@ -639,7 +639,7 @@
              */
             this.switch = 'picker-switch';
             /**
-             * The elements for all of the toolbar options
+             * The elements for all the toolbar options
              */
             this.toolbar = 'toolbar';
             /**
@@ -679,11 +679,11 @@
             this.active = 'active';
             //#region date element
             /**
-             * The outer most element for the calendar view.
+             * The outer element for the calendar view.
              */
             this.dateContainer = 'date-container';
             /**
-             * The outer most element for the decades view.
+             * The outer element for the decades view.
              */
             this.decadesContainer = `${this.dateContainer}-decades`;
             /**
@@ -691,7 +691,7 @@
              */
             this.decade = 'decade';
             /**
-             * The outer most element for the years view.
+             * The outer element for the years view.
              */
             this.yearsContainer = `${this.dateContainer}-years`;
             /**
@@ -699,7 +699,7 @@
              */
             this.year = 'year';
             /**
-             * The outer most element for the month view.
+             * The outer element for the month view.
              */
             this.monthsContainer = `${this.dateContainer}-months`;
             /**
@@ -707,7 +707,7 @@
              */
             this.month = 'month';
             /**
-             * The outer most element for the calendar view.
+             * The outer element for the calendar view.
              */
             this.daysContainer = `${this.dateContainer}-days`;
             /**
@@ -734,7 +734,7 @@
             //#endregion
             //#region time element
             /**
-             * The outer most element for all time related elements.
+             * The outer element for all time related elements.
              */
             this.timeContainer = 'time-container';
             /**
@@ -742,19 +742,19 @@
              */
             this.separator = 'separator';
             /**
-             * The outer most element for the clock view.
+             * The outer element for the clock view.
              */
             this.clockContainer = `${this.timeContainer}-clock`;
             /**
-             * The outer most element for the hours selection view.
+             * The outer element for the hours selection view.
              */
             this.hourContainer = `${this.timeContainer}-hour`;
             /**
-             * The outer most element for the minutes selection view.
+             * The outer element for the minutes selection view.
              */
             this.minuteContainer = `${this.timeContainer}-minute`;
             /**
-             * The outer most element for the seconds selection view.
+             * The outer element for the seconds selection view.
              */
             this.secondContainer = `${this.timeContainer}-second`;
             /**

@@ -427,8 +427,8 @@ class Build {
     ).window.document;
 
     const shell = this.shellDocument;
-    shell.getElementById('outerContainer').innerHTML =
-      indexDocument.documentElement.innerHTML;
+    shell.getElementById('outerContainer').outerHTML =
+      indexDocument.documentElement.getElementsByTagName('main')[0].innerHTML;
 
     const script = shell.createElement('script');
     script.type = 'module';

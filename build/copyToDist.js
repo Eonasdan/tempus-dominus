@@ -1,4 +1,11 @@
 const fs = require('fs');
+const { dirname } = require('path');
+
+function copyFileAndEnsurePathExistsAsync(file) {
+  fs.mkdirSync(dirname(file.destination), {recursive: true});
+
+  fs.copyFileSync(file.source, file.destination);
+}
 
 function copy() {
   [
@@ -7,7 +14,7 @@ function copy() {
     }
   ].forEach(file => {
     console.log(`copying ${file.source} to ${file.destination}`);
-    fs.copyFileSync(file.source, file.destination)
+    copyFileAndEnsurePathExistsAsync(file)
   });
 }
 
