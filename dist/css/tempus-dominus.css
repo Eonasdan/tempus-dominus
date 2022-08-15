@@ -400,7 +400,7 @@
   color: #6c757d;
 }
 .tempus-dominus-widget.dark .toolbar div:hover {
-  background: #232627;
+  background: rgb(35, 38, 39);
 }
 .tempus-dominus-widget.dark .date-container-days .dow {
   color: rgba(232, 230, 227, 0.5);
@@ -416,7 +416,7 @@
 .tempus-dominus-widget.dark .time-container-hour div:not(.no-highlight):hover,
 .tempus-dominus-widget.dark .time-container-minute div:not(.no-highlight):hover,
 .tempus-dominus-widget.dark .time-container-second div:not(.no-highlight):hover {
-  background: #232627;
+  background: rgb(35, 38, 39);
 }
 .tempus-dominus-widget.dark .date-container-decades div:not(.no-highlight).active,
 .tempus-dominus-widget.dark .date-container-years div:not(.no-highlight).active,
