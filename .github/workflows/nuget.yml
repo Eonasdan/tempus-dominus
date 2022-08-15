@@ -13,6 +13,6 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.6
       - name: Pack NuGet
-        run: nuget pack **/*.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis -BasePath $env:SourcesPath
+        run: nuget pack src/nuget/*.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis -BasePath $env:SourcesPath
       - name: Push Nuget
-        run: nuget push **/*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+        run: nuget push src/nuget/*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
