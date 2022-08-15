@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-  <title>CSS Classes - Tempus Dominus</title>
+  <title>Restrictions Options - Tempus Dominus</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -15,22 +15,20 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 
-  <meta name="title" content="CSS Classes">
-  <meta name="description" content="
-    A break down of the CSS classes in Tempus Dominus.
+  <meta name="title" content="Restrictions Options">
+  <meta name="description" content="How to use the restriction options.
   ">
 
   
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://getdatepicker.com/docs/6//namespace/css.html">
-  <meta property="og:title" content="CSS Classes">
-  <meta property="og:description" content="
-    A break down of the CSS classes in Tempus Dominus.
+  <meta property="og:url" content="https://getdatepicker.com/docs/6//options/restrictions.html">
+  <meta property="og:title" content="Restrictions Options">
+  <meta property="og:description" content="How to use the restriction options.
   ">
   <meta class="metaImage" property="og:image" content="">
 
-  <meta property="article:published_time" content="2021-07-08T00:00:00.000Z">
-  <meta property="article:modified_time" content="2021-07-08T00:00:00.000Z">
+  <meta property="article:published_time" content="2022-08-11T00:00:00.000Z">
+  <meta property="article:modified_time" content="2022-08-11T00:00:00.000Z">
   <meta property="article:tag" content="datepicker, javascript, open source, tempus dominus, eonasdan">
   <meta property="article:author" content="Jonathan Peterson">
   <meta property="article:section" content="Technology">
@@ -39,10 +37,9 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:site" content="@eonasdan">
   <meta property="twitter:creator" content="@eonasdan">
-  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//namespace/css.html">
-  <meta property="twitter:title" content="CSS Classes">
-  <meta property="twitter:description" content="
-    A break down of the CSS classes in Tempus Dominus.
+  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//options/restrictions.html">
+  <meta property="twitter:title" content="Restrictions Options">
+  <meta property="twitter:description" content="How to use the restriction options.
   ">
   <meta class="metaImage" property="twitter:image" content="">
   <link rel="stylesheet" href="/css/styles.min.css">
@@ -240,7 +237,7 @@
 <main class="bd-main order-1">
     <div class="bd-intro ps-lg-4">
         <div class="d-md-flex align-items-center justify-content-between">
-            <h1 class="bd-title title" id="content">CSS Classes</h1>
+            <h1 class="bd-title title" id="content">Restrictions Options</h1>
         </div>
     </div>
     <div class="bd-toc mt-3 mb-5 my-lg-0 ps-xl-3 mb-lg-5 text-muted d-none" id="tocContainer">
@@ -255,353 +252,166 @@
         </div>
     </div>
     <div id="mainContent" class="bd-content ps-lg-4">
-  <p>
-    The picker uses the following css classes to style the picker.
+  <p id="overview">
+    Restrictions allow you to prevent users from selected dates or times based on a set of rules.
   </p>
-  <div class="row">
-    <h2 id="widget">widget <a class="anchor-link" aria-label="Anchor" href="#widget"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the widget.
-    </p>
-  </div>
+  <pre id="defaults"><code class="language-js">new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+  {
+    restrictions: {
+      minDate: undefined,
+      maxDate: undefined,
+      disabledDates: [],
+      enabledDates: [],
+      daysOfWeekDisabled: [],
+      disabledTimeIntervals: [],
+      disabledHours: [],
+      enabledHours: []
+    }
+  }
+)</code>
+  </pre>
 
   <div class="row">
-    <h2 id="calendarHeader">calendarHeader <a class="anchor-link" aria-label="Anchor" href="#calendarHeader"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the calendar view header, next and previous actions.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="switch">switch <a class="anchor-link" aria-label="Anchor" href="#switch"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the action to change the calendar view. E.g. month -&gt; year.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="toolbar">switch <a class="anchor-link" aria-label="Anchor" href="#toolbar"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The elements for all the toolbar options.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="noHighlight">switch <a class="anchor-link" aria-label="Anchor" href="#noHighlight"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Disables the hover and rounding affect.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="sideBySide">sideBySide <a class="anchor-link" aria-label="Anchor" href="#sideBySide"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the widget element when the side by side option is in use.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="previous">previous <a class="anchor-link" aria-label="Anchor" href="#previous"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the action to change the calendar view, e.g. August -&gt; July
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="next">next <a class="anchor-link" aria-label="Anchor" href="#next"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the action to change the calendar view, e.g. August -&gt; September
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="disabled">disabled <a class="anchor-link" aria-label="Anchor" href="#disabled"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any action that would violate any restriction options. ALso applied to an input field if the disabled
-      function is called.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="old">old <a class="anchor-link" aria-label="Anchor" href="#old"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any date that is less than requested view, e.g. the last day of the previous month.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="new">new <a class="anchor-link" aria-label="Anchor" href="#new"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any date that is greater than of requested view, e.g. the last day of the previous month.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="active">active <a class="anchor-link" aria-label="Anchor" href="#active"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any date that is currently selected.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="dateContainer">dateContainer <a class="anchor-link" aria-label="Anchor" href="#dateContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the calendar view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="decadesContainer">decadesContainer <a class="anchor-link" aria-label="Anchor" href="#decadesContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the decades view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="decade">decade <a class="anchor-link" aria-label="Anchor" href="#decade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to elements within the decades container, e.g. 2020, 2030
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="yearsContainer">yearsContainer <a class="anchor-link" aria-label="Anchor" href="#yearsContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the years view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="year">year <a class="anchor-link" aria-label="Anchor" href="#year"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to elements within the years container, e.g. 2021, 2021
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="monthsContainer">monthsContainer <a class="anchor-link" aria-label="Anchor" href="#monthsContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the month view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="month">month <a class="anchor-link" aria-label="Anchor" href="#month"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    <h2 id="minDate">minDate
+      <a class="anchor-link" aria-label="Anchor" href="#minDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
     <p>
-      Applied to elements within the month container, e.g. January, February
+      <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
+      Prevents the user from selecting a date/time before this value. Set to
+      <code>undefined</code> to remove
+      the
+      restriction.
     </p>
-  </div>
-
-  <div class="row">
-    <h2 id="daysContainer">daysContainer <a class="anchor-link" aria-label="Anchor" href="#daysContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      The outer element for the calendar view.
+      Throws <a href="../namespace/errors.html#conflictingConfiguration">conflictingConfiguration</a>
+      if value is
+      after maxDate.
     </p>
   </div>
 
   <div class="row">
-    <h2 id="day">day <a class="anchor-link" aria-label="Anchor" href="#day"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="maxDate">maxDate <a class="anchor-link" aria-label="Anchor" href="#maxDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to elements within the day container, e.g. 1, 2..31
+      <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br>
+      Prevents the user from selecting a date/time after this value. Set to <code>undefined</code>
+      to remove the
+      restriction.
     </p>
-  </div>
-
-  <div class="row">
-    <h2 id="calendarWeeks">calendarWeeks <a class="anchor-link" aria-label="Anchor" href="#calendarWeeks"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      If display.calendarWeeks is enabled, a column displaying the week of year is shown. This class is applied to each
-      cell in that column.
+      Throws <a href="../namespace/errors.html#conflictingConfiguration">conflictingConfiguration</a>
+      if value is
+      after maxDate.
     </p>
   </div>
 
   <div class="row">
-    <h2 id="dayOfTheWeek">dayOfTheWeek <a class="anchor-link" aria-label="Anchor" href="#dayOfTheWeek"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the first row of the calendar view, e.g. Sunday, Monday
-    </p>
+    <h2 id="enabledDates">enabledDates/disabledDates
+      <a class="anchor-link" aria-label="Anchor" href="#enabledDates"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <div>
+      <strong>Accepts:</strong> array of string | Date | DateTime <strong>Defaults:</strong> undefined<br>
+      <div class="alert alert-warning">
+        Use one or the other, don't provide both enabledDates and disabledDates.
+      </div>
+    </div>
+    <div class="row">
+      <div class="col offset-1 border-start">
+        <h4>enabledDates</h4>
+        <p>
+          Allows the user to select only from the provided days. Setting this takes precedence
+          over
+          options.minDate,
+          options.maxDate configuration.
+        </p>
+        <h4>disabledDates</h4>
+        <p>
+          Disallows the user to select any of the provided days. Setting this takes precedence
+          over
+          options.minDate,
+          options.maxDate configuration.
+        </p>
+      </div>
+    </div>
   </div>
 
   <div class="row">
-    <h2 id="today">today <a class="anchor-link" aria-label="Anchor" href="#today"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    <h2 id="enabledHours">enabledHours/disabledHours
+      <a class="anchor-link" aria-label="Anchor" href="#enabledHours"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <div>
+      <strong>Accepts:</strong> array of number from 0-24 <strong>Defaults:</strong> undefined<br>
+      <div class="alert alert-warning">
+        Use one or the other, don't provide both enabledHours and disabledHours.
+      </div>
+      <p>
+        Throws <a href="../namespace/errors.html#numbersOutOfRage">numbersOutOfRage</a> any value is
+        not between 0-23
+      </p>
+    </div>
+    <div class="row">
+      <div class="col offset-1 border-start">
+        <h4>enabledHours</h4>
+        <p>
+          Allows the user to select only from the provided hours.
+        </p>
+        <h4>disabledHours</h4>
+        <p>
+          Disallows the user to select any of the provided hours.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <h2 id="disabledTimeIntervals">disabledTimeIntervals
+      <a class="anchor-link" aria-label="Anchor" href="#disabledTimeIntervals"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
     <p>
-      Applied to the current date on the calendar view.
+      <strong>Accepts:</strong> array of an object with from: DateTime, to: DateTime
+      <strong>Defaults:</strong>
+      undefined<br>
+      Disables time selection between the given DateTimes.
     </p>
+
+    <pre><code class="language-javascript">const later = new tempusDominus.DateTime();
+later.hours = 8;
+new tempusDominus.TempusDominus(..., {
+  restrictions: {
+    disabledTimeIntervals: [
+      { from: new tempusDominus.DateTime().startOf('date'), to: later }
+    ]
+  }
+});</code>
+  </pre>
   </div>
 
   <div class="row">
-    <h2 id="weekend">weekend <a class="anchor-link" aria-label="Anchor" href="#weekend"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    <h2 id="daysOfWeekDisabled">daysOfWeekDisabled
+      <a class="anchor-link" aria-label="Anchor" href="#daysOfWeekDisabled"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
     <p>
-      Applied to the locale's weekend dates on the calendar view, e.g. Sunday, Saturday
+      <strong>Accepts:</strong> array of numbers from 0-6<br>
+      Disallow the user to select weekdays that exist in this array. This has lower priority over the
+      options.minDate, options.maxDate, options.disabledDates and options.enabledDates configuration
+      settings.
     </p>
-  </div>
-
-  <div class="row">
-    <h2 id="timeContainer">timeContainer <a class="anchor-link" aria-label="Anchor" href="#timeContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      The outer element for all time related elements.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="separator">separator <a class="anchor-link" aria-label="Anchor" href="#separator"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied the separator columns between time elements, e.g. hour *:* minute *:* second
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="clockContainer">clockContainer <a class="anchor-link" aria-label="Anchor" href="#clockContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the clock view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="hourContainer">hourContainer <a class="anchor-link" aria-label="Anchor" href="#hourContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the hours selection view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="minuteContainer">minuteContainer <a class="anchor-link" aria-label="Anchor" href="#minuteContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the minutes selection view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="secondContainer">secondContainer <a class="anchor-link" aria-label="Anchor" href="#secondContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the seconds selection view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="hour">hour <a class="anchor-link" aria-label="Anchor" href="#hour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to each element in the hours selection view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="minute">minute <a class="anchor-link" aria-label="Anchor" href="#minute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to each element in the minutes selection view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="second">second <a class="anchor-link" aria-label="Anchor" href="#second"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to each element in the seconds selection view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="toggleMeridiem">second <a class="anchor-link" aria-label="Anchor" href="#toggleMeridiem"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied AM/PM toggle button.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="show">show <a class="anchor-link" aria-label="Anchor" href="#show"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied the element of the current view mode, e.g. calendar or clock.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="collapsing">collapsing <a class="anchor-link" aria-label="Anchor" href="#collapsing"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the currently showing view mode during a transition between calendar and clock views
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="collapse">collapse <a class="anchor-link" aria-label="Anchor" href="#collapse"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the currently hidden view mode.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="inline">inline <a class="anchor-link" aria-label="Anchor" href="#inline"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the widget when the option display.inline is enabled.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="lightTheme">lightTheme <a class="anchor-link" aria-label="Anchor" href="#lightTheme"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the widget when the option display.theme is light.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="darkTheme">darkTheme <a class="anchor-link" aria-label="Anchor" href="#darkTheme"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the widget when the option display.theme is dark.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="isDarkPreferredQuery">isDarkPreferredQuery <a class="anchor-link" aria-label="Anchor" href="#isDarkPreferredQuery"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Used for detecting if the system color preference is dark mode.
+      Throws <a href="../namespace/errors.html#numbersOutOfRage">numbersOutOfRage</a> any value is not
+      between 0-6.
     </p>
   </div>
 
   <div id="subToc" class="d-none">
     <nav id="TableOfContents">
       <ul>
-        <li><a href="#widget">Widget</a></li>
-        <li><a href="#calendarHeader">Calendar Header</a></li>
-        <li><a href="#switch">Switch</a></li>
-        <li><a href="#toolbar">Toolbar</a></li>
-        <li><a href="#noHighlight">No Highlight</a></li>
-        <li><a href="#sideBySide">Side By Side</a></li>
-        <li><a href="#previous">Previous</a></li>
-        <li><a href="#next">Next</a></li>
-        <li><a href="#disabled">Disabled</a></li>
-        <li><a href="#old">Old</a></li>
-        <li><a href="#new">New</a></li>
-        <li><a href="#active">Active</a></li>
-        <li><a href="#dateContainer">Date Container</a></li>
-        <li><a href="#decadesContainer">Decades Container</a></li>
-        <li><a href="#decade">Decade</a></li>
-        <li><a href="#yearsContainer">Years Container</a></li>
-        <li><a href="#year">Year</a></li>
-        <li><a href="#monthsContainer">Months Container</a></li>
-        <li><a href="#month">Month</a></li>
-        <li><a href="#daysContainer">Days Container</a></li>
-        <li><a href="#day">Day</a></li>
-        <li><a href="#calendarWeeks">Calendar Weeks</a></li>
-        <li><a href="#dayOfTheWeek">Day Of The Week</a></li>
-        <li><a href="#today">Today</a></li>
-        <li><a href="#weekend">Weekend</a></li>
-        <li><a href="#timeContainer">Time Container</a></li>
-        <li><a href="#separator">Separator</a></li>
-        <li><a href="#clockContainer">Clock Container</a></li>
-        <li><a href="#hourContainer">Hour Container</a></li>
-        <li><a href="#minuteContainer">Minute Container</a></li>
-        <li><a href="#secondContainer">Second Container</a></li>
-        <li><a href="#hour">Hour</a></li>
-        <li><a href="#minute">Minute</a></li>
-        <li><a href="#second">Second</a></li>
-        <li><a href="#toggleMeridiem">Toggle Meridiem</a></li>
-        <li><a href="#show">Show</a></li>
-        <li><a href="#collapsing">Collapsing</a></li>
-        <li><a href="#collapse">Collapse</a></li>
-        <li><a href="#inline">Inline</a></li>
-        <li><a href="#lightTheme">Light Theme</a></li>
-        <li><a href="#darkTheme">Dark Theme</a></li>
-        <li><a href="#isDarkPreferredQuery">Is Dark Preferred Query</a></li>
+        <li><a href="#content">Overview</a></li>
+        <li><a href="#defaults">Defaults</a></li>
+        <li><a href="#minDate">Min Date</a></li>
+        <li><a href="#maxDate">Max Date</a></li>
+        <li><a href="#enabledDates">Enabled/Disabled Dates</a></li>
+        <li><a href="#enabledHours">Enabled/Disabled Hours</a></li>
+        <li><a href="#disabledTimeIntervals">Disabled Time Intervals</a></li>
+        <li><a href="#daysOfWeekDisabled">Days Of Week Disabled</a></li>
       </ul>
     </nav>
   </div>

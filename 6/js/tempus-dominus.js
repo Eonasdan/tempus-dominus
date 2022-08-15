@@ -1,15 +1,15 @@
 /*!
-  * Tempus Dominus v6.0.0-beta9 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0-beta10 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@popperjs/core')) :
-    typeof define === 'function' && define.amd ? define(['exports', '@popperjs/core'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tempusDominus = {}, global.Popper));
-})(this, (function (exports, core) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@popperjs/core')) :
+    typeof define === 'function' && define.amd ? define(['@popperjs/core'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.tempusDominus = factory(global.Popper));
+})(this, (function (core) { 'use strict';
 
-    exports.Unit = void 0;
+    var Unit;
     (function (Unit) {
         Unit["seconds"] = "seconds";
         Unit["minutes"] = "minutes";
@@ -17,7 +17,7 @@
         Unit["date"] = "date";
         Unit["month"] = "month";
         Unit["year"] = "year";
-    })(exports.Unit || (exports.Unit = {}));
+    })(Unit || (Unit = {}));
     const twoDigitTemplate = {
         month: '2-digit',
         day: '2-digit',
@@ -78,6 +78,14 @@
             return new DateTime(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).setLocale(locale);
         }
         /**
+         * Attempts to create a DateTime from a string. A customDateFormat is required for non US dates.
+         * @param input
+         * @param localization
+         */
+        static fromString(input, localization) {
+            return new DateTime(input);
+        }
+        /**
          * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
          */
         get clone() {
@@ -107,20 +115,20 @@
                     this.setHours(0, 0, 0, 0);
                     break;
                 case 'weekDay':
-                    this.startOf(exports.Unit.date);
+                    this.startOf(Unit.date);
                     if (this.weekDay === startOfTheWeek)
                         break;
                     let goBack = this.weekDay;
                     if (startOfTheWeek !== 0 && this.weekDay === 0)
                         goBack = 8 - startOfTheWeek;
-                    this.manipulate(startOfTheWeek - goBack, exports.Unit.date);
+                    this.manipulate(startOfTheWeek - goBack, Unit.date);
                     break;
                 case 'month':
-                    this.startOf(exports.Unit.date);
+                    this.startOf(Unit.date);
                     this.setDate(1);
                     break;
                 case 'year':
-                    this.startOf(exports.Unit.date);
+                    this.startOf(Unit.date);
                     this.setMonth(0, 1);
                     break;
             }
@@ -150,17 +158,17 @@
                     this.setHours(23, 59, 59, 999);
                     break;
                 case 'weekDay':
-                    this.endOf(exports.Unit.date);
-                    this.manipulate((6 + startOfTheWeek) - this.weekDay, exports.Unit.date);
+                    this.endOf(Unit.date);
+                    this.manipulate((6 + startOfTheWeek) - this.weekDay, Unit.date);
                     break;
                 case 'month':
-                    this.endOf(exports.Unit.date);
-                    this.manipulate(1, exports.Unit.month);
+                    this.endOf(Unit.date);
+                    this.manipulate(1, Unit.month);
                     this.setDate(0);
                     break;
                 case 'year':
-                    this.endOf(exports.Unit.date);
-                    this.manipulate(1, exports.Unit.year);
+                    this.endOf(Unit.date);
+                    this.manipulate(1, Unit.year);
                     this.setDate(0);
                     break;
             }
@@ -554,11 +562,19 @@
             throw error;
         }
         /**
+         * customDateFormat errors
+         */
+        customDateFormatError(message) {
+            const error = new TdError(`${this.base} customDateFormat: ${message}`);
+            error.code = 9;
+            throw error;
+        }
+        /**
          * Logs a warning if a date option value is provided as a string, instead of
          * a date/datetime object.
          */
         dateString() {
-            console.warn(`${this.base} Using a string for date options is not recommended unless you specify an ISO string.`);
+            console.warn(`${this.base} Using a string for date options is not recommended unless you specify an ISO string or use the customDateFormat plugin.`);
         }
         throwError(message) {
             const error = new TdError(`${this.base} ${message}`);
@@ -568,7 +584,7 @@
     }
 
     // this is not the way I want this to stay but nested classes seemed to blown up once its compiled.
-    const NAME = 'tempus-dominus', version$1 = '6.0.0-beta9', dataKey = 'td';
+    const NAME = 'tempus-dominus', dataKey = 'td';
     /**
      * Events
      */
@@ -623,7 +639,7 @@
              */
             this.switch = 'picker-switch';
             /**
-             * The elements for all of the toolbar options
+             * The elements for all the toolbar options
              */
             this.toolbar = 'toolbar';
             /**
@@ -663,11 +679,11 @@
             this.active = 'active';
             //#region date element
             /**
-             * The outer most element for the calendar view.
+             * The outer element for the calendar view.
              */
             this.dateContainer = 'date-container';
             /**
-             * The outer most element for the decades view.
+             * The outer element for the decades view.
              */
             this.decadesContainer = `${this.dateContainer}-decades`;
             /**
@@ -675,7 +691,7 @@
              */
             this.decade = 'decade';
             /**
-             * The outer most element for the years view.
+             * The outer element for the years view.
              */
             this.yearsContainer = `${this.dateContainer}-years`;
             /**
@@ -683,7 +699,7 @@
              */
             this.year = 'year';
             /**
-             * The outer most element for the month view.
+             * The outer element for the month view.
              */
             this.monthsContainer = `${this.dateContainer}-months`;
             /**
@@ -691,7 +707,7 @@
              */
             this.month = 'month';
             /**
-             * The outer most element for the calendar view.
+             * The outer element for the calendar view.
              */
             this.daysContainer = `${this.dateContainer}-days`;
             /**
@@ -718,7 +734,7 @@
             //#endregion
             //#region time element
             /**
-             * The outer most element for all time related elements.
+             * The outer element for all time related elements.
              */
             this.timeContainer = 'time-container';
             /**
@@ -726,19 +742,19 @@
              */
             this.separator = 'separator';
             /**
-             * The outer most element for the clock view.
+             * The outer element for the clock view.
              */
             this.clockContainer = `${this.timeContainer}-clock`;
             /**
-             * The outer most element for the hours selection view.
+             * The outer element for the hours selection view.
              */
             this.hourContainer = `${this.timeContainer}-hour`;
             /**
-             * The outer most element for the minutes selection view.
+             * The outer element for the minutes selection view.
              */
             this.minuteContainer = `${this.timeContainer}-minute`;
             /**
-             * The outer most element for the seconds selection view.
+             * The outer element for the seconds selection view.
              */
             this.secondContainer = `${this.timeContainer}-second`;
             /**
@@ -788,14 +804,13 @@
             /**
             * Used for detecting if the system color preference is dark mode
             */
-            this.isDarkPreferedQuery = '(prefers-color-scheme: dark)';
+            this.isDarkPreferredQuery = '(prefers-color-scheme: dark)';
         }
     }
     class Namespace {
     }
     Namespace.NAME = NAME;
     // noinspection JSUnusedGlobalSymbols
-    Namespace.version = version$1;
     Namespace.dataKey = dataKey;
     Namespace.events = new Events();
     Namespace.css = new Css();
@@ -823,25 +838,25 @@
         {
             name: 'calendar',
             className: Namespace.css.daysContainer,
-            unit: exports.Unit.month,
+            unit: Unit.month,
             step: 1,
         },
         {
             name: 'months',
             className: Namespace.css.monthsContainer,
-            unit: exports.Unit.year,
+            unit: Unit.year,
             step: 1,
         },
         {
             name: 'years',
             className: Namespace.css.yearsContainer,
-            unit: exports.Unit.year,
+            unit: Unit.year,
             step: 10,
         },
         {
             name: 'decades',
             className: Namespace.css.decadesContainer,
-            unit: exports.Unit.year,
+            unit: Unit.year,
             step: 100,
         },
     ];
@@ -892,8 +907,8 @@
                 !this._isInEnabledDates(targetDate)) {
                 return false;
             }
-            if (granularity !== exports.Unit.month &&
-                granularity !== exports.Unit.year &&
+            if (granularity !== Unit.month &&
+                granularity !== Unit.year &&
                 ((_a = this.optionsStore.options.restrictions.daysOfWeekDisabled) === null || _a === void 0 ? void 0 : _a.length) > 0 &&
                 this.optionsStore.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
                 return false;
@@ -906,9 +921,9 @@
                 targetDate.isAfter(this.optionsStore.options.restrictions.maxDate, granularity)) {
                 return false;
             }
-            if (granularity === exports.Unit.hours ||
-                granularity === exports.Unit.minutes ||
-                granularity === exports.Unit.seconds) {
+            if (granularity === Unit.hours ||
+                granularity === Unit.minutes ||
+                granularity === Unit.seconds) {
                 if (this.optionsStore.options.restrictions.disabledHours.length > 0 &&
                     this._isInDisabledHours(targetDate)) {
                     return false;
@@ -936,9 +951,9 @@
             if (!this.optionsStore.options.restrictions.disabledDates ||
                 this.optionsStore.options.restrictions.disabledDates.length === 0)
                 return false;
-            const formattedDate = testDate.format(getFormatByUnit(exports.Unit.date));
+            const formattedDate = testDate.format(getFormatByUnit(Unit.date));
             return this.optionsStore.options.restrictions.disabledDates
-                .map((x) => x.format(getFormatByUnit(exports.Unit.date)))
+                .map((x) => x.format(getFormatByUnit(Unit.date)))
                 .find((x) => x === formattedDate);
         }
         /**
@@ -951,9 +966,9 @@
             if (!this.optionsStore.options.restrictions.enabledDates ||
                 this.optionsStore.options.restrictions.enabledDates.length === 0)
                 return true;
-            const formattedDate = testDate.format(getFormatByUnit(exports.Unit.date));
+            const formattedDate = testDate.format(getFormatByUnit(Unit.date));
             return this.optionsStore.options.restrictions.enabledDates
-                .map((x) => x.format(getFormatByUnit(exports.Unit.date)))
+                .map((x) => x.format(getFormatByUnit(Unit.date)))
                 .find((x) => x === formattedDate);
         }
         /**
@@ -1101,7 +1116,26 @@
             selectDate: 'Select Date',
             dayViewHeaderFormat: { month: 'long', year: '2-digit' },
             locale: 'default',
-            startOfTheWeek: 0
+            startOfTheWeek: 0,
+            /**
+             * This is only used with the customDateFormat plugin
+             */
+            dateFormats: {
+                LTS: 'h:mm:ss T',
+                LT: 'h:mm T',
+                L: 'MM/dd/yyyy',
+                LL: 'MMMM d, yyyy',
+                LLL: 'MMMM d, yyyy h:mm T',
+                LLLL: 'dddd, MMMM d, yyyy h:mm T',
+            },
+            /**
+             * This is only used with the customDateFormat plugin
+             */
+            ordinal: (n) => n,
+            /**
+             * This is only used with the customDateFormat plugin
+             */
+            format: 'L'
         },
         keepInvalid: false,
         debug: false,
@@ -1154,9 +1188,9 @@
          * @param provided An option from new providedOptions
          * @param copyTo Destination object. This was added to prevent reference copies
          * @param path
-         * @param locale
+         * @param localization
          */
-        static spread(provided, copyTo, path = '', locale = '') {
+        static spread(provided, copyTo, path = '', localization) {
             const defaultOptions = OptionConverter.objectPath(path, DefaultOptions);
             const unsupportedOptions = Object.keys(provided).filter((x) => !Object.keys(defaultOptions).includes(x));
             if (unsupportedOptions.length > 0) {
@@ -1170,7 +1204,7 @@
                 });
                 Namespace.errorMessages.unexpectedOptions(errors);
             }
-            Object.keys(provided).filter(key => key !== "__proto__" && key !== "constructor").forEach((key) => {
+            Object.keys(provided).filter(key => key !== '__proto__' && key !== 'constructor').forEach((key) => {
                 path += `.${key}`;
                 if (path.charAt(0) === '.')
                     path = path.slice(1);
@@ -1186,29 +1220,29 @@
                 if (typeof defaultOptionValue === 'object' &&
                     !Array.isArray(provided[key]) &&
                     !(defaultOptionValue instanceof Date || OptionConverter.ignoreProperties.includes(key))) {
-                    OptionConverter.spread(provided[key], copyTo[key], path, locale);
+                    OptionConverter.spread(provided[key], copyTo[key], path, localization);
                 }
                 else {
-                    copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, locale);
+                    copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, localization);
                 }
                 path = path.substring(0, path.lastIndexOf(`.${key}`));
             });
         }
-        static processKey(key, value, providedType, defaultType, path, locale) {
+        static processKey(key, value, providedType, defaultType, path, localization) {
             switch (key) {
                 case 'defaultDate': {
-                    const dateTime = this.dateConversion(value, 'defaultDate');
+                    const dateTime = this.dateConversion(value, 'defaultDate', localization);
                     if (dateTime !== undefined) {
-                        dateTime.setLocale(locale);
+                        dateTime.setLocale(localization.locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('defaultDate', providedType, 'DateTime or Date');
                     break;
                 }
                 case 'viewDate': {
-                    const dateTime = this.dateConversion(value, 'viewDate');
+                    const dateTime = this.dateConversion(value, 'viewDate', localization);
                     if (dateTime !== undefined) {
-                        dateTime.setLocale(locale);
+                        dateTime.setLocale(localization.locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('viewDate', providedType, 'DateTime or Date');
@@ -1218,9 +1252,9 @@
                     if (value === undefined) {
                         return value;
                     }
-                    const dateTime = this.dateConversion(value, 'restrictions.minDate');
+                    const dateTime = this.dateConversion(value, 'restrictions.minDate', localization);
                     if (dateTime !== undefined) {
-                        dateTime.setLocale(locale);
+                        dateTime.setLocale(localization.locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('restrictions.minDate', providedType, 'DateTime or Date');
@@ -1230,9 +1264,9 @@
                     if (value === undefined) {
                         return value;
                     }
-                    const dateTime = this.dateConversion(value, 'restrictions.maxDate');
+                    const dateTime = this.dateConversion(value, 'restrictions.maxDate', localization);
                     if (dateTime !== undefined) {
-                        dateTime.setLocale(locale);
+                        dateTime.setLocale(localization.locale);
                         return dateTime;
                     }
                     Namespace.errorMessages.typeMismatch('restrictions.maxDate', providedType, 'DateTime or Date');
@@ -1266,13 +1300,13 @@
                     if (value === undefined) {
                         return [];
                     }
-                    this._typeCheckDateArray('restrictions.enabledDates', value, providedType, locale);
+                    this._typeCheckDateArray('restrictions.enabledDates', value, providedType, localization);
                     return value;
                 case 'disabledDates':
                     if (value === undefined) {
                         return [];
                     }
-                    this._typeCheckDateArray('restrictions.disabledDates', value, providedType, locale);
+                    this._typeCheckDateArray('restrictions.disabledDates', value, providedType, localization);
                     return value;
                 case 'disabledTimeIntervals':
                     if (value === undefined) {
@@ -1286,11 +1320,11 @@
                         Object.keys(valueObject[i]).forEach((vk) => {
                             const subOptionName = `${key}[${i}].${vk}`;
                             let d = valueObject[i][vk];
-                            const dateTime = this.dateConversion(d, subOptionName);
+                            const dateTime = this.dateConversion(d, subOptionName, localization);
                             if (!dateTime) {
                                 Namespace.errorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
                             }
-                            dateTime.setLocale(locale);
+                            dateTime.setLocale(localization.locale);
                             valueObject[i][vk] = dateTime;
                         });
                     }
@@ -1303,7 +1337,7 @@
                         toolbarPlacement: ['top', 'bottom', 'default'],
                         type: ['icons', 'sprites'],
                         viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
-                        theme: ['light', 'dark', 'auto'],
+                        theme: ['light', 'dark', 'auto']
                     };
                     const keyOptions = optionValues[key];
                     if (!keyOptions.includes(value))
@@ -1346,10 +1380,10 @@
             var _a;
             const newConfig = OptionConverter.deepCopy(mergeTo);
             //see if the options specify a locale
-            const locale = mergeTo.localization.locale !== 'default'
-                ? mergeTo.localization.locale
-                : ((_a = providedOptions === null || providedOptions === void 0 ? void 0 : providedOptions.localization) === null || _a === void 0 ? void 0 : _a.locale) || 'default';
-            OptionConverter.spread(providedOptions, newConfig, '', locale);
+            const localization = ((_a = mergeTo.localization) === null || _a === void 0 ? void 0 : _a.locale) !== 'default'
+                ? mergeTo.localization
+                : (providedOptions === null || providedOptions === void 0 ? void 0 : providedOptions.localization) || DefaultOptions.localization;
+            OptionConverter.spread(providedOptions, newConfig, '', localization);
             return newConfig;
         }
         static _dataToOptions(element, options) {
@@ -1417,16 +1451,17 @@
         /**
          * Attempts to prove `d` is a DateTime or Date or can be converted into one.
          * @param d If a string will attempt creating a date from it.
+         * @param localization object containing locale and format settings. Only used with the custom formats
          * @private
          */
-        static _dateTypeCheck(d) {
+        static _dateTypeCheck(d, localization) {
             if (d.constructor.name === DateTime.name)
                 return d;
             if (d.constructor.name === Date.name) {
                 return DateTime.convert(d);
             }
             if (typeof d === typeof '') {
-                const dateTime = new DateTime(d);
+                const dateTime = DateTime.fromString(d, localization);
                 if (JSON.stringify(dateTime) === 'null') {
                     return null;
                 }
@@ -1439,19 +1474,20 @@
          * @param optionName Provides text to error messages e.g. disabledDates
          * @param value Option value
          * @param providedType Used to provide text to error messages
-         * @param locale
+         * @param localization
          */
-        static _typeCheckDateArray(optionName, value, providedType, locale = 'default') {
+        static _typeCheckDateArray(optionName, value, providedType, localization) {
+            var _a;
             if (!Array.isArray(value)) {
                 Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
             }
             for (let i = 0; i < value.length; i++) {
                 let d = value[i];
-                const dateTime = this.dateConversion(d, optionName);
+                const dateTime = this.dateConversion(d, optionName, localization);
                 if (!dateTime) {
                     Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
                 }
-                dateTime.setLocale(locale);
+                dateTime.setLocale((_a = localization === null || localization === void 0 ? void 0 : localization.locale) !== null && _a !== void 0 ? _a : 'default');
                 value[i] = dateTime;
             }
         }
@@ -1470,12 +1506,13 @@
          * Attempts to convert `d` to a DateTime object
          * @param d value to convert
          * @param optionName Provides text to error messages e.g. disabledDates
+         * @param localization object containing locale and format settings. Only used with the custom formats
          */
-        static dateConversion(d, optionName) {
+        static dateConversion(d, optionName, localization) {
             if (typeof d === typeof '' && optionName !== 'input') {
                 Namespace.errorMessages.dateString();
             }
-            const converted = this._dateTypeCheck(d);
+            const converted = this._dateTypeCheck(d, localization);
             if (!converted) {
                 Namespace.errorMessages.failedToParseDate(optionName, d, optionName === 'input');
             }
@@ -1520,7 +1557,8 @@
             }
         }
     }
-    OptionConverter.ignoreProperties = ['meta', 'dayViewHeaderFormat', 'container'];
+    OptionConverter.ignoreProperties = ['meta', 'dayViewHeaderFormat',
+        'container', 'dateForms', 'ordinal'];
     OptionConverter.isValue = a => a != null; // everything except undefined + null
 
     class Dates {
@@ -1577,7 +1615,7 @@
          * this can be overwritten to supply your own parsing.
          */
         parseInput(value) {
-            return OptionConverter.dateConversion(value, 'input');
+            return OptionConverter.dateConversion(value, 'input', this.optionsStore.options.localization);
         }
         /**
          * Tries to convert the provided value to a DateTime object.
@@ -1833,17 +1871,17 @@
                 this.optionsStore.options.display.components.month
                     ? switcher.classList.remove(Namespace.css.disabled)
                     : switcher.classList.add(Namespace.css.disabled);
-                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.month), exports.Unit.month)
+                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.month), Unit.month)
                     ? previous.classList.remove(Namespace.css.disabled)
                     : previous.classList.add(Namespace.css.disabled);
-                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.month), exports.Unit.month)
+                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.month), Unit.month)
                     ? next.classList.remove(Namespace.css.disabled)
                     : next.classList.add(Namespace.css.disabled);
             }
             let innerDate = this.optionsStore.viewDate.clone
-                .startOf(exports.Unit.month)
+                .startOf(Unit.month)
                 .startOf("weekDay", this.optionsStore.options.localization.startOfTheWeek)
-                .manipulate(12, exports.Unit.hours);
+                .manipulate(12, Unit.hours);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectDay}"], .${Namespace.css.calendarWeeks}`)
                 .forEach((containerClone) => {
@@ -1856,32 +1894,32 @@
                 }
                 let classes = [];
                 classes.push(Namespace.css.day);
-                if (innerDate.isBefore(this.optionsStore.viewDate, exports.Unit.month)) {
+                if (innerDate.isBefore(this.optionsStore.viewDate, Unit.month)) {
                     classes.push(Namespace.css.old);
                 }
-                if (innerDate.isAfter(this.optionsStore.viewDate, exports.Unit.month)) {
+                if (innerDate.isAfter(this.optionsStore.viewDate, Unit.month)) {
                     classes.push(Namespace.css.new);
                 }
                 if (!this.optionsStore.unset &&
-                    this.dates.isPicked(innerDate, exports.Unit.date)) {
+                    this.dates.isPicked(innerDate, Unit.date)) {
                     classes.push(Namespace.css.active);
                 }
-                if (!this.validation.isValid(innerDate, exports.Unit.date)) {
+                if (!this.validation.isValid(innerDate, Unit.date)) {
                     classes.push(Namespace.css.disabled);
                 }
-                if (innerDate.isSame(new DateTime(), exports.Unit.date)) {
+                if (innerDate.isSame(new DateTime(), Unit.date)) {
                     classes.push(Namespace.css.today);
                 }
                 if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
                     classes.push(Namespace.css.weekend);
                 }
-                paint(exports.Unit.date, innerDate, classes, containerClone);
+                paint(Unit.date, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute("data-value", `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
                 containerClone.setAttribute("data-day", `${innerDate.date}`);
                 containerClone.innerText = innerDate.format({ day: "numeric" });
-                innerDate.manipulate(1, exports.Unit.date);
+                innerDate.manipulate(1, Unit.date);
             });
         }
         /***
@@ -1891,7 +1929,7 @@
         _daysOfTheWeek() {
             let innerDate = this.optionsStore.viewDate.clone
                 .startOf("weekDay", this.optionsStore.options.localization.startOfTheWeek)
-                .startOf(exports.Unit.date);
+                .startOf(Unit.date);
             const row = [];
             document.createElement("div");
             if (this.optionsStore.options.display.calendarWeeks) {
@@ -1904,7 +1942,7 @@
                 const htmlDivElement = document.createElement("div");
                 htmlDivElement.classList.add(Namespace.css.dayOfTheWeek, Namespace.css.noHighlight);
                 htmlDivElement.innerText = innerDate.format({ weekday: "short" });
-                innerDate.manipulate(1, exports.Unit.date);
+                innerDate.manipulate(1, Unit.date);
                 row.push(htmlDivElement);
             }
             return row;
@@ -1948,32 +1986,32 @@
                 this.optionsStore.options.display.components.year
                     ? switcher.classList.remove(Namespace.css.disabled)
                     : switcher.classList.add(Namespace.css.disabled);
-                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.year), exports.Unit.year)
+                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.year), Unit.year)
                     ? previous.classList.remove(Namespace.css.disabled)
                     : previous.classList.add(Namespace.css.disabled);
-                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.year), exports.Unit.year)
+                this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.year), Unit.year)
                     ? next.classList.remove(Namespace.css.disabled)
                     : next.classList.add(Namespace.css.disabled);
             }
-            let innerDate = this.optionsStore.viewDate.clone.startOf(exports.Unit.year);
+            let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.year);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectMonth}"]`)
                 .forEach((containerClone, index) => {
                 let classes = [];
                 classes.push(Namespace.css.month);
                 if (!this.optionsStore.unset &&
-                    this.dates.isPicked(innerDate, exports.Unit.month)) {
+                    this.dates.isPicked(innerDate, Unit.month)) {
                     classes.push(Namespace.css.active);
                 }
-                if (!this.validation.isValid(innerDate, exports.Unit.month)) {
+                if (!this.validation.isValid(innerDate, Unit.month)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.month, innerDate, classes, containerClone);
+                paint(Unit.month, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${index}`);
                 containerClone.innerText = `${innerDate.format({ month: 'short' })}`;
-                innerDate.manipulate(1, exports.Unit.month);
+                innerDate.manipulate(1, Unit.month);
             });
         }
     }
@@ -2006,8 +2044,8 @@
          * @private
          */
         _update(widget, paint) {
-            this._startYear = this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.year);
-            this._endYear = this.optionsStore.viewDate.clone.manipulate(10, exports.Unit.year);
+            this._startYear = this.optionsStore.viewDate.clone.manipulate(-1, Unit.year);
+            this._endYear = this.optionsStore.viewDate.clone.manipulate(10, Unit.year);
             const container = widget.getElementsByClassName(Namespace.css.yearsContainer)[0];
             if (this.optionsStore.currentView === "years") {
                 const [previous, switcher, next] = container.parentElement
@@ -2017,34 +2055,34 @@
                 this.optionsStore.options.display.components.decades
                     ? switcher.classList.remove(Namespace.css.disabled)
                     : switcher.classList.add(Namespace.css.disabled);
-                this.validation.isValid(this._startYear, exports.Unit.year)
+                this.validation.isValid(this._startYear, Unit.year)
                     ? previous.classList.remove(Namespace.css.disabled)
                     : previous.classList.add(Namespace.css.disabled);
-                this.validation.isValid(this._endYear, exports.Unit.year)
+                this.validation.isValid(this._endYear, Unit.year)
                     ? next.classList.remove(Namespace.css.disabled)
                     : next.classList.add(Namespace.css.disabled);
             }
             let innerDate = this.optionsStore.viewDate.clone
-                .startOf(exports.Unit.year)
-                .manipulate(-1, exports.Unit.year);
+                .startOf(Unit.year)
+                .manipulate(-1, Unit.year);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectYear}"]`)
                 .forEach((containerClone) => {
                 let classes = [];
                 classes.push(Namespace.css.year);
                 if (!this.optionsStore.unset &&
-                    this.dates.isPicked(innerDate, exports.Unit.year)) {
+                    this.dates.isPicked(innerDate, Unit.year)) {
                     classes.push(Namespace.css.active);
                 }
-                if (!this.validation.isValid(innerDate, exports.Unit.year)) {
+                if (!this.validation.isValid(innerDate, Unit.year)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.year, innerDate, classes, containerClone);
+                paint(Unit.year, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute("data-value", `${innerDate.year}`);
                 containerClone.innerText = innerDate.format({ year: "numeric" });
-                innerDate.manipulate(1, exports.Unit.year);
+                innerDate.manipulate(1, Unit.year);
             });
         }
     }
@@ -2078,9 +2116,9 @@
          */
         _update(widget, paint) {
             const [start, end] = Dates.getStartEndYear(100, this.optionsStore.viewDate.year);
-            this._startDecade = this.optionsStore.viewDate.clone.startOf(exports.Unit.year);
+            this._startDecade = this.optionsStore.viewDate.clone.startOf(Unit.year);
             this._startDecade.year = start;
-            this._endDecade = this.optionsStore.viewDate.clone.startOf(exports.Unit.year);
+            this._endDecade = this.optionsStore.viewDate.clone.startOf(Unit.year);
             this._endDecade.year = end;
             const container = widget.getElementsByClassName(Namespace.css.decadesContainer)[0];
             const [previous, switcher, next] = container.parentElement
@@ -2088,10 +2126,10 @@
                 .getElementsByTagName("div");
             if (this.optionsStore.currentView === 'decades') {
                 switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.format({ year: "numeric" })}-${this._endDecade.format({ year: "numeric" })}`);
-                this.validation.isValid(this._startDecade, exports.Unit.year)
+                this.validation.isValid(this._startDecade, Unit.year)
                     ? previous.classList.remove(Namespace.css.disabled)
                     : previous.classList.add(Namespace.css.disabled);
-                this.validation.isValid(this._endDecade, exports.Unit.year)
+                this.validation.isValid(this._endDecade, Unit.year)
                     ? next.classList.remove(Namespace.css.disabled)
                     : next.classList.add(Namespace.css.disabled);
             }
@@ -2109,7 +2147,7 @@
                         return;
                     }
                     else {
-                        containerClone.innerText = this._startDecade.clone.manipulate(-10, exports.Unit.year).format({ year: "numeric" });
+                        containerClone.innerText = this._startDecade.clone.manipulate(-10, Unit.year).format({ year: "numeric" });
                         containerClone.setAttribute("data-value", `${this._startDecade.year}`);
                         return;
                     }
@@ -2128,7 +2166,7 @@
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute("data-value", `${this._startDecade.year}`);
                 containerClone.innerText = `${this._startDecade.format({ year: "numeric" })}`;
-                this._startDecade.manipulate(10, exports.Unit.year);
+                this._startDecade.manipulate(10, Unit.year);
             });
         }
     }
@@ -2165,50 +2203,50 @@
                 .querySelectorAll('.disabled')
                 .forEach((element) => element.classList.remove(Namespace.css.disabled));
             if (this.optionsStore.options.display.components.hours) {
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.hours), exports.Unit.hours)) {
+                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.hours), Unit.hours)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes$1.incrementHours}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.hours), exports.Unit.hours)) {
+                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.hours), Unit.hours)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                timesDiv.querySelector(`[data-time-component=${exports.Unit.hours}]`).innerText = this.optionsStore.options.display.components.useTwentyfourHour
+                timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = this.optionsStore.options.display.components.useTwentyfourHour
                     ? lastPicked.hoursFormatted
                     : lastPicked.twelveHoursFormatted;
             }
             if (this.optionsStore.options.display.components.minutes) {
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.minutes), exports.Unit.minutes)) {
+                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes$1.incrementMinutes}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.minutes), exports.Unit.minutes)) {
+                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.minutes), Unit.minutes)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes$1.decrementMinutes}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                timesDiv.querySelector(`[data-time-component=${exports.Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
+                timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
             }
             if (this.optionsStore.options.display.components.seconds) {
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.seconds), exports.Unit.seconds)) {
+                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes$1.incrementSeconds}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.seconds), exports.Unit.seconds)) {
+                if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, Unit.seconds), Unit.seconds)) {
                     timesDiv
                         .querySelector(`[data-action=${ActionTypes$1.decrementSeconds}]`)
                         .classList.add(Namespace.css.disabled);
                 }
-                timesDiv.querySelector(`[data-time-component=${exports.Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
+                timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
             }
             if (!this.optionsStore.options.display.components.useTwentyfourHour) {
                 const toggle = timesDiv.querySelector(`[data-action=${ActionTypes$1.toggleMeridiem}]`);
                 toggle.innerText = lastPicked.meridiem();
-                if (!this.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, exports.Unit.hours))) {
+                if (!this.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
                     toggle.classList.add(Namespace.css.disabled);
                 }
                 else {
@@ -2241,7 +2279,7 @@
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this.optionsStore.options.localization.pickHour);
                 divElement.setAttribute('data-action', ActionTypes$1.showHours);
-                divElement.setAttribute('data-time-component', exports.Unit.hours);
+                divElement.setAttribute('data-time-component', Unit.hours);
                 middle.push(divElement);
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this.optionsStore.options.localization.decrementHour);
@@ -2266,7 +2304,7 @@
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this.optionsStore.options.localization.pickMinute);
                 divElement.setAttribute('data-action', ActionTypes$1.showMinutes);
-                divElement.setAttribute('data-time-component', exports.Unit.minutes);
+                divElement.setAttribute('data-time-component', Unit.minutes);
                 middle.push(divElement);
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this.optionsStore.options.localization.decrementMinute);
@@ -2290,7 +2328,7 @@
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this.optionsStore.options.localization.pickSecond);
                 divElement.setAttribute('data-action', ActionTypes$1.showSeconds);
-                divElement.setAttribute('data-time-component', exports.Unit.seconds);
+                divElement.setAttribute('data-time-component', Unit.seconds);
                 middle.push(divElement);
                 divElement = document.createElement('div');
                 divElement.setAttribute('title', this.optionsStore.options.localization.decrementSecond);
@@ -2352,16 +2390,16 @@
          */
         _update(widget, paint) {
             const container = widget.getElementsByClassName(Namespace.css.hourContainer)[0];
-            let innerDate = this.optionsStore.viewDate.clone.startOf(exports.Unit.date);
+            let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectHour}"]`)
                 .forEach((containerClone) => {
                 let classes = [];
                 classes.push(Namespace.css.hour);
-                if (!this.validation.isValid(innerDate, exports.Unit.hours)) {
+                if (!this.validation.isValid(innerDate, Unit.hours)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.hours, innerDate, classes, containerClone);
+                paint(Unit.hours, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.hours}`);
@@ -2369,7 +2407,7 @@
                     .useTwentyfourHour
                     ? innerDate.hoursFormatted
                     : innerDate.twelveHoursFormatted;
-                innerDate.manipulate(1, exports.Unit.hours);
+                innerDate.manipulate(1, Unit.hours);
             });
         }
     }
@@ -2405,7 +2443,7 @@
          */
         _update(widget, paint) {
             const container = widget.getElementsByClassName(Namespace.css.minuteContainer)[0];
-            let innerDate = this.optionsStore.viewDate.clone.startOf(exports.Unit.hours);
+            let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.hours);
             let step = this.optionsStore.options.stepping === 1
                 ? 5
                 : this.optionsStore.options.stepping;
@@ -2414,15 +2452,15 @@
                 .forEach((containerClone) => {
                 let classes = [];
                 classes.push(Namespace.css.minute);
-                if (!this.validation.isValid(innerDate, exports.Unit.minutes)) {
+                if (!this.validation.isValid(innerDate, Unit.minutes)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.minutes, innerDate, classes, containerClone);
+                paint(Unit.minutes, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.minutes}`);
                 containerClone.innerText = innerDate.minutesFormatted;
-                innerDate.manipulate(step, exports.Unit.minutes);
+                innerDate.manipulate(step, Unit.minutes);
             });
         }
     }
@@ -2455,21 +2493,21 @@
          */
         _update(widget, paint) {
             const container = widget.getElementsByClassName(Namespace.css.secondContainer)[0];
-            let innerDate = this.optionsStore.viewDate.clone.startOf(exports.Unit.minutes);
+            let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.minutes);
             container
                 .querySelectorAll(`[data-action="${ActionTypes$1.selectSecond}"]`)
                 .forEach((containerClone) => {
                 let classes = [];
                 classes.push(Namespace.css.second);
-                if (!this.validation.isValid(innerDate, exports.Unit.seconds)) {
+                if (!this.validation.isValid(innerDate, Unit.seconds)) {
                     classes.push(Namespace.css.disabled);
                 }
-                paint(exports.Unit.seconds, innerDate, classes, containerClone);
+                paint(Unit.seconds, innerDate, classes, containerClone);
                 containerClone.classList.remove(...containerClone.classList);
                 containerClone.classList.add(...classes);
                 containerClone.setAttribute('data-value', `${innerDate.seconds}`);
                 containerClone.innerText = innerDate.secondsFormatted;
-                innerDate.manipulate(5, exports.Unit.seconds);
+                innerDate.manipulate(5, Unit.seconds);
             });
         }
     }
@@ -2642,36 +2680,36 @@
                 return;
             //todo do I want some kind of error catching or other guards here?
             switch (unit) {
-                case exports.Unit.seconds:
+                case Unit.seconds:
                     this.secondDisplay._update(this.widget, this.paint);
                     break;
-                case exports.Unit.minutes:
+                case Unit.minutes:
                     this.minuteDisplay._update(this.widget, this.paint);
                     break;
-                case exports.Unit.hours:
+                case Unit.hours:
                     this.hourDisplay._update(this.widget, this.paint);
                     break;
-                case exports.Unit.date:
+                case Unit.date:
                     this.dateDisplay._update(this.widget, this.paint);
                     break;
-                case exports.Unit.month:
+                case Unit.month:
                     this.monthDisplay._update(this.widget, this.paint);
                     break;
-                case exports.Unit.year:
+                case Unit.year:
                     this.yearDisplay._update(this.widget, this.paint);
                     break;
                 case 'clock':
                     if (!this._hasTime)
                         break;
                     this.timeDisplay._update(this.widget);
-                    this._update(exports.Unit.hours);
-                    this._update(exports.Unit.minutes);
-                    this._update(exports.Unit.seconds);
+                    this._update(Unit.hours);
+                    this._update(Unit.minutes);
+                    this._update(Unit.seconds);
                     break;
                 case 'calendar':
-                    this._update(exports.Unit.date);
-                    this._update(exports.Unit.year);
-                    this._update(exports.Unit.month);
+                    this._update(Unit.date);
+                    this._update(Unit.year);
+                    this._update(Unit.month);
                     this.decadeDisplay._update(this.widget, this.paint);
                     this._updateCalendarHeader();
                     break;
@@ -2698,7 +2736,7 @@
         /**
          * Shows the picker and creates a Popper instance if needed.
          * Add document click event to hide when clicking outside the picker.
-         * @fires Events#show
+         * fires Events#show
          */
         show() {
             var _a, _b;
@@ -2714,7 +2752,7 @@
                                 direction = -1;
                             }
                             while (!this.validation.isValid(date)) {
-                                date.manipulate(direction, exports.Unit.date);
+                                date.manipulate(direction, Unit.date);
                                 if (tries > 31)
                                     break;
                                 tries++;
@@ -2852,19 +2890,19 @@
             this.widget.classList.add(this._getThemeClass());
             if (this.optionsStore.options.display.theme === 'auto') {
                 window
-                    .matchMedia(Namespace.css.isDarkPreferedQuery)
+                    .matchMedia(Namespace.css.isDarkPreferredQuery)
                     .addEventListener('change', () => this._updateTheme());
             }
             else {
                 window
-                    .matchMedia(Namespace.css.isDarkPreferedQuery)
+                    .matchMedia(Namespace.css.isDarkPreferredQuery)
                     .removeEventListener('change', () => this._updateTheme());
             }
         }
         _getThemeClass() {
             const currentTheme = this.optionsStore.options.display.theme || 'auto';
             const isDarkMode = window.matchMedia &&
-                window.matchMedia(Namespace.css.isDarkPreferedQuery).matches;
+                window.matchMedia(Namespace.css.isDarkPreferredQuery).matches;
             switch (currentTheme) {
                 case 'light':
                     return Namespace.css.lightTheme;
@@ -2909,7 +2947,7 @@
         /**
          * Hides the picker if needed.
          * Remove document click event to hide when clicking outside the picker.
-         * @fires Events#hide
+         * fires Events#hide
          */
         hide() {
             if (!this.widget || !this._isVisible)
@@ -3205,15 +3243,15 @@
                 case ActionTypes$1.selectDay:
                     const day = this.optionsStore.viewDate.clone;
                     if (currentTarget.classList.contains(Namespace.css.old)) {
-                        day.manipulate(-1, exports.Unit.month);
+                        day.manipulate(-1, Unit.month);
                     }
                     if (currentTarget.classList.contains(Namespace.css.new)) {
-                        day.manipulate(1, exports.Unit.month);
+                        day.manipulate(1, Unit.month);
                     }
                     day.date = +currentTarget.dataset.day;
                     let index = 0;
                     if (this.optionsStore.options.multipleDates) {
-                        index = this.dates.pickedIndex(day, exports.Unit.date);
+                        index = this.dates.pickedIndex(day, Unit.date);
                         if (index !== -1) {
                             this.dates.setValue(null, index); //deselect multi-date
                         }
@@ -3251,25 +3289,25 @@
                     this.hideOrClock(e);
                     break;
                 case ActionTypes$1.incrementHours:
-                    this.manipulateAndSet(lastPicked, exports.Unit.hours);
+                    this.manipulateAndSet(lastPicked, Unit.hours);
                     break;
                 case ActionTypes$1.incrementMinutes:
-                    this.manipulateAndSet(lastPicked, exports.Unit.minutes, this.optionsStore.options.stepping);
+                    this.manipulateAndSet(lastPicked, Unit.minutes, this.optionsStore.options.stepping);
                     break;
                 case ActionTypes$1.incrementSeconds:
-                    this.manipulateAndSet(lastPicked, exports.Unit.seconds);
+                    this.manipulateAndSet(lastPicked, Unit.seconds);
                     break;
                 case ActionTypes$1.decrementHours:
-                    this.manipulateAndSet(lastPicked, exports.Unit.hours, -1);
+                    this.manipulateAndSet(lastPicked, Unit.hours, -1);
                     break;
                 case ActionTypes$1.decrementMinutes:
-                    this.manipulateAndSet(lastPicked, exports.Unit.minutes, this.optionsStore.options.stepping * -1);
+                    this.manipulateAndSet(lastPicked, Unit.minutes, this.optionsStore.options.stepping * -1);
                     break;
                 case ActionTypes$1.decrementSeconds:
-                    this.manipulateAndSet(lastPicked, exports.Unit.seconds, -1);
+                    this.manipulateAndSet(lastPicked, Unit.seconds, -1);
                     break;
                 case ActionTypes$1.toggleMeridiem:
-                    this.manipulateAndSet(lastPicked, exports.Unit.hours, this.dates.lastPicked.hours >= 12 ? -12 : 12);
+                    this.manipulateAndSet(lastPicked, Unit.hours, this.dates.lastPicked.hours >= 12 ? -12 : 12);
                     break;
                 case ActionTypes$1.togglePicker:
                     if (currentTarget.getAttribute('title') ===
@@ -3315,7 +3353,7 @@
                 case ActionTypes$1.today:
                     const today = new DateTime().setLocale(this.optionsStore.options.localization.locale);
                     this.optionsStore.viewDate = today;
-                    if (this.validation.isValid(today, exports.Unit.date))
+                    if (this.validation.isValid(today, Unit.date))
                         this.dates.setValue(today, this.dates.lastPickedIndex);
                     break;
             }
@@ -3337,15 +3375,15 @@
                     break;
                 case ActionTypes$1.showHours:
                     classToUse = Namespace.css.hourContainer;
-                    this.display._update(exports.Unit.hours);
+                    this.display._update(Unit.hours);
                     break;
                 case ActionTypes$1.showMinutes:
                     classToUse = Namespace.css.minuteContainer;
-                    this.display._update(exports.Unit.minutes);
+                    this.display._update(Unit.minutes);
                     break;
                 case ActionTypes$1.showSeconds:
                     classToUse = Namespace.css.secondContainer;
-                    this.display._update(exports.Unit.seconds);
+                    this.display._update(Unit.seconds);
                     break;
             }
             (this.display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
@@ -3822,25 +3860,29 @@
      * @param option
      */
     const extend = function (plugin, option) {
-        if (!plugin.$i) {
+        if (!plugin)
+            return tempusDominus;
+        if (!plugin.installed) {
             // install plugin only once
-            plugin.load(option, { TempusDominus, Dates, Display }, this);
-            plugin.$i = true;
+            plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, tempusDominus);
+            plugin.installed = true;
         }
-        return this;
+        return tempusDominus;
     };
-    const version = '6.0.0-beta9';
+    const version = '6.0.0-beta10';
+    const tempusDominus = {
+        TempusDominus,
+        extend,
+        loadLocale,
+        locale,
+        Namespace,
+        DefaultOptions,
+        DateTime,
+        Unit,
+        version
+    };
 
-    exports.DateTime = DateTime;
-    exports.DefaultOptions = DefaultOptions;
-    exports.Namespace = Namespace;
-    exports.TempusDominus = TempusDominus;
-    exports.extend = extend;
-    exports.loadLocale = loadLocale;
-    exports.locale = locale;
-    exports.version = version;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return tempusDominus;
 
 }));
 //# sourceMappingURL=tempus-dominus.js.map

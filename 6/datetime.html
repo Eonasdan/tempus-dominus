@@ -50,7 +50,7 @@
 
 </head>
 
-<body>
+<body class="line-numbers">
 <div class="skippy visually-hidden-focusable overflow-hidden">
   <div class="container-xl">
     <a class="d-inline-flex p-2 m-1" href="#content">Skip to main content</a>
@@ -72,13 +72,13 @@
     <div class="collapse navbar-collapse" id="bdNavbar">
       <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav pt-2 py-md-0">
         <li class="nav-item col-6 col-md-auto">
-          <a class="nav-link p-2" href="/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'TempisuDominus');">Home</a>
+          <a class="nav-link p-2" href="/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'TempusDominus');">Home</a>
         </li>
         <li class="nav-item col-6 col-md-auto">
           <a class="nav-link p-2" aria-current="true" href="/6/installing.html" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Docs');">Docs</a>
         </li>
         <li class="nav-item col-6 col-md-auto">
-          <a class="nav-link p-2" aria-current="true" href="/6/examples/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Docs');">Examples</a>
+          <a class="nav-link p-2" aria-current="true" href="/6/rep.html" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Docs');">REPL</a>
         </li>
         <li class="nav-item col-6 col-md-auto">
           <a class="nav-link p-2" aria-current="true" href="/6/change-log.html" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Change Log');">Change Log</a>
@@ -122,7 +122,6 @@
   </nav>
 </header>
 
-
 <nav class="bd-subnavbar py-2" aria-label="Secondary navigation">
   <div class="container-xxl d-flex align-items-md-center">
     <div class="dropdown ms-3">
@@ -165,10 +164,37 @@
                     <li><a href="/6/installing.html" class="d-inline-flex align-items-center rounded">Download</a>
                     </li>
                     <li><a href="/6/change-log.html" class="d-inline-flex align-items-center rounded" aria-current="page">Change Log</a></li>
-                    <li><a href="/6/functions.html" class="d-inline-flex align-items-center rounded" aria-current="page">Functions</a></li>
-                    <li><a href="/6/options.html" class="d-inline-flex align-items-center rounded" aria-current="page">Options</a></li>
                     <li><a href="/6/datetime.html" class="d-inline-flex align-items-center rounded" aria-current="page">DateTime</a></li>
-                    <li><a href="/6/locale.html" class="d-inline-flex align-items-center rounded" aria-current="page">Locales</a></li>
+                    <li><a href="/6/locale.html" class="d-inline-flex align-items-center rounded" aria-current="page">Locales</a></li><li>
+                    <a href="/6/migration.html" class="d-inline-flex align-items-center rounded">
+                        Migration
+                    </a>
+                </li>
+                </ul>
+            </li>
+            <li class="mb-1">
+                <strong>
+                    Options
+                </strong>
+
+                <ul class="list-unstyled fw-normal pb-1 small">
+                    <li><a href="/6/options/" class="d-inline-flex align-items-center rounded">Overview</a>
+                    </li>
+                    <li><a href="/6/options/restrictions.html" class="d-inline-flex align-items-center rounded">Restrictions</a></li>
+                    <li><a href="/6/options/display.html" class="d-inline-flex align-items-center rounded">Display</a></li>
+                    <li><a href="/6/options/localization.html" class="d-inline-flex align-items-center rounded">Localization</a></li>
+                </ul>
+            </li>
+            <li class="mb-1">
+                <strong>
+                    Functions
+                </strong>
+
+                <ul class="list-unstyled fw-normal pb-1 small">
+                    <li><a href="/6/functions/" class="d-inline-flex align-items-center rounded">Overview</a>
+                    </li>
+                    <li><a href="/6/functions/dates.html" class="d-inline-flex align-items-center rounded">Dates</a></li>
+                    <li><a href="/6/functions/display.html" class="d-inline-flex align-items-center rounded">Display</a></li>
                 </ul>
             </li>
             <li class="mb-1">
@@ -187,21 +213,7 @@
                     <li><a href="/6/namespace/unit.html" class="d-inline-flex align-items-center rounded">Unit</a></li>
                 </ul>
             </li>
-            <li class="mb-1">
-                <strong>
-                    Examples
-                </strong>
 
-                <ul class="list-unstyled fw-normal pb-1 small">
-                    <li><a href="/6/examples/" class="d-inline-flex align-items-center rounded">Overview</a>
-                    </li>
-                    <li><a href="/6/examples/jquery.html" class="d-inline-flex align-items-center rounded">jQuery</a>
-                    </li>
-                    <li><a href="/6/examples/no-styles.html" class="d-inline-flex align-items-center rounded">No
-                        Styles</a>
-                    </li>
-                </ul>
-            </li>
             <li class="mb-1">
                 <strong>
                     Plugins
@@ -218,12 +230,6 @@
                     </li>
                 </ul>
             </li>
-            <li class="my-3 mx-4 border-top"></li>
-            <li>
-                <a href="/6/migration.html" class="d-inline-flex align-items-center rounded">
-                    Migration
-                </a>
-            </li>
         </ul>
     </nav>
 
@@ -232,6 +238,17 @@
     <div class="bd-intro ps-lg-4">
         <div class="d-md-flex align-items-center justify-content-between">
             <h1 class="bd-title title" id="content">DateTime</h1>
+        </div>
+    </div>
+    <div class="bd-toc mt-3 mb-5 my-lg-0 ps-xl-3 mb-lg-5 text-muted d-none" id="tocContainer">
+        <button class="btn btn-link link-dark p-md-0 mb-2 mb-md-0 text-decoration-none bd-toc-toggle d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#tocContents" aria-expanded="false" aria-controls="tocContents">
+            On this page
+            <svg class="bi d-md-none ms-2" aria-hidden="true"><use xlink:href="#chevron-expand"></use></svg>
+        </button>
+        <strong class="d-none d-md-block h6 my-2">On this page</strong>
+        <hr class="d-none d-md-block my-2">
+        <div class="collapse bd-toc-collapse" id="tocContents">
+
         </div>
     </div>
     <div id="mainContent" class="bd-content ps-lg-4">
@@ -256,9 +273,12 @@
           <span class="fs-5">Tempus Dominus</span>
         </a>
         <ul class="list-unstyled small text-muted">
-          <li class="mb-2">Created by the <a href="https://eonasdan.com">Eonasdan (Jonathan Peterson)</a> with the help of <a href="https://github.com/Eonasdan/tempus-dominus/graphs/contributors">our contributors</a>.</li>
-          <li class="mb-2">Code licensed <a href="https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE" target="_blank" rel="license noopener">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY 3.0</a>.</li>
-          <li class="mb-2">Currently v6.0.0-alpha1.</li>
+          <li class="mb-2">Created by the <a href="https://eonasdan.com">Eonasdan (Jonathan Peterson)</a> with the help
+            of <a href="https://github.com/Eonasdan/tempus-dominus/graphs/contributors">our contributors</a>.
+          </li>
+          <li class="mb-2">Code licensed <a href="https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE" target="_blank" rel="license noopener">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY 3.0</a>.
+          </li>
+          <li class="mb-2">Currently v6.0.0-beta10-alpha1.</li>
         </ul>
       </div>
       <div class="col-6 col-lg-2 offset-lg-1 mb-3">
@@ -272,30 +292,44 @@
       <div class="col-6 col-lg-2 mb-3">
         <h5>Community</h5>
         <ul class="list-unstyled">
-          <li class="mb-2"><a href="https://github.com/Eonasdan/tempus-dominus/issues" target="_blank" rel="noopener">Issues</a></li>
+          <li class="mb-2"><a href="https://github.com/Eonasdan/tempus-dominus/issues" target="_blank" rel="noopener">Issues</a>
+          </li>
           <li class="mb-2"><a href="https://github.com/Eonasdan/tempus-dominus/discussions" target="_blank" rel="noopener">Discussions</a></li>
-          <li class="mb-2"><a href="https://ko-fi.com/eonasdan" target="_blank" rel="noopener">Support me on Ko-fi</a></li>
+          <li class="mb-2"><a href="https://ko-fi.com/eonasdan" target="_blank" rel="noopener">Support me on Ko-fi</a>
+          </li>
           <li class="mb-2"><a href="https://discord.gg/BHS9jw9YPf" target="_blank" rel="noopener">Discord</a></li>
         </ul>
       </div>
     </div>
   </div>
 </footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/solid.min.js" integrity="sha512-wabaor0DW08KSK5TQlRIyYOpDrAfJxl5J0FRzH0dNNhGJbeUpHaNj7up3Kr2Bwz/abLvVcJvDrJL+RLFcyGIkg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/brands.min.js" integrity="sha512-oPuIMrT4JN6Cw359VQkuI0OPn1reFOKJm1YUOjXxgIzMmNMY7g4jenNcJdYcF3dt90WyNajzivr3vZFSzgqLow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/fontawesome.min.js" integrity="sha512-PoFg70xtc+rAkD9xsjaZwIMkhkgbl1TkoaRrgucfsct7SVy9KvTj5LtECit+ZjQ3ts+7xWzgfHOGzdolfWEgrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/js/solid.min.js" integrity="sha512-LKdDHe5ZhpmiH6Kd6crBCESKkS6ryNpGRoBjGeh5mM/BW3NRN4WH8pyd7lHgQTTHQm5nhu0M+UQclYQalQzJnw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/js/brands.min.js" integrity="sha512-helwW+1jTcWdOarbAV4eDgcPQg/WEM20j9oo7HE5caJ8hZXdW0mgYGuxafhlf4j4gYAuOL8WsX1QTy6HUnpWKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/js/fontawesome.min.js" integrity="sha512-TXHaOs+47HgWwY4hUqqeD865VIBRoyQMjI27RmbQVeKb1pH1YTq0sbuHkiUzhVa5z0rRxG8UfzwDjIBYdPDM3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js" integrity="sha512-RDQSW3KoqJMiX0L/UBgwBmH1EmRYp8LBOiLaA8rBHIy+7OGP/7Gxg8vbt8wG4ZYd29P0Fnoq6+LOytCqx3cyoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.js" integrity="sha512-F+f/PpuIEHbIF3rrQgkRDU6EN9OmpfDWZiw/94StGTQeQPz9eeDZUWf2mj3/TfRXoiAEqTf/NUs2mGB2EBfDmw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js" integrity="sha512-st608h+ZqzliahyzEpETxzU0f7z7a9acN6AFvYmHvpFhmcFuKT8a22TT5TpKpjDa3pt3Wv7Z3SdQBCBdDPhyWA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" integrity="sha512-/kVH1uXuObC0iYgxxCKY41JdWOkKOxorFVmip+YVifKsJ4Au/87EisD1wty7vxN2kAhnWh6Yc8o/dSAXj6Oz7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/line-numbers/prism-line-numbers.min.js" integrity="sha512-BttltKXFyWnGZQcRWj6osIg7lbizJchuAMotOkdLxHxwt/Hyo+cl47bZU0QADg+Qt5DJwni3SbYGXeGMB5cBcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/line-numbers/prism-line-numbers.min.css" integrity="sha512-cbQXwDFK7lj2Fqfkuxbo5iD1dSbLlJGXGpfTDqbggqjHJeyzx88I3rfwjS38WJag/ihH7lzuGlGHpDBymLirZQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.css" integrity="sha512-Dqf5696xtofgH089BgZJo2lSWTvev4GFo+gA2o4GullFY65rzQVQLQVlzLvYwTo0Bb2Gpb6IqwxYWtoMonfdhQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    Prism.plugins.autoloader.languages_path = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/';
+  });
+</script>
 
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" integrity="sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==" crossorigin="anonymous"></script>
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-javascript.min.js" integrity="sha512-I4ZWqUpk7wqHcm7Gkv7k4IdgrDUTlGm1a7xeqyduqZLWeoGOn2E9us4XNBEDGclpk+6d1CmqIHYwmoyyL59zeA==" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism-tomorrow.min.css" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous">
+
 <script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
 <script defer="">
-  kofiWidgetOverlay.draw("eonasdan", {
-    "type": "floating-chat",
-    "floating-chat.donateButton.text": "Support me",
-    "floating-chat.donateButton.background-color": "#323842",
-    "floating-chat.donateButton.text-color": "#fff"
+  kofiWidgetOverlay.draw('eonasdan', {
+    'type': 'floating-chat',
+    'floating-chat.donateButton.text': 'Support me',
+    'floating-chat.donateButton.background-color': '#323842',
+    'floating-chat.donateButton.text-color': '#fff'
   });
 </script>
 <link rel="stylesheet" href="/css/carbon.css">

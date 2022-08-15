@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-  <title>CSS Classes - Tempus Dominus</title>
+  <title>Localization Options - Tempus Dominus</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -15,22 +15,20 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 
-  <meta name="title" content="CSS Classes">
-  <meta name="description" content="
-    A break down of the CSS classes in Tempus Dominus.
+  <meta name="title" content="Localization Options">
+  <meta name="description" content="How to use the restriction options.
   ">
 
   
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://getdatepicker.com/docs/6//namespace/css.html">
-  <meta property="og:title" content="CSS Classes">
-  <meta property="og:description" content="
-    A break down of the CSS classes in Tempus Dominus.
+  <meta property="og:url" content="https://getdatepicker.com/docs/6//options/localization.html">
+  <meta property="og:title" content="Localization Options">
+  <meta property="og:description" content="How to use the restriction options.
   ">
   <meta class="metaImage" property="og:image" content="">
 
-  <meta property="article:published_time" content="2021-07-08T00:00:00.000Z">
-  <meta property="article:modified_time" content="2021-07-08T00:00:00.000Z">
+  <meta property="article:published_time" content="2022-08-11T00:00:00.000Z">
+  <meta property="article:modified_time" content="2022-08-11T00:00:00.000Z">
   <meta property="article:tag" content="datepicker, javascript, open source, tempus dominus, eonasdan">
   <meta property="article:author" content="Jonathan Peterson">
   <meta property="article:section" content="Technology">
@@ -39,10 +37,9 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:site" content="@eonasdan">
   <meta property="twitter:creator" content="@eonasdan">
-  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//namespace/css.html">
-  <meta property="twitter:title" content="CSS Classes">
-  <meta property="twitter:description" content="
-    A break down of the CSS classes in Tempus Dominus.
+  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//options/localization.html">
+  <meta property="twitter:title" content="Localization Options">
+  <meta property="twitter:description" content="How to use the restriction options.
   ">
   <meta class="metaImage" property="twitter:image" content="">
   <link rel="stylesheet" href="/css/styles.min.css">
@@ -240,7 +237,7 @@
 <main class="bd-main order-1">
     <div class="bd-intro ps-lg-4">
         <div class="d-md-flex align-items-center justify-content-between">
-            <h1 class="bd-title title" id="content">CSS Classes</h1>
+            <h1 class="bd-title title" id="content">Localization Options</h1>
         </div>
     </div>
     <div class="bd-toc mt-3 mb-5 my-lg-0 ps-xl-3 mb-lg-5 text-muted d-none" id="tocContainer">
@@ -255,353 +252,411 @@
         </div>
     </div>
     <div id="mainContent" class="bd-content ps-lg-4">
-  <p>
-    The picker uses the following css classes to style the picker.
-  </p>
-  <div class="row">
-    <h2 id="widget">widget <a class="anchor-link" aria-label="Anchor" href="#widget"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the widget.
-    </p>
+  <div class="row" id="overview">
+    <div class="col">
+      <p>
+        Most of the localization options are for title tooltips over icons.
+      </p>
+      <p>
+        You can provide localization options to override the tooltips as well as the day/month display.
+      </p>
+      <p>
+        You could also set this globally via <code>tempusDominus.DefaultOptions.localization = { ...
+        }</code> or by
+        creating a variable e.g. <code>const ru = { today:'Перейти сегодня' ... };</code> then provide
+        the options
+        as
+      </p>
+      <pre><code class="language-javascript">new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
+   localization: ru
+ }</code>
+     </pre>
+    </div>
   </div>
 
-  <div class="row">
-    <h2 id="calendarHeader">calendarHeader <a class="anchor-link" aria-label="Anchor" href="#calendarHeader"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the calendar view header, next and previous actions.
-    </p>
-  </div>
+  <hr>
+
+  <pre id="defaults"><code class="language-js">new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+  {
+    localization: {
+      today: 'Go to today',
+      clear: 'Clear selection',
+      close: 'Close the picker',
+      selectMonth: 'Select Month',
+      previousMonth: 'Previous Month',
+      nextMonth: 'Next Month',
+      selectYear: 'Select Year',
+      previousYear: 'Previous Year',
+      nextYear: 'Next Year',
+      selectDecade: 'Select Decade',
+      previousDecade: 'Previous Decade',
+      nextDecade: 'Next Decade',
+      previousCentury: 'Previous Century',
+      nextCentury: 'Next Century',
+      pickHour: 'Pick Hour',
+      incrementHour: 'Increment Hour',
+      decrementHour: 'Decrement Hour',
+      pickMinute: 'Pick Minute',
+      incrementMinute: 'Increment Minute',
+      decrementMinute: 'Decrement Minute',
+      pickSecond: 'Pick Second',
+      incrementSecond: 'Increment Second',
+      decrementSecond: 'Decrement Second',
+      toggleMeridiem: 'Toggle Meridiem',
+      selectTime: 'Select Time',
+      selectDate: 'Select Date',
+      dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+      locale: 'default',
+      startOfTheWeek: 0,
+      /**
+       * This is only used with the customDateFormat plugin
+       */
+      dateFormats: {
+        LTS: 'h:mm:ss T',
+        LT: 'h:mm T',
+        L: 'MM/dd/yyyy',
+        LL: 'MMMM d, yyyy',
+        LLL: 'MMMM d, yyyy h:mm T',
+        LLLL: 'dddd, MMMM d, yyyy h:mm T'
+      },
+      /**
+       * This is only used with the customDateFormat plugin
+       */
+      ordinal: (n) =&gt; n,
+      /**
+       * This is only used with the customDateFormat plugin
+       */
+      format: 'L'
+    }
+  }
+)</code>
+  </pre>
 
   <div class="row">
-    <h2 id="switch">switch <a class="anchor-link" aria-label="Anchor" href="#switch"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the action to change the calendar view. E.g. month -&gt; year.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="toolbar">switch <a class="anchor-link" aria-label="Anchor" href="#toolbar"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The elements for all the toolbar options.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="noHighlight">switch <a class="anchor-link" aria-label="Anchor" href="#noHighlight"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Disables the hover and rounding affect.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="sideBySide">sideBySide <a class="anchor-link" aria-label="Anchor" href="#sideBySide"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the widget element when the side by side option is in use.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="previous">previous <a class="anchor-link" aria-label="Anchor" href="#previous"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the action to change the calendar view, e.g. August -&gt; July
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="next">next <a class="anchor-link" aria-label="Anchor" href="#next"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the action to change the calendar view, e.g. August -&gt; September
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="disabled">disabled <a class="anchor-link" aria-label="Anchor" href="#disabled"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any action that would violate any restriction options. ALso applied to an input field if the disabled
-      function is called.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="old">old <a class="anchor-link" aria-label="Anchor" href="#old"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any date that is less than requested view, e.g. the last day of the previous month.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="new">new <a class="anchor-link" aria-label="Anchor" href="#new"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any date that is greater than of requested view, e.g. the last day of the previous month.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="active">active <a class="anchor-link" aria-label="Anchor" href="#active"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any date that is currently selected.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="dateContainer">dateContainer <a class="anchor-link" aria-label="Anchor" href="#dateContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the calendar view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="decadesContainer">decadesContainer <a class="anchor-link" aria-label="Anchor" href="#decadesContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the decades view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="decade">decade <a class="anchor-link" aria-label="Anchor" href="#decade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to elements within the decades container, e.g. 2020, 2030
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="yearsContainer">yearsContainer <a class="anchor-link" aria-label="Anchor" href="#yearsContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the years view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="year">year <a class="anchor-link" aria-label="Anchor" href="#year"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to elements within the years container, e.g. 2021, 2021
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="monthsContainer">monthsContainer <a class="anchor-link" aria-label="Anchor" href="#monthsContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the month view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="month">month <a class="anchor-link" aria-label="Anchor" href="#month"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    <h2 id="today">today<a class="anchor-link" aria-label="Anchor" href="#today"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
     <p>
-      Applied to elements within the month container, e.g. January, February
+      <strong>Defaults:</strong> Go to today<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="daysContainer">daysContainer <a class="anchor-link" aria-label="Anchor" href="#daysContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the calendar view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="day">day <a class="anchor-link" aria-label="Anchor" href="#day"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to elements within the day container, e.g. 1, 2..31
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="calendarWeeks">calendarWeeks <a class="anchor-link" aria-label="Anchor" href="#calendarWeeks"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      If display.calendarWeeks is enabled, a column displaying the week of year is shown. This class is applied to each
-      cell in that column.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="dayOfTheWeek">dayOfTheWeek <a class="anchor-link" aria-label="Anchor" href="#dayOfTheWeek"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the first row of the calendar view, e.g. Sunday, Monday
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="today">today <a class="anchor-link" aria-label="Anchor" href="#today"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    <h2 id="clear">clear<a class="anchor-link" aria-label="Anchor" href="#clear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
     <p>
-      Applied to the current date on the calendar view.
+      <strong>Defaults:</strong> Clear selection<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="weekend">weekend <a class="anchor-link" aria-label="Anchor" href="#weekend"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    <h2 id="close">close<a class="anchor-link" aria-label="Anchor" href="#close"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
     <p>
-      Applied to the locale's weekend dates on the calendar view, e.g. Sunday, Saturday
+      <strong>Defaults:</strong> Close the picker<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="timeContainer">timeContainer <a class="anchor-link" aria-label="Anchor" href="#timeContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="selectMonth">selectMonth<a class="anchor-link" aria-label="Anchor" href="#selectMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      The outer element for all time related elements.
+      <strong>Defaults:</strong> Select Month<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="separator">separator <a class="anchor-link" aria-label="Anchor" href="#separator"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="previousMonth">previousMonth<a class="anchor-link" aria-label="Anchor" href="#previousMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied the separator columns between time elements, e.g. hour *:* minute *:* second
+      <strong>Defaults:</strong> Previous Month<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="clockContainer">clockContainer <a class="anchor-link" aria-label="Anchor" href="#clockContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="nextMonth">nextMonth<a class="anchor-link" aria-label="Anchor" href="#nextMonth"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      The outer element for the clock view.
+      <strong>Defaults:</strong> Next Month<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="hourContainer">hourContainer <a class="anchor-link" aria-label="Anchor" href="#hourContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="selectYear">selectYear<a class="anchor-link" aria-label="Anchor" href="#selectYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      The outer element for the hours selection view.
+      <strong>Defaults:</strong> Select Year<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="minuteContainer">minuteContainer <a class="anchor-link" aria-label="Anchor" href="#minuteContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="previousYear">previousYear<a class="anchor-link" aria-label="Anchor" href="#previousYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      The outer element for the minutes selection view.
+      <strong>Defaults:</strong> Previous Year<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="secondContainer">secondContainer <a class="anchor-link" aria-label="Anchor" href="#secondContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="nextYear">nextYear<a class="anchor-link" aria-label="Anchor" href="#nextYear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      The outer element for the seconds selection view.
+      <strong>Defaults:</strong> Next Year<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="hour">hour <a class="anchor-link" aria-label="Anchor" href="#hour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="selectDecade">selectDecade<a class="anchor-link" aria-label="Anchor" href="#selectDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to each element in the hours selection view.
+      <strong>Defaults:</strong> Select Decade<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="minute">minute <a class="anchor-link" aria-label="Anchor" href="#minute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="previousDecade">previousDecade<a class="anchor-link" aria-label="Anchor" href="#previousDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to each element in the minutes selection view.
+      <strong>Defaults:</strong> Previous Decade<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="second">second <a class="anchor-link" aria-label="Anchor" href="#second"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="nextDecade">nextDecade<a class="anchor-link" aria-label="Anchor" href="#nextDecade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to each element in the seconds selection view.
+      <strong>Defaults:</strong> Next Decade<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="toggleMeridiem">second <a class="anchor-link" aria-label="Anchor" href="#toggleMeridiem"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="previousCentury">previousCentury<a class="anchor-link" aria-label="Anchor" href="#previousCentury"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied AM/PM toggle button.
+      <strong>Defaults:</strong> Previous Century<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="show">show <a class="anchor-link" aria-label="Anchor" href="#show"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="nextCentury">nextCentury<a class="anchor-link" aria-label="Anchor" href="#nextCentury"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied the element of the current view mode, e.g. calendar or clock.
+      <strong>Defaults:</strong> Next Century<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="collapsing">collapsing <a class="anchor-link" aria-label="Anchor" href="#collapsing"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="pickHour">pickHour<a class="anchor-link" aria-label="Anchor" href="#pickHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to the currently showing view mode during a transition between calendar and clock views
+      <strong>Defaults:</strong> Pick Hour<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="collapse">collapse <a class="anchor-link" aria-label="Anchor" href="#collapse"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="incrementHour">incrementHour<a class="anchor-link" aria-label="Anchor" href="#incrementHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to the currently hidden view mode.
+      <strong>Defaults:</strong> Increment Hour<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="inline">inline <a class="anchor-link" aria-label="Anchor" href="#inline"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="decrementHour">decrementHour<a class="anchor-link" aria-label="Anchor" href="#decrementHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to the widget when the option display.inline is enabled.
+      <strong>Defaults:</strong> Decrement Hour<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="lightTheme">lightTheme <a class="anchor-link" aria-label="Anchor" href="#lightTheme"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="pickMinute">pickMinute<a class="anchor-link" aria-label="Anchor" href="#pickMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to the widget when the option display.theme is light.
+      <strong>Defaults:</strong> Pick Minute<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="darkTheme">darkTheme <a class="anchor-link" aria-label="Anchor" href="#darkTheme"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="incrementMinute">incrementMinute<a class="anchor-link" aria-label="Anchor" href="#incrementMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to the widget when the option display.theme is dark.
+      <strong>Defaults:</strong> Increment Minute<br>
     </p>
   </div>
 
   <div class="row">
-    <h2 id="isDarkPreferredQuery">isDarkPreferredQuery <a class="anchor-link" aria-label="Anchor" href="#isDarkPreferredQuery"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="decrementMinute">decrementMinute<a class="anchor-link" aria-label="Anchor" href="#decrementMinute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Used for detecting if the system color preference is dark mode.
+      <strong>Defaults:</strong> Decrement Minute<br>
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="pickSecond">pickSecond<a class="anchor-link" aria-label="Anchor" href="#pickSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Pick Second<br>
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="incrementSecond">incrementSecond<a class="anchor-link" aria-label="Anchor" href="#incrementSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Increment Second<br>
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="decrementSecond">decrementSecond<a class="anchor-link" aria-label="Anchor" href="#decrementSecond"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Decrement Second<br>
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="toggleMeridiem">toggleMeridiem<a class="anchor-link" aria-label="Anchor" href="#toggleMeridiem"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Toggle Period<br>
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="selectTime">selectTime<a class="anchor-link" aria-label="Anchor" href="#selectTime"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Select Time<br>
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="selectDate">selectDate<a class="anchor-link" aria-label="Anchor" href="#selectDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Select Date<br>
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="dayViewHeaderFormat">dayViewHeaderFormat<a class="anchor-link" aria-label="Anchor" href="#dayViewHeaderFormat"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> DateTimeFormatOptions <strong>Defaults:</strong>
+      <code>{ month: 'long', year: '2-digit' }</code><br>
+      This should be an appropriate value from the Intl.DateFormat options.
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="locale">locale<a class="anchor-link" aria-label="Anchor" href="#locale"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+      <strong>Defaults:</strong> default<br>
+      This should be a BCP 47 language tag or a value supported by Intl.
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="startOfTheWeek">startOfTheWeek<a class="anchor-link" aria-label="Anchor" href="#startOfTheWeek"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> 0-6 <strong>Defaults:</strong> 0<br>
+      Changes the start of the week to the provided index. Intl/Date does not provide apis to get the
+      locale's start of the week. 0 = Sunday, 6 = Saturday. If you want the calendar view to start on Monday,
+      set this option to 1.
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="dateFormats">dateFormats<a class="anchor-link" aria-label="Anchor" href="#dateFormats">
+      <i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+      These options describe shorthand format strings.
+    </p>
+    <div class="row">
+      <div class="col offset-1 border-start">
+        <div>
+          <h4 id="dateFormatsLTS">LTS<a class="anchor-link" aria-label="Anchor" href="#dateFormatsLTS"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+          <p>
+            Long form time format.
+          </p>
+        </div>
+        <div>
+          <h4 id="dateFormatsLT">LT<a class="anchor-link" aria-label="Anchor" href="#dateFormatsLT"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+          <p>
+            Short time format.
+          </p>
+        </div>
+        <div>
+          <h4 id="dateFormatsL">L<a class="anchor-link" aria-label="Anchor" href="#dateFormatsL"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+          <p>
+            Standard date format.
+          </p>
+        </div>
+        <div>
+          <h4 id="dateFormatsLL">LL<a class="anchor-link" aria-label="Anchor" href="#dateFormatsLL"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+          <p>
+            Long form date format. US default is July 4, 2022.
+          </p>
+        </div>
+        <div>
+          <h4 id="dateFormatsLLL">LLL<a class="anchor-link" aria-label="Anchor" href="#dateFormatsLLL"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+          <p>
+            Long form date/time format. US default is July 4, 2022 9:30 AM.
+          </p>
+        </div>
+        <div>
+          <h4 id="dateFormatsLLLL">LLLL<a class="anchor-link" aria-label="Anchor" href="#dateFormatsLLLL"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
+          <p>
+            Long form date/time format with weekday. US default is Monday, July 4, 2022 9:30 AM.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <h2 id="ordinal">ordinal<a class="anchor-link" aria-label="Anchor" href="#ordinal"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+      Function to convert cardinal numbers to ordinal numbers, e.g. 3 -&gt; third.
+    </p>
+  </div>
+
+  <div class="row">
+    <h2 id="format">format<a class="anchor-link" aria-label="Anchor" href="#format"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+      Default tokenized format to use. This can be "L" or "dd/MM/yyyy".
     </p>
   </div>
 
   <div id="subToc" class="d-none">
     <nav id="TableOfContents">
       <ul>
-        <li><a href="#widget">Widget</a></li>
-        <li><a href="#calendarHeader">Calendar Header</a></li>
-        <li><a href="#switch">Switch</a></li>
-        <li><a href="#toolbar">Toolbar</a></li>
-        <li><a href="#noHighlight">No Highlight</a></li>
-        <li><a href="#sideBySide">Side By Side</a></li>
-        <li><a href="#previous">Previous</a></li>
-        <li><a href="#next">Next</a></li>
-        <li><a href="#disabled">Disabled</a></li>
-        <li><a href="#old">Old</a></li>
-        <li><a href="#new">New</a></li>
-        <li><a href="#active">Active</a></li>
-        <li><a href="#dateContainer">Date Container</a></li>
-        <li><a href="#decadesContainer">Decades Container</a></li>
-        <li><a href="#decade">Decade</a></li>
-        <li><a href="#yearsContainer">Years Container</a></li>
-        <li><a href="#year">Year</a></li>
-        <li><a href="#monthsContainer">Months Container</a></li>
-        <li><a href="#month">Month</a></li>
-        <li><a href="#daysContainer">Days Container</a></li>
-        <li><a href="#day">Day</a></li>
-        <li><a href="#calendarWeeks">Calendar Weeks</a></li>
-        <li><a href="#dayOfTheWeek">Day Of The Week</a></li>
+        <li><a href="#content">Overview</a></li>
+        <li><a href="#defaults">Defaults</a></li>
         <li><a href="#today">Today</a></li>
-        <li><a href="#weekend">Weekend</a></li>
-        <li><a href="#timeContainer">Time Container</a></li>
-        <li><a href="#separator">Separator</a></li>
-        <li><a href="#clockContainer">Clock Container</a></li>
-        <li><a href="#hourContainer">Hour Container</a></li>
-        <li><a href="#minuteContainer">Minute Container</a></li>
-        <li><a href="#secondContainer">Second Container</a></li>
-        <li><a href="#hour">Hour</a></li>
-        <li><a href="#minute">Minute</a></li>
-        <li><a href="#second">Second</a></li>
+        <li><a href="#clear">Clear</a></li>
+        <li><a href="#close">Close</a></li>
+        <li><a href="#selectMonth">Select Month</a></li>
+        <li><a href="#previousMonth">Previous Month</a></li>
+        <li><a href="#nextMonth">Next Month</a></li>
+        <li><a href="#selectYear">Select Year</a></li>
+        <li><a href="#previousYear">Previous Year</a></li>
+        <li><a href="#nextYear">Next Year</a></li>
+        <li><a href="#selectDecade">Select Decade</a></li>
+        <li><a href="#previousDecade">Previous Decade</a></li>
+        <li><a href="#nextDecade">Next Decade</a></li>
+        <li><a href="#previousCentury">Previous Century</a></li>
+        <li><a href="#nextCentury">Next Century</a></li>
+        <li><a href="#pickHour">Pick Hour</a></li>
+        <li><a href="#incrementHour">Increment Hour</a></li>
+        <li><a href="#decrementHour">Decrement Hour</a></li>
+        <li><a href="#pickMinute">Pick Minute</a></li>
+        <li><a href="#incrementMinute">Increment Minute</a></li>
+        <li><a href="#decrementMinute">Decrement Minute</a></li>
+        <li><a href="#pickSecond">Pick Second</a></li>
+        <li><a href="#incrementSecond">Increment Second</a></li>
+        <li><a href="#decrementSecond">Decrement Second</a></li>
         <li><a href="#toggleMeridiem">Toggle Meridiem</a></li>
-        <li><a href="#show">Show</a></li>
-        <li><a href="#collapsing">Collapsing</a></li>
-        <li><a href="#collapse">Collapse</a></li>
-        <li><a href="#inline">Inline</a></li>
-        <li><a href="#lightTheme">Light Theme</a></li>
-        <li><a href="#darkTheme">Dark Theme</a></li>
-        <li><a href="#isDarkPreferredQuery">Is Dark Preferred Query</a></li>
+        <li><a href="#selectTime">Select Time</a></li>
+        <li><a href="#selectDate">Select Date</a></li>
+        <li><a href="#dayViewHeaderFormat">Day View Header Format</a></li>
+        <li><a href="#locale">Locale</a></li>
+        <li><a href="#startOfTheWeek">Start Of The Week</a></li>
+        <li><a href="#dateFormats">Date Formats</a></li>
+        <ul>
+          <li><a href="#LTS">LTS</a></li>
+          <li><a href="#LT">LT</a></li>
+          <li><a href="#L">L</a></li>
+          <li><a href="#LL">LL</a></li>
+          <li><a href="#LLL">LLL</a></li>
+          <li><a href="#LLLL">LLLL</a></li>
+        </ul>
+        <li><a href="#ordinal">Ordinal</a></li>
+        <li><a href="#format">Format</a></li>
       </ul>
     </nav>
   </div>

@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-  <title>CSS Classes - Tempus Dominus</title>
+  <title>Date Functions - Tempus Dominus</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -15,22 +15,20 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 
-  <meta name="title" content="CSS Classes">
-  <meta name="description" content="
-    A break down of the CSS classes in Tempus Dominus.
+  <meta name="title" content="Date Functions">
+  <meta name="description" content="How to use Tempus Dominus datetime picker
   ">
 
   
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://getdatepicker.com/docs/6//namespace/css.html">
-  <meta property="og:title" content="CSS Classes">
-  <meta property="og:description" content="
-    A break down of the CSS classes in Tempus Dominus.
+  <meta property="og:url" content="https://getdatepicker.com/docs/6//functions/dates.html">
+  <meta property="og:title" content="Date Functions">
+  <meta property="og:description" content="How to use Tempus Dominus datetime picker
   ">
   <meta class="metaImage" property="og:image" content="">
 
-  <meta property="article:published_time" content="2021-07-08T00:00:00.000Z">
-  <meta property="article:modified_time" content="2021-07-08T00:00:00.000Z">
+  <meta property="article:published_time" content="2022-08-14T00:00:00.000Z">
+  <meta property="article:modified_time" content="2022-08-14T00:00:00.000Z">
   <meta property="article:tag" content="datepicker, javascript, open source, tempus dominus, eonasdan">
   <meta property="article:author" content="Jonathan Peterson">
   <meta property="article:section" content="Technology">
@@ -39,10 +37,9 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:site" content="@eonasdan">
   <meta property="twitter:creator" content="@eonasdan">
-  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//namespace/css.html">
-  <meta property="twitter:title" content="CSS Classes">
-  <meta property="twitter:description" content="
-    A break down of the CSS classes in Tempus Dominus.
+  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//functions/dates.html">
+  <meta property="twitter:title" content="Date Functions">
+  <meta property="twitter:description" content="How to use Tempus Dominus datetime picker
   ">
   <meta class="metaImage" property="twitter:image" content="">
   <link rel="stylesheet" href="/css/styles.min.css">
@@ -240,7 +237,7 @@
 <main class="bd-main order-1">
     <div class="bd-intro ps-lg-4">
         <div class="d-md-flex align-items-center justify-content-between">
-            <h1 class="bd-title title" id="content">CSS Classes</h1>
+            <h1 class="bd-title title" id="content">Date Functions</h1>
         </div>
     </div>
     <div class="bd-toc mt-3 mb-5 my-lg-0 ps-xl-3 mb-lg-5 text-muted d-none" id="tocContainer">
@@ -255,353 +252,182 @@
         </div>
     </div>
     <div id="mainContent" class="bd-content ps-lg-4">
-  <p>
-    The picker uses the following css classes to style the picker.
-  </p>
   <div class="row">
-    <h2 id="widget">widget <a class="anchor-link" aria-label="Anchor" href="#widget"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the widget.
-    </p>
+    For the sake of the following documentation, assume there's a picker setup like this:
+    <pre><code class="language-javascript">const picker = new tempusdominus
+  .TempusDominus(document.getElementById('datetimepicker1'));
+</code>
+</pre>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="datetimepicker1Input" class="form-label">Simple picker</label>
+          <div class="input-group" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
+            <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1">
+            <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
+               <span class="fa-solid fa-calendar"></span>
+             </span>
+          </div>
+        </div>
+        <script type="text/javascript">
+          const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+        </script>
+      </div>
+    </div>
   </div>
 
   <div class="row">
-    <h2 id="calendarHeader">calendarHeader <a class="anchor-link" aria-label="Anchor" href="#calendarHeader"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the calendar view header, next and previous actions.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="switch">switch <a class="anchor-link" aria-label="Anchor" href="#switch"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the action to change the calendar view. E.g. month -&gt; year.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="toolbar">switch <a class="anchor-link" aria-label="Anchor" href="#toolbar"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The elements for all the toolbar options.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="noHighlight">switch <a class="anchor-link" aria-label="Anchor" href="#noHighlight"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Disables the hover and rounding affect.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="sideBySide">sideBySide <a class="anchor-link" aria-label="Anchor" href="#sideBySide"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the widget element when the side by side option is in use.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="previous">previous <a class="anchor-link" aria-label="Anchor" href="#previous"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the action to change the calendar view, e.g. August -&gt; July
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="next">next <a class="anchor-link" aria-label="Anchor" href="#next"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The element for the action to change the calendar view, e.g. August -&gt; September
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="disabled">disabled <a class="anchor-link" aria-label="Anchor" href="#disabled"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any action that would violate any restriction options. ALso applied to an input field if the disabled
-      function is called.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="old">old <a class="anchor-link" aria-label="Anchor" href="#old"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any date that is less than requested view, e.g. the last day of the previous month.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="new">new <a class="anchor-link" aria-label="Anchor" href="#new"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any date that is greater than of requested view, e.g. the last day of the previous month.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="active">active <a class="anchor-link" aria-label="Anchor" href="#active"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to any date that is currently selected.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="dateContainer">dateContainer <a class="anchor-link" aria-label="Anchor" href="#dateContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the calendar view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="decadesContainer">decadesContainer <a class="anchor-link" aria-label="Anchor" href="#decadesContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the decades view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="decade">decade <a class="anchor-link" aria-label="Anchor" href="#decade"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to elements within the decades container, e.g. 2020, 2030
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="yearsContainer">yearsContainer <a class="anchor-link" aria-label="Anchor" href="#yearsContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the years view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="year">year <a class="anchor-link" aria-label="Anchor" href="#year"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to elements within the years container, e.g. 2021, 2021
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="monthsContainer">monthsContainer <a class="anchor-link" aria-label="Anchor" href="#monthsContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      The outer element for the month view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="month">month <a class="anchor-link" aria-label="Anchor" href="#month"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    <h2 id="viewDate">Getting the View Date
+      <a class="anchor-link" aria-label="Anchor" href="#viewDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
     <p>
-      Applied to elements within the month container, e.g. January, February
+      <code>picker.viewDate</code> returns the pickers current view date.
     </p>
   </div>
-
-  <div class="row">
-    <h2 id="daysContainer">daysContainer <a class="anchor-link" aria-label="Anchor" href="#daysContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+  <div class="row mb-3">
+    <h2>picker.dates</h2>
     <p>
-      The outer element for the calendar view.
+      There are a number of function here that allow for retrieving the selected dates or adding to them.
+      These functions are used as <code>picker.dates.add(...)</code> for example.
     </p>
   </div>
-
   <div class="row">
-    <h2 id="day">day <a class="anchor-link" aria-label="Anchor" href="#day"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to elements within the day container, e.g. 1, 2..31
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="calendarWeeks">calendarWeeks <a class="anchor-link" aria-label="Anchor" href="#calendarWeeks"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      If display.calendarWeeks is enabled, a column displaying the week of year is shown. This class is applied to each
-      cell in that column.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="dayOfTheWeek">dayOfTheWeek <a class="anchor-link" aria-label="Anchor" href="#dayOfTheWeek"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the first row of the calendar view, e.g. Sunday, Monday
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="today">today <a class="anchor-link" aria-label="Anchor" href="#today"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    <h2 id="picked">picked
+      <a class="anchor-link" aria-label="Anchor" href="#picked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
     <p>
-      Applied to the current date on the calendar view.
+      Returns an array of <code>DateTime</code> of the selected date(s).
     </p>
   </div>
 
   <div class="row">
-    <h2 id="weekend">weekend <a class="anchor-link" aria-label="Anchor" href="#weekend"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    <h2 id="lastPicked">lastPicked
+      <a class="anchor-link" aria-label="Anchor" href="#lastPicked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
     <p>
-      Applied to the locale's weekend dates on the calendar view, e.g. Sunday, Saturday
+      Returns the last picked <code>DateTime</code> of the selected date(s).
     </p>
   </div>
 
   <div class="row">
-    <h2 id="timeContainer">timeContainer <a class="anchor-link" aria-label="Anchor" href="#timeContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="lastPickedIndex">lastPickedIndex
+      <a class="anchor-link" aria-label="Anchor" href="#lastPickedIndex"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
     <p>
-      The outer element for all time related elements.
+      Returns the length of picked dates -1 or 0 if none are selected.
     </p>
   </div>
 
   <div class="row">
-    <h2 id="separator">separator <a class="anchor-link" aria-label="Anchor" href="#separator"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="add">add(DateTime)
+      <a class="anchor-link" aria-label="Anchor" href="#add"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
     <p>
-      Applied the separator columns between time elements, e.g. hour *:* minute *:* second
+      Adds a new DateTime to selected dates array. Use this function with caution. It will not
+      automatically
+      refresh
+      the
+      widget or do any validation.
     </p>
   </div>
 
   <div class="row">
-    <h2 id="clockContainer">clockContainer <a class="anchor-link" aria-label="Anchor" href="#clockContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="setValue">setValue(value: DateTime, index?: number)
+      <a class="anchor-link" aria-label="Anchor" href="#setValue"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
     <p>
-      The outer element for the clock view.
+      Sets the select date index (or the first, if not provided) to the provided DateTime object.
+    </p>
+
+  </div>
+
+  <div class="row">
+    <h2 id="formatInput">formatInput(value: DateTime): string
+      <a class="anchor-link" aria-label="Anchor" href="#formatInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+      Formats a DateTime object to a string. Used when setting the input value. It is possible to
+      overwrite this
+      to provide more complex formatting with moment/dayjs or by hand.
+    </p>
+
+  </div>
+
+  <div class="row">
+    <h2 id="parseInput">parseInput(value:any): DateTime
+      <a class="anchor-link" aria-label="Anchor" href="#parseInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+      Parse the value into a DateTime object. This can be overwritten to supply your own parsing.
     </p>
   </div>
 
   <div class="row">
-    <h2 id="hourContainer">hourContainer <a class="anchor-link" aria-label="Anchor" href="#hourContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+
+    <h2 id="setFromInput">setFromInput(value: any, index?: number)
+      <a class="anchor-link" aria-label="Anchor" href="#setFromInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
     <p>
-      The outer element for the hours selection view.
+      Tries to convert the provided value to a DateTime object.
+      If value is null|undefined then clear the value of the provided index (or 0). It is possible to
+      overwrite
+      this
+      to provide more complex formatting with moment/dayjs or by hand.
     </p>
   </div>
 
   <div class="row">
-    <h2 id="minuteContainer">minuteContainer <a class="anchor-link" aria-label="Anchor" href="#minuteContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+
+    <h2 id="isPicked">isPicked(DateTime, Unit?)
+      <a class="anchor-link" aria-label="Anchor" href="#isPicked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
     <p>
-      The outer element for the minutes selection view.
+      Returns true if the target date is part of the selected dates array. If unit is provided then a
+      granularity
+      to that unit will be used.
     </p>
   </div>
 
   <div class="row">
-    <h2 id="secondContainer">secondContainer <a class="anchor-link" aria-label="Anchor" href="#secondContainer"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="pickedIndex">pickedIndex(DateTime, Unit?)
+      <a class="anchor-link" aria-label="Anchor" href="#pickedIndex"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
     <p>
-      The outer element for the seconds selection view.
+      Returns the index at which target date is in the array. This is used for updating or removing a
+      date when
+      multi-date is used. If unit is provided then a granularity to that unit will be used.
     </p>
   </div>
 
   <div class="row">
-    <h2 id="hour">hour <a class="anchor-link" aria-label="Anchor" href="#hour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
+    <h2 id="clear">clear
+      <a class="anchor-link" aria-label="Anchor" href="#clear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
     <p>
-      Applied to each element in the hours selection view.
+      Clears all selected dates.
     </p>
-  </div>
-
-  <div class="row">
-    <h2 id="minute">minute <a class="anchor-link" aria-label="Anchor" href="#minute"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
     <p>
-      Applied to each element in the minutes selection view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="second">second <a class="anchor-link" aria-label="Anchor" href="#second"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to each element in the seconds selection view.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="toggleMeridiem">second <a class="anchor-link" aria-label="Anchor" href="#toggleMeridiem"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied AM/PM toggle button.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="show">show <a class="anchor-link" aria-label="Anchor" href="#show"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied the element of the current view mode, e.g. calendar or clock.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="collapsing">collapsing <a class="anchor-link" aria-label="Anchor" href="#collapsing"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the currently showing view mode during a transition between calendar and clock views
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="collapse">collapse <a class="anchor-link" aria-label="Anchor" href="#collapse"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the currently hidden view mode.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="inline">inline <a class="anchor-link" aria-label="Anchor" href="#inline"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the widget when the option display.inline is enabled.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="lightTheme">lightTheme <a class="anchor-link" aria-label="Anchor" href="#lightTheme"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the widget when the option display.theme is light.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="darkTheme">darkTheme <a class="anchor-link" aria-label="Anchor" href="#darkTheme"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Applied to the widget when the option display.theme is dark.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="isDarkPreferredQuery">isDarkPreferredQuery <a class="anchor-link" aria-label="Anchor" href="#isDarkPreferredQuery"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h2>
-    <p>
-      Used for detecting if the system color preference is dark mode.
+      <strong>Emits</strong> <code>Namespace.events.change</code> with the last picked date.
     </p>
   </div>
 
   <div id="subToc" class="d-none">
     <nav id="TableOfContents">
       <ul>
-        <li><a href="#widget">Widget</a></li>
-        <li><a href="#calendarHeader">Calendar Header</a></li>
-        <li><a href="#switch">Switch</a></li>
-        <li><a href="#toolbar">Toolbar</a></li>
-        <li><a href="#noHighlight">No Highlight</a></li>
-        <li><a href="#sideBySide">Side By Side</a></li>
-        <li><a href="#previous">Previous</a></li>
-        <li><a href="#next">Next</a></li>
-        <li><a href="#disabled">Disabled</a></li>
-        <li><a href="#old">Old</a></li>
-        <li><a href="#new">New</a></li>
-        <li><a href="#active">Active</a></li>
-        <li><a href="#dateContainer">Date Container</a></li>
-        <li><a href="#decadesContainer">Decades Container</a></li>
-        <li><a href="#decade">Decade</a></li>
-        <li><a href="#yearsContainer">Years Container</a></li>
-        <li><a href="#year">Year</a></li>
-        <li><a href="#monthsContainer">Months Container</a></li>
-        <li><a href="#month">Month</a></li>
-        <li><a href="#daysContainer">Days Container</a></li>
-        <li><a href="#day">Day</a></li>
-        <li><a href="#calendarWeeks">Calendar Weeks</a></li>
-        <li><a href="#dayOfTheWeek">Day Of The Week</a></li>
-        <li><a href="#today">Today</a></li>
-        <li><a href="#weekend">Weekend</a></li>
-        <li><a href="#timeContainer">Time Container</a></li>
-        <li><a href="#separator">Separator</a></li>
-        <li><a href="#clockContainer">Clock Container</a></li>
-        <li><a href="#hourContainer">Hour Container</a></li>
-        <li><a href="#minuteContainer">Minute Container</a></li>
-        <li><a href="#secondContainer">Second Container</a></li>
-        <li><a href="#hour">Hour</a></li>
-        <li><a href="#minute">Minute</a></li>
-        <li><a href="#second">Second</a></li>
-        <li><a href="#toggleMeridiem">Toggle Meridiem</a></li>
-        <li><a href="#show">Show</a></li>
-        <li><a href="#collapsing">Collapsing</a></li>
-        <li><a href="#collapse">Collapse</a></li>
-        <li><a href="#inline">Inline</a></li>
-        <li><a href="#lightTheme">Light Theme</a></li>
-        <li><a href="#darkTheme">Dark Theme</a></li>
-        <li><a href="#isDarkPreferredQuery">Is Dark Preferred Query</a></li>
+        <li><a href="#content">Overview</a></li>
+        <li><a href="#viewDate">View Date</a></li>
+        <li><a href="#picked">Picked </a></li>
+        <li><a href="#lastPicked">Last Picked</a></li>
+        <li><a href="#lastPickedIndex">Last Picked Index</a></li>
+        <li><a href="#add">Add</a></li>
+        <li><a href="#setValue">Set Value</a></li>
+        <li><a href="#formatInput">Format Input</a></li>
+        <li><a href="#parseInput">Parse Input</a></li>
+        <li><a href="#setFromInput">Set From Input</a></li>
+        <li><a href="#isPicked">Is Picked</a></li>
+        <li><a href="#pickedIndex">Picked Index</a></li>
+        <li><a href="#clear">Clear</a></li>
       </ul>
     </nav>
   </div>
