@@ -48,7 +48,7 @@ declare class Css {
      */
     switch: string;
     /**
-     * The elements for all of the toolbar options
+     * The elements for all the toolbar options
      */
     toolbar: string;
     /**
@@ -87,11 +87,11 @@ declare class Css {
      */
     active: string;
     /**
-     * The outer most element for the calendar view.
+     * The outer element for the calendar view.
      */
     dateContainer: string;
     /**
-     * The outer most element for the decades view.
+     * The outer element for the decades view.
      */
     decadesContainer: string;
     /**
@@ -99,7 +99,7 @@ declare class Css {
      */
     decade: string;
     /**
-     * The outer most element for the years view.
+     * The outer element for the years view.
      */
     yearsContainer: string;
     /**
@@ -107,7 +107,7 @@ declare class Css {
      */
     year: string;
     /**
-     * The outer most element for the month view.
+     * The outer element for the month view.
      */
     monthsContainer: string;
     /**
@@ -115,7 +115,7 @@ declare class Css {
      */
     month: string;
     /**
-     * The outer most element for the calendar view.
+     * The outer element for the calendar view.
      */
     daysContainer: string;
     /**
@@ -140,7 +140,7 @@ declare class Css {
      */
     weekend: string;
     /**
-     * The outer most element for all time related elements.
+     * The outer element for all time related elements.
      */
     timeContainer: string;
     /**
@@ -148,19 +148,19 @@ declare class Css {
      */
     separator: string;
     /**
-     * The outer most element for the clock view.
+     * The outer element for the clock view.
      */
     clockContainer: string;
     /**
-     * The outer most element for the hours selection view.
+     * The outer element for the hours selection view.
      */
     hourContainer: string;
     /**
-     * The outer most element for the minutes selection view.
+     * The outer element for the minutes selection view.
      */
     minuteContainer: string;
     /**
-     * The outer most element for the seconds selection view.
+     * The outer element for the seconds selection view.
      */
     secondContainer: string;
     /**
