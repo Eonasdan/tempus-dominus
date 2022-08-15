@@ -38,13 +38,12 @@
     const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
   </script>
   <div class='row'>
-    <h3>Creating Locales</h3>
+    <h2 id='creating'>Creating Locales</h2>
     <p>
       There are a few examples in the source like this
     </p>
     <pre>
-      <code class='language-javascript'>
-const name = 'ru';
+<code class='language-javascript'>const name = 'ru';
 
 const localization = {
   today: 'Перейти сегодня',
@@ -53,24 +52,21 @@ const localization = {
   startOfTheWeek: 1
 };
 
-export { localization, name };
-      </code>
+export { localization, name };</code>
     </pre>
   </div>
+
   <div class='row'>
-    <h3>Using a locale</h3>
+    <h2 id='using'>Using a locale</h2>
     <p>Load the locale file.</p>
     <pre>
-      <code class='language-html'>
-&lt;script src=&quot;/path/to/locale.js&quot;&gt;&lt;/script&gt;
-      </code>
+<code class='language-html'>&lt;script src=&quot;/path/to/locale.js&quot;&gt;&lt;/script&gt;</code>
     </pre>
     <p>
       You can then either set the global default or you can it individually.
     </p>
     <pre>
-      <code class='language-js'>
-//load the RU locale
+<code class='language-js'>//load the RU locale
 tempusDominus.loadLocale(tempusDominus.locales.ru);
 
 //globally
@@ -78,9 +74,18 @@ tempusDominus.locale(tempusDominus.locales.ru.name);//set the default options to
 
 //picker
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
-datetimepicker1.locale(tempusDominus.locales.ru.name);
-      </code>
+datetimepicker1.locale(tempusDominus.locales.ru.name);</code>
     </pre>
+  </div>
+
+  <div id='subToc' class='d-none'>
+    <nav id='TableOfContents'>
+      <ul>
+        <li><a href='#content'>Overview</a></li>
+        <li><a href='#creating'>Creating</a></li>
+        <li><a href='#using'>Using</a></li>
+      </ul>
+    </nav>
   </div>
 </page-body>
 

@@ -65,7 +65,7 @@ class Css {
   switch = 'picker-switch';
 
   /**
-   * The elements for all of the toolbar options
+   * The elements for all the toolbar options
    */
   toolbar = 'toolbar';
 
@@ -115,12 +115,12 @@ class Css {
   //#region date element
 
   /**
-   * The outer most element for the calendar view.
+   * The outer element for the calendar view.
    */
   dateContainer = 'date-container';
 
   /**
-   * The outer most element for the decades view.
+   * The outer element for the decades view.
    */
   decadesContainer = `${this.dateContainer}-decades`;
 
@@ -130,7 +130,7 @@ class Css {
   decade = 'decade';
 
   /**
-   * The outer most element for the years view.
+   * The outer element for the years view.
    */
   yearsContainer = `${this.dateContainer}-years`;
 
@@ -140,7 +140,7 @@ class Css {
   year = 'year';
 
   /**
-   * The outer most element for the month view.
+   * The outer element for the month view.
    */
   monthsContainer = `${this.dateContainer}-months`;
 
@@ -150,7 +150,7 @@ class Css {
   month = 'month';
 
   /**
-   * The outer most element for the calendar view.
+   * The outer element for the calendar view.
    */
   daysContainer = `${this.dateContainer}-days`;
 
@@ -185,7 +185,7 @@ class Css {
   //#region time element
 
   /**
-   * The outer most element for all time related elements.
+   * The outer element for all time related elements.
    */
   timeContainer = 'time-container';
 
@@ -195,22 +195,22 @@ class Css {
   separator = 'separator';
 
   /**
-   * The outer most element for the clock view.
+   * The outer element for the clock view.
    */
   clockContainer = `${this.timeContainer}-clock`;
 
   /**
-   * The outer most element for the hours selection view.
+   * The outer element for the hours selection view.
    */
   hourContainer = `${this.timeContainer}-hour`;
 
   /**
-   * The outer most element for the minutes selection view.
+   * The outer element for the minutes selection view.
    */
   minuteContainer = `${this.timeContainer}-minute`;
 
   /**
-   * The outer most element for the seconds selection view.
+   * The outer element for the seconds selection view.
    */
   secondContainer = `${this.timeContainer}-second`;
 

@@ -8,45 +8,59 @@
       via the configuration or a plugin.
     </p>
   </div>
+
   <div class='row'>
-    <h3>Via CDN</h3>
+    <h2 id='cdn'>Via CDN</h2>
     <pre>
-    <code class='language-html'>
-&lt;!-- Popperjs --&gt;
+<code class='language-html'>&lt;!-- Popperjs --&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js&quot;
-      crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+  crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
 &lt;!-- Tempus Dominus JavaScript --&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@master/dist/js/tempus-dominus.js&quot;
-      crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+  crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
 
 &lt;!-- Tempus Dominus Styles --&gt;
 &lt;link href=&quot;https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@master/dist/css/tempus-dominus.css&quot;
-      rel=&quot;stylesheet&quot; crossorigin=&quot;anonymous&quot;&gt;
-    </code>
+  rel=&quot;stylesheet&quot; crossorigin=&quot;anonymous&quot;&gt;</code>
 </pre>
   </div>
+
   <div class='row'>
-    <h3>Via NPM</h3>
+    <h2 id='npm'>Via NPM</h2>
     <pre>
-    <code class='language-batch'>
-npm install @popperjs/core @eonasdan/tempus-dominus
-    </code>
+<code class='language-batch'>npm install @popperjs/core @eonasdan/tempus-dominus</code>
 </pre>
   </div>
   <div class='row'>
-    <h3>Compiled Code</h3>
+    <h2 id='compiled'>Compiled Code</h2>
     <p>
       You can grab the compiled js and css from <a href='https://github.com/Eonasdan/tempus-dominus/tree/master/dist'
                                                    target='_blank' rel='noopener'>GitHub</a>
     </p>
     <p>You still need to get Popper yourself.</p>
   </div>
+
   <div class='row'>
-    <h3>Nuget Package</h3>
-    <p>
-      Nuget package are returning! Coming Soon.
-    </p>
+    <h2 id='nuget'>Nuget Package</h2>
+    <pre>
+<code class='language-powershell'>Install-Package TempusDominus
+#or the SCSS version if you prefer
+Install-Package TempusDominus.scss</code>
+    </pre>
   </div>
+
+  <div id='subToc' class='d-none'>
+    <nav id='TableOfContents'>
+      <ul>
+        <li><a href='#content'>Overview</a></li>
+        <li><a href='#cdn'>CDN</a></li>
+        <li><a href='#npm'>NPM</a></li>
+        <li><a href='#compiled'>Compiled</a></li>
+        <li><a href='#nuget'>NuGet</a></li>
+      </ul>
+    </nav>
+  </div>
+
 </page-body>
 <page-meta>
   <title>Download</title>

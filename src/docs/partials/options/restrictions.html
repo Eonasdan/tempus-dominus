@@ -3,8 +3,7 @@
     Restrictions allow you to prevent users from selected dates or times based on a set of rules.
   </p>
   <pre id='defaults'>
-<code class='language-js'>
-new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+<code class='language-js'>new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
   {
     restrictions: {
       minDate: undefined,
@@ -17,15 +16,14 @@ new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
       enabledHours: []
     }
   }
-)
-</code>
+)</code>
   </pre>
 
   <div class='row'>
-    <h3 id='minDate'>minDate
+    <h2 id='minDate'>minDate
       <a class='anchor-link' aria-label='Anchor' href='#minDate'><i
         class='fa-solid fa-anchor' aria-hidden='true'></i></a>
-    </h3>
+    </h2>
     <p>
       <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br />
       Prevents the user from selecting a date/time before this value. Set to
@@ -41,9 +39,9 @@ new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
   </div>
 
   <div class='row'>
-    <h3 id='maxDate'>maxDate <a class='anchor-link' aria-label='Anchor'
+    <h2 id='maxDate'>maxDate <a class='anchor-link' aria-label='Anchor'
                                 href='#maxDate'><i
-      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h3>
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
     <p>
       <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br />
       Prevents the user from selecting a date/time after this value. Set to <code>undefined</code>
@@ -58,10 +56,10 @@ new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
   </div>
 
   <div class='row'>
-    <h3 id='enabledDates'>enabledDates/disabledDates
+    <h2 id='enabledDates'>enabledDates/disabledDates
       <a class='anchor-link' aria-label='Anchor' href='#enabledDates'><i
         class='fa-solid fa-anchor' aria-hidden='true'></i></a>
-    </h3>
+    </h2>
     <div>
       <strong>Accepts:</strong> array of string | Date | DateTime <strong>Defaults:</strong> undefined<br />
       <div class='alert alert-warning'>
@@ -89,10 +87,10 @@ new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
   </div>
 
   <div class='row'>
-    <h3 id='enabledHours'>enabledHours/disabledHours
+    <h2 id='enabledHours'>enabledHours/disabledHours
       <a class='anchor-link' aria-label='Anchor' href='#enabledHours'><i
         class='fa-solid fa-anchor' aria-hidden='true'></i></a>
-    </h3>
+    </h2>
     <div>
       <strong>Accepts:</strong> array of number from 0-24 <strong>Defaults:</strong> undefined<br />
       <div class='alert alert-warning'>
@@ -118,10 +116,10 @@ new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
   </div>
 
   <div class='row'>
-    <h3 id='disabledTimeIntervals'>disabledTimeIntervals
+    <h2 id='disabledTimeIntervals'>disabledTimeIntervals
       <a class='anchor-link' aria-label='Anchor' href='#disabledTimeIntervals'><i
         class='fa-solid fa-anchor' aria-hidden='true'></i></a>
-    </h3>
+    </h2>
     <p>
       <strong>Accepts:</strong> array of an object with from: DateTime, to: DateTime
       <strong>Defaults:</strong>
@@ -130,8 +128,7 @@ new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
     </p>
 
     <pre>
-<code class='language-javascript'>
-const later = new tempusDominus.DateTime();
+<code class='language-javascript'>const later = new tempusDominus.DateTime();
 later.hours = 8;
 new tempusDominus.TempusDominus(..., {
   restrictions: {
@@ -139,16 +136,15 @@ new tempusDominus.TempusDominus(..., {
       { from: new tempusDominus.DateTime().startOf('date'), to: later }
     ]
   }
-});
-</code>
+});</code>
   </pre>
   </div>
 
   <div class='row'>
-    <h3 id='daysOfWeekDisabled'>daysOfWeekDisabled
+    <h2 id='daysOfWeekDisabled'>daysOfWeekDisabled
       <a class='anchor-link' aria-label='Anchor' href='#daysOfWeekDisabled'><i
         class='fa-solid fa-anchor' aria-hidden='true'></i></a>
-    </h3>
+    </h2>
     <p>
       <strong>Accepts:</strong> array of numbers from 0-6<br />
       Disallow the user to select weekdays that exist in this array. This has lower priority over the
