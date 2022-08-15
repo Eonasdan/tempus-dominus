@@ -12,11 +12,14 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.6
+        with:
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-version: '6.x'
       - name: Pack NuGet
         run: | 
          nuget pack src/nuget/TempusDominus.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis -BasePath $env:SourcesPath
          nuget pack src/nuget/TempusDominus.scss.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis -BasePath $env:SourcesPath
       - name: Push Nuget
         run: |
-          nuget push src/nuget/TempusDominus.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
-          nuget push src/nuget/TempusDominus.scss.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+          nuget push src/nuget/TempusDominus.nupkg -Source 'https://api.nuget.org/v3/index.json'
+          nuget push src/nuget/TempusDominus.scss.nupkg -Source 'https://api.nuget.org/v3/index.json'
