@@ -1,0 +1,184 @@
+<page-body>
+  <p id='overview'>
+    Restrictions allow you to prevent users from selected dates or times based on a set of rules.
+  </p>
+  <pre id='defaults'>
+<code class='language-js'>new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+  {
+    restrictions: {
+      minDate: undefined,
+      maxDate: undefined,
+      disabledDates: [],
+      enabledDates: [],
+      daysOfWeekDisabled: [],
+      disabledTimeIntervals: [],
+      disabledHours: [],
+      enabledHours: []
+    }
+  }
+)</code>
+  </pre>
+
+  <div class='row'>
+    <h2 id='minDate'>minDate
+      <a class='anchor-link' aria-label='Anchor' href='#minDate'><i
+        class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br />
+      Prevents the user from selecting a date/time before this value. Set to
+      <code>undefined</code> to remove
+      the
+      restriction.
+    </p>
+    <p>
+      Throws <a href='../namespace/errors.html#conflictingConfiguration'>conflictingConfiguration</a>
+      if value is
+      after maxDate.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='maxDate'>maxDate <a class='anchor-link' aria-label='Anchor'
+                                href='#maxDate'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br />
+      Prevents the user from selecting a date/time after this value. Set to <code>undefined</code>
+      to remove the
+      restriction.
+    </p>
+    <p>
+      Throws <a href='../namespace/errors.html#conflictingConfiguration'>conflictingConfiguration</a>
+      if value is
+      after maxDate.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='enabledDates'>enabledDates/disabledDates
+      <a class='anchor-link' aria-label='Anchor' href='#enabledDates'><i
+        class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <div>
+      <strong>Accepts:</strong> array of string | Date | DateTime <strong>Defaults:</strong> undefined<br />
+      <div class='alert alert-warning'>
+        Use one or the other, don't provide both enabledDates and disabledDates.
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col offset-1 border-start'>
+        <h4>enabledDates</h4>
+        <p>
+          Allows the user to select only from the provided days. Setting this takes precedence
+          over
+          options.minDate,
+          options.maxDate configuration.
+        </p>
+        <h4>disabledDates</h4>
+        <p>
+          Disallows the user to select any of the provided days. Setting this takes precedence
+          over
+          options.minDate,
+          options.maxDate configuration.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <h2 id='enabledHours'>enabledHours/disabledHours
+      <a class='anchor-link' aria-label='Anchor' href='#enabledHours'><i
+        class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <div>
+      <strong>Accepts:</strong> array of number from 0-24 <strong>Defaults:</strong> undefined<br />
+      <div class='alert alert-warning'>
+        Use one or the other, don't provide both enabledHours and disabledHours.
+      </div>
+      <p>
+        Throws <a href='../namespace/errors.html#numbersOutOfRage'>numbersOutOfRage</a> any value is
+        not between 0-23
+      </p>
+    </div>
+    <div class='row'>
+      <div class='col offset-1 border-start'>
+        <h4>enabledHours</h4>
+        <p>
+          Allows the user to select only from the provided hours.
+        </p>
+        <h4>disabledHours</h4>
+        <p>
+          Disallows the user to select any of the provided hours.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <h2 id='disabledTimeIntervals'>disabledTimeIntervals
+      <a class='anchor-link' aria-label='Anchor' href='#disabledTimeIntervals'><i
+        class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> array of an object with from: DateTime, to: DateTime
+      <strong>Defaults:</strong>
+      undefined<br />
+      Disables time selection between the given DateTimes.
+    </p>
+
+    <pre>
+<code class='language-javascript'>const later = new tempusDominus.DateTime();
+later.hours = 8;
+new tempusDominus.TempusDominus(..., {
+  restrictions: {
+    disabledTimeIntervals: [
+      { from: new tempusDominus.DateTime().startOf('date'), to: later }
+    ]
+  }
+});</code>
+  </pre>
+  </div>
+
+  <div class='row'>
+    <h2 id='daysOfWeekDisabled'>daysOfWeekDisabled
+      <a class='anchor-link' aria-label='Anchor' href='#daysOfWeekDisabled'><i
+        class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> array of numbers from 0-6<br />
+      Disallow the user to select weekdays that exist in this array. This has lower priority over the
+      options.minDate, options.maxDate, options.disabledDates and options.enabledDates configuration
+      settings.
+    </p>
+    <p>
+      Throws <a href='../namespace/errors.html#numbersOutOfRage'>numbersOutOfRage</a> any value is not
+      between 0-6.
+    </p>
+  </div>
+
+  <div id='subToc' class='d-none'>
+    <nav id='TableOfContents'>
+      <ul>
+        <li><a href='#content'>Overview</a></li>
+        <li><a href='#defaults'>Defaults</a></li>
+        <li><a href='#minDate'>Min Date</a></li>
+        <li><a href='#maxDate'>Max Date</a></li>
+        <li><a href='#enabledDates'>Enabled/Disabled Dates</a></li>
+        <li><a href='#enabledHours'>Enabled/Disabled Hours</a></li>
+        <li><a href='#disabledTimeIntervals'>Disabled Time Intervals</a></li>
+        <li><a href='#daysOfWeekDisabled'>Days Of Week Disabled</a></li>
+      </ul>
+    </nav>
+  </div>
+
+</page-body>
+
+<page-meta>
+  <title>Restrictions Options</title>
+  <post-date>08/11/2022</post-date>
+  <update-date>08/11/2022</update-date>
+  <excerpt>How to use the restriction options.
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

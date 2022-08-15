@@ -1,0 +1,498 @@
+<page-body>
+  <div class='row' id='overview'>
+    <div class='col'>
+      <p>
+        Most of the localization options are for title tooltips over icons.
+      </p>
+      <p>
+        You can provide localization options to override the tooltips as well as the day/month display.
+      </p>
+      <p>
+        You could also set this globally via <code>tempusDominus.DefaultOptions.localization = { ...
+        }</code> or by
+        creating a variable e.g. <code>const ru = { today:'Перейти сегодня' ... };</code> then provide
+        the options
+        as
+      </p>
+      <pre>
+<code class='language-javascript'>new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
+   localization: ru
+ }</code>
+     </pre>
+    </div>
+  </div>
+
+  <hr />
+
+  <pre id='defaults'>
+<code class='language-js'>new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+  {
+    localization: {
+      today: 'Go to today',
+      clear: 'Clear selection',
+      close: 'Close the picker',
+      selectMonth: 'Select Month',
+      previousMonth: 'Previous Month',
+      nextMonth: 'Next Month',
+      selectYear: 'Select Year',
+      previousYear: 'Previous Year',
+      nextYear: 'Next Year',
+      selectDecade: 'Select Decade',
+      previousDecade: 'Previous Decade',
+      nextDecade: 'Next Decade',
+      previousCentury: 'Previous Century',
+      nextCentury: 'Next Century',
+      pickHour: 'Pick Hour',
+      incrementHour: 'Increment Hour',
+      decrementHour: 'Decrement Hour',
+      pickMinute: 'Pick Minute',
+      incrementMinute: 'Increment Minute',
+      decrementMinute: 'Decrement Minute',
+      pickSecond: 'Pick Second',
+      incrementSecond: 'Increment Second',
+      decrementSecond: 'Decrement Second',
+      toggleMeridiem: 'Toggle Meridiem',
+      selectTime: 'Select Time',
+      selectDate: 'Select Date',
+      dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+      locale: 'default',
+      startOfTheWeek: 0,
+      /**
+       * This is only used with the customDateFormat plugin
+       */
+      dateFormats: {
+        LTS: 'h:mm:ss T',
+        LT: 'h:mm T',
+        L: 'MM/dd/yyyy',
+        LL: 'MMMM d, yyyy',
+        LLL: 'MMMM d, yyyy h:mm T',
+        LLLL: 'dddd, MMMM d, yyyy h:mm T'
+      },
+      /**
+       * This is only used with the customDateFormat plugin
+       */
+      ordinal: (n) => n,
+      /**
+       * This is only used with the customDateFormat plugin
+       */
+      format: 'L'
+    }
+  }
+)</code>
+  </pre>
+
+  <div class='row'>
+    <h2 id='today'>today<a class='anchor-link' aria-label='Anchor'
+                           href='#today'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Defaults:</strong> Go to today<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='clear'>clear<a class='anchor-link' aria-label='Anchor'
+                           href='#clear'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Defaults:</strong> Clear selection<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='close'>close<a class='anchor-link' aria-label='Anchor'
+                           href='#close'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Defaults:</strong> Close the picker<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='selectMonth'>selectMonth<a class='anchor-link' aria-label='Anchor'
+                                       href='#selectMonth'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Select Month<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='previousMonth'>previousMonth<a class='anchor-link' aria-label='Anchor'
+                                           href='#previousMonth'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Previous Month<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='nextMonth'>nextMonth<a class='anchor-link' aria-label='Anchor'
+                                   href='#nextMonth'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Next Month<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='selectYear'>selectYear<a class='anchor-link' aria-label='Anchor'
+                                     href='#selectYear'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Select Year<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='previousYear'>previousYear<a class='anchor-link' aria-label='Anchor'
+                                         href='#previousYear'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Previous Year<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='nextYear'>nextYear<a class='anchor-link' aria-label='Anchor'
+                                 href='#nextYear'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Next Year<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='selectDecade'>selectDecade<a class='anchor-link' aria-label='Anchor'
+                                         href='#selectDecade'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Select Decade<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='previousDecade'>previousDecade<a class='anchor-link' aria-label='Anchor'
+                                             href='#previousDecade'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Previous Decade<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='nextDecade'>nextDecade<a class='anchor-link' aria-label='Anchor'
+                                     href='#nextDecade'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Next Decade<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='previousCentury'>previousCentury<a class='anchor-link' aria-label='Anchor'
+                                               href='#previousCentury'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Previous Century<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='nextCentury'>nextCentury<a class='anchor-link' aria-label='Anchor'
+                                       href='#nextCentury'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Next Century<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='pickHour'>pickHour<a class='anchor-link' aria-label='Anchor'
+                                 href='#pickHour'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Pick Hour<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='incrementHour'>incrementHour<a class='anchor-link' aria-label='Anchor'
+                                           href='#incrementHour'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Increment Hour<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='decrementHour'>decrementHour<a class='anchor-link' aria-label='Anchor'
+                                           href='#decrementHour'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Decrement Hour<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='pickMinute'>pickMinute<a class='anchor-link' aria-label='Anchor'
+                                     href='#pickMinute'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Pick Minute<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='incrementMinute'>incrementMinute<a class='anchor-link' aria-label='Anchor'
+                                               href='#incrementMinute'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Increment Minute<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='decrementMinute'>decrementMinute<a class='anchor-link' aria-label='Anchor'
+                                               href='#decrementMinute'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Decrement Minute<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='pickSecond'>pickSecond<a class='anchor-link' aria-label='Anchor'
+                                     href='#pickSecond'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Pick Second<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='incrementSecond'>incrementSecond<a class='anchor-link' aria-label='Anchor'
+                                               href='#incrementSecond'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Increment Second<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='decrementSecond'>decrementSecond<a class='anchor-link' aria-label='Anchor'
+                                               href='#decrementSecond'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Decrement Second<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='toggleMeridiem'>toggleMeridiem<a class='anchor-link' aria-label='Anchor'
+                                         href='#toggleMeridiem'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Toggle Period<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='selectTime'>selectTime<a class='anchor-link' aria-label='Anchor'
+                                     href='#selectTime'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Select Time<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='selectDate'>selectDate<a class='anchor-link' aria-label='Anchor'
+                                     href='#selectDate'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Defaults:</strong> Select Date<br />
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='dayViewHeaderFormat'>dayViewHeaderFormat<a class='anchor-link'
+                                                       aria-label='Anchor'
+                                                       href='#dayViewHeaderFormat'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> DateTimeFormatOptions <strong>Defaults:</strong>
+      <code>{ month: 'long', year: '2-digit' }</code><br />
+      This should be an appropriate value from the Intl.DateFormat options.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='locale'>locale<a class='anchor-link' aria-label='Anchor'
+                             href='#locale'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Defaults:</strong> default<br />
+      This should be a BCP 47 language tag or a value supported by Intl.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='startOfTheWeek'>startOfTheWeek<a class='anchor-link' aria-label='Anchor'
+                                             href='#startOfTheWeek'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> 0-6 <strong>Defaults:</strong> 0<br />
+      Changes the start of the week to the provided index. Intl/Date does not provide apis to get the
+      locale's start of the week. 0 = Sunday, 6 = Saturday. If you want the calendar view to start on Monday,
+      set this option to 1.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='dateFormats'>dateFormats<a class='anchor-link' aria-label='Anchor'
+                                       href='#dateFormats'>
+      <i class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      These options describe shorthand format strings.
+    </p>
+    <div class='row'>
+      <div class='col offset-1 border-start'>
+        <div>
+          <h4 id='dateFormatsLTS'>LTS<a class='anchor-link' aria-label='Anchor'
+                                        href='#dateFormatsLTS'><i
+            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+          <p>
+            Long form time format.
+          </p>
+        </div>
+        <div>
+          <h4 id='dateFormatsLT'>LT<a class='anchor-link' aria-label='Anchor'
+                                      href='#dateFormatsLT'><i
+            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+          <p>
+            Short time format.
+          </p>
+        </div>
+        <div>
+          <h4 id='dateFormatsL'>L<a class='anchor-link' aria-label='Anchor'
+                                    href='#dateFormatsL'><i
+            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+          <p>
+            Standard date format.
+          </p>
+        </div>
+        <div>
+          <h4 id='dateFormatsLL'>LL<a class='anchor-link' aria-label='Anchor'
+                                      href='#dateFormatsLL'><i
+            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+          <p>
+            Long form date format. US default is July 4, 2022.
+          </p>
+        </div>
+        <div>
+          <h4 id='dateFormatsLLL'>LLL<a class='anchor-link' aria-label='Anchor'
+                                        href='#dateFormatsLLL'><i
+            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+          <p>
+            Long form date/time format. US default is July 4, 2022 9:30 AM.
+          </p>
+        </div>
+        <div>
+          <h4 id='dateFormatsLLLL'>LLLL<a class='anchor-link' aria-label='Anchor'
+                                          href='#dateFormatsLLLL'><i
+            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+          <p>
+            Long form date/time format with weekday. US default is Monday, July 4, 2022 9:30 AM.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <h2 id='ordinal'>ordinal<a class='anchor-link' aria-label='Anchor'
+                               href='#ordinal'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Function to convert cardinal numbers to ordinal numbers, e.g. 3 -&gt; third.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='format'>format<a class='anchor-link' aria-label='Anchor'
+                             href='#format'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Default tokenized format to use. This can be "L" or "dd/MM/yyyy".
+    </p>
+  </div>
+
+  <div id='subToc' class='d-none'>
+    <nav id='TableOfContents'>
+      <ul>
+        <li><a href='#content'>Overview</a></li>
+        <li><a href='#defaults'>Defaults</a></li>
+        <li><a href="#today">Today</a></li>
+        <li><a href="#clear">Clear</a></li>
+        <li><a href="#close">Close</a></li>
+        <li><a href="#selectMonth">Select Month</a></li>
+        <li><a href="#previousMonth">Previous Month</a></li>
+        <li><a href="#nextMonth">Next Month</a></li>
+        <li><a href="#selectYear">Select Year</a></li>
+        <li><a href="#previousYear">Previous Year</a></li>
+        <li><a href="#nextYear">Next Year</a></li>
+        <li><a href="#selectDecade">Select Decade</a></li>
+        <li><a href="#previousDecade">Previous Decade</a></li>
+        <li><a href="#nextDecade">Next Decade</a></li>
+        <li><a href="#previousCentury">Previous Century</a></li>
+        <li><a href="#nextCentury">Next Century</a></li>
+        <li><a href="#pickHour">Pick Hour</a></li>
+        <li><a href="#incrementHour">Increment Hour</a></li>
+        <li><a href="#decrementHour">Decrement Hour</a></li>
+        <li><a href="#pickMinute">Pick Minute</a></li>
+        <li><a href="#incrementMinute">Increment Minute</a></li>
+        <li><a href="#decrementMinute">Decrement Minute</a></li>
+        <li><a href="#pickSecond">Pick Second</a></li>
+        <li><a href="#incrementSecond">Increment Second</a></li>
+        <li><a href="#decrementSecond">Decrement Second</a></li>
+        <li><a href="#toggleMeridiem">Toggle Meridiem</a></li>
+        <li><a href="#selectTime">Select Time</a></li>
+        <li><a href="#selectDate">Select Date</a></li>
+        <li><a href="#dayViewHeaderFormat">Day View Header Format</a></li>
+        <li><a href="#locale">Locale</a></li>
+        <li><a href="#startOfTheWeek">Start Of The Week</a></li>
+        <li><a href="#dateFormats">Date Formats</a></li>
+        <ul>
+          <li><a href="#LTS">LTS</a></li>
+          <li><a href="#LT">LT</a></li>
+          <li><a href="#L">L</a></li>
+          <li><a href="#LL">LL</a></li>
+          <li><a href="#LLL">LLL</a></li>
+          <li><a href="#LLLL">LLLL</a></li>
+        </ul>
+        <li><a href="#ordinal">Ordinal</a></li>
+        <li><a href="#format">Format</a></li>
+      </ul>
+    </nav>
+  </div>
+
+</page-body>
+
+<page-meta>
+  <title>Localization Options</title>
+  <post-date>08/11/2022</post-date>
+  <update-date>08/11/2022</update-date>
+  <excerpt>How to use the restriction options.
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

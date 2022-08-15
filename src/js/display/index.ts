@@ -148,7 +148,7 @@ export default class Display {
   /**
    * Shows the picker and creates a Popper instance if needed.
    * Add document click event to hide when clicking outside the picker.
-   * @fires Events#show
+   * fires Events#show
    */
   show(): void {
     if (this.widget == undefined) {
@@ -350,11 +350,11 @@ export default class Display {
 
     if (this.optionsStore.options.display.theme === 'auto') {
       window
-        .matchMedia(Namespace.css.isDarkPreferedQuery)
+        .matchMedia(Namespace.css.isDarkPreferredQuery)
         .addEventListener('change', () => this._updateTheme());
     } else {
       window
-        .matchMedia(Namespace.css.isDarkPreferedQuery)
+        .matchMedia(Namespace.css.isDarkPreferredQuery)
         .removeEventListener('change', () => this._updateTheme());
     }
   }
@@ -364,7 +364,7 @@ export default class Display {
 
     const isDarkMode =
       window.matchMedia &&
-      window.matchMedia(Namespace.css.isDarkPreferedQuery).matches;
+      window.matchMedia(Namespace.css.isDarkPreferredQuery).matches;
 
     switch (currentTheme) {
       case 'light':
@@ -451,7 +451,7 @@ export default class Display {
   /**
    * Hides the picker if needed.
    * Remove document click event to hide when clicking outside the picker.
-   * @fires Events#hide
+   * fires Events#hide
    */
   hide(): void {
     if (!this.widget || !this._isVisible) return;

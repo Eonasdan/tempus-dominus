@@ -1,6 +1,6 @@
 //obviously, loading moment js is required.
 declare var moment;
-export const load = (option, tdClasses, tdFactory) => {
+export default (option, tdClasses, tdFactory) => {
   tdClasses.Dates.prototype.setFromInput = function(value, index) {
     let converted = moment(value, option);
     if (converted.isValid()) {

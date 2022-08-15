@@ -1,0 +1,459 @@
+<page-body>
+  <p id='overview'>
+    The display options allow you to control much of the picker's look and feel. You can disable components, buttons
+    and change the default icons.
+  </p>
+  <pre id='defaults'>
+<code class='language-js'>new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+  {
+    display: {
+      icons: {
+        type: 'icons',
+        time: 'fa-solid fa-clock',
+        date: 'fa-solid fa-calendar',
+        up: 'fa-solid fa-arrow-up',
+        down: 'fa-solid fa-arrow-down',
+        previous: 'fa-solid fa-chevron-left',
+        next: 'fa-solid fa-chevron-right',
+        today: 'fa-solid fa-calendar-check',
+        clear: 'fa-solid fa-trash',
+        close: 'fa-solid fa-xmark'
+      },
+      sideBySide: false,
+      calendarWeeks: false,
+      viewMode: 'calendar',
+      toolbarPlacement: 'bottom',
+      keepOpen: false,
+      buttons: {
+        today: false,
+        clear: false,
+        close: false
+      },
+      components: {
+        calendar: true,
+        date: true,
+        month: true,
+        year: true,
+        decades: true,
+        clock: true,
+        hours: true,
+        minutes: true,
+        seconds: false,
+        useTwentyfourHour: undefined
+      },
+      inline: false,
+      theme: 'auto'
+    }
+)</code>
+          </pre>
+
+  <div class='row'>
+    <h2 id='icons'>icons<a class='anchor-link' aria-label='Anchor' href='#icons'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> string
+    </p>
+    <p>
+      Any icon library that expects icons to be used like
+      <code>&lt;i class=&#39;fas fa-calendar&#39;&gt;&lt;/i&gt;</code> will work, provided you include the
+      correct
+      styles and scripts needed.
+    </p>
+    <p>Icon sprites are also supported.</p>
+    <div class='row'>
+      <div class='col offset-1 border-start'>
+        <h4 id='iconsType'>type<a class='anchor-link' aria-label='Anchor'
+                                  href='#iconsType'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Accepts either "icons" or "sprites"</strong><br />
+          Defaults to "icons". If "sprites" is used as the value, the icons will be render with an svg
+          element
+          instead
+          of an "i" element. If you don't know which you should use, leave it as "icons".
+        </p>
+
+        <h4 id='iconsTime'>time<a class='anchor-link' aria-label='Anchor'
+                                  href='#iconsTime'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> <i class='fa-solid fa-clock' aria-hidden='true'></i> (fas
+          fa-clock)<br />
+          This icon is used to change the view from the calendar view to the clock view.
+        </p>
+
+        <h4 id='iconsDate'>date<a class='anchor-link' aria-label='Anchor'
+                                  href='#iconsDate'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> <i class='fa-solid fa-calendar' aria-hidden='true'></i> (fas
+          fa-calendar)<br />
+          This icon is used to change the view from the clock view to the calendar view.
+        </p>
+
+        <h4 id='iconsUp'>up<a class='anchor-link' aria-label='Anchor' href='#iconsUp'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> <i class='fa-solid fa-arrow-up' aria-hidden='true'></i> (fas
+          fa-arrow-up)<br />
+          This icon is used to increment hours, minutes and seconds in the clock view.
+        </p>
+
+        <h4 id='iconsDown'>down<a class='anchor-link' aria-label='Anchor'
+                                  href='#iconsDown'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> <i class='fa-solid fa-arrow-down' aria-hidden='true'></i> (fas
+          fa-arrow-down)<br />
+          This icon is used to decremeant hours, minutes and seconds in the clock view.
+        </p>
+
+        <h4 id='iconsNext'>next<a class='anchor-link' aria-label='Anchor'
+                                  href='#iconsNext'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> <i class='fa-solid fa-chevron-right' aria-hidden='true'></i> (fas
+          fa-chevron-right)<br />
+          This icon is used to navigation forward in the calendar, month, year, and decade views.
+        </p>
+
+        <h4 id='iconsPrevious'>previous<a class='anchor-link' aria-label='Anchor'
+                                          href='#iconsPrevious'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> <i class='fa-solid fa-chevron-left' aria-hidden='true'></i> (fas
+          fa-chevron-left)<br />
+          This icon is used to navigation backwards in the calendar, month, year, and decade views.
+        </p>
+
+        <h4 id='iconsToday'>today<a class='anchor-link' aria-label='Anchor'
+                                    href='#iconsToday'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> <i class='fa-solid fa-calendar-check' aria-hidden='true'></i>
+          (fas fa-calendar-check)<br />
+          This icon is used to change the date and view to now.
+        </p>
+
+        <h4 id='iconsClear'>clear<a class='anchor-link' aria-label='Anchor'
+                                    href='#iconsClear'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> <i class='fa-solid fa-trash' aria-hidden='true'></i> (fas
+          fa-trash)<br />
+          This icon is used to clear the currently selected date.
+        </p>
+
+        <h4 id='iconsClose'>close<a class='anchor-link' aria-label='Anchor'
+                                    href='#iconsClose'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> <i class='fa-solid fa-times' aria-hidden='true'></i> (fas
+          fa-times)<br />
+          This icon is used to close the picker.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+  <h2 id='sideBySide'>sideBySide<a class='anchor-link' aria-label='Anchor'
+                                   href='#sideBySide'><i
+    class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+  <p>
+    <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br />
+    <img src='../images/side-by-side.png' class='img-fluid img-thumbnail d-block' alt='Side by Side View' />
+    Displays the date and time pickers side by side.
+  </p>
+  </div>
+
+  <div class='row'>
+  <h2 id='calendarWeeks'>calendarWeeks<a class='anchor-link' aria-label='Anchor'
+                                         href='#calendarWeeks'><i
+    class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+  <p>
+    <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br />
+    <img src='../images/calendar-weeks.png' class='img-fluid img-thumbnail d-block' alt='Calendar View' />
+    Displays an additional column with the calendar week for that week.
+  </p>
+  </div>
+
+  <div class='row'>
+  <h2 id='viewMode'>viewMode<a class='anchor-link' aria-label='Anchor' href='#viewMode'><i
+    class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+  <p>
+    <strong>Accepts:</strong> 'clock' | 'calendar' | 'months' | 'years' | 'decades'
+    <strong>Defaults:</strong> calendar<br />
+    The default view when the picker is displayed. Set to "years" for a date of birth picker.
+  </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='toolbarPlacement'>toolbarPlacement<a class='anchor-link' aria-label='Anchor'
+                                                 href='#toolbarPlacement'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+
+    <p>
+      <strong>Accepts:</strong> 'top' | 'bottom' <strong>Defaults:</strong> bottom<br />
+      Changes the placement of the toolbar where the today, clear, component switch icon are located.
+    </p>
+    <p>
+      Throws <a href='../namespace/errors.html#unexpectedOptionValue'>unexpectedOptionValue</a> if value
+      is not one of the accepted values.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='keepOpen'>keepOpen<a class='anchor-link' aria-label='Anchor' href='#keepOpen'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Accepts:</strong> true|false <strong>Defaults:</strong> false<br />
+      Keep the picker window open even after a date selection. The picker can still be closed by the
+      target or
+      clicking on an outside element. This option will only work when time components are disabled.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='buttons'>buttons<a class='anchor-link' aria-label='Anchor' href='#buttons'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p><strong>Accepts: true|false</strong></p>
+    <p>
+      <img src='../images/buttons.png' class='img-fluid img-thumbnail d-block' alt='Buttons' />
+    </p>
+    <div class='row'>
+      <div class='col offset-1 border-start'>
+        <h4 id='buttonsToday'>today<a class='anchor-link' aria-label='Anchor'
+                                      href='#buttonsToday'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> false<br />
+          Displayed above in <span style='color:#FC4242;'>red</span>
+        </p>
+
+        <h4 id='buttonsClose'>close<a class='anchor-link' aria-label='Anchor'
+                                      href='#buttonsClose'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> false<br />
+          Displayed above in <span style='color:#632289;'>purple</span>
+        </p>
+
+        <h4 id='buttonsClear'>clear<a class='anchor-link' aria-label='Anchor'
+                                      href='#buttonsClear'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> false<br />
+          Displayed above in <span style='color:#06AF8F;'>green</span>
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <h2 id='components'>components<a class='anchor-link' aria-label='Anchor'
+                                     href='#components'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p><strong>Accepts: true|false</strong></p>
+
+    <p>
+      These options turns on or off the particular views. If option is false for <code>date</code> the
+      user would only be able to select month and year for instance.
+    </p>
+
+    <div class='row'>
+      <div class='col offset-1 border-start'>
+        <h4 id='componentsCalendar'>calendar<a class='anchor-link' aria-label='Anchor'
+                                               href='#componentsCalendar'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> true<br />
+          A convenience flag that can enable or disable all the calendar components like date,
+          month, year, decades, century. This flag must be true for any of the calendar components to be visible,
+          even if those
+          options are true.
+        </p>
+
+        <h4 id='componentsDate'>date<a class='anchor-link' aria-label='Anchor'
+                                       href='#componentsDate'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> true<br />
+          <img src='../images/calendar-view.png' class='img-fluid img-thumbnail d-block'
+               alt='Date View' />
+        </p>
+
+        <h4 id='componentsMonth'>month<a class='anchor-link' aria-label='Anchor'
+                                         href='#componentsMonth'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> true<br />
+          <img src='../images/month-view.png' class='img-fluid img-thumbnail d-block' alt='Month View' />
+          Turns on or off the month selection view.
+        </p>
+
+        <h4 id='componentsYear'>year<a class='anchor-link' aria-label='Anchor'
+                                       href='#componentsYear'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> true<br />
+          <img src='../images/year-view.png' class='img-fluid img-thumbnail d-block' alt='Year View' />
+        </p>
+
+        <h4 id='componentsDecades'>decades<a class='anchor-link' aria-label='Anchor'
+                                             href='#componentsDecades'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> true<br />
+          <img src='../images/decade-view.png' class='img-fluid img-thumbnail d-block'
+               alt='Decade View' />
+        </p>
+
+        <h4 id='componentsClock'>clock<a class='anchor-link' aria-label='Anchor'
+                                         href='#componentsClock'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <img src='../images/time-view.png' class='img-fluid img-thumbnail d-block' alt='Time View' />
+        </p>
+        <p>
+          <strong>Defaults:</strong> true<br />
+          A convenience flag that can enable or disable all the calendar components like date,
+          month, year,
+          decades, century.
+          This flag must be true for any of the calendar components to be visible, even if those
+          options are true.
+        </p>
+
+        <h4 id='componentsHours'>hours<a class='anchor-link' aria-label='Anchor'
+                                         href='#componentsHours'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> true<br />
+          Displayed above in <span style='color:#FC4242;'>red</span>
+        </p>
+
+        <h4 id='componentsMinutes'>minutes<a class='anchor-link' aria-label='Anchor'
+                                             href='#componentsMinutes'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> true<br />
+          Displayed above in <span style='color:#632289;'>purple</span>
+        </p>
+
+        <h4 id='componentsSeconds'>seconds<a class='anchor-link' aria-label='Anchor'
+                                             href='#componentsSeconds'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+        </h4>
+        <p>
+          <strong>Defaults:</strong> false<br />
+          Displayed above in <span style='color:#06AF8F;'>green</span>
+        </p>
+
+        <h4 id='componentsUseTwentyfourHour'>useTwentyfourHour<a class='anchor-link'
+                                                                 aria-label='Anchor'
+                                                                 href='#componentsUseTwentyfourHour'><i
+          class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
+        <p>
+          <strong>Defaults:</strong> false<br />
+          <img src='../images/24hour.png' class='img-fluid img-thumbnail d-block'
+               alt='Twenty-four View' />
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <h2 id='inline'>inline<a class='anchor-link' aria-label='Anchor' href='#inline'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> <strong>Defaults:boolean</strong> <br />
+      Displays the picker in a inline div instead of a popup.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='theme'>theme<a class='anchor-link' aria-label='Anchor' href='#theme'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Accepts:</strong> 'light' | 'dark' | 'auto' <strong>Defaults:</strong> 'auto'<br />
+      Specifies which theme to use, light mode or dark mode. When set to auto, it will auto detect based on settings
+      of the user's system.
+    </p>
+  </div>
+
+  <div id='subToc' class='d-none'>
+    <nav id='TableOfContents'>
+      <ul>
+        <li><a href='#content'>Overview</a></li>
+        <li><a href='#defaults'>Defaults</a></li>
+        <li><a href='#icons'>Icons</a>
+          <ul>
+            <li><a href='#iconsType'>Type</a></li>
+            <li><a href='#iconsTime'>Time</a></li>
+            <li><a href='#iconsDate'>Date</a></li>
+            <li><a href='#iconsUp'>Up</a></li>
+            <li><a href='#iconsDown'>Down</a></li>
+            <li><a href='#iconsNext'>Next</a></li>
+            <li><a href='#iconsPrevious'>Previous</a></li>
+            <li><a href='#iconsToday'>Today</a></li>
+            <li><a href='#iconsClear'>Clear</a></li>
+            <li><a href='#iconsClose'>Close</a></li>
+          </ul>
+        </li>
+        <li><a href='#sideBySide'>Side By Side</a></li>
+        <li><a href='#calendarWeeks'>Calendar Weeks</a></li>
+        <li><a href='#viewMode'>View Mode</a></li>
+        <li><a href='#toolbarPlacement'>Toolbar Placement</a></li>
+        <li><a href='#keepOpen'>Keep Open</a></li>
+        <li><a href='#buttons'>Buttons</a>
+        <ul>
+          <li><a href='#buttonsToday'>Today</a></li>
+          <li><a href='#buttonsClear'>Clear</a></li>
+          <li><a href='#buttonsClose'>Close</a></li>
+        </ul>
+        </li>
+        <li><a href='#components'>Components</a>
+          <ul>
+            <li><a href='#componentsCalendar'>Calendar</a></li>
+            <li><a href='#componentsDate'>Date</a></li>
+            <li><a href='#componentsMonth'>Month</a></li>
+            <li><a href='#componentsYear'>Year</a></li>
+            <li><a href='#componentsDecades'>Decades</a></li>
+            <li><a href='#componentsClock'>Clock</a></li>
+            <li><a href='#componentsHours'>Hours</a></li>
+            <li><a href='#componentsMinutes'>Minutes</a></li>
+            <li><a href='#componentsSeconds'>Seconds</a></li>
+            <li><a href='#componentsUseTwentyfourHour'>Use Twenty-four</a></li>
+          </ul></li>
+        <li><a href='#inline'>Inline</a></li>
+        <li><a href='#theme'>Theme</a></li>
+      </ul>
+    </nav>
+  </div>
+
+</page-body>
+
+<page-meta>
+  <title>Display Options</title>
+  <post-date>08/11/2022</post-date>
+  <update-date>08/11/2022</update-date>
+  <excerpt>How to use the display options.
+  </excerpt>
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

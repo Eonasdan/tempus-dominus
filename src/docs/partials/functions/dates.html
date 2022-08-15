@@ -1,0 +1,218 @@
+<page-body>
+  <div class='row'>
+    For the sake of the following documentation, assume there's a picker setup like this:
+    <pre>
+<code class='language-javascript'>const picker = new tempusdominus
+  .TempusDominus(document.getElementById('datetimepicker1'));
+</code>
+</pre>
+
+    <div class='container'>
+      <div class='row'>
+        <div class='col-sm-6'>
+          <label for='datetimepicker1Input' class='form-label'>Simple picker</label>
+          <div
+            class='input-group'
+            id='datetimepicker1'
+            data-td-target-input='nearest'
+            data-td-target-toggle='nearest'
+          >
+            <input
+              id='datetimepicker1Input'
+              type='text'
+              class='form-control'
+              data-td-target='#datetimepicker1'
+            />
+            <span
+              class='input-group-text'
+              data-td-target='#datetimepicker1'
+              data-td-toggle='datetimepicker'
+            >
+               <span class='fa-solid fa-calendar'></span>
+             </span>
+          </div>
+        </div>
+        <script type='text/javascript'>
+          const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <h2 id='viewDate'>Getting the View Date
+      <a class='anchor-link' aria-label='Anchor' href='#viewDate'><i class='fa-solid fa-anchor'
+                                                                     aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <code>picker.viewDate</code> returns the pickers current view date.
+    </p>
+  </div>
+  <div class='row mb-3'>
+    <h2>picker.dates</h2>
+    <p>
+      There are a number of function here that allow for retrieving the selected dates or adding to them.
+      These functions are used as <code>picker.dates.add(...)</code> for example.
+    </p>
+  </div>
+  <div class='row'>
+    <h2 id='picked'>picked
+      <a class='anchor-link' aria-label='Anchor' href='#picked'><i class='fa-solid fa-anchor'
+                                                                   aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Returns an array of <code>DateTime</code> of the selected date(s).
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='lastPicked'>lastPicked
+      <a class='anchor-link' aria-label='Anchor' href='#lastPicked'><i class='fa-solid fa-anchor'
+                                                                       aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Returns the last picked <code>DateTime</code> of the selected date(s).
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='lastPickedIndex'>lastPickedIndex
+      <a class='anchor-link' aria-label='Anchor' href='#lastPickedIndex'><i
+        class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Returns the length of picked dates -1 or 0 if none are selected.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='add'>add(DateTime)
+      <a class='anchor-link' aria-label='Anchor' href='#add'><i class='fa-solid fa-anchor'
+                                                                     aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Adds a new DateTime to selected dates array. Use this function with caution. It will not
+      automatically
+      refresh
+      the
+      widget or do any validation.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='setValue'>setValue(value: DateTime, index?: number)
+      <a class='anchor-link' aria-label='Anchor' href='#setValue'><i class='fa-solid fa-anchor'
+                                                                     aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Sets the select date index (or the first, if not provided) to the provided DateTime object.
+    </p>
+
+  </div>
+
+  <div class='row'>
+    <h2 id='formatInput'>formatInput(value: DateTime): string
+      <a class='anchor-link' aria-label='Anchor' href='#formatInput'><i class='fa-solid fa-anchor'
+                                                                        aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Formats a DateTime object to a string. Used when setting the input value. It is possible to
+      overwrite this
+      to provide more complex formatting with moment/dayjs or by hand.
+    </p>
+
+  </div>
+
+  <div class='row'>
+    <h2 id='parseInput'>parseInput(value:any): DateTime
+      <a class='anchor-link' aria-label='Anchor' href='#parseInput'><i class='fa-solid fa-anchor'
+                                                                       aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Parse the value into a DateTime object. This can be overwritten to supply your own parsing.
+    </p>
+  </div>
+
+  <div class='row'>
+
+    <h2 id='setFromInput'>setFromInput(value: any, index?: number)
+      <a class='anchor-link' aria-label='Anchor' href='#setFromInput'><i class='fa-solid fa-anchor'
+                                                                         aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Tries to convert the provided value to a DateTime object.
+      If value is null|undefined then clear the value of the provided index (or 0). It is possible to
+      overwrite
+      this
+      to provide more complex formatting with moment/dayjs or by hand.
+    </p>
+  </div>
+
+  <div class='row'>
+
+    <h2 id='isPicked'>isPicked(DateTime, Unit?)
+      <a class='anchor-link' aria-label='Anchor' href='#isPicked'><i class='fa-solid fa-anchor'
+                                                                     aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Returns true if the target date is part of the selected dates array. If unit is provided then a
+      granularity
+      to that unit will be used.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='pickedIndex'>pickedIndex(DateTime, Unit?)
+      <a class='anchor-link' aria-label='Anchor' href='#pickedIndex'><i
+        class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Returns the index at which target date is in the array. This is used for updating or removing a
+      date when
+      multi-date is used. If unit is provided then a granularity to that unit will be used.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='clear'>clear
+      <a class='anchor-link' aria-label='Anchor' href='#clear'><i class='fa-solid fa-anchor'
+                                                                  aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Clears all selected dates.
+    </p>
+    <p>
+      <strong>Emits</strong> <code>Namespace.events.change</code> with the last picked date.
+    </p>
+  </div>
+
+  <div id='subToc' class='d-none'>
+    <nav id='TableOfContents'>
+      <ul>
+        <li><a href='#content'>Overview</a></li>
+        <li><a href='#viewDate'>View Date</a></li>
+        <li><a href='#picked'>Picked </a></li>
+        <li><a href='#lastPicked'>Last Picked</a></li>
+        <li><a href='#lastPickedIndex'>Last Picked Index</a></li>
+        <li><a href='#add'>Add</a></li>
+        <li><a href='#setValue'>Set Value</a></li>
+        <li><a href='#formatInput'>Format Input</a></li>
+        <li><a href='#parseInput'>Parse Input</a></li>
+        <li><a href='#setFromInput'>Set From Input</a></li>
+        <li><a href='#isPicked'>Is Picked</a></li>
+        <li><a href='#pickedIndex'>Picked Index</a></li>
+        <li><a href='#clear'>Clear</a></li>
+      </ul>
+    </nav>
+  </div>
+
+</page-body>
+
+<page-meta>
+  <title>Date Functions</title>
+  <post-date>08/14/2022</post-date>
+  <update-date>08/14/2022</update-date>
+  <excerpt>How to use Tempus Dominus datetime picker
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

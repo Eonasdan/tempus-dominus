@@ -1,0 +1,316 @@
+<page-body>
+  <p id='overview'>
+    Options can be provided during the initial setup through the constructor <code>new
+    tempusDominus.TempusDominus(..., options);</code>. Take a look at the examples for more information.
+  </p>
+  <p>
+    The current options can be retrieved e.g. <code>datetimepicker1.optionsStore.options</code>.
+  </p>
+  <p>
+    Options can be updated through the <a href='../functions.html#updateOptions'><code>updateOptions</code>
+    function</a>.
+  </p>
+  <p>
+    All options will throw <a href='../namespace/errors.html#typeMismatch'>typeMismatch</a> if the
+    provided type does not match the expected type, e.g. a string instead of a boolean.
+  </p>
+  <div class='alert alert-info'>
+    While most of the date options accept string values it wil throw a warning. JavaScript's Date objects will be
+    converted to the pickers <a href='../datetime.html'>DateTime object</a>.
+  </div>
+
+  <pre id='defaults'>
+<code class='language-js'>new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+  {
+    restrictions: {
+      minDate: undefined,
+      maxDate: undefined,
+      disabledDates: [],
+      enabledDates: [],
+      daysOfWeekDisabled: [],
+      disabledTimeIntervals: [],
+      disabledHours: [],
+      enabledHours: []
+    },
+    display: {
+      icons: {
+        type: 'icons',
+        time: 'fa-solid fa-clock',
+        date: 'fa-solid fa-calendar',
+        up: 'fa-solid fa-arrow-up',
+        down: 'fa-solid fa-arrow-down',
+        previous: 'fa-solid fa-chevron-left',
+        next: 'fa-solid fa-chevron-right',
+        today: 'fa-solid fa-calendar-check',
+        clear: 'fa-solid fa-trash',
+        close: 'fa-solid fa-xmark'
+      },
+      sideBySide: false,
+      calendarWeeks: false,
+      viewMode: 'calendar',
+      toolbarPlacement: 'bottom',
+      keepOpen: false,
+      buttons: {
+        today: false,
+        clear: false,
+        close: false
+      },
+      components: {
+        calendar: true,
+        date: true,
+        month: true,
+        year: true,
+        decades: true,
+        clock: true,
+        hours: true,
+        minutes: true,
+        seconds: false,
+        useTwentyfourHour: undefined
+      },
+      inline: false,
+      theme: 'auto'
+    },
+    stepping: 1,
+    useCurrent: true,
+    defaultDate: undefined,
+    localization: {
+      today: 'Go to today',
+      clear: 'Clear selection',
+      close: 'Close the picker',
+      selectMonth: 'Select Month',
+      previousMonth: 'Previous Month',
+      nextMonth: 'Next Month',
+      selectYear: 'Select Year',
+      previousYear: 'Previous Year',
+      nextYear: 'Next Year',
+      selectDecade: 'Select Decade',
+      previousDecade: 'Previous Decade',
+      nextDecade: 'Next Decade',
+      previousCentury: 'Previous Century',
+      nextCentury: 'Next Century',
+      pickHour: 'Pick Hour',
+      incrementHour: 'Increment Hour',
+      decrementHour: 'Decrement Hour',
+      pickMinute: 'Pick Minute',
+      incrementMinute: 'Increment Minute',
+      decrementMinute: 'Decrement Minute',
+      pickSecond: 'Pick Second',
+      incrementSecond: 'Increment Second',
+      decrementSecond: 'Decrement Second',
+      toggleMeridiem: 'Toggle Meridiem',
+      selectTime: 'Select Time',
+      selectDate: 'Select Date',
+      dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+      locale: 'default',
+      startOfTheWeek: 0,
+      /**
+       * This is only used with the customDateFormat plugin
+       */
+      dateFormats: {
+        LTS: 'h:mm:ss T',
+        LT: 'h:mm T',
+        L: 'MM/dd/yyyy',
+        LL: 'MMMM d, yyyy',
+        LLL: 'MMMM d, yyyy h:mm T',
+        LLLL: 'dddd, MMMM d, yyyy h:mm T'
+      },
+      /**
+       * This is only used with the customDateFormat plugin
+       */
+      ordinal: (n) => n,
+      /**
+       * This is only used with the customDateFormat plugin
+       */
+      format: 'L'
+    },
+    keepInvalid: false,
+    debug: false,
+    allowInputToggle: false,
+    viewDate: new DateTime(),
+    multipleDates: false,
+    multipleDatesSeparator: '; ',
+    promptTimeOnDateChange: false,
+    promptTimeOnDateChangeTransitionDelay: 200,
+    meta: {},
+    container: undefined
+  }
+)</code>
+</pre>
+
+  <div class='row'>
+    <h2 id='stepping'>stepping<a class='anchor-link' aria-label='Anchor' href='#stepping'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts</strong> number <strong>Defaults:</strong> 1<br />
+      Controls how much the minutes are changed by. This also changes the minute selection grid to step by this
+      amount.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='useCurrent'>useCurrent<a class='anchor-link' aria-label='Anchor' href='#useCurrent'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Accepts</strong> true|false <strong>Defaults:</strong> true<br />
+      Determines if the current date/time should be used as the default value when the picker is opened.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='defaultDate'>defaultDate<a class='anchor-link' aria-label='Anchor' href='#defaultDate'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> undefined<br />
+      Sets the picker default date/time. Overrides <code>useCurrent</code>
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='keepInvalid'>keepInvalid<a class='anchor-link' aria-label='Anchor' href='#keepInvalid'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br />
+      Allows for the user to select a date that is invalid according to the rules. For instance, if a user enters a date
+      pasted the <code>maxDate</code>.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='debug'>debug<a class='anchor-link' aria-label='Anchor' href='#debug'><i class='fa-solid fa-anchor'
+                                                                                    aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br />
+      Similar to <code>display.keepOpen</code>, if true the picker won't close during any event where that would
+      normally
+      occur. This is useful when trying to debug rules or css changes. Note you can also use <code>window.debug =
+      true</code> in the dev tools console. Using the window object is useful for debugging deployed code without
+      requiring a configuration change.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='allowInputToggle'>allowInputToggle<a class='anchor-link' aria-label='Anchor' href='#allowInputToggle'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br />
+      If true, the picker will show on textbox focus.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='viewDate'>viewDate<a class='anchor-link' aria-label='Anchor' href='#viewDate'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> string | Date | DateTime <strong>Defaults:</strong> now<br />
+      Set the view date of the picker. Setting this will not change the selected date(s).
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='multipleDates'>multipleDates<a class='anchor-link' aria-label='Anchor' href='#multipleDates'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
+    <p>
+      <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br />
+      Allows multiple dates to be selected.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='multipleDatesSeparator'>multipleDatesSeparator<a class='anchor-link' aria-label='Anchor'
+                                                             href='#multipleDatesSeparator'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> string <strong>Defaults:</strong> <code>;</code><br />
+      When <code>multipleDates</code> is enabled, this value wil be used to separate the selected dates. E.g. <code>08/29/2021,
+      12:00 AM; 08/30/2021, 12:00 AM; 08/23/2021, 12:00 AM</code>
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='promptTimeOnDateChange'>promptTimeOnDateChange<a class='anchor-link' aria-label='Anchor'
+                                                             href='#promptTimeOnDateChange'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br />
+      If enabled and any of the time components are enabled, when a user selects a date the picker will automatically
+      display the clock view after <code>promptTimeOnDateChangeTransitionDelay</code>.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='promptTimeOnDateChangeTransitionDelay'>promptTimeOnDateChangeTransitionDelay
+      <a class='anchor-link' aria-label='Anchor' href='#promptTimeOnDateChangeTransitionDelay'>
+        <i class='fa-solid fa-anchor' aria-hidden='true'></i>
+      </a>
+    </h2>
+    <p>
+      <strong>Accepts</strong> number <strong>Defaults:</strong> 200<br />
+      Used with <code>promptTimeOnDateChange</code>. The number of milliseconds before the picker will display the
+      clock
+      view.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='meta'>meta
+      <a class='anchor-link' aria-label='Anchor' href='#meta'>
+        <i class='fa-solid fa-anchor' aria-hidden='true'></i>
+      </a>
+    </h2>
+    <p>
+      <strong>Accepts</strong> object <strong>Defaults:</strong> {}<br />
+      This property is to provide developers a place to store extra information about the picker. You can use this to
+      store database format strings for instance. There are no rules on what you add to this object and the picker
+      will not reference it.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='container'>container
+      <a class='anchor-link' aria-label='Anchor' href='#container'>
+        <i class='fa-solid fa-anchor' aria-hidden='true'></i>
+      </a>
+    </h2>
+    <p>
+      <strong>Accepts</strong> <code>HTMLElement</code> <strong>Defaults:</strong> undefined<br />
+      Change the target container to use for the widget instead of <code>body</code> (In case of application using
+      shadow DOM for example).
+    </p>
+  </div>
+
+  <div id='subToc' class='d-none'>
+    <nav id='TableOfContents'>
+      <ul>
+        <li><a href='#content'>Overview</a></li>
+        <li><a href='#defaults'>Defaults</a></li>
+        <li><a href='#stepping'>Stepping</a></li>
+        <li><a href='#useCurrent'>Use Current</a></li>
+        <li><a href='#defaultDate'>Default Date</a></li>
+        <li><a href='#keepInvalid'>Keep Invalid</a></li>
+        <li><a href='#debug'>Debug</a></li>
+        <li><a href='#allowInputToggle'>Allow Input Toggle</a></li>
+        <li><a href='#viewDate'>View Date</a></li>
+        <li><a href='#multipleDates'>Multiple Dates</a></li>
+        <li><a href='#multipleDatesSeparator'>Multiple Dates Separator</a></li>
+        <li><a href='#promptTimeOnDateChange'>Prompt Time On Date Change</a></li>
+        <li><a href='#promptTimeOnDateChangeTransitionDelay'>Prompt Time On Date Change Delay</a></li>
+        <li><a href='#meta'>Meta</a></li>
+        <li><a href='#container'>Container</a></li>
+      </ul>
+    </nav>
+  </div>
+
+</page-body>
+
+<page-meta>
+  <title>Options</title>
+  <post-date>07/08/2021</post-date>
+  <update-date>07/08/2021</update-date>
+  <excerpt>How to use Tempus Dominus datetime picker
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

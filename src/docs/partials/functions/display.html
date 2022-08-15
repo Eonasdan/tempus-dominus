@@ -1,0 +1,122 @@
+<page-body>
+  <div class='row'>
+    For the sake of the following documentation, assume there's a picker setup like this:
+    <pre>
+<code class='language-javascript'>const picker = new tempusdominus
+    .TempusDominus(document.getElementById('datetimepicker1'));</code>
+</pre>
+  </div>
+
+  <div class='row'>
+    <div class='col-sm-6'>
+      <label for='datetimepicker1Input' class='form-label'>Simple picker</label>
+      <div
+        class='input-group'
+        id='datetimepicker1'
+        data-td-target-input='nearest'
+        data-td-target-toggle='nearest'
+      >
+        <input
+          id='datetimepicker1Input'
+          type='text'
+          class='form-control'
+          data-td-target='#datetimepicker1'
+        />
+        <span
+          class='input-group-text'
+          data-td-target='#datetimepicker1'
+          data-td-toggle='datetimepicker'
+        >
+               <span class='fa-solid fa-calendar'></span>
+             </span>
+      </div>
+    </div>
+    <script type='text/javascript'>
+      const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+    </script>
+  </div>
+
+  <div class='row'>
+    <h2 id='toggle'>toggle</h2>
+    <p>Shows or hides the widget</p>
+    <h3 id='emits'>Emits</h3>
+    <ul>
+      <li>
+        <p><code>Namespace.events.hide</code> - if the widget is hidden after the toggle call</p>
+      </li>
+      <li>
+        <p><code>Namespace.events.show</code> - if the widget is show after the toggle call</p>
+      </li>
+      <li>
+        <p><code>Namespace.events.change</code> - if the widget is opened for the first time and the
+          input element
+          is empty and <code>options.useCurrent != false</code></p>
+      </li>
+    </ul>
+  </div>
+
+  <div class='row'>
+    <h2 id='show'>show
+      <a class='anchor-link' aria-label='Anchor' href='#show'><i class='fa-solid fa-anchor'
+                                                                 aria-hidden='true'></i></a></h2>
+    <p>Shows the widget</p>
+    <h4>Emits</h4>
+    <ul>
+      <li>
+        <p><code>Namespace.events.show</code> - if the widget was hidden before that call</p>
+      </li>
+      <li>
+        <p><code>Namespace.events.change</code> - if the widget is opened for the first time and the
+          <code>useCurrent</code> is set to true or to a granularity value and the input element the
+          component is
+          attached to has an empty value</p>
+      </li>
+    </ul>
+  </div>
+
+  <div class='row'>
+    <h2 id='hide'>hide
+      <a class='anchor-link' aria-label='Anchor' href='#hide'><i class='fa-solid fa-anchor'
+                                                                 aria-hidden='true'></i></a></h2>
+    <p>Hides the widget</p>
+    <h4>Emits</h4>
+    <ul>
+      <li><code>Namespace.events.hide</code> - if the widget was visible before that call</li>
+    </ul>
+  </div>
+
+  <div class='row'>
+    <h2 id='paint'>paint(Unit | 'decade', DateTime, string[], HTMLElement)</h2>
+    <p>
+      Allows developers to add/remove classes from an element. During the grid generation code, this function is called.
+    </p>
+    <p>
+      It provides the unit that is being generated (i.e. displaying the main date view), the date time object
+      being effected, the current set of css classes and the container element.
+    </p>
+    <p>Check out the <a href='/6/plugins/paint.html'>example paint plugin</a>.</p>
+  </div>
+
+  <div id='subToc' class='d-none'>
+    <nav id='TableOfContents'>
+      <ul>
+        <li><a href='#content'>Overview</a></li>
+        <li><a href='#updateOptions'>Update Options</a></li>
+        <li><a href='#dispose'>Dispose</a></li>
+        <li><a href='#disable'>Disable</a></li>
+        <li><a href='#enable'>Enable</a></li>
+        <li><a href='#clear'>Clear</a></li>
+        <li><a href='#subscribe'>Subscribe</a></li>
+      </ul>
+    </nav>
+  </div>
+</page-body>
+
+<page-meta>
+  <title>Display Functions</title>
+  <post-date>08/14/2022</post-date>
+  <update-date>08/14/2022</update-date>
+  <excerpt>How to use Tempus Dominus datetime picker
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

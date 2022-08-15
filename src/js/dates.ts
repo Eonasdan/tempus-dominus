@@ -69,7 +69,7 @@ export default class Dates {
    * this can be overwritten to supply your own parsing.
    */
   parseInput(value:any): DateTime {
-        return OptionConverter.dateConversion(value, 'input');
+        return OptionConverter.dateConversion(value, 'input', this.optionsStore.options.localization);
   }
 
   /**

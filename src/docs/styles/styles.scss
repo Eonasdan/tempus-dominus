@@ -62,6 +62,12 @@ section h2 {
   }
 }
 
+h2 {
+  border-top: 1px solid #f07534;
+  margin-top: 1.5rem !important;
+  padding-top: 1.5rem;
+}
+
 @media (prefers-color-scheme: dark) {
   $dark-background: #171717;
   $dark-font:#e3e3e3;
@@ -133,5 +139,31 @@ section h2 {
 
   code {
     color: #A3E170;
+  }
+}
+
+@media (min-width: 768px) {
+  .bd-toc-collapse {
+    display: block !important;
+  }
+}
+
+.bd-toc {
+  background-color: initial !important;
+
+  nav li {
+    list-style: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .bd-toc {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 5rem;
+    right: 0;
+    z-index: 2;
+    height: calc(100vh - 7rem);
+    overflow-y: auto;
   }
 }

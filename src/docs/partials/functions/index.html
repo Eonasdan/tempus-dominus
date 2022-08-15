@@ -1,0 +1,149 @@
+<page-body>
+    <div class='row'>
+        For the sake of the following documentation, assume there's a picker setup like this:
+        <pre>
+<code class='language-javascript'>const picker = new tempusdominus
+    .TempusDominus(document.getElementById('datetimepicker1'));</code>
+</pre>
+
+        <div class='container'>
+            <div class='row'>
+                <div class='col-sm-6'>
+                    <label for='datetimepicker1Input' class='form-label'>Simple picker</label>
+                    <div
+                            class='input-group'
+                            id='datetimepicker1'
+                            data-td-target-input='nearest'
+                            data-td-target-toggle='nearest'
+                    >
+                        <input
+                                id='datetimepicker1Input'
+                                type='text'
+                                class='form-control'
+                                data-td-target='#datetimepicker1'
+                        />
+                        <span
+                                class='input-group-text'
+                                data-td-target='#datetimepicker1'
+                                data-td-toggle='datetimepicker'
+                        >
+               <span class='fa-solid fa-calendar'></span>
+             </span>
+                    </div>
+                </div>
+                <script type='text/javascript'>
+                    const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class='row'>
+        <h2 id='updateOptions'>updateOptions(object, boolean?)
+            <a class='anchor-link' aria-label='Anchor' href='#updateOptions'><i class="fa-solid fa-anchor"
+                                                                                  aria-hidden="true"></i></a>
+        </h2>
+        <p>
+            In previous version there was a function to read/write to each of the provided options. This made it easy to
+            use
+            but made the code bulky and harder to maintain. <code>updateOptions</code> replaces those functions and
+            takes an
+            object of new options. This allows for multiple options to be set at the same time and works the same way as
+            when
+            setting up the picker.
+        </p>
+        <p>
+            If the optional <code>reset</code> flag is provided then new options will be merged with the default values.
+        </p>
+    </div>
+
+    <div class='row'>
+        <h2 id='dispose'>dispose
+            <a class='anchor-link' aria-label='Anchor' href='#dispose'><i class="fa-solid fa-anchor"
+                                                                            aria-hidden="true"></i></a></h2>
+        <p>Destroys the widget and removes all attached event listeners. If the picker is open it will be hidden and the
+            event fired.</p>
+    </div>
+    <div class='row'>
+        <h2 id='disable'>disable
+            <a class='anchor-link' aria-label='Anchor' href='#disable'><i class="fa-solid fa-anchor"
+                                                                            aria-hidden="true"></i></a></h2>
+        <p>Disables the input element and the component is attached to, by adding a <code>disabled="true"</code>
+            attribute
+            to
+            it. If the widget was visible before that call it is hidden.</p>
+        <h3>Emits</h3>
+        <ul>
+            <li><code>Namespace.events.hide</code> - if the widget was visible before this call</li>
+        </ul>
+    </div>
+    <div class='row'>
+        <h2 id='enable'>enable
+            <a class='anchor-link' aria-label='Anchor' href='#enable'><i class="fa-solid fa-anchor"
+                                                                           aria-hidden="true"></i></a></h2>
+        <p>Enables the input element and the component is attached to, by removing <code>disabled</code> attribute from
+            it.
+        </p>
+    </div>
+    <div class='row'>
+        <h2 id='clear'>clear
+            <a class='anchor-link' aria-label='Anchor' href='#clear'><i class="fa-solid fa-anchor"
+                                                                          aria-hidden="true"></i></a></h2>
+        <p>Clears all selected dates. This is a short cut to <code>picker.dates.clear()</code></p>
+    </div>
+    <div class='row'>
+        <h2 id='subscribe'>subscribe(event | events[], callback | callbacks[])
+            <a class='anchor-link' aria-label='Anchor' href='#subscribe'><i class="fa-solid fa-anchor"
+                                                                              aria-hidden="true"></i></a></h2>
+        <p>
+            Instead of adding event listeners to the pickers element, you can use the subscribe method. You can provide
+            a
+            single event to listen for or an array of events. When providing an array the number of callbacks must be
+            the
+            same as the number of events.
+        </p>
+        <p>
+            The subscribe method returns an unsubscribe method or an array of methods if multiple events are provided.
+            Calling
+            unsubscribe remove the callback from the event listeners. Unsubscribing will not prevent
+            <code>addEventListener()</code> from working.
+        </p>
+        <pre>
+<code class='language-javascript'>const subscription = picker.subscribe(tempusdominus.Namespace.events.change, (e) => {
+  console.log(e);
+});
+
+// event listener can be unsubscribed to:
+subscription.unsubscribe();
+
+//you can also provide multiple events:
+const subscriptions = picker.subscribe(
+        [tempusdominus.Namespace.events.show,tempusdominus.Namespace.events.hide],
+        [(e)=> console.log(e), (e) => console.log(e)]
+)</code>
+    </pre>
+    </div>
+
+    <div id='subToc' class='d-none'>
+        <nav id='TableOfContents'>
+            <ul>
+                <li><a href='#content'>Overview</a></li>
+                <li><a href='#updateOptions'>Update Options</a></li>
+                <li><a href='#dispose'>Dispose</a></li>
+                <li><a href='#disable'>Disable</a></li>
+                <li><a href='#enable'>Enable</a></li>
+                <li><a href='#clear'>Clear</a></li>
+                <li><a href='#subscribe'>Subscribe</a></li>
+            </ul>
+        </nav>
+    </div>
+</page-body>
+
+<page-meta>
+    <title>Functions</title>
+    <post-date>08/14/2022</post-date>
+    <update-date>08/14/2022</update-date>
+    <excerpt>How to use Tempus Dominus datetime picker
+    </excerpt>
+    <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

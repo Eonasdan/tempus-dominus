@@ -34,6 +34,12 @@ export declare class DateTime extends Date {
      */
     static convert(date: Date, locale?: string): DateTime;
     /**
+     * Attempts to create a DateTime from a string. A customDateFormat is required for non US dates.
+     * @param input
+     * @param localization
+     */
+    static fromString(input: string, localization: any): DateTime;
+    /**
      * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
      */
     get clone(): DateTime;

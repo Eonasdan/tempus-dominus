@@ -1,18 +1,25 @@
-name: Publish Package to npm
+name: Publish Package
 on:
   release:
-    types: [created]
+    types: [ created ]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#      - run: npm publish
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.6
+      - name: Pack NuGet
+        run: nuget pack **\*.nuspec" -Verbosity detailed -NonInteractive -NoPackageAnalysis -BasePath $env:SourcesPath
+      - name: Push Nuget
+        run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}

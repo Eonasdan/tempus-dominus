@@ -61,6 +61,10 @@ export declare class ErrorMessages {
      */
     conflictingConfiguration(message?: string): void;
     /**
+     * customDateFormat errors
+     */
+    customDateFormatError(message?: string): void;
+    /**
      * Logs a warning if a date option value is provided as a string, instead of
      * a date/datetime object.
      */

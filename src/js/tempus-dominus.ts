@@ -19,6 +19,7 @@ import DefaultOptions from './utilities/default-options';
 import ActionTypes from './utilities/action-types';
 import {OptionsStore} from "./utilities/optionsStore";
 import {OptionConverter} from "./utilities/optionConverter";
+import { ErrorMessages } from './utilities/errors';
 
 /**
  * A robust and powerful date/time picker component.
@@ -548,17 +549,18 @@ const locale = (l: string) => {
  * @param option
  */
 const extend = function (plugin, option) {
-  if (!plugin.$i) {
+  if (!plugin) return tempusDominus;
+  if (!plugin.installed) {
     // install plugin only once
-    plugin.load(option, { TempusDominus, Dates, Display }, this);
-    plugin.$i = true;
+    plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, tempusDominus);
+    plugin.installed = true;
   }
-  return this;
+  return tempusDominus;
 };
 
-const version = '6.0.0-beta9';
+const version = '6.0.0-beta10';
 
-export {
+const tempusDominus = {
   TempusDominus,
   extend,
   loadLocale,
@@ -566,8 +568,8 @@ export {
   Namespace,
   DefaultOptions,
   DateTime,
-  Options,
   Unit,
-  DateTimeFormatOptions,
   version
 };
+
+export default  tempusDominus
