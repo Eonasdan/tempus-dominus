@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="https://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>TempusDominus</id>
         <version>6.0.0-beta10</version>
@@ -14,7 +14,7 @@
         <releaseNotes>https://getdatepicker.com/6/change-log.html</releaseNotes>
         <tags>date time picker datetimepicker datepicker</tags>
         <icon>td.png</icon>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <licenseUrl>https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE</licenseUrl>
         <copyright>Copyright 2013-2022</copyright>
         <contentFiles>
             <files include="**/*" buildAction="Content" />
