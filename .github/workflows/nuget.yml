@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '**.nuspec'
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
