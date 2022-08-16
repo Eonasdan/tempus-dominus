@@ -10,7 +10,7 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.6
         with:
-          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-api-key: ${{ secrets.NPM_TOKEN }}
           nuget-version: '6.x'
       - name: Pack NuGet
         working-directory: ./src/nuget
