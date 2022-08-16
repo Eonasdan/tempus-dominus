@@ -13,9 +13,11 @@ jobs:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           nuget-version: '6.x'
       - name: Pack NuGet
+        working-directory: ./src/nuget
         run: | 
-         nuget pack src/nuget/TempusDominus.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
-         nuget pack src/nuget/TempusDominus.scss.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
+         nuget pack TempusDominus.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
+         nuget pack TempusDominus.scss.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
       - name: Push Nuget
+        working-directory: ./src/nuget
         run: |
-          nuget push src/nuget/*.nupkg -Source https://api.nuget.org/v3/index.json
+          nuget push *.nupkg -Source https://api.nuget.org/v3/index.json
