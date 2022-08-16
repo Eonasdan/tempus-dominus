@@ -14,12 +14,20 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-#      - run: npm publish
-#        env:
-#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.6
+        with:
+          nuget-version: '6.x'
       - name: Pack NuGet
-        run: nuget pack **\*.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis -BasePath $env:SourcesPath
+        working-directory: ./src/nuget
+        run: |
+          nuget pack TempusDominus.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
+          nuget pack TempusDominus.scss.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
       - name: Push Nuget
-        run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+        working-directory: ./src/nuget
+        run: |
+          nuget push TempusDominus.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NPM_TOKEN }}
+          nuget push TempusDominus.scss.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NPM_TOKEN }
