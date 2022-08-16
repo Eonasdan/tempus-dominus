@@ -10,7 +10,7 @@
         <projectUrl>https://github.com/Eonasdan/tempus-dominus</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Powerful and robust date and time picker</description>
-        <readme>..\..\readme.md</readme>
+        <readme>readme.md</readme>
         <releaseNotes>https://getdatepicker.com/6/change-log.html</releaseNotes>
         <tags>date time picker datetimepicker datepicker</tags>
         <icon>td.png</icon>
