@@ -20,4 +20,4 @@ jobs:
       - name: Push Nuget
         working-directory: ./src/nuget
         run: |
-          nuget push *.nupkg -Source https://api.nuget.org/v3/index.json
+          nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NPM_TOKEN }}
