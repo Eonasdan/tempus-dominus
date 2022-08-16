@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0-beta10 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.0 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -3865,7 +3865,7 @@ const extend = function (plugin, option) {
     }
     return tempusDominus;
 };
-const version = '6.0.0-beta10';
+const version = '6.0.0';
 const tempusDominus = {
     TempusDominus,
     extend,
