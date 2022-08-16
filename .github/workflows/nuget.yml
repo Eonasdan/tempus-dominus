@@ -18,5 +18,4 @@ jobs:
          nuget pack src/nuget/TempusDominus.scss.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
       - name: Push Nuget
         run: |
-          nuget push src/nuget/TempusDominus.nupkg -Source 'https://api.nuget.org/v3/index.json'
-          nuget push src/nuget/TempusDominus.scss.nupkg -Source 'https://api.nuget.org/v3/index.json'
+          nuget push src/nuget/*.nupkg -Source https://api.nuget.org/v3/index.json
