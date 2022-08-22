@@ -69,10 +69,10 @@
         this.originalJs = this.snapshot[targetJs];
         this.originalHtml = this.htmlToElement(this.snapshot[targetHtml]);
 
-        this.updateVm();
+        await this.updateVmAsync();
       }
 
-      updateVm(code = '') {
+      async updateVmAsync(code = '') {
         if (!code) code = this.getQueryCode();
         else code = JSON.parse(lzString.decompressFromURL(code));
 
@@ -95,11 +95,11 @@
           delta.create[targetHtml] = this.prettify(newHtml.outerHTML, 'html');
         }
 
-        this.vm.applyFsDiff(delta);
+        await this.vm.applyFsDiff(delta);
         console.clear();
       }
 
-      resetVm() {
+      async resetVmAsync() {
         const delta = {
           create: {},
           destroy: []
@@ -107,7 +107,7 @@
         delta.create[targetJs] = this.originalJs;
         delta.create[targetHtml] = this.originalHtml.outerHTML;
 
-        this.vm.applyFsDiff(delta);
+        await this.vm.applyFsDiff(delta);
         console.clear();
       }
     }
@@ -118,11 +118,11 @@
       const url = new URL(window.location);
       url.hash = `#code/${hash}`;
       window.history.pushState({}, '', url);
-      repl.updateVm(hash);
+      repl.updateVmAsync(hash).then();
     };
 
-    window.resetRepl = () => {
-      repl.resetVm();
+    const resetRepl = () => {
+      repl.resetVmAsync().then();
 
       const url = new URL(window.location);
       url.hash = ``;
