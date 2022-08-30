@@ -230,7 +230,7 @@ export default class Display {
         // If needed to change the parent container
         const container = this.optionsStore.options?.container || document.body;
         container.appendChild(this.widget);
-        this._popperInstance = this.createPopup(this.optionsStore.element, this.widget, {
+        this.createPopup(this.optionsStore.element, this.widget, {
           modifiers: [{ name: 'eventListeners', enabled: true }],
           //#2400
           placement:
@@ -276,11 +276,16 @@ export default class Display {
   }
 
   createPopup(element: HTMLElement, widget: HTMLElement, options: any): any  {
-    //this._popperInstance = createPopper(element, widget, options);
+    //@ts-ignore
+    import('@popperjs/core').then(popper =>{
+      this._popperInstance = popper.createPopper(element, widget, options)
+    }).catch(err =>{
+        console.warn("PopperJS is not installed")
+    })
   }
 
   updatePopup(): void {
-    //this._popperInstance.update();
+    this._popperInstance?.update();
   }
 
   /**

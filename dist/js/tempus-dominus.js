@@ -2800,7 +2800,7 @@
                     // If needed to change the parent container
                     const container = ((_b = this.optionsStore.options) === null || _b === void 0 ? void 0 : _b.container) || document.body;
                     container.appendChild(this.widget);
-                    this._popperInstance = this.createPopup(this.optionsStore.element, this.widget, {
+                    this.createPopup(this.optionsStore.element, this.widget, {
                         modifiers: [{ name: 'eventListeners', enabled: true }],
                         //#2400
                         placement: document.documentElement.dir === 'rtl'
@@ -2835,10 +2835,16 @@
             this._isVisible = true;
         }
         createPopup(element, widget, options) {
-            //this._popperInstance = createPopper(element, widget, options);
+            //@ts-ignore
+            import('@popperjs/core').then(popper => {
+                this._popperInstance = popper.createPopper(element, widget, options);
+            }).catch(err => {
+                console.log("ERR not installed");
+            });
         }
         updatePopup() {
-            //this._popperInstance.update();
+            var _a;
+            (_a = this._popperInstance) === null || _a === void 0 ? void 0 : _a.update();
         }
         /**
          * Changes the calendar view mode. E.g. month <-> year
