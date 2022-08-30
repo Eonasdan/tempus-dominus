@@ -33,14 +33,6 @@
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
   },
-  "peerDependencies": {
-    "@popperjs/core": "^2.10.1"
-  },
-  "peerDependenciesMeta": {
-    "@popperjs/core": {
-      "optional": true
-    }
-  },
   "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
   "devDependencies": {
     "@popperjs/core": "^2.11.6",
