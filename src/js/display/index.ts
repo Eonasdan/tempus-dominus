@@ -7,8 +7,7 @@ import HourDisplay from './time/hour-display';
 import MinuteDisplay from './time/minute-display';
 import SecondDisplay from './time/second-display';
 import { DateTime, Unit } from '../datetime';
-import {createPopper, reference} from '@popperjs/core';
-const {computePosition} = FloatingUIDOM;
+import { createPopper } from '@popperjs/core';
 import Namespace from '../utilities/namespace';
 import { HideEvent } from '../utilities/event-types';
 import Collapse from './collapse';
@@ -233,20 +232,18 @@ export default class Display {
         const container = this.optionsStore.options?.container || document.body;
         container.appendChild(this.widget);
 
-
-        computePosition(this.optionsStore.element, this.widget, {
-          placement:              document.documentElement.dir === 'rtl'
-            ? 'bottom-end'
-            : 'bottom-start',
-        }).then(({x, y}) => {
-          console.log("reference", this.optionsStore.element);
-          console.log("floating", this.widget);
-          Object.assign(this.widget.style, {
-            left: `${x}px`,
-            top: `${y}px`,
-            width: `${this.optionsStore.element.offsetWidth}px`
-          });
-        });
+        this._popperInstance = createPopper(
+          this.optionsStore.element,
+          this.widget,
+          {
+            modifiers: [{ name: 'eventListeners', enabled: true }],
+            //#2400
+            placement:
+              document.documentElement.dir === 'rtl'
+                ? 'bottom-end'
+                : 'bottom-start',
+          }
+        );
       } else {
         this.optionsStore.element.appendChild(this.widget);
       }
@@ -277,7 +274,7 @@ export default class Display {
 
     this.widget.classList.add(Namespace.css.show);
     if (!this.optionsStore.options.display.inline) {
-      //this._popperInstance.update();
+      this._popperInstance.update();
       document.addEventListener('click', this._documentClickEvent);
     }
     this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });

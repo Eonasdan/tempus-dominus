@@ -4,10 +4,10 @@
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.tempusDominus = factory());
-})(this, (function () { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@popperjs/core')) :
+    typeof define === 'function' && define.amd ? define(['@popperjs/core'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.tempusDominus = factory(global.Popper));
+})(this, (function (core) { 'use strict';
 
     var Unit;
     (function (Unit) {
@@ -2609,7 +2609,6 @@
             1000);
     };
 
-    const { computePosition } = FloatingUIDOM;
     /**
      * Main class for all things display related.
      */
@@ -2801,18 +2800,12 @@
                     // If needed to change the parent container
                     const container = ((_b = this.optionsStore.options) === null || _b === void 0 ? void 0 : _b.container) || document.body;
                     container.appendChild(this.widget);
-                    computePosition(this.optionsStore.element, this.widget, {
+                    this._popperInstance = core.createPopper(this.optionsStore.element, this.widget, {
+                        modifiers: [{ name: 'eventListeners', enabled: true }],
+                        //#2400
                         placement: document.documentElement.dir === 'rtl'
                             ? 'bottom-end'
                             : 'bottom-start',
-                    }).then(({ x, y }) => {
-                        console.log("reference", this.optionsStore.element);
-                        console.log("floating", this.widget);
-                        Object.assign(this.widget.style, {
-                            left: `${x}px`,
-                            top: `${y}px`,
-                            width: `${this.optionsStore.element.offsetWidth}px`
-                        });
                     });
                 }
                 else {
@@ -2835,7 +2828,7 @@
             }
             this.widget.classList.add(Namespace.css.show);
             if (!this.optionsStore.options.display.inline) {
-                //this._popperInstance.update();
+                this._popperInstance.update();
                 document.addEventListener('click', this._documentClickEvent);
             }
             this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
