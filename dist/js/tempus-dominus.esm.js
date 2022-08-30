@@ -3,6 +3,8 @@
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
+import { createPopper } from '@popperjs/core';
+
 var Unit;
 (function (Unit) {
     Unit["seconds"] = "seconds";
@@ -2794,7 +2796,7 @@ class Display {
                 // If needed to change the parent container
                 const container = ((_b = this.optionsStore.options) === null || _b === void 0 ? void 0 : _b.container) || document.body;
                 container.appendChild(this.widget);
-                this.createPopup(this.optionsStore.element, this.widget, {
+                this._popperInstance = createPopper(this.optionsStore.element, this.widget, {
                     modifiers: [{ name: 'eventListeners', enabled: true }],
                     //#2400
                     placement: document.documentElement.dir === 'rtl'
@@ -2822,23 +2824,11 @@ class Display {
         }
         this.widget.classList.add(Namespace.css.show);
         if (!this.optionsStore.options.display.inline) {
-            this.updatePopup();
+            this._popperInstance.update();
             document.addEventListener('click', this._documentClickEvent);
         }
         this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
         this._isVisible = true;
-    }
-    createPopup(element, widget, options) {
-        //@ts-ignore
-        import('@popperjs/core').then(popper => {
-            this._popperInstance = popper.createPopper(element, widget, options);
-        }).catch(err => {
-            console.log("ERR not installed");
-        });
-    }
-    updatePopup() {
-        var _a;
-        (_a = this._popperInstance) === null || _a === void 0 ? void 0 : _a.update();
     }
     /**
      * Changes the calendar view mode. E.g. month <-> year
