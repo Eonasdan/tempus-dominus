@@ -249,6 +249,7 @@ class CustomDateFormat {
   };
 
   format(dateTime) {
+    if (!dateTime) return dateTime;
     if (JSON.stringify(dateTime) === 'null') return 'Invalid Date';
 
     const format = this.localization.format || `${this.englishFormats.L}, ${this.englishFormats.LT}`;
@@ -281,7 +282,6 @@ class CustomDateFormat {
     }
 
     return format.replace(this.REGEX_FORMAT, (match, $1) => {
-      debugger;
       return $1 || matches[match];
     })
   }

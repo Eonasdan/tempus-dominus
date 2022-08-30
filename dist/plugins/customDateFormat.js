@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.0 (https://getdatepicker.com/)
+  * Tempus Dominus v6.0.1 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -237,6 +237,8 @@
         };
     }
     format(dateTime) {
+        if (!dateTime)
+            return dateTime;
         if (JSON.stringify(dateTime) === 'null')
             return 'Invalid Date';
         const format = this.localization.format || `${this.englishFormats.L}, ${this.englishFormats.LT}`;
@@ -266,7 +268,6 @@
             //z: dateTime.getTimezoneOffset() todo zones are stupid
         };
         return format.replace(this.REGEX_FORMAT, (match, $1) => {
-            debugger;
             return $1 || matches[match];
         });
     }
