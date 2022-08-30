@@ -7,7 +7,7 @@ import HourDisplay from './time/hour-display';
 import MinuteDisplay from './time/minute-display';
 import SecondDisplay from './time/second-display';
 import { DateTime, Unit } from '../datetime';
-import { createPopper } from '@popperjs/core';
+import {createPopper} from '@popperjs/core';
 import Namespace from '../utilities/namespace';
 import { HideEvent } from '../utilities/event-types';
 import Collapse from './collapse';
@@ -231,19 +231,14 @@ export default class Display {
         // If needed to change the parent container
         const container = this.optionsStore.options?.container || document.body;
         container.appendChild(this.widget);
-
-        this._popperInstance = createPopper(
-          this.optionsStore.element,
-          this.widget,
-          {
-            modifiers: [{ name: 'eventListeners', enabled: true }],
-            //#2400
-            placement:
-              document.documentElement.dir === 'rtl'
-                ? 'bottom-end'
-                : 'bottom-start',
-          }
-        );
+        this.createPopup(this.optionsStore.element, this.widget, {
+          modifiers: [{ name: 'eventListeners', enabled: true }],
+          //#2400
+          placement:
+            document.documentElement.dir === 'rtl'
+              ? 'bottom-end'
+              : 'bottom-start',
+        });
       } else {
         this.optionsStore.element.appendChild(this.widget);
       }
@@ -274,11 +269,19 @@ export default class Display {
 
     this.widget.classList.add(Namespace.css.show);
     if (!this.optionsStore.options.display.inline) {
-      this._popperInstance.update();
+      this.updatePopup();
       document.addEventListener('click', this._documentClickEvent);
     }
     this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
     this._isVisible = true;
+  }
+
+  createPopup(element: HTMLElement, widget: HTMLElement, options: any): any  {
+    this._popperInstance = createPopper(element, widget, options);
+  }
+
+  updatePopup(): void {
+    this._popperInstance.update();
   }
 
   /**
