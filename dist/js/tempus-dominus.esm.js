@@ -3,8 +3,6 @@
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
-import { createPopper } from '@popperjs/core';
-
 var Unit;
 (function (Unit) {
     Unit["seconds"] = "seconds";
@@ -2796,7 +2794,7 @@ class Display {
                 // If needed to change the parent container
                 const container = ((_b = this.optionsStore.options) === null || _b === void 0 ? void 0 : _b.container) || document.body;
                 container.appendChild(this.widget);
-                this._popperInstance = createPopper(this.optionsStore.element, this.widget, {
+                this._popperInstance = this.createPopup(this.optionsStore.element, this.widget, {
                     modifiers: [{ name: 'eventListeners', enabled: true }],
                     //#2400
                     placement: document.documentElement.dir === 'rtl'
@@ -2824,11 +2822,17 @@ class Display {
         }
         this.widget.classList.add(Namespace.css.show);
         if (!this.optionsStore.options.display.inline) {
-            this._popperInstance.update();
+            this.updatePopup();
             document.addEventListener('click', this._documentClickEvent);
         }
         this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
         this._isVisible = true;
+    }
+    createPopup(element, widget, options) {
+        //this._popperInstance = createPopper(element, widget, options);
+    }
+    updatePopup() {
+        //this._popperInstance.update();
     }
     /**
      * Changes the calendar view mode. E.g. month <-> year
