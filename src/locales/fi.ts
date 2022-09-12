@@ -1,4 +1,4 @@
-const name = 'de';
+const name = 'fi';
 
 const localization = {
   today: 'Tänään',
