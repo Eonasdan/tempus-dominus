@@ -275,13 +275,9 @@ export default class Display {
     this._isVisible = true;
   }
 
-  createPopup(element: HTMLElement, widget: HTMLElement, options: any): any  {
-    //@ts-ignore
-    import('@popperjs/core').then(popper =>{
-      this._popperInstance = popper.createPopper(element, widget, options)
-    }).catch(err =>{
-        console.warn("PopperJS is not installed")
-    })
+  async createPopup(element: HTMLElement, widget: HTMLElement, options: any): Promise<void>  {
+    const popper = await import('@popperjs/core');
+    this._popperInstance = popper.createPopper(element, widget, options);
   }
 
   updatePopup(): void {
