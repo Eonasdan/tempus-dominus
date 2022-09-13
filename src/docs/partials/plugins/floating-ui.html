@@ -14,8 +14,7 @@ import { computePosition } from '@floating-ui/dom';
 
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
 
-td.display.createPopup = computePosition(element, widget, options).then(({ x, y }) => {
-    const w = element.offsetWidth;
+datetimepicker1.display.createPopup = computePosition(element, widget, options).then(({ x, y }) => {
     Object.assign(widget.style, {
       left: `${x}px`,
       top: `${y}px`,
