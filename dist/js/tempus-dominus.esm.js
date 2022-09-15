@@ -2825,7 +2825,7 @@ class Display {
                     placement: document.documentElement.dir === 'rtl'
                         ? 'bottom-end'
                         : 'bottom-start',
-                });
+                }).then();
             }
             else {
                 this.optionsStore.element.appendChild(this.widget);
