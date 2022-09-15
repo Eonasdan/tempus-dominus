@@ -572,4 +572,14 @@ const tempusDominus = {
   version
 };
 
-export default  tempusDominus
+export {
+  TempusDominus,
+  extend,
+  loadLocale,
+  locale,
+  Namespace,
+  DefaultOptions,
+  DateTime,
+  Unit,
+  version
+}
