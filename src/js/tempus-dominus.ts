@@ -558,7 +558,7 @@ const extend = function (plugin, option) {
   return tempusDominus;
 };
 
-const version = '6.0.1';
+const version = '6.1.2';
 
 const tempusDominus = {
   TempusDominus,
@@ -572,4 +572,14 @@ const tempusDominus = {
   version
 };
 
-export default  tempusDominus
+export {
+  TempusDominus,
+  extend,
+  loadLocale,
+  locale,
+  Namespace,
+  DefaultOptions,
+  DateTime,
+  Unit,
+  version
+}
