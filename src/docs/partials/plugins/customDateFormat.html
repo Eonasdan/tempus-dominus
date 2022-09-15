@@ -1,36 +1,38 @@
 <page-body>
   <div class='row'>
     <p>
-      This plugin provides the ability to specify the picker's format. The picker's options can be set via then <code>localization</code> settings.
+      This plugin provides the ability to specify the picker's format. The picker's options can be set via then <code>localization</code>
+      settings.
     </p>
     <p>
-      Use the boxes below to set a format string and the locale of the sample picker and click "Change" to update the options.
+      Use the boxes below to set a format string and the locale of the sample picker and click "Change" to update the
+      options.
     </p>
   </div>
 
   <div class='row'>
     <div class='container'>
-      <div class="row">
-        <div class="col-6">
-          <div class="mb-3">
-            <label for="format" class="form-label">Format</label>
+      <div class='row'>
+        <div class='col-6'>
+          <div class='mb-3'>
+            <label for='format' class='form-label'>Format</label>
             <input
-              type="text"
-              class="form-control"
-              id="format"
-              value="dd/MM/yyyy HH:mm"
+              type='text'
+              class='form-control'
+              id='format'
+              value='dd/MM/yyyy HH:mm'
             />
           </div>
         </div>
-        <div class="col-6">
-          <div class="mb-3">
-            <label for="format" class="form-label">Locale</label>
-            <input type="text" class="form-control" id="locale" value="pt-BR" />
+        <div class='col-6'>
+          <div class='mb-3'>
+            <label for='format' class='form-label'>Locale</label>
+            <input type='text' class='form-control' id='locale' value='pt-BR' />
           </div>
         </div>
-        <div class="col-6">
-          <div class="mb-3">
-            <button type="button" class="btn btn-primary" id="change">
+        <div class='col-6'>
+          <div class='mb-3'>
+            <button type='button' class='btn btn-primary' id='change'>
               Change
             </button>
           </div>
@@ -69,16 +71,16 @@
         {
           localization: {
             locale: 'pt-BR',
-            format: 'dd/MM/yyyy HH:mm',
-          },
+            format: 'dd/MM/yyyy HH:mm'
+          }
         });
 
       document.getElementById('change').addEventListener('click', () => {
         datetimepicker1.updateOptions({
           localization: {
             locale: document.getElementById('locale').value,
-            format: document.getElementById('format').value,
-          },
+            format: document.getElementById('format').value
+          }
         });
         datetimepicker1.dates.setValue(new DateTime());
       });
@@ -102,12 +104,14 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
     </pre>
   </div>
 
-  <div class="row">
+  <div class='row'>
     <h2>Format Tokens</h2>
-    <div class="col-12">
-      The custom date format plugin supports the following tokens. Given
-      2022-07-04T15:13:29.474Z
-      <table class="table table-striped">
+    <div class='col-12'>
+      <p id='token-description'>
+        The custom date format plugin supports the following tokens. Given
+        2022-07-04T15:13:29.474Z
+      </p>
+      <table class='table table-striped' aria-describedby='token-description'>
         <thead>
         <tr>
           <th>Token</th>
