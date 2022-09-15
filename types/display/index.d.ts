@@ -58,6 +58,8 @@ export default class Display {
      * fires Events#show
      */
     show(): void;
+    createPopup(element: HTMLElement, widget: HTMLElement, options: any): Promise<void>;
+    updatePopup(): void;
     /**
      * Changes the calendar view mode. E.g. month <-> year
      * @param direction -/+ number to move currentViewMode

@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.0.1 (https://getdatepicker.com/)
+  * Tempus Dominus v6.1.2 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -14,14 +14,14 @@ const localization = {
     selectYear: 'Seleziona anno',
     previousYear: 'Anno precedente',
     nextYear: 'Anno successivo',
-    selectDecade: 'Seleziona Decennio',
+    selectDecade: 'Seleziona decennio',
     previousDecade: 'Decennio precedente',
     nextDecade: 'Decennio successivo',
     previousCentury: 'Secolo precedente',
     nextCentury: 'Secolo successivo',
-    pickHour: "Seleziona l'ora",
-    incrementHour: "Incrementa l'ora",
-    decrementHour: "Decrementa l'ora",
+    pickHour: 'Seleziona l\'ora',
+    incrementHour: 'Incrementa l\'ora',
+    decrementHour: 'Decrementa l\'ora',
     pickMinute: 'Seleziona i minuti',
     incrementMinute: 'Incrementa i minuti',
     decrementMinute: 'Decrementa i minuti',

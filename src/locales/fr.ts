@@ -1,4 +1,4 @@
-const name = "ar";
+const name = 'fr';
 
 const localization = {
   today: 'Aujourd\'hui',
@@ -15,9 +15,9 @@ const localization = {
   nextDecade: 'Décennie suivante',
   previousCentury: 'Siècle précédente',
   nextCentury: 'Siècle suivante',
-  pickHour: "Sélectionner l\'heure",
-  incrementHour: "Incrementer l\'heure",
-  decrementHour: "Diminuer l\'heure",
+  pickHour: 'Sélectionner l\'heure',
+  incrementHour: 'Incrementer l\'heure',
+  decrementHour: 'Diminuer l\'heure',
   pickMinute: 'Sélectionner les minutes',
   incrementMinute: 'Incrementer les minutes',
   decrementMinute: 'Diminuer les minutes',
@@ -25,7 +25,7 @@ const localization = {
   incrementSecond: 'Incrementer les secondes',
   decrementSecond: 'Diminuer les secondes',
   toggleMeridiem: 'Basculer AM-PM',
-  selectTime: "Sélectionner l\'heure",
+  selectTime: 'Sélectionner l\'heure',
   selectDate: 'Sélectionner une date',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'fr',
