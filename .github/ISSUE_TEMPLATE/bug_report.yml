@@ -1,7 +1,7 @@
 name: Report a bug
 description: Tell us about your issue.
 title: "Provide a general summary of the issue"
-assignees: "-"
+labels: ["Type: bug", "State: Triage"]
 body:
   - type: checkboxes
     attributes:
