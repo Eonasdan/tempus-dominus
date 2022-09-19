@@ -1,6 +1,7 @@
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R53OEFF)
 
 [![Rate on Openbase](https://badges.openbase.com/js/rating/@eonasdan/tempus-dominus.svg)](https://openbase.com/js/@eonasdan/tempus-dominus?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
+[![kandi X-Ray](https://kandi.openweaver.com/badges/xray.svg)](https://kandi.openweaver.com/html/Eonasdan/tempus-dominus)
 
 # Tempus Dominus Date/Time Picker v6.0.1
 
