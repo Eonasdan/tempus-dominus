@@ -12,17 +12,19 @@ To contribute, fork the library and run `npm install`. You need [node](http://no
 git https://github.com/Eonasdan/tempus-dominus.git
 cd tempus-dominus
 npm i
-git checkout master
+git checkout development  # all patches against development branch, please!
 ```
 
 # Very important notes
 
+**Pull requests to the `master` branch will be closed.** Please submit all pull requests to the `development` branch.
 - **Do not include the minified files in your pull request.** Don't worry, we'll build them when we cut a release.
 - Pull requests that do not include a description (title only) and the following will be closed:
   - What the change does
   - A use case (for new features or enhancements)
 
 # NPM Scripts
+
 
 | Script | Description |
 |--------|------------|
