@@ -276,8 +276,16 @@ export default class Display {
   }
 
   async createPopup(element: HTMLElement, widget: HTMLElement, options: any): Promise<void>  {
-    const { createPopper } = await import('@popperjs/core');
-    this._popperInstance = createPopper(element, widget, options);
+    let createPopper;
+    try{
+      createPopper = await import('@popperjs/core');
+    } catch (e){
+      createPopper = window?.Popper?.createPopper;
+    }
+
+    if(createPopper){
+      this._popperInstance = createPopper(element, widget, options);
+    }
   }
 
   updatePopup(): void {
