@@ -1,0 +1,247 @@
+<page-body>
+  <div class='row'>
+    <p>
+      This plugin provides the ability to specify the picker's format. The picker's options can be set via then <code>localization</code>
+      settings.
+    </p>
+    <p>
+      Use the boxes below to set a format string and the locale of the sample picker and click "Change" to update the
+      options.
+    </p>
+  </div>
+
+  <div class='row'>
+    <div class='container'>
+      <div class='row'>
+        <div class='col-6'>
+          <div class='mb-3'>
+            <label for='format' class='form-label'>Format</label>
+            <input
+              type='text'
+              class='form-control'
+              id='format'
+              value='dd/MM/yyyy HH:mm'
+            />
+          </div>
+        </div>
+        <div class='col-6'>
+          <div class='mb-3'>
+            <label for='format' class='form-label'>Locale</label>
+            <input type='text' class='form-control' id='locale' value='pt-BR' />
+          </div>
+        </div>
+        <div class='col-6'>
+          <div class='mb-3'>
+            <button type='button' class='btn btn-primary' id='change'>
+              Change
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-sm-6'>
+          <label for='datetimepicker1Input' class='form-label'>Sample picker</label>
+          <div
+            class='input-group'
+            id='datetimepicker1'
+            data-td-target-input='nearest'
+            data-td-target-toggle='nearest'
+          >
+            <input
+              id='datetimepicker1Input'
+              type='text'
+              class='form-control'
+              data-td-target='#datetimepicker1'
+            />
+            <span
+              class='input-group-text'
+              data-td-target='#datetimepicker1'
+              data-td-toggle='datetimepicker'
+            >
+               <span class='fas fa-calendar'></span>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src='/6/js/plugins/customDateFormat.js'></script>
+    <script type='text/javascript'>
+      tempusDominus.extend(window.tempusDominus.plugins.customDateFormat);
+      const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+        {
+          localization: {
+            locale: 'pt-BR',
+            format: 'dd/MM/yyyy HH:mm'
+          }
+        });
+
+      document.getElementById('change').addEventListener('click', () => {
+        datetimepicker1.updateOptions({
+          localization: {
+            locale: document.getElementById('locale').value,
+            format: document.getElementById('format').value
+          }
+        });
+        datetimepicker1.dates.setValue(new DateTime());
+      });
+    </script>
+  </div>
+
+  <div class='row'>
+    <pre>
+<code class='language-js'>tempusDominus.extend(window.tempusDominus.plugins.customDateFormat);
+//or
+import customDateFormat from 'tempusDominus/plugins/customDateFormat'
+tempusDominus.extend(customDateFormat);
+
+//example picker
+const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;),
+  localization: {
+  locale: 'pt-BR',
+  format: 'dd/MM/yyyy HH:mm',
+});
+</code>
+    </pre>
+  </div>
+
+  <div class='row'>
+    <h2>Format Tokens</h2>
+    <div class='col-12'>
+      <p id='token-description'>
+        The custom date format plugin supports the following tokens. Given
+        2022-07-04T15:13:29.474Z
+      </p>
+      <table class='table table-striped' aria-describedby='token-description'>
+        <thead>
+        <tr>
+          <th>Token</th>
+          <th>Description</th>
+          <th>Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>yy</td>
+          <td>2 digit year</td>
+          <td>22</td>
+        </tr>
+        <tr>
+          <td>yyyy</td>
+          <td>4 digit year</td>
+          <td>2022</td>
+        </tr>
+        <tr>
+          <td>M</td>
+          <td>1-2 digit month, e.g. 1...12</td>
+          <td>7</td>
+        </tr>
+        <tr>
+          <td>MM</td>
+          <td>2 digit month</td>
+          <td>07</td>
+        </tr>
+        <tr>
+          <td>MMM</td>
+          <td>Short Month</td>
+          <td>Jul</td>
+        </tr>
+        <tr>
+          <td>MMMM</td>
+          <td>Full Month</td>
+          <td>July</td>
+        </tr>
+        <tr>
+          <td>d</td>
+          <td>1-2 digit day, e.g. 1...31</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>dd</td>
+          <td>2 digit day</td>
+          <td>04</td>
+        </tr>
+        <tr>
+          <td>ddd</td>
+          <td>Short Weekday</td>
+          <td>Mon</td>
+        </tr>
+        <tr>
+          <td>dddd</td>
+          <td>Full Weekday</td>
+          <td>Monday</td>
+        </tr>
+        <tr>
+          <td>H</td>
+          <td>1-2 digit hour (24 hour)</td>
+          <td>13</td>
+        </tr>
+        <tr>
+          <td>HH</td>
+          <td>2 digit hour (24 hour)</td>
+          <td>13</td>
+        </tr>
+        <tr>
+          <td>h</td>
+          <td>1-2 digit hour (12 hour)</td>
+          <td>1 (PM)</td>
+        </tr>
+        <tr>
+          <td>hh</td>
+          <td>2 digit hour (12 hour)</td>
+          <td>01 (PM)</td>
+        </tr>
+        <tr>
+          <td>m</td>
+          <td>1-2 digit minute, e.g. 0...59</td>
+          <td>29</td>
+        </tr>
+        <tr>
+          <td>mm</td>
+          <td>2 digit minute, e.g. 0...5</td>
+          <td>29</td>
+        </tr>
+        <tr>
+          <td>s</td>
+          <td>1-2 digit second, e.g. 0...59</td>
+          <td>47</td>
+        </tr>
+        <tr>
+          <td>ss</td>
+          <td>2 digit second, e.g. 0...59</td>
+          <td>47</td>
+        </tr>
+        <!--tr>
+          <td>fff</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>t</td>
+          <td></td>
+          <td></td>
+        </tr-->
+        <tr>
+          <td>T</td>
+          <td>Meridiem</td>
+          <td>PM</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/solid.min.js'
+          integrity='sha512-Qc+cBMt/4/KXJ1F6nNQahXIsgPygHM4S2XWChoumV8qkpZ9oO+gBDBEpOxgbkQQ/6DlHx6cUxa5nBhEbuiR8xw=='
+          crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+  <script defer src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/fontawesome.min.js'
+          integrity='sha512-KCwrxBJebca0PPOaHELfqGtqkUlFUCuqCnmtydvBSTnJrBirJ55hRG5xcP4R9Rdx9Fz9IF3Yw6Rx40uhuAHR8Q=='
+          crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+</page-body>
+
+<page-meta>
+  <title>Plugins - Custom Date Formats</title>
+  <post-date>01/19/2022</post-date>
+  <update-date>07/22/2022</update-date>
+  <excerpt>How to use custom date format plugin with Tempus Dominus.
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

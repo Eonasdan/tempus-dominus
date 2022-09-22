@@ -1,0 +1,430 @@
+<page-body>
+  <div class='row'>
+    <h2>Beta9</h2>
+    <h3>Bug Fixes</h3>
+    <ul>
+      <li>Fixed jQuery provider. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2547'>#2547</a></li>
+      <li>Adds options for theme to fix <a href='https://github.com/Eonasdan/tempus-dominus/issues/2522'>#2522</a>. Big thanks to @matholum.</li>
+      <li>Fixed date view next/back button disabling when it shouldn't. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2595'>#2595</a></li>
+      <li>Fixed component disabling issue <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2502'>#2502</a></li>
+      <li>Changed default useTwentyfourHour to undefined. Now using DateTime.parts() to check if the view date has a "dayPeriod" property <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2510'>#2510</a></li>
+      <li>Fixed 24-hour 24/0 formatting
+        <a href='https://github.com/Eonasdan/tempus-dominus/issues/2563'>#2563</a>
+      </li>
+      <li>Fixed none latin number selection in the minute picker
+        <a href='https://github.com/Eonasdan/tempus-dominus/issues/2576'>#2576</a>
+      </li>
+      <li>Fixed input value to view date object reference
+        <a href='https://github.com/Eonasdan/tempus-dominus/issues/2568'>#2568</a>
+      </li>
+    </ul>
+    <h3>New</h3>
+    <ul>
+      <li>Add fr locale via #2581</li>
+      <li>Updated and published NuGet package.</li>
+    </ul>
+    <h3>Breaking changes</h3>
+    <ul>
+      <li>Renamed /src/sass to /src/scss to more accurately reflect code.</li>
+    </ul>
+    <h2>Beta8</h2>
+    <h3>Bug Fixes</h3>
+    <ul>
+      <li>Fixed view mode. <a
+              href='https://github.com/Eonasdan/tempus-dominus/issues/2583'>#2583</a></li>
+      <li>Fixed and simplified options merging <a href='https://github.com/Eonasdan/tempus-dominus/issues/2578'>#2578</a></li>
+    </ul>
+    <h2>Beta7</h2>
+    <h3>Bug Fixes</h3>
+    <ul>
+      <li>Fixed options mutable. <a
+              href='https://github.com/Eonasdan/tempus-dominus/issues/2487'>#2487</a></li>
+      <li>Fixed element toggle when input is disabled <a href='https://github.com/Eonasdan/tempus-dominus/issues/2495'>#2495</a></li>
+      <li>Fixed jQuery no conflict <a href='https://github.com/Eonasdan/tempus-dominus/issues/2506'>#2506</a></li>
+      <li>Fixed options update <a href='https://github.com/Eonasdan/tempus-dominus/issues/2549'>#2549</a></li>
+    </ul>
+    <h3>New</h3>
+    <ul>
+      <li>Added a new example for setting and getting dates.</li>
+    </ul>
+    <h2>Beta6</h2>
+    <h3>Bug Fixes</h3>
+    <ul>
+      <li>viewMode is optional <a
+              href='https://github.com/Eonasdan/tempus-dominus/issues/2550'>#2550</a></li>
+    </ul>
+    <h3>New</h3>
+    <ul>
+      <li>Introduced a simple overridable function parseInput  <a
+              href='https://github.com/Eonasdan/tempus-dominus/issues/2552'>#2552</a></li>
+    </ul>
+    <h2>6-beta5</h2>
+    <h3>Bug Fixes</h3>
+    <ul>
+      <li>Fixed clear() doesn't erase text of date. <a
+              href='https://github.com/Eonasdan/tempus-dominus/issues/2472'>#2472</a></li>
+      <li>Fixed clear button event cycle. <a
+              href='https://github.com/Eonasdan/tempus-dominus/issues/2516'>#2516</a></li>
+      <li>Fixed 2 digit formatting. <a
+              href='https://github.com/Eonasdan/tempus-dominus/issues/2516'>#2513</a></li>
+      <li>Trigger native change event on input when available - fixes #2401 <a
+              href='https://github.com/Eonasdan/tempus-dominus/issues/2533'>via #2533</a></li>
+      <li>Fixes use of SVG icons (issue #2527) <a
+              href='https://github.com/Eonasdan/tempus-dominus/issues/2533'>via #2529</a></li>
+    </ul>
+    <h2>Version 6-beta4</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Dark mode! The picker now has dark mode when the user's preference is dark.</li>
+      <li>Wrote a tiny service locator/di container in an effort to make plugins better</li>
+      <li>Added a momentjs plugin</li>
+      <li>Added DE, ES, IT, NL, RO locales thanks to @jcompagner <a
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2484'>via #2484</a>.
+      </li>
+      <li><code>toggleMeridiem</code> supports a comma separated list. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2399'>#2399.</a>
+      </li>
+      <li>
+        All event types now provide <code>viewMode</code> which provides
+        'clock' | 'calendar' | 'months' | 'years' | 'decades' depending what view
+        the event occurred.
+        <a
+          href='https://github.com/Eonasdan/tempus-dominus/issues/2428'>#2428.</a>
+      </li>
+    </ul>
+    <h3>Breaking changes</h3>
+    <ul>
+      <li>Plugins work a little differently now. Hopefully they are a bit cleaner to work with now</li>
+      <li>Hooks have been removed. Plugins are a better way to handle this. You can look at the momentjs plugin for a
+        guide.
+      </li>
+      <li>Locale loading and authoring has changed a bit as well.</li>
+      <li><code>ViewUpdateEvent</code> no longer provides <code>change: Unit</code>.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed event 'hide.td' not triggered when input is empty. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2424'>#2424.</a>
+      </li>
+      <li>Fixed input change event trigger. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2401'>#2401.</a>
+      </li>
+      <li>Fixed dataset deletion issue. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2483'>#2483.</a>
+      </li>
+      <li>Fixed month manipulation issue <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2474'>#2474.</a> <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2486'>2486.</a>
+      </li>
+      <li>Fixed Wrong calendar rendering when startOfTheWeek <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2473'>#2473.</a>
+      </li>
+      <li>Fixed viewMode option not respected (#2466) thanks @jmolinap <a
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2494'>via #2494.</a>
+      </li>
+    </ul>
+    <h2>Version 6-beta3</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Allow to change parent container for the widget <a
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2462'>via #2462</a>.
+      </li>
+      <li>Moved docs to gh-pages and set up a GitHub action to move compiled docs to that branch.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Issue with time picker only & fixing range example <a
+        href='https://github.com/Eonasdan/tempus-dominus/pull/2463'>via #2463.</a>
+      </li>
+      <li>Fixed issue with reading the data- attributes. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2430'>#2430</a>
+      </li>
+      <li>Fixed start of the week option having the incorrect heading. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2414'>#2443</a>
+      </li>
+    </ul>
+    <h2>Version 6-alpha17</h2>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed issue with calendar weeks. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2441'>#2441</a>
+      </li>
+    </ul>
+    <h2>Version 6-alpha16</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Started building html migration tool</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed issue with daysOfWeekDisabled. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2419'>#2419</a>
+      </li>
+      <li>Fixed issue with reading the data- attributes. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2430'>#2430</a>
+      </li>
+      <li>Fixed start of the week option having the incorrect heading. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2414'>#2443</a>
+      </li>
+    </ul>
+    <h2>Version 6-alpha15</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Added <code>localization.startOfTheWeek</code>. This allows setting the start of the week.</li>
+      <li>Added <code>numberingSystem</code> to <code>DateTimeFormatOptions</code></li>
+      <li>Added <code>meta</code> property to options.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed issue with 24 hour display formatting. <a href='https://github.com/Eonasdan/tempus-dominus/issues/2414'>#2414</a>
+      </li>
+      <li>Fixed default input change formatting function to check for empty dates. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2411'>#2411</a>
+      </li>
+      <li>Fixed an issue with the unsubscribe method typing. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2411'>#2411</a>
+      </li>
+      <li>Fixed an issue where the picker would try to update the clock view even it wasn't enabled. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2438'>#2438</a>
+      </li>
+      <li>Fixed an issue using a time component would not go back to the clock view. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2431'>#2431</a>
+      </li>
+      <li>The picker will return to the view date and show the calendar or clock after being reopened. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2410'>#2410</a>
+      </li>
+      <li>Fixed clock/calendar switching to wait until the other view is ready before switching. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2421'>#2421</a>
+      </li>
+      <li>Fixed the options interface so all properties are optionsal. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2439'>#2439</a>
+      </li>
+      <li><span class='badge bg-danger'>BREAKING</span> <code>localization.dayViewHeaderFormat</code> no longer takes a
+        string but instead accepts a <code>DateTimeFormatOptions</code>. This will allow for more customization. <a
+          href='https://github.com/Eonasdan/tempus-dominus/issues/2420'>#2420</a>
+      </li>
+    </ul>
+  </div>
+  <div class='row'>
+    <h2>Version 6-alpha14</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Cleaned up css a bit. Got rid of the popper arrow and aligned the picker to the start of the element.</li>
+      <li><span class='badge bg-danger'>BREAKING</span> <code>display.inputFormat</code> now takes a function, not an
+        Intl format. It has also been moved to <code>hooks.inputFormat</code> By default a function will be executed
+        that uses Intl to format the selected date(s) based on the selected components.
+      </li>
+      <li>Added <code>hooks.inputParse</code></li>
+      <li>Merged number localization Thanks @hkvstore <a href='https://github.com/Eonasdan/tempus-dominus/issues/2408'>#2408</a>
+      </li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Merged a fix for parsing issue from comparing constructor names. Thanks @faatihi <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2408'>#2408</a></li>
+      <li>Fixed doc issue</li>
+      <li>Fixed input value for real this time. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2387'>#2387</a></li>
+      <li>Fixed <code>keepOpen</code></li>
+      <li>Fixed widget positioning with rtl <a href='https://github.com/Eonasdan/tempus-dominus/issues/2400'>#2400</a>
+      </li>
+    </ul>
+  </div>
+  <div class='row'>
+    <h2>Version 6-alpha1.0.13</h2>
+    <h3>New</h3>
+    <ul>
+      <li>Created a new method <code>set(value: any, index?: number, from: string = 'date.set')</code> that tries to
+        conver the <code>value</code> provided and then tries to set that value to the <code>index</code> (or 0 if not
+        using multidate).
+      </li>
+      <li>Added esm output</li>
+      <li>Exposed <code>Unit</code> and <code>DateTimeFormatOptions</code> from the DateTime class.</li>
+      <li>Renamed <code>togglePeriod</code> to <code>toggleMeridiem</code></li>
+      <li>Added <code>toggleMeridiem</code> class to AM/PM button</li>
+      <li>Cleaned up css a bit. Got rid of the popper arrow and aligned the picker to the start of the element.</li>
+    </ul>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed dealing with input values/changes.</li>
+      <li>Fixed issue when calling hide if the widget hasn't been built (or shown) yet.</li>
+      <li>Fixed meridiem issue. Thanks @hkvstore <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2398'>#2398</a></li>
+      <li>Merged PR 2396 to fix 24 hour hour selection. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2395'>#2395</a></li>
+      <li>Fixed issue with time component grid. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2395'>#2395</a></li>
+    </ul>
+  </div>
+  <div class='row'>
+    <h2>Version 6-alpha1.0.4</h2>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed issue with meridiem (AM/PM) button clicks.</li>
+    </ul>
+  </div>
+  <div class='row'>
+    <h2>Version 6-alpha1.0.3</h2>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed year display after selecting a decade. <a href='https://github.com/Eonasdan/tempus-dominus/issues/2386'>#2386</a>
+      </li>
+      <li>Fixed issue if the input field had a value. <a href='https://github.com/Eonasdan/tempus-dominus/issues/2387'>#2387</a>
+      </li>
+      <li>Fixed setting the defaultDate option with a Date object. <a
+        href='https://github.com/Eonasdan/tempus-dominus/issues/2391'>#2391</a></li>
+    </ul>
+  </div>
+  <div class='row'>
+    <h2>Version 6-alpha1</h2>
+    <h3 id='general'>General</h3>
+    <ul>
+      <li>picker returns a <code>DateTime</code> which is an extended javascript <code>Date</code> object.</li>
+      <li>picker no longer uses jQuery, momentjs, or bootstrap</li>
+      <li>events now have interfaces</li>
+    </ul>
+    <h3 id='configuration'>Configuration</h3>
+    <ul>
+      <li>renamed <code>tooltip</code> to <code>localization</code>
+        <ul>
+          <li>renamed <code>tooltip.prevMonth</code> to <code>localization.previousMonth</code></li>
+          <li>renamed <code>tooltip.prevYear</code> to <code>localization.previousYear</code></li>
+          <li>renamed <code>tooltip.prevDecade</code> to <code>localization.previousDecade</code></li>
+          <li>renamed <code>tooltip.prevCentury</code> to <code>localization.previousCentury</code></li>
+          <li>moved <code>dayViewHeaderFormat</code> to <code>localization.dayViewHeaderFormat</code></li>
+          <li><code>dayViewHeaderFormat</code> now takes a javascript <code>intl</code> month option, e.g.
+            <code>long</code> (default)
+          </li>
+        </ul>
+      </li>
+      <li>moved <code>locale</code> to <code>localization</code>
+      </li>
+      <li>removed <code>useStrict</code></li>
+      <li>removed <code>timeZone</code></li>
+      <li>removed <code>format</code>
+        <ul>
+          <li>added <code>display.inputFormat</code> that takes <code>DateTimeFormatOptions</code>;</li>
+        </ul>
+      </li>
+      <li>removed <code>collapse</code></li>
+      <li>removed <code>extraFormats</code></li>
+      <li>removed <code>widgetParent</code></li>
+      <li>removed <code>widgetPositioning</code></li>
+      <li>changed <code>viewMode</code> from <code>&#39;times&#39; | &#39;days&#39;</code> to <code>&#39;clock&#39; |
+        &#39;calendar&#39;</code></li>
+      <li>renamed <code>allowMultidate</code> and <code>multidateSeparator</code> to <code>multipleDates</code> and
+        <code>multipleDatesSeparator</code>
+      </li>
+      <li>moved the following to <code>restrictions</code>
+        <ul>
+          <li>minDate</li>
+          <li>maxDate</li>
+          <li>disabledDates</li>
+          <li>enabledDates</li>
+          <li>daysOfWeekDisabled</li>
+          <li>disabledHours</li>
+          <li>enabledHours</li>
+          <li>readonly</li>
+          <li>disabledTimeIntervals</li>
+        </ul>
+      </li>
+      <li>moved the following to <code>display</code>
+        <ul>
+          <li>sideBySide</li>
+          <li>calendarWeeks</li>
+          <li>viewMode</li>
+          <li>toolbarPlacement</li>
+          <li>buttons</li>
+          <li>widgetPositioning</li>
+          <li>icons</li>
+          <li>inline</li>
+          <li>keepOpen</li>
+        </ul>
+      </li>
+      <li>disabledTimeIntervals is now an array of <code>{ from: DateTime, to: DateTime }</code>
+      </li>
+      <li>removed check for <code>dateOptions</code> on the element data set. jQuery hid allowing an object by looping
+        through the properties
+      </li>
+      <li>removed <code>keybindings</code> - this might come back later</li>
+      <li>removed <code>readonly<</code></li>
+      <li>removed <code>ignoreReadonly<</code></li>
+      <li>removed <code>focusOnShow<</code></li>
+    </ul>
+    <h4 id='styles'>Styles</h4>
+    <h5 id='tip-all-new-css-values-are-in-namespace-css-in-the-consts-ts-file'>Tip: All new css values are in <code>Namespace.Css.*</code>
+      in the <code>consts.ts</code> file</h5>
+    <ul>
+      <li>renamed <code>bootstrap-datetimepicker-widget</code> to <code>tempus-dominus-widget</code></li>
+      <li>renamed <code>tempusDominus-bootstrap-datetimepicker-widget-with-calendar-weeks</code> to <code>tempus-dominus-with-calendar-weeks</code>
+        (
+        v5)
+        <ul>
+          <li>removed <code>.input-group [data-toggle=&quot;datetimepicker&quot;]</code> setting the cursor type to
+            pointer.
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h6 id='date'>Date</h6>
+    <ul>
+      <li>renamed <code>datepicker</code> to <code>date-container</code></li>
+      <li>renamed <code>datepicker-decades</code> to <code>date-container-decades</code></li>
+      <li>renamed <code>datepicker-years</code> to <code>date-container-years</code></li>
+      <li>renamed <code>datepicker-months</code> to <code>date-container-months</code></li>
+      <li>renamed <code>datepicker-days</code> to <code>date-container-days</code></li>
+      <li>renamed <code>prev</code> to <code>previous</code></li>
+      <li>renamed <code>data-day</code> to <code>data-value</code> to be consistent with other views</li>
+    </ul>
+    <h6 id='time'>Time</h6>
+    <ul>
+      <li>renamed <code>usetwentyfour</code> to <code>useTwentyfour</code></li>
+      <li>renamed <code>timepicker</code> to <code>time-container</code></li>
+      <li>renamed <code>timepicker-hour</code> to <code>time-container-hour</code></li>
+      <li>renamed <code>timepicker-minute</code> to <code>time-container-minute</code></li>
+      <li>renamed <code>timepicker-second</code> to <code>time-container-second</code></li>
+    </ul>
+    <h5 id='saas'>Saas</h5>
+    <p>Saas file is now called <code>tempus-dominus.scss</code>. The &quot;build&quot; file has been deleted as it&#39;s
+      no longer required.</p>
+    <h3 id='events'>Events</h3>
+    <ul>
+      <li>changed <code>isInvalid</code> to <code>isValid</code> and flipped the boolean (v5)</li>
+      <li>changed event now emits <code>undefined</code> instead of false when the date is being cleared</li>
+      <li>changed plugin.name from <code>datetimepicker</code> to <code>tempus-dominus</code></li>
+      <li>changed root data namespace from <code>datetimepicker</code> to <code>td</code></li>
+    </ul>
+  </div>
+
+  <div class='row'>
+    <h1>
+      Version 5
+    </h1>
+    <p>
+      Version 5 was a rewrite of v4 taking some pending pull requests and fixes along with it. Unfortunately, I didn't
+      do a very good job at documenting those changes.
+    </p>
+  </div>
+
+  <div class='row'>
+    <h1>
+      Version 4
+    </h1>
+    <p>
+      The chang log from v2-v4 can be <a href='https://getdatepicker.com/4/ChangeLog/'>read here</a>.
+    </p>
+  </div>
+
+</page-body>
+<page-meta>
+  <title>Change Log Archive</title>
+  <post-date>07/20/2021</post-date>
+  <update-date>07/20/2021</update-date>
+  <excerpt>An archive of changes between different version of tempus dominus.
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>

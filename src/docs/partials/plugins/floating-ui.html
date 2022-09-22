@@ -1,0 +1,44 @@
+<page-body>
+  <div class='row'>
+    <h3>Floating UI</h3>
+    <p>
+      By default, @popperJS/core is required for the popper to work correctly. Alternatively, we can remove popper and use
+      <a href='https://github.com/floating-ui/floating-ui' target='_blank' rel='noopener'>FloatingUI</a> by creating a plugin that handles the popup creation.
+    </p>
+  </div>
+
+  <div class='row'>
+    <pre>
+<code class='language-js'>
+import { computePosition } from '@floating-ui/dom';
+
+const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
+
+datetimepicker1.display.createPopup = computePosition(element, widget, options).then(({ x, y }) => {
+    Object.assign(widget.style, {
+      left: `${x}px`,
+      top: `${y}px`,
+      position: 'absolute',
+    });
+  });
+</code>
+    </pre>
+  </div>
+
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/solid.min.js'
+          integrity='sha512-Qc+cBMt/4/KXJ1F6nNQahXIsgPygHM4S2XWChoumV8qkpZ9oO+gBDBEpOxgbkQQ/6DlHx6cUxa5nBhEbuiR8xw=='
+          crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+  <script defer src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/fontawesome.min.js'
+          integrity='sha512-KCwrxBJebca0PPOaHELfqGtqkUlFUCuqCnmtydvBSTnJrBirJ55hRG5xcP4R9Rdx9Fz9IF3Yw6Rx40uhuAHR8Q=='
+          crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+</page-body>
+
+<page-meta>
+  <title>Plugins - FloatingUI</title>
+  <post-date>09/13/2022</post-date>
+  <update-date>09/13/2022</update-date>
+  <excerpt>How to use FloatingUI plugin with Tempus Dominus.
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>
