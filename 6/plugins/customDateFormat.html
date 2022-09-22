@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-  <title>Date Functions - Tempus Dominus</title>
+  <title>Plugins - Custom Date Formats - Tempus Dominus</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -15,20 +15,20 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 
-  <meta name="title" content="Date Functions">
-  <meta name="description" content="How to use Tempus Dominus datetime picker
+  <meta name="title" content="Plugins - Custom Date Formats">
+  <meta name="description" content="How to use custom date format plugin with Tempus Dominus.
   ">
 
   
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://getdatepicker.com/docs/6//functions/dates.html">
-  <meta property="og:title" content="Date Functions">
-  <meta property="og:description" content="How to use Tempus Dominus datetime picker
+  <meta property="og:url" content="https://getdatepicker.com/docs/6//plugins/customDateFormat.html">
+  <meta property="og:title" content="Plugins - Custom Date Formats">
+  <meta property="og:description" content="How to use custom date format plugin with Tempus Dominus.
   ">
   <meta class="metaImage" property="og:image" content="">
 
-  <meta property="article:published_time" content="2022-08-14T00:00:00.000Z">
-  <meta property="article:modified_time" content="2022-08-14T00:00:00.000Z">
+  <meta property="article:published_time" content="2022-01-19T00:00:00.000Z">
+  <meta property="article:modified_time" content="2022-07-22T00:00:00.000Z">
   <meta property="article:tag" content="datepicker, javascript, open source, tempus dominus, eonasdan">
   <meta property="article:author" content="Jonathan Peterson">
   <meta property="article:section" content="Technology">
@@ -37,9 +37,9 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:site" content="@eonasdan">
   <meta property="twitter:creator" content="@eonasdan">
-  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//functions/dates.html">
-  <meta property="twitter:title" content="Date Functions">
-  <meta property="twitter:description" content="How to use Tempus Dominus datetime picker
+  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//plugins/customDateFormat.html">
+  <meta property="twitter:title" content="Plugins - Custom Date Formats">
+  <meta property="twitter:description" content="How to use custom date format plugin with Tempus Dominus.
   ">
   <meta class="metaImage" property="twitter:image" content="">
   <link rel="stylesheet" href="/css/styles.min.css">
@@ -245,7 +245,7 @@
 <main class="bd-main order-1">
   <div class="bd-intro ps-lg-4">
     <div class="d-md-flex align-items-center justify-content-between">
-      <h1 class="bd-title title" id="content">Date Functions</h1>
+      <h1 class="bd-title title" id="content">Plugins - Custom Date Formats</h1>
     </div>
   </div>
   <div class="bd-toc mt-3 mb-5 my-lg-0 ps-xl-3 mb-lg-5 text-muted d-none" id="tocContainer">
@@ -263,185 +263,208 @@
   </div>
   <div id="mainContent" class="bd-content ps-lg-4">
   <div class="row">
-    For the sake of the following documentation, assume there's a picker setup like this:
-    <pre><code class="language-javascript">const picker = new tempusdominus
-  .TempusDominus(document.getElementById('datetimepicker1'));
-</code>
-</pre>
+    <p>
+      This plugin provides the ability to specify the picker's format. The picker's options can be set via then <code>localization</code>
+      settings.
+    </p>
+    <p>
+      Use the boxes below to set a format string and the locale of the sample picker and click "Change" to update the
+      options.
+    </p>
+  </div>
 
+  <div class="row">
     <div class="container">
       <div class="row">
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="format" class="form-label">Format</label>
+            <input type="text" class="form-control" id="format" value="dd/MM/yyyy HH:mm">
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="format" class="form-label">Locale</label>
+            <input type="text" class="form-control" id="locale" value="pt-BR">
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <button type="button" class="btn btn-primary" id="change">
+              Change
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-sm-6">
-          <label for="datetimepicker1Input" class="form-label">Simple picker</label>
+          <label for="datetimepicker1Input" class="form-label">Sample picker</label>
           <div class="input-group" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
             <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1">
             <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
-               <span class="fa-solid fa-calendar"></span>
+               <span class="fas fa-calendar"></span>
              </span>
           </div>
         </div>
-        <script type="text/javascript">
-          const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
-        </script>
       </div>
     </div>
+    <script src="/6/js/plugins/customDateFormat.js"></script>
+    <script type="text/javascript">
+      tempusDominus.extend(window.tempusDominus.plugins.customDateFormat);
+      const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+        {
+          localization: {
+            locale: 'pt-BR',
+            format: 'dd/MM/yyyy HH:mm'
+          }
+        });
+
+      document.getElementById('change').addEventListener('click', () => {
+        datetimepicker1.updateOptions({
+          localization: {
+            locale: document.getElementById('locale').value,
+            format: document.getElementById('format').value
+          }
+        });
+        datetimepicker1.dates.setValue(new DateTime());
+      });
+    </script>
   </div>
 
   <div class="row">
-    <h2 id="viewDate">Getting the View Date
-      <a class="anchor-link" aria-label="Anchor" href="#viewDate"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      <code>picker.viewDate</code> returns the pickers current view date.
-    </p>
-  </div>
-  <div class="row mb-3">
-    <h2>picker.dates</h2>
-    <p>
-      There are a number of function here that allow for retrieving the selected dates or adding to them.
-      These functions are used as <code>picker.dates.add(...)</code> for example.
-    </p>
-  </div>
-  <div class="row">
-    <h2 id="picked">picked
-      <a class="anchor-link" aria-label="Anchor" href="#picked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Returns an array of <code>DateTime</code> of the selected date(s).
-    </p>
+    <pre><code class="language-js">tempusDominus.extend(window.tempusDominus.plugins.customDateFormat);
+//or
+import customDateFormat from 'tempusDominus/plugins/customDateFormat'
+tempusDominus.extend(customDateFormat);
+
+//example picker
+const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
+  localization: {
+  locale: 'pt-BR',
+  format: 'dd/MM/yyyy HH:mm',
+});
+</code>
+    </pre>
   </div>
 
   <div class="row">
-    <h2 id="lastPicked">lastPicked
-      <a class="anchor-link" aria-label="Anchor" href="#lastPicked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Returns the last picked <code>DateTime</code> of the selected date(s).
-    </p>
+    <h2>Format Tokens</h2>
+    <div class="col-12">
+      <p id="token-description">
+        The custom date format plugin supports the following tokens. Given
+        2022-07-04T15:13:29.474Z
+      </p>
+      <table class="table table-striped" aria-describedby="token-description">
+        <thead>
+        <tr>
+          <th>Token</th>
+          <th>Description</th>
+          <th>Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>yy</td>
+          <td>2 digit year</td>
+          <td>22</td>
+        </tr>
+        <tr>
+          <td>yyyy</td>
+          <td>4 digit year</td>
+          <td>2022</td>
+        </tr>
+        <tr>
+          <td>M</td>
+          <td>1-2 digit month, e.g. 1...12</td>
+          <td>7</td>
+        </tr>
+        <tr>
+          <td>MM</td>
+          <td>2 digit month</td>
+          <td>07</td>
+        </tr>
+        <tr>
+          <td>MMM</td>
+          <td>Short Month</td>
+          <td>Jul</td>
+        </tr>
+        <tr>
+          <td>MMMM</td>
+          <td>Full Month</td>
+          <td>July</td>
+        </tr>
+        <tr>
+          <td>d</td>
+          <td>1-2 digit day, e.g. 1...31</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>dd</td>
+          <td>2 digit day</td>
+          <td>04</td>
+        </tr>
+        <tr>
+          <td>ddd</td>
+          <td>Short Weekday</td>
+          <td>Mon</td>
+        </tr>
+        <tr>
+          <td>dddd</td>
+          <td>Full Weekday</td>
+          <td>Monday</td>
+        </tr>
+        <tr>
+          <td>H</td>
+          <td>1-2 digit hour (24 hour)</td>
+          <td>13</td>
+        </tr>
+        <tr>
+          <td>HH</td>
+          <td>2 digit hour (24 hour)</td>
+          <td>13</td>
+        </tr>
+        <tr>
+          <td>h</td>
+          <td>1-2 digit hour (12 hour)</td>
+          <td>1 (PM)</td>
+        </tr>
+        <tr>
+          <td>hh</td>
+          <td>2 digit hour (12 hour)</td>
+          <td>01 (PM)</td>
+        </tr>
+        <tr>
+          <td>m</td>
+          <td>1-2 digit minute, e.g. 0...59</td>
+          <td>29</td>
+        </tr>
+        <tr>
+          <td>mm</td>
+          <td>2 digit minute, e.g. 0...5</td>
+          <td>29</td>
+        </tr>
+        <tr>
+          <td>s</td>
+          <td>1-2 digit second, e.g. 0...59</td>
+          <td>47</td>
+        </tr>
+        <tr>
+          <td>ss</td>
+          <td>2 digit second, e.g. 0...59</td>
+          <td>47</td>
+        </tr>
+        
+        <tr>
+          <td>T</td>
+          <td>Meridiem</td>
+          <td>PM</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-
-  <div class="row">
-    <h2 id="lastPickedIndex">lastPickedIndex
-      <a class="anchor-link" aria-label="Anchor" href="#lastPickedIndex"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Returns the length of picked dates -1 or 0 if none are selected.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="add">add(DateTime)
-      <a class="anchor-link" aria-label="Anchor" href="#add"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Adds a new DateTime to selected dates array. Use this function with caution. It will not
-      automatically
-      refresh
-      the
-      widget or do any validation.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="setValue">setValue(value: DateTime, index?: number)
-      <a class="anchor-link" aria-label="Anchor" href="#setValue"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Sets the select date index (or the first, if not provided) to the provided DateTime object.
-    </p>
-
-  </div>
-
-  <div class="row">
-    <h2 id="formatInput">formatInput(value: DateTime): string
-      <a class="anchor-link" aria-label="Anchor" href="#formatInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Formats a DateTime object to a string. Used when setting the input value. It is possible to
-      overwrite this
-      to provide more complex formatting with moment/dayjs or by hand.
-    </p>
-
-  </div>
-
-  <div class="row">
-    <h2 id="parseInput">parseInput(value:any): DateTime
-      <a class="anchor-link" aria-label="Anchor" href="#parseInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Parse the value into a DateTime object. This can be overwritten to supply your own parsing.
-    </p>
-  </div>
-
-  <div class="row">
-
-    <h2 id="setFromInput">setFromInput(value: any, index?: number)
-      <a class="anchor-link" aria-label="Anchor" href="#setFromInput"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Tries to convert the provided value to a DateTime object.
-      If value is null|undefined then clear the value of the provided index (or 0). It is possible to
-      overwrite
-      this
-      to provide more complex formatting with moment/dayjs or by hand.
-    </p>
-  </div>
-
-  <div class="row">
-
-    <h2 id="isPicked">isPicked(DateTime, Unit?)
-      <a class="anchor-link" aria-label="Anchor" href="#isPicked"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Returns true if the target date is part of the selected dates array. If unit is provided then a
-      granularity
-      to that unit will be used.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="pickedIndex">pickedIndex(DateTime, Unit?)
-      <a class="anchor-link" aria-label="Anchor" href="#pickedIndex"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Returns the index at which target date is in the array. This is used for updating or removing a
-      date when
-      multi-date is used. If unit is provided then a granularity to that unit will be used.
-    </p>
-  </div>
-
-  <div class="row">
-    <h2 id="clear">clear
-      <a class="anchor-link" aria-label="Anchor" href="#clear"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
-    </h2>
-    <p>
-      Clears all selected dates.
-    </p>
-    <p>
-      <strong>Emits</strong> <code>Namespace.events.change</code> with the last picked date.
-    </p>
-  </div>
-
-  <div id="subToc" class="d-none">
-    <nav id="TableOfContents">
-      <ul>
-        <li><a href="#content">Overview</a></li>
-        <li><a href="#viewDate">View Date</a></li>
-        <li><a href="#picked">Picked </a></li>
-        <li><a href="#lastPicked">Last Picked</a></li>
-        <li><a href="#lastPickedIndex">Last Picked Index</a></li>
-        <li><a href="#add">Add</a></li>
-        <li><a href="#setValue">Set Value</a></li>
-        <li><a href="#formatInput">Format Input</a></li>
-        <li><a href="#parseInput">Parse Input</a></li>
-        <li><a href="#setFromInput">Set From Input</a></li>
-        <li><a href="#isPicked">Is Picked</a></li>
-        <li><a href="#pickedIndex">Picked Index</a></li>
-        <li><a href="#clear">Clear</a></li>
-      </ul>
-    </nav>
-  </div>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/solid.min.js" integrity="sha512-Qc+cBMt/4/KXJ1F6nNQahXIsgPygHM4S2XWChoumV8qkpZ9oO+gBDBEpOxgbkQQ/6DlHx6cUxa5nBhEbuiR8xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/fontawesome.min.js" integrity="sha512-KCwrxBJebca0PPOaHELfqGtqkUlFUCuqCnmtydvBSTnJrBirJ55hRG5xcP4R9Rdx9Fz9IF3Yw6Rx40uhuAHR8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </div>
 </main>
 </div>

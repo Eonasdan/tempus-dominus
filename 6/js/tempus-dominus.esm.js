@@ -1,9 +1,32 @@
 /*!
-  * Tempus Dominus v6.0.0-beta10 (https://getdatepicker.com/)
+  * Tempus Dominus v6.1.2 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
-import { createPopper } from '@popperjs/core';
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
 
 var Unit;
 (function (Unit) {
@@ -2796,13 +2819,13 @@ class Display {
                 // If needed to change the parent container
                 const container = ((_b = this.optionsStore.options) === null || _b === void 0 ? void 0 : _b.container) || document.body;
                 container.appendChild(this.widget);
-                this._popperInstance = createPopper(this.optionsStore.element, this.widget, {
+                this.createPopup(this.optionsStore.element, this.widget, {
                     modifiers: [{ name: 'eventListeners', enabled: true }],
                     //#2400
                     placement: document.documentElement.dir === 'rtl'
                         ? 'bottom-end'
                         : 'bottom-start',
-                });
+                }).then();
             }
             else {
                 this.optionsStore.element.appendChild(this.widget);
@@ -2824,11 +2847,21 @@ class Display {
         }
         this.widget.classList.add(Namespace.css.show);
         if (!this.optionsStore.options.display.inline) {
-            this._popperInstance.update();
+            this.updatePopup();
             document.addEventListener('click', this._documentClickEvent);
         }
         this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
         this._isVisible = true;
+    }
+    createPopup(element, widget, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { createPopper } = yield import('@popperjs/core');
+            this._popperInstance = createPopper(element, widget, options);
+        });
+    }
+    updatePopup() {
+        var _a;
+        (_a = this._popperInstance) === null || _a === void 0 ? void 0 : _a.update();
     }
     /**
      * Changes the calendar view mode. E.g. month <-> year
@@ -3865,7 +3898,7 @@ const extend = function (plugin, option) {
     }
     return tempusDominus;
 };
-const version = '6.0.0-beta10';
+const version = '6.1.2';
 const tempusDominus = {
     TempusDominus,
     extend,
@@ -3878,5 +3911,5 @@ const tempusDominus = {
     version
 };
 
-export { tempusDominus as default };
+export { DateTime, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale, version };
 //# sourceMappingURL=tempus-dominus.esm.js.map

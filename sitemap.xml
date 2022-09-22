@@ -1,10 +1,14 @@
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>https://getdatepicker.com</loc>
-<lastmod>2022-08-15T14:37:12.697Z</lastmod>
+<lastmod>2022-09-22T19:14:36.002Z</lastmod>
 <priority>1.00</priority>
 </url>
 <url>
+<loc>https://getdatepicker.com/docs/6//change-log-archive.html</loc>
+<lastmod>2021-07-20T00:00:00.000Z</lastmod>
+<priority>0.80</priority>
+</url><url>
 <loc>https://getdatepicker.com/docs/6//change-log.html</loc>
 <lastmod>2021-07-20T00:00:00.000Z</lastmod>
 <priority>0.80</priority>
@@ -93,8 +97,16 @@
 <lastmod>2022-08-13T00:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url><url>
+<loc>https://getdatepicker.com/docs/6//plugins/customDateFormat.html</loc>
+<lastmod>2022-07-22T00:00:00.000Z</lastmod>
+<priority>0.80</priority>
+</url><url>
 <loc>https://getdatepicker.com/docs/6//plugins/fa5.html</loc>
 <lastmod>2022-07-22T00:00:00.000Z</lastmod>
+<priority>0.80</priority>
+</url><url>
+<loc>https://getdatepicker.com/docs/6//plugins/floating-ui.html</loc>
+<lastmod>2022-09-13T00:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url><url>
 <loc>https://getdatepicker.com/docs/6//plugins/index.html</loc>
