@@ -2854,9 +2854,19 @@ class Display {
         this._isVisible = true;
     }
     createPopup(element, widget, options) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { createPopper } = yield import('@popperjs/core');
-            this._popperInstance = createPopper(element, widget, options);
+            let createPopperFunction;
+            if (window === null || window === void 0 ? void 0 : window.Popper) {
+                createPopperFunction = (_a = window === null || window === void 0 ? void 0 : window.Popper) === null || _a === void 0 ? void 0 : _a.createPopper;
+            }
+            else {
+                const { createPopper } = yield import('@popperjs/core');
+                createPopperFunction = createPopper;
+            }
+            if (createPopperFunction) {
+                this._popperInstance = createPopperFunction(element, widget, options);
+            }
         });
     }
     updatePopup() {
