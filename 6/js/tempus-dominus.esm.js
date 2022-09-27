@@ -1,33 +1,8 @@
 /*!
-  * Tempus Dominus v6.1.2 (https://getdatepicker.com/)
+  * Tempus Dominus v6.1.3 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-function __awaiter(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
-
 var Unit;
 (function (Unit) {
     Unit["seconds"] = "seconds";
@@ -362,13 +337,12 @@ class DateTime extends Date {
      * @param locale
      */
     meridiem(locale = this.locale) {
-        var _a;
-        return (_a = new Intl.DateTimeFormat(locale, {
+        return new Intl.DateTimeFormat(locale, {
             hour: 'numeric',
             hour12: true
         })
             .formatToParts(this)
-            .find((p) => p.type === 'dayPeriod')) === null || _a === void 0 ? void 0 : _a.value;
+            .find((p) => p.type === 'dayPeriod')?.value;
     }
     /**
      * Shortcut to Date.getDate()
@@ -917,7 +891,6 @@ class Validation {
      * @param granularity
      */
     isValid(targetDate, granularity) {
-        var _a;
         if (this.optionsStore.options.restrictions.disabledDates.length > 0 &&
             this._isInDisabledDates(targetDate)) {
             return false;
@@ -928,7 +901,7 @@ class Validation {
         }
         if (granularity !== Unit.month &&
             granularity !== Unit.year &&
-            ((_a = this.optionsStore.options.restrictions.daysOfWeekDisabled) === null || _a === void 0 ? void 0 : _a.length) > 0 &&
+            this.optionsStore.options.restrictions.daysOfWeekDisabled?.length > 0 &&
             this.optionsStore.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
             return false;
         }
@@ -1369,7 +1342,7 @@ class OptionConverter {
                 if (value &&
                     !(value instanceof HTMLElement ||
                         value instanceof Element ||
-                        (value === null || value === void 0 ? void 0 : value.appendChild))) {
+                        value?.appendChild)) {
                     Namespace.errorMessages.typeMismatch(path.substring(1), typeof value, 'HTMLElement');
                 }
                 return value;
@@ -1396,20 +1369,19 @@ class OptionConverter {
         }
     }
     static _mergeOptions(providedOptions, mergeTo) {
-        var _a;
         const newConfig = OptionConverter.deepCopy(mergeTo);
         //see if the options specify a locale
-        const localization = ((_a = mergeTo.localization) === null || _a === void 0 ? void 0 : _a.locale) !== 'default'
+        const localization = mergeTo.localization?.locale !== 'default'
             ? mergeTo.localization
-            : (providedOptions === null || providedOptions === void 0 ? void 0 : providedOptions.localization) || DefaultOptions.localization;
+            : providedOptions?.localization || DefaultOptions.localization;
         OptionConverter.spread(providedOptions, newConfig, '', localization);
         return newConfig;
     }
     static _dataToOptions(element, options) {
         const eData = JSON.parse(JSON.stringify(element.dataset));
-        if (eData === null || eData === void 0 ? void 0 : eData.tdTargetInput)
+        if (eData?.tdTargetInput)
             delete eData.tdTargetInput;
-        if (eData === null || eData === void 0 ? void 0 : eData.tdTargetToggle)
+        if (eData?.tdTargetToggle)
             delete eData.tdTargetToggle;
         if (!eData ||
             Object.keys(eData).length === 0 ||
@@ -1496,7 +1468,6 @@ class OptionConverter {
      * @param localization
      */
     static _typeCheckDateArray(optionName, value, providedType, localization) {
-        var _a;
         if (!Array.isArray(value)) {
             Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
         }
@@ -1506,7 +1477,7 @@ class OptionConverter {
             if (!dateTime) {
                 Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
             }
-            dateTime.setLocale((_a = localization === null || localization === void 0 ? void 0 : localization.locale) !== null && _a !== void 0 ? _a : 'default');
+            dateTime.setLocale(localization?.locale ?? 'default');
             value[i] = dateTime;
         }
     }
@@ -1739,7 +1710,7 @@ class Dates {
             if (this.optionsStore.input.value != newValue)
                 this.optionsStore.input.value = newValue;
         };
-        if (target && (oldDate === null || oldDate === void 0 ? void 0 : oldDate.isSame(target))) {
+        if (target && oldDate?.isSame(target)) {
             updateInput();
             return;
         }
@@ -2640,12 +2611,11 @@ class Display {
          * @param e MouseEvent
          */
         this._documentClickEvent = (e) => {
-            var _a;
             if (this.optionsStore.options.debug || window.debug)
                 return;
             if (this._isVisible &&
                 !e.composedPath().includes(this.widget) && // click inside the widget
-                !((_a = e.composedPath()) === null || _a === void 0 ? void 0 : _a.includes(this.optionsStore.element)) // click on the element
+                !e.composedPath()?.includes(this.optionsStore.element) // click on the element
             ) {
                 this.hide();
             }
@@ -2758,7 +2728,6 @@ class Display {
      * fires Events#show
      */
     show() {
-        var _a, _b;
         if (this.widget == undefined) {
             if (this.dates.picked.length == 0) {
                 if (this.optionsStore.options.useCurrent &&
@@ -2767,7 +2736,7 @@ class Display {
                     if (!this.optionsStore.options.keepInvalid) {
                         let tries = 0;
                         let direction = 1;
-                        if ((_a = this.optionsStore.options.restrictions.maxDate) === null || _a === void 0 ? void 0 : _a.isBefore(date)) {
+                        if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
                             direction = -1;
                         }
                         while (!this.validation.isValid(date)) {
@@ -2817,7 +2786,7 @@ class Display {
             }
             if (!this.optionsStore.options.display.inline) {
                 // If needed to change the parent container
-                const container = ((_b = this.optionsStore.options) === null || _b === void 0 ? void 0 : _b.container) || document.body;
+                const container = this.optionsStore.options?.container || document.body;
                 container.appendChild(this.widget);
                 this.createPopup(this.optionsStore.element, this.widget, {
                     modifiers: [{ name: 'eventListeners', enabled: true }],
@@ -2853,15 +2822,21 @@ class Display {
         this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
         this._isVisible = true;
     }
-    createPopup(element, widget, options) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { createPopper } = yield import('@popperjs/core');
-            this._popperInstance = createPopper(element, widget, options);
-        });
+    async createPopup(element, widget, options) {
+        let createPopperFunction;
+        if (window?.Popper) {
+            createPopperFunction = window?.Popper?.createPopper;
+        }
+        else {
+            const { createPopper } = await import('@popperjs/core');
+            createPopperFunction = createPopper;
+        }
+        if (createPopperFunction) {
+            this._popperInstance = createPopperFunction(element, widget, options);
+        }
     }
     updatePopup() {
-        var _a;
-        (_a = this._popperInstance) === null || _a === void 0 ? void 0 : _a.update();
+        this._popperInstance?.update();
     }
     /**
      * Changes the calendar view mode. E.g. month <-> year
@@ -3229,11 +3204,10 @@ class Actions {
      * @param action If not provided, then look for a [data-action]
      */
     do(e, action) {
-        var _a, _b;
-        const currentTarget = e === null || e === void 0 ? void 0 : e.currentTarget;
-        if ((_a = currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.classList) === null || _a === void 0 ? void 0 : _a.contains(Namespace.css.disabled))
+        const currentTarget = e?.currentTarget;
+        if (currentTarget?.classList?.contains(Namespace.css.disabled))
             return false;
-        action = action || ((_b = currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.dataset) === null || _b === void 0 ? void 0 : _b.action);
+        action = action || currentTarget?.dataset?.action;
         const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
             .clone;
         switch (action) {
@@ -3468,7 +3442,7 @@ class TempusDominus {
          * @private
          */
         this._inputChangeEvent = (event) => {
-            const internallyTriggered = event === null || event === void 0 ? void 0 : event.detail;
+            const internallyTriggered = event?.detail;
             if (internallyTriggered)
                 return;
             const setViewDate = () => {
@@ -3484,7 +3458,7 @@ class TempusDominus {
                     }
                     setViewDate();
                 }
-                catch (_a) {
+                catch {
                     console.warn('TD: Something went wrong trying to set the multipleDates values from the input field.');
                 }
             }
@@ -3499,8 +3473,7 @@ class TempusDominus {
          * @private
          */
         this._toggleClickEvent = () => {
-            var _a, _b;
-            if (((_a = this.optionsStore.element) === null || _a === void 0 ? void 0 : _a.disabled) || ((_b = this.optionsStore.input) === null || _b === void 0 ? void 0 : _b.disabled))
+            if (this.optionsStore.element?.disabled || this.optionsStore.input?.disabled)
                 return;
             this.toggle();
         };
@@ -3579,11 +3552,10 @@ class TempusDominus {
      * @public
      */
     disable() {
-        var _a;
         this._isDisabled = true;
         // todo this might be undesired. If a dev disables the input field to
         // only allow using the picker, this will break that.
-        (_a = this.optionsStore.input) === null || _a === void 0 ? void 0 : _a.setAttribute('disabled', 'disabled');
+        this.optionsStore.input?.setAttribute('disabled', 'disabled');
         this.display.hide();
     }
     // noinspection JSUnusedGlobalSymbols
@@ -3592,9 +3564,8 @@ class TempusDominus {
      * @public
      */
     enable() {
-        var _a;
         this._isDisabled = false;
-        (_a = this.optionsStore.input) === null || _a === void 0 ? void 0 : _a.removeAttribute('disabled');
+        this.optionsStore.input?.removeAttribute('disabled');
     }
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -3647,15 +3618,14 @@ class TempusDominus {
      * Hides the picker and removes event listeners
      */
     dispose() {
-        var _a, _b, _c;
         this.display.hide();
         // this will clear the document click event listener
         this.display._dispose();
-        (_a = this.optionsStore.input) === null || _a === void 0 ? void 0 : _a.removeEventListener('change', this._inputChangeEvent);
+        this.optionsStore.input?.removeEventListener('change', this._inputChangeEvent);
         if (this.optionsStore.options.allowInputToggle) {
-            (_b = this.optionsStore.input) === null || _b === void 0 ? void 0 : _b.removeEventListener('click', this._toggleClickEvent);
+            this.optionsStore.input?.removeEventListener('click', this._toggleClickEvent);
         }
-        (_c = this._toggle) === null || _c === void 0 ? void 0 : _c.removeEventListener('click', this._toggleClickEvent);
+        this._toggle?.removeEventListener('click', this._toggleClickEvent);
         this._subscribers = {};
     }
     /**
@@ -3678,7 +3648,6 @@ class TempusDominus {
      * @private
      */
     _triggerEvent(event) {
-        var _a, _b;
         event.viewMode = this.optionsStore.currentView;
         const isChangeEvent = event.type === Namespace.events.change;
         if (isChangeEvent) {
@@ -3688,8 +3657,8 @@ class TempusDominus {
                 return;
             }
             this._handleAfterChangeEvent(event);
-            (_a = this.optionsStore.input) === null || _a === void 0 ? void 0 : _a.dispatchEvent(new CustomEvent(event.type, { detail: event }));
-            (_b = this.optionsStore.input) === null || _b === void 0 ? void 0 : _b.dispatchEvent(new CustomEvent('change', { detail: event }));
+            this.optionsStore.input?.dispatchEvent(new CustomEvent(event.type, { detail: event }));
+            this.optionsStore.input?.dispatchEvent(new CustomEvent('change', { detail: event }));
         }
         this.optionsStore.element.dispatchEvent(new CustomEvent(event.type, { detail: event }));
         if (window.jQuery) {
@@ -3734,7 +3703,6 @@ class TempusDominus {
      * @private
      */
     _initializeOptions(config, mergeTo, includeDataset = false) {
-        var _a, _b;
         let newConfig = OptionConverter.deepCopy(config);
         newConfig = OptionConverter._mergeOptions(newConfig, mergeTo);
         if (includeDataset)
@@ -3763,11 +3731,11 @@ class TempusDominus {
             newConfig.display.viewMode) {
             this.optionsStore.currentCalendarViewMode = Math.max(CalendarModes.findIndex((x) => x.name === newConfig.display.viewMode), this.optionsStore.minimumCalendarViewMode);
         }
-        if ((_a = this.display) === null || _a === void 0 ? void 0 : _a.isVisible) {
+        if (this.display?.isVisible) {
             this.display._update('all');
         }
         if (newConfig.display.components.useTwentyfourHour === undefined) {
-            newConfig.display.components.useTwentyfourHour = !!!((_b = newConfig.viewDate.parts()) === null || _b === void 0 ? void 0 : _b.dayPeriod);
+            newConfig.display.components.useTwentyfourHour = !!!newConfig.viewDate.parts()?.dayPeriod;
         }
         this.optionsStore.options = newConfig;
     }
@@ -3824,7 +3792,6 @@ class TempusDominus {
      * @private
      */
     _handleAfterChangeEvent(e) {
-        var _a, _b;
         if (
         // options is disabled
         !this.optionsStore.options.promptTimeOnDateChange ||
@@ -3832,15 +3799,16 @@ class TempusDominus {
             this.optionsStore.options.display.sideBySide ||
             // time is disabled
             !this.display._hasTime ||
-            (
             // clock component is already showing
-            (_a = this.display.widget) === null || _a === void 0 ? void 0 : _a.getElementsByClassName(Namespace.css.show)[0].classList.contains(Namespace.css.timeContainer)))
+            this.display.widget
+                ?.getElementsByClassName(Namespace.css.show)[0]
+                .classList.contains(Namespace.css.timeContainer))
             return;
         // First time ever. If useCurrent option is set to true (default), do nothing
         // because the first date is selected automatically.
         // or date didn't change (time did) or date changed because time did.
         if ((!e.oldDate && this.optionsStore.options.useCurrent) ||
-            (e.oldDate && ((_b = e.date) === null || _b === void 0 ? void 0 : _b.isSame(e.oldDate)))) {
+            (e.oldDate && e.date?.isSame(e.oldDate))) {
             return;
         }
         clearTimeout(this._currentPromptTimeTimeout);
@@ -3898,7 +3866,7 @@ const extend = function (plugin, option) {
     }
     return tempusDominus;
 };
-const version = '6.1.2';
+const version = '6.1.3';
 const tempusDominus = {
     TempusDominus,
     extend,

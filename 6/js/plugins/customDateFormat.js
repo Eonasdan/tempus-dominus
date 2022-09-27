@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.1.2 (https://getdatepicker.com/)
+  * Tempus Dominus v6.1.3 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -175,13 +175,12 @@
     }
     ;
     meridiemMatch(input) {
-        var _a;
-        const meridiem = (_a = new Intl.DateTimeFormat(this.localization.locale, {
+        const meridiem = new Intl.DateTimeFormat(this.localization.locale, {
             hour: 'numeric',
             hour12: true,
         })
             .formatToParts(new Date(2022, 3, 4, 13))
-            .find((p) => p.type === 'dayPeriod')) === null || _a === void 0 ? void 0 : _a.value;
+            .find((p) => p.type === 'dayPeriod')?.value;
         return input.toLowerCase() === meridiem.toLowerCase();
     }
     ;

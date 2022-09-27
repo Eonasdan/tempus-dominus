@@ -35,25 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const events = [
-    'change.td',
-    'update.td',
-    'error.td',
-    'show.td',
-    'hide.td',
-    'click.td'
-  ];
-
-  document.querySelectorAll('.log-event').forEach(element => {
-    events.forEach((listen) => {
-      element.addEventListener(listen, (e) => {
-        logger(element.closest('section').getElementsByClassName('logger')[0],
-          listen === 'error.td' ? 'error' : 'log',
-          `${element.getAttribute('id')} -> ${listen}:`, JSON.stringify(e.detail, null, 2));
-      });
-    });
-  });
-
   const subToc = document.getElementById('subToc');
 
   if (subToc) {
