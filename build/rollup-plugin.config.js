@@ -1,6 +1,4 @@
-const typescript = require('rollup-plugin-typescript2'); //todo investigate why the other one doesn't work
-//const typescript = require('@rollup/plugin-typescript');
-//import { terser } from "rollup-plugin-terser";
+const typescript = require('rollup-plugin-ts');
 
 const banner = require('./banner.js');
 const globals = {
@@ -9,7 +7,7 @@ const globals = {
 };
 
 module.exports = (config) => {
-  const { input, fileName, name } = config
+  const { input, fileName, name } = config;
   return {
     input: {
       input,
@@ -18,8 +16,7 @@ module.exports = (config) => {
       ],
       plugins: [
         typescript({
-          declaration: true,
-          declarationDir: 'types'
+          tsconfig: resolvedConfig => ({ ...resolvedConfig, declaration: false, rootDir: "./src" })
         })
       ]
     },
@@ -31,5 +28,5 @@ module.exports = (config) => {
       globals,
       compact: true
     }
-  }
-}
+  };
+};

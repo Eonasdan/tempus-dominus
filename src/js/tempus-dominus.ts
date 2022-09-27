@@ -558,7 +558,7 @@ const extend = function (plugin, option) {
   return tempusDominus;
 };
 
-const version = '6.1.2';
+const version = '6.1.3';
 
 const tempusDominus = {
   TempusDominus,
@@ -581,5 +581,6 @@ export {
   DefaultOptions,
   DateTime,
   Unit,
-  version
+  version,
+  DateTimeFormatOptions
 }

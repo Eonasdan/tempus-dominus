@@ -79,4 +79,4 @@ async function main(args) {
   }
 }
 
-main(process.argv.slice(2))
+main(process.argv.slice(2)).then()
