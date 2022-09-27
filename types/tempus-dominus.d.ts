@@ -1,6 +1,6 @@
 import Display from './display/index';
 import Dates from './dates';
-import { DateTime, Unit } from './datetime';
+import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
 import DefaultOptions from './utilities/default-options';
@@ -158,5 +158,5 @@ declare const extend: (plugin: any, option: any) => {
     Unit: typeof Unit;
     version: string;
 };
-declare const version = "6.1.2";
-export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Unit, version };
+declare const version = "6.1.3";
+export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Unit, version, DateTimeFormatOptions };

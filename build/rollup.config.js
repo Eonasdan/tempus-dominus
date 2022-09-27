@@ -1,5 +1,4 @@
-//const typescript = require('rollup-plugin-typescript2'); //this doesn't produce map files correctly ...sigh
-const typescript = require('@rollup/plugin-typescript');
+const typescript = require('rollup-plugin-ts');
 import postcss from 'rollup-plugin-postcss';
 import { terser } from "rollup-plugin-terser";
 
@@ -49,10 +48,7 @@ export default [
     ],
     external: ['@popperjs/core'],
     plugins: [
-      typescript({
-        declaration: true,
-        declarationDir: 'types'
-      })
+      typescript()
     ]
   },
   {
