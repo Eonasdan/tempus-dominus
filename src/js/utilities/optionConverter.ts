@@ -168,7 +168,7 @@ export class OptionConverter {
           providedType
         );
         if (value.filter((x) => x < 0 || x > 24).length > 0)
-          Namespace.errorMessages.numbersOutOfRage(
+          Namespace.errorMessages.numbersOutOfRange(
             'restrictions.disabledHours',
             0,
             23
@@ -184,7 +184,7 @@ export class OptionConverter {
           providedType
         );
         if (value.filter((x) => x < 0 || x > 24).length > 0)
-          Namespace.errorMessages.numbersOutOfRage(
+          Namespace.errorMessages.numbersOutOfRange(
             'restrictions.enabledHours',
             0,
             23
@@ -200,7 +200,7 @@ export class OptionConverter {
           providedType
         );
         if (value.filter((x) => x < 0 || x > 6).length > 0)
-          Namespace.errorMessages.numbersOutOfRage(
+          Namespace.errorMessages.numbersOutOfRange(
             'restrictions.daysOfWeekDisabled',
             0,
             6

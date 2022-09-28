@@ -631,7 +631,7 @@ declare class ErrorMessages {
      * @param lower
      * @param upper
      */
-    numbersOutOfRage(optionName: string, lower: number, upper: number): void;
+    numbersOutOfRange(optionName: string, lower: number, upper: number): void;
     /**
      * Throws an error when a value for a date options couldn't be parsed. Either
      * the option was an invalid string or an invalid Date object.
@@ -1251,5 +1251,5 @@ declare const extend: (plugin: any, option: any) => {
     Unit: typeof Unit;
     version: string;
 };
-declare const version = "6.1.3";
+declare const version = "6.2.4";
 export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Unit, version, DateTimeFormatOptions };

@@ -3,7 +3,7 @@
     "name": "Jonathan Peterson"
   },
   "name": "@eonasdan/tempus-dominus",
-  "version": "6.1.3",
+  "version": "6.2.4",
   "style": "dist/css/tempus-dominus.css",
   "sass": "scss/tempus-dominus.scss",
   "main": "dist/js/tempus-dominus.js",
@@ -18,8 +18,10 @@
   "scripts": {
     "start": "npm run build && concurrently \"npm:*-watch\" \"npm run serve\"",
     "serve": "browser-sync start --config build/browser-sync-config.js",
-    "build": "node ./build/copyToDist.js && npm run rollup && npm run build:plugins",
-    "build:plugins": "node ./build/plugins.js",
+    "build": "node ./build/copyToDist.js && npm run rollup && npm run build:plugins-and-locales",
+    "build:plugins": "node ./build/plugins.js -p",
+    "build:locales": "node ./build/plugins.js -l",
+    "build:plugins-and-locales": "node ./build/plugins.js",
     "build:declarations": "tsc --declaration --emitDeclarationOnly --outDir types",
     "sass": "sass src/scss/tempus-dominus.scss ./dist/css/tempus-dominus.css",
     "rollup": "rollup -c ./build/rollup.config.js",

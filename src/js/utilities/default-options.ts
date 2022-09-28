@@ -101,7 +101,7 @@ const DefaultOptions: Options = {
     /**
      * This is only used with the customDateFormat plugin
      */
-    format: 'L'
+    format: 'L LT'
   },
   keepInvalid: false,
   debug: false,

@@ -76,7 +76,7 @@ export class ErrorMessages {
    * @param lower
    * @param upper
    */
-  numbersOutOfRage(optionName: string, lower: number, upper: number) {
+  numbersOutOfRange(optionName: string, lower: number, upper: number) {
     const error = new TdError(
       `${this.base} ${optionName} expected an array of number between ${lower} and ${upper}.`
     );
