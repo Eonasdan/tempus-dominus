@@ -16,7 +16,8 @@ async function build(option) {
   await bundle.write(option.output);
 }
 
-(async () => {
+async function locales() {
+  console.log('Building Locales...');
   try {
     /* eslint-disable no-restricted-syntax, no-await-in-loop */
     // We use await-in-loop to make rollup run sequentially to save on RAM
@@ -29,7 +30,14 @@ async function build(option) {
         name: `tempusDominus.locales.${formatName(l)}`
       }));
     }
+  } catch (e) {
+    console.error(e); // eslint-disable-line no-console
+  }
+}
 
+async function plugins() {
+  console.log('Building Plugins...');
+  try {
     const plugins = await promisifyReadDir(path.join(__dirname, '../src/plugins'));
     for (const plugin of plugins.filter(x => x !== 'examples')) {
       // run builds sequentially to limit RAM usage
@@ -52,4 +60,22 @@ async function build(option) {
   } catch (e) {
     console.error(e); // eslint-disable-line no-console
   }
-})();
+}
+
+const args = process.argv.slice(2);
+
+let command = 'all';
+
+if (args.length !== 0) command = args[0];
+
+switch (command) {
+  case '-p':
+    plugins().then();
+    break;
+  case '-l':
+    locales().then();
+    break;
+  case 'all':
+    plugins().then(() => locales().then());
+    break;
+}

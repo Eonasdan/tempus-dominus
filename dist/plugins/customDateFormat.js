@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.1.3 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.4 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -240,7 +240,7 @@
             return dateTime;
         if (JSON.stringify(dateTime) === 'null')
             return 'Invalid Date';
-        const format = this.localization.format || `${this.englishFormats.L}, ${this.englishFormats.LT}`;
+        const format = this.replaceTokens(this.localization.format || `${this.englishFormats.L}, ${this.englishFormats.LT}`, this.localization.dateFormats);
         const formatter = (template) => new Intl.DateTimeFormat(this.localization.locale, template).format(dateTime);
         const matches = {
             yy: formatter({ year: '2-digit' }),

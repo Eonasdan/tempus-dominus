@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.1.3 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.4 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -516,7 +516,7 @@
        * @param lower
        * @param upper
        */
-      numbersOutOfRage(optionName, lower, upper) {
+      numbersOutOfRange(optionName, lower, upper) {
           const error = new TdError(`${this.base} ${optionName} expected an array of number between ${lower} and ${upper}.`);
           error.code = 4;
           throw error;
@@ -1133,7 +1133,7 @@
           /**
            * This is only used with the customDateFormat plugin
            */
-          format: 'L'
+          format: 'L LT'
       },
       keepInvalid: false,
       debug: false,
@@ -1276,7 +1276,7 @@
                   }
                   this._typeCheckNumberArray('restrictions.disabledHours', value, providedType);
                   if (value.filter((x) => x < 0 || x > 24).length > 0)
-                      Namespace.errorMessages.numbersOutOfRage('restrictions.disabledHours', 0, 23);
+                      Namespace.errorMessages.numbersOutOfRange('restrictions.disabledHours', 0, 23);
                   return value;
               case 'enabledHours':
                   if (value === undefined) {
@@ -1284,7 +1284,7 @@
                   }
                   this._typeCheckNumberArray('restrictions.enabledHours', value, providedType);
                   if (value.filter((x) => x < 0 || x > 24).length > 0)
-                      Namespace.errorMessages.numbersOutOfRage('restrictions.enabledHours', 0, 23);
+                      Namespace.errorMessages.numbersOutOfRange('restrictions.enabledHours', 0, 23);
                   return value;
               case 'daysOfWeekDisabled':
                   if (value === undefined) {
@@ -1292,7 +1292,7 @@
                   }
                   this._typeCheckNumberArray('restrictions.daysOfWeekDisabled', value, providedType);
                   if (value.filter((x) => x < 0 || x > 6).length > 0)
-                      Namespace.errorMessages.numbersOutOfRage('restrictions.daysOfWeekDisabled', 0, 6);
+                      Namespace.errorMessages.numbersOutOfRange('restrictions.daysOfWeekDisabled', 0, 6);
                   return value;
               case 'enabledDates':
                   if (value === undefined) {
@@ -3872,7 +3872,7 @@
       }
       return tempusDominus;
   };
-  const version = '6.1.3';
+  const version = '6.2.4';
   const tempusDominus = {
       TempusDominus,
       extend,
