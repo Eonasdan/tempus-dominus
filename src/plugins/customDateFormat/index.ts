@@ -252,7 +252,7 @@ class CustomDateFormat {
     if (!dateTime) return dateTime;
     if (JSON.stringify(dateTime) === 'null') return 'Invalid Date';
 
-    const format = this.localization.format || `${this.englishFormats.L}, ${this.englishFormats.LT}`;
+    const format = this.replaceTokens(this.localization.format || `${this.englishFormats.L}, ${this.englishFormats.LT}`, this.localization.dateFormats);
 
     const formatter = (template) => new Intl.DateTimeFormat(this.localization.locale, template).format(dateTime);
 
