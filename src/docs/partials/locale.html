@@ -76,6 +76,25 @@ tempusDominus.locale(tempusDominus.locales.ru.name);//set the default options to
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
 datetimepicker1.locale(tempusDominus.locales.ru.name);</code>
     </pre>
+    <p>
+      If you want to load locales in TypeScript:
+    </p>
+    <pre>
+<code class='language-js'>import { TempusDominus, loadLocale, locale } from '@eonasdan/tempus-dominus';
+
+import { localization, name } from "@eonasdan/tempus-dominus/dist/locales/ru";
+
+//load the locale
+loadLocale({localization, name});
+
+//set globally
+locale(name);
+
+var datetimepicker1 = new TempusDominus(document.getElementById('datetimepicker1'));
+
+//or set per picker
+datetimepicker1.locale(name);</code>
+    </pre>
   </div>
 
   <div id='subToc' class='d-none'>
