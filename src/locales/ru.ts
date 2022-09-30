@@ -29,7 +29,17 @@ const localization = {
   selectDate: 'Выбрать дату',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'ru',
-  startOfTheWeek: 1
+  startOfTheWeek: 1,
+  dateFormats: {
+    LT: 'H:mm',
+    LTS: 'H:mm:ss',
+    L: 'DD.MM.YYYY',
+    LL: 'D MMMM YYYY г.',
+    LLL: 'D MMMM YYYY г., H:mm',
+    LLLL: 'dddd, D MMMM YYYY г., H:mm'
+  },
+  ordinal: (n) => n,
+  format: 'L LT'
 };
 
 export { localization, name };

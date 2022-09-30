@@ -33,5 +33,15 @@ const localization = {
     selectDate: 'Tarih seçin',
     dayViewHeaderFormat: { month: 'long', year: 'numeric' },
     locale: 'tr',
-    startOfTheWeek: 1
+    startOfTheWeek: 1,
+    dateFormats: {
+        LT: 'HH:mm',
+        LTS: 'HH:mm:ss',
+        L: 'DD.MM.YYYY',
+        LL: 'D MMMM YYYY',
+        LLL: 'D MMMM YYYY HH:mm',
+        LLLL: 'dddd, D MMMM YYYY HH:mm'
+    },
+    ordinal: n => `${n}.`,
+    format: 'L LT'
 };exports.localization=localization;exports.name=name;Object.defineProperty(exports,'__esModule',{value:true});}));

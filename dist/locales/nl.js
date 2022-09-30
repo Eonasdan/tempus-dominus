@@ -33,5 +33,15 @@ const localization = {
     selectDate: 'Selecteer een datum',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'nl',
-    startOfTheWeek: 1
+    startOfTheWeek: 1,
+    dateFormats: {
+        LT: 'HH:mm',
+        LTS: 'HH:mm:ss',
+        L: 'DD-MM-YYYY',
+        LL: 'D MMMM YYYY',
+        LLL: 'D MMMM YYYY HH:mm',
+        LLLL: 'dddd D MMMM YYYY HH:mm'
+    },
+    ordinal: n => `[${n}${n === 1 || n === 8 || n >= 20 ? 'ste' : 'de'}]`,
+    format: 'L LT'
 };exports.localization=localization;exports.name=name;Object.defineProperty(exports,'__esModule',{value:true});}));
