@@ -29,7 +29,17 @@ const localization = {
   selectDate: 'Seleccionar fecha',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'es',
-  startOfTheWeek: 1
+  startOfTheWeek: 1,
+  dateFormats: {
+    LT: 'H:mm',
+    LTS: 'H:mm:ss',
+    L: 'DD/MM/YYYY',
+    LL: 'D [de] MMMM [de] YYYY',
+    LLL: 'D [de] MMMM [de] YYYY H:mm',
+    LLLL: 'dddd, D [de] MMMM [de] YYYY H:mm'
+  },
+  ordinal: n => `${n}º`,
+  format: 'L LT'
 };
 
 export { localization, name };

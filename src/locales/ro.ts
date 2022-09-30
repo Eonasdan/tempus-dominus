@@ -29,7 +29,17 @@ const localization = {
   selectDate: 'Selectează data',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'ro',
-  startOfTheWeek: 1
+  startOfTheWeek: 1,
+  dateFormats: {
+    LT: 'H:mm',
+    LTS: 'H:mm:ss',
+    L: 'DD.MM.YYYY',
+    LL: 'D MMMM YYYY',
+    LLL: 'D MMMM YYYY H:mm',
+    LLLL: 'dddd, D MMMM YYYY H:mm'
+  },
+  ordinal: (n) => n,
+  format: 'L LT'
 };
 
 export { localization, name };
