@@ -2,7 +2,7 @@ import Namespace from './namespace';
 import { DateTime } from '../datetime';
 import DefaultOptions from './default-options';
 import Options, { FormatLocalization } from './options';
-import { optionProcessor } from './optionProcessor';
+import { processKey } from './optionProcessor';
 
 export class OptionConverter {
 
@@ -100,27 +100,7 @@ export class OptionConverter {
   }
 
   static processKey(key: string, value: any, providedType: string, defaultType: string, path: string, localization: FormatLocalization) {
-    if (key in optionProcessor) {
-      return optionProcessor[key](this, { key, value, providedType, defaultType, path, localization });
-    }
-    switch (defaultType) {
-      case 'boolean':
-        return value === 'true' || value === true;
-      case 'number':
-        return +value;
-      case 'string':
-        return value.toString();
-      case 'object':
-        return {};
-      case 'function':
-        return value;
-      default:
-        Namespace.errorMessages.typeMismatch(
-          path,
-          providedType,
-          defaultType
-        );
-    }
+    return processKey(this, { key, value, providedType, defaultType, path, localization });
   }
 
   static _mergeOptions(providedOptions: Options, mergeTo: Options): Options {

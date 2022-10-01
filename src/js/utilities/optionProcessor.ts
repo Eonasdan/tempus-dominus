@@ -1,18 +1,20 @@
 import Namespace from "./namespace";
-import { OptionConverter } from "./optionConverter";
-import { FormatLocalization } from "./options";
+import type { OptionConverter } from "./optionConverter";
+import type { FormatLocalization } from "./options";
+
+interface OptionProcessorFunctionArguments {
+    key: string,
+    value: any,
+    providedType: string,
+    defaultType: string,
+    path: string,
+    localization: FormatLocalization;
+}
 
 type OptionProcessorFunction = (
     this: void,
     converter: typeof OptionConverter,
-    args: {
-        key: string,
-        value: any,
-        providedType: string,
-        defaultType: string,
-        path: string,
-        localization: FormatLocalization;
-    }
+    args: OptionProcessorFunctionArguments
 ) => any;
 
 function mandatoryDate(key: string): OptionProcessorFunction {
@@ -91,7 +93,7 @@ function validKeyOption(keyOptions: string[]): OptionProcessorFunction {
     };
 }
 
-export const optionProcessor: { [key: string]: OptionProcessorFunction; } = Object.freeze({
+const optionProcessors: { [key: string]: OptionProcessorFunction; } = Object.freeze({
     'defaultDate': mandatoryDate('defaultDate'),
     'viewDate': mandatoryDate('viewDate'),
     'minDate': optionalDate('restrictions.minDate'),
@@ -163,3 +165,28 @@ export const optionProcessor: { [key: string]: OptionProcessorFunction; } = Obje
         );
     }
 });
+
+const defaultProcessor: OptionProcessorFunction = (_, { value, defaultType, providedType, path }) => {
+    switch (defaultType) {
+        case 'boolean':
+            return value === 'true' || value === true;
+        case 'number':
+            return +value;
+        case 'string':
+            return value.toString();
+        case 'object':
+            return {};
+        case 'function':
+            return value;
+        default:
+            Namespace.errorMessages.typeMismatch(
+                path,
+                providedType,
+                defaultType
+            );
+    }
+};
+
+export function processKey(converter: typeof OptionConverter, args: OptionProcessorFunctionArguments) {
+    return (optionProcessors[args.key] || defaultProcessor)(converter, args);
+};
