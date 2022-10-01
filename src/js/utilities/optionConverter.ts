@@ -2,6 +2,7 @@ import Namespace from './namespace';
 import { DateTime } from '../datetime';
 import DefaultOptions from './default-options';
 import Options, { FormatLocalization } from './options';
+import { optionProcessor } from './optionProcessor';
 
 export class OptionConverter {
 
@@ -98,230 +99,27 @@ export class OptionConverter {
     });
   }
 
-  static processKey(key, value, providedType, defaultType, path, localization: FormatLocalization) {
-    switch (key) {
-      case 'defaultDate': {
-        const dateTime = this.dateConversion(value, 'defaultDate', localization);
-        if (dateTime !== undefined) {
-          dateTime.setLocale(localization.locale);
-          return dateTime;
-        }
-        Namespace.errorMessages.typeMismatch(
-          'defaultDate',
-          providedType,
-          'DateTime or Date'
-        );
-        break;
-      }
-      case 'viewDate': {
-        const dateTime = this.dateConversion(value, 'viewDate', localization);
-        if (dateTime !== undefined) {
-          dateTime.setLocale(localization.locale);
-          return dateTime;
-        }
-        Namespace.errorMessages.typeMismatch(
-          'viewDate',
-          providedType,
-          'DateTime or Date'
-        );
-        break;
-      }
-      case 'minDate': {
-        if (value === undefined) {
-          return value;
-        }
-        const dateTime = this.dateConversion(value, 'restrictions.minDate', localization);
-        if (dateTime !== undefined) {
-          dateTime.setLocale(localization.locale);
-          return dateTime;
-        }
-        Namespace.errorMessages.typeMismatch(
-          'restrictions.minDate',
-          providedType,
-          'DateTime or Date'
-        );
-        break;
-      }
-      case 'maxDate': {
-        if (value === undefined) {
-          return value;
-        }
-        const dateTime = this.dateConversion(value, 'restrictions.maxDate', localization);
-        if (dateTime !== undefined) {
-          dateTime.setLocale(localization.locale);
-          return dateTime;
-        }
-        Namespace.errorMessages.typeMismatch(
-          'restrictions.maxDate',
-          providedType,
-          'DateTime or Date'
-        );
-        break;
-      }
-      case 'disabledHours':
-        if (value === undefined) {
-          return [];
-        }
-        this._typeCheckNumberArray(
-          'restrictions.disabledHours',
-          value,
-          providedType
-        );
-        if (value.filter((x) => x < 0 || x > 24).length > 0)
-          Namespace.errorMessages.numbersOutOfRange(
-            'restrictions.disabledHours',
-            0,
-            23
-          );
+  static processKey(key: string, value: any, providedType: string, defaultType: string, path: string, localization: FormatLocalization) {
+    if (key in optionProcessor) {
+      return optionProcessor[key](this, { key, value, providedType, defaultType, path, localization });
+    }
+    switch (defaultType) {
+      case 'boolean':
+        return value === 'true' || value === true;
+      case 'number':
+        return +value;
+      case 'string':
+        return value.toString();
+      case 'object':
+        return {};
+      case 'function':
         return value;
-      case 'enabledHours':
-        if (value === undefined) {
-          return [];
-        }
-        this._typeCheckNumberArray(
-          'restrictions.enabledHours',
-          value,
-          providedType
-        );
-        if (value.filter((x) => x < 0 || x > 24).length > 0)
-          Namespace.errorMessages.numbersOutOfRange(
-            'restrictions.enabledHours',
-            0,
-            23
-          );
-        return value;
-      case 'daysOfWeekDisabled':
-        if (value === undefined) {
-          return [];
-        }
-        this._typeCheckNumberArray(
-          'restrictions.daysOfWeekDisabled',
-          value,
-          providedType
-        );
-        if (value.filter((x) => x < 0 || x > 6).length > 0)
-          Namespace.errorMessages.numbersOutOfRange(
-            'restrictions.daysOfWeekDisabled',
-            0,
-            6
-          );
-        return value;
-      case 'enabledDates':
-        if (value === undefined) {
-          return [];
-        }
-        this._typeCheckDateArray(
-          'restrictions.enabledDates',
-          value,
-          providedType,
-          localization
-        );
-        return value;
-      case 'disabledDates':
-        if (value === undefined) {
-          return [];
-        }
-        this._typeCheckDateArray(
-          'restrictions.disabledDates',
-          value,
-          providedType,
-          localization
-        );
-        return value;
-      case 'disabledTimeIntervals':
-        if (value === undefined) {
-          return [];
-        }
-        if (!Array.isArray(value)) {
-          Namespace.errorMessages.typeMismatch(
-            key,
-            providedType,
-            'array of { from: DateTime|Date, to: DateTime|Date }'
-          );
-        }
-        const valueObject = value as { from: any; to: any }[];
-        for (let i = 0; i < valueObject.length; i++) {
-          Object.keys(valueObject[i]).forEach((vk) => {
-            const subOptionName = `${key}[${i}].${vk}`;
-            let d = valueObject[i][vk];
-            const dateTime = this.dateConversion(d, subOptionName, localization);
-            if (!dateTime) {
-              Namespace.errorMessages.typeMismatch(
-                subOptionName,
-                typeof d,
-                'DateTime or Date'
-              );
-            }
-            dateTime.setLocale(localization.locale);
-            valueObject[i][vk] = dateTime;
-          });
-        }
-        return valueObject;
-      case 'toolbarPlacement':
-      case 'type':
-      case 'viewMode':
-      case 'theme':
-        const optionValues = {
-          toolbarPlacement: ['top', 'bottom', 'default'],
-          type: ['icons', 'sprites'],
-          viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
-          theme: ['light', 'dark', 'auto']
-        };
-        const keyOptions = optionValues[key];
-        if (!keyOptions.includes(value))
-          Namespace.errorMessages.unexpectedOptionValue(
-            path.substring(1),
-            value,
-            keyOptions
-          );
-
-        return value;
-      case 'meta':
-      case 'dayViewHeaderFormat':
-        return value;
-      case 'container':
-        if (
-          value &&
-          !(
-            value instanceof HTMLElement ||
-            value instanceof Element ||
-            value?.appendChild
-          )
-        ) {
-          Namespace.errorMessages.typeMismatch(
-            path.substring(1),
-            typeof value,
-            'HTMLElement'
-          );
-        }
-        return value;
-      case 'useTwentyfourHour':
-        if (value === undefined || providedType === 'boolean') return value;
+      default:
         Namespace.errorMessages.typeMismatch(
           path,
           providedType,
           defaultType
         );
-        break;
-      default:
-        switch (defaultType) {
-          case 'boolean':
-            return value === 'true' || value === true;
-          case 'number':
-            return +value;
-          case 'string':
-            return value.toString();
-          case 'object':
-            return {};
-          case 'function':
-            return value;
-          default:
-            Namespace.errorMessages.typeMismatch(
-              path,
-              providedType,
-              defaultType
-            );
-        }
     }
   }
 
