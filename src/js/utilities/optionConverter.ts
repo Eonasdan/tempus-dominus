@@ -3,6 +3,7 @@ import { DateTime } from '../datetime';
 import DefaultOptions from './default-options';
 import Options, { FormatLocalization } from './options';
 import { processKey } from './optionProcessor';
+import { convertToDateTime, tryConvertToDateTime, typeCheckDateArray, typeCheckNumberArray } from './typeChecker';
 
 export class OptionConverter {
 
@@ -100,7 +101,7 @@ export class OptionConverter {
   }
 
   static processKey(key: string, value: any, providedType: string, defaultType: string, path: string, localization: FormatLocalization) {
-    return processKey(this, { key, value, providedType, defaultType, path, localization });
+    return processKey({ key, value, providedType, defaultType, path, localization });
   }
 
   static _mergeOptions(providedOptions: Options, mergeTo: Options): Options {
@@ -212,18 +213,7 @@ export class OptionConverter {
    * @private
    */
   static _dateTypeCheck(d: any, localization: FormatLocalization): DateTime | null {
-    if (d.constructor.name === DateTime.name) return d;
-    if (d.constructor.name === Date.name) {
-      return DateTime.convert(d);
-    }
-    if (typeof d === typeof '') {
-      const dateTime = DateTime.fromString(d, localization);
-      if (JSON.stringify(dateTime) === 'null') {
-        return null;
-      }
-      return dateTime;
-    }
-    return null;
+    return tryConvertToDateTime(d, localization);
   }
 
   /**
@@ -239,26 +229,7 @@ export class OptionConverter {
     providedType: string,
     localization: FormatLocalization
   ) {
-    if (!Array.isArray(value)) {
-      Namespace.errorMessages.typeMismatch(
-        optionName,
-        providedType,
-        'array of DateTime or Date'
-      );
-    }
-    for (let i = 0; i < value.length; i++) {
-      let d = value[i];
-      const dateTime = this.dateConversion(d, optionName, localization);
-      if (!dateTime) {
-        Namespace.errorMessages.typeMismatch(
-          optionName,
-          typeof d,
-          'DateTime or Date'
-        );
-      }
-      dateTime.setLocale(localization?.locale ?? 'default');
-      value[i] = dateTime;
-    }
+    return typeCheckDateArray(optionName, value, providedType, localization);
   }
 
   /**
@@ -272,13 +243,7 @@ export class OptionConverter {
     value,
     providedType: string
   ) {
-    if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
-      Namespace.errorMessages.typeMismatch(
-        optionName,
-        providedType,
-        'array of numbers'
-      );
-    }
+    return typeCheckNumberArray(optionName, value, providedType);
   }
 
   /**
@@ -288,20 +253,7 @@ export class OptionConverter {
    * @param localization object containing locale and format settings. Only used with the custom formats
    */
   static dateConversion(d: any, optionName: string, localization: FormatLocalization): DateTime {
-    if (typeof d === typeof '' && optionName !== 'input') {
-      Namespace.errorMessages.dateString();
-    }
-
-    const converted = this._dateTypeCheck(d, localization);
-
-    if (!converted) {
-      Namespace.errorMessages.failedToParseDate(
-        optionName,
-        d,
-        optionName === 'input'
-      );
-    }
-    return converted;
+    return convertToDateTime(d, optionName, localization);
   }
 
   private static _flattenDefaults: string[];

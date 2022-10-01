@@ -1,6 +1,6 @@
 import Namespace from "./namespace";
-import type { OptionConverter } from "./optionConverter";
 import type { FormatLocalization } from "./options";
+import { convertToDateTime, typeCheckNumberArray, typeCheckDateArray } from "./typeChecker";
 
 interface OptionProcessorFunctionArguments {
     key: string,
@@ -13,13 +13,12 @@ interface OptionProcessorFunctionArguments {
 
 type OptionProcessorFunction = (
     this: void,
-    converter: typeof OptionConverter,
     args: OptionProcessorFunctionArguments
 ) => any;
 
 function mandatoryDate(key: string): OptionProcessorFunction {
-    return (converter, { value, providedType, localization }) => {
-        const dateTime = converter.dateConversion(value, key, localization);
+    return ({ value, providedType, localization }) => {
+        const dateTime = convertToDateTime(value, key, localization);
         if (dateTime !== undefined) {
             dateTime.setLocale(localization.locale);
             return dateTime;
@@ -34,20 +33,20 @@ function mandatoryDate(key: string): OptionProcessorFunction {
 
 function optionalDate(key: string): OptionProcessorFunction {
     const mandatory = mandatoryDate(key);
-    return (converter, args) => {
+    return (args) => {
         if (args.value === undefined) {
             return args.value;
         }
-        return mandatory(converter, args);
+        return mandatory(args);
     };
 }
 
 function numbersInRange(key: string, lower: number, upper: number): OptionProcessorFunction {
-    return (converter, { value, providedType }) => {
+    return ({ value, providedType }) => {
         if (value === undefined) {
             return [];
         }
-        converter._typeCheckNumberArray(
+        typeCheckNumberArray(
             key,
             value,
             providedType
@@ -67,11 +66,11 @@ function validHourRange(key: string): OptionProcessorFunction {
 }
 
 function validDateArray(key: string): OptionProcessorFunction {
-    return (_, { value, providedType, localization }) => {
+    return ({ value, providedType, localization }) => {
         if (value === undefined) {
             return [];
         }
-        this._typeCheckDateArray(
+        typeCheckDateArray(
             key,
             value,
             providedType,
@@ -82,7 +81,7 @@ function validDateArray(key: string): OptionProcessorFunction {
 }
 
 function validKeyOption(keyOptions: string[]): OptionProcessorFunction {
-    return (_, { value, path }) => {
+    return ({ value, path }) => {
         if (!keyOptions.includes(value))
             Namespace.errorMessages.unexpectedOptionValue(
                 path.substring(1),
@@ -103,7 +102,7 @@ const optionProcessors: { [key: string]: OptionProcessorFunction; } = Object.fre
     'disabledDates': validDateArray('restrictions.disabledDates'),
     'enabledDates': validDateArray('restrictions.enabledDates'),
     'daysOfWeekDisabled': numbersInRange('restrictions.daysOfWeekDisabled', 0, 6),
-    'disabledTimeIntervals': (converter, { key, value, providedType, localization }) => {
+    'disabledTimeIntervals': ({ key, value, providedType, localization }) => {
         if (value === undefined) {
             return [];
         }
@@ -119,7 +118,7 @@ const optionProcessors: { [key: string]: OptionProcessorFunction; } = Object.fre
             Object.keys(valueObject[i]).forEach((vk) => {
                 const subOptionName = `${key}[${i}].${vk}`;
                 const d = valueObject[i][vk];
-                const dateTime = converter.dateConversion(d, subOptionName, localization);
+                const dateTime = convertToDateTime(d, subOptionName, localization);
                 if (!dateTime) {
                     Namespace.errorMessages.typeMismatch(
                         subOptionName,
@@ -137,9 +136,9 @@ const optionProcessors: { [key: string]: OptionProcessorFunction; } = Object.fre
     'type': validKeyOption(['icons', 'sprites']),
     'viewMode': validKeyOption(['clock', 'calendar', 'months', 'years', 'decades']),
     'theme': validKeyOption(['light', 'dark', 'auto']),
-    'meta': (_, { value }) => value,
-    'dayViewHeaderFormat': (_, { value }) => value,
-    'container': (_, { value, path }) => {
+    'meta': ({ value }) => value,
+    'dayViewHeaderFormat': ({ value }) => value,
+    'container': ({ value, path }) => {
         if (
             value &&
             !(
@@ -156,7 +155,7 @@ const optionProcessors: { [key: string]: OptionProcessorFunction; } = Object.fre
         }
         return value;
     },
-    'useTwentyfourHour': (_, { value, path, providedType, defaultType }) => {
+    'useTwentyfourHour': ({ value, path, providedType, defaultType }) => {
         if (value === undefined || providedType === 'boolean') return value;
         Namespace.errorMessages.typeMismatch(
             path,
@@ -166,7 +165,7 @@ const optionProcessors: { [key: string]: OptionProcessorFunction; } = Object.fre
     }
 });
 
-const defaultProcessor: OptionProcessorFunction = (_, { value, defaultType, providedType, path }) => {
+const defaultProcessor: OptionProcessorFunction = ({ value, defaultType, providedType, path }) => {
     switch (defaultType) {
         case 'boolean':
             return value === 'true' || value === true;
@@ -187,6 +186,6 @@ const defaultProcessor: OptionProcessorFunction = (_, { value, defaultType, prov
     }
 };
 
-export function processKey(converter: typeof OptionConverter, args: OptionProcessorFunctionArguments) {
-    return (optionProcessors[args.key] || defaultProcessor)(converter, args);
+export function processKey(this: void, args: OptionProcessorFunctionArguments) {
+    return (optionProcessors[args.key] || defaultProcessor)(args);
 };
