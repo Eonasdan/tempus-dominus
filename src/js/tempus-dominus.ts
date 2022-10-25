@@ -582,5 +582,6 @@ export {
   DateTime,
   Unit,
   version,
-  DateTimeFormatOptions
+  DateTimeFormatOptions,
+  Options
 }

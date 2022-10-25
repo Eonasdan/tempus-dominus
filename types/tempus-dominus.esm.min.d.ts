@@ -1252,4 +1252,4 @@ declare const extend: (plugin: any, option: any) => {
     version: string;
 };
 declare const version = "6.2.5";
-export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Unit, version, DateTimeFormatOptions };
+export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Unit, version, DateTimeFormatOptions, Options };
