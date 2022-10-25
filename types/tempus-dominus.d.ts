@@ -158,5 +158,5 @@ declare const extend: (plugin: any, option: any) => {
     Unit: typeof Unit;
     version: string;
 };
-declare const version = "6.2.4";
-export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Unit, version, DateTimeFormatOptions };
+declare const version = "6.2.5";
+export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Unit, version, DateTimeFormatOptions, Options };

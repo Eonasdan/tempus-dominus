@@ -30,6 +30,16 @@ const localization = {
   dayViewHeaderFormat: { month: "long", year: "2-digit" },
   locale: "ar",
   startOfTheWeek: 1,
+  dateFormats: {
+    LT: 'HH:mm',
+    LTS: 'HH:mm:ss',
+    L: 'D/M/YYYY',
+    LL: 'D MMMM YYYY',
+    LLL: 'D MMMM YYYY HH:mm',
+    LLLL: 'dddd D MMMM YYYY HH:mm'
+  },
+  ordinal: (n) => n,
+  format: 'L LT'
 };
 
 export { localization, name };

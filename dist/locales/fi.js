@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.4 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.5 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -33,5 +33,19 @@ const localization = {
     selectDate: 'Valise päivä',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'fi',
-    startOfTheWeek: 1
+    startOfTheWeek: 1,
+    dateFormats: {
+        LT: 'HH.mm',
+        LTS: 'HH.mm.ss',
+        L: 'DD.MM.YYYY',
+        LL: 'D. MMMM[ta] YYYY',
+        LLL: 'D. MMMM[ta] YYYY, [klo] HH.mm',
+        LLLL: 'dddd, D. MMMM[ta] YYYY, [klo] HH.mm',
+        l: 'D.M.YYYY',
+        ll: 'D. MMM YYYY',
+        lll: 'D. MMM YYYY, [klo] HH.mm',
+        llll: 'ddd, D. MMM YYYY, [klo] HH.mm'
+    },
+    ordinal: n => `${n}.`,
+    format: 'L LT'
 };exports.localization=localization;exports.name=name;Object.defineProperty(exports,'__esModule',{value:true});}));
