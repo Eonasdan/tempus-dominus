@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.4 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.5 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -33,5 +33,18 @@ const localization = {
     selectDate: 'Sélectionner une date',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'fr',
-    startOfTheWeek: 1
+    startOfTheWeek: 1,
+    dateFormats: {
+        LT: 'HH:mm',
+        LTS: 'HH:mm:ss',
+        L: 'DD/MM/YYYY',
+        LL: 'D MMMM YYYY',
+        LLL: 'D MMMM YYYY HH:mm',
+        LLLL: 'dddd D MMMM YYYY HH:mm'
+    },
+    ordinal: (n) => {
+        const o = n === 1 ? 'er' : '';
+        return `${n}${o}`;
+    },
+    format: 'L LT'
 };exports.localization=localization;exports.name=name;Object.defineProperty(exports,'__esModule',{value:true});}));

@@ -137,7 +137,7 @@
   {
     "file": "change-log.html",
     "title": "Change Log",
-    "body": "version bug fixes fix misspelling issue with customformatplugin popper reference new added custom date format plugin docs it is now possible to replace popperjs another positioning system via imports should work again for fr fi and locales a customdateformat options allow formats be provided input parsing/setting replaced examples page repl lots of doc clean up older history please see the archived change log",
+    "body": "version new added polish localization updated locales to include formats export re-export options interface bug fixes fix misspelling issue with customformatplugin popper reference custom date format plugin docs it is now possible replace popperjs another positioning system via imports should work again for fr fi and a customdateformat allow be provided input parsing/setting replaced examples page repl lots of doc clean up older history please see the archived change log",
     "postDate": "07/20/2021",
     "updateDate": "07/20/2021",
     "excerpt": "An overview of changes between different version of tempus dominus\n  ",
