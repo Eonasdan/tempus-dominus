@@ -20,7 +20,7 @@ export declare class OptionConverter {
      * @param localization
      */
     static spread(provided: any, copyTo: any, path: string, localization: FormatLocalization): void;
-    static processKey(key: any, value: any, providedType: any, defaultType: any, path: any, localization: FormatLocalization): any;
+    static processKey(key: string, value: any, providedType: string, defaultType: string, path: string, localization: FormatLocalization): any;
     static _mergeOptions(providedOptions: Options, mergeTo: Options): Options;
     static _dataToOptions(element: any, options: Options): Options;
     /**
