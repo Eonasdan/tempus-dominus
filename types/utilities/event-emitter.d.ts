@@ -1,4 +1,4 @@
-import { Unit } from '../datetime';
+import { DateTime, Unit } from '../datetime';
 import ActionTypes from './action-types';
 import { BaseEvent } from './event-types';
 export declare type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
@@ -17,5 +17,6 @@ export declare class EventEmitters {
         e: any;
         action?: ActionTypes;
     }>;
+    updateViewDate: EventEmitter<DateTime>;
     destroy(): void;
 }

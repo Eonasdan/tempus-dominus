@@ -1,4 +1,4 @@
-import { Unit } from '../datetime';
+import { DateTime, Unit } from '../datetime';
 import ActionTypes from './action-types';
 import { BaseEvent } from './event-types';
 
@@ -33,11 +33,13 @@ export class EventEmitters {
   viewUpdate = new EventEmitter();
   updateDisplay = new EventEmitter<ViewUpdateValues>();
   action = new EventEmitter<{ e: any; action?: ActionTypes }>();
+  updateViewDate = new EventEmitter<DateTime>();
 
   destroy() {
     this.triggerEvent.destroy();
     this.viewUpdate.destroy();
     this.updateDisplay.destroy();
     this.action.destroy();
+    this.updateViewDate.destroy();
   }
 }

@@ -241,7 +241,7 @@ export default class Dates {
 
     if (this.validation.isValid(target)) {
       this._dates[index] = target;
-      this.optionsStore.viewDate = target.clone;
+      this._eventEmitters.updateViewDate.emit(target.clone);
 
       updateInput();
 
@@ -259,7 +259,7 @@ export default class Dates {
 
     if (this.optionsStore.options.keepInvalid) {
       this._dates[index] = target;
-      this.optionsStore.viewDate = target.clone;
+      this._eventEmitters.updateViewDate.emit(target.clone);
 
       updateInput();
 

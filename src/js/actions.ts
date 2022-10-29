@@ -228,7 +228,9 @@ export default class Actions {
                 const today = new DateTime().setLocale(
                     this.optionsStore.options.localization.locale
                 );
-                this.optionsStore.viewDate = today;
+                this._eventEmitters.updateViewDate.emit(today);
+
+                //todo this this really a good idea?
                 if (this.validation.isValid(today, Unit.date))
                     this.dates.setValue(today, this.dates.lastPickedIndex);
                 break;

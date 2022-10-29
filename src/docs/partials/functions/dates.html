@@ -40,13 +40,14 @@
   </div>
 
   <div class='row'>
-    <h2 id='viewDate'>Getting the View Date
+    <h2 id='viewDate'>View Date
       <a class='anchor-link' aria-label='Anchor' href='#viewDate'><i class='fa-solid fa-anchor'
                                                                      aria-hidden='true'></i></a>
     </h2>
     <p>
       <code>picker.viewDate</code> returns the pickers current view date.
     </p>
+    <p><code>picker.viewDate = DateTime</code> will set the view date, update the options and ask the view to refresh.</p>
   </div>
   <div class='row mb-3'>
     <h2>picker.dates</h2>
@@ -88,7 +89,7 @@
   <div class='row'>
     <h2 id='add'>add(DateTime)
       <a class='anchor-link' aria-label='Anchor' href='#add'><i class='fa-solid fa-anchor'
-                                                                     aria-hidden='true'></i></a>
+                                                                aria-hidden='true'></i></a>
     </h2>
     <p>
       Adds a new DateTime to selected dates array. Use this function with caution. It will not
