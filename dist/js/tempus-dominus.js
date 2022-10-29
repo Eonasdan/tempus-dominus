@@ -897,11 +897,13 @@
        * @param granularity
        */
       isValid(targetDate, granularity) {
-          if (this.optionsStore.options.restrictions.disabledDates.length > 0 &&
+          if (granularity !== exports.Unit.month &&
+              this.optionsStore.options.restrictions.disabledDates.length > 0 &&
               this._isInDisabledDates(targetDate)) {
               return false;
           }
-          if (this.optionsStore.options.restrictions.enabledDates.length > 0 &&
+          if (granularity !== exports.Unit.month &&
+              this.optionsStore.options.restrictions.enabledDates.length > 0 &&
               !this._isInEnabledDates(targetDate)) {
               return false;
           }
@@ -949,10 +951,8 @@
           if (!this.optionsStore.options.restrictions.disabledDates ||
               this.optionsStore.options.restrictions.disabledDates.length === 0)
               return false;
-          const formattedDate = testDate.format(getFormatByUnit(exports.Unit.date));
           return this.optionsStore.options.restrictions.disabledDates
-              .map((x) => x.format(getFormatByUnit(exports.Unit.date)))
-              .find((x) => x === formattedDate);
+              .find((x) => x.isSame(testDate, exports.Unit.date));
       }
       /**
        * Checks to see if the enabledDates option is in use and returns true (meaning valid)
@@ -964,10 +964,8 @@
           if (!this.optionsStore.options.restrictions.enabledDates ||
               this.optionsStore.options.restrictions.enabledDates.length === 0)
               return true;
-          const formattedDate = testDate.format(getFormatByUnit(exports.Unit.date));
           return this.optionsStore.options.restrictions.enabledDates
-              .map((x) => x.format(getFormatByUnit(exports.Unit.date)))
-              .find((x) => x === formattedDate);
+              .find((x) => x.isSame(testDate, exports.Unit.date));
       }
       /**
        * Checks to see if the disabledHours option is in use and returns true (meaning invalid)

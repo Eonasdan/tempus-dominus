@@ -1,6 +1,6 @@
-import { DateTime, getFormatByUnit, Unit } from './datetime';
+import { DateTime, Unit } from './datetime';
 import { serviceLocator } from './utilities/service-locator';
-import {OptionsStore} from "./utilities/optionsStore";
+import { OptionsStore } from './utilities/optionsStore';
 
 /**
  * Main class for date validation rules based on the options provided.
@@ -20,12 +20,14 @@ export default class Validation {
    */
   isValid(targetDate: DateTime, granularity?: Unit): boolean {
     if (
+      granularity !== Unit.month &&
       this.optionsStore.options.restrictions.disabledDates.length > 0 &&
       this._isInDisabledDates(targetDate)
     ) {
       return false;
     }
     if (
+      granularity !== Unit.month &&
       this.optionsStore.options.restrictions.enabledDates.length > 0 &&
       !this._isInEnabledDates(targetDate)
     ) {
@@ -108,10 +110,8 @@ export default class Validation {
       this.optionsStore.options.restrictions.disabledDates.length === 0
     )
       return false;
-    const formattedDate = testDate.format(getFormatByUnit(Unit.date));
     return this.optionsStore.options.restrictions.disabledDates
-      .map((x) => x.format(getFormatByUnit(Unit.date)))
-      .find((x) => x === formattedDate);
+      .find((x) => x.isSame(testDate, Unit.date));
   }
 
   /**
@@ -126,10 +126,8 @@ export default class Validation {
       this.optionsStore.options.restrictions.enabledDates.length === 0
     )
       return true;
-    const formattedDate = testDate.format(getFormatByUnit(Unit.date));
     return this.optionsStore.options.restrictions.enabledDates
-      .map((x) => x.format(getFormatByUnit(Unit.date)))
-      .find((x) => x === formattedDate);
+      .find((x) => x.isSame(testDate, Unit.date));
   }
 
   /**
