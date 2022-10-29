@@ -1,6 +1,8 @@
+import { DateTime } from '../../js/datetime';
+
 class CustomDateFormat {
   localization: any;
-  private readonly DateTime: any; //I don't want to import
+  private readonly DateTime: typeof DateTime; //I don't want to import
   private readonly errorMessages: any;
 
   constructor(dateTime, errorMessages: any) {
@@ -8,9 +10,9 @@ class CustomDateFormat {
     this.errorMessages = errorMessages;
   }
 
-  private REGEX_FORMAT = /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|Z{1,2}/g
+  private REGEX_FORMAT = /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|Z{1,2}/g;
 
-  private getAllMonths(format: "2-digit" | "numeric" | "long" | "short" | "narrow" = 'long') {
+  private getAllMonths(format: '2-digit' | 'numeric' | 'long' | 'short' | 'narrow' = 'long') {
     const applyFormat = new Intl.DateTimeFormat(this.localization.locale, { month: format }).format;
     return [...Array(12).keys()].map((m) => applyFormat(new Date(2021, m)));
   }
@@ -26,7 +28,8 @@ class CustomDateFormat {
     return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
       const B = b && b.toUpperCase();
       return a || this.englishFormats[b] || this.replaceExtendedTokens(formats[B]);
-    })}
+    });
+  }
 
   // noinspection SpellCheckingInspection
   private englishFormats = {
@@ -35,11 +38,11 @@ class CustomDateFormat {
     L: 'MM/dd/yyyy',
     LL: 'MMMM d, yyyy',
     LLL: 'MMMM d, yyyy h:mm T',
-    LLLL: 'dddd, MMMM d, yyyy h:mm T',
+    LLLL: 'dddd, MMMM d, yyyy h:mm T'
   };
 
   private formattingTokens =
-    /(\[[^[]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|ZZ?)/g;
+    /(\[[^[]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g;
 
   private match1 = /\d/; // 0 - 9
   private match2 = /\d\d/; // 00 - 99
@@ -69,17 +72,39 @@ class CustomDateFormat {
     };
   };
 
+  /**
+   * z = -4, zz = -04, zzz = -0400
+   * @param date
+   * @param style
+   * @private
+   */
+  private zoneInformation(date: DateTime, style: 'z' | 'zz' | 'zzz') {
+    let name = date.parts(this.localization.locale, { timeZoneName: 'longOffset' })
+      .timeZoneName
+      .replace('GMT', '')
+      .replace(':', '');
+
+    let negative = name.includes('-');
+
+    name = name.replace('-');
+
+    if (style === 'z') name = name.substring(1, 2);
+    else if (style === 'zz') name = name.substring(0, 2);
+
+    return `${negative ? '-' : ''}${name}`;
+  }
+
   private zoneExpressions = [
     this.matchOffset,
     (obj, input) => {
       obj.offset = this.offsetFromString(input);
-    },
+    }
   ];
 
   private meridiemMatch(input) {
     const meridiem = new Intl.DateTimeFormat(this.localization.locale, {
       hour: 'numeric',
-      hour12: true,
+      hour12: true
     })
       .formatToParts(new Date(2022, 3, 4, 13))
       .find((p) => p.type === 'dayPeriod')?.value;
@@ -92,19 +117,19 @@ class CustomDateFormat {
       this.matchWord,
       (ojb, input) => {
         ojb.afternoon = this.meridiemMatch(input);
-      },
+      }
     ],
     T: [
       this.matchWord,
       (ojb, input) => {
         ojb.afternoon = this.meridiemMatch(input);
-      },
+      }
     ],
     fff: [
       this.match3,
       (ojb, input) => {
         ojb.milliseconds = +input;
-      },
+      }
     ],
     s: [this.match1to2, this.addInput('seconds')],
     ss: [this.match1to2, this.addInput('seconds')],
@@ -126,7 +151,7 @@ class CustomDateFormat {
             ojb.day = i;
           }
         }
-      },
+      }
     ],
     M: [this.match1to2, this.addInput('month')],
     MM: [this.match2, this.addInput('month')],
@@ -141,7 +166,7 @@ class CustomDateFormat {
           throw new Error();
         }
         obj.month = matchIndex % 12 || matchIndex;
-      },
+      }
     ],
     MMMM: [
       this.matchWord,
@@ -152,18 +177,19 @@ class CustomDateFormat {
           throw new Error();
         }
         obj.month = matchIndex % 12 || matchIndex;
-      },
+      }
     ],
     y: [this.matchSigned, this.addInput('year')],
     yy: [
       this.match2,
       (obj, input) => {
         obj.year = this.parseTwoDigitYear(input);
-      },
+      }
     ],
     yyyy: [this.match4, this.addInput('year')],
-    Z: this.zoneExpressions,
-    ZZ: this.zoneExpressions,
+    z: this.zoneExpressions,
+    zz: this.zoneExpressions,
+    zzz: this.zoneExpressions
   };
 
   private correctHours(time) {
@@ -265,8 +291,8 @@ class CustomDateFormat {
       MMMM: this.getAllMonths()[dateTime.getMonth()],
       d: dateTime.date,
       dd: dateTime.dateFormatted,
-      ddd: formatter({ weekday: "short" }),
-      dddd: formatter({ weekday: "long" }),
+      ddd: formatter({ weekday: 'short' }),
+      dddd: formatter({ weekday: 'long' }),
       H: dateTime.getHours(),
       HH: dateTime.hoursFormatted,
       h: dateTime.hours > 12 ? dateTime.hours - 12 : dateTime.hours,
@@ -278,12 +304,14 @@ class CustomDateFormat {
       s: dateTime.seconds,
       ss: dateTime.secondsFormatted,
       fff: dateTime.getMilliseconds(),
-      //z: dateTime.getTimezoneOffset() todo zones are stupid
-    }
+      z: this.zoneInformation(dateTime, 'z'), //-4
+      zz: this.zoneInformation(dateTime, 'zz'), //-04
+      zzz: this.zoneInformation(dateTime, 'zzz') //-0400
+    };
 
     return format.replace(this.REGEX_FORMAT, (match, $1) => {
       return $1 || matches[match];
-    })
+    });
   }
 }
 
@@ -292,18 +320,19 @@ export default (_, tdClasses, __) => {
 
   // noinspection JSUnusedGlobalSymbols
   tdClasses.Dates.prototype.formatInput = function(date) {
+    if (!date) return '';
     customDateFormat.localization = this.optionsStore.options.localization;
     return customDateFormat.format(date);
-  }
+  };
 
   // noinspection JSUnusedGlobalSymbols
   tdClasses.Dates.prototype.parseInput = function(input) {
     customDateFormat.localization = this.optionsStore.options.localization;
     return customDateFormat.parseFormattedInput(input);
-  }
+  };
 
-  tdClasses.DateTime.fromString = function (input: string, localization: any) {
+  tdClasses.DateTime.fromString = function(input: string, localization: any) {
     customDateFormat.localization = localization;
     return customDateFormat.parseFormattedInput(input);
-  }
+  };
 }

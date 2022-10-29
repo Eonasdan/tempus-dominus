@@ -275,6 +275,8 @@ var index = (_, tdClasses, __) => {
     const customDateFormat = new CustomDateFormat(tdClasses.DateTime, tdClasses.ErrorMessages);
     // noinspection JSUnusedGlobalSymbols
     tdClasses.Dates.prototype.formatInput = function (date) {
+        if (!date)
+            return '';
         customDateFormat.localization = this.optionsStore.options.localization;
         return customDateFormat.format(date);
     };
