@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.6 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.5 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -856,8 +856,8 @@ const CalendarModes = [
 
 class OptionsStore {
     constructor() {
+        this.viewDate = new DateTime();
         this._currentCalendarViewMode = 0;
-        this._viewDate = new DateTime();
         this.minimumCalendarViewMode = 0;
         this.currentView = 'calendar';
     }
@@ -867,14 +867,6 @@ class OptionsStore {
     set currentCalendarViewMode(value) {
         this._currentCalendarViewMode = value;
         this.currentView = CalendarModes[value].name;
-    }
-    get viewDate() {
-        return this._viewDate;
-    }
-    set viewDate(v) {
-        this._viewDate = v;
-        if (this.options)
-            this.options.viewDate = v;
     }
     /**
      * When switching back to the calendar from the clock,
@@ -899,13 +891,11 @@ class Validation {
      * @param granularity
      */
     isValid(targetDate, granularity) {
-        if (granularity !== Unit.month &&
-            this.optionsStore.options.restrictions.disabledDates.length > 0 &&
+        if (this.optionsStore.options.restrictions.disabledDates.length > 0 &&
             this._isInDisabledDates(targetDate)) {
             return false;
         }
-        if (granularity !== Unit.month &&
-            this.optionsStore.options.restrictions.enabledDates.length > 0 &&
+        if (this.optionsStore.options.restrictions.enabledDates.length > 0 &&
             !this._isInEnabledDates(targetDate)) {
             return false;
         }
@@ -953,8 +943,10 @@ class Validation {
         if (!this.optionsStore.options.restrictions.disabledDates ||
             this.optionsStore.options.restrictions.disabledDates.length === 0)
             return false;
+        const formattedDate = testDate.format(getFormatByUnit(Unit.date));
         return this.optionsStore.options.restrictions.disabledDates
-            .find((x) => x.isSame(testDate, Unit.date));
+            .map((x) => x.format(getFormatByUnit(Unit.date)))
+            .find((x) => x === formattedDate);
     }
     /**
      * Checks to see if the enabledDates option is in use and returns true (meaning valid)
@@ -966,8 +958,10 @@ class Validation {
         if (!this.optionsStore.options.restrictions.enabledDates ||
             this.optionsStore.options.restrictions.enabledDates.length === 0)
             return true;
+        const formattedDate = testDate.format(getFormatByUnit(Unit.date));
         return this.optionsStore.options.restrictions.enabledDates
-            .find((x) => x.isSame(testDate, Unit.date));
+            .map((x) => x.format(getFormatByUnit(Unit.date)))
+            .find((x) => x === formattedDate);
     }
     /**
      * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
@@ -1024,14 +1018,12 @@ class EventEmitters {
         this.viewUpdate = new EventEmitter();
         this.updateDisplay = new EventEmitter();
         this.action = new EventEmitter();
-        this.updateViewDate = new EventEmitter();
     }
     destroy() {
         this.triggerEvent.destroy();
         this.viewUpdate.destroy();
         this.updateDisplay.destroy();
         this.action.destroy();
-        this.updateViewDate.destroy();
     }
 }
 
@@ -1149,214 +1141,16 @@ const DefaultOptions = {
     container: undefined
 };
 
-/**
- * Attempts to prove `d` is a DateTime or Date or can be converted into one.
- * @param d If a string will attempt creating a date from it.
- * @param localization object containing locale and format settings. Only used with the custom formats
- * @private
- */
-function tryConvertToDateTime(d, localization) {
-    if (d.constructor.name === DateTime.name)
-        return d;
-    if (d.constructor.name === Date.name) {
-        return DateTime.convert(d);
-    }
-    if (typeof d === typeof '') {
-        const dateTime = DateTime.fromString(d, localization);
-        if (JSON.stringify(dateTime) === 'null') {
-            return null;
-        }
-        return dateTime;
-    }
-    return null;
-}
-/**
- * Attempts to convert `d` to a DateTime object
- * @param d value to convert
- * @param optionName Provides text to error messages e.g. disabledDates
- * @param localization object containing locale and format settings. Only used with the custom formats
- */
-function convertToDateTime(d, optionName, localization) {
-    if (typeof d === typeof '' && optionName !== 'input') {
-        Namespace.errorMessages.dateString();
-    }
-    const converted = tryConvertToDateTime(d, localization);
-    if (!converted) {
-        Namespace.errorMessages.failedToParseDate(optionName, d, optionName === 'input');
-    }
-    return converted;
-}
-/**
- * Type checks that `value` is an array of Date or DateTime
- * @param optionName Provides text to error messages e.g. disabledDates
- * @param value Option value
- * @param providedType Used to provide text to error messages
- * @param localization
- */
-function typeCheckDateArray(optionName, value, providedType, localization) {
-    if (!Array.isArray(value)) {
-        Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
-    }
-    for (let i = 0; i < value.length; i++) {
-        let d = value[i];
-        const dateTime = convertToDateTime(d, optionName, localization);
-        if (!dateTime) {
-            Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
-        }
-        dateTime.setLocale(localization?.locale ?? 'default');
-        value[i] = dateTime;
-    }
-}
-/**
- * Type checks that `value` is an array of numbers
- * @param optionName Provides text to error messages e.g. disabledDates
- * @param value Option value
- * @param providedType Used to provide text to error messages
- */
-function typeCheckNumberArray(optionName, value, providedType) {
-    if (!Array.isArray(value) || value.some((x) => typeof x !== typeof 0)) {
-        Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of numbers');
-    }
-}
-
-function mandatoryDate(key) {
-    return ({ value, providedType, localization }) => {
-        const dateTime = convertToDateTime(value, key, localization);
-        if (dateTime !== undefined) {
-            dateTime.setLocale(localization.locale);
-            return dateTime;
-        }
-        Namespace.errorMessages.typeMismatch(key, providedType, 'DateTime or Date');
-    };
-}
-function optionalDate(key) {
-    const mandatory = mandatoryDate(key);
-    return (args) => {
-        if (args.value === undefined) {
-            return args.value;
-        }
-        return mandatory(args);
-    };
-}
-function numbersInRange(key, lower, upper) {
-    return ({ value, providedType }) => {
-        if (value === undefined) {
-            return [];
-        }
-        typeCheckNumberArray(key, value, providedType);
-        if (value.some(x => x < lower || x > upper))
-            Namespace.errorMessages.numbersOutOfRange(key, lower, upper);
-        return value;
-    };
-}
-function validHourRange(key) {
-    return numbersInRange(key, 0, 23);
-}
-function validDateArray(key) {
-    return ({ value, providedType, localization }) => {
-        if (value === undefined) {
-            return [];
-        }
-        typeCheckDateArray(key, value, providedType, localization);
-        return value;
-    };
-}
-function validKeyOption(keyOptions) {
-    return ({ value, path }) => {
-        if (!keyOptions.includes(value))
-            Namespace.errorMessages.unexpectedOptionValue(path.substring(1), value, keyOptions);
-        return value;
-    };
-}
-const optionProcessors = Object.freeze({
-    'defaultDate': mandatoryDate('defaultDate'),
-    'viewDate': mandatoryDate('viewDate'),
-    'minDate': optionalDate('restrictions.minDate'),
-    'maxDate': optionalDate('restrictions.maxDate'),
-    'disabledHours': validHourRange('restrictions.disabledHours'),
-    'enabledHours': validHourRange('restrictions.enabledHours'),
-    'disabledDates': validDateArray('restrictions.disabledDates'),
-    'enabledDates': validDateArray('restrictions.enabledDates'),
-    'daysOfWeekDisabled': numbersInRange('restrictions.daysOfWeekDisabled', 0, 6),
-    'disabledTimeIntervals': ({ key, value, providedType, localization }) => {
-        if (value === undefined) {
-            return [];
-        }
-        if (!Array.isArray(value)) {
-            Namespace.errorMessages.typeMismatch(key, providedType, 'array of { from: DateTime|Date, to: DateTime|Date }');
-        }
-        const valueObject = value;
-        for (let i = 0; i < valueObject.length; i++) {
-            Object.keys(valueObject[i]).forEach((vk) => {
-                const subOptionName = `${key}[${i}].${vk}`;
-                const d = valueObject[i][vk];
-                const dateTime = convertToDateTime(d, subOptionName, localization);
-                if (!dateTime) {
-                    Namespace.errorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
-                }
-                dateTime.setLocale(localization.locale);
-                valueObject[i][vk] = dateTime;
-            });
-        }
-        return valueObject;
-    },
-    'toolbarPlacement': validKeyOption(['top', 'bottom', 'default']),
-    'type': validKeyOption(['icons', 'sprites']),
-    'viewMode': validKeyOption(['clock', 'calendar', 'months', 'years', 'decades']),
-    'theme': validKeyOption(['light', 'dark', 'auto']),
-    'meta': ({ value }) => value,
-    'dayViewHeaderFormat': ({ value }) => value,
-    'container': ({ value, path }) => {
-        if (value &&
-            !(value instanceof HTMLElement ||
-                value instanceof Element ||
-                value?.appendChild)) {
-            Namespace.errorMessages.typeMismatch(path.substring(1), typeof value, 'HTMLElement');
-        }
-        return value;
-    },
-    'useTwentyfourHour': ({ value, path, providedType, defaultType }) => {
-        if (value === undefined || providedType === 'boolean')
-            return value;
-        Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
-    }
-});
-const defaultProcessor = ({ value, defaultType, providedType, path }) => {
-    switch (defaultType) {
-        case 'boolean':
-            return value === 'true' || value === true;
-        case 'number':
-            return +value;
-        case 'string':
-            return value.toString();
-        case 'object':
-            return {};
-        case 'function':
-            return value;
-        default:
-            Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
-    }
-};
-function processKey(args) {
-    return (optionProcessors[args.key] || defaultProcessor)(args);
-}
-
 class OptionConverter {
     static deepCopy(input) {
         const o = {};
         Object.keys(input).forEach((key) => {
             const inputElement = input[key];
-            if (inputElement instanceof DateTime) {
-                o[key] = inputElement.clone;
-                return;
-            }
-            else if (inputElement instanceof Date) {
-                o[key] = new Date(inputElement.valueOf());
-            }
             o[key] = inputElement;
             if (typeof inputElement !== 'object' ||
                 inputElement instanceof HTMLElement ||
-                inputElement instanceof Element)
+                inputElement instanceof Element ||
+                inputElement instanceof Date)
                 return;
             if (!Array.isArray(inputElement)) {
                 o[key] = OptionConverter.deepCopy(inputElement);
@@ -1427,7 +1221,152 @@ class OptionConverter {
         });
     }
     static processKey(key, value, providedType, defaultType, path, localization) {
-        return processKey({ key, value, providedType, defaultType, path, localization });
+        switch (key) {
+            case 'defaultDate': {
+                const dateTime = this.dateConversion(value, 'defaultDate', localization);
+                if (dateTime !== undefined) {
+                    dateTime.setLocale(localization.locale);
+                    return dateTime;
+                }
+                Namespace.errorMessages.typeMismatch('defaultDate', providedType, 'DateTime or Date');
+                break;
+            }
+            case 'viewDate': {
+                const dateTime = this.dateConversion(value, 'viewDate', localization);
+                if (dateTime !== undefined) {
+                    dateTime.setLocale(localization.locale);
+                    return dateTime;
+                }
+                Namespace.errorMessages.typeMismatch('viewDate', providedType, 'DateTime or Date');
+                break;
+            }
+            case 'minDate': {
+                if (value === undefined) {
+                    return value;
+                }
+                const dateTime = this.dateConversion(value, 'restrictions.minDate', localization);
+                if (dateTime !== undefined) {
+                    dateTime.setLocale(localization.locale);
+                    return dateTime;
+                }
+                Namespace.errorMessages.typeMismatch('restrictions.minDate', providedType, 'DateTime or Date');
+                break;
+            }
+            case 'maxDate': {
+                if (value === undefined) {
+                    return value;
+                }
+                const dateTime = this.dateConversion(value, 'restrictions.maxDate', localization);
+                if (dateTime !== undefined) {
+                    dateTime.setLocale(localization.locale);
+                    return dateTime;
+                }
+                Namespace.errorMessages.typeMismatch('restrictions.maxDate', providedType, 'DateTime or Date');
+                break;
+            }
+            case 'disabledHours':
+                if (value === undefined) {
+                    return [];
+                }
+                this._typeCheckNumberArray('restrictions.disabledHours', value, providedType);
+                if (value.filter((x) => x < 0 || x > 24).length > 0)
+                    Namespace.errorMessages.numbersOutOfRange('restrictions.disabledHours', 0, 23);
+                return value;
+            case 'enabledHours':
+                if (value === undefined) {
+                    return [];
+                }
+                this._typeCheckNumberArray('restrictions.enabledHours', value, providedType);
+                if (value.filter((x) => x < 0 || x > 24).length > 0)
+                    Namespace.errorMessages.numbersOutOfRange('restrictions.enabledHours', 0, 23);
+                return value;
+            case 'daysOfWeekDisabled':
+                if (value === undefined) {
+                    return [];
+                }
+                this._typeCheckNumberArray('restrictions.daysOfWeekDisabled', value, providedType);
+                if (value.filter((x) => x < 0 || x > 6).length > 0)
+                    Namespace.errorMessages.numbersOutOfRange('restrictions.daysOfWeekDisabled', 0, 6);
+                return value;
+            case 'enabledDates':
+                if (value === undefined) {
+                    return [];
+                }
+                this._typeCheckDateArray('restrictions.enabledDates', value, providedType, localization);
+                return value;
+            case 'disabledDates':
+                if (value === undefined) {
+                    return [];
+                }
+                this._typeCheckDateArray('restrictions.disabledDates', value, providedType, localization);
+                return value;
+            case 'disabledTimeIntervals':
+                if (value === undefined) {
+                    return [];
+                }
+                if (!Array.isArray(value)) {
+                    Namespace.errorMessages.typeMismatch(key, providedType, 'array of { from: DateTime|Date, to: DateTime|Date }');
+                }
+                const valueObject = value;
+                for (let i = 0; i < valueObject.length; i++) {
+                    Object.keys(valueObject[i]).forEach((vk) => {
+                        const subOptionName = `${key}[${i}].${vk}`;
+                        let d = valueObject[i][vk];
+                        const dateTime = this.dateConversion(d, subOptionName, localization);
+                        if (!dateTime) {
+                            Namespace.errorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
+                        }
+                        dateTime.setLocale(localization.locale);
+                        valueObject[i][vk] = dateTime;
+                    });
+                }
+                return valueObject;
+            case 'toolbarPlacement':
+            case 'type':
+            case 'viewMode':
+            case 'theme':
+                const optionValues = {
+                    toolbarPlacement: ['top', 'bottom', 'default'],
+                    type: ['icons', 'sprites'],
+                    viewMode: ['clock', 'calendar', 'months', 'years', 'decades'],
+                    theme: ['light', 'dark', 'auto']
+                };
+                const keyOptions = optionValues[key];
+                if (!keyOptions.includes(value))
+                    Namespace.errorMessages.unexpectedOptionValue(path.substring(1), value, keyOptions);
+                return value;
+            case 'meta':
+            case 'dayViewHeaderFormat':
+                return value;
+            case 'container':
+                if (value &&
+                    !(value instanceof HTMLElement ||
+                        value instanceof Element ||
+                        value?.appendChild)) {
+                    Namespace.errorMessages.typeMismatch(path.substring(1), typeof value, 'HTMLElement');
+                }
+                return value;
+            case 'useTwentyfourHour':
+                if (value === undefined || providedType === 'boolean')
+                    return value;
+                Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
+                break;
+            default:
+                switch (defaultType) {
+                    case 'boolean':
+                        return value === 'true' || value === true;
+                    case 'number':
+                        return +value;
+                    case 'string':
+                        return value.toString();
+                    case 'object':
+                        return {};
+                    case 'function':
+                        return value;
+                    default:
+                        Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
+                }
+        }
     }
     static _mergeOptions(providedOptions, mergeTo) {
         const newConfig = OptionConverter.deepCopy(mergeTo);
@@ -1507,7 +1446,19 @@ class OptionConverter {
      * @private
      */
     static _dateTypeCheck(d, localization) {
-        return tryConvertToDateTime(d, localization);
+        if (d.constructor.name === DateTime.name)
+            return d;
+        if (d.constructor.name === Date.name) {
+            return DateTime.convert(d);
+        }
+        if (typeof d === typeof '') {
+            const dateTime = DateTime.fromString(d, localization);
+            if (JSON.stringify(dateTime) === 'null') {
+                return null;
+            }
+            return dateTime;
+        }
+        return null;
     }
     /**
      * Type checks that `value` is an array of Date or DateTime
@@ -1517,7 +1468,18 @@ class OptionConverter {
      * @param localization
      */
     static _typeCheckDateArray(optionName, value, providedType, localization) {
-        return typeCheckDateArray(optionName, value, providedType, localization);
+        if (!Array.isArray(value)) {
+            Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
+        }
+        for (let i = 0; i < value.length; i++) {
+            let d = value[i];
+            const dateTime = this.dateConversion(d, optionName, localization);
+            if (!dateTime) {
+                Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
+            }
+            dateTime.setLocale(localization?.locale ?? 'default');
+            value[i] = dateTime;
+        }
     }
     /**
      * Type checks that `value` is an array of numbers
@@ -1526,7 +1488,9 @@ class OptionConverter {
      * @param providedType Used to provide text to error messages
      */
     static _typeCheckNumberArray(optionName, value, providedType) {
-        return typeCheckNumberArray(optionName, value, providedType);
+        if (!Array.isArray(value) || value.find((x) => typeof x !== typeof 0)) {
+            Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of numbers');
+        }
     }
     /**
      * Attempts to convert `d` to a DateTime object
@@ -1535,7 +1499,14 @@ class OptionConverter {
      * @param localization object containing locale and format settings. Only used with the custom formats
      */
     static dateConversion(d, optionName, localization) {
-        return convertToDateTime(d, optionName, localization);
+        if (typeof d === typeof '' && optionName !== 'input') {
+            Namespace.errorMessages.dateString();
+        }
+        const converted = this._dateTypeCheck(d, localization);
+        if (!converted) {
+            Namespace.errorMessages.failedToParseDate(optionName, d, optionName === 'input');
+        }
+        return converted;
     }
     static getFlattenDefaultOptions() {
         if (this._flattenDefaults)
@@ -1776,7 +1747,7 @@ class Dates {
         }
         if (this.validation.isValid(target)) {
             this._dates[index] = target;
-            this._eventEmitters.updateViewDate.emit(target.clone);
+            this.optionsStore.viewDate = target.clone;
             updateInput();
             this.optionsStore.unset = false;
             this._eventEmitters.updateDisplay.emit('all');
@@ -1791,7 +1762,7 @@ class Dates {
         }
         if (this.optionsStore.options.keepInvalid) {
             this._dates[index] = target;
-            this._eventEmitters.updateViewDate.emit(target.clone);
+            this.optionsStore.viewDate = target.clone;
             updateInput();
             this._eventEmitters.triggerEvent.emit({
                 type: Namespace.events.change,
@@ -3384,8 +3355,7 @@ class Actions {
                 break;
             case ActionTypes$1.today:
                 const today = new DateTime().setLocale(this.optionsStore.options.localization.locale);
-                this._eventEmitters.updateViewDate.emit(today);
-                //todo this this really a good idea?
+                this.optionsStore.viewDate = today;
                 if (this.validation.isValid(today, Unit.date))
                     this.dates.setValue(today, this.dates.lastPickedIndex);
                 break;
@@ -3477,7 +3447,7 @@ class TempusDominus {
                 return;
             const setViewDate = () => {
                 if (this.dates.lastPicked)
-                    this.viewDate = this.dates.lastPicked.clone;
+                    this.optionsStore.viewDate = this.dates.lastPicked.clone;
             };
             const value = this.optionsStore.input.value;
             if (this.optionsStore.options.multipleDates) {
@@ -3530,17 +3500,9 @@ class TempusDominus {
         this._eventEmitters.viewUpdate.subscribe(() => {
             this._viewUpdate();
         });
-        this._eventEmitters.updateViewDate.subscribe(dateTime => {
-            this.viewDate = dateTime;
-        });
     }
     get viewDate() {
         return this.optionsStore.viewDate;
-    }
-    set viewDate(value) {
-        this.optionsStore.viewDate = value;
-        this.optionsStore.viewDate.setLocale(this.optionsStore.options.localization.locale);
-        this.display._update(this.optionsStore.currentView === 'clock' ? 'clock' : 'calendar');
     }
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -3643,7 +3605,7 @@ class TempusDominus {
             }
             this._subscribers[eventType].push(callBackArray[i]);
             returnArray.push({
-                unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1)
+                unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1),
             });
             if (eventTypes.length === 1) {
                 return returnArray[0];
@@ -3659,7 +3621,6 @@ class TempusDominus {
         this.display.hide();
         // this will clear the document click event listener
         this.display._dispose();
-        this._eventEmitters.destroy();
         this.optionsStore.input?.removeEventListener('change', this._inputChangeEvent);
         if (this.optionsStore.options.allowInputToggle) {
             this.optionsStore.input?.removeEventListener('click', this._toggleClickEvent);
@@ -3677,7 +3638,7 @@ class TempusDominus {
         if (!asked)
             return;
         this.updateOptions({
-            localization: asked
+            localization: asked,
         });
     }
     /**
@@ -3728,7 +3689,7 @@ class TempusDominus {
     _viewUpdate() {
         this._triggerEvent({
             type: Namespace.events.update,
-            viewDate: this.optionsStore.viewDate.clone
+            viewDate: this.optionsStore.viewDate.clone,
         });
     }
     _unsubscribe(eventName, index) {
@@ -3855,9 +3816,9 @@ class TempusDominus {
             if (this.display.widget) {
                 this._eventEmitters.action.emit({
                     e: {
-                        currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`)
+                        currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`),
                     },
-                    action: ActionTypes$1.togglePicker
+                    action: ActionTypes$1.togglePicker,
                 });
             }
         }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
@@ -3905,7 +3866,7 @@ const extend = function (plugin, option) {
     }
     return tempusDominus;
 };
-const version = '6.2.6';
+const version = '6.2.5';
 const tempusDominus = {
     TempusDominus,
     extend,

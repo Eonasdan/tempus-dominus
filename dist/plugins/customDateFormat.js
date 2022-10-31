@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.6 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.5 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -13,9 +13,9 @@
             L: 'MM/dd/yyyy',
             LL: 'MMMM d, yyyy',
             LLL: 'MMMM d, yyyy h:mm T',
-            LLLL: 'dddd, MMMM d, yyyy h:mm T'
+            LLLL: 'dddd, MMMM d, yyyy h:mm T',
         };
-        this.formattingTokens = /(\[[^[]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g;
+        this.formattingTokens = /(\[[^[]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|ZZ?)/g;
         this.match1 = /\d/; // 0 - 9
         this.match2 = /\d\d/; // 00 - 99
         this.match3 = /\d{3}/; // 000 - 999
@@ -28,26 +28,26 @@
             this.matchOffset,
             (obj, input) => {
                 obj.offset = this.offsetFromString(input);
-            }
+            },
         ];
         this.expressions = {
             t: [
                 this.matchWord,
                 (ojb, input) => {
                     ojb.afternoon = this.meridiemMatch(input);
-                }
+                },
             ],
             T: [
                 this.matchWord,
                 (ojb, input) => {
                     ojb.afternoon = this.meridiemMatch(input);
-                }
+                },
             ],
             fff: [
                 this.match3,
                 (ojb, input) => {
                     ojb.milliseconds = +input;
-                }
+                },
             ],
             s: [this.match1to2, this.addInput('seconds')],
             ss: [this.match1to2, this.addInput('seconds')],
@@ -70,7 +70,7 @@
                             ojb.day = i;
                         }
                     }
-                }
+                },
             ],
             M: [this.match1to2, this.addInput('month')],
             MM: [this.match2, this.addInput('month')],
@@ -84,7 +84,7 @@
                         throw new Error();
                     }
                     obj.month = matchIndex % 12 || matchIndex;
-                }
+                },
             ],
             MMMM: [
                 this.matchWord,
@@ -95,19 +95,18 @@
                         throw new Error();
                     }
                     obj.month = matchIndex % 12 || matchIndex;
-                }
+                },
             ],
             y: [this.matchSigned, this.addInput('year')],
             yy: [
                 this.match2,
                 (obj, input) => {
                     obj.year = this.parseTwoDigitYear(input);
-                }
+                },
             ],
             yyyy: [this.match4, this.addInput('year')],
-            // z: this.zoneExpressions,
-            // zz: this.zoneExpressions,
-            // zzz: this.zoneExpressions
+            Z: this.zoneExpressions,
+            ZZ: this.zoneExpressions,
         };
         this.parseFormattedInput = (input) => {
             if (!this.localization.format) {
@@ -175,29 +174,10 @@
         };
     }
     ;
-    /**
-     * z = -4, zz = -04, zzz = -0400
-     * @param date
-     * @param style
-     * @private
-     */
-    zoneInformation(date, style) {
-        let name = date.parts(this.localization.locale, { timeZoneName: 'longOffset' })
-            .timeZoneName
-            .replace('GMT', '')
-            .replace(':', '');
-        let negative = name.includes('-');
-        name = name.replace('-');
-        if (style === 'z')
-            name = name.substring(1, 2);
-        else if (style === 'zz')
-            name = name.substring(0, 2);
-        return `${negative ? '-' : ''}${name}`;
-    }
     meridiemMatch(input) {
         const meridiem = new Intl.DateTimeFormat(this.localization.locale, {
             hour: 'numeric',
-            hour12: true
+            hour12: true,
         })
             .formatToParts(new Date(2022, 3, 4, 13))
             .find((p) => p.type === 'dayPeriod')?.value;
@@ -271,8 +251,8 @@
             MMMM: this.getAllMonths()[dateTime.getMonth()],
             d: dateTime.date,
             dd: dateTime.dateFormatted,
-            ddd: formatter({ weekday: 'short' }),
-            dddd: formatter({ weekday: 'long' }),
+            ddd: formatter({ weekday: "short" }),
+            dddd: formatter({ weekday: "long" }),
             H: dateTime.getHours(),
             HH: dateTime.hoursFormatted,
             h: dateTime.hours > 12 ? dateTime.hours - 12 : dateTime.hours,
@@ -284,9 +264,7 @@
             s: dateTime.seconds,
             ss: dateTime.secondsFormatted,
             fff: dateTime.getMilliseconds(),
-            // z: this.zoneInformation(dateTime, 'z'), //-4
-            // zz: this.zoneInformation(dateTime, 'zz'), //-04
-            // zzz: this.zoneInformation(dateTime, 'zzz') //-0400
+            //z: dateTime.getTimezoneOffset() todo zones are stupid
         };
         return format.replace(this.REGEX_FORMAT, (match, $1) => {
             return $1 || matches[match];
@@ -297,8 +275,6 @@ var index = (_, tdClasses, __) => {
     const customDateFormat = new CustomDateFormat(tdClasses.DateTime, tdClasses.ErrorMessages);
     // noinspection JSUnusedGlobalSymbols
     tdClasses.Dates.prototype.formatInput = function (date) {
-        if (!date)
-            return '';
         customDateFormat.localization = this.optionsStore.options.localization;
         return customDateFormat.format(date);
     };
