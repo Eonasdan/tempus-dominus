@@ -187,9 +187,9 @@ class CustomDateFormat {
       }
     ],
     yyyy: [this.match4, this.addInput('year')],
-    z: this.zoneExpressions,
-    zz: this.zoneExpressions,
-    zzz: this.zoneExpressions
+    // z: this.zoneExpressions,
+    // zz: this.zoneExpressions,
+    // zzz: this.zoneExpressions
   };
 
   private correctHours(time) {
@@ -304,9 +304,9 @@ class CustomDateFormat {
       s: dateTime.seconds,
       ss: dateTime.secondsFormatted,
       fff: dateTime.getMilliseconds(),
-      z: this.zoneInformation(dateTime, 'z'), //-4
-      zz: this.zoneInformation(dateTime, 'zz'), //-04
-      zzz: this.zoneInformation(dateTime, 'zzz') //-0400
+      // z: this.zoneInformation(dateTime, 'z'), //-4
+      // zz: this.zoneInformation(dateTime, 'zz'), //-04
+      // zzz: this.zoneInformation(dateTime, 'zzz') //-0400
     };
 
     return format.replace(this.REGEX_FORMAT, (match, $1) => {
