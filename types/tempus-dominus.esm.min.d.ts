@@ -595,8 +595,6 @@ declare class Dates {
 }
 declare class ErrorMessages {
     private base;
-    private in;
-    constructor();
     //#region out to console
     /**
      * Throws an error indicating that a key in the options object is invalid.
