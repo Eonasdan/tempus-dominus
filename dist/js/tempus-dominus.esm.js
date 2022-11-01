@@ -444,7 +444,6 @@ class TdError extends Error {
 class ErrorMessages {
     constructor() {
         this.base = 'TD:';
-        this.in = false;
         //#endregion
         //#region used with notify.error
         /**
@@ -457,7 +456,7 @@ class ErrorMessages {
          * input field directly, and does not provide a valid date.
          */
         this.failedToParseInput = 'Failed parse input field';
-        this.in = true;
+        //#endregion
     }
     //#region out to console
     /**
@@ -559,7 +558,6 @@ class ErrorMessages {
      * customDateFormat errors
      */
     customDateFormatError(message) {
-        console.log(`in: ${this.in}`);
         const error = new TdError(`${this.base} customDateFormat: ${message}`);
         error.code = 9;
         throw error;
