@@ -294,7 +294,7 @@
     }
 }
 var index = (_, tdClasses, __) => {
-    const customDateFormat = new CustomDateFormat(tdClasses.DateTime, tdClasses.ErrorMessages);
+    const customDateFormat = new CustomDateFormat(tdClasses.DateTime, tdClasses.Namespace.errorMessages);
     // noinspection JSUnusedGlobalSymbols
     tdClasses.Dates.prototype.formatInput = function (date) {
         if (!date)

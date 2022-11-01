@@ -16,7 +16,7 @@ module.exports = (config) => {
         'tempusDominus'
       ],
       plugins: [
-        ignore(['DateTime']),
+        ignore(['DateTime', 'ErrorMessages']),
         typescript({
           tsconfig: resolvedConfig => ({ ...resolvedConfig, declaration: false, rootDir: "./src" })
         })

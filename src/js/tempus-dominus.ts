@@ -552,7 +552,7 @@ const extend = function (plugin, option) {
   if (!plugin) return tempusDominus;
   if (!plugin.installed) {
     // install plugin only once
-    plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, tempusDominus);
+    plugin(option, { TempusDominus, Dates, Display, DateTime, Namespace }, tempusDominus);
     plugin.installed = true;
   }
   return tempusDominus;

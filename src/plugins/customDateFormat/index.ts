@@ -1,9 +1,10 @@
 import { DateTime } from '../../js/datetime';
+import { ErrorMessages } from '../../js/utilities/errors';
 
 class CustomDateFormat {
   localization: any;
-  private readonly DateTime: typeof DateTime; //I don't want to import
-  private readonly errorMessages: any;
+  private readonly DateTime: typeof DateTime;
+  private readonly errorMessages: ErrorMessages;
 
   constructor(dateTime, errorMessages: any) {
     this.DateTime = dateTime;
@@ -316,7 +317,7 @@ class CustomDateFormat {
 }
 
 export default (_, tdClasses, __) => {
-  const customDateFormat = new CustomDateFormat(tdClasses.DateTime, tdClasses.ErrorMessages);
+  const customDateFormat = new CustomDateFormat(tdClasses.DateTime, tdClasses.Namespace.errorMessages);
 
   // noinspection JSUnusedGlobalSymbols
   tdClasses.Dates.prototype.formatInput = function(date) {
