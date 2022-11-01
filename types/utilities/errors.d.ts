@@ -3,6 +3,8 @@ export declare class TdError extends Error {
 }
 export declare class ErrorMessages {
     private base;
+    private in;
+    constructor();
     /**
      * Throws an error indicating that a key in the options object is invalid.
      * @param optionName
