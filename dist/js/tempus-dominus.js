@@ -1358,6 +1358,7 @@
               }
               else if (inputElement instanceof Date) {
                   o[key] = new Date(inputElement.valueOf());
+                  return;
               }
               o[key] = inputElement;
               if (typeof inputElement !== 'object' ||
@@ -1718,6 +1719,18 @@
           const step = factor / 10, startYear = Math.floor(year / factor) * factor, endYear = startYear + step * 9, focusValue = Math.floor(year / step) * step;
           return [startYear, endYear, focusValue];
       }
+      updateInput(target) {
+          if (!this.optionsStore.input)
+              return;
+          let newValue = this.formatInput(target);
+          if (this.optionsStore.options.multipleDates) {
+              newValue = this._dates
+                  .map((d) => this.formatInput(d))
+                  .join(this.optionsStore.options.multipleDatesSeparator);
+          }
+          if (this.optionsStore.input.value != newValue)
+              this.optionsStore.input.value = newValue;
+      }
       /**
        * Attempts to either clear or set the `target` date at `index`.
        * If the `target` is null then the date will be cleared.
@@ -1733,20 +1746,8 @@
           if (!oldDate && !this.optionsStore.unset && noIndex && isClear) {
               oldDate = this.lastPicked;
           }
-          const updateInput = () => {
-              if (!this.optionsStore.input)
-                  return;
-              let newValue = this.formatInput(target);
-              if (this.optionsStore.options.multipleDates) {
-                  newValue = this._dates
-                      .map((d) => this.formatInput(d))
-                      .join(this.optionsStore.options.multipleDatesSeparator);
-              }
-              if (this.optionsStore.input.value != newValue)
-                  this.optionsStore.input.value = newValue;
-          };
           if (target && oldDate?.isSame(target)) {
-              updateInput();
+              this.updateInput(target);
               return;
           }
           // case of calling setValue(null)
@@ -1760,7 +1761,7 @@
               else {
                   this._dates.splice(index, 1);
               }
-              updateInput();
+              this.updateInput();
               this._eventEmitters.triggerEvent.emit({
                   type: Namespace.events.change,
                   date: undefined,
@@ -1783,7 +1784,7 @@
           if (this.validation.isValid(target)) {
               this._dates[index] = target;
               this._eventEmitters.updateViewDate.emit(target.clone);
-              updateInput();
+              this.updateInput(target);
               this.optionsStore.unset = false;
               this._eventEmitters.updateDisplay.emit('all');
               this._eventEmitters.triggerEvent.emit({
@@ -1798,7 +1799,7 @@
           if (this.optionsStore.options.keepInvalid) {
               this._dates[index] = target;
               this._eventEmitters.updateViewDate.emit(target.clone);
-              updateInput();
+              this.updateInput(target);
               this._eventEmitters.triggerEvent.emit({
                   type: Namespace.events.change,
                   date: target,
@@ -3806,6 +3807,8 @@
           }
           if (!this.optionsStore.input)
               return;
+          if (!this.optionsStore.input.value && this.optionsStore.options.defaultDate)
+              this.optionsStore.input.value = this.dates.formatInput(this.optionsStore.options.defaultDate);
           this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
           if (this.optionsStore.options.allowInputToggle) {
               this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
