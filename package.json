@@ -17,6 +17,8 @@
   ],
   "scripts": {
     "start": "npm run build && concurrently \"npm:*-watch\" \"npm run serve\"",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
     "serve": "browser-sync start --config build/browser-sync-config.js",
     "build": "node ./build/copyToDist.js && npm run rollup && npm run build:plugins-and-locales",
     "build:plugins": "node ./build/plugins.js -p",
@@ -43,6 +45,7 @@
     "@popperjs/core": "^2.11.6",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@types/node": "^18.7.20",
+    "@vitest/coverage-c8": "^0.24.5",
     "bootstrap": "^5.2.1",
     "browser-sync": "^2.27.10",
     "chokidar": "^3.5.3",
@@ -61,7 +64,8 @@
     "sass": "^1.55.0",
     "terser": "^5.15.0",
     "tslib": "^2.4.0",
-    "typescript": "~4.8.3"
+    "typescript": "~4.8.3",
+    "vitest": "^0.24.5"
   },
   "homepage": "https://getdatepicker.com/",
   "keywords": [
