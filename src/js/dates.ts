@@ -166,6 +166,19 @@ export default class Dates {
     return [startYear, endYear, focusValue];
   }
 
+  updateInput(target?: DateTime) {
+    if (!this.optionsStore.input) return;
+
+    let newValue = this.formatInput(target);
+    if (this.optionsStore.options.multipleDates) {
+      newValue = this._dates
+        .map((d) => this.formatInput(d))
+        .join(this.optionsStore.options.multipleDatesSeparator);
+    }
+    if (this.optionsStore.input.value != newValue)
+      this.optionsStore.input.value = newValue;
+  }
+
   /**
    * Attempts to either clear or set the `target` date at `index`.
    * If the `target` is null then the date will be cleared.
@@ -183,21 +196,8 @@ export default class Dates {
       oldDate = this.lastPicked;
     }
 
-    const updateInput = () => {
-      if (!this.optionsStore.input) return;
-
-      let newValue = this.formatInput(target);
-      if (this.optionsStore.options.multipleDates) {
-        newValue = this._dates
-          .map((d) => this.formatInput(d))
-          .join(this.optionsStore.options.multipleDatesSeparator);
-      }
-      if (this.optionsStore.input.value != newValue)
-        this.optionsStore.input.value = newValue;
-    };
-
     if (target && oldDate?.isSame(target)) {
-      updateInput();
+      this.updateInput(target);
       return;
     }
 
@@ -214,7 +214,7 @@ export default class Dates {
         this._dates.splice(index, 1);
       }
 
-      updateInput();
+      this.updateInput();
 
       this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,
@@ -243,7 +243,7 @@ export default class Dates {
       this._dates[index] = target;
       this._eventEmitters.updateViewDate.emit(target.clone);
 
-      updateInput();
+      this.updateInput(target);
 
       this.optionsStore.unset = false;
       this._eventEmitters.updateDisplay.emit('all');
@@ -261,7 +261,7 @@ export default class Dates {
       this._dates[index] = target;
       this._eventEmitters.updateViewDate.emit(target.clone);
 
-      updateInput();
+      this.updateInput(target);
 
       this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.change,

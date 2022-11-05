@@ -339,6 +339,10 @@ export default class Display {
     }
 
     picker.style.display = 'grid';
+
+    if (this.optionsStore.options.display.sideBySide)
+      (<HTMLElement>(this.widget.querySelectorAll(`.${Namespace.css.clockContainer}`)[0])).style.display = 'grid';
+
     this._updateCalendarHeader();
     this._eventEmitters.viewUpdate.emit();
   }
@@ -452,9 +456,9 @@ export default class Display {
           'title',
           this.optionsStore.options.localization.nextMonth
         );
-        switcher.innerText = this.optionsStore.viewDate.format(
+        switcher.setAttribute(showing, this.optionsStore.viewDate.format(
           this.optionsStore.options.localization.dayViewHeaderFormat
-        );
+        ));
         break;
     }
     switcher.innerText = switcher.getAttribute(showing);
