@@ -3,7 +3,7 @@
     "name": "Jonathan Peterson"
   },
   "name": "@eonasdan/tempus-dominus",
-  "version": "6.2.5",
+  "version": "6.2.7",
   "style": "dist/css/tempus-dominus.css",
   "sass": "scss/tempus-dominus.scss",
   "main": "dist/js/tempus-dominus.js",
@@ -18,6 +18,7 @@
   "scripts": {
     "start": "npm run build && concurrently \"npm:*-watch\" \"npm run serve\"",
     "test": "vitest",
+    "test:silent": "vitest --run --silent",
     "coverage": "vitest run --coverage",
     "serve": "browser-sync start --config build/browser-sync-config.js",
     "build": "node ./build/copyToDist.js && npm run rollup && npm run build:plugins-and-locales",
@@ -31,7 +32,7 @@
     "prettier": "prettier --write .",
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
-    "release": "npm run build && npm run build:declarations",
+    "release": "npm run test:silent && npm run build && npm run build:declarations",
     "release:version": "npm run release && node build/change-version.js"
   },
   "bugs": {
