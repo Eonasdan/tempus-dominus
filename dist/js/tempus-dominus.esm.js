@@ -2904,6 +2904,8 @@ class Display {
                 break;
         }
         picker.style.display = 'grid';
+        if (this.optionsStore.options.display.sideBySide)
+            (this.widget.querySelectorAll(`.${Namespace.css.clockContainer}`)[0]).style.display = 'grid';
         this._updateCalendarHeader();
         this._eventEmitters.viewUpdate.emit();
     }
@@ -2974,7 +2976,7 @@ class Display {
                 previous.setAttribute('title', this.optionsStore.options.localization.previousMonth);
                 switcher.setAttribute('title', this.optionsStore.options.localization.selectMonth);
                 next.setAttribute('title', this.optionsStore.options.localization.nextMonth);
-                switcher.innerText = this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat);
+                switcher.setAttribute(showing, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
                 break;
         }
         switcher.innerText = switcher.getAttribute(showing);
