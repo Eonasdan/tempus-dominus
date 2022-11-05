@@ -1,4 +1,4 @@
-import type { FormatLocalization } from './options';
+import type { FormatLocalization } from "./options";
 interface OptionProcessorFunctionArguments {
     key: string;
     value: any;

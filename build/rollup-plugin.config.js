@@ -1,4 +1,5 @@
 const typescript = require('rollup-plugin-ts');
+const ignore = require('rollup-plugin-ignore');
 
 const banner = require('./banner.js');
 const globals = {
@@ -15,6 +16,7 @@ module.exports = (config) => {
         'tempusDominus'
       ],
       plugins: [
+        ignore(['DateTime', 'ErrorMessages']),
         typescript({
           tsconfig: resolvedConfig => ({ ...resolvedConfig, declaration: false, rootDir: "./src" })
         })
