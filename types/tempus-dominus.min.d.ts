@@ -582,6 +582,7 @@ declare class Dates {
         number,
         number
     ];
+    updateInput(target?: DateTime): void;
     /**
      * Attempts to either clear or set the `target` date at `index`.
      * If the `target` is null then the date will be cleared.
@@ -1030,7 +1031,6 @@ declare class TempusDominus {
     dates: Dates;
     constructor(element: HTMLElement, options?: Options);
     get viewDate(): DateTime;
-    set viewDate(value: DateTime);
     /**
      * Update the picker options. If `reset` is provide `options` will be merged with DefaultOptions instead.
      * @param options
@@ -1252,5 +1252,5 @@ declare const extend: (plugin: any, option: any) => {
     Unit: typeof Unit;
     version: string;
 };
-declare const version = "6.2.6";
+declare const version = "6.2.7";
 export { TempusDominus, extend, loadLocale, locale, Namespace, DefaultOptions, DateTime, Unit, version, DateTimeFormatOptions, Options };
