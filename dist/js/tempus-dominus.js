@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.5 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.7 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -159,7 +159,10 @@
                   break;
               case 'weekDay':
                   this.endOf(exports.Unit.date);
-                  this.manipulate((6 + startOfTheWeek) - this.weekDay, exports.Unit.date);
+                  const endOfWeek = (6 + startOfTheWeek);
+                  if (this.weekDay === endOfWeek)
+                      break;
+                  this.manipulate(endOfWeek - this.weekDay, exports.Unit.date);
                   break;
               case 'month':
                   this.endOf(exports.Unit.date);
@@ -168,8 +171,7 @@
                   break;
               case 'year':
                   this.endOf(exports.Unit.date);
-                  this.manipulate(1, exports.Unit.year);
-                  this.setDate(0);
+                  this.setMonth(11, 31);
                   break;
           }
           return this;
@@ -250,18 +252,18 @@
               throw new Error(`Unit '${unit}' is not valid`);
           const leftInclusivity = inclusivity[0] === '(';
           const rightInclusivity = inclusivity[1] === ')';
-          return (((leftInclusivity
+          return (leftInclusivity
               ? this.isAfter(left, unit)
               : !this.isBefore(left, unit)) &&
               (rightInclusivity
                   ? this.isBefore(right, unit)
-                  : !this.isAfter(right, unit))) ||
-              ((leftInclusivity
+                  : !this.isAfter(right, unit)) ||
+              (leftInclusivity
                   ? this.isBefore(left, unit)
                   : !this.isAfter(left, unit)) &&
                   (rightInclusivity
                       ? this.isAfter(right, unit)
-                      : !this.isBefore(right, unit))));
+                      : !this.isBefore(right, unit));
       }
       /**
        * Returns flattened object of the date. Does not include literals
@@ -3907,7 +3909,7 @@
       }
       return tempusDominus;
   };
-  const version = '6.2.5';
+  const version = '6.2.7';
   const tempusDominus = {
       TempusDominus,
       extend,

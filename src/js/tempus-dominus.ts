@@ -19,7 +19,6 @@ import DefaultOptions from './utilities/default-options';
 import ActionTypes from './utilities/action-types';
 import {OptionsStore} from "./utilities/optionsStore";
 import {OptionConverter} from "./utilities/optionConverter";
-import { ErrorMessages } from './utilities/errors';
 
 /**
  * A robust and powerful date/time picker component.
@@ -561,7 +560,7 @@ const extend = function (plugin, option) {
   return tempusDominus;
 };
 
-const version = '6.2.5';
+const version = '6.2.7';
 
 const tempusDominus = {
   TempusDominus,
