@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.6 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.5 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -3483,7 +3483,7 @@
                   return;
               const setViewDate = () => {
                   if (this.dates.lastPicked)
-                      this.viewDate = this.dates.lastPicked.clone;
+                      this.optionsStore.viewDate = this.dates.lastPicked.clone;
               };
               const value = this.optionsStore.input.value;
               if (this.optionsStore.options.multipleDates) {
@@ -3536,17 +3536,9 @@
           this._eventEmitters.viewUpdate.subscribe(() => {
               this._viewUpdate();
           });
-          this._eventEmitters.updateViewDate.subscribe(dateTime => {
-              this.viewDate = dateTime;
-          });
       }
       get viewDate() {
           return this.optionsStore.viewDate;
-      }
-      set viewDate(value) {
-          this.optionsStore.viewDate = value;
-          this.optionsStore.viewDate.setLocale(this.optionsStore.options.localization.locale);
-          this.display._update(this.optionsStore.currentView === 'clock' ? 'clock' : 'calendar');
       }
       // noinspection JSUnusedGlobalSymbols
       /**
@@ -3649,7 +3641,7 @@
               }
               this._subscribers[eventType].push(callBackArray[i]);
               returnArray.push({
-                  unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1)
+                  unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1),
               });
               if (eventTypes.length === 1) {
                   return returnArray[0];
@@ -3665,7 +3657,6 @@
           this.display.hide();
           // this will clear the document click event listener
           this.display._dispose();
-          this._eventEmitters.destroy();
           this.optionsStore.input?.removeEventListener('change', this._inputChangeEvent);
           if (this.optionsStore.options.allowInputToggle) {
               this.optionsStore.input?.removeEventListener('click', this._toggleClickEvent);
@@ -3683,7 +3674,7 @@
           if (!asked)
               return;
           this.updateOptions({
-              localization: asked
+              localization: asked,
           });
       }
       /**
@@ -3734,7 +3725,7 @@
       _viewUpdate() {
           this._triggerEvent({
               type: Namespace.events.update,
-              viewDate: this.optionsStore.viewDate.clone
+              viewDate: this.optionsStore.viewDate.clone,
           });
       }
       _unsubscribe(eventName, index) {
@@ -3861,9 +3852,9 @@
               if (this.display.widget) {
                   this._eventEmitters.action.emit({
                       e: {
-                          currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`)
+                          currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`),
                       },
-                      action: ActionTypes$1.togglePicker
+                      action: ActionTypes$1.togglePicker,
                   });
               }
           }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
@@ -3906,12 +3897,12 @@
           return tempusDominus;
       if (!plugin.installed) {
           // install plugin only once
-          plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, tempusDominus);
+          plugin(option, { TempusDominus, Dates, Display, DateTime, Namespace }, tempusDominus);
           plugin.installed = true;
       }
       return tempusDominus;
   };
-  const version = '6.2.6';
+  const version = '6.2.5';
   const tempusDominus = {
       TempusDominus,
       extend,
