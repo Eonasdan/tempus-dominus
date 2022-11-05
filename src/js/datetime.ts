@@ -169,7 +169,9 @@ export class DateTime extends Date {
         break;
       case 'weekDay':
         this.endOf(Unit.date);
-        this.manipulate((6 + startOfTheWeek) - this.weekDay, Unit.date);
+        const endOfWeek = (6 + startOfTheWeek);
+        if (this.weekDay === endOfWeek) break;
+        this.manipulate(endOfWeek - this.weekDay, Unit.date);
         break;
       case 'month':
         this.endOf(Unit.date);
@@ -178,8 +180,7 @@ export class DateTime extends Date {
         break;
       case 'year':
         this.endOf(Unit.date);
-        this.manipulate(1, Unit.year);
-        this.setDate(0);
+        this.setMonth(11, 31);
         break;
     }
     return this;
@@ -270,20 +271,18 @@ export class DateTime extends Date {
     const leftInclusivity = inclusivity[0] === '(';
     const rightInclusivity = inclusivity[1] === ')';
 
-    return (
-      ((leftInclusivity
-          ? this.isAfter(left, unit)
-          : !this.isBefore(left, unit)) &&
-        (rightInclusivity
-          ? this.isBefore(right, unit)
-          : !this.isAfter(right, unit))) ||
-      ((leftInclusivity
-          ? this.isBefore(left, unit)
-          : !this.isAfter(left, unit)) &&
-        (rightInclusivity
-          ? this.isAfter(right, unit)
-          : !this.isBefore(right, unit)))
-    );
+    return (leftInclusivity
+        ? this.isAfter(left, unit)
+        : !this.isBefore(left, unit)) &&
+      (rightInclusivity
+        ? this.isBefore(right, unit)
+        : !this.isAfter(right, unit)) ||
+    (leftInclusivity
+        ? this.isBefore(left, unit)
+        : !this.isAfter(left, unit)) &&
+      (rightInclusivity
+        ? this.isAfter(right, unit)
+        : !this.isBefore(right, unit));
   }
 
   /**

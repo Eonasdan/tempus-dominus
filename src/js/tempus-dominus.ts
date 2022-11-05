@@ -7,18 +7,18 @@ import Options from './utilities/options';
 import {
   BaseEvent,
   ChangeEvent,
-  ViewUpdateEvent
+  ViewUpdateEvent,
 } from './utilities/event-types';
 import { EventEmitters } from './utilities/event-emitter';
 import {
   serviceLocator,
-  setupServiceLocator
+  setupServiceLocator,
 } from './utilities/service-locator';
 import CalendarModes from './utilities/calendar-modes';
 import DefaultOptions from './utilities/default-options';
 import ActionTypes from './utilities/action-types';
-import { OptionsStore } from './utilities/optionsStore';
-import { OptionConverter } from './utilities/optionConverter';
+import {OptionsStore} from "./utilities/optionsStore";
+import {OptionConverter} from "./utilities/optionConverter";
 import { ErrorMessages } from './utilities/errors';
 
 /**
@@ -199,7 +199,7 @@ class TempusDominus {
           this,
           eventType,
           this._subscribers[eventType].length - 1
-        )
+        ),
       });
 
       if (eventTypes.length === 1) {
@@ -242,7 +242,7 @@ class TempusDominus {
     let asked = loadedLocales[language];
     if (!asked) return;
     this.updateOptions({
-      localization: asked
+      localization: asked,
     });
   }
 
@@ -271,7 +271,7 @@ class TempusDominus {
       );
 
       this.optionsStore.input?.dispatchEvent(
-        new CustomEvent('change', { detail: event as any })
+          new CustomEvent('change', { detail: event as any })
       );
     }
 
@@ -311,7 +311,7 @@ class TempusDominus {
   private _viewUpdate() {
     this._triggerEvent({
       type: Namespace.events.update,
-      viewDate: this.optionsStore.viewDate.clone
+      viewDate: this.optionsStore.viewDate.clone,
     } as ViewUpdateEvent);
   }
 
@@ -385,6 +385,7 @@ class TempusDominus {
       newConfig.display.components.useTwentyfourHour = !!!newConfig.viewDate.parts()?.dayPeriod;
     }
 
+
     this.optionsStore.options = newConfig;
   }
 
@@ -408,6 +409,9 @@ class TempusDominus {
     }
 
     if (!this.optionsStore.input) return;
+
+    if (!this.optionsStore.input.value && this.optionsStore.options.defaultDate)
+      this.optionsStore.input.value = this.dates.formatInput(this.optionsStore.options.defaultDate);
 
     this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
     if (this.optionsStore.options.allowInputToggle) {
@@ -473,9 +477,9 @@ class TempusDominus {
           e: {
             currentTarget: this.display.widget.querySelector(
               `.${Namespace.css.switch} div`
-            )
+            ),
           },
-          action: ActionTypes.togglePicker
+          action: ActionTypes.togglePicker,
         });
       }
     }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
@@ -492,7 +496,7 @@ class TempusDominus {
 
     const setViewDate = () => {
       if (this.dates.lastPicked)
-        this.viewDate = this.dates.lastPicked.clone;
+        this.optionsStore.viewDate = this.dates.lastPicked.clone;
     };
 
     const value = this.optionsStore.input.value;
@@ -522,7 +526,7 @@ class TempusDominus {
    * @private
    */
   private _toggleClickEvent = () => {
-    if ((this.optionsStore.element as any)?.disabled || this.optionsStore.input?.disabled) return;
+    if ((this.optionsStore.element as any)?.disabled || this.optionsStore.input?.disabled) return
     this.toggle();
   };
 }
@@ -560,17 +564,17 @@ const locale = (l: string) => {
  * @param plugin
  * @param option
  */
-const extend = function(plugin, option) {
+const extend = function (plugin, option) {
   if (!plugin) return tempusDominus;
   if (!plugin.installed) {
     // install plugin only once
-    plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, tempusDominus);
+    plugin(option, { TempusDominus, Dates, Display, DateTime, Namespace }, tempusDominus);
     plugin.installed = true;
   }
   return tempusDominus;
 };
 
-const version = '6.2.6';
+const version = '6.2.7';
 
 const tempusDominus = {
   TempusDominus,
@@ -596,4 +600,4 @@ export {
   version,
   DateTimeFormatOptions,
   Options
-};
+}
