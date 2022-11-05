@@ -49,12 +49,12 @@ export default class HourDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.hourContainer
     )[0];
-    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
+    const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
       .forEach((containerClone: HTMLElement) => {
-        let classes = [];
+        const classes = [];
         classes.push(Namespace.css.hour);
 
         if (!this.validation.isValid(innerDate, Unit.hours)) {

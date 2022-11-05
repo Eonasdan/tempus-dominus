@@ -75,12 +75,12 @@ export default class MonthDisplay {
         : next.classList.add(Namespace.css.disabled);
     }
 
-    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.year);
+    const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.year);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectMonth}"]`)
       .forEach((containerClone: HTMLElement, index) => {
-        let classes = [];
+        const classes = [];
         classes.push(Namespace.css.month);
 
         if (

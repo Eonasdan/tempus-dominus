@@ -92,7 +92,7 @@ class CustomDateFormat {
       .timeZoneName.replace('GMT', '')
       .replace(':', '');
 
-    let negative = name.includes('-');
+    const negative = name.includes('-');
 
     name = name.replace('-');
 

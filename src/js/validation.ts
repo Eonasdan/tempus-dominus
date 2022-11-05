@@ -83,8 +83,8 @@ export default class Validation {
       if (
         this.optionsStore.options.restrictions.disabledTimeIntervals.length > 0
       ) {
-        for (let disabledTimeIntervals of this.optionsStore.options.restrictions
-          .disabledTimeIntervals) {
+        for (const disabledTimeIntervals of this.optionsStore.options
+          .restrictions.disabledTimeIntervals) {
           if (
             targetDate.isBetween(
               disabledTimeIntervals.from,

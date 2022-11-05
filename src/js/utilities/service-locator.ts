@@ -1,7 +1,7 @@
 export declare type Constructable<T> = new (...args: any[]) => T;
 
 class ServiceLocator {
-  private cache: Map<Constructable<unknown>, unknown | Symbol> = new Map();
+  private cache: Map<Constructable<unknown>, unknown | symbol> = new Map();
 
   locate<T>(identifier: Constructable<T>): T {
     const service = this.cache.get(identifier);

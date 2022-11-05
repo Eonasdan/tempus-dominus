@@ -90,7 +90,7 @@ export class OptionConverter {
 
       const errors = unsupportedOptions.map((x) => {
         let error = `"${path}.${x}" in not a known option.`;
-        let didYouMean = flattenedOptions.find((y) => y.includes(x));
+        const didYouMean = flattenedOptions.find((y) => y.includes(x));
         if (didYouMean) error += ` Did you mean "${didYouMean}"?`;
         return error;
       });
@@ -104,9 +104,9 @@ export class OptionConverter {
         if (path.charAt(0) === '.') path = path.slice(1);
 
         const defaultOptionValue = defaultOptions[key];
-        let providedType = typeof provided[key];
-        let defaultType = typeof defaultOptionValue;
-        let value = provided[key];
+        const providedType = typeof provided[key];
+        const defaultType = typeof defaultOptionValue;
+        const value = provided[key];
 
         if (value === undefined || value === null) {
           copyTo[key] = value;
@@ -186,7 +186,7 @@ export class OptionConverter {
       eData.constructor !== DOMStringMap
     )
       return options;
-    let dataOptions = {} as Options;
+    const dataOptions = {} as Options;
 
     // because dataset returns camelCase including the 'td' key the option
     // key won't align

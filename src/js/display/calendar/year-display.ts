@@ -79,14 +79,14 @@ export default class YearDisplay {
         : next.classList.add(Namespace.css.disabled);
     }
 
-    let innerDate = this.optionsStore.viewDate.clone
+    const innerDate = this.optionsStore.viewDate.clone
       .startOf(Unit.year)
       .manipulate(-1, Unit.year);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectYear}"]`)
       .forEach((containerClone: HTMLElement) => {
-        let classes = [];
+        const classes = [];
         classes.push(Namespace.css.year);
 
         if (

@@ -1,10 +1,10 @@
 //obviously, loading moment js is required.
-declare var moment;
+declare let moment;
 export default (option, tdClasses, tdFactory) => {
   tdClasses.Dates.prototype.setFromInput = function (value, index) {
-    let converted = moment(value, option);
+    const converted = moment(value, option);
     if (converted.isValid()) {
-      let date = tdFactory.DateTime.convert(
+      const date = tdFactory.DateTime.convert(
         converted.toDate(),
         this.optionsStore.options.localization.locale
       );

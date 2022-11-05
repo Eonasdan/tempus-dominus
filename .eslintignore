@@ -5,7 +5,7 @@
 **/.husky/
 **/types/
 **/nuget/
-/package-lock.json
+**/*.json
 **/*.png
 **/*.md
 /td logo.xcf

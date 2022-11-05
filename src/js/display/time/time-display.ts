@@ -288,7 +288,7 @@ export default class TimeDisplay {
       let divElement = getSeparator();
       top.push(divElement);
 
-      let button = document.createElement('button');
+      const button = document.createElement('button');
       button.setAttribute(
         'title',
         this.optionsStore.options.localization.toggleMeridiem

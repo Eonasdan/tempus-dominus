@@ -88,7 +88,7 @@ export default class DecadeDisplay {
             containerClone.textContent = ' ';
             previous.classList.add(Namespace.css.disabled);
             containerClone.classList.add(Namespace.css.disabled);
-            containerClone.setAttribute('data-value', ``);
+            containerClone.setAttribute('data-value', '');
             return;
           } else {
             containerClone.innerText = this._startDecade.clone
@@ -102,7 +102,7 @@ export default class DecadeDisplay {
           }
         }
 
-        let classes = [];
+        const classes = [];
         classes.push(Namespace.css.decade);
         const startDecadeYear = this._startDecade.year;
         const endDecadeYear = this._startDecade.year + 9;

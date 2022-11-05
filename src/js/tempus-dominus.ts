@@ -19,7 +19,6 @@ import DefaultOptions from './utilities/default-options';
 import ActionTypes from './utilities/action-types';
 import { OptionsStore } from './utilities/optionsStore';
 import { OptionConverter } from './utilities/optionConverter';
-import { ErrorMessages } from './utilities/errors';
 
 /**
  * A robust and powerful date/time picker component.
@@ -241,7 +240,7 @@ class TempusDominus {
    * @param language
    */
   locale(language: string) {
-    let asked = loadedLocales[language];
+    const asked = loadedLocales[language];
     if (!asked) return;
     this.updateOptions({
       localization: asked,
@@ -387,7 +386,7 @@ class TempusDominus {
 
     if (newConfig.display.components.useTwentyfourHour === undefined) {
       newConfig.display.components.useTwentyfourHour =
-        !!!newConfig.viewDate.parts()?.dayPeriod;
+        !newConfig.viewDate.parts()?.dayPeriod;
     }
 
     this.optionsStore.options = newConfig;
@@ -402,7 +401,7 @@ class TempusDominus {
     if (this.optionsStore.element.tagName == 'INPUT') {
       this.optionsStore.input = this.optionsStore.element as HTMLInputElement;
     } else {
-      let query = this.optionsStore.element.dataset.tdTargetInput;
+      const query = this.optionsStore.element.dataset.tdTargetInput;
       if (query == undefined || query == 'nearest') {
         this.optionsStore.input =
           this.optionsStore.element.querySelector('input');
@@ -563,7 +562,7 @@ const loadLocale = (l) => {
  * @param l
  */
 const locale = (l: string) => {
-  let asked = loadedLocales[l];
+  const asked = loadedLocales[l];
   if (!asked) return;
   DefaultOptions.localization = asked;
 };

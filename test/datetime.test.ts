@@ -76,7 +76,7 @@ test('startOf', () => {
   expect(dt.valueOf()).toBe(new DateTime(2022, 0, 1, 0, 0, 0).valueOf());
 
   // @ts-ignore
-  expect(() => dt.startOf('foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt.startOf('foo')).toThrow("Unit 'foo' is not valid");
 
   //check if skip the process of the start of the week is the same weekday
   dt = new DateTime(2022, 11, 25, 0, 0, 0);
@@ -115,7 +115,7 @@ test('endOf', () => {
   expect(dt.valueOf()).toBe(new Date(2022, 11, 31, 23, 59, 59, 999).valueOf());
 
   // @ts-ignore
-  expect(() => dt.endOf('foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt.endOf('foo')).toThrow("Unit 'foo' is not valid");
 
   //check if skip the process of the end of the week is the same weekday
   dt = new DateTime(2022, 11, 17, 0, 0, 0);
@@ -131,7 +131,7 @@ test('endOf', () => {
 test('manipulate throws an error with invalid part', () => {
   // @ts-ignore
   expect(() => new DateTime().manipulate(1, 'foo')).toThrow(
-    `Unit 'foo' is not valid`
+    "Unit 'foo' is not valid"
   );
 });
 
@@ -150,7 +150,7 @@ test('isBefore', () => {
   expect(dt1.isBefore(dt2, Unit.date)).toBe(true);
 
   // @ts-ignore
-  expect(() => dt1.isBefore(dt2, 'foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt1.isBefore(dt2, 'foo')).toThrow("Unit 'foo' is not valid");
 });
 
 test('isAfter', () => {
@@ -162,7 +162,7 @@ test('isAfter', () => {
   expect(dt2.isAfter(dt1, Unit.date)).toBe(true);
 
   // @ts-ignore
-  expect(() => dt2.isAfter(dt1, 'foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt2.isAfter(dt1, 'foo')).toThrow("Unit 'foo' is not valid");
 });
 
 test('isSame', () => {
@@ -174,7 +174,7 @@ test('isSame', () => {
   expect(dt1.isSame(dt2, Unit.date)).toBe(true);
 
   // @ts-ignore
-  expect(() => dt1.isSame(dt2, 'foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt1.isSame(dt2, 'foo')).toThrow("Unit 'foo' is not valid");
 });
 
 //todo this is missing some conditions: https://github.com/moment/moment/blob/master/src/test/moment/is_between.js
@@ -190,7 +190,7 @@ test('isBetween', () => {
 
   // @ts-ignore
   expect(() => dt1.isBetween(left, right, 'foo')).toThrow(
-    `Unit 'foo' is not valid`
+    "Unit 'foo' is not valid"
   );
 
   const dateTime = new DateTime('2016-10-30');

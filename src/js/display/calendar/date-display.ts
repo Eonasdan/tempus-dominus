@@ -97,7 +97,7 @@ export default class DateDisplay {
         : next.classList.add(Namespace.css.disabled);
     }
 
-    let innerDate = this.optionsStore.viewDate.clone
+    const innerDate = this.optionsStore.viewDate.clone
       .startOf(Unit.month)
       .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
       .manipulate(12, Unit.hours);
@@ -116,7 +116,7 @@ export default class DateDisplay {
           return;
         }
 
-        let classes: string[] = [];
+        const classes: string[] = [];
         classes.push(Namespace.css.day);
 
         if (innerDate.isBefore(this.optionsStore.viewDate, Unit.month)) {
@@ -161,7 +161,7 @@ export default class DateDisplay {
    * @private
    */
   private _daysOfTheWeek(): HTMLElement[] {
-    let innerDate = this.optionsStore.viewDate.clone
+    const innerDate = this.optionsStore.viewDate.clone
       .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
       .startOf(Unit.date);
     const row = [];

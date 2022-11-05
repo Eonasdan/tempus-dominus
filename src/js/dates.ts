@@ -113,7 +113,7 @@ export default class Dates {
 
     const format = getFormatByUnit(unit);
 
-    let innerDateFormatted = targetDate.format(format);
+    const innerDateFormatted = targetDate.format(format);
 
     return (
       this._dates
@@ -134,7 +134,7 @@ export default class Dates {
 
     const format = getFormatByUnit(unit);
 
-    let innerDateFormatted = targetDate.format(format);
+    const innerDateFormatted = targetDate.format(format);
 
     return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
   }

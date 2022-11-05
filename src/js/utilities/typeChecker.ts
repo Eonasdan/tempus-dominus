@@ -77,7 +77,7 @@ export function typeCheckDateArray(
     );
   }
   for (let i = 0; i < value.length; i++) {
-    let d = value[i];
+    const d = value[i];
     const dateTime = convertToDateTime(d, optionName, localization);
     if (!dateTime) {
       Namespace.errorMessages.typeMismatch(

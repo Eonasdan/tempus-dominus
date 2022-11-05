@@ -25,7 +25,7 @@ export default class MinuteDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.minuteContainer);
 
-    let step =
+    const step =
       this.optionsStore.options.stepping === 1
         ? 5
         : this.optionsStore.options.stepping;
@@ -46,8 +46,8 @@ export default class MinuteDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.minuteContainer
     )[0];
-    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.hours);
-    let step =
+    const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.hours);
+    const step =
       this.optionsStore.options.stepping === 1
         ? 5
         : this.optionsStore.options.stepping;
@@ -55,7 +55,7 @@ export default class MinuteDisplay {
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectMinute}"]`)
       .forEach((containerClone: HTMLElement) => {
-        let classes = [];
+        const classes = [];
         classes.push(Namespace.css.minute);
 
         if (!this.validation.isValid(innerDate, Unit.minutes)) {
