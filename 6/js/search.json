@@ -137,7 +137,7 @@
   {
     "file": "change-log.html",
     "title": "Change Log",
-    "body": "version bug fixes fixed disabled/enabled dates performance issue this also should fix the next/previous month selection view date syncing across options and not updating correctly new added polish localization updated locales to include formats export re-export interface misspelling with customformatplugin popper reference custom format plugin docs it is now possible replace popperjs another positioning system via imports work again for fr fi a customdateformat allow be provided input parsing/setting replaced examples page repl lots of doc clean up older history please see archived change log",
+    "body": "version bug fixes fixed customdateformat shows undefined when you manually erase the date calendar header not updating correctly clock components disappearing using side by some doc issues new unit tests disabled/enabled dates performance issue this also should fix next/previous month selection view syncing across options and added polish localization updated locales to include formats export re-export interface misspelling with customformatplugin popper reference custom format plugin docs it is now possible replace popperjs another positioning system via imports work again for fr fi a allow be provided input parsing/setting replaced examples page repl lots of clean up older history please see archived change log",
     "postDate": "07/20/2021",
     "updateDate": "07/20/2021",
     "excerpt": "An overview of changes between different version of tempus dominus\n  ",

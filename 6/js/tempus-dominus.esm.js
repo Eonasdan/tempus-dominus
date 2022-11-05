@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.6 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.7 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -153,7 +153,10 @@ class DateTime extends Date {
                 break;
             case 'weekDay':
                 this.endOf(Unit.date);
-                this.manipulate((6 + startOfTheWeek) - this.weekDay, Unit.date);
+                const endOfWeek = (6 + startOfTheWeek);
+                if (this.weekDay === endOfWeek)
+                    break;
+                this.manipulate(endOfWeek - this.weekDay, Unit.date);
                 break;
             case 'month':
                 this.endOf(Unit.date);
@@ -162,8 +165,7 @@ class DateTime extends Date {
                 break;
             case 'year':
                 this.endOf(Unit.date);
-                this.manipulate(1, Unit.year);
-                this.setDate(0);
+                this.setMonth(11, 31);
                 break;
         }
         return this;
@@ -244,18 +246,18 @@ class DateTime extends Date {
             throw new Error(`Unit '${unit}' is not valid`);
         const leftInclusivity = inclusivity[0] === '(';
         const rightInclusivity = inclusivity[1] === ')';
-        return (((leftInclusivity
+        return (leftInclusivity
             ? this.isAfter(left, unit)
             : !this.isBefore(left, unit)) &&
             (rightInclusivity
                 ? this.isBefore(right, unit)
-                : !this.isAfter(right, unit))) ||
-            ((leftInclusivity
+                : !this.isAfter(right, unit)) ||
+            (leftInclusivity
                 ? this.isBefore(left, unit)
                 : !this.isAfter(left, unit)) &&
                 (rightInclusivity
                     ? this.isAfter(right, unit)
-                    : !this.isBefore(right, unit))));
+                    : !this.isBefore(right, unit));
     }
     /**
      * Returns flattened object of the date. Does not include literals
@@ -1352,6 +1354,7 @@ class OptionConverter {
             }
             else if (inputElement instanceof Date) {
                 o[key] = new Date(inputElement.valueOf());
+                return;
             }
             o[key] = inputElement;
             if (typeof inputElement !== 'object' ||
@@ -1712,6 +1715,18 @@ class Dates {
         const step = factor / 10, startYear = Math.floor(year / factor) * factor, endYear = startYear + step * 9, focusValue = Math.floor(year / step) * step;
         return [startYear, endYear, focusValue];
     }
+    updateInput(target) {
+        if (!this.optionsStore.input)
+            return;
+        let newValue = this.formatInput(target);
+        if (this.optionsStore.options.multipleDates) {
+            newValue = this._dates
+                .map((d) => this.formatInput(d))
+                .join(this.optionsStore.options.multipleDatesSeparator);
+        }
+        if (this.optionsStore.input.value != newValue)
+            this.optionsStore.input.value = newValue;
+    }
     /**
      * Attempts to either clear or set the `target` date at `index`.
      * If the `target` is null then the date will be cleared.
@@ -1727,20 +1742,8 @@ class Dates {
         if (!oldDate && !this.optionsStore.unset && noIndex && isClear) {
             oldDate = this.lastPicked;
         }
-        const updateInput = () => {
-            if (!this.optionsStore.input)
-                return;
-            let newValue = this.formatInput(target);
-            if (this.optionsStore.options.multipleDates) {
-                newValue = this._dates
-                    .map((d) => this.formatInput(d))
-                    .join(this.optionsStore.options.multipleDatesSeparator);
-            }
-            if (this.optionsStore.input.value != newValue)
-                this.optionsStore.input.value = newValue;
-        };
         if (target && oldDate?.isSame(target)) {
-            updateInput();
+            this.updateInput(target);
             return;
         }
         // case of calling setValue(null)
@@ -1754,7 +1757,7 @@ class Dates {
             else {
                 this._dates.splice(index, 1);
             }
-            updateInput();
+            this.updateInput();
             this._eventEmitters.triggerEvent.emit({
                 type: Namespace.events.change,
                 date: undefined,
@@ -1777,7 +1780,7 @@ class Dates {
         if (this.validation.isValid(target)) {
             this._dates[index] = target;
             this._eventEmitters.updateViewDate.emit(target.clone);
-            updateInput();
+            this.updateInput(target);
             this.optionsStore.unset = false;
             this._eventEmitters.updateDisplay.emit('all');
             this._eventEmitters.triggerEvent.emit({
@@ -1792,7 +1795,7 @@ class Dates {
         if (this.optionsStore.options.keepInvalid) {
             this._dates[index] = target;
             this._eventEmitters.updateViewDate.emit(target.clone);
-            updateInput();
+            this.updateInput(target);
             this._eventEmitters.triggerEvent.emit({
                 type: Namespace.events.change,
                 date: target,
@@ -2902,6 +2905,8 @@ class Display {
                 break;
         }
         picker.style.display = 'grid';
+        if (this.optionsStore.options.display.sideBySide)
+            (this.widget.querySelectorAll(`.${Namespace.css.clockContainer}`)[0]).style.display = 'grid';
         this._updateCalendarHeader();
         this._eventEmitters.viewUpdate.emit();
     }
@@ -2972,7 +2977,7 @@ class Display {
                 previous.setAttribute('title', this.optionsStore.options.localization.previousMonth);
                 switcher.setAttribute('title', this.optionsStore.options.localization.selectMonth);
                 next.setAttribute('title', this.optionsStore.options.localization.nextMonth);
-                switcher.innerText = this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat);
+                switcher.setAttribute(showing, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
                 break;
         }
         switcher.innerText = switcher.getAttribute(showing);
@@ -3477,7 +3482,7 @@ class TempusDominus {
                 return;
             const setViewDate = () => {
                 if (this.dates.lastPicked)
-                    this.viewDate = this.dates.lastPicked.clone;
+                    this.optionsStore.viewDate = this.dates.lastPicked.clone;
             };
             const value = this.optionsStore.input.value;
             if (this.optionsStore.options.multipleDates) {
@@ -3643,7 +3648,7 @@ class TempusDominus {
             }
             this._subscribers[eventType].push(callBackArray[i]);
             returnArray.push({
-                unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1)
+                unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1),
             });
             if (eventTypes.length === 1) {
                 return returnArray[0];
@@ -3677,7 +3682,7 @@ class TempusDominus {
         if (!asked)
             return;
         this.updateOptions({
-            localization: asked
+            localization: asked,
         });
     }
     /**
@@ -3728,7 +3733,7 @@ class TempusDominus {
     _viewUpdate() {
         this._triggerEvent({
             type: Namespace.events.update,
-            viewDate: this.optionsStore.viewDate.clone
+            viewDate: this.optionsStore.viewDate.clone,
         });
     }
     _unsubscribe(eventName, index) {
@@ -3800,6 +3805,8 @@ class TempusDominus {
         }
         if (!this.optionsStore.input)
             return;
+        if (!this.optionsStore.input.value && this.optionsStore.options.defaultDate)
+            this.optionsStore.input.value = this.dates.formatInput(this.optionsStore.options.defaultDate);
         this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
         if (this.optionsStore.options.allowInputToggle) {
             this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
@@ -3855,9 +3862,9 @@ class TempusDominus {
             if (this.display.widget) {
                 this._eventEmitters.action.emit({
                     e: {
-                        currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`)
+                        currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`),
                     },
-                    action: ActionTypes$1.togglePicker
+                    action: ActionTypes$1.togglePicker,
                 });
             }
         }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
@@ -3900,12 +3907,12 @@ const extend = function (plugin, option) {
         return tempusDominus;
     if (!plugin.installed) {
         // install plugin only once
-        plugin(option, { TempusDominus, Dates, Display, DateTime, ErrorMessages }, tempusDominus);
+        plugin(option, { TempusDominus, Dates, Display, DateTime, Namespace }, tempusDominus);
         plugin.installed = true;
     }
     return tempusDominus;
 };
-const version = '6.2.6';
+const version = '6.2.7';
 const tempusDominus = {
     TempusDominus,
     extend,

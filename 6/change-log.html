@@ -84,7 +84,7 @@
           <a class="nav-link p-2" aria-current="true" href="/6/change-log.html" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Change Log');">Change Log</a>
         </li>
         <li class="nav-item col-6 col-md-auto">
-          <a class="nav-link p-2" href="https://jonathanpeterson.com/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Blog');" target="_blank" rel="noopener">Blog</a>
+          <a class="nav-link p-2" href="https://eonasdan.com/" onclick="ga('send', 'event', 'Navbar', 'Community links', 'Blog');" target="_blank" rel="noopener">Blog</a>
         </li>
       </ul>
 
@@ -266,17 +266,28 @@
     <h1>Version 6</h1>
 
     <div class="row">
-      <h2>6.2.6</h2>
+      <h2>6.2.7</h2>
       <h3>Bug fixes</h3>
       <ul>
-        <li>Fixed disabled/enabled dates performance issue. This also should fix the next/previous month selection #2658</li>
-        <li>Fixed view date syncing across options and not updating correctly #2611</li>
+        <li>Fixed customDateFormat shows 'undefined' when you manually erase the date #2693</li>
+        <li>Fixed calendar header not updating correctly #2685</li>
+        <li>Fixed clock components disappearing when using side by side #2684</li>
+        <li>Fixed some doc issues #2706</li>
       </ul>
       <h3>New</h3>
       <ul>
+        <li>Unit tests! #2711</li>
+    </ul>
+  </div>
 
-      </ul>
-    </div>
+  <div class="row">
+    <h2>6.2.6</h2>
+    <h3>Bug fixes</h3>
+    <ul>
+      <li>Fixed disabled/enabled dates performance issue. This also should fix the next/previous month selection #2658</li>
+      <li>Fixed view date syncing across options and not updating correctly #2611</li>
+    </ul>
+  </div>
 
     <div class="row">
       <h2>6.2.5</h2>
@@ -356,12 +367,12 @@
           <span class="fs-5">Tempus Dominus</span>
         </a>
         <ul class="list-unstyled small text-muted">
-          <li class="mb-2">Created by the <a href="https://jonathanpeterson.com">Eonasdan (Jonathan Peterson)</a> with the help
+          <li class="mb-2">Created by the <a href="https://eonasdan.com">Eonasdan (Jonathan Peterson)</a> with the help
             of <a href="https://github.com/Eonasdan/tempus-dominus/graphs/contributors">our contributors</a>.
           </li>
           <li class="mb-2">Code licensed <a href="https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE" target="_blank" rel="license noopener">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY 3.0</a>.
           </li>
-          <li class="mb-2">Currently v6.2.6</li>
+          <li class="mb-2">Currently v6.2.7</li>
         </ul>
       </div>
       <div class="col-6 col-lg-2 offset-lg-1 mb-3">
@@ -369,7 +380,7 @@
         <ul class="list-unstyled">
           <li class="mb-2"><a href="/">Home</a></li>
           <li class="mb-2"><a href="/docs/6/">Docs</a></li>
-          <li class="mb-2"><a href="https://jonathanpeterson.com">Blog</a></li>
+          <li class="mb-2"><a href="https://eonasdan.com">Blog</a></li>
         </ul>
       </div>
       <div class="col-6 col-lg-2 mb-3">
@@ -414,6 +425,17 @@
     'floating-chat.donateButton.background-color': '#323842',
     'floating-chat.donateButton.text-color': '#fff'
   });
+</script>
+
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-CL5K7E80FB"></script>
+<script>
+  if (location.hostname === 'getdatepicker.com') {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-CL5K7E80FB');
+  }
 </script>
 <link rel="stylesheet" href="/css/carbon.css">
 
