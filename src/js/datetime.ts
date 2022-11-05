@@ -1,3 +1,5 @@
+import { FormatLocalization } from './utilities/options';
+
 export enum Unit {
   seconds = 'seconds',
   minutes = 'minutes',
@@ -67,7 +69,7 @@ export class DateTime extends Date {
    * @param  date
    * @param locale
    */
-  static convert(date: Date, locale: string = 'default'): DateTime {
+  static convert(date: Date, locale = 'default'): DateTime {
     if (!date) throw new Error(`A date is required`);
     return new DateTime(
       date.getFullYear(),
@@ -85,7 +87,8 @@ export class DateTime extends Date {
    * @param input
    * @param localization
    */
-  static fromString(input: string, localization: any): DateTime {
+  static fromString(input: string, localization: FormatLocalization): DateTime {
+    //eslint-disable-line @typescript-eslint/no-unused-vars
     return new DateTime(input);
   }
 
@@ -127,7 +130,7 @@ export class DateTime extends Date {
       case 'date':
         this.setHours(0, 0, 0, 0);
         break;
-      case 'weekDay':
+      case 'weekDay': {
         this.startOf(Unit.date);
         if (this.weekDay === startOfTheWeek) break;
         let goBack = this.weekDay;
@@ -135,6 +138,7 @@ export class DateTime extends Date {
           goBack = 8 - startOfTheWeek;
         this.manipulate(startOfTheWeek - goBack, Unit.date);
         break;
+      }
       case 'month':
         this.startOf(Unit.date);
         this.setDate(1);
@@ -170,12 +174,13 @@ export class DateTime extends Date {
       case 'date':
         this.setHours(23, 59, 59, 999);
         break;
-      case 'weekDay':
+      case 'weekDay': {
         this.endOf(Unit.date);
         const endOfWeek = 6 + startOfTheWeek;
         if (this.weekDay === endOfWeek) break;
         this.manipulate(endOfWeek - this.weekDay, Unit.date);
         break;
+      }
       case 'month':
         this.endOf(Unit.date);
         this.manipulate(1, Unit.month);
@@ -302,8 +307,8 @@ export class DateTime extends Date {
    */
   parts(
     locale = this.locale,
-    template: any = { dateStyle: 'full', timeStyle: 'long' }
-  ): any {
+    template: Record<string, unknown> = { dateStyle: 'full', timeStyle: 'long' }
+  ): Record<string, string> {
     const parts = {};
     new Intl.DateTimeFormat(locale, template)
       .formatToParts(this)
@@ -392,7 +397,7 @@ export class DateTime extends Date {
     return new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
       hour12: true,
-    } as any)
+    })
       .formatToParts(this)
       .find((p) => p.type === 'dayPeriod')?.value;
   }

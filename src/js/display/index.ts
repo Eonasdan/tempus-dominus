@@ -23,7 +23,7 @@ import { OptionsStore } from '../utilities/optionsStore';
  */
 export default class Display {
   private _widget: HTMLElement;
-  private _popperInstance: any;
+  private _popperInstance: any; // eslint-disable-line  @typescript-eslint/no-explicit-any
   private _isVisible = false;
   private optionsStore: OptionsStore;
   private validation: Validation;
@@ -135,6 +135,8 @@ export default class Display {
    * @param _classes
    * @param _element
    */
+
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   paint(
     _unit: Unit | 'decade',
     _date: DateTime,
@@ -143,6 +145,7 @@ export default class Display {
   ) {
     // implemented in plugin
   }
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   /**
    * Shows the picker and creates a Popper instance if needed.
@@ -278,11 +281,12 @@ export default class Display {
   async createPopup(
     element: HTMLElement,
     widget: HTMLElement,
-    options: any
+    options: any //eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<void> {
     let createPopperFunction;
     if ((window as any)?.Popper) {
-      createPopperFunction = (window as any)?.Popper?.createPopper;
+      //eslint-disable-line @typescript-eslint/no-explicit-any
+      createPopperFunction = (window as any)?.Popper?.createPopper; //eslint-disable-line @typescript-eslint/no-explicit-any
     } else {
       const { createPopper } = await import('@popperjs/core');
       createPopperFunction = createPopper;
@@ -322,7 +326,7 @@ export default class Display {
 
     const datePickerMode =
       CalendarModes[this.optionsStore.currentCalendarViewMode];
-    let picker: HTMLElement = this.widget.querySelector(
+    const picker: HTMLElement = this.widget.querySelector(
       `.${datePickerMode.className}`
     );
 
@@ -762,7 +766,7 @@ export default class Display {
    * @param e MouseEvent
    */
   private _documentClickEvent = (e: MouseEvent) => {
-    if (this.optionsStore.options.debug || (window as any).debug) return;
+    if (this.optionsStore.options.debug || (window as any).debug) return; //eslint-disable-line @typescript-eslint/no-explicit-any
 
     if (
       this._isVisible &&

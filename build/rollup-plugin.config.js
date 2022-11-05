@@ -14,7 +14,7 @@ module.exports = (config) => {
       input,
       external: ['tempusDominus'],
       plugins: [
-        ignore(['DateTime', 'ErrorMessages']),
+        ignore(['DateTime', 'ErrorMessages', 'FormatLocalization']),
         typescript({
           tsconfig: (resolvedConfig) => ({
             ...resolvedConfig,

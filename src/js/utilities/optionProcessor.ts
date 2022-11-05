@@ -8,7 +8,7 @@ import {
 
 interface OptionProcessorFunctionArguments {
   key: string;
-  value: any;
+  value: any; //eslint-disable-line @typescript-eslint/no-explicit-any
   providedType: string;
   defaultType: string;
   path: string;
@@ -18,7 +18,7 @@ interface OptionProcessorFunctionArguments {
 type OptionProcessorFunction = (
   this: void,
   args: OptionProcessorFunctionArguments
-) => any;
+) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
 
 function mandatoryDate(key: string): OptionProcessorFunction {
   return ({ value, providedType, localization }) => {
@@ -105,7 +105,7 @@ const optionProcessors: { [key: string]: OptionProcessorFunction } =
           'array of { from: DateTime|Date, to: DateTime|Date }'
         );
       }
-      const valueObject = value as { from: any; to: any }[];
+      const valueObject = value as { from: any; to: any }[]; //eslint-disable-line @typescript-eslint/no-explicit-any
       for (let i = 0; i < valueObject.length; i++) {
         Object.keys(valueObject[i]).forEach((vk) => {
           const subOptionName = `${key}[${i}].${vk}`;

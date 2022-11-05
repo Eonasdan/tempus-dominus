@@ -10,15 +10,15 @@ import { FormatLocalization } from './options';
  */
 export function tryConvertToDateTime(
   this: void,
-  d: any,
+  d: DateTime | Date | '',
   localization: FormatLocalization
 ): DateTime | null {
-  if (d.constructor.name === DateTime.name) return d;
+  if (d.constructor.name === DateTime.name) return d as DateTime;
   if (d.constructor.name === Date.name) {
-    return DateTime.convert(d);
+    return DateTime.convert(d as Date);
   }
   if (typeof d === typeof '') {
-    const dateTime = DateTime.fromString(d, localization);
+    const dateTime = DateTime.fromString(d as string, localization);
     if (JSON.stringify(dateTime) === 'null') {
       return null;
     }
@@ -35,7 +35,7 @@ export function tryConvertToDateTime(
  */
 export function convertToDateTime(
   this: void,
-  d: any,
+  d: DateTime | Date | '',
   optionName: string,
   localization: FormatLocalization
 ): DateTime {
@@ -65,7 +65,7 @@ export function convertToDateTime(
 export function typeCheckDateArray(
   this: void,
   optionName: string,
-  value: any,
+  value: any, //eslint-disable-line @typescript-eslint/no-explicit-any
   providedType: string,
   localization: FormatLocalization
 ) {
@@ -100,7 +100,7 @@ export function typeCheckDateArray(
 export function typeCheckNumberArray(
   this: void,
   optionName: string,
-  value: any,
+  value: any, //eslint-disable-line @typescript-eslint/no-explicit-any
   providedType: string
 ) {
   if (!Array.isArray(value) || value.some((x) => typeof x !== typeof 0)) {

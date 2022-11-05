@@ -1,3 +1,5 @@
+/* eslint-disable  @typescript-eslint/ban-ts-comment */
+
 import { expect, test } from 'vitest';
 import { DateTime, getFormatByUnit, Unit } from '../src/js/datetime';
 

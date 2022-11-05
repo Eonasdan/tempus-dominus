@@ -1,12 +1,26 @@
 import { DateTime } from '../../js/datetime';
 import { ErrorMessages } from '../../js/utilities/errors';
+import { FormatLocalization } from '../../js/utilities/options';
+
+type parsedTime = {
+  year?: number;
+  month?: number;
+  day?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  milliseconds?: number;
+  zone?: {
+    offset: number;
+  };
+};
 
 class CustomDateFormat {
-  localization: any;
+  localization: FormatLocalization;
   private readonly DateTime: typeof DateTime;
   private readonly errorMessages: ErrorMessages;
 
-  constructor(dateTime, errorMessages: any) {
+  constructor(dateTime, errorMessages) {
     this.DateTime = dateTime;
     this.errorMessages = errorMessages;
   }
@@ -155,7 +169,7 @@ class CustomDateFormat {
         [ojb.day] = input.match(/\d+/);
         if (!this.localization.ordinal) return;
         for (let i = 1; i <= 31; i += 1) {
-          if (this.localization.ordinal(i).replace(/[\[\]]/g, '') === input) {
+          if (this.localization.ordinal(i).replace(/[[\]]/g, '') === input) {
             ojb.day = i;
           }
         }
@@ -231,7 +245,7 @@ class CustomDateFormat {
       }
     }
 
-    return (input) => {
+    return (input): parsedTime => {
       const time = {};
       for (let i = 0, start = 0; i < length; i += 1) {
         const token = array[i];
@@ -262,7 +276,7 @@ class CustomDateFormat {
         );
       const parser = this.makeParser(this.localization.format);
       const { year, month, day, hours, minutes, seconds, milliseconds, zone } =
-        parser(input) as any;
+        parser(input);
       const now = new this.DateTime();
       const d = day || (!year && !month ? now.getDate() : 1);
       const y = year || now.getFullYear();
@@ -336,7 +350,7 @@ class CustomDateFormat {
   }
 }
 
-export default (_, tdClasses, __) => {
+export default (_, tdClasses) => {
   const customDateFormat = new CustomDateFormat(
     tdClasses.DateTime,
     tdClasses.Namespace.errorMessages
@@ -355,7 +369,10 @@ export default (_, tdClasses, __) => {
     return customDateFormat.parseFormattedInput(input);
   };
 
-  tdClasses.DateTime.fromString = function (input: string, localization: any) {
+  tdClasses.DateTime.fromString = function (
+    input: string,
+    localization: FormatLocalization
+  ) {
     customDateFormat.localization = localization;
     return customDateFormat.parseFormattedInput(input);
   };

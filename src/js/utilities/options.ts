@@ -58,7 +58,7 @@ export default interface Options {
   multipleDatesSeparator?: string;
   promptTimeOnDateChange?: boolean;
   promptTimeOnDateChangeTransitionDelay?: number;
-  meta?: {};
+  meta?: Record<string, unknown>;
   container?: HTMLElement;
 }
 
@@ -72,7 +72,7 @@ export interface FormatLocalization {
     LLL?: string;
     LLLL?: string;
   };
-  ordinal?: (n: number) => any;
+  ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
   format?: string;
 }
 

@@ -35,7 +35,7 @@
     "release": "npm run test:silent && npm run build && npm run build:declarations",
     "release:version": "npm run release && node build/change-version.js",
     "prepare": "husky install",
-    "eslint": "npx eslint **/*"
+    "eslint": "npx eslint  --ext .html,.ts ."
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

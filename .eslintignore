@@ -1,14 +1,9 @@
 **/dist/
 **/docs/
-**/node_modules/
 **/coverage/
 **/.husky/
 **/types/
-**/nuget/
-**/*.json
-**/*.png
-**/*.md
-/td logo.xcf
-/.eslintrc.yml
-/CNAME
-/LICENSE
+**/build/
+
+#temporary
+/test/test-import.ts

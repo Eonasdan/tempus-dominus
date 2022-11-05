@@ -24,10 +24,11 @@ import { OptionConverter } from './utilities/optionConverter';
  * A robust and powerful date/time picker component.
  */
 class TempusDominus {
-  _subscribers: { [key: string]: ((event: any) => {})[] } = {};
+  _subscribers: { [key: string]: ((event: any) => Record<string, unknown>)[] } =
+    {}; //eslint-disable-line @typescript-eslint/no-explicit-any
   private _isDisabled = false;
   private _toggle: HTMLElement;
-  private _currentPromptTimeTimeout: any;
+  private _currentPromptTimeTimeout: NodeJS.Timeout;
   private actions: Actions;
   private optionsStore: OptionsStore;
   private _eventEmitters: EventEmitters;
@@ -169,12 +170,12 @@ class TempusDominus {
    */
   subscribe(
     eventTypes: string | string[],
-    callbacks: (event: any) => void | ((event: any) => void)[]
+    callbacks: (event: any) => void | ((event: any) => void)[] //eslint-disable-line @typescript-eslint/no-explicit-any
   ): { unsubscribe: () => void } | { unsubscribe: () => void }[] {
     if (typeof eventTypes === 'string') {
       eventTypes = [eventTypes];
     }
-    let callBackArray: any[];
+    let callBackArray: any[]; //eslint-disable-line @typescript-eslint/no-explicit-any
     if (!Array.isArray(callbacks)) {
       callBackArray = [callbacks];
     } else {
@@ -268,20 +269,21 @@ class TempusDominus {
       this._handleAfterChangeEvent(event as ChangeEvent);
 
       this.optionsStore.input?.dispatchEvent(
-        new CustomEvent(event.type, { detail: event as any })
+        new CustomEvent(event.type, { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
       );
 
       this.optionsStore.input?.dispatchEvent(
-        new CustomEvent('change', { detail: event as any })
+        new CustomEvent('change', { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
       );
     }
 
     this.optionsStore.element.dispatchEvent(
-      new CustomEvent(event.type, { detail: event as any })
+      new CustomEvent(event.type, { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
     );
 
     if ((window as any).jQuery) {
-      const $ = (window as any).jQuery;
+      //eslint-disable-line @typescript-eslint/no-explicit-any
+      const $ = (window as any).jQuery; //eslint-disable-line @typescript-eslint/no-explicit-any
 
       if (isChangeEvent && this.optionsStore.input) {
         $(this.optionsStore.input).trigger(event);
@@ -496,6 +498,7 @@ class TempusDominus {
    * @private
    */
   private _inputChangeEvent = (event?: any) => {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
     const internallyTriggered = event?.detail;
     if (internallyTriggered) return;
 
@@ -532,7 +535,7 @@ class TempusDominus {
    */
   private _toggleClickEvent = () => {
     if (
-      (this.optionsStore.element as any)?.disabled ||
+      (this.optionsStore.element as HTMLInputElement)?.disabled ||
       this.optionsStore.input?.disabled
     )
       return;

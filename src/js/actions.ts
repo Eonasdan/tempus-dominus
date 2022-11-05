@@ -38,6 +38,7 @@ export default class Actions {
    * @param action If not provided, then look for a [data-action]
    */
   do(e: any, action?: ActionTypes) {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
     const currentTarget = e?.currentTarget;
     if (currentTarget?.classList?.contains(Namespace.css.disabled))
       return false;
@@ -57,64 +58,12 @@ export default class Actions {
       case ActionTypes.selectMonth:
       case ActionTypes.selectYear:
       case ActionTypes.selectDecade:
-        const value = +currentTarget.dataset.value;
-        switch (action) {
-          case ActionTypes.selectMonth:
-            this.optionsStore.viewDate.month = value;
-            break;
-          case ActionTypes.selectYear:
-          case ActionTypes.selectDecade:
-            this.optionsStore.viewDate.year = value;
-            break;
-        }
-
-        if (
-          this.optionsStore.currentCalendarViewMode ===
-          this.optionsStore.minimumCalendarViewMode
-        ) {
-          this.dates.setValue(
-            this.optionsStore.viewDate,
-            this.dates.lastPickedIndex
-          );
-          if (!this.optionsStore.options.display.inline) {
-            this.display.hide();
-          }
-        } else {
-          this.display._showMode(-1);
-        }
+        this.handleSelectCalendarMode(action, currentTarget);
         break;
       case ActionTypes.selectDay:
-        const day = this.optionsStore.viewDate.clone;
-        if (currentTarget.classList.contains(Namespace.css.old)) {
-          day.manipulate(-1, Unit.month);
-        }
-        if (currentTarget.classList.contains(Namespace.css.new)) {
-          day.manipulate(1, Unit.month);
-        }
-
-        day.date = +currentTarget.dataset.day;
-        let index = 0;
-        if (this.optionsStore.options.multipleDates) {
-          index = this.dates.pickedIndex(day, Unit.date);
-          if (index !== -1) {
-            this.dates.setValue(null, index); //deselect multi-date
-          } else {
-            this.dates.setValue(day, this.dates.lastPickedIndex + 1);
-          }
-        } else {
-          this.dates.setValue(day, this.dates.lastPickedIndex);
-        }
-
-        if (
-          !this.display._hasTime &&
-          !this.optionsStore.options.display.keepOpen &&
-          !this.optionsStore.options.display.inline &&
-          !this.optionsStore.options.multipleDates
-        ) {
-          this.display.hide();
-        }
+        this.handleSelectDay(currentTarget);
         break;
-      case ActionTypes.selectHour:
+      case ActionTypes.selectHour: {
         let hour = +currentTarget.dataset.value;
         if (
           lastPicked.hours >= 12 &&
@@ -125,16 +74,19 @@ export default class Actions {
         this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         this.hideOrClock(e);
         break;
-      case ActionTypes.selectMinute:
+      }
+      case ActionTypes.selectMinute: {
         lastPicked.minutes = +currentTarget.dataset.value;
         this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         this.hideOrClock(e);
         break;
-      case ActionTypes.selectSecond:
+      }
+      case ActionTypes.selectSecond: {
         lastPicked.seconds = +currentTarget.dataset.value;
         this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         this.hideOrClock(e);
         break;
+      }
       case ActionTypes.incrementHours:
         this.manipulateAndSet(lastPicked, Unit.hours);
         break;
@@ -169,40 +121,7 @@ export default class Actions {
         );
         break;
       case ActionTypes.togglePicker:
-        if (
-          currentTarget.getAttribute('title') ===
-          this.optionsStore.options.localization.selectDate
-        ) {
-          currentTarget.setAttribute(
-            'title',
-            this.optionsStore.options.localization.selectTime
-          );
-          currentTarget.innerHTML = this.display._iconTag(
-            this.optionsStore.options.display.icons.time
-          ).outerHTML;
-
-          this.display._updateCalendarHeader();
-          this.optionsStore.refreshCurrentView();
-        } else {
-          currentTarget.setAttribute(
-            'title',
-            this.optionsStore.options.localization.selectDate
-          );
-          currentTarget.innerHTML = this.display._iconTag(
-            this.optionsStore.options.display.icons.date
-          ).outerHTML;
-          if (this.display._hasTime) {
-            this.handleShowClockContainers(ActionTypes.showClock);
-            this.display._update('clock');
-          }
-        }
-
-        this.display.widget
-          .querySelectorAll(
-            `.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`
-          )
-          .forEach((htmlElement: HTMLElement) => Collapse.toggle(htmlElement));
-        this._eventEmitters.viewUpdate.emit();
+        this.handleToggle(currentTarget);
         break;
       case ActionTypes.showClock:
       case ActionTypes.showHours:
@@ -235,7 +154,7 @@ export default class Actions {
       case ActionTypes.close:
         this.display.hide();
         break;
-      case ActionTypes.today:
+      case ActionTypes.today: {
         const today = new DateTime().setLocale(
           this.optionsStore.options.localization.locale
         );
@@ -245,6 +164,7 @@ export default class Actions {
         if (this.validation.isValid(today, Unit.date))
           this.dates.setValue(today, this.dates.lastPickedIndex);
         break;
+      }
     }
   }
 
@@ -326,6 +246,112 @@ export default class Actions {
     const newDate = lastPicked.manipulate(value, unit);
     if (this.validation.isValid(newDate, unit)) {
       this.dates.setValue(newDate, this.dates.lastPickedIndex);
+    }
+  }
+
+  private handleSelectCalendarMode(
+    action:
+      | ActionTypes.selectMonth
+      | ActionTypes.selectYear
+      | ActionTypes.selectDecade,
+    currentTarget: any
+  ) {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
+    const value = +currentTarget.dataset.value;
+    switch (action) {
+      case ActionTypes.selectMonth:
+        this.optionsStore.viewDate.month = value;
+        break;
+      case ActionTypes.selectYear:
+      case ActionTypes.selectDecade:
+        this.optionsStore.viewDate.year = value;
+        break;
+    }
+
+    if (
+      this.optionsStore.currentCalendarViewMode ===
+      this.optionsStore.minimumCalendarViewMode
+    ) {
+      this.dates.setValue(
+        this.optionsStore.viewDate,
+        this.dates.lastPickedIndex
+      );
+      if (!this.optionsStore.options.display.inline) {
+        this.display.hide();
+      }
+    } else {
+      this.display._showMode(-1);
+    }
+  }
+
+  private handleToggle(currentTarget: any) {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
+    if (
+      currentTarget.getAttribute('title') ===
+      this.optionsStore.options.localization.selectDate
+    ) {
+      currentTarget.setAttribute(
+        'title',
+        this.optionsStore.options.localization.selectTime
+      );
+      currentTarget.innerHTML = this.display._iconTag(
+        this.optionsStore.options.display.icons.time
+      ).outerHTML;
+
+      this.display._updateCalendarHeader();
+      this.optionsStore.refreshCurrentView();
+    } else {
+      currentTarget.setAttribute(
+        'title',
+        this.optionsStore.options.localization.selectDate
+      );
+      currentTarget.innerHTML = this.display._iconTag(
+        this.optionsStore.options.display.icons.date
+      ).outerHTML;
+      if (this.display._hasTime) {
+        this.handleShowClockContainers(ActionTypes.showClock);
+        this.display._update('clock');
+      }
+    }
+
+    this.display.widget
+      .querySelectorAll(
+        `.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`
+      )
+      .forEach((htmlElement: HTMLElement) => Collapse.toggle(htmlElement));
+    this._eventEmitters.viewUpdate.emit();
+  }
+
+  private handleSelectDay(currentTarget: any) {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
+    const day = this.optionsStore.viewDate.clone;
+    if (currentTarget.classList.contains(Namespace.css.old)) {
+      day.manipulate(-1, Unit.month);
+    }
+    if (currentTarget.classList.contains(Namespace.css.new)) {
+      day.manipulate(1, Unit.month);
+    }
+
+    day.date = +currentTarget.dataset.day;
+    let index = 0;
+    if (this.optionsStore.options.multipleDates) {
+      index = this.dates.pickedIndex(day, Unit.date);
+      if (index !== -1) {
+        this.dates.setValue(null, index); //deselect multi-date
+      } else {
+        this.dates.setValue(day, this.dates.lastPickedIndex + 1);
+      }
+    } else {
+      this.dates.setValue(day, this.dates.lastPickedIndex);
+    }
+
+    if (
+      !this.display._hasTime &&
+      !this.optionsStore.options.display.keepOpen &&
+      !this.optionsStore.options.display.inline &&
+      !this.optionsStore.options.multipleDates
+    ) {
+      this.display.hide();
     }
   }
 }

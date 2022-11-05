@@ -69,6 +69,7 @@ export default class Dates {
    * this can be overwritten to supply your own parsing.
    */
   parseInput(value: any): DateTime {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
     return OptionConverter.dateConversion(
       value,
       'input',
@@ -83,6 +84,7 @@ export default class Dates {
    * @param index When using multidates this is the index in the array
    */
   setFromInput(value: any, index?: number) {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
     if (!value) {
       this.setValue(undefined, index);
       return;

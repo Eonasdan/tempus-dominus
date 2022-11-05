@@ -145,7 +145,7 @@ export class OptionConverter {
 
   static processKey(
     key: string,
-    value: any,
+    value: any, //eslint-disable-line @typescript-eslint/no-explicit-any
     providedType: string,
     defaultType: string,
     path: string,
@@ -202,8 +202,8 @@ export class OptionConverter {
     const rabbitHole = (
       split: string[],
       index: number,
-      optionSubgroup: {},
-      value: any
+      optionSubgroup: unknown,
+      value: unknown
     ) => {
       // first round = display { ... }
       const normalizedOptions = objectToNormalized(optionSubgroup);
@@ -270,7 +270,7 @@ export class OptionConverter {
    * @private
    */
   static _dateTypeCheck(
-    d: any,
+    d: unknown,
     localization: FormatLocalization
   ): DateTime | null {
     return tryConvertToDateTime(d, localization);
@@ -313,7 +313,7 @@ export class OptionConverter {
    * @param localization object containing locale and format settings. Only used with the custom formats
    */
   static dateConversion(
-    d: any,
+    d: unknown,
     optionName: string,
     localization: FormatLocalization
   ): DateTime {
