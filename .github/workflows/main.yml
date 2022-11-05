@@ -27,8 +27,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
       - name: Npm install
         run: npm ci
+      - name: Unit tests
+        run: npm run test:silent
       - name: Build docs
         run: npm run docs

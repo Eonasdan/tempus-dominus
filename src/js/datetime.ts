@@ -15,12 +15,12 @@ const twoDigitTemplate = {
   minute: '2-digit',
   second: '2-digit',
   hour12: true,
-}
+};
 
 const twoDigitTwentyFourTemplate = {
   hour: '2-digit',
-  hour12: false
-}
+  hour12: false,
+};
 
 export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
   timeStyle?: 'short' | 'medium' | 'long';
@@ -35,7 +35,7 @@ export const getFormatByUnit = (unit: Unit): object => {
     case 'month':
       return {
         month: 'numeric',
-        year: 'numeric'
+        year: 'numeric',
       };
     case 'year':
       return { year: 'numeric' };
@@ -112,7 +112,8 @@ export class DateTime extends Date {
    * @param startOfTheWeek Allows for the changing the start of the week.
    */
   startOf(unit: Unit | 'weekDay', startOfTheWeek = 0): this {
-    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
+    if (this[unit] === undefined)
+      throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
       case 'seconds':
         this.setMilliseconds(0);
@@ -130,7 +131,8 @@ export class DateTime extends Date {
         this.startOf(Unit.date);
         if (this.weekDay === startOfTheWeek) break;
         let goBack = this.weekDay;
-        if (startOfTheWeek !== 0 && this.weekDay === 0) goBack = 8 - startOfTheWeek;
+        if (startOfTheWeek !== 0 && this.weekDay === 0)
+          goBack = 8 - startOfTheWeek;
         this.manipulate(startOfTheWeek - goBack, Unit.date);
         break;
       case 'month':
@@ -153,7 +155,8 @@ export class DateTime extends Date {
    * @param startOfTheWeek
    */
   endOf(unit: Unit | 'weekDay', startOfTheWeek = 0): this {
-    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
+    if (this[unit] === undefined)
+      throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
       case 'seconds':
         this.setMilliseconds(999);
@@ -169,7 +172,7 @@ export class DateTime extends Date {
         break;
       case 'weekDay':
         this.endOf(Unit.date);
-        const endOfWeek = (6 + startOfTheWeek);
+        const endOfWeek = 6 + startOfTheWeek;
         if (this.weekDay === endOfWeek) break;
         this.manipulate(endOfWeek - this.weekDay, Unit.date);
         break;
@@ -194,7 +197,8 @@ export class DateTime extends Date {
    * @param unit
    */
   manipulate(value: number, unit: Unit): this {
-    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
+    if (this[unit] === undefined)
+      throw new Error(`Unit '${unit}' is not valid`);
     this[unit] += value;
     return this;
   }
@@ -218,7 +222,8 @@ export class DateTime extends Date {
    */
   isBefore(compare: DateTime, unit?: Unit): boolean {
     if (!unit) return this.valueOf() < compare.valueOf();
-    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
+    if (this[unit] === undefined)
+      throw new Error(`Unit '${unit}' is not valid`);
     return (
       this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf()
     );
@@ -232,7 +237,8 @@ export class DateTime extends Date {
    */
   isAfter(compare: DateTime, unit?: Unit): boolean {
     if (!unit) return this.valueOf() > compare.valueOf();
-    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
+    if (this[unit] === undefined)
+      throw new Error(`Unit '${unit}' is not valid`);
     return (
       this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf()
     );
@@ -246,7 +252,8 @@ export class DateTime extends Date {
    */
   isSame(compare: DateTime, unit?: Unit): boolean {
     if (!unit) return this.valueOf() === compare.valueOf();
-    if (this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
+    if (this[unit] === undefined)
+      throw new Error(`Unit '${unit}' is not valid`);
     compare = DateTime.convert(compare);
     return (
       this.clone.startOf(unit).valueOf() === compare.startOf(unit).valueOf()
@@ -267,22 +274,25 @@ export class DateTime extends Date {
     unit?: Unit,
     inclusivity: '()' | '[]' | '(]' | '[)' = '()'
   ): boolean {
-    if (unit && this[unit] === undefined) throw new Error(`Unit '${unit}' is not valid`);
+    if (unit && this[unit] === undefined)
+      throw new Error(`Unit '${unit}' is not valid`);
     const leftInclusivity = inclusivity[0] === '(';
     const rightInclusivity = inclusivity[1] === ')';
 
-    return (leftInclusivity
+    return (
+      ((leftInclusivity
         ? this.isAfter(left, unit)
         : !this.isBefore(left, unit)) &&
-      (rightInclusivity
-        ? this.isBefore(right, unit)
-        : !this.isAfter(right, unit)) ||
-    (leftInclusivity
+        (rightInclusivity
+          ? this.isBefore(right, unit)
+          : !this.isAfter(right, unit))) ||
+      ((leftInclusivity
         ? this.isBefore(left, unit)
         : !this.isAfter(left, unit)) &&
-      (rightInclusivity
-        ? this.isAfter(right, unit)
-        : !this.isBefore(right, unit));
+        (rightInclusivity
+          ? this.isAfter(right, unit)
+          : !this.isBefore(right, unit)))
+    );
   }
 
   /**
@@ -381,7 +391,7 @@ export class DateTime extends Date {
   meridiem(locale: string = this.locale): string {
     return new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
-      hour12: true
+      hour12: true,
     } as any)
       .formatToParts(this)
       .find((p) => p.type === 'dayPeriod')?.value;
@@ -493,13 +503,20 @@ export class DateTime extends Date {
   }
 
   get isLeapYear() {
-    return this.year % 4 === 0 && (this.year % 100 !== 0 || this.year % 400 === 0);
+    return (
+      this.year % 4 === 0 && (this.year % 100 !== 0 || this.year % 400 === 0)
+    );
   }
 
   private computeOrdinal() {
-    return this.date + (this.isLeapYear ? this.leapLadder : this.nonLeapLadder)[this.month];
+    return (
+      this.date +
+      (this.isLeapYear ? this.leapLadder : this.nonLeapLadder)[this.month]
+    );
   }
 
-  private nonLeapLadder = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+  private nonLeapLadder = [
+    0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334,
+  ];
   private leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
 }

@@ -1,12 +1,12 @@
 const typescript = require('rollup-plugin-ts');
 import postcss from 'rollup-plugin-postcss';
-import { terser } from "rollup-plugin-terser";
+import { terser } from 'rollup-plugin-terser';
 
 const pkg = require('../package.json');
 const banner = require('./banner.js');
 
 const globals = {
-  '@popperjs/core': 'Popper'
+  '@popperjs/core': 'Popper',
 };
 
 export default [
@@ -19,7 +19,7 @@ export default [
         format: 'umd',
         name: 'tempusDominus',
         sourcemap: true,
-        globals
+        globals,
       },
       {
         banner,
@@ -27,67 +27,65 @@ export default [
         format: 'es',
         name: 'tempusDominus',
         sourcemap: true,
-        globals
+        globals,
       },
       {
         banner,
-        file: `${pkg.main.replace('.js','')}.min.js`,
+        file: `${pkg.main.replace('.js', '')}.min.js`,
         format: 'umd',
         name: 'tempusDominus',
-        globals, 
-        plugins: [terser()]
+        globals,
+        plugins: [terser()],
       },
       {
         banner,
-        file: `${pkg.module.replace('.js','')}.min.js`,
+        file: `${pkg.module.replace('.js', '')}.min.js`,
         format: 'es',
         name: 'tempusDominus',
         globals,
-        plugins: [terser()]
-      }
+        plugins: [terser()],
+      },
     ],
     external: ['@popperjs/core'],
-    plugins: [
-      typescript()
-    ]
+    plugins: [typescript()],
   },
   {
     input: 'dist/js/jQuery-provider.js',
     output: [
       {
         file: 'dist/js/jQuery-provider.min.js',
-      }
+      },
     ],
-    plugins: [terser()]
+    plugins: [terser()],
   },
   {
     input: 'src/scss/tempus-dominus.scss',
     output: [
       {
         banner,
-        file: 'dist/css/tempus-dominus.css'
-      }
+        file: 'dist/css/tempus-dominus.css',
+      },
     ],
     plugins: [
       postcss({
         sourceMap: true,
-        extract: true
-      })
-    ]
+        extract: true,
+      }),
+    ],
   },
   {
     input: 'src/scss/tempus-dominus.scss',
     output: [
       {
         banner,
-        file: 'dist/css/tempus-dominus.min.css'
-      }
+        file: 'dist/css/tempus-dominus.min.css',
+      },
     ],
     plugins: [
       postcss({
         extract: true,
-        minimize: true
-      })
-    ]
-  }
+        minimize: true,
+      }),
+    ],
+  },
 ];

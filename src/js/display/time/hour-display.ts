@@ -4,7 +4,7 @@ import Validation from '../../validation';
 import { serviceLocator } from '../../utilities/service-locator';
 import { Paint } from '../index';
 import ActionTypes from '../../utilities/action-types';
-import {OptionsStore} from "../../utilities/optionsStore";
+import { OptionsStore } from '../../utilities/optionsStore';
 
 /**
  * Creates and updates the grid for `hours`
@@ -28,7 +28,9 @@ export default class HourDisplay {
     for (
       let i = 0;
       i <
-      (this.optionsStore.options.display.components.useTwentyfourHour ? 24 : 12);
+      (this.optionsStore.options.display.components.useTwentyfourHour
+        ? 24
+        : 12);
       i++
     ) {
       const div = document.createElement('div');

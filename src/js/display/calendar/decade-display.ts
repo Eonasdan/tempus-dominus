@@ -1,11 +1,11 @@
-import Dates from "../../dates";
-import { DateTime, Unit } from "../../datetime";
-import Namespace from "../../utilities/namespace";
-import Validation from "../../validation";
-import { Paint } from "../index";
-import { serviceLocator } from "../../utilities/service-locator";
-import ActionTypes from "../../utilities/action-types";
-import { OptionsStore } from "../../utilities/optionsStore";
+import Dates from '../../dates';
+import { DateTime, Unit } from '../../datetime';
+import Namespace from '../../utilities/namespace';
+import Validation from '../../validation';
+import { Paint } from '../index';
+import { serviceLocator } from '../../utilities/service-locator';
+import ActionTypes from '../../utilities/action-types';
+import { OptionsStore } from '../../utilities/optionsStore';
 
 /**
  * Creates and updates the grid for `seconds`
@@ -28,12 +28,12 @@ export default class DecadeDisplay {
    * @private
    */
   getPicker() {
-    const container = document.createElement("div");
+    const container = document.createElement('div');
     container.classList.add(Namespace.css.decadesContainer);
 
     for (let i = 0; i < 12; i++) {
-      const div = document.createElement("div");
-      div.setAttribute("data-action", ActionTypes.selectDecade);
+      const div = document.createElement('div');
+      div.setAttribute('data-action', ActionTypes.selectDecade);
       container.appendChild(div);
     }
     return container;
@@ -59,12 +59,14 @@ export default class DecadeDisplay {
 
     const [previous, switcher, next] = container.parentElement
       .getElementsByClassName(Namespace.css.calendarHeader)[0]
-      .getElementsByTagName("div");
+      .getElementsByTagName('div');
 
     if (this.optionsStore.currentView === 'decades') {
       switcher.setAttribute(
         Namespace.css.decadesContainer,
-        `${this._startDecade.format({ year: "numeric" })}-${this._endDecade.format({ year: "numeric" })}`
+        `${this._startDecade.format({
+          year: 'numeric',
+        })}-${this._endDecade.format({ year: 'numeric' })}`
       );
 
       this.validation.isValid(this._startDecade, Unit.year)
@@ -83,15 +85,17 @@ export default class DecadeDisplay {
         if (index === 0) {
           containerClone.classList.add(Namespace.css.old);
           if (this._startDecade.year - 10 < 0) {
-            containerClone.textContent = " ";
+            containerClone.textContent = ' ';
             previous.classList.add(Namespace.css.disabled);
             containerClone.classList.add(Namespace.css.disabled);
-            containerClone.setAttribute("data-value", ``);
+            containerClone.setAttribute('data-value', ``);
             return;
           } else {
-            containerClone.innerText = this._startDecade.clone.manipulate(-10, Unit.year).format({ year: "numeric" });
+            containerClone.innerText = this._startDecade.clone
+              .manipulate(-10, Unit.year)
+              .format({ year: 'numeric' });
             containerClone.setAttribute(
-              "data-value",
+              'data-value',
               `${this._startDecade.year}`
             );
             return;
@@ -111,15 +115,14 @@ export default class DecadeDisplay {
           classes.push(Namespace.css.active);
         }
 
-        paint("decade", this._startDecade, classes, containerClone);
+        paint('decade', this._startDecade, classes, containerClone);
 
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
-        containerClone.setAttribute(
-          "data-value",
-          `${this._startDecade.year}`
-        );
-        containerClone.innerText = `${this._startDecade.format({ year: "numeric" })}`;
+        containerClone.setAttribute('data-value', `${this._startDecade.year}`);
+        containerClone.innerText = `${this._startDecade.format({
+          year: 'numeric',
+        })}`;
 
         this._startDecade.manipulate(10, Unit.year);
       });

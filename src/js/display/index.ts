@@ -207,7 +207,7 @@ export default class Display {
         this.optionsStore.options.display.viewMode !== 'clock'
       ) {
         if (this._hasTime) {
-          if(!this.optionsStore.options.display.sideBySide) {
+          if (!this.optionsStore.options.display.sideBySide) {
             Collapse.hideImmediately(
               this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
             );
@@ -275,16 +275,19 @@ export default class Display {
     this._isVisible = true;
   }
 
-  async createPopup(element: HTMLElement, widget: HTMLElement, options: any): Promise<void>  {
+  async createPopup(
+    element: HTMLElement,
+    widget: HTMLElement,
+    options: any
+  ): Promise<void> {
     let createPopperFunction;
-    if((window as any)?.Popper) {
+    if ((window as any)?.Popper) {
       createPopperFunction = (window as any)?.Popper?.createPopper;
-    }
-    else {
+    } else {
       const { createPopper } = await import('@popperjs/core');
       createPopperFunction = createPopper;
     }
-    if(createPopperFunction){
+    if (createPopperFunction) {
       this._popperInstance = createPopperFunction(element, widget, options);
     }
   }
@@ -341,7 +344,9 @@ export default class Display {
     picker.style.display = 'grid';
 
     if (this.optionsStore.options.display.sideBySide)
-      (<HTMLElement>(this.widget.querySelectorAll(`.${Namespace.css.clockContainer}`)[0])).style.display = 'grid';
+      (<HTMLElement>(
+        this.widget.querySelectorAll(`.${Namespace.css.clockContainer}`)[0]
+      )).style.display = 'grid';
 
     this._updateCalendarHeader();
     this._eventEmitters.viewUpdate.emit();
@@ -456,9 +461,12 @@ export default class Display {
           'title',
           this.optionsStore.options.localization.nextMonth
         );
-        switcher.setAttribute(showing, this.optionsStore.viewDate.format(
-          this.optionsStore.options.localization.dayViewHeaderFormat
-        ));
+        switcher.setAttribute(
+          showing,
+          this.optionsStore.viewDate.format(
+            this.optionsStore.options.localization.dayViewHeaderFormat
+          )
+        );
         break;
     }
     switcher.innerText = switcher.getAttribute(showing);

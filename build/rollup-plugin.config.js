@@ -4,7 +4,7 @@ const ignore = require('rollup-plugin-ignore');
 const banner = require('./banner.js');
 const globals = {
   '@popperjs/core': 'Popper',
-  tempusDominus: 'tempusDominus'
+  tempusDominus: 'tempusDominus',
 };
 
 module.exports = (config) => {
@@ -12,15 +12,17 @@ module.exports = (config) => {
   return {
     input: {
       input,
-      external: [
-        'tempusDominus'
-      ],
+      external: ['tempusDominus'],
       plugins: [
         ignore(['DateTime', 'ErrorMessages']),
         typescript({
-          tsconfig: resolvedConfig => ({ ...resolvedConfig, declaration: false, rootDir: "./src" })
-        })
-      ]
+          tsconfig: (resolvedConfig) => ({
+            ...resolvedConfig,
+            declaration: false,
+            rootDir: './src',
+          }),
+        }),
+      ],
     },
     output: {
       banner,
@@ -28,7 +30,7 @@ module.exports = (config) => {
       format: 'umd',
       name: name || 'tempusDominus',
       globals,
-      compact: true
-    }
+      compact: true,
+    },
   };
 };

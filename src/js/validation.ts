@@ -83,7 +83,8 @@ export default class Validation {
       if (
         this.optionsStore.options.restrictions.disabledTimeIntervals.length > 0
       ) {
-        for (let disabledTimeIntervals of this.optionsStore.options.restrictions.disabledTimeIntervals) {
+        for (let disabledTimeIntervals of this.optionsStore.options.restrictions
+          .disabledTimeIntervals) {
           if (
             targetDate.isBetween(
               disabledTimeIntervals.from,
@@ -110,8 +111,9 @@ export default class Validation {
       this.optionsStore.options.restrictions.disabledDates.length === 0
     )
       return false;
-    return this.optionsStore.options.restrictions.disabledDates
-      .find((x) => x.isSame(testDate, Unit.date));
+    return this.optionsStore.options.restrictions.disabledDates.find((x) =>
+      x.isSame(testDate, Unit.date)
+    );
   }
 
   /**
@@ -126,8 +128,9 @@ export default class Validation {
       this.optionsStore.options.restrictions.enabledDates.length === 0
     )
       return true;
-    return this.optionsStore.options.restrictions.enabledDates
-      .find((x) => x.isSame(testDate, Unit.date));
+    return this.optionsStore.options.restrictions.enabledDates.find((x) =>
+      x.isSame(testDate, Unit.date)
+    );
   }
 
   /**

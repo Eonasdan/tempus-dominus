@@ -5,7 +5,7 @@ import Dates from '../../dates';
 import { Paint } from '../index';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
-import {OptionsStore} from "../../utilities/optionsStore";
+import { OptionsStore } from '../../utilities/optionsStore';
 
 /**
  * Creates and updates the grid for `month`
@@ -46,7 +46,7 @@ export default class MonthDisplay {
       Namespace.css.monthsContainer
     )[0];
 
-    if(this.optionsStore.currentView === 'months') {
+    if (this.optionsStore.currentView === 'months') {
       const [previous, switcher, next] = container.parentElement
         .getElementsByClassName(Namespace.css.calendarHeader)[0]
         .getElementsByTagName('div');

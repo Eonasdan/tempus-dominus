@@ -4,7 +4,7 @@ import Validation from '../../validation';
 import Dates from '../../dates';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
-import {OptionsStore} from "../../utilities/optionsStore";
+import { OptionsStore } from '../../utilities/optionsStore';
 
 /**
  * Creates the clock display
@@ -41,13 +41,10 @@ export default class TimeDisplay {
    */
   _update(widget: HTMLElement): void {
     const timesDiv = <HTMLElement>(
-      widget.getElementsByClassName(
-        Namespace.css.clockContainer
-      )[0]
+      widget.getElementsByClassName(Namespace.css.clockContainer)[0]
     );
-    const lastPicked = (
-      this.dates.lastPicked || this.optionsStore.viewDate
-    ).clone;
+    const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
+      .clone;
 
     timesDiv
       .querySelectorAll('.disabled')
@@ -77,7 +74,8 @@ export default class TimeDisplay {
       }
       timesDiv.querySelector<HTMLElement>(
         `[data-time-component=${Unit.hours}]`
-      ).innerText = this.optionsStore.options.display.components.useTwentyfourHour
+      ).innerText = this.optionsStore.options.display.components
+        .useTwentyfourHour
         ? lastPicked.hoursFormatted
         : lastPicked.twelveHoursFormatted;
     }
@@ -170,12 +168,8 @@ export default class TimeDisplay {
       middle = [],
       bottom = [],
       separator = document.createElement('div'),
-      upIcon = iconTag(
-        this.optionsStore.options.display.icons.up
-      ),
-      downIcon = iconTag(
-        this.optionsStore.options.display.icons.down
-      );
+      upIcon = iconTag(this.optionsStore.options.display.icons.up),
+      downIcon = iconTag(this.optionsStore.options.display.icons.down);
 
     separator.classList.add(Namespace.css.separator, Namespace.css.noHighlight);
     const separatorColon = <HTMLElement>separator.cloneNode(true);
@@ -301,10 +295,10 @@ export default class TimeDisplay {
       );
       button.setAttribute('data-action', ActionTypes.toggleMeridiem);
       button.setAttribute('tabindex', '-1');
-      if (Namespace.css.toggleMeridiem.includes(',')) { //todo move this to paint function?
+      if (Namespace.css.toggleMeridiem.includes(',')) {
+        //todo move this to paint function?
         button.classList.add(...Namespace.css.toggleMeridiem.split(','));
-      }
-      else button.classList.add(Namespace.css.toggleMeridiem);
+      } else button.classList.add(Namespace.css.toggleMeridiem);
 
       divElement = document.createElement('div');
       divElement.classList.add(Namespace.css.noHighlight);

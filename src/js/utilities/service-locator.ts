@@ -13,6 +13,6 @@ class ServiceLocator {
 }
 export const setupServiceLocator = () => {
   serviceLocator = new ServiceLocator();
-}
+};
 
 export let serviceLocator: ServiceLocator;

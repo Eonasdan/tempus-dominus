@@ -136,9 +136,7 @@ export class ErrorMessages {
    * customDateFormat errors
    */
   customDateFormatError(message?: string) {
-    const error = new TdError(
-      `${this.base} customDateFormat: ${message}`
-    );
+    const error = new TdError(`${this.base} customDateFormat: ${message}`);
     error.code = 9;
     throw error;
   }
@@ -154,9 +152,7 @@ export class ErrorMessages {
   }
 
   throwError(message) {
-    const error = new TdError(
-        `${this.base} ${message}`
-    );
+    const error = new TdError(`${this.base} ${message}`);
     error.code = 9;
     throw error;
   }

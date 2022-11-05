@@ -65,12 +65,12 @@ export default interface Options {
 export interface FormatLocalization {
   locale?: string;
   dateFormats?: {
-    LTS?: string,
-    LT?: string,
-    L?: string,
-    LL?: string,
-    LLL?: string,
-    LLLL?: string,
+    LTS?: string;
+    LT?: string;
+    L?: string;
+    LL?: string;
+    LLL?: string;
+    LLLL?: string;
   };
   ordinal?: (n: number) => any;
   format?: string;

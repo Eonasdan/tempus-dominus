@@ -3,12 +3,21 @@ import { DateTime } from '../datetime';
 import DefaultOptions from './default-options';
 import Options, { FormatLocalization } from './options';
 import { processKey } from './optionProcessor';
-import { convertToDateTime, tryConvertToDateTime, typeCheckDateArray, typeCheckNumberArray } from './typeChecker';
+import {
+  convertToDateTime,
+  tryConvertToDateTime,
+  typeCheckDateArray,
+  typeCheckNumberArray,
+} from './typeChecker';
 
 export class OptionConverter {
-
-  private static ignoreProperties = ['meta', 'dayViewHeaderFormat',
-    'container', 'dateForms', 'ordinal'];
+  private static ignoreProperties = [
+    'meta',
+    'dayViewHeaderFormat',
+    'container',
+    'dateForms',
+    'ordinal',
+  ];
 
   static deepCopy(input): Options {
     const o = {};
@@ -17,18 +26,20 @@ export class OptionConverter {
       const inputElement = input[key];
 
       if (inputElement instanceof DateTime) {
-        o[key] = inputElement.clone
+        o[key] = inputElement.clone;
         return;
-      }
-      else if (inputElement instanceof Date) {
+      } else if (inputElement instanceof Date) {
         o[key] = new Date(inputElement.valueOf());
         return;
       }
 
       o[key] = inputElement;
-      if (typeof inputElement !== 'object' ||
+      if (
+        typeof inputElement !== 'object' ||
         inputElement instanceof HTMLElement ||
-        inputElement instanceof Element) return;
+        inputElement instanceof Element
+      )
+        return;
       if (!Array.isArray(inputElement)) {
         o[key] = OptionConverter.deepCopy(inputElement);
       }
@@ -37,7 +48,7 @@ export class OptionConverter {
     return o;
   }
 
-  private static isValue = a => a != null; // everything except undefined + null
+  private static isValue = (a) => a != null; // everything except undefined + null
 
   /**
    * Finds value out of an object based on a string, period delimited, path
@@ -45,13 +56,17 @@ export class OptionConverter {
    * @param obj
    */
   static objectPath(paths: string, obj) {
-    if (paths.charAt(0) === '.')
-      paths = paths.slice(1);
+    if (paths.charAt(0) === '.') paths = paths.slice(1);
     if (!paths) return obj;
-    return paths.split('.')
-      .reduce((value, key) => (OptionConverter.isValue(value) || OptionConverter.isValue(value[key]) ?
-        value[key] :
-        undefined), obj);
+    return paths
+      .split('.')
+      .reduce(
+        (value, key) =>
+          OptionConverter.isValue(value) || OptionConverter.isValue(value[key])
+            ? value[key]
+            : undefined,
+        obj
+      );
   }
 
   /**
@@ -82,35 +97,68 @@ export class OptionConverter {
       Namespace.errorMessages.unexpectedOptions(errors);
     }
 
-    Object.keys(provided).filter(key => key !== '__proto__' && key !== 'constructor').forEach((key) => {
-      path += `.${key}`;
-      if (path.charAt(0) === '.') path = path.slice(1);
+    Object.keys(provided)
+      .filter((key) => key !== '__proto__' && key !== 'constructor')
+      .forEach((key) => {
+        path += `.${key}`;
+        if (path.charAt(0) === '.') path = path.slice(1);
 
-      const defaultOptionValue = defaultOptions[key];
-      let providedType = typeof provided[key];
-      let defaultType = typeof defaultOptionValue;
-      let value = provided[key];
+        const defaultOptionValue = defaultOptions[key];
+        let providedType = typeof provided[key];
+        let defaultType = typeof defaultOptionValue;
+        let value = provided[key];
 
-      if (value === undefined || value === null) {
-        copyTo[key] = value;
+        if (value === undefined || value === null) {
+          copyTo[key] = value;
+          path = path.substring(0, path.lastIndexOf(`.${key}`));
+          return;
+        }
+
+        if (
+          typeof defaultOptionValue === 'object' &&
+          !Array.isArray(provided[key]) &&
+          !(
+            defaultOptionValue instanceof Date ||
+            OptionConverter.ignoreProperties.includes(key)
+          )
+        ) {
+          OptionConverter.spread(
+            provided[key],
+            copyTo[key],
+            path,
+            localization
+          );
+        } else {
+          copyTo[key] = OptionConverter.processKey(
+            key,
+            value,
+            providedType,
+            defaultType,
+            path,
+            localization
+          );
+        }
+
         path = path.substring(0, path.lastIndexOf(`.${key}`));
-        return;
-      }
-
-      if (typeof defaultOptionValue === 'object' &&
-        !Array.isArray(provided[key]) &&
-        !(defaultOptionValue instanceof Date || OptionConverter.ignoreProperties.includes(key))) {
-        OptionConverter.spread(provided[key], copyTo[key], path, localization);
-      } else {
-        copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, localization);
-      }
-
-      path = path.substring(0, path.lastIndexOf(`.${key}`));
-    });
+      });
   }
 
-  static processKey(key: string, value: any, providedType: string, defaultType: string, path: string, localization: FormatLocalization) {
-    return processKey({ key, value, providedType, defaultType, path, localization });
+  static processKey(
+    key: string,
+    value: any,
+    providedType: string,
+    defaultType: string,
+    path: string,
+    localization: FormatLocalization
+  ) {
+    return processKey({
+      key,
+      value,
+      providedType,
+      defaultType,
+      path,
+      localization,
+    });
   }
 
   static _mergeOptions(providedOptions: Options, mergeTo: Options): Options {
@@ -221,7 +269,10 @@ export class OptionConverter {
    * @param localization object containing locale and format settings. Only used with the custom formats
    * @private
    */
-  static _dateTypeCheck(d: any, localization: FormatLocalization): DateTime | null {
+  static _dateTypeCheck(
+    d: any,
+    localization: FormatLocalization
+  ): DateTime | null {
     return tryConvertToDateTime(d, localization);
   }
 
@@ -261,7 +312,11 @@ export class OptionConverter {
    * @param optionName Provides text to error messages e.g. disabledDates
    * @param localization object containing locale and format settings. Only used with the custom formats
    */
-  static dateConversion(d: any, optionName: string, localization: FormatLocalization): DateTime {
+  static dateConversion(
+    d: any,
+    optionName: string,
+    localization: FormatLocalization
+  ): DateTime {
     return convertToDateTime(d, optionName, localization);
   }
 
