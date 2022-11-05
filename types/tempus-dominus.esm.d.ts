@@ -582,6 +582,7 @@ declare class Dates {
         number,
         number
     ];
+    updateInput(target?: DateTime): void;
     /**
      * Attempts to either clear or set the `target` date at `index`.
      * If the `target` is null then the date will be cleared.
