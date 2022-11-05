@@ -1031,6 +1031,7 @@ declare class TempusDominus {
     dates: Dates;
     constructor(element: HTMLElement, options?: Options);
     get viewDate(): DateTime;
+    set viewDate(value: DateTime);
     /**
      * Update the picker options. If `reset` is provide `options` will be merged with DefaultOptions instead.
      * @param options

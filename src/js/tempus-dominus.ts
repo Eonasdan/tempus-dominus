@@ -66,10 +66,22 @@ class TempusDominus {
     this._eventEmitters.viewUpdate.subscribe(() => {
       this._viewUpdate();
     });
+
+    this._eventEmitters.updateViewDate.subscribe(dateTime => {
+      this.viewDate = dateTime;
+    });
   }
 
   get viewDate() {
     return this.optionsStore.viewDate;
+  }
+
+  set viewDate(value) {
+    this.optionsStore.viewDate = value;
+    this.optionsStore.viewDate.setLocale(
+      this.optionsStore.options.localization.locale
+    );
+    this.display._update(this.optionsStore.currentView === 'clock' ? 'clock' : 'calendar');
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -206,6 +218,7 @@ class TempusDominus {
     this.display.hide();
     // this will clear the document click event listener
     this.display._dispose();
+    this._eventEmitters.destroy();
     this.optionsStore.input?.removeEventListener(
       'change',
       this._inputChangeEvent
