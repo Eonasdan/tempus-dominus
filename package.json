@@ -29,16 +29,20 @@
     "sass": "sass src/scss/tempus-dominus.scss ./dist/css/tempus-dominus.css",
     "rollup": "rollup -c ./build/rollup.config.js",
     "rollup-watch": "rollup -c ./build/rollup.config.js -w",
-    "prettier": "prettier --write .",
+    "prettier": "prettier --write --ignore-unknown",
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
     "release": "npm run test:silent && npm run build && npm run build:declarations",
     "release:version": "npm run release && node build/change-version.js",
     "prepare": "husky install",
-    "eslint": "npx eslint  --ext .html,.ts ."
+    "eslint": "npx eslint --ext .html,.ts ."
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "*.{html,ts}": [
+      "npm run eslint",
+      "npm run prettier"
+    ],
+    "**/*": "npm run prettier"
   },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
