@@ -34,7 +34,8 @@
     "docs-watch": "node ./src/docs/make.js --watch",
     "release": "npm run test:silent && npm run build && npm run build:declarations",
     "release:version": "npm run release && node build/change-version.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "eslint": "npx eslint **/*"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

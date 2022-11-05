@@ -1,0 +1,14 @@
+**/dist/
+**/docs/
+**/node_modules/
+**/coverage/
+**/.husky/
+**/types/
+**/nuget/
+/package-lock.json
+**/*.png
+**/*.md
+/td logo.xcf
+/.eslintrc.yml
+/CNAME
+/LICENSE
