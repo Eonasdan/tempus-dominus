@@ -409,6 +409,9 @@ class TempusDominus {
 
     if (!this.optionsStore.input) return;
 
+    if (!this.optionsStore.input.value && this.optionsStore.options.defaultDate)
+      this.optionsStore.input.value = this.dates.formatInput(this.optionsStore.options.defaultDate);
+
     this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
     if (this.optionsStore.options.allowInputToggle) {
       this.optionsStore.input.addEventListener('click', this._toggleClickEvent);

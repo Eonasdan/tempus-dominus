@@ -21,7 +21,8 @@ export class OptionConverter {
         return;
       }
       else if (inputElement instanceof Date) {
-        o[key] = new Date(inputElement.valueOf())
+        o[key] = new Date(inputElement.valueOf());
+        return;
       }
 
       o[key] = inputElement;
