@@ -36,7 +36,7 @@ const localization = {
     L: 'dd.MM.yyyy',
     LL: 'd. MMMM yyyy',
     LLL: 'd. MMMM yyyy HH:mm',
-    LLLL: 'dddd, D. MMMM yyyy HH:mm',
+    LLLL: 'dddd, d. MMMM yyyy HH:mm',
   },
   ordinal: (n) => `${n}.`,
   format: 'L LT',
