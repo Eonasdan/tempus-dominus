@@ -48,7 +48,7 @@ class CustomDateFormat {
     return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
       const B = b && b.toUpperCase();
       return (
-        a || this.englishFormats[b] || this.replaceExtendedTokens(formats[B])
+          a || this.replaceExtendedTokens(formats[B]) || this.englishFormats[b]
       );
     });
   }
