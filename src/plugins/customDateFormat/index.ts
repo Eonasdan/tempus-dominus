@@ -37,18 +37,11 @@ class CustomDateFormat {
     return [...Array(12).keys()].map((m) => applyFormat(new Date(2021, m)));
   }
 
-  private replaceExtendedTokens(format) {
-    return format.replace(
-      /(\[[^\]]+])|(MMMM|MM|dd|dddd)/g,
-      (_, a, b) => a || b.slice(1)
-    );
-  }
-
   private replaceTokens(formatStr, formats) {
     return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
       const B = b && b.toUpperCase();
       return (
-          a || this.replaceExtendedTokens(formats[B]) || this.englishFormats[b]
+          a || formats[B] || this.englishFormats[B]
       );
     });
   }
