@@ -19,7 +19,7 @@
     "start": "npm run build && concurrently \"npm:*-watch\" \"npm run serve\"",
     "test": "vitest",
     "test:silent": "vitest --run --silent",
-    "coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage",
     "serve": "browser-sync start --config build/browser-sync-config.js",
     "build": "node ./build/copyToDist.js && npm run rollup && npm run build:plugins-and-locales",
     "build:plugins": "node ./build/plugins.js -p",

@@ -18,7 +18,7 @@ jobs:
       - name: Npm install
         run: npm ci
       - name: Unit tests
-        run: npm run test:silent
+        run: npm run test:coverage
       - name: Build docs
         run: npm run docs
       # Send coverage report to Coveralls
