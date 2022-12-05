@@ -12,6 +12,6 @@ site
 src/docs/partials/examples/test.html
 /docs/
 /dist/plugins/examples/
-coverage/tmp
+coverage
 
 .DS_Store
