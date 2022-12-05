@@ -48,6 +48,7 @@ export default class Collapse {
     target.classList.add(Namespace.css.collapsing);
 
     timeOut = setTimeout(
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       complete,
       this.getTransitionDurationFromElement(target)
     );
@@ -92,6 +93,7 @@ export default class Collapse {
     target.style.height = '';
 
     timeOut = setTimeout(
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       complete,
       this.getTransitionDurationFromElement(target)
     );

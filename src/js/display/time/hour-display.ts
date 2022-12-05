@@ -4,7 +4,7 @@ import Validation from '../../validation';
 import { serviceLocator } from '../../utilities/service-locator';
 import { Paint } from '../index';
 import ActionTypes from '../../utilities/action-types';
-import {OptionsStore} from "../../utilities/optionsStore";
+import { OptionsStore } from '../../utilities/optionsStore';
 
 /**
  * Creates and updates the grid for `hours`
@@ -28,7 +28,9 @@ export default class HourDisplay {
     for (
       let i = 0;
       i <
-      (this.optionsStore.options.display.components.useTwentyfourHour ? 24 : 12);
+      (this.optionsStore.options.display.components.useTwentyfourHour
+        ? 24
+        : 12);
       i++
     ) {
       const div = document.createElement('div');
@@ -47,12 +49,12 @@ export default class HourDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.hourContainer
     )[0];
-    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
+    const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
       .forEach((containerClone: HTMLElement) => {
-        let classes = [];
+        const classes = [];
         classes.push(Namespace.css.hour);
 
         if (!this.validation.isValid(innerDate, Unit.hours)) {

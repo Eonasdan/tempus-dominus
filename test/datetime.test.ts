@@ -1,3 +1,5 @@
+/* eslint-disable  @typescript-eslint/ban-ts-comment */
+
 import { expect, test } from 'vitest';
 import { DateTime, getFormatByUnit, Unit } from '../src/js/datetime';
 
@@ -5,7 +7,7 @@ test('getFormatByUnit', () => {
   expect(getFormatByUnit(Unit.date)).toEqual({ dateStyle: 'short' });
   expect(getFormatByUnit(Unit.month)).toEqual({
     month: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
   });
   expect(getFormatByUnit(Unit.year)).toEqual({ year: 'numeric' });
 });
@@ -49,7 +51,7 @@ test('Can create clone', () => {
 
   expect(dt.valueOf()).toBe(d.valueOf());
 });
-new Date()
+new Date();
 test('startOf', () => {
   let dt = new DateTime(2022, 11, 14, 13, 42, 59, 500);
 
@@ -76,7 +78,7 @@ test('startOf', () => {
   expect(dt.valueOf()).toBe(new DateTime(2022, 0, 1, 0, 0, 0).valueOf());
 
   // @ts-ignore
-  expect(() => dt.startOf('foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt.startOf('foo')).toThrow("Unit 'foo' is not valid");
 
   //check if skip the process of the start of the week is the same weekday
   dt = new DateTime(2022, 11, 25, 0, 0, 0);
@@ -115,7 +117,7 @@ test('endOf', () => {
   expect(dt.valueOf()).toBe(new Date(2022, 11, 31, 23, 59, 59, 999).valueOf());
 
   // @ts-ignore
-  expect(() => dt.endOf('foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt.endOf('foo')).toThrow("Unit 'foo' is not valid");
 
   //check if skip the process of the end of the week is the same weekday
   dt = new DateTime(2022, 11, 17, 0, 0, 0);
@@ -130,7 +132,9 @@ test('endOf', () => {
 
 test('manipulate throws an error with invalid part', () => {
   // @ts-ignore
-  expect(() => new DateTime().manipulate(1, 'foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => new DateTime().manipulate(1, 'foo')).toThrow(
+    "Unit 'foo' is not valid"
+  );
 });
 
 test('Format should return formatted date', () => {
@@ -148,7 +152,7 @@ test('isBefore', () => {
   expect(dt1.isBefore(dt2, Unit.date)).toBe(true);
 
   // @ts-ignore
-  expect(() => dt1.isBefore(dt2, 'foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt1.isBefore(dt2, 'foo')).toThrow("Unit 'foo' is not valid");
 });
 
 test('isAfter', () => {
@@ -160,7 +164,7 @@ test('isAfter', () => {
   expect(dt2.isAfter(dt1, Unit.date)).toBe(true);
 
   // @ts-ignore
-  expect(() => dt2.isAfter(dt1, 'foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt2.isAfter(dt1, 'foo')).toThrow("Unit 'foo' is not valid");
 });
 
 test('isSame', () => {
@@ -172,7 +176,7 @@ test('isSame', () => {
   expect(dt1.isSame(dt2, Unit.date)).toBe(true);
 
   // @ts-ignore
-  expect(() => dt1.isSame(dt2, 'foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt1.isSame(dt2, 'foo')).toThrow("Unit 'foo' is not valid");
 });
 
 //todo this is missing some conditions: https://github.com/moment/moment/blob/master/src/test/moment/is_between.js
@@ -187,14 +191,22 @@ test('isBetween', () => {
   expect(dt1.isBetween(left, right, Unit.date)).toBe(true);
 
   // @ts-ignore
-  expect(() => dt1.isBetween(left, right, 'foo')).toThrow(`Unit 'foo' is not valid`);
+  expect(() => dt1.isBetween(left, right, 'foo')).toThrow(
+    "Unit 'foo' is not valid"
+  );
 
   const dateTime = new DateTime('2016-10-30');
 
-  expect(dateTime.isBetween(dateTime, new DateTime('2016-12-30'), undefined, '()')).toBe(false);
+  expect(
+    dateTime.isBetween(dateTime, new DateTime('2016-12-30'), undefined, '()')
+  ).toBe(false);
   expect(dateTime.isBetween(dateTime, dateTime, undefined, '[]')).toBe(true);
-  expect(dateTime.isBetween(new DateTime('2016-01-01'), dateTime, undefined, '(]')).toBe(true);
-  expect(dateTime.isBetween(dateTime, new DateTime('2016-12-30'), undefined, '[)')).toBe(true);
+  expect(
+    dateTime.isBetween(new DateTime('2016-01-01'), dateTime, undefined, '(]')
+  ).toBe(true);
+  expect(
+    dateTime.isBetween(dateTime, new DateTime('2016-12-30'), undefined, '[)')
+  ).toBe(true);
 });
 
 test('Getters/Setters', () => {
@@ -244,7 +256,7 @@ test('Getters/Setters', () => {
 
   expect(dt.weeksInWeekYear(dt.year)).toBe(52);
 
-  dt.year = 2024
+  dt.year = 2024;
   expect(dt.isLeapYear).toBe(true);
 
   dt.year = 2026;

@@ -1,5 +1,6 @@
 {
   "singleQuote": true,
   "tabWidth": 2,
-  "htmlWhitespaceSensitivity": "ignore"
+  "htmlWhitespaceSensitivity": "ignore",
+  "endOfLine": "lf"
 }

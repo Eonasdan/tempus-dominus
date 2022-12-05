@@ -4,8 +4,8 @@ import { ChangeEvent, FailEvent } from './utilities/event-types';
 import Validation from './validation';
 import { serviceLocator } from './utilities/service-locator';
 import { EventEmitters } from './utilities/event-emitter';
-import {OptionsStore} from "./utilities/optionsStore";
-import {OptionConverter} from "./utilities/optionConverter";
+import { OptionsStore } from './utilities/optionsStore';
+import { OptionConverter } from './utilities/optionConverter';
 
 export default class Dates {
   private _dates: DateTime[] = [];
@@ -63,13 +63,18 @@ export default class Dates {
       hour12: !components.useTwentyfourHour,
     });
   }
-  
+
   /**
    * parse the value into a DateTime object.
    * this can be overwritten to supply your own parsing.
    */
-  parseInput(value:any): DateTime {
-        return OptionConverter.dateConversion(value, 'input', this.optionsStore.options.localization);
+  parseInput(value: any): DateTime {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
+    return OptionConverter.dateConversion(
+      value,
+      'input',
+      this.optionsStore.options.localization
+    );
   }
 
   /**
@@ -79,6 +84,7 @@ export default class Dates {
    * @param index When using multidates this is the index in the array
    */
   setFromInput(value: any, index?: number) {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
     if (!value) {
       this.setValue(undefined, index);
       return;
@@ -109,7 +115,7 @@ export default class Dates {
 
     const format = getFormatByUnit(unit);
 
-    let innerDateFormatted = targetDate.format(format);
+    const innerDateFormatted = targetDate.format(format);
 
     return (
       this._dates
@@ -130,7 +136,7 @@ export default class Dates {
 
     const format = getFormatByUnit(unit);
 
-    let innerDateFormatted = targetDate.format(format);
+    const innerDateFormatted = targetDate.format(format);
 
     return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
   }

@@ -4,7 +4,7 @@ import Validation from '../../validation';
 import { serviceLocator } from '../../utilities/service-locator';
 import { Paint } from '../index';
 import ActionTypes from '../../utilities/action-types';
-import {OptionsStore} from "../../utilities/optionsStore";
+import { OptionsStore } from '../../utilities/optionsStore';
 
 /**
  * Creates and updates the grid for `seconds`
@@ -42,12 +42,12 @@ export default class secondDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.secondContainer
     )[0];
-    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.minutes);
+    const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.minutes);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectSecond}"]`)
       .forEach((containerClone: HTMLElement) => {
-        let classes = [];
+        const classes = [];
         classes.push(Namespace.css.second);
 
         if (!this.validation.isValid(innerDate, Unit.seconds)) {

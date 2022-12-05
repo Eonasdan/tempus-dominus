@@ -1,0 +1,9 @@
+**/dist/
+**/docs/
+**/coverage/
+**/.husky/
+**/types/
+**/build/
+
+#temporary
+/test/test-import.ts

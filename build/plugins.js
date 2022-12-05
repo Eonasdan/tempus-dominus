@@ -7,7 +7,7 @@ const path = require('path');
 const { promisify } = util;
 
 const promisifyReadDir = promisify(fs.readdir);
-const formatName = n => n.replace(/\.ts/, '').replace(/-/g, '_');
+const formatName = (n) => n.replace(/\.ts/, '').replace(/-/g, '_');
 
 const localePath = path.join(__dirname, '../src/locales');
 
@@ -24,11 +24,13 @@ async function locales() {
     const locales = await promisifyReadDir(localePath);
     for (const l of locales) {
       // run builds sequentially to limit RAM usage
-      await build(genericRollup({
-        input: `./src/locales/${l}`,
-        fileName: `./dist/locales/${l.replace('.ts', '.js')}`,
-        name: `tempusDominus.locales.${formatName(l)}`
-      }));
+      await build(
+        genericRollup({
+          input: `./src/locales/${l}`,
+          fileName: `./dist/locales/${l.replace('.ts', '.js')}`,
+          name: `tempusDominus.locales.${formatName(l)}`,
+        })
+      );
     }
   } catch (e) {
     console.error(e); // eslint-disable-line no-console
@@ -38,24 +40,32 @@ async function locales() {
 async function plugins() {
   console.log('Building Plugins...');
   try {
-    const plugins = await promisifyReadDir(path.join(__dirname, '../src/plugins'));
-    for (const plugin of plugins.filter(x => x !== 'examples')) {
+    const plugins = await promisifyReadDir(
+      path.join(__dirname, '../src/plugins')
+    );
+    for (const plugin of plugins.filter((x) => x !== 'examples')) {
       // run builds sequentially to limit RAM usage
-      await build(genericRollup({
-        input: `./src/plugins/${plugin}/index.ts`,
-        fileName: `./dist/plugins/${plugin}.js`,
-        name: `tempusDominus.plugins.${formatName(plugin)}`
-      }));
+      await build(
+        genericRollup({
+          input: `./src/plugins/${plugin}/index.ts`,
+          fileName: `./dist/plugins/${plugin}.js`,
+          name: `tempusDominus.plugins.${formatName(plugin)}`,
+        })
+      );
     }
 
-    const examplePlugins = await promisifyReadDir(path.join(__dirname, '../src/plugins/examples'));
-    for (const plugin of examplePlugins.map(x => x.replace('.ts', ''))) {
+    const examplePlugins = await promisifyReadDir(
+      path.join(__dirname, '../src/plugins/examples')
+    );
+    for (const plugin of examplePlugins.map((x) => x.replace('.ts', ''))) {
       // run builds sequentially to limit RAM usage
-      await build(genericRollup({
-        input: `./src/plugins/examples/${plugin}.ts`,
-        fileName: `./dist/plugins/examples/${plugin}.js`,
-        name: `tempusDominus.plugins.${formatName(plugin)}`
-      }));
+      await build(
+        genericRollup({
+          input: `./src/plugins/examples/${plugin}.ts`,
+          fileName: `./dist/plugins/examples/${plugin}.js`,
+          name: `tempusDominus.plugins.${formatName(plugin)}`,
+        })
+      );
     }
   } catch (e) {
     console.error(e); // eslint-disable-line no-console

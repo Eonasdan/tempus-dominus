@@ -92,6 +92,7 @@ export class ErrorMessages {
    * @param soft If true, logs a warning instead of an error.
    */
   failedToParseDate(optionName: string, date: any, soft = false) {
+    //eslint-disable-line @typescript-eslint/no-explicit-any
     const error = new TdError(
       `${this.base} Could not correctly parse "${date}" to a date for ${optionName}.`
     );
@@ -136,9 +137,7 @@ export class ErrorMessages {
    * customDateFormat errors
    */
   customDateFormatError(message?: string) {
-    const error = new TdError(
-      `${this.base} customDateFormat: ${message}`
-    );
+    const error = new TdError(`${this.base} customDateFormat: ${message}`);
     error.code = 9;
     throw error;
   }
@@ -154,9 +153,7 @@ export class ErrorMessages {
   }
 
   throwError(message) {
-    const error = new TdError(
-        `${this.base} ${message}`
-    );
+    const error = new TdError(`${this.base} ${message}`);
     error.code = 9;
     throw error;
   }

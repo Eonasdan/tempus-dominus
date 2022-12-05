@@ -58,21 +58,21 @@ export default interface Options {
   multipleDatesSeparator?: string;
   promptTimeOnDateChange?: boolean;
   promptTimeOnDateChangeTransitionDelay?: number;
-  meta?: {};
+  meta?: Record<string, unknown>;
   container?: HTMLElement;
 }
 
 export interface FormatLocalization {
   locale?: string;
   dateFormats?: {
-    LTS?: string,
-    LT?: string,
-    L?: string,
-    LL?: string,
-    LLL?: string,
-    LLLL?: string,
+    LTS?: string;
+    LT?: string;
+    L?: string;
+    LL?: string;
+    LLL?: string;
+    LLLL?: string;
   };
-  ordinal?: (n: number) => any;
+  ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
   format?: string;
 }
 

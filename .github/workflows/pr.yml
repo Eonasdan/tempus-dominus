@@ -1,9 +1,9 @@
 name: CI
 on:
   push:
-    branches: [ master ]
+    branches: [ development ]
   pull_request:
-    branches: [ master ]
+    branches: [ development ]
   workflow_dispatch:
 jobs:
   build:
@@ -19,8 +19,6 @@ jobs:
         run: npm ci
       - name: Unit tests
         run: npm run test:coverage
-      - name: Build docs
-        run: npm run docs
       # Send coverage report to Coveralls
       - name: Coveralls
         uses: coverallsapp/github-action@master

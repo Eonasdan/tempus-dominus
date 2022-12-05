@@ -267,13 +267,13 @@ class Css {
   lightTheme = 'light';
 
   /**
-  * Applied to the widget when the option display.theme is dark.
-  */
+   * Applied to the widget when the option display.theme is dark.
+   */
   darkTheme = 'dark';
 
   /**
-  * Used for detecting if the system color preference is dark mode
-  */
+   * Used for detecting if the system color preference is dark mode
+   */
   isDarkPreferredQuery = '(prefers-color-scheme: dark)';
 }
 

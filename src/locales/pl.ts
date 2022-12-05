@@ -36,10 +36,10 @@ const localization = {
     L: 'DD.MM.YYYY',
     LL: 'D MMMM YYYY',
     LLL: 'D MMMM YYYY HH:mm',
-    LLLL: 'dddd, D MMMM YYYY HH:mm'
+    LLLL: 'dddd, D MMMM YYYY HH:mm',
   },
-  ordinal: n => `${n}.`,
-  format: 'L LT'
+  ordinal: (n) => `${n}.`,
+  format: 'L LT',
 };
 
 export { localization, name };
