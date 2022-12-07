@@ -294,7 +294,7 @@ test('Guess hour cycle', () => {
   expect(guess).toBe('h23');
 
   guess = guessHourCycle('ar-IQ');
-  expect(guess).toBe('h23');
+  expect(guess).toBe('h12');
 
   guess = guessHourCycle('sv-SE');
   expect(guess).toBe('h23');

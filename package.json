@@ -41,7 +41,10 @@
     "*.{html,ts}": [
       "npm run eslint"
     ],
-    "**/*": "npm run prettier"
+    "**/*": [
+      "npm run prettier",
+      "npm run test:silent"
+    ]
   },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"

@@ -51,7 +51,7 @@ export const guessHourCycle = (locale: string): Intl.LocaleHourCycleKey => {
   const dt = new DateTime().setLocale(locale);
   dt.hours = 0;
 
-  const start = dt.parts(undefined).hour;
+  const start = dt.parts(undefined, template).hour;
 
   //midnight is 12 so en-US style 12 AM
   if (start === '12') return 'h12';
@@ -64,8 +64,13 @@ export const guessHourCycle = (locale: string): Intl.LocaleHourCycleKey => {
   //if midnight is 00 and hour 23 is 11 then
   if (start === '00' && end === '11') return 'h11';
 
-  //otherwise assume h23
-  return 'h23';
+  if (start === '00' && end === '23') return 'h23';
+
+  console.warn(
+    `couldn't determine hour cycle for ${locale}. start: ${start}. end: ${end}`
+  );
+
+  return undefined;
 };
 
 /**
