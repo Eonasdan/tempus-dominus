@@ -24,7 +24,7 @@
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
+      second: '2-digit',
   };
   const getFormatByUnit = (unit) => {
       switch (unit) {
@@ -33,7 +33,7 @@
           case 'month':
               return {
                   month: 'numeric',
-                  year: 'numeric'
+                  year: 'numeric',
               };
           case 'year':
               return { year: 'numeric' };
@@ -42,9 +42,15 @@
   const guessHourCycle = (locale) => {
       if (!locale)
           return 'h12';
+      // noinspection SpellCheckingInspection
+      const template = {
+          hour: '2-digit',
+          minute: '2-digit',
+          numberingSystem: 'latn',
+      };
       const dt = new DateTime().setLocale(locale);
       dt.hours = 0;
-      const start = dt.parts(undefined, { hour: '2-digit', minute: '2-digit' }).hour;
+      const start = dt.parts(undefined).hour;
       //midnight is 12 so en-US style 12 AM
       if (start === '12')
           return 'h12';
@@ -52,7 +58,7 @@
       if (start === '24')
           return 'h24';
       dt.hours = 23;
-      const end = dt.parts(undefined, { hour: '2-digit', minute: '2-digit' }).hour;
+      const end = dt.parts(undefined, template).hour;
       //if midnight is 00 and hour 23 is 11 then
       if (start === '00' && end === '11')
           return 'h11';
@@ -71,7 +77,7 @@
            */
           this.locale = 'default';
           this.nonLeapLadder = [
-              0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334
+              0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334,
           ];
           this.leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
       }
@@ -99,8 +105,8 @@
        * @param input
        * @param localization
        */
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
       static fromString(input, localization) {
-          //eslint-disable-line @typescript-eslint/no-unused-vars
           return new DateTime(input);
       }
       /**
@@ -347,7 +353,8 @@
           this.setHours(value);
       }
       getHoursFormatted(hourCycle = 'h12') {
-          return this.parts(undefined, { ...twoDigitTemplate, hourCycle: hourCycle }).hour;
+          return this.parts(undefined, { ...twoDigitTemplate, hourCycle: hourCycle })
+              .hour;
       }
       /**
        * Get the meridiem of the date. E.g. AM or PM.
@@ -358,7 +365,7 @@
       meridiem(locale = this.locale) {
           return new Intl.DateTimeFormat(locale, {
               hour: 'numeric',
-              hour12: true
+              hour12: true,
           })
               .formatToParts(this)
               .find((p) => p.type === 'dayPeriod')?.value;
@@ -542,8 +549,8 @@
        * @param date
        * @param soft If true, logs a warning instead of an error.
        */
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       failedToParseDate(optionName, date, soft = false) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           const error = new TdError(`${this.base} Could not correctly parse "${date}" to a date for ${optionName}.`);
           error.code = 5;
           if (!soft)
@@ -1679,15 +1686,15 @@
               hour: components.clock && components.hours ? '2-digit' : undefined,
               minute: components.clock && components.minutes ? '2-digit' : undefined,
               second: components.clock && components.seconds ? '2-digit' : undefined,
-              hourCycle: this.optionsStore.options.localization.hourCycle
+              hourCycle: this.optionsStore.options.localization.hourCycle,
           });
       }
       /**
        * parse the value into a DateTime object.
        * this can be overwritten to supply your own parsing.
        */
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       parseInput(value) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           return OptionConverter.dateConversion(value, 'input', this.optionsStore.options.localization);
       }
       /**
@@ -1696,8 +1703,8 @@
        * @param value Value to convert or null|undefined
        * @param index When using multidates this is the index in the array
        */
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       setFromInput(value, index) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           if (!value) {
               this.setValue(undefined, index);
               return;
@@ -2458,10 +2465,7 @@
       getPicker() {
           const container = document.createElement('div');
           container.classList.add(Namespace.css.hourContainer);
-          for (let i = 0; i <
-              ((this.optionsStore.isTwelveHour)
-                  ? 12
-                  : 24); i++) {
+          for (let i = 0; i < (this.optionsStore.isTwelveHour ? 12 : 24); i++) {
               const div = document.createElement('div');
               div.setAttribute('data-action', ActionTypes$1.selectHour);
               container.appendChild(div);
@@ -2632,9 +2636,8 @@
           target.style.height = '0';
           target.classList.remove(Namespace.css.collapse);
           target.classList.add(Namespace.css.collapsing);
-          setTimeout(
-          // eslint-disable-line @typescript-eslint/no-unused-vars
-          complete, this.getTransitionDurationFromElement(target));
+          //eslint-disable-next-line @typescript-eslint/no-unused-vars
+          setTimeout(complete, this.getTransitionDurationFromElement(target));
           target.style.height = `${target.scrollHeight}px`;
       }
       /**
@@ -2664,9 +2667,8 @@
           target.classList.remove(Namespace.css.collapse, Namespace.css.show);
           target.classList.add(Namespace.css.collapsing);
           target.style.height = '';
-          setTimeout(
-          // eslint-disable-line @typescript-eslint/no-unused-vars
-          complete, this.getTransitionDurationFromElement(target));
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          setTimeout(complete, this.getTransitionDurationFromElement(target));
       }
   }
   /**
@@ -2922,9 +2924,10 @@
       async createPopup(element, widget, options //eslint-disable-line @typescript-eslint/no-explicit-any
       ) {
           let createPopperFunction;
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (window?.Popper) {
-              //eslint-disable-line @typescript-eslint/no-explicit-any
-              createPopperFunction = window?.Popper?.createPopper; //eslint-disable-line @typescript-eslint/no-explicit-any
+              //eslint-disable-next-line @typescript-eslint/no-explicit-any
+              createPopperFunction = window?.Popper?.createPopper;
           }
           else {
               const { createPopper } = await import('@popperjs/core');
@@ -3304,8 +3307,8 @@
        * @param e This is normally a click event
        * @param action If not provided, then look for a [data-action]
        */
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       do(e, action) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           const currentTarget = e?.currentTarget;
           if (currentTarget?.classList?.contains(Namespace.css.disabled))
               return false;
@@ -3331,8 +3334,7 @@
                   break;
               case ActionTypes$1.selectHour: {
                   let hour = +currentTarget.dataset.value;
-                  if (lastPicked.hours >= 12 &&
-                      this.optionsStore.isTwelveHour)
+                  if (lastPicked.hours >= 12 && this.optionsStore.isTwelveHour)
                       hour += 12;
                   lastPicked.hours = hour;
                   this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
@@ -3472,8 +3474,8 @@
               this.dates.setValue(newDate, this.dates.lastPickedIndex);
           }
       }
-      handleSelectCalendarMode(action, currentTarget) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
+      handleSelectCalendarMode(action, currentTarget //eslint-disable-line @typescript-eslint/no-explicit-any
+      ) {
           const value = +currentTarget.dataset.value;
           switch (action) {
               case ActionTypes$1.selectMonth:
@@ -3495,8 +3497,8 @@
               this.display._showMode(-1);
           }
       }
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       handleToggle(currentTarget) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           if (currentTarget.getAttribute('title') ===
               this.optionsStore.options.localization.selectDate) {
               currentTarget.setAttribute('title', this.optionsStore.options.localization.selectTime);
@@ -3517,8 +3519,8 @@
               .forEach((htmlElement) => Collapse.toggle(htmlElement));
           this._eventEmitters.viewUpdate.emit();
       }
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       handleSelectDay(currentTarget) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           const day = this.optionsStore.viewDate.clone;
           if (currentTarget.classList.contains(Namespace.css.old)) {
               day.manipulate(-1, exports.Unit.month);
@@ -3554,15 +3556,16 @@
    */
   class TempusDominus {
       constructor(element, options = {}) {
-          this._subscribers = {}; //eslint-disable-line @typescript-eslint/no-explicit-any
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
+          this._subscribers = {};
           this._isDisabled = false;
           /**
            * Event for when the input field changes. This is a class level method so there's
            * something for the remove listener function.
            * @private
            */
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
           this._inputChangeEvent = (event) => {
-              //eslint-disable-line @typescript-eslint/no-explicit-any
               const internallyTriggered = event?.detail;
               if (internallyTriggered)
                   return;
@@ -3736,7 +3739,7 @@
               }
               this._subscribers[eventType].push(callBackArray[i]);
               returnArray.push({
-                  unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1)
+                  unsubscribe: this._unsubscribe.bind(this, eventType, this._subscribers[eventType].length - 1),
               });
               if (eventTypes.length === 1) {
                   return returnArray[0];
@@ -3770,7 +3773,7 @@
           if (!asked)
               return;
           this.updateOptions({
-              localization: asked
+              localization: asked,
           });
       }
       /**
@@ -3796,9 +3799,10 @@
           }
           this.optionsStore.element.dispatchEvent(new CustomEvent(event.type, { detail: event }) //eslint-disable-line @typescript-eslint/no-explicit-any
           );
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (window.jQuery) {
-              //eslint-disable-line @typescript-eslint/no-explicit-any
-              const $ = window.jQuery; //eslint-disable-line @typescript-eslint/no-explicit-any
+              //eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const $ = window.jQuery;
               if (isChangeEvent && this.optionsStore.input) {
                   $(this.optionsStore.input).trigger(event);
               }
@@ -3825,7 +3829,7 @@
       _viewUpdate() {
           this._triggerEvent({
               type: Namespace.events.update,
-              viewDate: this.optionsStore.viewDate.clone
+              viewDate: this.optionsStore.viewDate.clone,
           });
       }
       _unsubscribe(eventName, index) {
@@ -3870,7 +3874,8 @@
           if (this.display?.isVisible) {
               this.display._update('all');
           }
-          if (newConfig.display.components.useTwentyfourHour && newConfig.localization.hourCycle === undefined)
+          if (newConfig.display.components.useTwentyfourHour &&
+              newConfig.localization.hourCycle === undefined)
               newConfig.localization.hourCycle = 'h24';
           else if (newConfig.localization.hourCycle === undefined) {
               newConfig.localization.hourCycle = guessHourCycle(newConfig.localization.locale);
@@ -3956,9 +3961,9 @@
               if (this.display.widget) {
                   this._eventEmitters.action.emit({
                       e: {
-                          currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`)
+                          currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`),
                       },
-                      action: ActionTypes$1.togglePicker
+                      action: ActionTypes$1.togglePicker,
                   });
               }
           }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
@@ -4016,7 +4021,7 @@
       DefaultOptions,
       DateTime,
       Unit: exports.Unit,
-      version
+      version,
   };
 
   exports.DateTime = DateTime;

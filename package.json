@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "start": "npm run build && concurrently \"npm:*-watch\" \"npm run serve\"",
-    "test": "vitest",
+    "test": "vitest --ui",
     "test:silent": "vitest --run --silent",
     "test:coverage": "vitest run --coverage",
     "serve": "browser-sync start --config build/browser-sync-config.js",
@@ -57,6 +57,7 @@
     "@typescript-eslint/eslint-plugin": "^5.45.1",
     "@typescript-eslint/parser": "^5.45.1",
     "@vitest/coverage-c8": "^0.25.4",
+    "@vitest/ui": "^0.25.5",
     "bootstrap": "^5.2.3",
     "browser-sync": "^2.27.10",
     "chokidar": "^3.5.3",

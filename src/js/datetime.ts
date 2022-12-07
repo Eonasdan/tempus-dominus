@@ -41,15 +41,17 @@ export const getFormatByUnit = (unit: Unit): object => {
 export const guessHourCycle = (locale: string): Intl.LocaleHourCycleKey => {
   if (!locale) return 'h12';
 
-  const dt = new DateTime().setLocale(locale);
-  dt.hours = 0;
-
   // noinspection SpellCheckingInspection
-  const start = dt.parts(undefined, {
+  const template = {
     hour: '2-digit',
     minute: '2-digit',
     numberingSystem: 'latn',
-  }).hour;
+  };
+
+  const dt = new DateTime().setLocale(locale);
+  dt.hours = 0;
+
+  const start = dt.parts(undefined).hour;
 
   //midnight is 12 so en-US style 12 AM
   if (start === '12') return 'h12';
@@ -57,7 +59,7 @@ export const guessHourCycle = (locale: string): Intl.LocaleHourCycleKey => {
   if (start === '24') return 'h24';
 
   dt.hours = 23;
-  const end = dt.parts(undefined, { hour: '2-digit', minute: '2-digit' }).hour;
+  const end = dt.parts(undefined, template).hour;
 
   //if midnight is 00 and hour 23 is 11 then
   if (start === '00' && end === '11') return 'h11';

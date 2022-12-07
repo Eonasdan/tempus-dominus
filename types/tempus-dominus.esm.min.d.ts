@@ -324,6 +324,7 @@ declare class DateTime extends Date {
    * @param input
    * @param localization
    */
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   static fromString(input: string, localization: FormatLocalization): DateTime;
   /**
    * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
@@ -668,6 +669,7 @@ declare class Dates {
    * parse the value into a DateTime object.
    * this can be overwritten to supply your own parsing.
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   parseInput(value: any): DateTime;
   /**
    * Tries to convert the provided value to a DateTime object.
@@ -675,6 +677,7 @@ declare class Dates {
    * @param value Value to convert or null|undefined
    * @param index When using multidates this is the index in the array
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFromInput(value: any, index?: number): void;
   /**
    * Adds a new DateTime to selected dates array
@@ -771,6 +774,7 @@ declare class ErrorMessages {
    * @param date
    * @param soft If true, logs a warning instead of an error.
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   failedToParseDate(optionName: string, date: any, soft?: boolean): void;
   /**
    * Throws when an element to attach to was not provided in the constructor.

@@ -283,13 +283,19 @@ test('Getters/Setters', () => {
 });
 
 test('Guess hour cycle', () => {
-  let guess = guessHourCycle('en-US');
+  // @ts-ignore
+  let guess = guessHourCycle();
+  expect(guess).toBe('h12');
+
+  guess = guessHourCycle('en-US');
   expect(guess).toBe('h12');
 
   guess = guessHourCycle('en-GB');
   expect(guess).toBe('h23');
 
   guess = guessHourCycle('ar-IQ');
-  console.log(guess);
+  expect(guess).toBe('h23');
+
+  guess = guessHourCycle('sv-SE');
   expect(guess).toBe('h23');
 });
