@@ -25,14 +25,7 @@ export default class HourDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.hourContainer);
 
-    for (
-      let i = 0;
-      i <
-      (this.optionsStore.options.display.components.useTwentyfourHour
-        ? 24
-        : 12);
-      i++
-    ) {
+    for (let i = 0; i < (this.optionsStore.isTwelveHour ? 12 : 24); i++) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectHour);
       container.appendChild(div);
@@ -66,10 +59,9 @@ export default class HourDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${innerDate.hours}`);
-        containerClone.innerText = this.optionsStore.options.display.components
-          .useTwentyfourHour
-          ? innerDate.hoursFormatted
-          : innerDate.twelveHoursFormatted;
+        containerClone.innerText = innerDate.getHoursFormatted(
+          this.optionsStore.options.localization.hourCycle
+        );
         innerDate.manipulate(1, Unit.hours);
       });
   }

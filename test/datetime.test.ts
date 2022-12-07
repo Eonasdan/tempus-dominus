@@ -1,7 +1,12 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
 
 import { expect, test } from 'vitest';
-import { DateTime, getFormatByUnit, Unit } from '../src/js/datetime';
+import {
+  DateTime,
+  getFormatByUnit,
+  guessHourCycle,
+  Unit,
+} from '../src/js/datetime';
 
 test('getFormatByUnit', () => {
   expect(getFormatByUnit(Unit.date)).toEqual({ dateStyle: 'short' });
@@ -225,13 +230,25 @@ test('Getters/Setters', () => {
   dt.hours = 4;
 
   expect(dt.hours).toBe(4);
-  expect(dt.hoursFormatted).toBe('04');
+  expect(dt.getHoursFormatted()).toBe('04');
 
   dt.hours = 14;
 
   expect(dt.hours).toBe(14);
-  expect(dt.hoursFormatted).toBe('14');
-  expect(dt.twelveHoursFormatted).toBe('02');
+  expect(dt.getHoursFormatted('h24')).toBe('14');
+  expect(dt.getHoursFormatted()).toBe('02');
+
+  dt.hours = 0;
+  expect(dt.getHoursFormatted('h11')).toBe('00');
+  expect(dt.getHoursFormatted('h12')).toBe('12');
+  expect(dt.getHoursFormatted('h23')).toBe('00');
+  expect(dt.getHoursFormatted('h24')).toBe('24');
+
+  dt.hours = 23;
+  expect(dt.getHoursFormatted('h11')).toBe('11');
+  expect(dt.getHoursFormatted('h12')).toBe('11');
+  expect(dt.getHoursFormatted('h23')).toBe('23');
+  expect(dt.getHoursFormatted('h24')).toBe('23');
 
   dt.date = 4;
 
@@ -263,4 +280,16 @@ test('Getters/Setters', () => {
   expect(dt.weeksInWeekYear(dt.year)).toBe(53);
 
   expect(dt.meridiem()).toBe('PM');
+});
+
+test('Guess hour cycle', () => {
+  let guess = guessHourCycle('en-US');
+  expect(guess).toBe('h12');
+
+  guess = guessHourCycle('en-GB');
+  expect(guess).toBe('h23');
+
+  guess = guessHourCycle('ar-IQ');
+  console.log(guess);
+  expect(guess).toBe('h23');
 });

@@ -37,8 +37,8 @@ export default class Actions {
    * @param e This is normally a click event
    * @param action If not provided, then look for a [data-action]
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   do(e: any, action?: ActionTypes) {
-    //eslint-disable-line @typescript-eslint/no-explicit-any
     const currentTarget = e?.currentTarget;
     if (currentTarget?.classList?.contains(Namespace.css.disabled))
       return false;
@@ -65,10 +65,7 @@ export default class Actions {
         break;
       case ActionTypes.selectHour: {
         let hour = +currentTarget.dataset.value;
-        if (
-          lastPicked.hours >= 12 &&
-          !this.optionsStore.options.display.components.useTwentyfourHour
-        )
+        if (lastPicked.hours >= 12 && this.optionsStore.isTwelveHour)
           hour += 12;
         lastPicked.hours = hour;
         this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
@@ -225,7 +222,7 @@ export default class Actions {
    */
   private hideOrClock(e) {
     if (
-      this.optionsStore.options.display.components.useTwentyfourHour &&
+      !this.optionsStore.isTwelveHour &&
       !this.optionsStore.options.display.components.minutes &&
       !this.optionsStore.options.display.keepOpen &&
       !this.optionsStore.options.display.inline
@@ -254,9 +251,8 @@ export default class Actions {
       | ActionTypes.selectMonth
       | ActionTypes.selectYear
       | ActionTypes.selectDecade,
-    currentTarget: any
+    currentTarget: any //eslint-disable-line @typescript-eslint/no-explicit-any
   ) {
-    //eslint-disable-line @typescript-eslint/no-explicit-any
     const value = +currentTarget.dataset.value;
     switch (action) {
       case ActionTypes.selectMonth:
@@ -284,8 +280,8 @@ export default class Actions {
     }
   }
 
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   private handleToggle(currentTarget: any) {
-    //eslint-disable-line @typescript-eslint/no-explicit-any
     if (
       currentTarget.getAttribute('title') ===
       this.optionsStore.options.localization.selectDate
@@ -322,8 +318,8 @@ export default class Actions {
     this._eventEmitters.viewUpdate.emit();
   }
 
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   private handleSelectDay(currentTarget: any) {
-    //eslint-disable-line @typescript-eslint/no-explicit-any
     const day = this.optionsStore.viewDate.clone;
     if (currentTarget.classList.contains(Namespace.css.old)) {
       day.manipulate(-1, Unit.month);

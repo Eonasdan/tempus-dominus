@@ -91,8 +91,8 @@ export class ErrorMessages {
    * @param date
    * @param soft If true, logs a warning instead of an error.
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   failedToParseDate(optionName: string, date: any, soft = false) {
-    //eslint-disable-line @typescript-eslint/no-explicit-any
     const error = new TdError(
       `${this.base} Could not correctly parse "${date}" to a date for ${optionName}.`
     );
@@ -149,6 +149,12 @@ export class ErrorMessages {
   dateString() {
     console.warn(
       `${this.base} Using a string for date options is not recommended unless you specify an ISO string or use the customDateFormat plugin.`
+    );
+  }
+
+  deprecatedWarning(message: string, remediation?: string) {
+    console.warn(
+      `${this.base} Warning ${message} is deprecated and will be removed in a future version. ${remediation}`
     );
   }
 

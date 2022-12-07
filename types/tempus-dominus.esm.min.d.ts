@@ -167,6 +167,124 @@ declare module secondDisplayWrapper {
   export { secondDisplay };
 }
 import SecondDisplay = secondDisplayWrapper.secondDisplay;
+type ViewMode = {
+  clock: any;
+  calendar: any;
+  months: any;
+  years: any;
+  decades: any;
+};
+interface Options {
+  restrictions?: {
+    minDate?: DateTime;
+    maxDate?: DateTime;
+    enabledDates?: DateTime[];
+    disabledDates?: DateTime[];
+    enabledHours?: number[];
+    disabledHours?: number[];
+    disabledTimeIntervals?: {
+      from: DateTime;
+      to: DateTime;
+    }[];
+    daysOfWeekDisabled?: number[];
+  };
+  display?: {
+    toolbarPlacement?: 'top' | 'bottom';
+    components?: {
+      calendar?: boolean;
+      date?: boolean;
+      month?: boolean;
+      year?: boolean;
+      decades?: boolean;
+      clock?: boolean;
+      hours?: boolean;
+      minutes?: boolean;
+      seconds?: boolean;
+      useTwentyfourHour?: boolean;
+    };
+    buttons?: {
+      today?: boolean;
+      close?: boolean;
+      clear?: boolean;
+    };
+    calendarWeeks?: boolean;
+    icons?: {
+      date?: string;
+      next?: string;
+      previous?: string;
+      today?: string;
+      clear?: string;
+      time?: string;
+      up?: string;
+      type?: 'icons' | 'sprites';
+      down?: string;
+      close?: string;
+    };
+    viewMode?: keyof ViewMode;
+    sideBySide?: boolean;
+    inline?: boolean;
+    keepOpen?: boolean;
+    theme?: 'light' | 'dark' | 'auto';
+  };
+  stepping?: number;
+  useCurrent?: boolean;
+  defaultDate?: DateTime;
+  localization?: Localization;
+  keepInvalid?: boolean;
+  debug?: boolean;
+  allowInputToggle?: boolean;
+  viewDate?: DateTime;
+  multipleDates?: boolean;
+  multipleDatesSeparator?: string;
+  promptTimeOnDateChange?: boolean;
+  promptTimeOnDateChangeTransitionDelay?: number;
+  meta?: Record<string, unknown>;
+  container?: HTMLElement;
+}
+interface FormatLocalization {
+  locale?: string;
+  dateFormats?: {
+    LTS?: string;
+    LT?: string;
+    L?: string;
+    LL?: string;
+    LLL?: string;
+    LLLL?: string;
+  };
+  ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
+  format?: string;
+}
+interface Localization extends FormatLocalization {
+  nextMonth?: string;
+  pickHour?: string;
+  incrementSecond?: string;
+  nextDecade?: string;
+  selectDecade?: string;
+  dayViewHeaderFormat?: DateTimeFormatOptions;
+  decrementHour?: string;
+  selectDate?: string;
+  incrementHour?: string;
+  previousCentury?: string;
+  decrementSecond?: string;
+  today?: string;
+  previousMonth?: string;
+  selectYear?: string;
+  pickSecond?: string;
+  nextCentury?: string;
+  close?: string;
+  incrementMinute?: string;
+  selectTime?: string;
+  clear?: string;
+  toggleMeridiem?: string;
+  selectMonth?: string;
+  decrementMinute?: string;
+  pickMinute?: string;
+  nextYear?: string;
+  previousYear?: string;
+  previousDecade?: string;
+  startOfTheWeek?: number;
+  hourCycle?: Intl.LocaleHourCycleKey;
+}
 declare enum Unit {
   seconds = 'seconds',
   minutes = 'minutes',
@@ -206,7 +324,7 @@ declare class DateTime extends Date {
    * @param input
    * @param localization
    */
-  static fromString(input: string, localization: any): DateTime;
+  static fromString(input: string, localization: FormatLocalization): DateTime;
   /**
    * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
    */
@@ -269,7 +387,7 @@ declare class DateTime extends Date {
    * @param left
    * @param right
    * @param unit.
-   * @param inclusivity. A [ indicates inclusion of a value. A ( indicates exclusion.
+   * @param inclusivity. A "[ indicates inclusion of a value. A ( indicates exclusion.
    * If the inclusivity parameter is used, both indicators must be passed.
    */
   isBetween(
@@ -283,7 +401,10 @@ declare class DateTime extends Date {
    * @param locale
    * @param template
    */
-  parts(locale?: string, template?: any): any;
+  parts(
+    locale?: string,
+    template?: Record<string, unknown>
+  ): Record<string, string>;
   /**
    * Shortcut to Date.getSeconds()
    */
@@ -316,14 +437,7 @@ declare class DateTime extends Date {
    * Shortcut to Date.setHours()
    */
   set hours(value: number);
-  /**
-   * Returns two digit hours
-   */
-  get hoursFormatted(): string;
-  /**
-   * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
-   */
-  get twelveHoursFormatted(): string;
+  getHoursFormatted(hourCycle?: Intl.LocaleHourCycleKey): string;
   /**
    * Get the meridiem of the date. E.g. AM or PM.
    * If the {@link locale} provides a "dayPeriod" then this will be returned,
@@ -378,20 +492,13 @@ declare class DateTime extends Date {
   private nonLeapLadder;
   private leapLadder;
 }
-type ViewMode = {
-  clock: any;
-  calendar: any;
-  months: any;
-  years: any;
-  decades: any;
-};
 type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
 /**
  * Main class for all things display related.
  */
 declare class Display {
   private _widget;
-  private _popperInstance;
+  private _popperInstance; // eslint-disable-line  @typescript-eslint/no-explicit-any
   private _isVisible;
   private optionsStore;
   private validation;
@@ -430,12 +537,14 @@ declare class Display {
    * @param _classes
    * @param _element
    */
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   paint(
     _unit: Unit | 'decade',
     _date: DateTime,
     _classes: string[],
     _element: HTMLElement
   ): void;
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   /**
    * Shows the picker and creates a Popper instance if needed.
    * Add document click event to hide when clicking outside the picker.
@@ -445,7 +554,7 @@ declare class Display {
   createPopup(
     element: HTMLElement,
     widget: HTMLElement,
-    options: any
+    options: any //eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<void>;
   updatePopup(): void;
   /**
@@ -685,6 +794,7 @@ declare class ErrorMessages {
    * a date/datetime object.
    */
   dateString(): void;
+  deprecatedWarning(message: string, remediation?: string): void;
   throwError(message: any): void;
   //#endregion
   //#region used with notify.error
@@ -925,123 +1035,13 @@ declare class Namespace {
   static css: Css;
   static errorMessages: ErrorMessages;
 }
-interface Options {
-  restrictions?: {
-    minDate?: DateTime;
-    maxDate?: DateTime;
-    enabledDates?: DateTime[];
-    disabledDates?: DateTime[];
-    enabledHours?: number[];
-    disabledHours?: number[];
-    disabledTimeIntervals?: {
-      from: DateTime;
-      to: DateTime;
-    }[];
-    daysOfWeekDisabled?: number[];
-  };
-  display?: {
-    toolbarPlacement?: 'top' | 'bottom';
-    components?: {
-      calendar?: boolean;
-      date?: boolean;
-      month?: boolean;
-      year?: boolean;
-      decades?: boolean;
-      clock?: boolean;
-      hours?: boolean;
-      minutes?: boolean;
-      seconds?: boolean;
-      useTwentyfourHour?: boolean;
-    };
-    buttons?: {
-      today?: boolean;
-      close?: boolean;
-      clear?: boolean;
-    };
-    calendarWeeks?: boolean;
-    icons?: {
-      date?: string;
-      next?: string;
-      previous?: string;
-      today?: string;
-      clear?: string;
-      time?: string;
-      up?: string;
-      type?: 'icons' | 'sprites';
-      down?: string;
-      close?: string;
-    };
-    viewMode?: keyof ViewMode;
-    sideBySide?: boolean;
-    inline?: boolean;
-    keepOpen?: boolean;
-    theme?: 'light' | 'dark' | 'auto';
-  };
-  stepping?: number;
-  useCurrent?: boolean;
-  defaultDate?: DateTime;
-  localization?: Localization;
-  keepInvalid?: boolean;
-  debug?: boolean;
-  allowInputToggle?: boolean;
-  viewDate?: DateTime;
-  multipleDates?: boolean;
-  multipleDatesSeparator?: string;
-  promptTimeOnDateChange?: boolean;
-  promptTimeOnDateChangeTransitionDelay?: number;
-  meta?: {};
-  container?: HTMLElement;
-}
-interface FormatLocalization {
-  locale?: string;
-  dateFormats?: {
-    LTS?: string;
-    LT?: string;
-    L?: string;
-    LL?: string;
-    LLL?: string;
-    LLLL?: string;
-  };
-  ordinal?: (n: number) => any;
-  format?: string;
-}
-interface Localization extends FormatLocalization {
-  nextMonth?: string;
-  pickHour?: string;
-  incrementSecond?: string;
-  nextDecade?: string;
-  selectDecade?: string;
-  dayViewHeaderFormat?: DateTimeFormatOptions;
-  decrementHour?: string;
-  selectDate?: string;
-  incrementHour?: string;
-  previousCentury?: string;
-  decrementSecond?: string;
-  today?: string;
-  previousMonth?: string;
-  selectYear?: string;
-  pickSecond?: string;
-  nextCentury?: string;
-  close?: string;
-  incrementMinute?: string;
-  selectTime?: string;
-  clear?: string;
-  toggleMeridiem?: string;
-  selectMonth?: string;
-  decrementMinute?: string;
-  pickMinute?: string;
-  nextYear?: string;
-  previousYear?: string;
-  previousDecade?: string;
-  startOfTheWeek?: number;
-}
 declare const DefaultOptions: Options;
 /**
  * A robust and powerful date/time picker component.
  */
 declare class TempusDominus {
   _subscribers: {
-    [key: string]: ((event: any) => {})[];
+    [key: string]: ((event: any) => Record<string, unknown>)[];
   };
   private _isDisabled;
   private _toggle;

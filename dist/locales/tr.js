@@ -19,9 +19,9 @@ const localization = {
     nextDecade: 'Sonraki on yıl',
     previousCentury: 'Önceki yüzyıl',
     nextCentury: 'Sonraki yüzyıl',
-    pickHour: "Saat seçin",
-    incrementHour: "Saati ilerlet",
-    decrementHour: "Saati gerilet",
+    pickHour: 'Saat seçin',
+    incrementHour: 'Saati ilerlet',
+    decrementHour: 'Saati gerilet',
     pickMinute: 'Dakika seçin',
     incrementMinute: 'Dakikayı ilerlet',
     decrementMinute: 'Dakikayı gerilet',
@@ -29,7 +29,7 @@ const localization = {
     incrementSecond: 'Saniyeyi ilerlet',
     decrementSecond: 'Saniyeyi gerilet',
     toggleMeridiem: 'Meridemi Değiştir AM-PM',
-    selectTime: "Saat seçin",
+    selectTime: 'Saat seçin',
     selectDate: 'Tarih seçin',
     dayViewHeaderFormat: { month: 'long', year: 'numeric' },
     locale: 'tr',
@@ -40,8 +40,8 @@ const localization = {
         L: 'DD.MM.YYYY',
         LL: 'D MMMM YYYY',
         LLL: 'D MMMM YYYY HH:mm',
-        LLLL: 'dddd, D MMMM YYYY HH:mm'
+        LLLL: 'dddd, D MMMM YYYY HH:mm',
     },
-    ordinal: n => `${n}.`,
-    format: 'L LT'
+    ordinal: (n) => `${n}.`,
+    format: 'L LT',
 };exports.localization=localization;exports.name=name;Object.defineProperty(exports,'__esModule',{value:true});}));

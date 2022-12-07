@@ -1,7 +1,12 @@
 import Display from './display/index';
 import Dates from './dates';
 import Actions from './actions';
-import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
+import {
+  DateTime,
+  DateTimeFormatOptions,
+  guessHourCycle,
+  Unit,
+} from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
 import {
@@ -24,8 +29,9 @@ import { OptionConverter } from './utilities/optionConverter';
  * A robust and powerful date/time picker component.
  */
 class TempusDominus {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   _subscribers: { [key: string]: ((event: any) => Record<string, unknown>)[] } =
-    {}; //eslint-disable-line @typescript-eslint/no-explicit-any
+    {};
   private _isDisabled = false;
   private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: NodeJS.Timeout;
@@ -281,9 +287,10 @@ class TempusDominus {
       new CustomEvent(event.type, { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
     );
 
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any).jQuery) {
-      //eslint-disable-line @typescript-eslint/no-explicit-any
-      const $ = (window as any).jQuery; //eslint-disable-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const $ = (window as any).jQuery;
 
       if (isChangeEvent && this.optionsStore.input) {
         $(this.optionsStore.input).trigger(event);
@@ -386,9 +393,15 @@ class TempusDominus {
       this.display._update('all');
     }
 
-    if (newConfig.display.components.useTwentyfourHour === undefined) {
-      newConfig.display.components.useTwentyfourHour =
-        !newConfig.viewDate.parts()?.dayPeriod;
+    if (
+      newConfig.display.components.useTwentyfourHour &&
+      newConfig.localization.hourCycle === undefined
+    )
+      newConfig.localization.hourCycle = 'h24';
+    else if (newConfig.localization.hourCycle === undefined) {
+      newConfig.localization.hourCycle = guessHourCycle(
+        newConfig.localization.locale
+      );
     }
 
     this.optionsStore.options = newConfig;
@@ -497,8 +510,8 @@ class TempusDominus {
    * something for the remove listener function.
    * @private
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _inputChangeEvent = (event?: any) => {
-    //eslint-disable-line @typescript-eslint/no-explicit-any
     const internallyTriggered = event?.detail;
     if (internallyTriggered) return;
 

@@ -16,12 +16,6 @@ const twoDigitTemplate = {
   hour: '2-digit',
   minute: '2-digit',
   second: '2-digit',
-  hour12: true,
-};
-
-const twoDigitTwentyFourTemplate = {
-  hour: '2-digit',
-  hour12: false,
 };
 
 export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
@@ -42,6 +36,34 @@ export const getFormatByUnit = (unit: Unit): object => {
     case 'year':
       return { year: 'numeric' };
   }
+};
+
+export const guessHourCycle = (locale: string): Intl.LocaleHourCycleKey => {
+  if (!locale) return 'h12';
+
+  const dt = new DateTime().setLocale(locale);
+  dt.hours = 0;
+
+  // noinspection SpellCheckingInspection
+  const start = dt.parts(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    numberingSystem: 'latn',
+  }).hour;
+
+  //midnight is 12 so en-US style 12 AM
+  if (start === '12') return 'h12';
+  //midnight is 24 is from 00-24
+  if (start === '24') return 'h24';
+
+  dt.hours = 23;
+  const end = dt.parts(undefined, { hour: '2-digit', minute: '2-digit' }).hour;
+
+  //if midnight is 00 and hour 23 is 11 then
+  if (start === '00' && end === '11') return 'h11';
+
+  //otherwise assume h23
+  return 'h23';
 };
 
 /**
@@ -87,8 +109,8 @@ export class DateTime extends Date {
    * @param input
    * @param localization
    */
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   static fromString(input: string, localization: FormatLocalization): DateTime {
-    //eslint-disable-line @typescript-eslint/no-unused-vars
     return new DateTime(input);
   }
 
@@ -270,7 +292,7 @@ export class DateTime extends Date {
    * @param left
    * @param right
    * @param unit.
-   * @param inclusivity. A [ indicates inclusion of a value. A ( indicates exclusion.
+   * @param inclusivity. A "[ indicates inclusion of a value. A ( indicates exclusion.
    * If the inclusivity parameter is used, both indicators must be passed.
    */
   isBetween(
@@ -373,18 +395,9 @@ export class DateTime extends Date {
     this.setHours(value);
   }
 
-  /**
-   * Returns two digit hours
-   */
-  get hoursFormatted(): string {
-    return this.parts(undefined, twoDigitTwentyFourTemplate).hour;
-  }
-
-  /**
-   * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
-   */
-  get twelveHoursFormatted(): string {
-    return this.parts(undefined, twoDigitTemplate).hour;
+  getHoursFormatted(hourCycle: Intl.LocaleHourCycleKey = 'h12') {
+    return this.parts(undefined, { ...twoDigitTemplate, hourCycle: hourCycle })
+      .hour;
   }
 
   /**
