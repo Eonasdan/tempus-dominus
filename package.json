@@ -32,19 +32,10 @@
     "prettier": "prettier --ignore-unknown --write .",
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
-    "release": "npm run test:silent && npm run build && npm run build:declarations",
+    "release": "npm run prettier && npm run eslint && npm run test:silent && npm run build && npm run build:declarations",
     "release:version": "npm run release && node build/change-version.js",
     "prepare": "husky install",
     "eslint": "npm run prettier && npx eslint --ext .html,.ts ."
-  },
-  "lint-staged": {
-    "**/*!(.d)/.ts": [
-      "npm run eslint",
-      "npm run test:silent"
-    ],
-    "**/*": [
-      "npm run prettier"
-    ]
   },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
