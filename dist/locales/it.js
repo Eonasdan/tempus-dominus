@@ -19,9 +19,9 @@ const localization = {
     nextDecade: 'Decennio successivo',
     previousCentury: 'Secolo precedente',
     nextCentury: 'Secolo successivo',
-    pickHour: 'Seleziona l\'ora',
-    incrementHour: 'Incrementa l\'ora',
-    decrementHour: 'Decrementa l\'ora',
+    pickHour: "Seleziona l'ora",
+    incrementHour: "Incrementa l'ora",
+    decrementHour: "Decrementa l'ora",
     pickMinute: 'Seleziona i minuti',
     incrementMinute: 'Incrementa i minuti',
     decrementMinute: 'Decrementa i minuti',
@@ -40,8 +40,8 @@ const localization = {
         L: 'DD/MM/YYYY',
         LL: 'D MMMM YYYY',
         LLL: 'D MMMM YYYY HH:mm',
-        LLLL: 'dddd D MMMM YYYY HH:mm'
+        LLLL: 'dddd D MMMM YYYY HH:mm',
     },
-    ordinal: n => `${n}º`,
-    format: 'L LT'
+    ordinal: (n) => `${n}º`,
+    format: 'L LT',
 };exports.localization=localization;exports.name=name;Object.defineProperty(exports,'__esModule',{value:true});}));

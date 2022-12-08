@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "start": "npm run build && concurrently \"npm:*-watch\" \"npm run serve\"",
-    "test": "vitest",
+    "test": "vitest --ui",
     "test:silent": "vitest --run --silent",
     "test:coverage": "vitest run --coverage",
     "serve": "browser-sync start --config build/browser-sync-config.js",
@@ -29,20 +29,22 @@
     "sass": "sass src/scss/tempus-dominus.scss ./dist/css/tempus-dominus.css",
     "rollup": "rollup -c ./build/rollup.config.js",
     "rollup-watch": "rollup -c ./build/rollup.config.js -w",
-    "prettier": "prettier --write --ignore-unknown",
+    "prettier": "prettier --ignore-unknown --write .",
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
-    "release": "npm run test:silent && npm run build && npm run build:declarations",
+    "release": "npm run prettier && npm run eslint && npm run test:silent && npm run build && npm run build:declarations",
     "release:version": "npm run release && node build/change-version.js",
     "prepare": "husky install",
-    "eslint": "npx eslint --ext .html,.ts ."
+    "eslint": "npm run prettier && npx eslint --ext .html,.ts ."
   },
   "lint-staged": {
-    "*.{html,ts}": [
+    "**/*!(.d)/.ts": [
       "npm run eslint",
-      "npm run prettier"
+      "npm run test:silent"
     ],
-    "**/*": "npm run prettier"
+    "**/*": [
+      "npm run prettier"
+    ]
   },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
@@ -54,35 +56,36 @@
   "devDependencies": {
     "@popperjs/core": "^2.11.6",
     "@rollup/plugin-node-resolve": "^14.1.0",
-    "@types/node": "^18.11.9",
-    "@typescript-eslint/eslint-plugin": "^5.42.0",
-    "@typescript-eslint/parser": "^5.42.0",
-    "@vitest/coverage-c8": "^0.24.5",
-    "bootstrap": "^5.2.2",
+    "@types/node": "^18.11.11",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/parser": "^5.45.1",
+    "@vitest/coverage-c8": "^0.25.4",
+    "@vitest/ui": "^0.25.5",
+    "bootstrap": "^5.2.3",
     "browser-sync": "^2.27.10",
     "chokidar": "^3.5.3",
     "clean-css": "^5.3.1",
-    "concurrently": "^7.5.0",
+    "concurrently": "^7.6.0",
     "dropcss": "^1.0.16",
-    "eslint": "^8.26.0",
+    "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "glob": "^7.2.3",
     "globby": "^11.1.0",
     "html-minifier-terser": "^5.1.1",
-    "husky": "^8.0.1",
-    "jsdom": "^20.0.2",
-    "lint-staged": "^13.0.3",
-    "prettier": "^2.7.1",
+    "husky": "^8.0.2",
+    "jsdom": "^20.0.3",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.0",
     "rollup": "^2.79.1",
     "rollup-plugin-ignore": "^1.0.10",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-ts": "^3.0.2",
-    "sass": "^1.56.0",
-    "terser": "^5.15.1",
+    "sass": "^1.56.1",
+    "terser": "^5.16.1",
     "tslib": "^2.4.1",
-    "typescript": "~4.8.4",
-    "vitest": "^0.24.5",
+    "typescript": "~4.9.3",
+    "vitest": "^0.25.4",
     "vitest-github-actions-reporter": "^0.9.0"
   },
   "homepage": "https://getdatepicker.com/",

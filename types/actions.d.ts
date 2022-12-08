@@ -29,4 +29,7 @@ export default class Actions {
    * @param value Value to change by
    */
   private manipulateAndSet;
+  private handleSelectCalendarMode;
+  private handleToggle;
+  private handleSelectDay;
 }

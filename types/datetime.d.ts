@@ -1,3 +1,4 @@
+import { FormatLocalization } from './utilities/options';
 export declare enum Unit {
   seconds = 'seconds',
   minutes = 'minutes',
@@ -38,7 +39,7 @@ export declare class DateTime extends Date {
    * @param input
    * @param localization
    */
-  static fromString(input: string, localization: any): DateTime;
+  static fromString(input: string, localization: FormatLocalization): DateTime;
   /**
    * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
    */
@@ -115,7 +116,10 @@ export declare class DateTime extends Date {
    * @param locale
    * @param template
    */
-  parts(locale?: string, template?: any): any;
+  parts(
+    locale?: string,
+    template?: Record<string, unknown>
+  ): Record<string, string>;
   /**
    * Shortcut to Date.getSeconds()
    */

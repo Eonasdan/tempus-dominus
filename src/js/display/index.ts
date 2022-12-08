@@ -402,6 +402,7 @@ export default class Display {
   }
 
   _updateCalendarHeader() {
+    if (!this._hasDate) return;
     const showing = [
       ...this.widget.querySelector(
         `.${Namespace.css.dateContainer} div[style*="display: grid"]`

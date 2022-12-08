@@ -9,7 +9,7 @@ import DefaultOptions from './utilities/default-options';
  */
 declare class TempusDominus {
   _subscribers: {
-    [key: string]: ((event: any) => {})[];
+    [key: string]: ((event: any) => Record<string, unknown>)[];
   };
   private _isDisabled;
   private _toggle;

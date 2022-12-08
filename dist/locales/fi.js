@@ -44,8 +44,8 @@ const localization = {
         l: 'D.M.YYYY',
         ll: 'D. MMM YYYY',
         lll: 'D. MMM YYYY, [klo] HH.mm',
-        llll: 'ddd, D. MMM YYYY, [klo] HH.mm'
+        llll: 'ddd, D. MMM YYYY, [klo] HH.mm',
     },
-    ordinal: n => `${n}.`,
-    format: 'L LT'
+    ordinal: (n) => `${n}.`,
+    format: 'L LT',
 };exports.localization=localization;exports.name=name;Object.defineProperty(exports,'__esModule',{value:true});}));
