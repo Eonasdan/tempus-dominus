@@ -57,6 +57,7 @@
       dayViewHeaderFormat: { month: 'long', year: '2-digit' },
       locale: 'default',
       startOfTheWeek: 0,
+      hourCycle: undefined,
       /**
        * This is only used with the customDateFormat plugin
        */
@@ -293,7 +294,7 @@
 
   <div class='row'>
     <h2 id='toggleMeridiem'>toggleMeridiem<a class='anchor-link' aria-label='Anchor'
-                                         href='#toggleMeridiem'><i
+                                             href='#toggleMeridiem'><i
       class='fa-solid fa-anchor' aria-hidden='true'></i></a></h2>
     <p>
       <strong>Defaults:</strong> Toggle Period<br />
@@ -353,6 +354,54 @@
       locale's start of the week. 0 = Sunday, 6 = Saturday. If you want the calendar view to start on Monday,
       set this option to 1.
     </p>
+  </div>
+
+  <div class='row'>
+    <h2 id='hourCycle'>hourCycle<a class='anchor-link' aria-label='Anchor'
+                                   href='#hourCycle'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> 'h11' | 'h12' | 'h23' | 'h24' <strong>Defaults:</strong> undefined<br />
+      Changes how the hours are displayed. If left undefined, the picker will attempt to guess.
+    </p>
+    <p id='hourCycle-description'>
+      Here is how the different options affect the start and end of the day.
+    </p>
+    <table class='table table-striped' aria-describedby='hourCycle-description'>
+      <thead>
+      <tr>
+        <th>Hour Cycle</th>
+        <th>Midnight</th>
+        <th>Night</th>
+        <th>Notes</th>
+      </tr>
+      </thead>
+      <tr>
+        <td>h11</td>
+        <td>00 AM</td>
+        <td>11 PM</td>
+        <td>If your locale uses this please let me know.</td>
+      </tr>
+      <tr>
+        <td>h12</td>
+        <td>12 AM</td>
+        <td>11 PM</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>h23</td>
+        <td>00</td>
+        <td>23</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>h24</td>
+        <td>01</td>
+        <td>24</td>
+        <td>If your locale uses this please let me know.</td>
+      </tr>
+    </table>
   </div>
 
   <div class='row'>
@@ -442,46 +491,47 @@
       <ul>
         <li><a href='#content'>Overview</a></li>
         <li><a href='#defaults'>Defaults</a></li>
-        <li><a href="#today">Today</a></li>
-        <li><a href="#clear">Clear</a></li>
-        <li><a href="#close">Close</a></li>
-        <li><a href="#selectMonth">Select Month</a></li>
-        <li><a href="#previousMonth">Previous Month</a></li>
-        <li><a href="#nextMonth">Next Month</a></li>
-        <li><a href="#selectYear">Select Year</a></li>
-        <li><a href="#previousYear">Previous Year</a></li>
-        <li><a href="#nextYear">Next Year</a></li>
-        <li><a href="#selectDecade">Select Decade</a></li>
-        <li><a href="#previousDecade">Previous Decade</a></li>
-        <li><a href="#nextDecade">Next Decade</a></li>
-        <li><a href="#previousCentury">Previous Century</a></li>
-        <li><a href="#nextCentury">Next Century</a></li>
-        <li><a href="#pickHour">Pick Hour</a></li>
-        <li><a href="#incrementHour">Increment Hour</a></li>
-        <li><a href="#decrementHour">Decrement Hour</a></li>
-        <li><a href="#pickMinute">Pick Minute</a></li>
-        <li><a href="#incrementMinute">Increment Minute</a></li>
-        <li><a href="#decrementMinute">Decrement Minute</a></li>
-        <li><a href="#pickSecond">Pick Second</a></li>
-        <li><a href="#incrementSecond">Increment Second</a></li>
-        <li><a href="#decrementSecond">Decrement Second</a></li>
-        <li><a href="#toggleMeridiem">Toggle Meridiem</a></li>
-        <li><a href="#selectTime">Select Time</a></li>
-        <li><a href="#selectDate">Select Date</a></li>
-        <li><a href="#dayViewHeaderFormat">Day View Header Format</a></li>
-        <li><a href="#locale">Locale</a></li>
-        <li><a href="#startOfTheWeek">Start Of The Week</a></li>
-        <li><a href="#dateFormats">Date Formats</a></li>
-        <ul>
-          <li><a href="#LTS">LTS</a></li>
-          <li><a href="#LT">LT</a></li>
-          <li><a href="#L">L</a></li>
-          <li><a href="#LL">LL</a></li>
-          <li><a href="#LLL">LLL</a></li>
-          <li><a href="#LLLL">LLLL</a></li>
-        </ul>
-        <li><a href="#ordinal">Ordinal</a></li>
-        <li><a href="#format">Format</a></li>
+        <li><a href='#today'>Today</a></li>
+        <li><a href='#clear'>Clear</a></li>
+        <li><a href='#close'>Close</a></li>
+        <li><a href='#selectMonth'>Select Month</a></li>
+        <li><a href='#previousMonth'>Previous Month</a></li>
+        <li><a href='#nextMonth'>Next Month</a></li>
+        <li><a href='#selectYear'>Select Year</a></li>
+        <li><a href='#previousYear'>Previous Year</a></li>
+        <li><a href='#nextYear'>Next Year</a></li>
+        <li><a href='#selectDecade'>Select Decade</a></li>
+        <li><a href='#previousDecade'>Previous Decade</a></li>
+        <li><a href='#nextDecade'>Next Decade</a></li>
+        <li><a href='#previousCentury'>Previous Century</a></li>
+        <li><a href='#nextCentury'>Next Century</a></li>
+        <li><a href='#pickHour'>Pick Hour</a></li>
+        <li><a href='#incrementHour'>Increment Hour</a></li>
+        <li><a href='#decrementHour'>Decrement Hour</a></li>
+        <li><a href='#pickMinute'>Pick Minute</a></li>
+        <li><a href='#incrementMinute'>Increment Minute</a></li>
+        <li><a href='#decrementMinute'>Decrement Minute</a></li>
+        <li><a href='#pickSecond'>Pick Second</a></li>
+        <li><a href='#incrementSecond'>Increment Second</a></li>
+        <li><a href='#decrementSecond'>Decrement Second</a></li>
+        <li><a href='#toggleMeridiem'>Toggle Meridiem</a></li>
+        <li><a href='#selectTime'>Select Time</a></li>
+        <li><a href='#selectDate'>Select Date</a></li>
+        <li><a href='#dayViewHeaderFormat'>Day View Header Format</a></li>
+        <li><a href='#locale'>Locale</a></li>
+        <li><a href='#startOfTheWeek'>Start Of The Week</a></li>
+        <li><a href='#dateFormats'>Date Formats</a>
+          <ul>
+            <li><a href='#dateFormatsLTS'>LTS</a></li>
+            <li><a href='#dateFormatsLT'>LT</a></li>
+            <li><a href='#dateFormatsL'>L</a></li>
+            <li><a href='#dateFormatsLL'>LL</a></li>
+            <li><a href='#dateFormatsLLL'>LLL</a></li>
+            <li><a href='#dateFormatsLLLL'>LLLL</a></li>
+          </ul>
+        </li>
+        <li><a href='#ordinal'>Ordinal</a></li>
+        <li><a href='#format'>Format</a></li>
       </ul>
     </nav>
   </div>
