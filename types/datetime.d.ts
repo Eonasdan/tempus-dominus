@@ -1,3 +1,4 @@
+import { FormatLocalization } from './utilities/options';
 export declare enum Unit {
   seconds = 'seconds',
   minutes = 'minutes',
@@ -12,6 +13,9 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
   numberingSystem?: string;
 }
 export declare const getFormatByUnit: (unit: Unit) => object;
+export declare const guessHourCycle: (
+  locale: string
+) => Intl.LocaleHourCycleKey;
 /**
  * For the most part this object behaves exactly the same way
  * as the native Date object with a little extra spice.
@@ -38,7 +42,7 @@ export declare class DateTime extends Date {
    * @param input
    * @param localization
    */
-  static fromString(input: string, localization: any): DateTime;
+  static fromString(input: string, localization: FormatLocalization): DateTime;
   /**
    * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
    */
@@ -101,7 +105,7 @@ export declare class DateTime extends Date {
    * @param left
    * @param right
    * @param unit.
-   * @param inclusivity. A [ indicates inclusion of a value. A ( indicates exclusion.
+   * @param inclusivity. A "[ indicates inclusion of a value. A ( indicates exclusion.
    * If the inclusivity parameter is used, both indicators must be passed.
    */
   isBetween(
@@ -115,7 +119,10 @@ export declare class DateTime extends Date {
    * @param locale
    * @param template
    */
-  parts(locale?: string, template?: any): any;
+  parts(
+    locale?: string,
+    template?: Record<string, unknown>
+  ): Record<string, string>;
   /**
    * Shortcut to Date.getSeconds()
    */
@@ -148,14 +155,7 @@ export declare class DateTime extends Date {
    * Shortcut to Date.setHours()
    */
   set hours(value: number);
-  /**
-   * Returns two digit hours
-   */
-  get hoursFormatted(): string;
-  /**
-   * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
-   */
-  get twelveHoursFormatted(): string;
+  getHoursFormatted(hourCycle?: Intl.LocaleHourCycleKey): string;
   /**
    * Get the meridiem of the date. E.g. AM or PM.
    * If the {@link locale} provides a "dayPeriod" then this will be returned,

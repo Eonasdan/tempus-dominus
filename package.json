@@ -38,12 +38,12 @@
     "eslint": "npm run prettier && npx eslint --ext .html,.ts ."
   },
   "lint-staged": {
-    "*.{html,ts}": [
-      "npm run eslint"
+    "**/*!(.d)/.ts": [
+      "npm run eslint",
+      "npm run test:silent"
     ],
     "**/*": [
-      "npm run prettier",
-      "npm run test:silent"
+      "npm run prettier"
     ]
   },
   "bugs": {

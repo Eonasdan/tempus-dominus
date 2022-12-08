@@ -64,7 +64,7 @@ export default interface Options {
   multipleDatesSeparator?: string;
   promptTimeOnDateChange?: boolean;
   promptTimeOnDateChangeTransitionDelay?: number;
-  meta?: {};
+  meta?: Record<string, unknown>;
   container?: HTMLElement;
 }
 export interface FormatLocalization {
@@ -109,4 +109,5 @@ export interface Localization extends FormatLocalization {
   previousYear?: string;
   previousDecade?: string;
   startOfTheWeek?: number;
+  hourCycle?: Intl.LocaleHourCycleKey;
 }
