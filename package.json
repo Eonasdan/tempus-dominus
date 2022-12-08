@@ -37,6 +37,15 @@
     "prepare": "husky install",
     "eslint": "npm run prettier && npx eslint --ext .html,.ts ."
   },
+  "lint-staged": {
+    "**/*!(.d)/.ts": [
+      "npm run eslint",
+      "npm run test:silent"
+    ],
+    "**/*": [
+      "npm run prettier"
+    ]
+  },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
   },
