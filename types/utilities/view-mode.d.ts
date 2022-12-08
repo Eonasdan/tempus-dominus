@@ -1,4 +1,4 @@
-declare type ViewMode = {
+type ViewMode = {
   clock: any;
   calendar: any;
   months: any;
