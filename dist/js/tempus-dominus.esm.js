@@ -266,7 +266,7 @@ class DateTime extends Date {
      * @param left
      * @param right
      * @param unit.
-     * @param inclusivity. A "[ indicates inclusion of a value. A ( indicates exclusion.
+     * @param inclusivity. A [ indicates inclusion of a value. A ( indicates exclusion.
      * If the inclusivity parameter is used, both indicators must be passed.
      */
     isBetween(left, right, unit, inclusivity = '()') {
@@ -2663,7 +2663,7 @@ class Collapse {
         target.classList.remove(Namespace.css.collapse, Namespace.css.show);
         target.classList.add(Namespace.css.collapsing);
         target.style.height = '';
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        //eslint-disable-next-line @typescript-eslint/no-unused-vars
         setTimeout(complete, this.getTransitionDurationFromElement(target));
     }
 }
@@ -2917,8 +2917,9 @@ class Display {
         this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
         this._isVisible = true;
     }
-    async createPopup(element, widget, options //eslint-disable-line @typescript-eslint/no-explicit-any
-    ) {
+    async createPopup(element, widget, 
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options) {
         let createPopperFunction;
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (window?.Popper) {
@@ -3017,6 +3018,8 @@ class Display {
         }
     }
     _updateCalendarHeader() {
+        if (!this._hasDate)
+            return;
         const showing = [
             ...this.widget.querySelector(`.${Namespace.css.dateContainer} div[style*="display: grid"]`).classList,
         ].find((x) => x.startsWith(Namespace.css.dateContainer));
@@ -3470,8 +3473,9 @@ class Actions {
             this.dates.setValue(newDate, this.dates.lastPickedIndex);
         }
     }
-    handleSelectCalendarMode(action, currentTarget //eslint-disable-line @typescript-eslint/no-explicit-any
-    ) {
+    handleSelectCalendarMode(action, 
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    currentTarget) {
         const value = +currentTarget.dataset.value;
         switch (action) {
             case ActionTypes$1.selectMonth:
@@ -3788,13 +3792,16 @@ class TempusDominus {
                 return;
             }
             this._handleAfterChangeEvent(event);
-            this.optionsStore.input?.dispatchEvent(new CustomEvent(event.type, { detail: event }) //eslint-disable-line @typescript-eslint/no-explicit-any
-            );
-            this.optionsStore.input?.dispatchEvent(new CustomEvent('change', { detail: event }) //eslint-disable-line @typescript-eslint/no-explicit-any
-            );
+            this.optionsStore.input?.dispatchEvent(
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
+            new CustomEvent(event.type, { detail: event }));
+            this.optionsStore.input?.dispatchEvent(
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
+            new CustomEvent('change', { detail: event }));
         }
-        this.optionsStore.element.dispatchEvent(new CustomEvent(event.type, { detail: event }) //eslint-disable-line @typescript-eslint/no-explicit-any
-        );
+        this.optionsStore.element.dispatchEvent(
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new CustomEvent(event.type, { detail: event }));
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (window.jQuery) {
             //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -3957,7 +3964,7 @@ class TempusDominus {
             if (this.display.widget) {
                 this._eventEmitters.action.emit({
                     e: {
-                        currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`),
+                        currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch}`),
                     },
                     action: ActionTypes$1.togglePicker,
                 });

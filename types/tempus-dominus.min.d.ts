@@ -388,7 +388,7 @@ declare class DateTime extends Date {
    * @param left
    * @param right
    * @param unit.
-   * @param inclusivity. A "[ indicates inclusion of a value. A ( indicates exclusion.
+   * @param inclusivity. A [ indicates inclusion of a value. A ( indicates exclusion.
    * If the inclusivity parameter is used, both indicators must be passed.
    */
   isBetween(
@@ -555,7 +555,8 @@ declare class Display {
   createPopup(
     element: HTMLElement,
     widget: HTMLElement,
-    options: any //eslint-disable-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options: any
   ): Promise<void>;
   updatePopup(): void;
   /**
