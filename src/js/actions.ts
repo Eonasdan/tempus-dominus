@@ -65,10 +65,7 @@ export default class Actions {
         break;
       case ActionTypes.selectHour: {
         let hour = +currentTarget.dataset.value;
-        if (
-          lastPicked.hours >= 12 &&
-          !this.optionsStore.options.display.components.useTwentyfourHour
-        )
+        if (lastPicked.hours >= 12 && this.optionsStore.isTwelveHour)
           hour += 12;
         lastPicked.hours = hour;
         this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
@@ -225,7 +222,7 @@ export default class Actions {
    */
   private hideOrClock(e) {
     if (
-      this.optionsStore.options.display.components.useTwentyfourHour &&
+      !this.optionsStore.isTwelveHour &&
       !this.optionsStore.options.display.components.minutes &&
       !this.optionsStore.options.display.keepOpen &&
       !this.optionsStore.options.display.inline

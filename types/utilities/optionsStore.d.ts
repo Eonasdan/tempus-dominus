@@ -19,4 +19,5 @@ export declare class OptionsStore {
   refreshCurrentView(): void;
   minimumCalendarViewMode: number;
   currentView: keyof ViewMode;
+  get isTwelveHour(): boolean;
 }

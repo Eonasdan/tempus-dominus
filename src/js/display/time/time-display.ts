@@ -74,10 +74,9 @@ export default class TimeDisplay {
       }
       timesDiv.querySelector<HTMLElement>(
         `[data-time-component=${Unit.hours}]`
-      ).innerText = this.optionsStore.options.display.components
-        .useTwentyfourHour
-        ? lastPicked.hoursFormatted
-        : lastPicked.twelveHoursFormatted;
+      ).innerText = lastPicked.getHoursFormatted(
+        this.optionsStore.options.localization.hourCycle
+      );
     }
 
     if (this.optionsStore.options.display.components.minutes) {
@@ -134,7 +133,7 @@ export default class TimeDisplay {
       ).innerText = lastPicked.secondsFormatted;
     }
 
-    if (!this.optionsStore.options.display.components.useTwentyfourHour) {
+    if (this.optionsStore.isTwelveHour) {
       const toggle = timesDiv.querySelector<HTMLElement>(
         `[data-action=${ActionTypes.toggleMeridiem}]`
       );
@@ -283,7 +282,7 @@ export default class TimeDisplay {
       bottom.push(divElement);
     }
 
-    if (!this.optionsStore.options.display.components.useTwentyfourHour) {
+    if (this.optionsStore.isTwelveHour) {
       this._gridColumns += ' a';
       let divElement = getSeparator();
       top.push(divElement);

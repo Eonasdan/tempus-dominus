@@ -13,6 +13,9 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
   numberingSystem?: string;
 }
 export declare const getFormatByUnit: (unit: Unit) => object;
+export declare const guessHourCycle: (
+  locale: string
+) => Intl.LocaleHourCycleKey;
 /**
  * For the most part this object behaves exactly the same way
  * as the native Date object with a little extra spice.
@@ -152,14 +155,7 @@ export declare class DateTime extends Date {
    * Shortcut to Date.setHours()
    */
   set hours(value: number);
-  /**
-   * Returns two digit hours
-   */
-  get hoursFormatted(): string;
-  /**
-   * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
-   */
-  get twelveHoursFormatted(): string;
+  getHoursFormatted(hourCycle?: Intl.LocaleHourCycleKey): string;
   /**
    * Get the meridiem of the date. E.g. AM or PM.
    * If the {@link locale} provides a "dayPeriod" then this will be returned,

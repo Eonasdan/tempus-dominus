@@ -52,15 +52,10 @@ export default class Dates {
       year: components.calendar && components.year ? 'numeric' : undefined,
       month: components.calendar && components.month ? '2-digit' : undefined,
       day: components.calendar && components.date ? '2-digit' : undefined,
-      hour:
-        components.clock && components.hours
-          ? components.useTwentyfourHour
-            ? '2-digit'
-            : 'numeric'
-          : undefined,
+      hour: components.clock && components.hours ? '2-digit' : undefined,
       minute: components.clock && components.minutes ? '2-digit' : undefined,
       second: components.clock && components.seconds ? '2-digit' : undefined,
-      hour12: !components.useTwentyfourHour,
+      hourCycle: this.optionsStore.options.localization.hourCycle,
     });
   }
 

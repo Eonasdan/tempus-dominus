@@ -154,9 +154,14 @@ const optionProcessors: { [key: string]: OptionProcessorFunction } =
       return value;
     },
     useTwentyfourHour: ({ value, path, providedType, defaultType }) => {
+      Namespace.errorMessages.deprecatedWarning(
+        'useTwentyfourHour',
+        'Please use "options.localization.hourCycle" instead'
+      );
       if (value === undefined || providedType === 'boolean') return value;
       Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
     },
+    hourCycle: validKeyOption(['h11', 'h12', 'h23', 'h24']),
   });
 
 const defaultProcessor: OptionProcessorFunction = ({

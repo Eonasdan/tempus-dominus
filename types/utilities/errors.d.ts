@@ -73,6 +73,7 @@ export declare class ErrorMessages {
    * a date/datetime object.
    */
   dateString(): void;
+  deprecatedWarning(message: string, remediation?: string): void;
   throwError(message: any): void;
   /**
    * Used with an Error Event type if the user selects a date that

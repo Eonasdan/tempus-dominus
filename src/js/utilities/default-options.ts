@@ -82,6 +82,7 @@ const DefaultOptions: Options = {
     selectDate: 'Select Date',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'default',
+    hourCycle: undefined,
     startOfTheWeek: 0,
     /**
      * This is only used with the customDateFormat plugin

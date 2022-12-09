@@ -19,11 +19,6 @@ const twoDigitTemplate = {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-    hour12: true,
-};
-const twoDigitTwentyFourTemplate = {
-    hour: '2-digit',
-    hour12: false,
 };
 const getFormatByUnit = (unit) => {
     switch (unit) {
@@ -37,6 +32,34 @@ const getFormatByUnit = (unit) => {
         case 'year':
             return { year: 'numeric' };
     }
+};
+const guessHourCycle = (locale) => {
+    if (!locale)
+        return 'h12';
+    // noinspection SpellCheckingInspection
+    const template = {
+        hour: '2-digit',
+        minute: '2-digit',
+        numberingSystem: 'latn',
+    };
+    const dt = new DateTime().setLocale(locale);
+    dt.hours = 0;
+    const start = dt.parts(undefined, template).hour;
+    //midnight is 12 so en-US style 12 AM
+    if (start === '12')
+        return 'h12';
+    //midnight is 24 is from 00-24
+    if (start === '24')
+        return 'h24';
+    dt.hours = 23;
+    const end = dt.parts(undefined, template).hour;
+    //if midnight is 00 and hour 23 is 11 then
+    if (start === '00' && end === '11')
+        return 'h11';
+    if (start === '00' && end === '23')
+        return 'h23';
+    console.warn(`couldn't determine hour cycle for ${locale}. start: ${start}. end: ${end}`);
+    return undefined;
 };
 /**
  * For the most part this object behaves exactly the same way
@@ -325,17 +348,9 @@ class DateTime extends Date {
     set hours(value) {
         this.setHours(value);
     }
-    /**
-     * Returns two digit hours
-     */
-    get hoursFormatted() {
-        return this.parts(undefined, twoDigitTwentyFourTemplate).hour;
-    }
-    /**
-     * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
-     */
-    get twelveHoursFormatted() {
-        return this.parts(undefined, twoDigitTemplate).hour;
+    getHoursFormatted(hourCycle = 'h12') {
+        return this.parts(undefined, { ...twoDigitTemplate, hourCycle: hourCycle })
+            .hour;
     }
     /**
      * Get the meridiem of the date. E.g. AM or PM.
@@ -532,7 +547,6 @@ class ErrorMessages {
      */
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
     failedToParseDate(optionName, date, soft = false) {
-        //eslint-disable-line @typescript-eslint/no-explicit-any
         const error = new TdError(`${this.base} Could not correctly parse "${date}" to a date for ${optionName}.`);
         error.code = 5;
         if (!soft)
@@ -578,6 +592,9 @@ class ErrorMessages {
      */
     dateString() {
         console.warn(`${this.base} Using a string for date options is not recommended unless you specify an ISO string or use the customDateFormat plugin.`);
+    }
+    deprecatedWarning(message, remediation) {
+        console.warn(`${this.base} Warning ${message} is deprecated and will be removed in a future version. ${remediation}`);
     }
     throwError(message) {
         const error = new TdError(`${this.base} ${message}`);
@@ -893,6 +910,9 @@ class OptionsStore {
     refreshCurrentView() {
         this.currentView = CalendarModes[this.currentCalendarViewMode].name;
     }
+    get isTwelveHour() {
+        return ['h12', 'h11'].includes(this.options.localization.hourCycle);
+    }
 }
 
 /**
@@ -1125,6 +1145,7 @@ const DefaultOptions = {
         selectDate: 'Select Date',
         dayViewHeaderFormat: { month: 'long', year: '2-digit' },
         locale: 'default',
+        hourCycle: undefined,
         startOfTheWeek: 0,
         /**
          * This is only used with the customDateFormat plugin
@@ -1333,10 +1354,12 @@ const optionProcessors = Object.freeze({
         return value;
     },
     useTwentyfourHour: ({ value, path, providedType, defaultType }) => {
+        Namespace.errorMessages.deprecatedWarning('useTwentyfourHour', 'Please use "options.localization.hourCycle" instead');
         if (value === undefined || providedType === 'boolean')
             return value;
         Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
     },
+    hourCycle: validKeyOption(['h11', 'h12', 'h23', 'h24']),
 });
 const defaultProcessor = ({ value, defaultType, providedType, path, }) => {
     switch (defaultType) {
@@ -1656,14 +1679,10 @@ class Dates {
             year: components.calendar && components.year ? 'numeric' : undefined,
             month: components.calendar && components.month ? '2-digit' : undefined,
             day: components.calendar && components.date ? '2-digit' : undefined,
-            hour: components.clock && components.hours
-                ? components.useTwentyfourHour
-                    ? '2-digit'
-                    : 'numeric'
-                : undefined,
+            hour: components.clock && components.hours ? '2-digit' : undefined,
             minute: components.clock && components.minutes ? '2-digit' : undefined,
             second: components.clock && components.seconds ? '2-digit' : undefined,
-            hour12: !components.useTwentyfourHour,
+            hourCycle: this.optionsStore.options.localization.hourCycle,
         });
     }
     /**
@@ -2280,10 +2299,7 @@ class TimeDisplay {
                     .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
                     .classList.add(Namespace.css.disabled);
             }
-            timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = this.optionsStore.options.display.components
-                .useTwentyfourHour
-                ? lastPicked.hoursFormatted
-                : lastPicked.twelveHoursFormatted;
+            timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = lastPicked.getHoursFormatted(this.optionsStore.options.localization.hourCycle);
         }
         if (this.optionsStore.options.display.components.minutes) {
             if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
@@ -2311,7 +2327,7 @@ class TimeDisplay {
             }
             timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
         }
-        if (!this.optionsStore.options.display.components.useTwentyfourHour) {
+        if (this.optionsStore.isTwelveHour) {
             const toggle = timesDiv.querySelector(`[data-action=${ActionTypes$1.toggleMeridiem}]`);
             toggle.innerText = lastPicked.meridiem();
             if (!this.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
@@ -2404,7 +2420,7 @@ class TimeDisplay {
             divElement.appendChild(downIcon.cloneNode(true));
             bottom.push(divElement);
         }
-        if (!this.optionsStore.options.display.components.useTwentyfourHour) {
+        if (this.optionsStore.isTwelveHour) {
             this._gridColumns += ' a';
             let divElement = getSeparator();
             top.push(divElement);
@@ -2445,10 +2461,7 @@ class HourDisplay {
     getPicker() {
         const container = document.createElement('div');
         container.classList.add(Namespace.css.hourContainer);
-        for (let i = 0; i <
-            (this.optionsStore.options.display.components.useTwentyfourHour
-                ? 24
-                : 12); i++) {
+        for (let i = 0; i < (this.optionsStore.isTwelveHour ? 12 : 24); i++) {
             const div = document.createElement('div');
             div.setAttribute('data-action', ActionTypes$1.selectHour);
             container.appendChild(div);
@@ -2474,10 +2487,7 @@ class HourDisplay {
             containerClone.classList.remove(...containerClone.classList);
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.hours}`);
-            containerClone.innerText = this.optionsStore.options.display.components
-                .useTwentyfourHour
-                ? innerDate.hoursFormatted
-                : innerDate.twelveHoursFormatted;
+            containerClone.innerText = innerDate.getHoursFormatted(this.optionsStore.options.localization.hourCycle);
             innerDate.manipulate(1, Unit.hours);
         });
     }
@@ -3323,8 +3333,7 @@ class Actions {
                 break;
             case ActionTypes$1.selectHour: {
                 let hour = +currentTarget.dataset.value;
-                if (lastPicked.hours >= 12 &&
-                    !this.optionsStore.options.display.components.useTwentyfourHour)
+                if (lastPicked.hours >= 12 && this.optionsStore.isTwelveHour)
                     hour += 12;
                 lastPicked.hours = hour;
                 this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
@@ -3442,7 +3451,7 @@ class Actions {
      * @param e
      */
     hideOrClock(e) {
-        if (this.optionsStore.options.display.components.useTwentyfourHour &&
+        if (!this.optionsStore.isTwelveHour &&
             !this.optionsStore.options.display.components.minutes &&
             !this.optionsStore.options.display.keepOpen &&
             !this.optionsStore.options.display.inline) {
@@ -3868,9 +3877,11 @@ class TempusDominus {
         if (this.display?.isVisible) {
             this.display._update('all');
         }
-        if (newConfig.display.components.useTwentyfourHour === undefined) {
-            newConfig.display.components.useTwentyfourHour =
-                !newConfig.viewDate.parts()?.dayPeriod;
+        if (newConfig.display.components.useTwentyfourHour &&
+            newConfig.localization.hourCycle === undefined)
+            newConfig.localization.hourCycle = 'h24';
+        else if (newConfig.localization.hourCycle === undefined) {
+            newConfig.localization.hourCycle = guessHourCycle(newConfig.localization.locale);
         }
         this.optionsStore.options = newConfig;
     }

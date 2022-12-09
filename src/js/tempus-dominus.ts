@@ -1,7 +1,12 @@
 import Display from './display/index';
 import Dates from './dates';
 import Actions from './actions';
-import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
+import {
+  DateTime,
+  DateTimeFormatOptions,
+  guessHourCycle,
+  Unit,
+} from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
 import {
@@ -391,9 +396,15 @@ class TempusDominus {
       this.display._update('all');
     }
 
-    if (newConfig.display.components.useTwentyfourHour === undefined) {
-      newConfig.display.components.useTwentyfourHour =
-        !newConfig.viewDate.parts()?.dayPeriod;
+    if (
+      newConfig.display.components.useTwentyfourHour &&
+      newConfig.localization.hourCycle === undefined
+    )
+      newConfig.localization.hourCycle = 'h24';
+    else if (newConfig.localization.hourCycle === undefined) {
+      newConfig.localization.hourCycle = guessHourCycle(
+        newConfig.localization.locale
+      );
     }
 
     this.optionsStore.options = newConfig;

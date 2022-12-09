@@ -109,4 +109,5 @@ export interface Localization extends FormatLocalization {
   previousYear?: string;
   previousDecade?: string;
   startOfTheWeek?: number;
+  hourCycle?: Intl.LocaleHourCycleKey;
 }

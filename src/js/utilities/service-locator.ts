@@ -1,4 +1,5 @@
-export declare type Constructable<T> = new (...args: any[]) => T; //eslint-disable-line @typescript-eslint/no-explicit-any
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+export declare type Constructable<T> = new (...args: any[]) => T;
 
 class ServiceLocator {
   private cache: Map<Constructable<unknown>, unknown | symbol> = new Map();

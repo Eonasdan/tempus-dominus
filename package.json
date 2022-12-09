@@ -39,8 +39,7 @@
   },
   "lint-staged": {
     "**/*!(.d)/.ts": [
-      "npm run eslint",
-      "npm run test:silent"
+      "npm run eslint"
     ],
     "**/*": [
       "npm run prettier"

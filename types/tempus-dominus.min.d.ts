@@ -283,6 +283,7 @@ interface Localization extends FormatLocalization {
   previousYear?: string;
   previousDecade?: string;
   startOfTheWeek?: number;
+  hourCycle?: Intl.LocaleHourCycleKey;
 }
 declare enum Unit {
   seconds = 'seconds',
@@ -437,14 +438,7 @@ declare class DateTime extends Date {
    * Shortcut to Date.setHours()
    */
   set hours(value: number);
-  /**
-   * Returns two digit hours
-   */
-  get hoursFormatted(): string;
-  /**
-   * Returns two digit hours but in twelve hour mode e.g. 13 -> 1
-   */
-  get twelveHoursFormatted(): string;
+  getHoursFormatted(hourCycle?: Intl.LocaleHourCycleKey): string;
   /**
    * Get the meridiem of the date. E.g. AM or PM.
    * If the {@link locale} provides a "dayPeriod" then this will be returned,
@@ -805,6 +799,7 @@ declare class ErrorMessages {
    * a date/datetime object.
    */
   dateString(): void;
+  deprecatedWarning(message: string, remediation?: string): void;
   throwError(message: any): void;
   //#endregion
   //#region used with notify.error
