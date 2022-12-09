@@ -84,8 +84,8 @@
        * @param input
        * @param localization
        */
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
       static fromString(input, localization) {
-          //eslint-disable-line @typescript-eslint/no-unused-vars
           return new DateTime(input);
       }
       /**
@@ -536,6 +536,7 @@
        * @param date
        * @param soft If true, logs a warning instead of an error.
        */
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       failedToParseDate(optionName, date, soft = false) {
           //eslint-disable-line @typescript-eslint/no-explicit-any
           const error = new TdError(`${this.base} Could not correctly parse "${date}" to a date for ${optionName}.`);
@@ -1675,8 +1676,8 @@
        * parse the value into a DateTime object.
        * this can be overwritten to supply your own parsing.
        */
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       parseInput(value) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           return OptionConverter.dateConversion(value, 'input', this.optionsStore.options.localization);
       }
       /**
@@ -1685,8 +1686,8 @@
        * @param value Value to convert or null|undefined
        * @param index When using multidates this is the index in the array
        */
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       setFromInput(value, index) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           if (!value) {
               this.setValue(undefined, index);
               return;
@@ -2627,9 +2628,8 @@
           target.style.height = '0';
           target.classList.remove(Namespace.css.collapse);
           target.classList.add(Namespace.css.collapsing);
-          setTimeout(
-          // eslint-disable-line @typescript-eslint/no-unused-vars
-          complete, this.getTransitionDurationFromElement(target));
+          //eslint-disable-next-line @typescript-eslint/no-unused-vars
+          setTimeout(complete, this.getTransitionDurationFromElement(target));
           target.style.height = `${target.scrollHeight}px`;
       }
       /**
@@ -2659,9 +2659,8 @@
           target.classList.remove(Namespace.css.collapse, Namespace.css.show);
           target.classList.add(Namespace.css.collapsing);
           target.style.height = '';
-          setTimeout(
-          // eslint-disable-line @typescript-eslint/no-unused-vars
-          complete, this.getTransitionDurationFromElement(target));
+          //eslint-disable-next-line @typescript-eslint/no-unused-vars
+          setTimeout(complete, this.getTransitionDurationFromElement(target));
       }
   }
   /**
@@ -2914,12 +2913,14 @@
           this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
           this._isVisible = true;
       }
-      async createPopup(element, widget, options //eslint-disable-line @typescript-eslint/no-explicit-any
-      ) {
+      async createPopup(element, widget, 
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      options) {
           let createPopperFunction;
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (window?.Popper) {
-              //eslint-disable-line @typescript-eslint/no-explicit-any
-              createPopperFunction = window?.Popper?.createPopper; //eslint-disable-line @typescript-eslint/no-explicit-any
+              //eslint-disable-next-line @typescript-eslint/no-explicit-any
+              createPopperFunction = window?.Popper?.createPopper;
           }
           else {
               const { createPopper } = await import('@popperjs/core');
@@ -3301,8 +3302,8 @@
        * @param e This is normally a click event
        * @param action If not provided, then look for a [data-action]
        */
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       do(e, action) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           const currentTarget = e?.currentTarget;
           if (currentTarget?.classList?.contains(Namespace.css.disabled))
               return false;
@@ -3469,8 +3470,9 @@
               this.dates.setValue(newDate, this.dates.lastPickedIndex);
           }
       }
-      handleSelectCalendarMode(action, currentTarget) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
+      handleSelectCalendarMode(action, 
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      currentTarget) {
           const value = +currentTarget.dataset.value;
           switch (action) {
               case ActionTypes$1.selectMonth:
@@ -3492,8 +3494,8 @@
               this.display._showMode(-1);
           }
       }
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       handleToggle(currentTarget) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           if (currentTarget.getAttribute('title') ===
               this.optionsStore.options.localization.selectDate) {
               currentTarget.setAttribute('title', this.optionsStore.options.localization.selectTime);
@@ -3514,8 +3516,8 @@
               .forEach((htmlElement) => Collapse.toggle(htmlElement));
           this._eventEmitters.viewUpdate.emit();
       }
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       handleSelectDay(currentTarget) {
-          //eslint-disable-line @typescript-eslint/no-explicit-any
           const day = this.optionsStore.viewDate.clone;
           if (currentTarget.classList.contains(Namespace.css.old)) {
               day.manipulate(-1, exports.Unit.month);
@@ -3551,15 +3553,16 @@
    */
   class TempusDominus {
       constructor(element, options = {}) {
-          this._subscribers = {}; //eslint-disable-line @typescript-eslint/no-explicit-any
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
+          this._subscribers = {};
           this._isDisabled = false;
           /**
            * Event for when the input field changes. This is a class level method so there's
            * something for the remove listener function.
            * @private
            */
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
           this._inputChangeEvent = (event) => {
-              //eslint-disable-line @typescript-eslint/no-explicit-any
               const internallyTriggered = event?.detail;
               if (internallyTriggered)
                   return;
@@ -3786,16 +3789,20 @@
                   return;
               }
               this._handleAfterChangeEvent(event);
-              this.optionsStore.input?.dispatchEvent(new CustomEvent(event.type, { detail: event }) //eslint-disable-line @typescript-eslint/no-explicit-any
-              );
-              this.optionsStore.input?.dispatchEvent(new CustomEvent('change', { detail: event }) //eslint-disable-line @typescript-eslint/no-explicit-any
-              );
+              this.optionsStore.input?.dispatchEvent(
+              //eslint-disable-next-line @typescript-eslint/no-explicit-any
+              new CustomEvent(event.type, { detail: event }));
+              this.optionsStore.input?.dispatchEvent(
+              //eslint-disable-next-line @typescript-eslint/no-explicit-any
+              new CustomEvent('change', { detail: event }));
           }
-          this.optionsStore.element.dispatchEvent(new CustomEvent(event.type, { detail: event }) //eslint-disable-line @typescript-eslint/no-explicit-any
-          );
+          this.optionsStore.element.dispatchEvent(
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
+          new CustomEvent(event.type, { detail: event }));
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (window.jQuery) {
-              //eslint-disable-line @typescript-eslint/no-explicit-any
-              const $ = window.jQuery; //eslint-disable-line @typescript-eslint/no-explicit-any
+              //eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const $ = window.jQuery;
               if (isChangeEvent && this.optionsStore.input) {
                   $(this.optionsStore.input).trigger(event);
               }
@@ -3952,7 +3959,7 @@
               if (this.display.widget) {
                   this._eventEmitters.action.emit({
                       e: {
-                          currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch} div`),
+                          currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch}`),
                       },
                       action: ActionTypes$1.togglePicker,
                   });
