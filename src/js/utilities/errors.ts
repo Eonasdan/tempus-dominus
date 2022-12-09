@@ -91,6 +91,7 @@ export class ErrorMessages {
    * @param date
    * @param soft If true, logs a warning instead of an error.
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   failedToParseDate(optionName: string, date: any, soft = false) {
     //eslint-disable-line @typescript-eslint/no-explicit-any
     const error = new TdError(

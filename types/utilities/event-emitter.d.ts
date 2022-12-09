@@ -1,7 +1,7 @@
 import { DateTime, Unit } from '../datetime';
 import ActionTypes from './action-types';
 import { BaseEvent } from './event-types';
-export declare type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
+export type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
 export declare class EventEmitter<T> {
   private subscribers;
   subscribe(callback: (value: T) => void): any;

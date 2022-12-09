@@ -281,12 +281,14 @@ export default class Display {
   async createPopup(
     element: HTMLElement,
     widget: HTMLElement,
-    options: any //eslint-disable-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options: any
   ): Promise<void> {
     let createPopperFunction;
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any)?.Popper) {
-      //eslint-disable-line @typescript-eslint/no-explicit-any
-      createPopperFunction = (window as any)?.Popper?.createPopper; //eslint-disable-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      createPopperFunction = (window as any)?.Popper?.createPopper;
     } else {
       const { createPopper } = await import('@popperjs/core');
       createPopperFunction = createPopper;
