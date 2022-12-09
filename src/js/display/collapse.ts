@@ -92,7 +92,7 @@ export default class Collapse {
     target.classList.add(Namespace.css.collapsing);
     target.style.height = '';
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     timeOut = setTimeout(
       complete,
       this.getTransitionDurationFromElement(target)

@@ -251,7 +251,8 @@ export default class Actions {
       | ActionTypes.selectMonth
       | ActionTypes.selectYear
       | ActionTypes.selectDecade,
-    currentTarget: any //eslint-disable-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    currentTarget: any
   ) {
     const value = +currentTarget.dataset.value;
     switch (action) {

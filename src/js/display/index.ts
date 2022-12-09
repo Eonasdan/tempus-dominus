@@ -281,7 +281,8 @@ export default class Display {
   async createPopup(
     element: HTMLElement,
     widget: HTMLElement,
-    options: any //eslint-disable-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options: any
   ): Promise<void> {
     let createPopperFunction;
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -403,6 +404,7 @@ export default class Display {
   }
 
   _updateCalendarHeader() {
+    if (!this._hasDate) return;
     const showing = [
       ...this.widget.querySelector(
         `.${Namespace.css.dateContainer} div[style*="display: grid"]`

@@ -275,16 +275,19 @@ class TempusDominus {
       this._handleAfterChangeEvent(event as ChangeEvent);
 
       this.optionsStore.input?.dispatchEvent(
-        new CustomEvent(event.type, { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new CustomEvent(event.type, { detail: event as any })
       );
 
       this.optionsStore.input?.dispatchEvent(
-        new CustomEvent('change', { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new CustomEvent('change', { detail: event as any })
       );
     }
 
     this.optionsStore.element.dispatchEvent(
-      new CustomEvent(event.type, { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      new CustomEvent(event.type, { detail: event as any })
     );
 
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -496,7 +499,7 @@ class TempusDominus {
         this._eventEmitters.action.emit({
           e: {
             currentTarget: this.display.widget.querySelector(
-              `.${Namespace.css.switch} div`
+              `.${Namespace.css.switch}`
             ),
           },
           action: ActionTypes.togglePicker,
