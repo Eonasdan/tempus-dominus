@@ -87,8 +87,8 @@ export class DateTime extends Date {
    * @param input
    * @param localization
    */
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   static fromString(input: string, localization: FormatLocalization): DateTime {
-    //eslint-disable-line @typescript-eslint/no-unused-vars
     return new DateTime(input);
   }
 

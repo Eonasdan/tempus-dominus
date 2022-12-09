@@ -27,7 +27,7 @@ export declare class OptionConverter {
   ): void;
   static processKey(
     key: string,
-    value: any,
+    value: any, //eslint-disable-line @typescript-eslint/no-explicit-any
     providedType: string,
     defaultType: string,
     path: string,
@@ -42,7 +42,7 @@ export declare class OptionConverter {
    * @private
    */
   static _dateTypeCheck(
-    d: any,
+    d: any, //eslint-disable-line @typescript-eslint/no-explicit-any
     localization: FormatLocalization
   ): DateTime | null;
   /**
@@ -76,7 +76,7 @@ export declare class OptionConverter {
    * @param localization object containing locale and format settings. Only used with the custom formats
    */
   static dateConversion(
-    d: any,
+    d: any, //eslint-disable-line @typescript-eslint/no-explicit-any
     optionName: string,
     localization: FormatLocalization
   ): DateTime;

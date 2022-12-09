@@ -24,8 +24,9 @@ import { OptionConverter } from './utilities/optionConverter';
  * A robust and powerful date/time picker component.
  */
 class TempusDominus {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   _subscribers: { [key: string]: ((event: any) => Record<string, unknown>)[] } =
-    {}; //eslint-disable-line @typescript-eslint/no-explicit-any
+    {};
   private _isDisabled = false;
   private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: NodeJS.Timeout;
@@ -269,21 +270,25 @@ class TempusDominus {
       this._handleAfterChangeEvent(event as ChangeEvent);
 
       this.optionsStore.input?.dispatchEvent(
-        new CustomEvent(event.type, { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new CustomEvent(event.type, { detail: event as any })
       );
 
       this.optionsStore.input?.dispatchEvent(
-        new CustomEvent('change', { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new CustomEvent('change', { detail: event as any })
       );
     }
 
     this.optionsStore.element.dispatchEvent(
-      new CustomEvent(event.type, { detail: event as any }) //eslint-disable-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      new CustomEvent(event.type, { detail: event as any })
     );
 
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any).jQuery) {
-      //eslint-disable-line @typescript-eslint/no-explicit-any
-      const $ = (window as any).jQuery; //eslint-disable-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const $ = (window as any).jQuery;
 
       if (isChangeEvent && this.optionsStore.input) {
         $(this.optionsStore.input).trigger(event);
@@ -483,7 +488,7 @@ class TempusDominus {
         this._eventEmitters.action.emit({
           e: {
             currentTarget: this.display.widget.querySelector(
-              `.${Namespace.css.switch} div`
+              `.${Namespace.css.switch}`
             ),
           },
           action: ActionTypes.togglePicker,
@@ -497,8 +502,8 @@ class TempusDominus {
    * something for the remove listener function.
    * @private
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _inputChangeEvent = (event?: any) => {
-    //eslint-disable-line @typescript-eslint/no-explicit-any
     const internallyTriggered = event?.detail;
     if (internallyTriggered) return;
 

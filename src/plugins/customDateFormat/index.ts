@@ -108,7 +108,7 @@ class CustomDateFormat {
 
     const negative = name.includes('-');
 
-    name = name.replace('-');
+    name = name.replace('-', '');
 
     if (style === 'z') name = name.substring(1, 2);
     else if (style === 'zz') name = name.substring(0, 2);

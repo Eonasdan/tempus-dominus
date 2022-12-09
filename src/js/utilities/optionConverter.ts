@@ -270,7 +270,7 @@ export class OptionConverter {
    * @private
    */
   static _dateTypeCheck(
-    d: unknown,
+    d: any, //eslint-disable-line @typescript-eslint/no-explicit-any
     localization: FormatLocalization
   ): DateTime | null {
     return tryConvertToDateTime(d, localization);
@@ -313,7 +313,7 @@ export class OptionConverter {
    * @param localization object containing locale and format settings. Only used with the custom formats
    */
   static dateConversion(
-    d: unknown,
+    d: any, //eslint-disable-line @typescript-eslint/no-explicit-any
     optionName: string,
     localization: FormatLocalization
   ): DateTime {

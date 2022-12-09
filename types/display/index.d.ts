@@ -147,7 +147,7 @@ export default class Display {
    */
   _rebuild(): void;
 }
-export declare type Paint = (
+export type Paint = (
   unit: Unit | 'decade',
   innerDate: DateTime,
   classes: string[],

@@ -8,7 +8,7 @@ import { FormatLocalization } from './options';
  */
 export declare function tryConvertToDateTime(
   this: void,
-  d: any,
+  d: DateTime | Date | '',
   localization: FormatLocalization
 ): DateTime | null;
 /**
@@ -19,7 +19,7 @@ export declare function tryConvertToDateTime(
  */
 export declare function convertToDateTime(
   this: void,
-  d: any,
+  d: DateTime | Date | '',
   optionName: string,
   localization: FormatLocalization
 ): DateTime;
@@ -33,7 +33,7 @@ export declare function convertToDateTime(
 export declare function typeCheckDateArray(
   this: void,
   optionName: string,
-  value: any,
+  value: any, //eslint-disable-line @typescript-eslint/no-explicit-any
   providedType: string,
   localization: FormatLocalization
 ): void;
@@ -46,6 +46,6 @@ export declare function typeCheckDateArray(
 export declare function typeCheckNumberArray(
   this: void,
   optionName: string,
-  value: any,
+  value: any, //eslint-disable-line @typescript-eslint/no-explicit-any
   providedType: string
 ): void;

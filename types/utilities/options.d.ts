@@ -64,7 +64,7 @@ export default interface Options {
   multipleDatesSeparator?: string;
   promptTimeOnDateChange?: boolean;
   promptTimeOnDateChangeTransitionDelay?: number;
-  meta?: {};
+  meta?: Record<string, unknown>;
   container?: HTMLElement;
 }
 export interface FormatLocalization {
