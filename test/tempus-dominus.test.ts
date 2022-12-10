@@ -3,10 +3,10 @@
  */
 
 import { beforeEach, expect, test } from 'vitest';
-import { TempusDominus, version } from '../src/js/tempus-dominus';
+import { TempusDominus } from '../src/js/tempus-dominus';
 
 beforeEach(() => {
-document.body.innerHTML = `<div class="container">
+  document.body.innerHTML = `<div class="container">
 <div class="row">
   <div class="col-sm-12" id="htmlTarget">
     <label for="datetimepicker1Input" class="form-label">Picker</label>
@@ -33,10 +33,15 @@ document.body.innerHTML = `<div class="container">
   </div>
 </div>
 </div>
-`
+`;
 });
 
 test('TD can construct', () => {
-    const element = document.getElementById('datetimepicker1');
-    expect(element).not.toBe(null);
-})
+  const element = document.getElementById('datetimepicker1');
+  expect(element).not.toBe(null);
+
+  const td = new TempusDominus(document.getElementById('datetimepicker1'));
+
+  expect(td).not.toBe(null);
+  expect(td instanceof TempusDominus).toBe(true);
+});
