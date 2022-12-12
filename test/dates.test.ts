@@ -1,9 +1,6 @@
-import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+import { beforeEach, expect, test } from 'vitest';
 import Dates from '../src/js/dates';
-import {
-  serviceLocator,
-  setupServiceLocator,
-} from '../src/js/utilities/service-locator';
+import { setupServiceLocator } from '../src/js/utilities/service-locator';
 import { DateTime } from '../src/js/datetime';
 
 beforeEach(() => {
@@ -36,5 +33,3 @@ test('lastPicked to return last selected date', () => {
   expect(dates.lastPicked.valueOf()).toBe(dt2.valueOf());
   expect(dates.lastPickedIndex).toBe(1);
 });
-
-test('Format input should return string date', () => {});

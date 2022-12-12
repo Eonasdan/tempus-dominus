@@ -47,7 +47,11 @@ export default [
       },
     ],
     external: ['@popperjs/core'],
-    plugins: [typescript()],
+    plugins: [
+      typescript({
+        exclude: ['./src/locales/**/*.ts', './src/plugins/**/*.ts'],
+      }),
+    ],
   },
   {
     input: 'dist/js/jQuery-provider.js',

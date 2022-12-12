@@ -1,12 +1,8 @@
 const rollup = require('rollup');
 const genericRollup = require('./rollup-plugin.config');
-const fs = require('fs');
-const util = require('util');
+const fs = require('fs').promises;
 const path = require('path');
 
-const { promisify } = util;
-
-const promisifyReadDir = promisify(fs.readdir);
 const formatName = (n) => n.replace(/\.ts/, '').replace(/-/g, '_');
 
 const localePath = path.join(__dirname, '../src/locales');
@@ -21,8 +17,8 @@ async function locales() {
   try {
     /* eslint-disable no-restricted-syntax, no-await-in-loop */
     // We use await-in-loop to make rollup run sequentially to save on RAM
-    const locales = await promisifyReadDir(localePath);
-    for (const l of locales) {
+    const locales = await fs.readdir(localePath);
+    for (const l of locales.filter((x) => x.endsWith('.ts'))) {
       // run builds sequentially to limit RAM usage
       await build(
         genericRollup({
@@ -40,9 +36,7 @@ async function locales() {
 async function plugins() {
   console.log('Building Plugins...');
   try {
-    const plugins = await promisifyReadDir(
-      path.join(__dirname, '../src/plugins')
-    );
+    const plugins = await fs.readdir(path.join(__dirname, '../src/plugins'));
     for (const plugin of plugins.filter((x) => x !== 'examples')) {
       // run builds sequentially to limit RAM usage
       await build(
@@ -54,7 +48,7 @@ async function plugins() {
       );
     }
 
-    const examplePlugins = await promisifyReadDir(
+    const examplePlugins = await fs.readdir(
       path.join(__dirname, '../src/plugins/examples')
     );
     for (const plugin of examplePlugins.map((x) => x.replace('.ts', ''))) {
