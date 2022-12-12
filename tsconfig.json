@@ -12,16 +12,12 @@
       "ES2021"
     ],
     "moduleResolution": "node",
-    "rootDir": "./src",
+    "rootDir": "./src/js",
     "declaration": true,
     "declarationDir": "./types",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "include": [
-    "./src/js/**/*.ts",
-    "./src/locales/**/*.ts",
-    "./src/plugins/**/*.ts"
-  ],
+  "include": ["./src/js/**/*.ts"],
   "exclude": ["node_modules"]
 }
