@@ -3,7 +3,7 @@
     "name": "Jonathan Peterson"
   },
   "name": "@eonasdan/tempus-dominus",
-  "version": "6.2.7",
+  "version": "6.2.8",
   "style": "dist/css/tempus-dominus.css",
   "sass": "scss/tempus-dominus.scss",
   "main": "dist/js/tempus-dominus.js",
@@ -12,6 +12,8 @@
   "files": [
     "dist/**/*",
     "src/js/**/*.ts",
+    "src/locales/**/*.ts",
+    "src/plugins/**/*.ts",
     "src/scss/**/*.scss",
     "types/**/*"
   ],
@@ -21,7 +23,8 @@
     "test:silent": "vitest --run --silent",
     "test:coverage": "vitest run --coverage",
     "serve": "browser-sync start --config build/browser-sync-config.js",
-    "build": "node ./build/utilities.js --clean ./dist && node ./build/utilities.js --copy && npm run rollup && npm run build:plugins-and-locales",
+    "clean": "node ./build/utilities.js --clean ./dist && node ./build/utilities.js --clean ./types",
+    "build": "npm run clean && node ./build/utilities.js --copy && npm run rollup && npm run build:plugins-and-locales",
     "build:plugins": "node ./build/plugins.js -p",
     "build:locales": "node ./build/plugins.js -l",
     "build:plugins-and-locales": "node ./build/plugins.js",
@@ -29,12 +32,12 @@
     "sass": "sass src/scss/tempus-dominus.scss ./dist/css/tempus-dominus.css",
     "rollup": "rollup -c ./build/rollup.config.js",
     "rollup-watch": "rollup -c ./build/rollup.config.js -w",
-    "prettier": "prettier --ignore-unknown --write .",
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
-    "release": "npm run prettier && npm run eslint && npm run test:silent && npm run build && npm run build:declarations",
+    "release": "npm run eslint && npm run test:silent && npm run build",
     "release:version": "npm run release && node build/change-version.js",
     "prepare": "husky install",
+    "prettier": "prettier --ignore-unknown --write .",
     "eslint": "npm run prettier && npx eslint --ext .html,.ts ."
   },
   "lint-staged": {

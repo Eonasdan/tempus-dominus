@@ -25,6 +25,7 @@ async function locales() {
           input: `./src/locales/${l}`,
           fileName: `./dist/locales/${l.replace('.ts', '.js')}`,
           name: `tempusDominus.locales.${formatName(l)}`,
+          kind: 'locales',
         })
       );
     }
@@ -44,6 +45,7 @@ async function plugins() {
           input: `./src/plugins/${plugin}/index.ts`,
           fileName: `./dist/plugins/${plugin}.js`,
           name: `tempusDominus.plugins.${formatName(plugin)}`,
+          kind: 'plugins',
         })
       );
     }

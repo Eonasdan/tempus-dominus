@@ -8,7 +8,7 @@ const globals = {
 };
 
 module.exports = (config) => {
-  const { input, fileName, name } = config;
+  const { input, fileName, name, kind } = config;
   return {
     input: {
       input,
@@ -18,8 +18,9 @@ module.exports = (config) => {
         typescript({
           tsconfig: (resolvedConfig) => ({
             ...resolvedConfig,
-            declaration: false,
+            declaration: kind !== undefined,
             rootDir: './src',
+            declarationDir: `./types/${kind}`,
           }),
         }),
       ],

@@ -49,7 +49,12 @@ export default [
     external: ['@popperjs/core'],
     plugins: [
       typescript({
-        exclude: ['./src/locales/**/*.ts', './src/plugins/**/*.ts'],
+        tsconfig: (resolvedConfig) => ({
+          ...resolvedConfig,
+          //declaration: false,
+          // rootDir: './src',
+          // declarationDir: `./types/${kind}`,
+        }),
       }),
     ],
   },
