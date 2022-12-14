@@ -40,9 +40,7 @@ class CustomDateFormat {
   private replaceTokens(formatStr, formats) {
     return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
       const B = b && b.toUpperCase();
-      return (
-        a || formats[B] || this.englishFormats[B]
-      );
+      return a || formats[B] || this.englishFormats[B];
     });
   }
 
