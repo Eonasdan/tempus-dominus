@@ -47,7 +47,16 @@ export default [
       },
     ],
     external: ['@popperjs/core'],
-    plugins: [typescript()],
+    plugins: [
+      typescript({
+        tsconfig: (resolvedConfig) => ({
+          ...resolvedConfig,
+          //declaration: false,
+          // rootDir: './src',
+          // declarationDir: `./types/${kind}`,
+        }),
+      }),
+    ],
   },
   {
     input: 'dist/js/jQuery-provider.js',
