@@ -796,11 +796,8 @@ export default class Display {
    */
   _rebuild() {
     const wasVisible = this._isVisible;
-    if (wasVisible) this.hide();
     this._dispose();
-    if (wasVisible) {
-      this.show();
-    }
+    if (wasVisible) this.show();
   }
 }
 

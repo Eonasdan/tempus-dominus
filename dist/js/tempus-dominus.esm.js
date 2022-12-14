@@ -3278,12 +3278,9 @@ class Display {
      */
     _rebuild() {
         const wasVisible = this._isVisible;
-        if (wasVisible)
-            this.hide();
         this._dispose();
-        if (wasVisible) {
+        if (wasVisible)
             this.show();
-        }
     }
 }
 
