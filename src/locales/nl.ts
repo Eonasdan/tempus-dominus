@@ -33,13 +33,13 @@ const localization = {
   dateFormats: {
     LT: 'HH:mm',
     LTS: 'HH:mm:ss',
-    L: 'DD-MM-YYYY',
-    LL: 'D MMMM YYYY',
-    LLL: 'D MMMM YYYY HH:mm',
-    LLLL: 'dddd D MMMM YYYY HH:mm'
+    L: 'dd-MM-yyyy',
+    LL: 'd MMMM yyyy',
+    LLL: 'd MMMM yyyy HH:mm',
+    LLLL: 'dddd d MMMM yyyy HH:mm',
   },
-  ordinal: n => `[${n}${n === 1 || n === 8 || n >= 20 ? 'ste' : 'de'}]`,
-  format: 'L LT'
+  ordinal: (n) => `[${n}${n === 1 || n === 8 || n >= 20 ? 'ste' : 'de'}]`,
+  format: 'L LT',
 };
 
 export { localization, name };

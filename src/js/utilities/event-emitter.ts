@@ -32,7 +32,7 @@ export class EventEmitters {
   triggerEvent = new EventEmitter<BaseEvent>();
   viewUpdate = new EventEmitter();
   updateDisplay = new EventEmitter<ViewUpdateValues>();
-  action = new EventEmitter<{ e: any; action?: ActionTypes }>();
+  action = new EventEmitter<{ e: any; action?: ActionTypes }>(); //eslint-disable-line @typescript-eslint/no-explicit-any
   updateViewDate = new EventEmitter<DateTime>();
 
   destroy() {

@@ -5,14 +5,14 @@ const localization = {
   clear: 'Auswahl löschen',
   close: 'Auswahlbox schließen',
   selectMonth: 'Monat wählen',
-  previousMonth: 'Letzter Montat',
+  previousMonth: 'Letzter Monat',
   nextMonth: 'Nächster Monat',
   selectYear: 'Jahr wählen',
   previousYear: 'Letztes Jahr',
   nextYear: 'Nächstes Jahr',
   selectDecade: 'Jahrzehnt wählen',
-  previousDecade: 'Letztes Jahrzent',
-  nextDecade: 'Nächstes Jahrzent',
+  previousDecade: 'Letztes Jahrzehnt',
+  nextDecade: 'Nächstes Jahrzehnt',
   previousCentury: 'Letztes Jahrhundert',
   nextCentury: 'Nächstes Jahrhundert',
   pickHour: 'Stunde wählen',
@@ -33,13 +33,13 @@ const localization = {
   dateFormats: {
     LTS: 'HH:mm:ss',
     LT: 'HH:mm',
-    L: 'DD.MM.YYYY',
-    LL: 'D. MMMM YYYY',
-    LLL: 'D. MMMM YYYY HH:mm',
-    LLLL: 'dddd, D. MMMM YYYY HH:mm'
+    L: 'dd.MM.yyyy',
+    LL: 'd. MMMM yyyy',
+    LLL: 'd. MMMM yyyy HH:mm',
+    LLLL: 'dddd, d. MMMM yyyy HH:mm',
   },
-  ordinal: n => `${n}.`,
-  format: 'L LT'
+  ordinal: (n) => `${n}.`,
+  format: 'L LT',
 };
 
 export { localization, name };

@@ -4,7 +4,7 @@ import Validation from '../../validation';
 import Dates from '../../dates';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
-import {OptionsStore} from "../../utilities/optionsStore";
+import { OptionsStore } from '../../utilities/optionsStore';
 
 /**
  * Creates the clock display
@@ -41,13 +41,10 @@ export default class TimeDisplay {
    */
   _update(widget: HTMLElement): void {
     const timesDiv = <HTMLElement>(
-      widget.getElementsByClassName(
-        Namespace.css.clockContainer
-      )[0]
+      widget.getElementsByClassName(Namespace.css.clockContainer)[0]
     );
-    const lastPicked = (
-      this.dates.lastPicked || this.optionsStore.viewDate
-    ).clone;
+    const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
+      .clone;
 
     timesDiv
       .querySelectorAll('.disabled')
@@ -77,9 +74,9 @@ export default class TimeDisplay {
       }
       timesDiv.querySelector<HTMLElement>(
         `[data-time-component=${Unit.hours}]`
-      ).innerText = this.optionsStore.options.display.components.useTwentyfourHour
-        ? lastPicked.hoursFormatted
-        : lastPicked.twelveHoursFormatted;
+      ).innerText = lastPicked.getHoursFormatted(
+        this.optionsStore.options.localization.hourCycle
+      );
     }
 
     if (this.optionsStore.options.display.components.minutes) {
@@ -136,7 +133,7 @@ export default class TimeDisplay {
       ).innerText = lastPicked.secondsFormatted;
     }
 
-    if (!this.optionsStore.options.display.components.useTwentyfourHour) {
+    if (this.optionsStore.isTwelveHour) {
       const toggle = timesDiv.querySelector<HTMLElement>(
         `[data-action=${ActionTypes.toggleMeridiem}]`
       );
@@ -170,12 +167,8 @@ export default class TimeDisplay {
       middle = [],
       bottom = [],
       separator = document.createElement('div'),
-      upIcon = iconTag(
-        this.optionsStore.options.display.icons.up
-      ),
-      downIcon = iconTag(
-        this.optionsStore.options.display.icons.down
-      );
+      upIcon = iconTag(this.optionsStore.options.display.icons.up),
+      downIcon = iconTag(this.optionsStore.options.display.icons.down);
 
     separator.classList.add(Namespace.css.separator, Namespace.css.noHighlight);
     const separatorColon = <HTMLElement>separator.cloneNode(true);
@@ -289,22 +282,22 @@ export default class TimeDisplay {
       bottom.push(divElement);
     }
 
-    if (!this.optionsStore.options.display.components.useTwentyfourHour) {
+    if (this.optionsStore.isTwelveHour) {
       this._gridColumns += ' a';
       let divElement = getSeparator();
       top.push(divElement);
 
-      let button = document.createElement('button');
+      const button = document.createElement('button');
       button.setAttribute(
         'title',
         this.optionsStore.options.localization.toggleMeridiem
       );
       button.setAttribute('data-action', ActionTypes.toggleMeridiem);
       button.setAttribute('tabindex', '-1');
-      if (Namespace.css.toggleMeridiem.includes(',')) { //todo move this to paint function?
+      if (Namespace.css.toggleMeridiem.includes(',')) {
+        //todo move this to paint function?
         button.classList.add(...Namespace.css.toggleMeridiem.split(','));
-      }
-      else button.classList.add(Namespace.css.toggleMeridiem);
+      } else button.classList.add(Namespace.css.toggleMeridiem);
 
       divElement = document.createElement('div');
       divElement.classList.add(Namespace.css.noHighlight);

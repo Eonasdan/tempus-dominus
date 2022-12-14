@@ -1,4 +1,4 @@
-import { DateTime, Unit } from '../datetime';
+import { DateTime } from '../datetime';
 import ViewMode from './view-mode';
 
 interface BaseEvent {

@@ -1,11 +1,11 @@
-import { DateTime, Unit } from "../../datetime";
-import Namespace from "../../utilities/namespace";
-import Validation from "../../validation";
-import Dates from "../../dates";
-import { Paint } from "../index";
-import { serviceLocator } from "../../utilities/service-locator";
-import ActionTypes from "../../utilities/action-types";
-import { OptionsStore } from "../../utilities/optionsStore";
+import { DateTime, Unit } from '../../datetime';
+import Namespace from '../../utilities/namespace';
+import Validation from '../../validation';
+import Dates from '../../dates';
+import { Paint } from '../index';
+import { serviceLocator } from '../../utilities/service-locator';
+import ActionTypes from '../../utilities/action-types';
+import { OptionsStore } from '../../utilities/optionsStore';
 
 /**
  * Creates and updates the grid for `date`
@@ -26,13 +26,13 @@ export default class DateDisplay {
    * @private
    */
   getPicker(): HTMLElement {
-    const container = document.createElement("div");
+    const container = document.createElement('div');
     container.classList.add(Namespace.css.daysContainer);
 
     container.append(...this._daysOfTheWeek());
 
     if (this.optionsStore.options.display.calendarWeeks) {
-      const div = document.createElement("div");
+      const div = document.createElement('div');
       div.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
       container.appendChild(div);
     }
@@ -40,7 +40,7 @@ export default class DateDisplay {
     for (let i = 0; i < 42; i++) {
       if (i !== 0 && i % 7 === 0) {
         if (this.optionsStore.options.display.calendarWeeks) {
-          const div = document.createElement("div");
+          const div = document.createElement('div');
           div.classList.add(
             Namespace.css.calendarWeeks,
             Namespace.css.noHighlight
@@ -49,8 +49,8 @@ export default class DateDisplay {
         }
       }
 
-      const div = document.createElement("div");
-      div.setAttribute("data-action", ActionTypes.selectDay);
+      const div = document.createElement('div');
+      div.setAttribute('data-action', ActionTypes.selectDay);
       container.appendChild(div);
     }
 
@@ -66,10 +66,10 @@ export default class DateDisplay {
       Namespace.css.daysContainer
     )[0];
 
-    if (this.optionsStore.currentView === "calendar") {
+    if (this.optionsStore.currentView === 'calendar') {
       const [previous, switcher, next] = container.parentElement
         .getElementsByClassName(Namespace.css.calendarHeader)[0]
-        .getElementsByTagName("div");
+        .getElementsByTagName('div');
 
       switcher.setAttribute(
         Namespace.css.daysContainer,
@@ -95,12 +95,11 @@ export default class DateDisplay {
       )
         ? next.classList.remove(Namespace.css.disabled)
         : next.classList.add(Namespace.css.disabled);
-
     }
 
-    let innerDate = this.optionsStore.viewDate.clone
+    const innerDate = this.optionsStore.viewDate.clone
       .startOf(Unit.month)
-      .startOf("weekDay", this.optionsStore.options.localization.startOfTheWeek)
+      .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
       .manipulate(12, Unit.hours);
 
     container
@@ -112,12 +111,12 @@ export default class DateDisplay {
           this.optionsStore.options.display.calendarWeeks &&
           containerClone.classList.contains(Namespace.css.calendarWeeks)
         ) {
-          if (containerClone.innerText === "#") return;
+          if (containerClone.innerText === '#') return;
           containerClone.innerText = `${innerDate.week}`;
           return;
         }
 
-        let classes: string[] = [];
+        const classes: string[] = [];
         classes.push(Namespace.css.day);
 
         if (innerDate.isBefore(this.optionsStore.viewDate, Unit.month)) {
@@ -148,11 +147,11 @@ export default class DateDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute(
-          "data-value",
+          'data-value',
           `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`
         );
-        containerClone.setAttribute("data-day", `${innerDate.date}`);
-        containerClone.innerText = innerDate.format({ day: "numeric" });
+        containerClone.setAttribute('data-day', `${innerDate.date}`);
+        containerClone.innerText = innerDate.format({ day: 'numeric' });
         innerDate.manipulate(1, Unit.date);
       });
   }
@@ -162,29 +161,29 @@ export default class DateDisplay {
    * @private
    */
   private _daysOfTheWeek(): HTMLElement[] {
-    let innerDate = this.optionsStore.viewDate.clone
-      .startOf("weekDay", this.optionsStore.options.localization.startOfTheWeek)
+    const innerDate = this.optionsStore.viewDate.clone
+      .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
       .startOf(Unit.date);
     const row = [];
-    document.createElement("div");
+    document.createElement('div');
 
     if (this.optionsStore.options.display.calendarWeeks) {
-      const htmlDivElement = document.createElement("div");
+      const htmlDivElement = document.createElement('div');
       htmlDivElement.classList.add(
         Namespace.css.calendarWeeks,
         Namespace.css.noHighlight
       );
-      htmlDivElement.innerText = "#";
+      htmlDivElement.innerText = '#';
       row.push(htmlDivElement);
     }
 
     for (let i = 0; i < 7; i++) {
-      const htmlDivElement = document.createElement("div");
+      const htmlDivElement = document.createElement('div');
       htmlDivElement.classList.add(
         Namespace.css.dayOfTheWeek,
         Namespace.css.noHighlight
       );
-      htmlDivElement.innerText = innerDate.format({ weekday: "short" });
+      htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
       innerDate.manipulate(1, Unit.date);
       row.push(htmlDivElement);
     }

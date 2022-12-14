@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.7 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.8 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -13,7 +13,7 @@
             L: 'MM/dd/yyyy',
             LL: 'MMMM d, yyyy',
             LLL: 'MMMM d, yyyy h:mm T',
-            LLLL: 'dddd, MMMM d, yyyy h:mm T'
+            LLLL: 'dddd, MMMM d, yyyy h:mm T',
         };
         this.formattingTokens = /(\[[^[]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g;
         this.match1 = /\d/; // 0 - 9
@@ -28,26 +28,26 @@
             this.matchOffset,
             (obj, input) => {
                 obj.offset = this.offsetFromString(input);
-            }
+            },
         ];
         this.expressions = {
             t: [
                 this.matchWord,
                 (ojb, input) => {
                     ojb.afternoon = this.meridiemMatch(input);
-                }
+                },
             ],
             T: [
                 this.matchWord,
                 (ojb, input) => {
                     ojb.afternoon = this.meridiemMatch(input);
-                }
+                },
             ],
             fff: [
                 this.match3,
                 (ojb, input) => {
                     ojb.milliseconds = +input;
-                }
+                },
             ],
             s: [this.match1to2, this.addInput('seconds')],
             ss: [this.match1to2, this.addInput('seconds')],
@@ -66,11 +66,11 @@
                     if (!this.localization.ordinal)
                         return;
                     for (let i = 1; i <= 31; i += 1) {
-                        if (this.localization.ordinal(i).replace(/[\[\]]/g, '') === input) {
+                        if (this.localization.ordinal(i).replace(/[[\]]/g, '') === input) {
                             ojb.day = i;
                         }
                     }
-                }
+                },
             ],
             M: [this.match1to2, this.addInput('month')],
             MM: [this.match2, this.addInput('month')],
@@ -84,7 +84,7 @@
                         throw new Error();
                     }
                     obj.month = matchIndex % 12 || matchIndex;
-                }
+                },
             ],
             MMMM: [
                 this.matchWord,
@@ -95,14 +95,14 @@
                         throw new Error();
                     }
                     obj.month = matchIndex % 12 || matchIndex;
-                }
+                },
             ],
             y: [this.matchSigned, this.addInput('year')],
             yy: [
                 this.match2,
                 (obj, input) => {
                     obj.year = this.parseTwoDigitYear(input);
-                }
+                },
             ],
             yyyy: [this.match4, this.addInput('year')],
             // z: this.zoneExpressions,
@@ -143,23 +143,21 @@
         this.errorMessages = errorMessages;
     }
     getAllMonths(format = 'long') {
-        const applyFormat = new Intl.DateTimeFormat(this.localization.locale, { month: format }).format;
+        const applyFormat = new Intl.DateTimeFormat(this.localization.locale, {
+            month: format,
+        }).format;
         return [...Array(12).keys()].map((m) => applyFormat(new Date(2021, m)));
-    }
-    replaceExtendedTokens(format) {
-        return format.replace(/(\[[^\]]+])|(MMMM|MM|dd|dddd)/g, (_, a, b) => a || b.slice(1));
     }
     replaceTokens(formatStr, formats) {
         return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
             const B = b && b.toUpperCase();
-            return a || this.englishFormats[b] || this.replaceExtendedTokens(formats[B]);
+            return a || formats[B] || this.englishFormats[B];
         });
     }
     parseTwoDigitYear(input) {
         input = +input;
         return input + (input > 68 ? 1900 : 2000);
     }
-    ;
     offsetFromString(string) {
         if (!string)
             return 0;
@@ -174,7 +172,6 @@
             time[property] = +input;
         };
     }
-    ;
     /**
      * z = -4, zz = -04, zzz = -0400
      * @param date
@@ -182,12 +179,12 @@
      * @private
      */
     zoneInformation(date, style) {
-        let name = date.parts(this.localization.locale, { timeZoneName: 'longOffset' })
-            .timeZoneName
-            .replace('GMT', '')
+        let name = date
+            .parts(this.localization.locale, { timeZoneName: 'longOffset' })
+            .timeZoneName.replace('GMT', '')
             .replace(':', '');
-        let negative = name.includes('-');
-        name = name.replace('-');
+        const negative = name.includes('-');
+        name = name.replace('-', '');
         if (style === 'z')
             name = name.substring(1, 2);
         else if (style === 'zz')
@@ -197,13 +194,12 @@
     meridiemMatch(input) {
         const meridiem = new Intl.DateTimeFormat(this.localization.locale, {
             hour: 'numeric',
-            hour12: true
+            hour12: true,
         })
             .formatToParts(new Date(2022, 3, 4, 13))
             .find((p) => p.type === 'dayPeriod')?.value;
         return input.toLowerCase() === meridiem.toLowerCase();
     }
-    ;
     correctHours(time) {
         const { afternoon } = time;
         if (afternoon !== undefined) {
@@ -260,7 +256,8 @@
             return dateTime;
         if (JSON.stringify(dateTime) === 'null')
             return 'Invalid Date';
-        const format = this.replaceTokens(this.localization.format || `${this.englishFormats.L}, ${this.englishFormats.LT}`, this.localization.dateFormats);
+        const format = this.replaceTokens(this.localization.format ||
+            `${this.englishFormats.L}, ${this.englishFormats.LT}`, this.localization.dateFormats);
         const formatter = (template) => new Intl.DateTimeFormat(this.localization.locale, template).format(dateTime);
         const matches = {
             yy: formatter({ year: '2-digit' }),
@@ -293,7 +290,7 @@
         });
     }
 }
-var index = (_, tdClasses, __) => {
+var index = (_, tdClasses) => {
     const customDateFormat = new CustomDateFormat(tdClasses.DateTime, tdClasses.Namespace.errorMessages);
     // noinspection JSUnusedGlobalSymbols
     tdClasses.Dates.prototype.formatInput = function (date) {

@@ -10,7 +10,7 @@ const DefaultOptions: Options = {
     daysOfWeekDisabled: [],
     disabledTimeIntervals: [],
     disabledHours: [],
-    enabledHours: []
+    enabledHours: [],
   },
   display: {
     icons: {
@@ -23,7 +23,7 @@ const DefaultOptions: Options = {
       next: 'fa-solid fa-chevron-right',
       today: 'fa-solid fa-calendar-check',
       clear: 'fa-solid fa-trash',
-      close: 'fa-solid fa-xmark'
+      close: 'fa-solid fa-xmark',
     },
     sideBySide: false,
     calendarWeeks: false,
@@ -33,7 +33,7 @@ const DefaultOptions: Options = {
     buttons: {
       today: false,
       clear: false,
-      close: false
+      close: false,
     },
     components: {
       calendar: true,
@@ -45,10 +45,10 @@ const DefaultOptions: Options = {
       hours: true,
       minutes: true,
       seconds: false,
-      useTwentyfourHour: undefined
+      useTwentyfourHour: undefined,
     },
     inline: false,
-    theme: 'auto'
+    theme: 'auto',
   },
   stepping: 1,
   useCurrent: true,
@@ -82,6 +82,7 @@ const DefaultOptions: Options = {
     selectDate: 'Select Date',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
     locale: 'default',
+    hourCycle: undefined,
     startOfTheWeek: 0,
     /**
      * This is only used with the customDateFormat plugin
@@ -101,7 +102,7 @@ const DefaultOptions: Options = {
     /**
      * This is only used with the customDateFormat plugin
      */
-    format: 'L LT'
+    format: 'L LT',
   },
   keepInvalid: false,
   debug: false,
@@ -112,7 +113,7 @@ const DefaultOptions: Options = {
   promptTimeOnDateChange: false,
   promptTimeOnDateChangeTransitionDelay: 200,
   meta: {},
-  container: undefined
+  container: undefined,
 };
 
 export default DefaultOptions;

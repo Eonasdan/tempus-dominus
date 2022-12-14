@@ -1,4 +1,9 @@
 import { TempusDominus, version } from '../src/js/tempus-dominus';
+import { localization } from '../src/locales/ru';
 
-
-let dp: TempusDominus = new TempusDominus(document.getElementById('datetimepicker1'));
+const dp: TempusDominus = new TempusDominus(
+  document.getElementById('datetimepicker1'),
+  {
+    localization: localization,
+  }
+);

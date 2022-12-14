@@ -1,7 +1,12 @@
 import Display from './display/index';
 import Dates from './dates';
 import Actions from './actions';
-import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
+import {
+  DateTime,
+  DateTimeFormatOptions,
+  guessHourCycle,
+  Unit,
+} from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
 import {
@@ -17,18 +22,19 @@ import {
 import CalendarModes from './utilities/calendar-modes';
 import DefaultOptions from './utilities/default-options';
 import ActionTypes from './utilities/action-types';
-import {OptionsStore} from "./utilities/optionsStore";
-import {OptionConverter} from "./utilities/optionConverter";
-import { ErrorMessages } from './utilities/errors';
+import { OptionsStore } from './utilities/optionsStore';
+import { OptionConverter } from './utilities/optionConverter';
 
 /**
  * A robust and powerful date/time picker component.
  */
 class TempusDominus {
-  _subscribers: { [key: string]: ((event: any) => {})[] } = {};
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  _subscribers: { [key: string]: ((event: any) => Record<string, unknown>)[] } =
+    {};
   private _isDisabled = false;
   private _toggle: HTMLElement;
-  private _currentPromptTimeTimeout: any;
+  private _currentPromptTimeTimeout: NodeJS.Timeout;
   private actions: Actions;
   private optionsStore: OptionsStore;
   private _eventEmitters: EventEmitters;
@@ -67,7 +73,7 @@ class TempusDominus {
       this._viewUpdate();
     });
 
-    this._eventEmitters.updateViewDate.subscribe(dateTime => {
+    this._eventEmitters.updateViewDate.subscribe((dateTime) => {
       this.viewDate = dateTime;
     });
   }
@@ -81,7 +87,9 @@ class TempusDominus {
     this.optionsStore.viewDate.setLocale(
       this.optionsStore.options.localization.locale
     );
-    this.display._update(this.optionsStore.currentView === 'clock' ? 'clock' : 'calendar');
+    this.display._update(
+      this.optionsStore.currentView === 'clock' ? 'clock' : 'calendar'
+    );
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -168,12 +176,12 @@ class TempusDominus {
    */
   subscribe(
     eventTypes: string | string[],
-    callbacks: (event: any) => void | ((event: any) => void)[]
+    callbacks: (event: any) => void | ((event: any) => void)[] //eslint-disable-line @typescript-eslint/no-explicit-any
   ): { unsubscribe: () => void } | { unsubscribe: () => void }[] {
     if (typeof eventTypes === 'string') {
       eventTypes = [eventTypes];
     }
-    let callBackArray: any[];
+    let callBackArray: any[]; //eslint-disable-line @typescript-eslint/no-explicit-any
     if (!Array.isArray(callbacks)) {
       callBackArray = [callbacks];
     } else {
@@ -239,7 +247,7 @@ class TempusDominus {
    * @param language
    */
   locale(language: string) {
-    let asked = loadedLocales[language];
+    const asked = loadedLocales[language];
     if (!asked) return;
     this.updateOptions({
       localization: asked,
@@ -267,19 +275,24 @@ class TempusDominus {
       this._handleAfterChangeEvent(event as ChangeEvent);
 
       this.optionsStore.input?.dispatchEvent(
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         new CustomEvent(event.type, { detail: event as any })
       );
 
       this.optionsStore.input?.dispatchEvent(
-          new CustomEvent('change', { detail: event as any })
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new CustomEvent('change', { detail: event as any })
       );
     }
 
     this.optionsStore.element.dispatchEvent(
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       new CustomEvent(event.type, { detail: event as any })
     );
 
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any).jQuery) {
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       const $ = (window as any).jQuery;
 
       if (isChangeEvent && this.optionsStore.input) {
@@ -341,7 +354,9 @@ class TempusDominus {
 
     OptionConverter._validateConflicts(newConfig);
 
-    newConfig.viewDate = newConfig.viewDate.setLocale(newConfig.localization.locale);
+    newConfig.viewDate = newConfig.viewDate.setLocale(
+      newConfig.localization.locale
+    );
 
     if (!this.optionsStore.viewDate.isSame(newConfig.viewDate)) {
       this.optionsStore.viewDate = newConfig.viewDate;
@@ -381,10 +396,16 @@ class TempusDominus {
       this.display._update('all');
     }
 
-    if (newConfig.display.components.useTwentyfourHour === undefined) {
-      newConfig.display.components.useTwentyfourHour = !!!newConfig.viewDate.parts()?.dayPeriod;
+    if (
+      newConfig.display.components.useTwentyfourHour &&
+      newConfig.localization.hourCycle === undefined
+    )
+      newConfig.localization.hourCycle = 'h24';
+    else if (newConfig.localization.hourCycle === undefined) {
+      newConfig.localization.hourCycle = guessHourCycle(
+        newConfig.localization.locale
+      );
     }
-
 
     this.optionsStore.options = newConfig;
   }
@@ -398,7 +419,7 @@ class TempusDominus {
     if (this.optionsStore.element.tagName == 'INPUT') {
       this.optionsStore.input = this.optionsStore.element as HTMLInputElement;
     } else {
-      let query = this.optionsStore.element.dataset.tdTargetInput;
+      const query = this.optionsStore.element.dataset.tdTargetInput;
       if (query == undefined || query == 'nearest') {
         this.optionsStore.input =
           this.optionsStore.element.querySelector('input');
@@ -411,7 +432,9 @@ class TempusDominus {
     if (!this.optionsStore.input) return;
 
     if (!this.optionsStore.input.value && this.optionsStore.options.defaultDate)
-      this.optionsStore.input.value = this.dates.formatInput(this.optionsStore.options.defaultDate);
+      this.optionsStore.input.value = this.dates.formatInput(
+        this.optionsStore.options.defaultDate
+      );
 
     this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
     if (this.optionsStore.options.allowInputToggle) {
@@ -476,7 +499,7 @@ class TempusDominus {
         this._eventEmitters.action.emit({
           e: {
             currentTarget: this.display.widget.querySelector(
-              `.${Namespace.css.switch} div`
+              `.${Namespace.css.switch}`
             ),
           },
           action: ActionTypes.togglePicker,
@@ -490,6 +513,7 @@ class TempusDominus {
    * something for the remove listener function.
    * @private
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _inputChangeEvent = (event?: any) => {
     const internallyTriggered = event?.detail;
     if (internallyTriggered) return;
@@ -526,7 +550,11 @@ class TempusDominus {
    * @private
    */
   private _toggleClickEvent = () => {
-    if ((this.optionsStore.element as any)?.disabled || this.optionsStore.input?.disabled) return
+    if (
+      (this.optionsStore.element as HTMLInputElement)?.disabled ||
+      this.optionsStore.input?.disabled
+    )
+      return;
     this.toggle();
   };
 }
@@ -553,7 +581,7 @@ const loadLocale = (l) => {
  * @param l
  */
 const locale = (l: string) => {
-  let asked = loadedLocales[l];
+  const asked = loadedLocales[l];
   if (!asked) return;
   DefaultOptions.localization = asked;
 };
@@ -568,13 +596,17 @@ const extend = function (plugin, option) {
   if (!plugin) return tempusDominus;
   if (!plugin.installed) {
     // install plugin only once
-    plugin(option, { TempusDominus, Dates, Display, DateTime, Namespace }, tempusDominus);
+    plugin(
+      option,
+      { TempusDominus, Dates, Display, DateTime, Namespace },
+      tempusDominus
+    );
     plugin.installed = true;
   }
   return tempusDominus;
 };
 
-const version = '6.2.7';
+const version = '6.2.8';
 
 const tempusDominus = {
   TempusDominus,
@@ -585,7 +617,7 @@ const tempusDominus = {
   DefaultOptions,
   DateTime,
   Unit,
-  version
+  version,
 };
 
 export {
@@ -599,5 +631,5 @@ export {
   Unit,
   version,
   DateTimeFormatOptions,
-  Options
-}
+  Options,
+};

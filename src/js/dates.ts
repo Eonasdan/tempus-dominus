@@ -4,8 +4,8 @@ import { ChangeEvent, FailEvent } from './utilities/event-types';
 import Validation from './validation';
 import { serviceLocator } from './utilities/service-locator';
 import { EventEmitters } from './utilities/event-emitter';
-import {OptionsStore} from "./utilities/optionsStore";
-import {OptionConverter} from "./utilities/optionConverter";
+import { OptionsStore } from './utilities/optionsStore';
+import { OptionConverter } from './utilities/optionConverter';
 
 export default class Dates {
   private _dates: DateTime[] = [];
@@ -52,24 +52,24 @@ export default class Dates {
       year: components.calendar && components.year ? 'numeric' : undefined,
       month: components.calendar && components.month ? '2-digit' : undefined,
       day: components.calendar && components.date ? '2-digit' : undefined,
-      hour:
-        components.clock && components.hours
-          ? components.useTwentyfourHour
-            ? '2-digit'
-            : 'numeric'
-          : undefined,
+      hour: components.clock && components.hours ? '2-digit' : undefined,
       minute: components.clock && components.minutes ? '2-digit' : undefined,
       second: components.clock && components.seconds ? '2-digit' : undefined,
-      hour12: !components.useTwentyfourHour,
+      hourCycle: this.optionsStore.options.localization.hourCycle,
     });
   }
-  
+
   /**
    * parse the value into a DateTime object.
    * this can be overwritten to supply your own parsing.
    */
-  parseInput(value:any): DateTime {
-        return OptionConverter.dateConversion(value, 'input', this.optionsStore.options.localization);
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  parseInput(value: any): DateTime {
+    return OptionConverter.dateConversion(
+      value,
+      'input',
+      this.optionsStore.options.localization
+    );
   }
 
   /**
@@ -78,6 +78,7 @@ export default class Dates {
    * @param value Value to convert or null|undefined
    * @param index When using multidates this is the index in the array
    */
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFromInput(value: any, index?: number) {
     if (!value) {
       this.setValue(undefined, index);
@@ -109,7 +110,7 @@ export default class Dates {
 
     const format = getFormatByUnit(unit);
 
-    let innerDateFormatted = targetDate.format(format);
+    const innerDateFormatted = targetDate.format(format);
 
     return (
       this._dates
@@ -130,7 +131,7 @@ export default class Dates {
 
     const format = getFormatByUnit(unit);
 
-    let innerDateFormatted = targetDate.format(format);
+    const innerDateFormatted = targetDate.format(format);
 
     return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
   }

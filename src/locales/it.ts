@@ -15,9 +15,9 @@ const localization = {
   nextDecade: 'Decennio successivo',
   previousCentury: 'Secolo precedente',
   nextCentury: 'Secolo successivo',
-  pickHour: 'Seleziona l\'ora',
-  incrementHour: 'Incrementa l\'ora',
-  decrementHour: 'Decrementa l\'ora',
+  pickHour: "Seleziona l'ora",
+  incrementHour: "Incrementa l'ora",
+  decrementHour: "Decrementa l'ora",
   pickMinute: 'Seleziona i minuti',
   incrementMinute: 'Incrementa i minuti',
   decrementMinute: 'Decrementa i minuti',
@@ -33,13 +33,13 @@ const localization = {
   dateFormats: {
     LT: 'HH:mm',
     LTS: 'HH:mm:ss',
-    L: 'DD/MM/YYYY',
-    LL: 'D MMMM YYYY',
-    LLL: 'D MMMM YYYY HH:mm',
-    LLLL: 'dddd D MMMM YYYY HH:mm'
+    L: 'dd/MM/yyyy',
+    LL: 'd MMMM yyyy',
+    LLL: 'd MMMM yyyy HH:mm',
+    LLLL: 'dddd d MMMM yyyy HH:mm',
   },
-  ordinal: n => `${n}º`,
-  format: 'L LT'
+  ordinal: (n) => `${n}º`,
+  format: 'L LT',
 };
 
 export { localization, name };

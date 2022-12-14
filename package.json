@@ -3,7 +3,7 @@
     "name": "Jonathan Peterson"
   },
   "name": "@eonasdan/tempus-dominus",
-  "version": "6.2.7",
+  "version": "6.2.8",
   "style": "dist/css/tempus-dominus.css",
   "sass": "scss/tempus-dominus.scss",
   "main": "dist/js/tempus-dominus.js",
@@ -12,62 +12,87 @@
   "files": [
     "dist/**/*",
     "src/js/**/*.ts",
+    "src/locales/**/*.ts",
+    "src/plugins/**/*.ts",
     "src/scss/**/*.scss",
     "types/**/*"
   ],
   "scripts": {
     "start": "npm run build && concurrently \"npm:*-watch\" \"npm run serve\"",
-    "test": "vitest",
+    "test": "vitest --ui",
     "test:silent": "vitest --run --silent",
-    "coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage",
     "serve": "browser-sync start --config build/browser-sync-config.js",
-    "build": "node ./build/copyToDist.js && npm run rollup && npm run build:plugins-and-locales",
+    "clean": "node ./build/utilities.js --clean ./dist && node ./build/utilities.js --clean ./types",
+    "build": "npm run clean && node ./build/utilities.js --copy && npm run rollup && npm run build:plugins-and-locales",
     "build:plugins": "node ./build/plugins.js -p",
     "build:locales": "node ./build/plugins.js -l",
     "build:plugins-and-locales": "node ./build/plugins.js",
-    "build:declarations": "tsc --declaration --emitDeclarationOnly --outDir types",
+    "build:declarations": "node ./build/utilities.js --clean ./types && tsc --declaration --emitDeclarationOnly --outDir types",
     "sass": "sass src/scss/tempus-dominus.scss ./dist/css/tempus-dominus.css",
     "rollup": "rollup -c ./build/rollup.config.js",
     "rollup-watch": "rollup -c ./build/rollup.config.js -w",
-    "prettier": "prettier --write .",
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
-    "release": "npm run test:silent && npm run build && npm run build:declarations",
-    "release:version": "npm run release && node build/change-version.js"
+    "release": "npm run eslint && npm run test:silent && npm run build",
+    "release:version": "npm run release && node build/change-version.js",
+    "prepare": "husky install",
+    "prettier": "prettier --ignore-unknown --write .",
+    "eslint": "npm run prettier && npx eslint --ext .html,.ts ."
+  },
+  "lint-staged": {
+    "**/*!(.d)/.ts": [
+      "npm run eslint"
+    ],
+    "**/*": [
+      "npm run prettier"
+    ]
   },
   "bugs": {
     "url": "https://github.com/eonasdan/tempus-dominus/issues"
   },
-  "optionalDependencies": {
-    "@popperjs/core": "^2.10.1"
+  "peerDependencies": {
+    "@popperjs/core": "^2.11.6"
+  },
+  "peerDependenciesMeta": {
+    "@popperjs/core\"": {
+      "optional": true
+    }
   },
   "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
   "devDependencies": {
     "@popperjs/core": "^2.11.6",
     "@rollup/plugin-node-resolve": "^14.1.0",
-    "@types/node": "^18.7.20",
-    "@vitest/coverage-c8": "^0.24.5",
-    "bootstrap": "^5.2.1",
+    "@types/node": "^18.11.11",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/parser": "^5.45.1",
+    "@vitest/coverage-c8": "^0.25.4",
+    "@vitest/ui": "^0.25.5",
+    "bootstrap": "^5.2.3",
     "browser-sync": "^2.27.10",
     "chokidar": "^3.5.3",
     "clean-css": "^5.3.1",
-    "concurrently": "^7.4.0",
+    "concurrently": "^7.6.0",
     "dropcss": "^1.0.16",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^8.5.0",
     "glob": "^7.2.3",
     "globby": "^11.1.0",
     "html-minifier-terser": "^5.1.1",
-    "jsdom": "^20.0.0",
-    "prettier": "^2.7.1",
+    "husky": "^8.0.2",
+    "jsdom": "^20.0.3",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.0",
     "rollup": "^2.79.1",
     "rollup-plugin-ignore": "^1.0.10",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-ts": "^3.0.2",
-    "sass": "^1.55.0",
-    "terser": "^5.15.0",
-    "tslib": "^2.4.0",
-    "typescript": "~4.8.3",
-    "vitest": "^0.24.5",
+    "sass": "^1.56.1",
+    "terser": "^5.16.1",
+    "tslib": "^2.4.1",
+    "typescript": "~4.9.3",
+    "vitest": "^0.25.4",
     "vitest-github-actions-reporter": "^0.9.0"
   },
   "homepage": "https://getdatepicker.com/",

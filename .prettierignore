@@ -1,1 +1,5 @@
-src/docs/tempus-dominus*
+dist
+docs
+node_modules
+.github
+coverage

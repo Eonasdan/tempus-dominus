@@ -39,6 +39,7 @@
         hours: true,
         minutes: true,
         seconds: false,
+        //deprecated use localization.hourCycle = 'h24' instead
         useTwentyfourHour: undefined
       },
       inline: false,
@@ -367,11 +368,20 @@
                                                                  aria-label='Anchor'
                                                                  href='#componentsUseTwentyfourHour'><i
           class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
-        <p>
+        <div>
           <strong>Defaults:</strong> false<br />
+
+          <div class='alert alert-warning'>
+            <h4 class='alert-heading'>Deprecated</h4>
+            <p>
+              This option has been deprecated and will be removed in a future version.
+              Use <a href='localization.html#hourCycle'><code class='text-dark'>localization.hourCycle</code></a> instead.
+            </p>
+          </div>
+
           <img src='../images/24hour.png' class='img-fluid img-thumbnail d-block'
                alt='Twenty-four View' />
-        </p>
+        </div>
       </div>
     </div>
   </div>

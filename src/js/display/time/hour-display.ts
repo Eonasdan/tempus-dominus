@@ -4,7 +4,7 @@ import Validation from '../../validation';
 import { serviceLocator } from '../../utilities/service-locator';
 import { Paint } from '../index';
 import ActionTypes from '../../utilities/action-types';
-import {OptionsStore} from "../../utilities/optionsStore";
+import { OptionsStore } from '../../utilities/optionsStore';
 
 /**
  * Creates and updates the grid for `hours`
@@ -25,12 +25,7 @@ export default class HourDisplay {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.hourContainer);
 
-    for (
-      let i = 0;
-      i <
-      (this.optionsStore.options.display.components.useTwentyfourHour ? 24 : 12);
-      i++
-    ) {
+    for (let i = 0; i < (this.optionsStore.isTwelveHour ? 12 : 24); i++) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectHour);
       container.appendChild(div);
@@ -47,12 +42,12 @@ export default class HourDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.hourContainer
     )[0];
-    let innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
+    const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectHour}"]`)
       .forEach((containerClone: HTMLElement) => {
-        let classes = [];
+        const classes = [];
         classes.push(Namespace.css.hour);
 
         if (!this.validation.isValid(innerDate, Unit.hours)) {
@@ -64,10 +59,9 @@ export default class HourDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${innerDate.hours}`);
-        containerClone.innerText = this.optionsStore.options.display.components
-          .useTwentyfourHour
-          ? innerDate.hoursFormatted
-          : innerDate.twelveHoursFormatted;
+        containerClone.innerText = innerDate.getHoursFormatted(
+          this.optionsStore.options.localization.hourCycle
+        );
         innerDate.manipulate(1, Unit.hours);
       });
   }

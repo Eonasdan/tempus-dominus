@@ -1,34 +1,46 @@
 import { DateTime } from '../../js/datetime';
 import { ErrorMessages } from '../../js/utilities/errors';
+import { FormatLocalization } from '../../js/utilities/options';
+
+type parsedTime = {
+  year?: number;
+  month?: number;
+  day?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  milliseconds?: number;
+  zone?: {
+    offset: number;
+  };
+};
 
 class CustomDateFormat {
-  localization: any;
+  localization: FormatLocalization;
   private readonly DateTime: typeof DateTime;
   private readonly errorMessages: ErrorMessages;
 
-  constructor(dateTime, errorMessages: any) {
+  constructor(dateTime, errorMessages) {
     this.DateTime = dateTime;
     this.errorMessages = errorMessages;
   }
 
-  private REGEX_FORMAT = /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|Z{1,2}/g;
+  private REGEX_FORMAT =
+    /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|Z{1,2}/g;
 
-  private getAllMonths(format: '2-digit' | 'numeric' | 'long' | 'short' | 'narrow' = 'long') {
-    const applyFormat = new Intl.DateTimeFormat(this.localization.locale, { month: format }).format;
+  private getAllMonths(
+    format: '2-digit' | 'numeric' | 'long' | 'short' | 'narrow' = 'long'
+  ) {
+    const applyFormat = new Intl.DateTimeFormat(this.localization.locale, {
+      month: format,
+    }).format;
     return [...Array(12).keys()].map((m) => applyFormat(new Date(2021, m)));
-  }
-
-  private replaceExtendedTokens(format) {
-    return format.replace(
-      /(\[[^\]]+])|(MMMM|MM|dd|dddd)/g,
-      (_, a, b) => a || b.slice(1)
-    );
   }
 
   private replaceTokens(formatStr, formats) {
     return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
       const B = b && b.toUpperCase();
-      return a || this.englishFormats[b] || this.replaceExtendedTokens(formats[B]);
+      return a || formats[B] || this.englishFormats[B];
     });
   }
 
@@ -39,7 +51,7 @@ class CustomDateFormat {
     L: 'MM/dd/yyyy',
     LL: 'MMMM d, yyyy',
     LLL: 'MMMM d, yyyy h:mm T',
-    LLLL: 'dddd, MMMM d, yyyy h:mm T'
+    LLLL: 'dddd, MMMM d, yyyy h:mm T',
   };
 
   private formattingTokens =
@@ -57,7 +69,7 @@ class CustomDateFormat {
   private parseTwoDigitYear(input) {
     input = +input;
     return input + (input > 68 ? 1900 : 2000);
-  };
+  }
 
   private offsetFromString(string) {
     if (!string) return 0;
@@ -71,7 +83,7 @@ class CustomDateFormat {
     return (time, input) => {
       time[property] = +input;
     };
-  };
+  }
 
   /**
    * z = -4, zz = -04, zzz = -0400
@@ -80,14 +92,14 @@ class CustomDateFormat {
    * @private
    */
   private zoneInformation(date: DateTime, style: 'z' | 'zz' | 'zzz') {
-    let name = date.parts(this.localization.locale, { timeZoneName: 'longOffset' })
-      .timeZoneName
-      .replace('GMT', '')
+    let name = date
+      .parts(this.localization.locale, { timeZoneName: 'longOffset' })
+      .timeZoneName.replace('GMT', '')
       .replace(':', '');
 
-    let negative = name.includes('-');
+    const negative = name.includes('-');
 
-    name = name.replace('-');
+    name = name.replace('-', '');
 
     if (style === 'z') name = name.substring(1, 2);
     else if (style === 'zz') name = name.substring(0, 2);
@@ -99,38 +111,38 @@ class CustomDateFormat {
     this.matchOffset,
     (obj, input) => {
       obj.offset = this.offsetFromString(input);
-    }
+    },
   ];
 
   private meridiemMatch(input) {
     const meridiem = new Intl.DateTimeFormat(this.localization.locale, {
       hour: 'numeric',
-      hour12: true
+      hour12: true,
     })
       .formatToParts(new Date(2022, 3, 4, 13))
       .find((p) => p.type === 'dayPeriod')?.value;
 
     return input.toLowerCase() === meridiem.toLowerCase();
-  };
+  }
 
   private expressions = {
     t: [
       this.matchWord,
       (ojb, input) => {
         ojb.afternoon = this.meridiemMatch(input);
-      }
+      },
     ],
     T: [
       this.matchWord,
       (ojb, input) => {
         ojb.afternoon = this.meridiemMatch(input);
-      }
+      },
     ],
     fff: [
       this.match3,
       (ojb, input) => {
         ojb.milliseconds = +input;
-      }
+      },
     ],
     s: [this.match1to2, this.addInput('seconds')],
     ss: [this.match1to2, this.addInput('seconds')],
@@ -148,11 +160,11 @@ class CustomDateFormat {
         [ojb.day] = input.match(/\d+/);
         if (!this.localization.ordinal) return;
         for (let i = 1; i <= 31; i += 1) {
-          if (this.localization.ordinal(i).replace(/[\[\]]/g, '') === input) {
+          if (this.localization.ordinal(i).replace(/[[\]]/g, '') === input) {
             ojb.day = i;
           }
         }
-      }
+      },
     ],
     M: [this.match1to2, this.addInput('month')],
     MM: [this.match2, this.addInput('month')],
@@ -167,7 +179,7 @@ class CustomDateFormat {
           throw new Error();
         }
         obj.month = matchIndex % 12 || matchIndex;
-      }
+      },
     ],
     MMMM: [
       this.matchWord,
@@ -178,14 +190,14 @@ class CustomDateFormat {
           throw new Error();
         }
         obj.month = matchIndex % 12 || matchIndex;
-      }
+      },
     ],
     y: [this.matchSigned, this.addInput('year')],
     yy: [
       this.match2,
       (obj, input) => {
         obj.year = this.parseTwoDigitYear(input);
-      }
+      },
     ],
     yyyy: [this.match4, this.addInput('year')],
     // z: this.zoneExpressions,
@@ -224,7 +236,7 @@ class CustomDateFormat {
       }
     }
 
-    return (input) => {
+    return (input): parsedTime => {
       const time = {};
       for (let i = 0, start = 0; i < length; i += 1) {
         const token = array[i];
@@ -250,10 +262,12 @@ class CustomDateFormat {
     }
     try {
       if (['x', 'X'].indexOf(this.localization.format) > -1)
-        return new this.DateTime((this.localization.format === 'X' ? 1000 : 1) * input);
+        return new this.DateTime(
+          (this.localization.format === 'X' ? 1000 : 1) * input
+        );
       const parser = this.makeParser(this.localization.format);
       const { year, month, day, hours, minutes, seconds, milliseconds, zone } =
-        parser(input) as any;
+        parser(input);
       const now = new this.DateTime();
       const d = day || (!year && !month ? now.getDate() : 1);
       const y = year || now.getFullYear();
@@ -266,11 +280,15 @@ class CustomDateFormat {
       const s = seconds || 0;
       const ms = milliseconds || 0;
       if (zone) {
-        return new this.DateTime(Date.UTC(y, M, d, h, m, s, ms + zone.offset * 60 * 1000));
+        return new this.DateTime(
+          Date.UTC(y, M, d, h, m, s, ms + zone.offset * 60 * 1000)
+        );
       }
       return new this.DateTime(y, M, d, h, m, s, ms);
     } catch (e) {
-      this.errorMessages.customDateFormatError(`Unable to parse provided input: ${input}, format: ${this.localization.format}`);
+      this.errorMessages.customDateFormatError(
+        `Unable to parse provided input: ${input}, format: ${this.localization.format}`
+      );
       return new this.DateTime(''); // Invalid Date
     }
   };
@@ -279,9 +297,16 @@ class CustomDateFormat {
     if (!dateTime) return dateTime;
     if (JSON.stringify(dateTime) === 'null') return 'Invalid Date';
 
-    const format = this.replaceTokens(this.localization.format || `${this.englishFormats.L}, ${this.englishFormats.LT}`, this.localization.dateFormats);
+    const format = this.replaceTokens(
+      this.localization.format ||
+        `${this.englishFormats.L}, ${this.englishFormats.LT}`,
+      this.localization.dateFormats
+    );
 
-    const formatter = (template) => new Intl.DateTimeFormat(this.localization.locale, template).format(dateTime);
+    const formatter = (template) =>
+      new Intl.DateTimeFormat(this.localization.locale, template).format(
+        dateTime
+      );
 
     const matches = {
       yy: formatter({ year: '2-digit' }),
@@ -316,24 +341,30 @@ class CustomDateFormat {
   }
 }
 
-export default (_, tdClasses, __) => {
-  const customDateFormat = new CustomDateFormat(tdClasses.DateTime, tdClasses.Namespace.errorMessages);
+export default (_, tdClasses) => {
+  const customDateFormat = new CustomDateFormat(
+    tdClasses.DateTime,
+    tdClasses.Namespace.errorMessages
+  );
 
   // noinspection JSUnusedGlobalSymbols
-  tdClasses.Dates.prototype.formatInput = function(date) {
+  tdClasses.Dates.prototype.formatInput = function (date) {
     if (!date) return '';
     customDateFormat.localization = this.optionsStore.options.localization;
     return customDateFormat.format(date);
   };
 
   // noinspection JSUnusedGlobalSymbols
-  tdClasses.Dates.prototype.parseInput = function(input) {
+  tdClasses.Dates.prototype.parseInput = function (input) {
     customDateFormat.localization = this.optionsStore.options.localization;
     return customDateFormat.parseFormattedInput(input);
   };
 
-  tdClasses.DateTime.fromString = function(input: string, localization: any) {
+  tdClasses.DateTime.fromString = function (
+    input: string,
+    localization: FormatLocalization
+  ) {
     customDateFormat.localization = localization;
     return customDateFormat.parseFormattedInput(input);
   };
-}
+};

@@ -1,7 +1,8 @@
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
 export declare type Constructable<T> = new (...args: any[]) => T;
 
 class ServiceLocator {
-  private cache: Map<Constructable<unknown>, unknown | Symbol> = new Map();
+  private cache: Map<Constructable<unknown>, unknown | symbol> = new Map();
 
   locate<T>(identifier: Constructable<T>): T {
     const service = this.cache.get(identifier);
@@ -13,6 +14,6 @@ class ServiceLocator {
 }
 export const setupServiceLocator = () => {
   serviceLocator = new ServiceLocator();
-}
+};
 
 export let serviceLocator: ServiceLocator;
