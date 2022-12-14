@@ -51,9 +51,6 @@ export default [
       typescript({
         tsconfig: (resolvedConfig) => ({
           ...resolvedConfig,
-          //declaration: false,
-          // rootDir: './src',
-          // declarationDir: `./types/${kind}`,
         }),
       }),
     ],

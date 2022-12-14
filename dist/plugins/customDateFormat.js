@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.7 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.8 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -148,13 +148,10 @@
         }).format;
         return [...Array(12).keys()].map((m) => applyFormat(new Date(2021, m)));
     }
-    replaceExtendedTokens(format) {
-        return format.replace(/(\[[^\]]+])|(MMMM|MM|dd|dddd)/g, (_, a, b) => a || b.slice(1));
-    }
     replaceTokens(formatStr, formats) {
         return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
             const B = b && b.toUpperCase();
-            return (a || this.englishFormats[b] || this.replaceExtendedTokens(formats[B]));
+            return a || formats[B] || this.englishFormats[B];
         });
     }
     parseTwoDigitYear(input) {
