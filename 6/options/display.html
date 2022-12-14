@@ -301,6 +301,7 @@
         hours: true,
         minutes: true,
         seconds: false,
+        //deprecated use localization.hourCycle = 'h24' instead
         useTwentyfourHour: undefined
       },
       inline: false,
@@ -569,10 +570,19 @@
         </p>
 
         <h4 id="componentsUseTwentyfourHour">useTwentyfourHour<a class="anchor-link" aria-label="Anchor" href="#componentsUseTwentyfourHour"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a></h4>
-        <p>
+        <div>
           <strong>Defaults:</strong> false<br>
+
+          <div class="alert alert-warning">
+            <h4 class="alert-heading">Deprecated</h4>
+            <p>
+              This option has been deprecated and will be removed in a future version.
+              Use <a href="localization.html#hourCycle"><code class="text-dark">localization.hourCycle</code></a> instead.
+            </p>
+          </div>
+
           <img src="../images/24hour.png" class="img-fluid img-thumbnail d-block" alt="Twenty-four View">
-        </p>
+        </div>
       </div>
     </div>
   </div>
@@ -663,7 +673,7 @@
           </li>
           <li class="mb-2">Code licensed <a href="https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE" target="_blank" rel="license noopener">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY 3.0</a>.
           </li>
-          <li class="mb-2">Currently v6.2.7</li>
+          <li class="mb-2">Currently v6.2.8</li>
         </ul>
       </div>
       <div class="col-6 col-lg-2 offset-lg-1 mb-3">

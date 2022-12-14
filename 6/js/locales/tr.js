@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.7 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.8 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -19,9 +19,9 @@ const localization = {
     nextDecade: 'Sonraki on yıl',
     previousCentury: 'Önceki yüzyıl',
     nextCentury: 'Sonraki yüzyıl',
-    pickHour: "Saat seçin",
-    incrementHour: "Saati ilerlet",
-    decrementHour: "Saati gerilet",
+    pickHour: 'Saat seçin',
+    incrementHour: 'Saati ilerlet',
+    decrementHour: 'Saati gerilet',
     pickMinute: 'Dakika seçin',
     incrementMinute: 'Dakikayı ilerlet',
     decrementMinute: 'Dakikayı gerilet',
@@ -29,7 +29,7 @@ const localization = {
     incrementSecond: 'Saniyeyi ilerlet',
     decrementSecond: 'Saniyeyi gerilet',
     toggleMeridiem: 'Meridemi Değiştir AM-PM',
-    selectTime: "Saat seçin",
+    selectTime: 'Saat seçin',
     selectDate: 'Tarih seçin',
     dayViewHeaderFormat: { month: 'long', year: 'numeric' },
     locale: 'tr',
@@ -37,11 +37,11 @@ const localization = {
     dateFormats: {
         LT: 'HH:mm',
         LTS: 'HH:mm:ss',
-        L: 'DD.MM.YYYY',
-        LL: 'D MMMM YYYY',
-        LLL: 'D MMMM YYYY HH:mm',
-        LLLL: 'dddd, D MMMM YYYY HH:mm'
+        L: 'dd.MM.yyyy',
+        LL: 'd MMMM yyyy',
+        LLL: 'd MMMM yyyy HH:mm',
+        LLLL: 'dddd, d MMMM yyyy HH:mm',
     },
-    ordinal: n => `${n}.`,
-    format: 'L LT'
+    ordinal: (n) => `${n}.`,
+    format: 'L LT',
 };exports.localization=localization;exports.name=name;Object.defineProperty(exports,'__esModule',{value:true});}));

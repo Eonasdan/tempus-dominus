@@ -318,6 +318,7 @@
       dayViewHeaderFormat: { month: 'long', year: '2-digit' },
       locale: 'default',
       startOfTheWeek: 0,
+      hourCycle: undefined,
       /**
        * This is only used with the customDateFormat plugin
        */
@@ -558,6 +559,52 @@
   </div>
 
   <div class="row">
+    <h2 id="hourCycle">hourCycle<a class="anchor-link" aria-label="Anchor" href="#hourCycle"><i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
+    </h2>
+    <p>
+      <strong>Accepts:</strong> 'h11' | 'h12' | 'h23' | 'h24' <strong>Defaults:</strong> undefined<br>
+      Changes how the hours are displayed. If left undefined, the picker will attempt to guess.
+    </p>
+    <p id="hourCycle-description">
+      Here is how the different options affect the start and end of the day.
+    </p>
+    <table class="table table-striped" aria-describedby="hourCycle-description">
+      <thead>
+      <tr>
+        <th>Hour Cycle</th>
+        <th>Midnight</th>
+        <th>Night</th>
+        <th>Notes</th>
+      </tr>
+      </thead>
+      <tbody><tr>
+        <td>h11</td>
+        <td>00 AM</td>
+        <td>11 PM</td>
+        <td>If your locale uses this please let me know.</td>
+      </tr>
+      <tr>
+        <td>h12</td>
+        <td>12 AM</td>
+        <td>11 PM</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>h23</td>
+        <td>00</td>
+        <td>23</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>h24</td>
+        <td>01</td>
+        <td>24</td>
+        <td>If your locale uses this please let me know.</td>
+      </tr>
+    </tbody></table>
+  </div>
+
+  <div class="row">
     <h2 id="dateFormats">dateFormats<a class="anchor-link" aria-label="Anchor" href="#dateFormats">
       <i class="fa-solid fa-anchor" aria-hidden="true"></i></a>
     </h2>
@@ -656,15 +703,16 @@
         <li><a href="#dayViewHeaderFormat">Day View Header Format</a></li>
         <li><a href="#locale">Locale</a></li>
         <li><a href="#startOfTheWeek">Start Of The Week</a></li>
-        <li><a href="#dateFormats">Date Formats</a></li>
-        <ul>
-          <li><a href="#LTS">LTS</a></li>
-          <li><a href="#LT">LT</a></li>
-          <li><a href="#L">L</a></li>
-          <li><a href="#LL">LL</a></li>
-          <li><a href="#LLL">LLL</a></li>
-          <li><a href="#LLLL">LLLL</a></li>
-        </ul>
+        <li><a href="#dateFormats">Date Formats</a>
+          <ul>
+            <li><a href="#dateFormatsLTS">LTS</a></li>
+            <li><a href="#dateFormatsLT">LT</a></li>
+            <li><a href="#dateFormatsL">L</a></li>
+            <li><a href="#dateFormatsLL">LL</a></li>
+            <li><a href="#dateFormatsLLL">LLL</a></li>
+            <li><a href="#dateFormatsLLLL">LLLL</a></li>
+          </ul>
+        </li>
         <li><a href="#ordinal">Ordinal</a></li>
         <li><a href="#format">Format</a></li>
       </ul>
@@ -689,7 +737,7 @@
           </li>
           <li class="mb-2">Code licensed <a href="https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE" target="_blank" rel="license noopener">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY 3.0</a>.
           </li>
-          <li class="mb-2">Currently v6.2.7</li>
+          <li class="mb-2">Currently v6.2.8</li>
         </ul>
       </div>
       <div class="col-6 col-lg-2 offset-lg-1 mb-3">
