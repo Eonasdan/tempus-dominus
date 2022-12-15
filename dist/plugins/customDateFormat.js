@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.8 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.9 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -271,9 +271,9 @@
             ddd: formatter({ weekday: 'short' }),
             dddd: formatter({ weekday: 'long' }),
             H: dateTime.getHours(),
-            HH: dateTime.hoursFormatted,
+            HH: dateTime.getHoursFormatted('h24'),
             h: dateTime.hours > 12 ? dateTime.hours - 12 : dateTime.hours,
-            hh: dateTime.twelveHoursFormatted,
+            hh: dateTime.getHoursFormatted('h12'),
             t: dateTime.meridiem(),
             T: dateTime.meridiem().toUpperCase(),
             m: dateTime.minutes,
