@@ -74,6 +74,7 @@ export interface FormatLocalization {
   };
   ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
   format?: string;
+  hourCycle?: Intl.LocaleHourCycleKey;
 }
 
 export interface Localization extends FormatLocalization {
@@ -105,5 +106,4 @@ export interface Localization extends FormatLocalization {
   previousYear?: string;
   previousDecade?: string;
   startOfTheWeek?: number;
-  hourCycle?: Intl.LocaleHourCycleKey;
 }

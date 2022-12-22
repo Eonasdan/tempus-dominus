@@ -3,7 +3,7 @@
     "name": "Jonathan Peterson"
   },
   "name": "@eonasdan/tempus-dominus",
-  "version": "6.2.9",
+  "version": "6.2.10",
   "style": "dist/css/tempus-dominus.css",
   "sass": "scss/tempus-dominus.scss",
   "main": "dist/js/tempus-dominus.js",
@@ -12,8 +12,8 @@
   "files": [
     "dist/**/*",
     "src/js/**/*.ts",
-    "src/locales/**/*.ts",
-    "src/plugins/**/*.ts",
+    "src/js/locales/**/*.ts",
+    "src/js/plugins/**/*.ts",
     "src/scss/**/*.scss",
     "types/**/*"
   ],

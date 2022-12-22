@@ -253,6 +253,7 @@ interface FormatLocalization {
   };
   ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
   format?: string;
+  hourCycle?: Intl.LocaleHourCycleKey;
 }
 interface Localization extends FormatLocalization {
   nextMonth?: string;
@@ -283,7 +284,6 @@ interface Localization extends FormatLocalization {
   previousYear?: string;
   previousDecade?: string;
   startOfTheWeek?: number;
-  hourCycle?: Intl.LocaleHourCycleKey;
 }
 declare enum Unit {
   seconds = 'seconds',
@@ -1276,7 +1276,7 @@ declare const locale: (l: string) => void;
  */
 declare const extend: (
   plugin: any,
-  option: any
+  option?: any
 ) => {
   TempusDominus: typeof TempusDominus;
   extend: any;
@@ -1288,7 +1288,7 @@ declare const extend: (
   Unit: typeof Unit;
   version: string;
 };
-declare const version = '6.2.9';
+declare const version = '6.2.10';
 export {
   TempusDominus,
   extend,

@@ -5,7 +5,7 @@ const path = require('path');
 
 const formatName = (n) => n.replace(/\.ts/, '').replace(/-/g, '_');
 
-const localePath = path.join(__dirname, '../src/locales');
+const localePath = path.join(__dirname, '../src/js/locales');
 
 async function build(option) {
   const bundle = await rollup.rollup(option.input);
@@ -22,7 +22,7 @@ async function locales() {
       // run builds sequentially to limit RAM usage
       await build(
         genericRollup({
-          input: `./src/locales/${l}`,
+          input: `./src/js/locales/${l}`,
           fileName: `./dist/locales/${l.replace('.ts', '.js')}`,
           name: `tempusDominus.locales.${formatName(l)}`,
           kind: 'locales',
@@ -37,12 +37,12 @@ async function locales() {
 async function plugins() {
   console.log('Building Plugins...');
   try {
-    const plugins = await fs.readdir(path.join(__dirname, '../src/plugins'));
+    const plugins = await fs.readdir(path.join(__dirname, '../src/js/plugins'));
     for (const plugin of plugins.filter((x) => x !== 'examples')) {
       // run builds sequentially to limit RAM usage
       await build(
         genericRollup({
-          input: `./src/plugins/${plugin}/index.ts`,
+          input: `./src/js/plugins/${plugin}/index.ts`,
           fileName: `./dist/plugins/${plugin}.js`,
           name: `tempusDominus.plugins.${formatName(plugin)}`,
           kind: 'plugins',
@@ -51,13 +51,13 @@ async function plugins() {
     }
 
     const examplePlugins = await fs.readdir(
-      path.join(__dirname, '../src/plugins/examples')
+      path.join(__dirname, '../src/js/plugins/examples')
     );
     for (const plugin of examplePlugins.map((x) => x.replace('.ts', ''))) {
       // run builds sequentially to limit RAM usage
       await build(
         genericRollup({
-          input: `./src/plugins/examples/${plugin}.ts`,
+          input: `./src/js/plugins/examples/${plugin}.ts`,
           fileName: `./dist/plugins/examples/${plugin}.js`,
           name: `tempusDominus.plugins.${formatName(plugin)}`,
         })
