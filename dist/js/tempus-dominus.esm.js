@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.9 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.10 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -2860,7 +2860,7 @@ class Display {
                 });
             }
             // otherwise return to the calendar view
-            if (!this.optionsStore.currentCalendarViewMode) {
+            else if (!this.optionsStore.currentCalendarViewMode) {
                 this.optionsStore.currentCalendarViewMode =
                     this.optionsStore.minimumCalendarViewMode;
             }
@@ -4001,7 +4001,7 @@ const locale = (l) => {
  * @param plugin
  * @param option
  */
-const extend = function (plugin, option) {
+const extend = function (plugin, option = undefined) {
     if (!plugin)
         return tempusDominus;
     if (!plugin.installed) {
@@ -4011,7 +4011,7 @@ const extend = function (plugin, option) {
     }
     return tempusDominus;
 };
-const version = '6.2.9';
+const version = '6.2.10';
 const tempusDominus = {
     TempusDominus,
     extend,

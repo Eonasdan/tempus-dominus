@@ -16,7 +16,6 @@
   list-style: none;
   padding: 4px;
   width: 19rem;
-  min-height: 360px;
   border-radius: 4px;
   display: none;
   z-index: 9999;
@@ -56,6 +55,13 @@
 
   &.show {
     display: block;
+    &.date-container {
+      min-height: 315px;
+    }
+
+    &.time-container {
+      min-height: 217px;
+    }
   }
 
   .td-collapse {

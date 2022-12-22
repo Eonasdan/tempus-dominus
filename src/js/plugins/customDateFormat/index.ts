@@ -1,6 +1,6 @@
-import { DateTime } from '../../js/datetime';
-import { ErrorMessages } from '../../js/utilities/errors';
-import { FormatLocalization } from '../../js/utilities/options';
+import { DateTime } from '../../datetime';
+import { ErrorMessages } from '../../utilities/errors';
+import { FormatLocalization } from '../../utilities/options';
 
 type parsedTime = {
   year?: number;
@@ -308,6 +308,14 @@ class CustomDateFormat {
         dateTime
       );
 
+    //if the format asks for a twenty-four-hour string but the hour cycle is not, then make a base guess
+    const HHCycle = this.localization.hourCycle.startsWith('h1')
+      ? 'h24'
+      : this.localization.hourCycle;
+    const hhCycle = this.localization.hourCycle.startsWith('h2')
+      ? 'h12'
+      : this.localization.hourCycle;
+
     const matches = {
       yy: formatter({ year: '2-digit' }),
       yyyy: dateTime.year,
@@ -320,9 +328,9 @@ class CustomDateFormat {
       ddd: formatter({ weekday: 'short' }),
       dddd: formatter({ weekday: 'long' }),
       H: dateTime.getHours(),
-      HH: dateTime.getHoursFormatted('h24'),
+      HH: dateTime.getHoursFormatted(HHCycle),
       h: dateTime.hours > 12 ? dateTime.hours - 12 : dateTime.hours,
-      hh: dateTime.getHoursFormatted('h12'),
+      hh: dateTime.getHoursFormatted(hhCycle),
       t: dateTime.meridiem(),
       T: dateTime.meridiem().toUpperCase(),
       m: dateTime.minutes,
