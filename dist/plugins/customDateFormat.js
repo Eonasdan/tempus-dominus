@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.9 (https://getdatepicker.com/)
+  * Tempus Dominus v6.2.10 (https://getdatepicker.com/)
   * Copyright 2013-2022 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -259,6 +259,13 @@
         const format = this.replaceTokens(this.localization.format ||
             `${this.englishFormats.L}, ${this.englishFormats.LT}`, this.localization.dateFormats);
         const formatter = (template) => new Intl.DateTimeFormat(this.localization.locale, template).format(dateTime);
+        //if the format asks for a twenty-four-hour string but the hour cycle is not, then make a base guess
+        const HHCycle = this.localization.hourCycle.startsWith('h1')
+            ? 'h24'
+            : this.localization.hourCycle;
+        const hhCycle = this.localization.hourCycle.startsWith('h2')
+            ? 'h12'
+            : this.localization.hourCycle;
         const matches = {
             yy: formatter({ year: '2-digit' }),
             yyyy: dateTime.year,
@@ -271,9 +278,9 @@
             ddd: formatter({ weekday: 'short' }),
             dddd: formatter({ weekday: 'long' }),
             H: dateTime.getHours(),
-            HH: dateTime.getHoursFormatted('h24'),
+            HH: dateTime.getHoursFormatted(HHCycle),
             h: dateTime.hours > 12 ? dateTime.hours - 12 : dateTime.hours,
-            hh: dateTime.getHoursFormatted('h12'),
+            hh: dateTime.getHoursFormatted(hhCycle),
             t: dateTime.meridiem(),
             T: dateTime.meridiem().toUpperCase(),
             m: dateTime.minutes,
