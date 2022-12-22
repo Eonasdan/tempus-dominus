@@ -1,6 +1,6 @@
 import { TempusDominus, version, extend } from '../src/js/tempus-dominus';
 //import { localization } from '../src/locales/ru';
-import * as cdf from '../src/plugins/customDateFormat';
+import * as cdf from '../src/js/plugins/customDateFormat';
 
 extend(cdf, undefined);
 

@@ -19,7 +19,6 @@ module.exports = (config) => {
           tsconfig: (resolvedConfig) => ({
             ...resolvedConfig,
             declaration: kind !== undefined,
-            rootDir: './src',
             declarationDir: `./types/${kind}`,
           }),
         }),

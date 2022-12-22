@@ -19,9 +19,6 @@
   z-index: 9999;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
 }
-.tempus-dominus-widget .date-container {
-  min-height: 315px;
-}
 .tempus-dominus-widget.calendarWeeks {
   width: 21rem;
 }
@@ -44,6 +41,12 @@
 }
 .tempus-dominus-widget.show {
   display: block;
+}
+.tempus-dominus-widget.show.date-container {
+  min-height: 315px;
+}
+.tempus-dominus-widget.show.time-container {
+  min-height: 217px;
 }
 .tempus-dominus-widget .td-collapse:not(.show) {
   display: none;

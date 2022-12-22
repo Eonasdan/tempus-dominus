@@ -592,7 +592,7 @@ const locale = (l: string) => {
  * @param plugin
  * @param option
  */
-const extend = function (plugin, option) {
+const extend = function (plugin, option = undefined) {
   if (!plugin) return tempusDominus;
   if (!plugin.installed) {
     // install plugin only once
@@ -606,7 +606,7 @@ const extend = function (plugin, option) {
   return tempusDominus;
 };
 
-const version = '6.2.9';
+const version = '6.2.10';
 
 const tempusDominus = {
   TempusDominus,

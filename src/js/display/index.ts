@@ -198,9 +198,8 @@ export default class Display {
           action: ActionTypes.showClock,
         });
       }
-
       // otherwise return to the calendar view
-      if (!this.optionsStore.currentCalendarViewMode) {
+      else if (!this.optionsStore.currentCalendarViewMode) {
         this.optionsStore.currentCalendarViewMode =
           this.optionsStore.minimumCalendarViewMode;
       }
