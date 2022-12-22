@@ -14,7 +14,6 @@
   list-style: none;
   padding: 4px;
   width: 19rem;
-  min-height: 360px;
   border-radius: 4px;
   display: none;
   z-index: 9999;
@@ -42,6 +41,12 @@
 }
 .tempus-dominus-widget.show {
   display: block;
+}
+.tempus-dominus-widget.show.date-container {
+  min-height: 315px;
+}
+.tempus-dominus-widget.show.time-container {
+  min-height: 217px;
 }
 .tempus-dominus-widget .td-collapse:not(.show) {
   display: none;
