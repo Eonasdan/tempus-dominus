@@ -31,9 +31,10 @@ const localization = {
     toggleMeridiem: 'Przełącz porę dnia',
     selectTime: 'Ustaw godzinę',
     selectDate: 'Ustaw datę',
-    dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+    dayViewHeaderFormat: { month: 'long', year: 'numeric' },
     locale: 'pl',
     startOfTheWeek: 1,
+    hourCycle: 'h24',
     dateFormats: {
         LT: 'HH:mm',
         LTS: 'HH:mm:ss',
