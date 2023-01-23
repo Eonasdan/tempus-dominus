@@ -1,4 +1,4 @@
-import Options from './options';
+import Options, { FormatLocalization } from './options';
 import { DateTime } from '../datetime';
 
 const DefaultOptions: Options = {
@@ -117,3 +117,17 @@ const DefaultOptions: Options = {
 };
 
 export default DefaultOptions;
+
+export const DefaultFormatLocalization: FormatLocalization = {
+  locale: DefaultOptions.localization.locale,
+  hourCycle: DefaultOptions.localization.hourCycle,
+  dateFormats: DefaultOptions.localization.dateFormats,
+  /**
+   * This is only used with the customDateFormat plugin
+   */
+  ordinal: DefaultOptions.localization.ordinal,
+  /**
+   * This is only used with the customDateFormat plugin
+   */
+  format: DefaultOptions.localization.format,
+};
