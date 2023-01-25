@@ -1,6 +1,6 @@
 import { FormatLocalization } from './utilities/options';
-import { DefaultFormatLocalization } from './utilities/default-options';
 import Namespace from './utilities/namespace';
+import DefaultFormatLocalization from './utilities/default-format-localization';
 
 type parsedTime = {
   year?: number;
@@ -63,7 +63,7 @@ export const guessHourCycle = (locale: string): Intl.LocaleHourCycleKey => {
     numberingSystem: 'latn',
   };
 
-  const dt = new DateTime().setLocale(locale);
+  const dt = new DateTime().setLocalization({ locale });
   dt.hours = 0;
 
   const start = dt.parts(undefined, template).hour;
@@ -93,7 +93,7 @@ export const guessHourCycle = (locale: string): Intl.LocaleHourCycleKey => {
  * as the native Date object with a little extra spice.
  */
 export class DateTime extends Date {
-  localization: FormatLocalization;
+  localization: FormatLocalization = DefaultFormatLocalization;
 
   /**
    * Chainable way to set the {@link locale}
@@ -121,8 +121,7 @@ export class DateTime extends Date {
    * Converts a plain JS date object to a DateTime object.
    * Doing this allows access to format, etc.
    * @param  date
-   * @param locale
-   *
+   * @param locale this parameter is deprecated. Use formatLocalization instead.
    * @param formatLocalization
    */
   static convert(
@@ -264,19 +263,19 @@ export class DateTime extends Date {
     return this;
   }
 
-  /**
-   * Returns a string format.
-   * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
-   * for valid templates and locale objects
-   * @param template An object. Uses browser defaults otherwise.
-   * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
-   */
-  format(
-    template: DateTimeFormatOptions,
-    locale = this.localization.locale
-  ): string {
-    return new Intl.DateTimeFormat(locale, template).format(this);
-  }
+  // /**
+  //  * Returns a string format.
+  //  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
+  //  * for valid templates and locale objects
+  //  * @param template An object. Uses browser defaults otherwise.
+  //  * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
+  //  */
+  // format(
+  //   template: DateTimeFormatOptions,
+  //   locale = this.localization.locale
+  // ): string {
+  //   return new Intl.DateTimeFormat(locale, template).format(this);
+  // }
 
   /**
    * Return true if {@link compare} is before this date
@@ -590,21 +589,16 @@ export class DateTime extends Date {
   }
 
   private replaceTokens(formatStr, formats) {
+    /***
+     * _ => match
+     * a => first capture group. Anything between [ and ]
+     * b => second capture group
+     */
     return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
       const B = b && b.toUpperCase();
-      return a || formats[B] || this.englishFormats[B];
+      return a || formats[B] || DefaultFormatLocalization.dateFormats[B];
     });
   }
-
-  // noinspection SpellCheckingInspection
-  private englishFormats = {
-    LTS: 'h:mm:ss T',
-    LT: 'h:mm T',
-    L: 'MM/dd/yyyy',
-    LL: 'MMMM d, yyyy',
-    LLL: 'MMMM d, yyyy h:mm T',
-    LLLL: 'dddd, MMMM d, yyyy h:mm T',
-  };
 
   private formattingTokens =
     /(\[[^[]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g;
@@ -808,17 +802,18 @@ export class DateTime extends Date {
   }
 
   /**
-   * Attempts to create a DateTime from a string. A customDateFormat is required for non US dates.
+   * Attempts to create a DateTime from a string.
    * @param input
    * @param localization
    */
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   static fromString(input: string, localization: FormatLocalization): DateTime {
-    if (!localization.format) {
+    if (!localization?.format) {
       Namespace.errorMessages.customDateFormatError('No format was provided');
     }
     try {
       const dt = new DateTime(); //todo this needs some clean up
+      dt.setLocalization(localization);
       if (['x', 'X'].indexOf(localization.format) > -1)
         return new DateTime((localization.format === 'X' ? 1000 : 1) * +input);
       const parser = dt.makeParser(localization.format);
@@ -849,20 +844,28 @@ export class DateTime extends Date {
     }
   }
 
-  customFormat(dateTime) {
-    if (!dateTime) return dateTime;
-    if (JSON.stringify(dateTime) === 'null') return 'Invalid Date';
+  /**
+   * Returns a string format.
+   * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
+   * for valid templates and locale objects
+   * @param template An optional object. If provided, method will use Intl., otherwise the localizations format properties
+   * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
+   */
+  format(
+    template?: DateTimeFormatOptions,
+    locale = this.localization.locale
+  ): string {
+    if (template && typeof template === 'object')
+      return new Intl.DateTimeFormat(locale, template).format(this);
 
-    const format = this.replaceTokens(
+    const formatString = this.replaceTokens(
       this.localization.format ||
-        `${this.englishFormats.L}, ${this.englishFormats.LT}`,
+        `${DefaultFormatLocalization.dateFormats.L}, ${DefaultFormatLocalization.dateFormats.LT}`,
       this.localization.dateFormats
     );
 
     const formatter = (template) =>
-      new Intl.DateTimeFormat(this.localization.locale, template).format(
-        dateTime
-      );
+      new Intl.DateTimeFormat(this.localization.locale, template).format(this);
 
     //if the format asks for a twenty-four-hour string but the hour cycle is not, then make a base guess
     const HHCycle = this.localization.hourCycle.startsWith('h1')
@@ -874,34 +877,35 @@ export class DateTime extends Date {
 
     const matches = {
       yy: formatter({ year: '2-digit' }),
-      yyyy: dateTime.year,
+      yyyy: this.year,
       M: formatter({ month: 'numeric' }),
-      MM: dateTime.monthFormatted,
-      MMM: this.getAllMonths('short')[dateTime.getMonth()],
-      MMMM: this.getAllMonths()[dateTime.getMonth()],
-      d: dateTime.date,
-      dd: dateTime.dateFormatted,
+      MM: this.monthFormatted,
+      MMM: this.getAllMonths('short')[this.getMonth()],
+      MMMM: this.getAllMonths()[this.getMonth()],
+      d: this.date,
+      dd: this.dateFormatted,
       ddd: formatter({ weekday: 'short' }),
       dddd: formatter({ weekday: 'long' }),
-      H: dateTime.getHours(),
-      HH: dateTime.getHoursFormatted(HHCycle),
-      h: dateTime.hours > 12 ? dateTime.hours - 12 : dateTime.hours,
-      hh: dateTime.getHoursFormatted(hhCycle),
-      t: dateTime.meridiem(),
-      T: dateTime.meridiem().toUpperCase(),
-      m: dateTime.minutes,
-      mm: dateTime.minutesFormatted,
-      s: dateTime.seconds,
-      ss: dateTime.secondsFormatted,
-      fff: dateTime.getMilliseconds(),
+      H: this.getHours(),
+      HH: this.getHoursFormatted(HHCycle),
+      h: this.hours > 12 ? this.hours - 12 : this.hours,
+      hh: this.getHoursFormatted(hhCycle),
+      t: this.meridiem(),
+      T: this.meridiem().toUpperCase(),
+      m: this.minutes,
+      mm: this.minutesFormatted,
+      s: this.seconds,
+      ss: this.secondsFormatted,
+      fff: this.getMilliseconds(),
       // z: this.zoneInformation(dateTime, 'z'), //-4
       // zz: this.zoneInformation(dateTime, 'zz'), //-04
       // zzz: this.zoneInformation(dateTime, 'zzz') //-0400
     };
 
-    return format.replace(this.REGEX_FORMAT, (match, $1) => {
+    return formatString.replace(this.REGEX_FORMAT, (match, $1) => {
       return $1 || matches[match];
     });
   }
+
   //#endregion CDF stuff
 }

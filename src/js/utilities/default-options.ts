@@ -1,5 +1,6 @@
-import Options, { FormatLocalization } from './options';
+import Options from './options';
 import { DateTime } from '../datetime';
+import DefaultFormatLocalization from './default-format-localization';
 
 const DefaultOptions: Options = {
   restrictions: {
@@ -81,28 +82,12 @@ const DefaultOptions: Options = {
     selectTime: 'Select Time',
     selectDate: 'Select Date',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
-    locale: 'default',
-    hourCycle: undefined,
     startOfTheWeek: 0,
-    /**
-     * This is only used with the customDateFormat plugin
-     */
-    dateFormats: {
-      LTS: 'h:mm:ss T',
-      LT: 'h:mm T',
-      L: 'MM/dd/yyyy',
-      LL: 'MMMM d, yyyy',
-      LLL: 'MMMM d, yyyy h:mm T',
-      LLLL: 'dddd, MMMM d, yyyy h:mm T',
-    },
-    /**
-     * This is only used with the customDateFormat plugin
-     */
-    ordinal: (n) => n,
-    /**
-     * This is only used with the customDateFormat plugin
-     */
-    format: 'L LT',
+    locale: DefaultFormatLocalization.locale,
+    hourCycle: DefaultFormatLocalization.hourCycle,
+    dateFormats: DefaultFormatLocalization.dateFormats,
+    ordinal: DefaultFormatLocalization.ordinal,
+    format: DefaultFormatLocalization.format,
   },
   keepInvalid: false,
   debug: false,
@@ -117,17 +102,3 @@ const DefaultOptions: Options = {
 };
 
 export default DefaultOptions;
-
-export const DefaultFormatLocalization: FormatLocalization = {
-  locale: DefaultOptions.localization.locale,
-  hourCycle: DefaultOptions.localization.hourCycle,
-  dateFormats: DefaultOptions.localization.dateFormats,
-  /**
-   * This is only used with the customDateFormat plugin
-   */
-  ordinal: DefaultOptions.localization.ordinal,
-  /**
-   * This is only used with the customDateFormat plugin
-   */
-  format: DefaultOptions.localization.format,
-};

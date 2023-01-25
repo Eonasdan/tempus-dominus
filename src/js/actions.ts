@@ -152,8 +152,8 @@ export default class Actions {
         this.display.hide();
         break;
       case ActionTypes.today: {
-        const today = new DateTime().setLocale(
-          this.optionsStore.options.localization.locale
+        const today = new DateTime().setLocalization(
+          this.optionsStore.options.localization
         );
         this._eventEmitters.updateViewDate.emit(today);
 

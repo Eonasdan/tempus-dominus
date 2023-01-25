@@ -46,17 +46,8 @@ export default class Dates {
    * @param date
    */
   formatInput(date: DateTime): string {
-    const components = this.optionsStore.options.display.components;
     if (!date) return '';
-    return date.format({
-      year: components.calendar && components.year ? 'numeric' : undefined,
-      month: components.calendar && components.month ? '2-digit' : undefined,
-      day: components.calendar && components.date ? '2-digit' : undefined,
-      hour: components.clock && components.hours ? '2-digit' : undefined,
-      minute: components.clock && components.minutes ? '2-digit' : undefined,
-      second: components.clock && components.seconds ? '2-digit' : undefined,
-      hourCycle: this.optionsStore.options.localization.hourCycle,
-    });
+    return date.format();
   }
 
   /**
@@ -86,7 +77,7 @@ export default class Dates {
     }
     const converted = this.parseInput(value);
     if (converted) {
-      converted.setLocale(this.optionsStore.options.localization.locale);
+      converted.setLocalization(this.optionsStore.options.localization);
       this.setValue(converted, index);
     }
   }

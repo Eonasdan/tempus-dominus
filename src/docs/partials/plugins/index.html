@@ -8,7 +8,7 @@
   </div>
 
   <div class='row'>
-    <h3 id='creating'>Creating plugins</h3>
+    <h3 id='creating' class='mt-3'>Creating plugins</h3>
     <p>
       There are a few examples in the source like this
     </p>
@@ -43,7 +43,8 @@
   </div>
 
   <div class='row'>
-    <h3 id='using'>Using a plugin</h3>
+    <h2 id='using'>Using a plugin</h2>
+    <h3 class='mt-3'>Globally</h3>
     <p>
       Using a plugin is easy. Load the plugin script file after you load Tempus Dominus
     </p>
@@ -53,24 +54,37 @@
     </pre>
 
     <p>
-      You can also use plugins in Typescript or Node.
+      You can also use import the plugins instead.
     </p>
     <pre>
-<code class='language-js'>const example = require('tempusDominus/plugins/examples/sample')
-// or
-import example from 'tempusDominus/plugins/examples/sample'
+<code class='language-js'>import { TempusDominus, version, extend } from '@eonasdan/tempus-dominus'; //require also works
+import sample from '@eonasdan/tempus-dominus/dist/plugins/examples/sample';
 
-tempusDominus.extend(example) // use plugin</code>
+extend(sample); // use plugin</code>
     </pre>
+
+    <h3 class='mt-3'>Per instance</h3>
+    <p>
+      Plugins can also be loaded per picker.
+    </p>
+
+    <pre>
+<code class='language-javascript'>const picker = new tempusdominus
+    .TempusDominus(document.getElementById('datetimepicker1'));
+
+picker.extend(sample);
+</code>
+</pre>
   </div>
 
   <div class='row'>
-    <h2 id='perPicker'>Per Picker</h2>
+    <h2 id='perPicker'>Per Instance Overwrites</h2>
     <p>
-      It is possible to use this system per picker. For instance:
+      It is possible to overwrite specific functions per picker instances as well. For instance:
     </p>
     <pre>
-<code class='language-js'>const td = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+<code class='language-js'>const td = new tempusDominus
+  .TempusDominus(document.getElementById('datetimepicker1'));
 
 td.dates.formatInput = function(date) { {return moment(date).format('MM/DD/YYYY') } }</code>
 </pre>

@@ -7,6 +7,7 @@ import {
   guessHourCycle,
   Unit,
 } from '../src/js/datetime';
+import DefaultFormatLocalization from '../src/js/utilities/default-format-localization';
 
 test('getFormatByUnit', () => {
   expect(getFormatByUnit(Unit.date)).toEqual({ dateStyle: 'short' });
@@ -24,11 +25,24 @@ test('Can create with string (ctor)', () => {
   expect(dt.year).toBe(2022);
 });
 
-test('Locale is stored', () => {
+test('Localization is stored', () => {
   const dt = new DateTime();
-  expect(dt.locale).toBe('default');
-  dt.setLocale('en-US');
-  expect(dt.locale).toBe('en-US');
+  expect(dt.localization).toEqual(DefaultFormatLocalization);
+  const es = {
+    locale: 'es',
+    dateFormats: {
+      LT: 'H:mm',
+      LTS: 'H:mm:ss',
+      L: 'dd/MM/yyyy',
+      LL: 'd [de] MMMM [de] yyyy',
+      LLL: 'd [de] MMMM [de] yyyy H:mm',
+      LLLL: 'dddd, d [de] MMMM [de] yyyy H:mm',
+    },
+    ordinal: (n) => `${n}º`,
+    format: 'L LT',
+  };
+  dt.setLocalization(es);
+  expect(dt.localization).toEqual(es);
 });
 
 test('Can convert from a Date object', () => {
@@ -43,8 +57,10 @@ test('Convert fails with no parameter', () => {
 });
 
 test('Can create with string', () => {
-  //Presently, this is just a function for the custom date format plugin to overwrite
-  const dt = DateTime.fromString('12/31/2022', null);
+  expect(() => DateTime.fromString('12/31/2022', null)).toThrow(/TD/);
+  const localization = DefaultFormatLocalization;
+  localization.format = localization.dateFormats.L;
+  const dt = DateTime.fromString('12/31/2022', localization);
   expect(dt.month).toBe(12 - 1); //minus 1 because javascript 🙄
   expect(dt.date).toBe(31);
   expect(dt.year).toBe(2022);
@@ -85,12 +101,12 @@ test('startOf', () => {
   // @ts-ignore
   expect(() => dt.startOf('foo')).toThrow("Unit 'foo' is not valid");
 
-  //check if skip the process of the start of the week is the same weekday
+  //skip the process of the start of the week is the same weekday
   dt = new DateTime(2022, 11, 25, 0, 0, 0);
   dt = dt.startOf('weekDay');
   expect(dt.valueOf()).toBe(new Date(2022, 11, 25, 0, 0, 0).valueOf());
 
-  //check if weekday works if the week doesn't start on Sunday
+  //check if weekday works when the week doesn't start on Sunday
   dt = new DateTime(2022, 11, 18, 0, 0, 0);
   dt = dt.startOf('weekDay', 1);
   expect(dt.valueOf()).toBe(new Date(2022, 11, 12, 0, 0, 0).valueOf());
@@ -124,12 +140,12 @@ test('endOf', () => {
   // @ts-ignore
   expect(() => dt.endOf('foo')).toThrow("Unit 'foo' is not valid");
 
-  //check if skip the process of the end of the week is the same weekday
+  //skip the process if the end of the week is the same weekday
   dt = new DateTime(2022, 11, 17, 0, 0, 0);
   dt = dt.endOf('weekDay');
   expect(dt.valueOf()).toBe(new Date(2022, 11, 17, 23, 59, 59, 999).valueOf());
 
-  //check if weekday works if the week doesn't start on Sunday
+  //check if weekday works when the week doesn't start on Sunday
   dt = new DateTime(2022, 11, 14, 0, 0, 0);
   dt = dt.endOf('weekDay', 1);
   expect(dt.valueOf()).toBe(new Date(2022, 11, 18, 23, 59, 59, 999).valueOf());
@@ -298,4 +314,53 @@ test('Guess hour cycle', () => {
 
   guess = guessHourCycle('sv-SE');
   expect(guess).toBe('h23');
+});
+
+test('Get ALl Months', () => {
+  // @ts-ignore
+  const months = new DateTime().getAllMonths();
+  expect(months).toEqual([
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]);
+});
+
+test('replace tokens', () => {
+  const dateTime = new DateTime();
+
+  const rt = (formatStr, formats) => {
+    // @ts-ignore
+    return dateTime.replaceTokens(formatStr, formats);
+  };
+
+  expect(rt('hi LTS', 'LTS')).toBe(
+    `hi ${DefaultFormatLocalization.dateFormats.LTS}`
+  );
+
+  expect(rt('LLLLL', DefaultFormatLocalization.dateFormats)).toBe(
+    `dddd, MMMM d, yyyy h:mm TMM/dd/yyyy`
+  );
+});
+
+test('parseTwoDigitYear', () => {
+  const dateTime = new DateTime();
+  // @ts-ignore
+  let parsed = dateTime.parseTwoDigitYear(70);
+
+  expect(parsed).toBe(1970);
+
+  // @ts-ignore
+  parsed = dateTime.parseTwoDigitYear(23);
+
+  expect(parsed).toBe(2023);
 });

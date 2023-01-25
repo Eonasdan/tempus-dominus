@@ -55,8 +55,8 @@ class TempusDominus {
 
     this.optionsStore.element = element;
     this._initializeOptions(options, DefaultOptions, true);
-    this.optionsStore.viewDate.setLocale(
-      this.optionsStore.options.localization.locale
+    this.optionsStore.viewDate.setLocalization(
+      this.optionsStore.options.localization
     );
     this.optionsStore.unset = true;
 
@@ -84,8 +84,8 @@ class TempusDominus {
 
   set viewDate(value) {
     this.optionsStore.viewDate = value;
-    this.optionsStore.viewDate.setLocale(
-      this.optionsStore.options.localization.locale
+    this.optionsStore.viewDate.setLocalization(
+      this.optionsStore.options.localization
     );
     this.display._update(
       this.optionsStore.currentView === 'clock' ? 'clock' : 'calendar'
@@ -354,8 +354,8 @@ class TempusDominus {
 
     OptionConverter._validateConflicts(newConfig);
 
-    newConfig.viewDate = newConfig.viewDate.setLocale(
-      newConfig.localization.locale
+    newConfig.viewDate = newConfig.viewDate.setLocalization(
+      newConfig.localization
     );
 
     if (!this.optionsStore.viewDate.isSame(newConfig.viewDate)) {

@@ -28,8 +28,8 @@ const localization = {
   selectTime: 'Seleccionar tiempo',
   selectDate: 'Seleccionar fecha',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
-  locale: 'es',
   startOfTheWeek: 1,
+  locale: 'es',
   dateFormats: {
     LT: 'H:mm',
     LTS: 'H:mm:ss',
