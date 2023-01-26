@@ -17,7 +17,7 @@ declare class DateDisplay {
    */
   _update(widget: HTMLElement, paint: Paint): void;
   /***
-   * Generates an html row that contains the days of the week.
+   * Generates a html row that contains the days of the week.
    * @private
    */
   private _daysOfTheWeek;
@@ -303,29 +303,30 @@ interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
  * as the native Date object with a little extra spice.
  */
 declare class DateTime extends Date {
+  localization: FormatLocalization;
   /**
-   * Used with Intl.DateTimeFormat
+   * Chainable way to set the {@link locale}
+   * @param value
+   * @deprecated use setLocalization with a FormatLocalization object instead
    */
-  locale: string;
+  setLocale(value: string): this;
   /**
    * Chainable way to set the {@link locale}
    * @param value
    */
-  setLocale(value: string): this;
+  setLocalization(value: FormatLocalization): this;
   /**
    * Converts a plain JS date object to a DateTime object.
    * Doing this allows access to format, etc.
    * @param  date
-   * @param locale
+   * @param locale this parameter is deprecated. Use formatLocalization instead.
+   * @param formatLocalization
    */
-  static convert(date: Date, locale?: string): DateTime;
-  /**
-   * Attempts to create a DateTime from a string. A customDateFormat is required for non US dates.
-   * @param input
-   * @param localization
-   */
-  //eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static fromString(input: string, localization: FormatLocalization): DateTime;
+  static convert(
+    date: Date,
+    locale?: string,
+    formatLocalization?: FormatLocalization
+  ): DateTime;
   /**
    * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
    */
@@ -355,32 +356,24 @@ declare class DateTime extends Date {
    */
   manipulate(value: number, unit: Unit): this;
   /**
-   * Returns a string format.
-   * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
-   * for valid templates and locale objects
-   * @param template An object. Uses browser defaults otherwise.
-   * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
-   */
-  format(template: DateTimeFormatOptions, locale?: string): string;
-  /**
    * Return true if {@link compare} is before this date
    * @param compare The Date/DateTime to compare
    * @param unit If provided, uses {@link startOf} for
-   * comparision.
+   * comparison.
    */
   isBefore(compare: DateTime, unit?: Unit): boolean;
   /**
    * Return true if {@link compare} is after this date
    * @param compare The Date/DateTime to compare
    * @param unit If provided, uses {@link startOf} for
-   * comparision.
+   * comparison.
    */
   isAfter(compare: DateTime, unit?: Unit): boolean;
   /**
    * Return true if {@link compare} is same this date
    * @param compare The Date/DateTime to compare
    * @param unit If provided, uses {@link startOf} for
-   * comparision.
+   * comparison.
    */
   isSame(compare: DateTime, unit?: Unit): boolean;
   /**
@@ -487,11 +480,53 @@ declare class DateTime extends Date {
    * Gets the week of the year
    */
   get week(): number;
-  weeksInWeekYear(weekYear: any): 53 | 52;
+  weeksInWeekYear(): 53 | 52;
   get isLeapYear(): boolean;
   private computeOrdinal;
   private nonLeapLadder;
   private leapLadder;
+  //#region CDF stuff
+  private REGEX_FORMAT;
+  private getAllMonths;
+  private replaceTokens;
+  private formattingTokens;
+  private match2; // 00 - 99
+  private match3; // 000 - 999
+  private match4; // 0000 - 9999
+  private match1to2; // 0 - 99
+  private matchSigned; // -inf - inf
+  private matchOffset; // +00:00 -00:00 +0000 or -0000 +00 or Z
+  private matchWord; // Word
+  private parseTwoDigitYear;
+  private offsetFromString;
+  /**
+   * z = -4, zz = -04, zzz = -0400
+   * @param date
+   * @param style
+   * @private
+   */
+  private zoneInformation;
+  private zoneExpressions;
+  private addInput;
+  private meridiemMatch;
+  private expressions;
+  private correctHours;
+  private makeParser;
+  /**
+   * Attempts to create a DateTime from a string.
+   * @param input
+   * @param localization
+   */
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static fromString(input: string, localization: FormatLocalization): DateTime;
+  /**
+   * Returns a string format.
+   * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
+   * for valid templates and locale objects
+   * @param template An optional object. If provided, method will use Intl., otherwise the localizations format properties
+   * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
+   */
+  format(template?: DateTimeFormatOptions | string, locale?: string): string;
 }
 type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
 /**

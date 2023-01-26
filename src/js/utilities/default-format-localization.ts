@@ -11,7 +11,11 @@ const DefaultFormatLocalization: FormatLocalization = {
     LLL: 'MMMM d, yyyy h:mm T',
     LLLL: 'dddd, MMMM d, yyyy h:mm T',
   },
-  ordinal: (n) => n,
+  ordinal: (n) => {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
+    return `[${n}${s[(v - 20) % 10] || s[v] || s[0]}]`;
+  },
   format: 'L LT',
 };
 

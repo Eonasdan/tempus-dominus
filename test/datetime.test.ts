@@ -287,13 +287,30 @@ test('Getters/Setters', () => {
 
   expect(dt.week).toBe(26);
 
-  expect(dt.weeksInWeekYear(dt.year)).toBe(52);
+  dt.year = 2004;
+
+  expect(dt.weeksInWeekYear()).toBe(53);
+
+  dt.year = 2017;
+
+  expect(dt.weeksInWeekYear()).toBe(52);
+
+  dt.year = 2020;
+
+  expect(dt.weeksInWeekYear()).toBe(53);
+
+  dt.year = 2000;
+  expect(dt.isLeapYear).toBe(true);
+  expect(dt.week).toBe(26);
 
   dt.year = 2024;
   expect(dt.isLeapYear).toBe(true);
 
+  dt.year = 2023;
+  expect(dt.isLeapYear).toBe(false);
+
   dt.year = 2026;
-  expect(dt.weeksInWeekYear(dt.year)).toBe(53);
+  expect(dt.weeksInWeekYear()).toBe(53);
 
   expect(dt.meridiem()).toBe('PM');
 });
@@ -338,16 +355,14 @@ test('Get ALl Months', () => {
 test('replace tokens', () => {
   const dateTime = new DateTime();
 
-  const rt = (formatStr, formats) => {
-    // @ts-ignore
-    return dateTime.replaceTokens(formatStr, formats);
-  };
+  // @ts-ignore
+  const replaceTokens = dateTime.replaceTokens;
 
-  expect(rt('hi LTS', 'LTS')).toBe(
+  expect(replaceTokens('hi LTS', 'LTS')).toBe(
     `hi ${DefaultFormatLocalization.dateFormats.LTS}`
   );
 
-  expect(rt('LLLLL', DefaultFormatLocalization.dateFormats)).toBe(
+  expect(replaceTokens('LLLLL', DefaultFormatLocalization.dateFormats)).toBe(
     `dddd, MMMM d, yyyy h:mm TMM/dd/yyyy`
   );
 });
@@ -363,4 +378,229 @@ test('parseTwoDigitYear', () => {
   parsed = dateTime.parseTwoDigitYear(23);
 
   expect(parsed).toBe(2023);
+});
+
+test('meridiemMatch', () => {
+  const dateTime = new DateTime();
+  // @ts-ignore
+  let match = dateTime.meridiemMatch('AM');
+
+  expect(match).toBe(false);
+
+  // @ts-ignore
+  match = dateTime.meridiemMatch('PM');
+
+  expect(match).toBe(true);
+});
+
+test('expressions', () => {
+  const dateTime = new DateTime();
+  // @ts-ignore
+  const e = { ...dateTime.expressions };
+  // @ts-ignore
+  const matchWord = dateTime.matchWord;
+  // @ts-ignore
+  const match2 = dateTime.match2;
+  // @ts-ignore
+  const match3 = dateTime.match3;
+  // @ts-ignore
+  const match4 = dateTime.match4;
+  // @ts-ignore
+  const match1to2 = dateTime.match1to2;
+  // @ts-ignore
+  const matchSigned = dateTime.matchSigned;
+
+  const o: any = {};
+
+  //#region meridiem
+  expect(e.t[0]).toBe(matchWord);
+
+  (e.t[1] as any)(o, 'AM');
+
+  expect(o.afternoon).toBe(false);
+
+  (e.t[1] as any)(o, 'pm');
+
+  expect(o.afternoon).toBe(true);
+
+  (e.T[1] as any)(o, 'AM');
+
+  expect(o.afternoon).toBe(false);
+
+  (e.T[1] as any)(o, 'pm');
+
+  expect(o.afternoon).toBe(true);
+
+  //#endregion
+
+  expect(e.fff[0]).toBe(match3);
+
+  (e.fff[1] as any)(o, 42);
+
+  expect(o.milliseconds).toBe(42);
+
+  expect(e.s[0]).toBe(match1to2);
+
+  (e.s[1] as any)(o, 5);
+
+  expect(o.seconds).toBe(5);
+
+  expect(e.ss[0]).toBe(match1to2);
+
+  (e.ss[1] as any)(o, 6);
+
+  expect(o.seconds).toBe(6);
+
+  expect(e.m[0]).toBe(match1to2);
+
+  (e.m[1] as any)(o, 7);
+
+  expect(o.minutes).toBe(7);
+
+  expect(e.mm[0]).toBe(match1to2);
+
+  (e.mm[1] as any)(o, 10);
+
+  expect(o.minutes).toBe(10);
+
+  expect(e.h[0]).toBe(match1to2);
+
+  (e.h[1] as any)(o, 11);
+
+  expect(o.hours).toBe(11);
+
+  expect(e.hh[0]).toBe(match1to2);
+
+  (e.hh[1] as any)(o, 12);
+
+  expect(o.hours).toBe(12);
+
+  expect(e.HH[0]).toBe(match1to2);
+
+  (e.HH[1] as any)(o, 13);
+
+  expect(o.hours).toBe(13);
+
+  expect(e.HH[0]).toBe(match1to2);
+
+  (e.HH[1] as any)(o, 14);
+
+  expect(o.hours).toBe(14);
+
+  expect(e.d[0]).toBe(match1to2);
+
+  (e.d[1] as any)(o, 15);
+
+  expect(o.day).toBe(15);
+
+  expect(e.dd[0]).toBe(match2);
+
+  (e.dd[1] as any)(o, 16);
+
+  expect(o.day).toBe(16);
+
+  expect(e.Do[0]).toBe(matchWord);
+
+  (e.Do[1] as any)(o, '1st');
+
+  expect(o.day).toBe(1);
+
+  dateTime.localization.ordinal = undefined;
+
+  (e.Do[1] as any)(o, '1st');
+
+  expect(o.day).toBe('1');
+
+  dateTime.localization.ordinal = DefaultFormatLocalization.ordinal;
+
+  //#region Months
+
+  expect(e.M[0]).toBe(match1to2);
+
+  (e.M[1] as any)(o, 5);
+
+  expect(o.month).toBe(5);
+
+  expect(e.MM[0]).toBe(match2);
+
+  (e.MM[1] as any)(o, 7);
+
+  expect(o.month).toBe(7);
+
+  expect(e.MMM[0]).toBe(matchWord);
+
+  (e.MMM[1] as any)(o, 'Jan');
+
+  expect(o.month).toBe(1);
+
+  expect(e.MMMM[0]).toBe(matchWord);
+
+  (e.MMMM[1] as any)(o, 'January');
+
+  expect(o.month).toBe(1);
+
+  //#endregion
+
+  //#region Year
+
+  expect(e.y[0]).toBe(matchSigned);
+
+  (e.y[1] as any)(o, 2000);
+
+  expect(o.year).toBe(2000);
+
+  expect(e.yy[0]).toBe(match2);
+
+  (e.yy[1] as any)(o, 20);
+
+  expect(o.year).toBe(2020);
+
+  expect(e.yyyy[0]).toBe(match4);
+
+  (e.yyyy[1] as any)(o, 2023);
+
+  expect(o.year).toBe(2023);
+
+  //#endregion
+});
+
+test('correctHours', () => {
+  const dateTime = new DateTime();
+
+  // @ts-ignore
+  const correctHours = dateTime.correctHours;
+
+  const o = {
+    afternoon: true,
+    hours: 8,
+  };
+
+  correctHours(o);
+
+  expect(o.hours).toBe(20);
+  expect(o.afternoon).toBe(undefined);
+
+  o.hours = 12;
+  o.afternoon = false;
+
+  correctHours(o);
+
+  expect(o.hours).toBe(0);
+  expect(o.afternoon).toBe(undefined);
+});
+
+test('format', () => {
+  const dateTime = new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500);
+
+  dateTime.localization.hourCycle = 'h11';
+
+  expect(dateTime.format()).toBe('03/14/2023');
+
+  expect(dateTime.format('L LT')).toBe('03/14/2023 1:25 PM');
+
+  dateTime.hours = 10;
+
+  expect(dateTime.format('dddd, MMMM, dd yy h:mm:ss:fff')).toBe(
+    'Tuesday, March, 14 23 10:25:42:500'
+  );
 });

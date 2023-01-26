@@ -263,20 +263,6 @@ export class DateTime extends Date {
     return this;
   }
 
-  // /**
-  //  * Returns a string format.
-  //  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
-  //  * for valid templates and locale objects
-  //  * @param template An object. Uses browser defaults otherwise.
-  //  * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
-  //  */
-  // format(
-  //   template: DateTimeFormatOptions,
-  //   locale = this.localization.locale
-  // ): string {
-  //   return new Intl.DateTimeFormat(locale, template).format(this);
-  // }
-
   /**
    * Return true if {@link compare} is before this date
    * @param compare The Date/DateTime to compare
@@ -531,22 +517,22 @@ export class DateTime extends Date {
     let weekNumber = Math.floor((ordinal - weekday + 10) / 7);
 
     if (weekNumber < 1) {
-      weekNumber = this.weeksInWeekYear(this.year - 1);
-    } else if (weekNumber > this.weeksInWeekYear(this.year)) {
+      weekNumber = this.weeksInWeekYear();
+    } else if (weekNumber > this.weeksInWeekYear()) {
       weekNumber = 1;
     }
 
     return weekNumber;
   }
 
-  weeksInWeekYear(weekYear) {
+  weeksInWeekYear() {
     const p1 =
-        (weekYear +
-          Math.floor(weekYear / 4) -
-          Math.floor(weekYear / 100) +
-          Math.floor(weekYear / 400)) %
+        (this.year +
+          Math.floor(this.year / 4) -
+          Math.floor(this.year / 100) +
+          Math.floor(this.year / 400)) %
         7,
-      last = weekYear - 1,
+      last = this.year - 1,
       p2 =
         (last +
           Math.floor(last / 4) -
@@ -577,7 +563,7 @@ export class DateTime extends Date {
   //#region CDF stuff
 
   private REGEX_FORMAT =
-    /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|Z{1,2}/g;
+    /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|fff|Z{1,2}/g;
 
   private getAllMonths(
     format: '2-digit' | 'numeric' | 'long' | 'short' | 'narrow' = 'long'
@@ -624,12 +610,6 @@ export class DateTime extends Date {
     return minutes === 0 ? 0 : parts[0] === '+' ? -minutes : minutes; // eslint-disable-line no-nested-ternary
   }
 
-  private addInput(property) {
-    return (time, input) => {
-      time[property] = +input;
-    };
-  }
-
   /**
    * z = -4, zz = -04, zzz = -0400
    * @param date
@@ -658,6 +638,12 @@ export class DateTime extends Date {
       obj.offset = this.offsetFromString(input);
     },
   ];
+
+  private addInput(property) {
+    return (time, input) => {
+      time[property] = +input;
+    };
+  }
 
   private meridiemMatch(input) {
     const meridiem = new Intl.DateTimeFormat(this.localization.locale, {
@@ -852,15 +838,16 @@ export class DateTime extends Date {
    * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
    */
   format(
-    template?: DateTimeFormatOptions,
+    template?: DateTimeFormatOptions | string,
     locale = this.localization.locale
   ): string {
     if (template && typeof template === 'object')
       return new Intl.DateTimeFormat(locale, template).format(this);
 
     const formatString = this.replaceTokens(
-      this.localization.format ||
-        `${DefaultFormatLocalization.dateFormats.L}, ${DefaultFormatLocalization.dateFormats.LT}`,
+      template || //try template first
+        this.localization.format || //otherwise try localization format
+        `${DefaultFormatLocalization.dateFormats.L}, ${DefaultFormatLocalization.dateFormats.LT}`, //otherwise try date + time
       this.localization.dateFormats
     );
 
