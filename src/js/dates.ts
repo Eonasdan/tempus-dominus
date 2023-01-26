@@ -47,6 +47,7 @@ export default class Dates {
    */
   formatInput(date: DateTime): string {
     if (!date) return '';
+    date.localization = this.optionsStore.options.localization;
     return date.format();
   }
 

@@ -854,6 +854,9 @@ export class DateTime extends Date {
     const formatter = (template) =>
       new Intl.DateTimeFormat(this.localization.locale, template).format(this);
 
+    if (!this.localization.hourCycle)
+      this.localization.hourCycle = guessHourCycle(this.localization.locale);
+
     //if the format asks for a twenty-four-hour string but the hour cycle is not, then make a base guess
     const HHCycle = this.localization.hourCycle.startsWith('h1')
       ? 'h24'
