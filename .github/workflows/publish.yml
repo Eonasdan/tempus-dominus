@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    uses: ./build.yaml
+    uses: ./build.yaml@v1
     secrets: inherit
   publish:
     runs-on: ubuntu-latest
