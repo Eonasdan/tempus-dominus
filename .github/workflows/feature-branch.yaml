@@ -1,0 +1,19 @@
+name: Feature Branch Publish Package
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+
+jobs:
+  build:
+    uses: ./build.yaml
+    secrets: inherit
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish package
+        run: |
+          if [[ ${{ github.ref }} == "refs/heads/feature/*" ]]; then
+            npm publish --access public --registry https://npm.pkg.github.com/
+          fi

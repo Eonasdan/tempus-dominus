@@ -468,15 +468,15 @@ class DateTime extends Date {
         ];
         this.leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
         //#region CDF stuff
-        this.REGEX_FORMAT = /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|fff|Z{1,2}/g;
-        this.formattingTokens = /(\[[^[]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g;
+        this.REGEX_FORMAT = /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}|Z{1,2}/g;
+        this.formattingTokens = /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g;
         this.match2 = /\d\d/; // 00 - 99
         this.match3 = /\d{3}/; // 000 - 999
         this.match4 = /\d{4}/; // 0000 - 9999
         this.match1to2 = /\d\d?/; // 0 - 99
         this.matchSigned = /[+-]?\d+/; // -inf - inf
         this.matchOffset = /[+-]\d\d:?(\d\d)?|Z/; // +00:00 -00:00 +0000 or -0000 +00 or Z
-        this.matchWord = /\d*[^-_:/,()\s\d]+/; // Word
+        this.matchWord = /[^\d_:/,()\s]+/; // Word
         this.zoneExpressions = [
             this.matchOffset,
             (obj, input) => {
@@ -957,7 +957,7 @@ class DateTime extends Date {
          * a => first capture group. Anything between [ and ]
          * b => second capture group
          */
-        return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
+        return formatStr.replace(/(\[[^[\]]*])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
             const B = b && b.toUpperCase();
             return a || formats[B] || DefaultFormatLocalization$1.dateFormats[B];
         });

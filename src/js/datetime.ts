@@ -563,7 +563,7 @@ export class DateTime extends Date {
   //#region CDF stuff
 
   private REGEX_FORMAT =
-    /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|fff|Z{1,2}/g;
+    /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}|Z{1,2}/g;
 
   private getAllMonths(
     format: '2-digit' | 'numeric' | 'long' | 'short' | 'narrow' = 'long'
@@ -580,14 +580,17 @@ export class DateTime extends Date {
      * a => first capture group. Anything between [ and ]
      * b => second capture group
      */
-    return formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
-      const B = b && b.toUpperCase();
-      return a || formats[B] || DefaultFormatLocalization.dateFormats[B];
-    });
+    return formatStr.replace(
+      /(\[[^[\]]*])|(LTS?|l{1,4}|L{1,4})/g,
+      (_, a, b) => {
+        const B = b && b.toUpperCase();
+        return a || formats[B] || DefaultFormatLocalization.dateFormats[B];
+      }
+    );
   }
 
   private formattingTokens =
-    /(\[[^[]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g;
+    /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g;
 
   private match2 = /\d\d/; // 00 - 99
   private match3 = /\d{3}/; // 000 - 999
@@ -595,7 +598,7 @@ export class DateTime extends Date {
   private match1to2 = /\d\d?/; // 0 - 99
   private matchSigned = /[+-]?\d+/; // -inf - inf
   private matchOffset = /[+-]\d\d:?(\d\d)?|Z/; // +00:00 -00:00 +0000 or -0000 +00 or Z
-  private matchWord = /\d*[^-_:/,()\s\d]+/; // Word
+  private matchWord = /[^\d_:/,()\s]+/; // Word
 
   private parseTwoDigitYear(input) {
     input = +input;
