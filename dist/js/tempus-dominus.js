@@ -474,8 +474,10 @@
           ];
           this.leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
           //#region CDF stuff
-          this.REGEX_FORMAT = /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}|Z{1,2}/g;
-          this.formattingTokens = /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g;
+          this.dateTimeRegex = 
+          //is regex cannot be simplified beyond what it already is
+          /(\[[^[\]]*])|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}|Z{1,2}/g; //NOSONAR
+          this.formattingTokens = /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g; //NOSONAR is regex cannot be simplified beyond what it already is
           this.match2 = /\d\d/; // 00 - 99
           this.match3 = /\d{3}/; // 000 - 999
           this.match4 = /\d{4}/; // 0000 - 9999
@@ -977,9 +979,10 @@
               return 0;
           if (string === 'Z')
               return 0;
-          const parts = string.match(/([+-]|\d\d)/g);
-          const minutes = +(parts[1] * 60) + (+parts[2] || 0);
-          return minutes === 0 ? 0 : parts[0] === '+' ? -minutes : minutes; // eslint-disable-line no-nested-ternary
+          const [first, second, third] = string.match(/([+-]|\d\d)/g);
+          const minutes = +(second * 60) + (+third || 0);
+          const signed = first === '+' ? -minutes : minutes;
+          return minutes === 0 ? 0 : signed; // eslint-disable-line no-nested-ternary
       }
       /**
        * z = -4, zz = -04, zzz = -0400
@@ -1042,11 +1045,16 @@
                   array[i] = { regex, parser };
               }
               else {
-                  array[i] = token.replace(/^\[|]$/g, '');
+                  array[i] = token.replace(/^\[[^[\]]*]$/g, '');
               }
           }
           return (input) => {
-              const time = {};
+              const time = {
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+              };
               for (let i = 0, start = 0; i < length; i += 1) {
                   const token = array[i];
                   if (typeof token === 'string') {
@@ -1076,27 +1084,22 @@
               Namespace.errorMessages.customDateFormatError('No format was provided');
           }
           try {
-              const dt = new DateTime(); //todo this needs some clean up
+              const dt = new DateTime();
               dt.setLocalization(localization);
               if (['x', 'X'].indexOf(localization.format) > -1)
                   return new DateTime((localization.format === 'X' ? 1000 : 1) * +input);
               const parser = dt.makeParser(localization.format);
               const { year, month, day, hours, minutes, seconds, milliseconds, zone } = parser(input);
-              const now = new DateTime();
-              const d = day || (!year && !month ? now.getDate() : 1);
-              const y = year || now.getFullYear();
+              const d = day || (!year && !month ? dt.getDate() : 1);
+              const y = year || dt.getFullYear();
               let M = 0;
               if (!(year && !month)) {
-                  M = month > 0 ? month - 1 : now.getMonth();
+                  M = month > 0 ? month - 1 : dt.getMonth();
               }
-              const h = hours || 0;
-              const m = minutes || 0;
-              const s = seconds || 0;
-              const ms = milliseconds || 0;
               if (zone) {
-                  return new DateTime(Date.UTC(y, M, d, h, m, s, ms + zone.offset * 60 * 1000));
+                  return new DateTime(Date.UTC(y, M, d, hours, minutes, seconds, milliseconds + zone.offset * 60 * 1000));
               }
-              return new DateTime(y, M, d, h, m, s, ms);
+              return new DateTime(y, M, d, hours, minutes, seconds, milliseconds);
           }
           catch (e) {
               Namespace.errorMessages.customDateFormatError(`Unable to parse provided input: ${input}, format: ${localization.format}`);
@@ -1113,10 +1116,13 @@
       format(template, locale = this.localization.locale) {
           if (template && typeof template === 'object')
               return new Intl.DateTimeFormat(locale, template).format(this);
-          const formatString = this.replaceTokens(template || //try template first
-              this.localization.format || //otherwise try localization format
-              `${DefaultFormatLocalization$1.dateFormats.L}, ${DefaultFormatLocalization$1.dateFormats.LT}`, //otherwise try date + time
-          this.localization.dateFormats);
+          const formatString = this.replaceTokens(
+          //try template first
+          template ||
+              //otherwise try localization format
+              this.localization.format ||
+              //otherwise try date + time
+              `${DefaultFormatLocalization$1.dateFormats.L}, ${DefaultFormatLocalization$1.dateFormats.LT}`, this.localization.dateFormats);
           const formatter = (template) => new Intl.DateTimeFormat(this.localization.locale, template).format(this);
           if (!this.localization.hourCycle)
               this.localization.hourCycle = guessHourCycle(this.localization.locale);
@@ -1153,7 +1159,7 @@
               // zz: this.zoneInformation(dateTime, 'zz'), //-04
               // zzz: this.zoneInformation(dateTime, 'zzz') //-0400
           };
-          return formatString.replace(this.REGEX_FORMAT, (match, $1) => {
+          return formatString.replace(this.dateTimeRegex, (match, $1) => {
               return $1 || matches[match];
           });
       }

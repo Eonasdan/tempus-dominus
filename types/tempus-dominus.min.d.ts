@@ -486,10 +486,10 @@ declare class DateTime extends Date {
   private nonLeapLadder;
   private leapLadder;
   //#region CDF stuff
-  private REGEX_FORMAT;
+  private dateTimeRegex; //NOSONAR
+  private formattingTokens; //NOSONAR is regex cannot be simplified beyond what it already is
   private getAllMonths;
   private replaceTokens;
-  private formattingTokens;
   private match2; // 00 - 99
   private match3; // 000 - 999
   private match4; // 0000 - 9999

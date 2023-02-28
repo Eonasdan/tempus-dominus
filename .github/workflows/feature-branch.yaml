@@ -17,3 +17,5 @@ jobs:
           if [[ ${{ github.ref }} == "refs/heads/feature/*" ]]; then
             npm publish --access public --registry https://npm.pkg.github.com/
           fi
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
