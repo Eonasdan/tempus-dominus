@@ -563,7 +563,7 @@ export class DateTime extends Date {
   //#region CDF stuff
 
   private REGEX_FORMAT =
-    /\[([^\]]+)]|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}|Z{1,2}/g;
+    /(\[[^[\]]*])|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}|Z{1,2}/g;
 
   private getAllMonths(
     format: '2-digit' | 'numeric' | 'long' | 'short' | 'narrow' = 'long'
