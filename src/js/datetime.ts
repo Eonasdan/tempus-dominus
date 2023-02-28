@@ -766,7 +766,7 @@ export class DateTime extends Date {
       if (parser) {
         array[i] = { regex, parser };
       } else {
-        array[i] = token.replace(/^\[|]$/g, '');
+        array[i] = token.replace(/^\[[^[\]]*]$/g, '');
       }
     }
 
