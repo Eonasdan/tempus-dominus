@@ -8,13 +8,13 @@ Tempus Dominus is a powerful and robust date time picker for javascript. Version
 
 # Ready State
 
-The beta is here. There's still plenty of things that can be worked on and you can see the [rough roadmap here](https://github.com/Eonasdan/tempus-dominus/projects).
+V6 has shipped! You can see the [rough roadmap here](https://github.com/users/Eonasdan/projects/1).
 
 # Community
 
 Need help or want to discuss some? Join [the discord](https://discord.gg/BHS9jw9YPf).
 
-Please also take a look at the [discussions](https://github.com/Eonasdan/tempus-dominus/discussions). There are several RFCs (Request For Comment) open and you can help shape the future of the picker by participating in these discussions.
+Please also take a look at the [discussions](https://github.com/Eonasdan/tempus-dominus/discussions). There are several RFCs (Request For Comment) open, and you can help shape the future of the picker by participating in these discussions.
 
 # Developers
 
@@ -26,13 +26,13 @@ The docs folder contains the generated documentation site, don't modify this dir
 
 ## Running
 
-You can run `npm run serve` which will start a browser-sync server. Navigate to `http://localhost:3001/` to view the docs.
+You can run `npm run serve` which will start a web server. Navigate to `http://localhost:3001/` to view the docs.
 
 ## Watching for changes
 
 Do not run `npm run serve` at the same time.
 
-Run `npm start`. This runs browser-sync, the build and watchers for the docs, styles, and typescript.
+Run `npm start`. This runs web server, the build and watchers for the docs, styles, and typescript.
 
 ## Where do you use this?
 

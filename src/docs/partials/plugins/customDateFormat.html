@@ -1,9 +1,8 @@
 <page-body>
   <div class='row'>
-    <p>
-      This plugin provides the ability to specify the picker's format. The picker's options can be set via then <code>localization</code>
-      settings.
-    </p>
+    <div class='alert alert-info'>
+      <i class="fa-solid fa-exclamation"></i> This is no longer a plugin and is included in the DateTime object.
+    </div>
     <p>
       Use the boxes below to set a format string and the locale of the sample picker and click "Change" to update the
       options.
@@ -66,7 +65,6 @@
     </div>
     <script src='/6/js/plugins/customDateFormat.js'></script>
     <script type='text/javascript'>
-      tempusDominus.extend(tempusDominus.plugins.customDateFormat);
       const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
         {
           localization: {
@@ -82,18 +80,14 @@
             format: document.getElementById('format').value
           }
         });
-        datetimepicker1.dates.setValue(new DateTime());
+        datetimepicker1.dates.setValue(new tempusDominus.DateTime());
       });
     </script>
   </div>
 
   <div class='row'>
     <pre>
-<code class='language-js'>tempusDominus.extend(tempusDominus.plugins.customDateFormat);
-//or
-import customDateFormat from 'tempusDominus/plugins/customDateFormat'
-tempusDominus.extend(customDateFormat);
-
+<code class='language-js'>
 //example picker
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;),
   localization: {
@@ -108,8 +102,7 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
     <h2>Format Tokens</h2>
     <div class='col-12'>
       <p id='token-description'>
-        The custom date format plugin supports the following tokens. Given
-        2022-07-04T15:13:29.474Z
+        The format supports the following tokens. Given 2022-07-04T15:13:29.474Z
       </p>
       <table class='table table-striped' aria-describedby='token-description'>
         <thead>
@@ -238,9 +231,9 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
 </page-body>
 
 <page-meta>
-  <title>Plugins - Custom Date Formats</title>
+  <title>Custom Date Formats</title>
   <post-date>01/19/2022</post-date>
-  <update-date>07/22/2022</update-date>
+  <update-date>01/26/2023</update-date>
   <excerpt>How to use custom date format plugin with Tempus Dominus.
   </excerpt>
   <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>

@@ -1,2 +1,2 @@
-declare const _default: (_: any, tdClasses: any) => void;
+declare const _default: () => void;
 export { _default as default };

@@ -1,6 +1,7 @@
 import Namespace from './namespace';
 import { DateTime } from '../datetime';
 import { FormatLocalization } from './options';
+import DefaultFormatLocalization from './default-format-localization';
 
 /**
  * Attempts to prove `d` is a DateTime or Date or can be converted into one.
@@ -86,7 +87,7 @@ export function typeCheckDateArray(
         'DateTime or Date'
       );
     }
-    dateTime.setLocale(localization?.locale ?? 'default');
+    dateTime.setLocalization(localization ?? DefaultFormatLocalization);
     value[i] = dateTime;
   }
 }

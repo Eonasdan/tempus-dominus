@@ -1,467 +1,8 @@
 /*!
   * Tempus Dominus v6.2.10 (https://getdatepicker.com/)
-  * Copyright 2013-2022 Jonathan Peterson
+  * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
-var Unit;
-(function (Unit) {
-    Unit["seconds"] = "seconds";
-    Unit["minutes"] = "minutes";
-    Unit["hours"] = "hours";
-    Unit["date"] = "date";
-    Unit["month"] = "month";
-    Unit["year"] = "year";
-})(Unit || (Unit = {}));
-const twoDigitTemplate = {
-    month: '2-digit',
-    day: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-};
-const getFormatByUnit = (unit) => {
-    switch (unit) {
-        case 'date':
-            return { dateStyle: 'short' };
-        case 'month':
-            return {
-                month: 'numeric',
-                year: 'numeric',
-            };
-        case 'year':
-            return { year: 'numeric' };
-    }
-};
-const guessHourCycle = (locale) => {
-    if (!locale)
-        return 'h12';
-    // noinspection SpellCheckingInspection
-    const template = {
-        hour: '2-digit',
-        minute: '2-digit',
-        numberingSystem: 'latn',
-    };
-    const dt = new DateTime().setLocale(locale);
-    dt.hours = 0;
-    const start = dt.parts(undefined, template).hour;
-    //midnight is 12 so en-US style 12 AM
-    if (start === '12')
-        return 'h12';
-    //midnight is 24 is from 00-24
-    if (start === '24')
-        return 'h24';
-    dt.hours = 23;
-    const end = dt.parts(undefined, template).hour;
-    //if midnight is 00 and hour 23 is 11 then
-    if (start === '00' && end === '11')
-        return 'h11';
-    if (start === '00' && end === '23')
-        return 'h23';
-    console.warn(`couldn't determine hour cycle for ${locale}. start: ${start}. end: ${end}`);
-    return undefined;
-};
-/**
- * For the most part this object behaves exactly the same way
- * as the native Date object with a little extra spice.
- */
-class DateTime extends Date {
-    constructor() {
-        super(...arguments);
-        /**
-         * Used with Intl.DateTimeFormat
-         */
-        this.locale = 'default';
-        this.nonLeapLadder = [
-            0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334,
-        ];
-        this.leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
-    }
-    /**
-     * Chainable way to set the {@link locale}
-     * @param value
-     */
-    setLocale(value) {
-        this.locale = value;
-        return this;
-    }
-    /**
-     * Converts a plain JS date object to a DateTime object.
-     * Doing this allows access to format, etc.
-     * @param  date
-     * @param locale
-     */
-    static convert(date, locale = 'default') {
-        if (!date)
-            throw new Error(`A date is required`);
-        return new DateTime(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).setLocale(locale);
-    }
-    /**
-     * Attempts to create a DateTime from a string. A customDateFormat is required for non US dates.
-     * @param input
-     * @param localization
-     */
-    //eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static fromString(input, localization) {
-        return new DateTime(input);
-    }
-    /**
-     * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
-     */
-    get clone() {
-        return new DateTime(this.year, this.month, this.date, this.hours, this.minutes, this.seconds, this.getMilliseconds()).setLocale(this.locale);
-    }
-    /**
-     * Sets the current date to the start of the {@link unit} provided
-     * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).startOf('month')
-     * would return April 1, 2021, 12:00:00.000 AM (midnight)
-     * @param unit
-     * @param startOfTheWeek Allows for the changing the start of the week.
-     */
-    startOf(unit, startOfTheWeek = 0) {
-        if (this[unit] === undefined)
-            throw new Error(`Unit '${unit}' is not valid`);
-        switch (unit) {
-            case 'seconds':
-                this.setMilliseconds(0);
-                break;
-            case 'minutes':
-                this.setSeconds(0, 0);
-                break;
-            case 'hours':
-                this.setMinutes(0, 0, 0);
-                break;
-            case 'date':
-                this.setHours(0, 0, 0, 0);
-                break;
-            case 'weekDay': {
-                this.startOf(Unit.date);
-                if (this.weekDay === startOfTheWeek)
-                    break;
-                let goBack = this.weekDay;
-                if (startOfTheWeek !== 0 && this.weekDay === 0)
-                    goBack = 8 - startOfTheWeek;
-                this.manipulate(startOfTheWeek - goBack, Unit.date);
-                break;
-            }
-            case 'month':
-                this.startOf(Unit.date);
-                this.setDate(1);
-                break;
-            case 'year':
-                this.startOf(Unit.date);
-                this.setMonth(0, 1);
-                break;
-        }
-        return this;
-    }
-    /**
-     * Sets the current date to the end of the {@link unit} provided
-     * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).endOf('month')
-     * would return April 30, 2021, 11:59:59.999 PM
-     * @param unit
-     * @param startOfTheWeek
-     */
-    endOf(unit, startOfTheWeek = 0) {
-        if (this[unit] === undefined)
-            throw new Error(`Unit '${unit}' is not valid`);
-        switch (unit) {
-            case 'seconds':
-                this.setMilliseconds(999);
-                break;
-            case 'minutes':
-                this.setSeconds(59, 999);
-                break;
-            case 'hours':
-                this.setMinutes(59, 59, 999);
-                break;
-            case 'date':
-                this.setHours(23, 59, 59, 999);
-                break;
-            case 'weekDay': {
-                this.endOf(Unit.date);
-                const endOfWeek = 6 + startOfTheWeek;
-                if (this.weekDay === endOfWeek)
-                    break;
-                this.manipulate(endOfWeek - this.weekDay, Unit.date);
-                break;
-            }
-            case 'month':
-                this.endOf(Unit.date);
-                this.manipulate(1, Unit.month);
-                this.setDate(0);
-                break;
-            case 'year':
-                this.endOf(Unit.date);
-                this.setMonth(11, 31);
-                break;
-        }
-        return this;
-    }
-    /**
-     * Change a {@link unit} value. Value can be positive or negative
-     * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).manipulate(1, 'month')
-     * would return May 30, 2021, 11:45:32.984 AM
-     * @param value A positive or negative number
-     * @param unit
-     */
-    manipulate(value, unit) {
-        if (this[unit] === undefined)
-            throw new Error(`Unit '${unit}' is not valid`);
-        this[unit] += value;
-        return this;
-    }
-    /**
-     * Returns a string format.
-     * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
-     * for valid templates and locale objects
-     * @param template An object. Uses browser defaults otherwise.
-     * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
-     */
-    format(template, locale = this.locale) {
-        return new Intl.DateTimeFormat(locale, template).format(this);
-    }
-    /**
-     * Return true if {@link compare} is before this date
-     * @param compare The Date/DateTime to compare
-     * @param unit If provided, uses {@link startOf} for
-     * comparision.
-     */
-    isBefore(compare, unit) {
-        if (!unit)
-            return this.valueOf() < compare.valueOf();
-        if (this[unit] === undefined)
-            throw new Error(`Unit '${unit}' is not valid`);
-        return (this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf());
-    }
-    /**
-     * Return true if {@link compare} is after this date
-     * @param compare The Date/DateTime to compare
-     * @param unit If provided, uses {@link startOf} for
-     * comparision.
-     */
-    isAfter(compare, unit) {
-        if (!unit)
-            return this.valueOf() > compare.valueOf();
-        if (this[unit] === undefined)
-            throw new Error(`Unit '${unit}' is not valid`);
-        return (this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf());
-    }
-    /**
-     * Return true if {@link compare} is same this date
-     * @param compare The Date/DateTime to compare
-     * @param unit If provided, uses {@link startOf} for
-     * comparision.
-     */
-    isSame(compare, unit) {
-        if (!unit)
-            return this.valueOf() === compare.valueOf();
-        if (this[unit] === undefined)
-            throw new Error(`Unit '${unit}' is not valid`);
-        compare = DateTime.convert(compare);
-        return (this.clone.startOf(unit).valueOf() === compare.startOf(unit).valueOf());
-    }
-    /**
-     * Check if this is between two other DateTimes, optionally looking at unit scale. The match is exclusive.
-     * @param left
-     * @param right
-     * @param unit.
-     * @param inclusivity. A [ indicates inclusion of a value. A ( indicates exclusion.
-     * If the inclusivity parameter is used, both indicators must be passed.
-     */
-    isBetween(left, right, unit, inclusivity = '()') {
-        if (unit && this[unit] === undefined)
-            throw new Error(`Unit '${unit}' is not valid`);
-        const leftInclusivity = inclusivity[0] === '(';
-        const rightInclusivity = inclusivity[1] === ')';
-        return (((leftInclusivity
-            ? this.isAfter(left, unit)
-            : !this.isBefore(left, unit)) &&
-            (rightInclusivity
-                ? this.isBefore(right, unit)
-                : !this.isAfter(right, unit))) ||
-            ((leftInclusivity
-                ? this.isBefore(left, unit)
-                : !this.isAfter(left, unit)) &&
-                (rightInclusivity
-                    ? this.isAfter(right, unit)
-                    : !this.isBefore(right, unit))));
-    }
-    /**
-     * Returns flattened object of the date. Does not include literals
-     * @param locale
-     * @param template
-     */
-    parts(locale = this.locale, template = { dateStyle: 'full', timeStyle: 'long' }) {
-        const parts = {};
-        new Intl.DateTimeFormat(locale, template)
-            .formatToParts(this)
-            .filter((x) => x.type !== 'literal')
-            .forEach((x) => (parts[x.type] = x.value));
-        return parts;
-    }
-    /**
-     * Shortcut to Date.getSeconds()
-     */
-    get seconds() {
-        return this.getSeconds();
-    }
-    /**
-     * Shortcut to Date.setSeconds()
-     */
-    set seconds(value) {
-        this.setSeconds(value);
-    }
-    /**
-     * Returns two digit hours
-     */
-    get secondsFormatted() {
-        return this.parts(undefined, twoDigitTemplate).second;
-    }
-    /**
-     * Shortcut to Date.getMinutes()
-     */
-    get minutes() {
-        return this.getMinutes();
-    }
-    /**
-     * Shortcut to Date.setMinutes()
-     */
-    set minutes(value) {
-        this.setMinutes(value);
-    }
-    /**
-     * Returns two digit minutes
-     */
-    get minutesFormatted() {
-        return this.parts(undefined, twoDigitTemplate).minute;
-    }
-    /**
-     * Shortcut to Date.getHours()
-     */
-    get hours() {
-        return this.getHours();
-    }
-    /**
-     * Shortcut to Date.setHours()
-     */
-    set hours(value) {
-        this.setHours(value);
-    }
-    getHoursFormatted(hourCycle = 'h12') {
-        return this.parts(undefined, { ...twoDigitTemplate, hourCycle: hourCycle })
-            .hour;
-    }
-    /**
-     * Get the meridiem of the date. E.g. AM or PM.
-     * If the {@link locale} provides a "dayPeriod" then this will be returned,
-     * otherwise it will return AM or PM.
-     * @param locale
-     */
-    meridiem(locale = this.locale) {
-        return new Intl.DateTimeFormat(locale, {
-            hour: 'numeric',
-            hour12: true,
-        })
-            .formatToParts(this)
-            .find((p) => p.type === 'dayPeriod')?.value;
-    }
-    /**
-     * Shortcut to Date.getDate()
-     */
-    get date() {
-        return this.getDate();
-    }
-    /**
-     * Shortcut to Date.setDate()
-     */
-    set date(value) {
-        this.setDate(value);
-    }
-    /**
-     * Return two digit date
-     */
-    get dateFormatted() {
-        return this.parts(undefined, twoDigitTemplate).day;
-    }
-    /**
-     * Shortcut to Date.getDay()
-     */
-    get weekDay() {
-        return this.getDay();
-    }
-    /**
-     * Shortcut to Date.getMonth()
-     */
-    get month() {
-        return this.getMonth();
-    }
-    /**
-     * Shortcut to Date.setMonth()
-     */
-    set month(value) {
-        const targetMonth = new Date(this.year, value + 1);
-        targetMonth.setDate(0);
-        const endOfMonth = targetMonth.getDate();
-        if (this.date > endOfMonth) {
-            this.date = endOfMonth;
-        }
-        this.setMonth(value);
-    }
-    /**
-     * Return two digit, human expected month. E.g. January = 1, December = 12
-     */
-    get monthFormatted() {
-        return this.parts(undefined, twoDigitTemplate).month;
-    }
-    /**
-     * Shortcut to Date.getFullYear()
-     */
-    get year() {
-        return this.getFullYear();
-    }
-    /**
-     * Shortcut to Date.setFullYear()
-     */
-    set year(value) {
-        this.setFullYear(value);
-    }
-    // borrowed a bunch of stuff from Luxon
-    /**
-     * Gets the week of the year
-     */
-    get week() {
-        const ordinal = this.computeOrdinal(), weekday = this.getUTCDay();
-        let weekNumber = Math.floor((ordinal - weekday + 10) / 7);
-        if (weekNumber < 1) {
-            weekNumber = this.weeksInWeekYear(this.year - 1);
-        }
-        else if (weekNumber > this.weeksInWeekYear(this.year)) {
-            weekNumber = 1;
-        }
-        return weekNumber;
-    }
-    weeksInWeekYear(weekYear) {
-        const p1 = (weekYear +
-            Math.floor(weekYear / 4) -
-            Math.floor(weekYear / 100) +
-            Math.floor(weekYear / 400)) %
-            7, last = weekYear - 1, p2 = (last +
-            Math.floor(last / 4) -
-            Math.floor(last / 100) +
-            Math.floor(last / 400)) %
-            7;
-        return p1 === 4 || p2 === 3 ? 53 : 52;
-    }
-    get isLeapYear() {
-        return (this.year % 4 === 0 && (this.year % 100 !== 0 || this.year % 400 === 0));
-    }
-    computeOrdinal() {
-        return (this.date +
-            (this.isLeapYear ? this.leapLadder : this.nonLeapLadder)[this.month]);
-    }
-}
-
 class TdError extends Error {
 }
 class ErrorMessages {
@@ -836,6 +377,788 @@ Namespace.events = new Events();
 Namespace.css = new Css();
 Namespace.errorMessages = new ErrorMessages();
 
+const DefaultFormatLocalization = {
+    locale: 'default',
+    hourCycle: undefined,
+    dateFormats: {
+        LTS: 'h:mm:ss T',
+        LT: 'h:mm T',
+        L: 'MM/dd/yyyy',
+        LL: 'MMMM d, yyyy',
+        LLL: 'MMMM d, yyyy h:mm T',
+        LLLL: 'dddd, MMMM d, yyyy h:mm T',
+    },
+    ordinal: (n) => {
+        const s = ['th', 'st', 'nd', 'rd'];
+        const v = n % 100;
+        return `[${n}${s[(v - 20) % 10] || s[v] || s[0]}]`;
+    },
+    format: 'L LT',
+};
+var DefaultFormatLocalization$1 = { ...DefaultFormatLocalization };
+
+var Unit;
+(function (Unit) {
+    Unit["seconds"] = "seconds";
+    Unit["minutes"] = "minutes";
+    Unit["hours"] = "hours";
+    Unit["date"] = "date";
+    Unit["month"] = "month";
+    Unit["year"] = "year";
+})(Unit || (Unit = {}));
+const twoDigitTemplate = {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+};
+const getFormatByUnit = (unit) => {
+    switch (unit) {
+        case 'date':
+            return { dateStyle: 'short' };
+        case 'month':
+            return {
+                month: 'numeric',
+                year: 'numeric',
+            };
+        case 'year':
+            return { year: 'numeric' };
+    }
+};
+const guessHourCycle = (locale) => {
+    if (!locale)
+        return 'h12';
+    // noinspection SpellCheckingInspection
+    const template = {
+        hour: '2-digit',
+        minute: '2-digit',
+        numberingSystem: 'latn',
+    };
+    const dt = new DateTime().setLocalization({ locale });
+    dt.hours = 0;
+    const start = dt.parts(undefined, template).hour;
+    //midnight is 12 so en-US style 12 AM
+    if (start === '12')
+        return 'h12';
+    //midnight is 24 is from 00-24
+    if (start === '24')
+        return 'h24';
+    dt.hours = 23;
+    const end = dt.parts(undefined, template).hour;
+    //if midnight is 00 and hour 23 is 11 then
+    if (start === '00' && end === '11')
+        return 'h11';
+    if (start === '00' && end === '23')
+        return 'h23';
+    console.warn(`couldn't determine hour cycle for ${locale}. start: ${start}. end: ${end}`);
+    return undefined;
+};
+/**
+ * For the most part this object behaves exactly the same way
+ * as the native Date object with a little extra spice.
+ */
+class DateTime extends Date {
+    constructor() {
+        super(...arguments);
+        this.localization = DefaultFormatLocalization$1;
+        this.nonLeapLadder = [
+            0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334,
+        ];
+        this.leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
+        //#region CDF stuff
+        this.dateTimeRegex = 
+        //is regex cannot be simplified beyond what it already is
+        /(\[[^[\]]*])|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}|Z{1,2}/g; //NOSONAR
+        this.formattingTokens = /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g; //NOSONAR is regex cannot be simplified beyond what it already is
+        this.match2 = /\d\d/; // 00 - 99
+        this.match3 = /\d{3}/; // 000 - 999
+        this.match4 = /\d{4}/; // 0000 - 9999
+        this.match1to2 = /\d\d?/; // 0 - 99
+        this.matchSigned = /[+-]?\d+/; // -inf - inf
+        this.matchOffset = /[+-]\d\d:?(\d\d)?|Z/; // +00:00 -00:00 +0000 or -0000 +00 or Z
+        this.matchWord = /[^\d_:/,()\s]+/; // Word
+        this.zoneExpressions = [
+            this.matchOffset,
+            (obj, input) => {
+                obj.offset = this.offsetFromString(input);
+            },
+        ];
+        this.expressions = {
+            t: [
+                this.matchWord,
+                (ojb, input) => {
+                    ojb.afternoon = this.meridiemMatch(input);
+                },
+            ],
+            T: [
+                this.matchWord,
+                (ojb, input) => {
+                    ojb.afternoon = this.meridiemMatch(input);
+                },
+            ],
+            fff: [
+                this.match3,
+                (ojb, input) => {
+                    ojb.milliseconds = +input;
+                },
+            ],
+            s: [this.match1to2, this.addInput('seconds')],
+            ss: [this.match1to2, this.addInput('seconds')],
+            m: [this.match1to2, this.addInput('minutes')],
+            mm: [this.match1to2, this.addInput('minutes')],
+            H: [this.match1to2, this.addInput('hours')],
+            h: [this.match1to2, this.addInput('hours')],
+            HH: [this.match1to2, this.addInput('hours')],
+            hh: [this.match1to2, this.addInput('hours')],
+            d: [this.match1to2, this.addInput('day')],
+            dd: [this.match2, this.addInput('day')],
+            Do: [
+                this.matchWord,
+                (ojb, input) => {
+                    [ojb.day] = input.match(/\d+/);
+                    if (!this.localization.ordinal)
+                        return;
+                    for (let i = 1; i <= 31; i += 1) {
+                        if (this.localization.ordinal(i).replace(/[[\]]/g, '') === input) {
+                            ojb.day = i;
+                        }
+                    }
+                },
+            ],
+            M: [this.match1to2, this.addInput('month')],
+            MM: [this.match2, this.addInput('month')],
+            MMM: [
+                this.matchWord,
+                (obj, input) => {
+                    const months = this.getAllMonths();
+                    const monthsShort = this.getAllMonths('short');
+                    const matchIndex = (monthsShort || months.map((_) => _.slice(0, 3))).indexOf(input) + 1;
+                    if (matchIndex < 1) {
+                        throw new Error();
+                    }
+                    obj.month = matchIndex % 12 || matchIndex;
+                },
+            ],
+            MMMM: [
+                this.matchWord,
+                (obj, input) => {
+                    const months = this.getAllMonths();
+                    const matchIndex = months.indexOf(input) + 1;
+                    if (matchIndex < 1) {
+                        throw new Error();
+                    }
+                    obj.month = matchIndex % 12 || matchIndex;
+                },
+            ],
+            y: [this.matchSigned, this.addInput('year')],
+            yy: [
+                this.match2,
+                (obj, input) => {
+                    obj.year = this.parseTwoDigitYear(input);
+                },
+            ],
+            yyyy: [this.match4, this.addInput('year')],
+            // z: this.zoneExpressions,
+            // zz: this.zoneExpressions,
+            // zzz: this.zoneExpressions
+        };
+        //#endregion CDF stuff
+    }
+    /**
+     * Chainable way to set the {@link locale}
+     * @param value
+     * @deprecated use setLocalization with a FormatLocalization object instead
+     */
+    setLocale(value) {
+        if (!this.localization) {
+            this.localization = DefaultFormatLocalization$1;
+            this.localization.locale = value;
+        }
+        return this;
+    }
+    /**
+     * Chainable way to set the {@link locale}
+     * @param value
+     */
+    setLocalization(value) {
+        this.localization = value;
+        return this;
+    }
+    /**
+     * Converts a plain JS date object to a DateTime object.
+     * Doing this allows access to format, etc.
+     * @param  date
+     * @param locale this parameter is deprecated. Use formatLocalization instead.
+     * @param formatLocalization
+     */
+    static convert(date, locale = 'default', formatLocalization = undefined) {
+        if (!date)
+            throw new Error(`A date is required`);
+        if (!formatLocalization) {
+            formatLocalization = DefaultFormatLocalization$1;
+            formatLocalization.locale = locale;
+        }
+        return new DateTime(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).setLocalization(formatLocalization);
+    }
+    /**
+     * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
+     */
+    get clone() {
+        return new DateTime(this.year, this.month, this.date, this.hours, this.minutes, this.seconds, this.getMilliseconds()).setLocalization(this.localization);
+    }
+    /**
+     * Sets the current date to the start of the {@link unit} provided
+     * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).startOf('month')
+     * would return April 1, 2021, 12:00:00.000 AM (midnight)
+     * @param unit
+     * @param startOfTheWeek Allows for the changing the start of the week.
+     */
+    startOf(unit, startOfTheWeek = 0) {
+        if (this[unit] === undefined)
+            throw new Error(`Unit '${unit}' is not valid`);
+        switch (unit) {
+            case 'seconds':
+                this.setMilliseconds(0);
+                break;
+            case 'minutes':
+                this.setSeconds(0, 0);
+                break;
+            case 'hours':
+                this.setMinutes(0, 0, 0);
+                break;
+            case 'date':
+                this.setHours(0, 0, 0, 0);
+                break;
+            case 'weekDay': {
+                this.startOf(Unit.date);
+                if (this.weekDay === startOfTheWeek)
+                    break;
+                let goBack = this.weekDay;
+                if (startOfTheWeek !== 0 && this.weekDay === 0)
+                    goBack = 8 - startOfTheWeek;
+                this.manipulate(startOfTheWeek - goBack, Unit.date);
+                break;
+            }
+            case 'month':
+                this.startOf(Unit.date);
+                this.setDate(1);
+                break;
+            case 'year':
+                this.startOf(Unit.date);
+                this.setMonth(0, 1);
+                break;
+        }
+        return this;
+    }
+    /**
+     * Sets the current date to the end of the {@link unit} provided
+     * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).endOf('month')
+     * would return April 30, 2021, 11:59:59.999 PM
+     * @param unit
+     * @param startOfTheWeek
+     */
+    endOf(unit, startOfTheWeek = 0) {
+        if (this[unit] === undefined)
+            throw new Error(`Unit '${unit}' is not valid`);
+        switch (unit) {
+            case 'seconds':
+                this.setMilliseconds(999);
+                break;
+            case 'minutes':
+                this.setSeconds(59, 999);
+                break;
+            case 'hours':
+                this.setMinutes(59, 59, 999);
+                break;
+            case 'date':
+                this.setHours(23, 59, 59, 999);
+                break;
+            case 'weekDay': {
+                this.endOf(Unit.date);
+                const endOfWeek = 6 + startOfTheWeek;
+                if (this.weekDay === endOfWeek)
+                    break;
+                this.manipulate(endOfWeek - this.weekDay, Unit.date);
+                break;
+            }
+            case 'month':
+                this.endOf(Unit.date);
+                this.manipulate(1, Unit.month);
+                this.setDate(0);
+                break;
+            case 'year':
+                this.endOf(Unit.date);
+                this.setMonth(11, 31);
+                break;
+        }
+        return this;
+    }
+    /**
+     * Change a {@link unit} value. Value can be positive or negative
+     * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).manipulate(1, 'month')
+     * would return May 30, 2021, 11:45:32.984 AM
+     * @param value A positive or negative number
+     * @param unit
+     */
+    manipulate(value, unit) {
+        if (this[unit] === undefined)
+            throw new Error(`Unit '${unit}' is not valid`);
+        this[unit] += value;
+        return this;
+    }
+    /**
+     * Return true if {@link compare} is before this date
+     * @param compare The Date/DateTime to compare
+     * @param unit If provided, uses {@link startOf} for
+     * comparison.
+     */
+    isBefore(compare, unit) {
+        if (!unit)
+            return this.valueOf() < compare.valueOf();
+        if (this[unit] === undefined)
+            throw new Error(`Unit '${unit}' is not valid`);
+        return (this.clone.startOf(unit).valueOf() < compare.clone.startOf(unit).valueOf());
+    }
+    /**
+     * Return true if {@link compare} is after this date
+     * @param compare The Date/DateTime to compare
+     * @param unit If provided, uses {@link startOf} for
+     * comparison.
+     */
+    isAfter(compare, unit) {
+        if (!unit)
+            return this.valueOf() > compare.valueOf();
+        if (this[unit] === undefined)
+            throw new Error(`Unit '${unit}' is not valid`);
+        return (this.clone.startOf(unit).valueOf() > compare.clone.startOf(unit).valueOf());
+    }
+    /**
+     * Return true if {@link compare} is same this date
+     * @param compare The Date/DateTime to compare
+     * @param unit If provided, uses {@link startOf} for
+     * comparison.
+     */
+    isSame(compare, unit) {
+        if (!unit)
+            return this.valueOf() === compare.valueOf();
+        if (this[unit] === undefined)
+            throw new Error(`Unit '${unit}' is not valid`);
+        compare = DateTime.convert(compare);
+        return (this.clone.startOf(unit).valueOf() === compare.startOf(unit).valueOf());
+    }
+    /**
+     * Check if this is between two other DateTimes, optionally looking at unit scale. The match is exclusive.
+     * @param left
+     * @param right
+     * @param unit.
+     * @param inclusivity. A [ indicates inclusion of a value. A ( indicates exclusion.
+     * If the inclusivity parameter is used, both indicators must be passed.
+     */
+    isBetween(left, right, unit, inclusivity = '()') {
+        if (unit && this[unit] === undefined)
+            throw new Error(`Unit '${unit}' is not valid`);
+        const leftInclusivity = inclusivity[0] === '(';
+        const rightInclusivity = inclusivity[1] === ')';
+        return (((leftInclusivity
+            ? this.isAfter(left, unit)
+            : !this.isBefore(left, unit)) &&
+            (rightInclusivity
+                ? this.isBefore(right, unit)
+                : !this.isAfter(right, unit))) ||
+            ((leftInclusivity
+                ? this.isBefore(left, unit)
+                : !this.isAfter(left, unit)) &&
+                (rightInclusivity
+                    ? this.isAfter(right, unit)
+                    : !this.isBefore(right, unit))));
+    }
+    /**
+     * Returns flattened object of the date. Does not include literals
+     * @param locale
+     * @param template
+     */
+    parts(locale = this.localization.locale, template = { dateStyle: 'full', timeStyle: 'long' }) {
+        const parts = {};
+        new Intl.DateTimeFormat(locale, template)
+            .formatToParts(this)
+            .filter((x) => x.type !== 'literal')
+            .forEach((x) => (parts[x.type] = x.value));
+        return parts;
+    }
+    /**
+     * Shortcut to Date.getSeconds()
+     */
+    get seconds() {
+        return this.getSeconds();
+    }
+    /**
+     * Shortcut to Date.setSeconds()
+     */
+    set seconds(value) {
+        this.setSeconds(value);
+    }
+    /**
+     * Returns two digit hours
+     */
+    get secondsFormatted() {
+        return this.parts(undefined, twoDigitTemplate).second;
+    }
+    /**
+     * Shortcut to Date.getMinutes()
+     */
+    get minutes() {
+        return this.getMinutes();
+    }
+    /**
+     * Shortcut to Date.setMinutes()
+     */
+    set minutes(value) {
+        this.setMinutes(value);
+    }
+    /**
+     * Returns two digit minutes
+     */
+    get minutesFormatted() {
+        return this.parts(undefined, twoDigitTemplate).minute;
+    }
+    /**
+     * Shortcut to Date.getHours()
+     */
+    get hours() {
+        return this.getHours();
+    }
+    /**
+     * Shortcut to Date.setHours()
+     */
+    set hours(value) {
+        this.setHours(value);
+    }
+    getHoursFormatted(hourCycle = 'h12') {
+        return this.parts(undefined, { ...twoDigitTemplate, hourCycle: hourCycle })
+            .hour;
+    }
+    /**
+     * Get the meridiem of the date. E.g. AM or PM.
+     * If the {@link locale} provides a "dayPeriod" then this will be returned,
+     * otherwise it will return AM or PM.
+     * @param locale
+     */
+    meridiem(locale = this.localization.locale) {
+        return new Intl.DateTimeFormat(locale, {
+            hour: 'numeric',
+            hour12: true,
+        })
+            .formatToParts(this)
+            .find((p) => p.type === 'dayPeriod')?.value;
+    }
+    /**
+     * Shortcut to Date.getDate()
+     */
+    get date() {
+        return this.getDate();
+    }
+    /**
+     * Shortcut to Date.setDate()
+     */
+    set date(value) {
+        this.setDate(value);
+    }
+    /**
+     * Return two digit date
+     */
+    get dateFormatted() {
+        return this.parts(undefined, twoDigitTemplate).day;
+    }
+    /**
+     * Shortcut to Date.getDay()
+     */
+    get weekDay() {
+        return this.getDay();
+    }
+    /**
+     * Shortcut to Date.getMonth()
+     */
+    get month() {
+        return this.getMonth();
+    }
+    /**
+     * Shortcut to Date.setMonth()
+     */
+    set month(value) {
+        const targetMonth = new Date(this.year, value + 1);
+        targetMonth.setDate(0);
+        const endOfMonth = targetMonth.getDate();
+        if (this.date > endOfMonth) {
+            this.date = endOfMonth;
+        }
+        this.setMonth(value);
+    }
+    /**
+     * Return two digit, human expected month. E.g. January = 1, December = 12
+     */
+    get monthFormatted() {
+        return this.parts(undefined, twoDigitTemplate).month;
+    }
+    /**
+     * Shortcut to Date.getFullYear()
+     */
+    get year() {
+        return this.getFullYear();
+    }
+    /**
+     * Shortcut to Date.setFullYear()
+     */
+    set year(value) {
+        this.setFullYear(value);
+    }
+    // borrowed a bunch of stuff from Luxon
+    /**
+     * Gets the week of the year
+     */
+    get week() {
+        const ordinal = this.computeOrdinal(), weekday = this.getUTCDay();
+        let weekNumber = Math.floor((ordinal - weekday + 10) / 7);
+        if (weekNumber < 1) {
+            weekNumber = this.weeksInWeekYear();
+        }
+        else if (weekNumber > this.weeksInWeekYear()) {
+            weekNumber = 1;
+        }
+        return weekNumber;
+    }
+    weeksInWeekYear() {
+        const p1 = (this.year +
+            Math.floor(this.year / 4) -
+            Math.floor(this.year / 100) +
+            Math.floor(this.year / 400)) %
+            7, last = this.year - 1, p2 = (last +
+            Math.floor(last / 4) -
+            Math.floor(last / 100) +
+            Math.floor(last / 400)) %
+            7;
+        return p1 === 4 || p2 === 3 ? 53 : 52;
+    }
+    get isLeapYear() {
+        return (this.year % 4 === 0 && (this.year % 100 !== 0 || this.year % 400 === 0));
+    }
+    computeOrdinal() {
+        return (this.date +
+            (this.isLeapYear ? this.leapLadder : this.nonLeapLadder)[this.month]);
+    }
+    getAllMonths(format = 'long') {
+        const applyFormat = new Intl.DateTimeFormat(this.localization.locale, {
+            month: format,
+        }).format;
+        return [...Array(12).keys()].map((m) => applyFormat(new Date(2021, m)));
+    }
+    replaceTokens(formatStr, formats) {
+        /***
+         * _ => match
+         * a => first capture group. Anything between [ and ]
+         * b => second capture group
+         */
+        return formatStr.replace(/(\[[^[\]]*])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
+            const B = b && b.toUpperCase();
+            return a || formats[B] || DefaultFormatLocalization$1.dateFormats[B];
+        });
+    }
+    parseTwoDigitYear(input) {
+        input = +input;
+        return input + (input > 68 ? 1900 : 2000);
+    }
+    offsetFromString(string) {
+        if (!string)
+            return 0;
+        if (string === 'Z')
+            return 0;
+        const [first, second, third] = string.match(/([+-]|\d\d)/g);
+        const minutes = +(second * 60) + (+third || 0);
+        const signed = first === '+' ? -minutes : minutes;
+        return minutes === 0 ? 0 : signed; // eslint-disable-line no-nested-ternary
+    }
+    /**
+     * z = -4, zz = -04, zzz = -0400
+     * @param date
+     * @param style
+     * @private
+     */
+    zoneInformation(date, style) {
+        let name = date
+            .parts(this.localization.locale, { timeZoneName: 'longOffset' })
+            .timeZoneName.replace('GMT', '')
+            .replace(':', '');
+        const negative = name.includes('-');
+        name = name.replace('-', '');
+        if (style === 'z')
+            name = name.substring(1, 2);
+        else if (style === 'zz')
+            name = name.substring(0, 2);
+        return `${negative ? '-' : ''}${name}`;
+    }
+    addInput(property) {
+        return (time, input) => {
+            time[property] = +input;
+        };
+    }
+    meridiemMatch(input) {
+        const meridiem = new Intl.DateTimeFormat(this.localization.locale, {
+            hour: 'numeric',
+            hour12: true,
+        })
+            .formatToParts(new Date(2022, 3, 4, 13))
+            .find((p) => p.type === 'dayPeriod')?.value;
+        return input.toLowerCase() === meridiem.toLowerCase();
+    }
+    correctHours(time) {
+        const { afternoon } = time;
+        if (afternoon !== undefined) {
+            const { hours } = time;
+            if (afternoon) {
+                if (hours < 12) {
+                    time.hours += 12;
+                }
+            }
+            else if (hours === 12) {
+                time.hours = 0;
+            }
+            delete time.afternoon;
+        }
+    }
+    makeParser(format) {
+        format = this.replaceTokens(format, this.localization.dateFormats);
+        const array = format.match(this.formattingTokens);
+        const { length } = array;
+        for (let i = 0; i < length; i += 1) {
+            const token = array[i];
+            const parseTo = this.expressions[token];
+            const regex = parseTo && parseTo[0];
+            const parser = parseTo && parseTo[1];
+            if (parser) {
+                array[i] = { regex, parser };
+            }
+            else {
+                array[i] = token.replace(/^\[[^[\]]*]$/g, '');
+            }
+        }
+        return (input) => {
+            const time = {
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                milliseconds: 0,
+            };
+            for (let i = 0, start = 0; i < length; i += 1) {
+                const token = array[i];
+                if (typeof token === 'string') {
+                    start += token.length;
+                }
+                else {
+                    const { regex, parser } = token;
+                    const part = input.slice(start);
+                    const match = regex.exec(part);
+                    const value = match[0];
+                    parser.call(this, time, value);
+                    input = input.replace(value, '');
+                }
+            }
+            this.correctHours(time);
+            return time;
+        };
+    }
+    /**
+     * Attempts to create a DateTime from a string.
+     * @param input
+     * @param localization
+     */
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static fromString(input, localization) {
+        if (!localization?.format) {
+            Namespace.errorMessages.customDateFormatError('No format was provided');
+        }
+        try {
+            const dt = new DateTime();
+            dt.setLocalization(localization);
+            if (['x', 'X'].indexOf(localization.format) > -1)
+                return new DateTime((localization.format === 'X' ? 1000 : 1) * +input);
+            const parser = dt.makeParser(localization.format);
+            const { year, month, day, hours, minutes, seconds, milliseconds, zone } = parser(input);
+            const d = day || (!year && !month ? dt.getDate() : 1);
+            const y = year || dt.getFullYear();
+            let M = 0;
+            if (!(year && !month)) {
+                M = month > 0 ? month - 1 : dt.getMonth();
+            }
+            if (zone) {
+                return new DateTime(Date.UTC(y, M, d, hours, minutes, seconds, milliseconds + zone.offset * 60 * 1000));
+            }
+            return new DateTime(y, M, d, hours, minutes, seconds, milliseconds);
+        }
+        catch (e) {
+            Namespace.errorMessages.customDateFormatError(`Unable to parse provided input: ${input}, format: ${localization.format}`);
+            return new DateTime(''); // Invalid Date
+        }
+    }
+    /**
+     * Returns a string format.
+     * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
+     * for valid templates and locale objects
+     * @param template An optional object. If provided, method will use Intl., otherwise the localizations format properties
+     * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
+     */
+    format(template, locale = this.localization.locale) {
+        if (template && typeof template === 'object')
+            return new Intl.DateTimeFormat(locale, template).format(this);
+        const formatString = this.replaceTokens(
+        //try template first
+        template ||
+            //otherwise try localization format
+            this.localization.format ||
+            //otherwise try date + time
+            `${DefaultFormatLocalization$1.dateFormats.L}, ${DefaultFormatLocalization$1.dateFormats.LT}`, this.localization.dateFormats);
+        const formatter = (template) => new Intl.DateTimeFormat(this.localization.locale, template).format(this);
+        if (!this.localization.hourCycle)
+            this.localization.hourCycle = guessHourCycle(this.localization.locale);
+        //if the format asks for a twenty-four-hour string but the hour cycle is not, then make a base guess
+        const HHCycle = this.localization.hourCycle.startsWith('h1')
+            ? 'h24'
+            : this.localization.hourCycle;
+        const hhCycle = this.localization.hourCycle.startsWith('h2')
+            ? 'h12'
+            : this.localization.hourCycle;
+        const matches = {
+            yy: formatter({ year: '2-digit' }),
+            yyyy: this.year,
+            M: formatter({ month: 'numeric' }),
+            MM: this.monthFormatted,
+            MMM: this.getAllMonths('short')[this.getMonth()],
+            MMMM: this.getAllMonths()[this.getMonth()],
+            d: this.date,
+            dd: this.dateFormatted,
+            ddd: formatter({ weekday: 'short' }),
+            dddd: formatter({ weekday: 'long' }),
+            H: this.getHours(),
+            HH: this.getHoursFormatted(HHCycle),
+            h: this.hours > 12 ? this.hours - 12 : this.hours,
+            hh: this.getHoursFormatted(hhCycle),
+            t: this.meridiem(),
+            T: this.meridiem().toUpperCase(),
+            m: this.minutes,
+            mm: this.minutesFormatted,
+            s: this.seconds,
+            ss: this.secondsFormatted,
+            fff: this.getMilliseconds(),
+            // z: this.zoneInformation(dateTime, 'z'), //-4
+            // zz: this.zoneInformation(dateTime, 'zz'), //-04
+            // zzz: this.zoneInformation(dateTime, 'zzz') //-0400
+        };
+        return formatString.replace(this.dateTimeRegex, (match, $1) => {
+            return $1 || matches[match];
+        });
+    }
+}
+
 class ServiceLocator {
     constructor() {
         this.cache = new Map();
@@ -1144,28 +1467,12 @@ const DefaultOptions = {
         selectTime: 'Select Time',
         selectDate: 'Select Date',
         dayViewHeaderFormat: { month: 'long', year: '2-digit' },
-        locale: 'default',
-        hourCycle: undefined,
         startOfTheWeek: 0,
-        /**
-         * This is only used with the customDateFormat plugin
-         */
-        dateFormats: {
-            LTS: 'h:mm:ss T',
-            LT: 'h:mm T',
-            L: 'MM/dd/yyyy',
-            LL: 'MMMM d, yyyy',
-            LLL: 'MMMM d, yyyy h:mm T',
-            LLLL: 'dddd, MMMM d, yyyy h:mm T',
-        },
-        /**
-         * This is only used with the customDateFormat plugin
-         */
-        ordinal: (n) => n,
-        /**
-         * This is only used with the customDateFormat plugin
-         */
-        format: 'L LT',
+        locale: DefaultFormatLocalization$1.locale,
+        hourCycle: DefaultFormatLocalization$1.hourCycle,
+        dateFormats: DefaultFormatLocalization$1.dateFormats,
+        ordinal: DefaultFormatLocalization$1.ordinal,
+        format: DefaultFormatLocalization$1.format,
     },
     keepInvalid: false,
     debug: false,
@@ -1234,7 +1541,7 @@ providedType, localization) {
         if (!dateTime) {
             Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
         }
-        dateTime.setLocale(localization?.locale ?? 'default');
+        dateTime.setLocalization(localization ?? DefaultFormatLocalization$1);
         value[i] = dateTime;
     }
 }
@@ -1255,7 +1562,7 @@ function mandatoryDate(key) {
     return ({ value, providedType, localization }) => {
         const dateTime = convertToDateTime(value, key, localization);
         if (dateTime !== undefined) {
-            dateTime.setLocale(localization.locale);
+            dateTime.setLocalization(localization);
             return dateTime;
         }
         Namespace.errorMessages.typeMismatch(key, providedType, 'DateTime or Date');
@@ -1326,7 +1633,7 @@ const optionProcessors = Object.freeze({
                 if (!dateTime) {
                     Namespace.errorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
                 }
-                dateTime.setLocale(localization.locale);
+                dateTime.setLocalization(localization);
                 valueObject[i][vk] = dateTime;
             });
         }
@@ -1672,18 +1979,10 @@ class Dates {
      * @param date
      */
     formatInput(date) {
-        const components = this.optionsStore.options.display.components;
         if (!date)
             return '';
-        return date.format({
-            year: components.calendar && components.year ? 'numeric' : undefined,
-            month: components.calendar && components.month ? '2-digit' : undefined,
-            day: components.calendar && components.date ? '2-digit' : undefined,
-            hour: components.clock && components.hours ? '2-digit' : undefined,
-            minute: components.clock && components.minutes ? '2-digit' : undefined,
-            second: components.clock && components.seconds ? '2-digit' : undefined,
-            hourCycle: this.optionsStore.options.localization.hourCycle,
-        });
+        date.localization = this.optionsStore.options.localization;
+        return date.format();
     }
     /**
      * parse the value into a DateTime object.
@@ -1707,7 +2006,7 @@ class Dates {
         }
         const converted = this.parseInput(value);
         if (converted) {
-            converted.setLocale(this.optionsStore.options.localization.locale);
+            converted.setLocalization(this.optionsStore.options.localization);
             this.setValue(converted, index);
         }
     }
@@ -1995,12 +2294,14 @@ class DateDisplay {
             containerClone.classList.add(...classes);
             containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
             containerClone.setAttribute('data-day', `${innerDate.date}`);
-            containerClone.innerText = innerDate.format({ day: 'numeric' });
+            containerClone.innerText = innerDate.parts(undefined, {
+                day: 'numeric',
+            }).day;
             innerDate.manipulate(1, Unit.date);
         });
     }
     /***
-     * Generates an html row that contains the days of the week.
+     * Generates a html row that contains the days of the week.
      * @private
      */
     _daysOfTheWeek() {
@@ -2827,7 +3128,7 @@ class Display {
             if (this.dates.picked.length == 0) {
                 if (this.optionsStore.options.useCurrent &&
                     !this.optionsStore.options.defaultDate) {
-                    const date = new DateTime().setLocale(this.optionsStore.options.localization.locale);
+                    const date = new DateTime().setLocalization(this.optionsStore.options.localization);
                     if (!this.optionsStore.options.keepInvalid) {
                         let tries = 0;
                         let direction = 1;
@@ -3395,7 +3696,7 @@ class Actions {
                 this.display.hide();
                 break;
             case ActionTypes$1.today: {
-                const today = new DateTime().setLocale(this.optionsStore.options.localization.locale);
+                const today = new DateTime().setLocalization(this.optionsStore.options.localization);
                 this._eventEmitters.updateViewDate.emit(today);
                 //todo this this really a good idea?
                 if (this.validation.isValid(today, Unit.date))
@@ -3610,7 +3911,7 @@ class TempusDominus {
         }
         this.optionsStore.element = element;
         this._initializeOptions(options, DefaultOptions, true);
-        this.optionsStore.viewDate.setLocale(this.optionsStore.options.localization.locale);
+        this.optionsStore.viewDate.setLocalization(this.optionsStore.options.localization);
         this.optionsStore.unset = true;
         this._initializeInput();
         this._initializeToggle();
@@ -3631,7 +3932,7 @@ class TempusDominus {
     }
     set viewDate(value) {
         this.optionsStore.viewDate = value;
-        this.optionsStore.viewDate.setLocale(this.optionsStore.options.localization.locale);
+        this.optionsStore.viewDate.setLocalization(this.optionsStore.options.localization);
         this.display._update(this.optionsStore.currentView === 'clock' ? 'clock' : 'calendar');
     }
     // noinspection JSUnusedGlobalSymbols
@@ -3848,7 +4149,7 @@ class TempusDominus {
         if (includeDataset)
             newConfig = OptionConverter._dataToOptions(this.optionsStore.element, newConfig);
         OptionConverter._validateConflicts(newConfig);
-        newConfig.viewDate = newConfig.viewDate.setLocale(newConfig.localization.locale);
+        newConfig.viewDate = newConfig.viewDate.setLocalization(newConfig.localization);
         if (!this.optionsStore.viewDate.isSame(newConfig.viewDate)) {
             this.optionsStore.viewDate = newConfig.viewDate;
         }

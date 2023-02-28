@@ -159,8 +159,8 @@ export default class Display {
           this.optionsStore.options.useCurrent &&
           !this.optionsStore.options.defaultDate
         ) {
-          const date = new DateTime().setLocale(
-            this.optionsStore.options.localization.locale
+          const date = new DateTime().setLocalization(
+            this.optionsStore.options.localization
           );
           if (!this.optionsStore.options.keepInvalid) {
             let tries = 0;

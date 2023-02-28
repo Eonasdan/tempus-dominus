@@ -151,13 +151,15 @@ export default class DateDisplay {
           `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`
         );
         containerClone.setAttribute('data-day', `${innerDate.date}`);
-        containerClone.innerText = innerDate.format({ day: 'numeric' });
+        containerClone.innerText = innerDate.parts(undefined, {
+          day: 'numeric',
+        }).day;
         innerDate.manipulate(1, Unit.date);
       });
   }
 
   /***
-   * Generates an html row that contains the days of the week.
+   * Generates a html row that contains the days of the week.
    * @private
    */
   private _daysOfTheWeek(): HTMLElement[] {
