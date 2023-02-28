@@ -7,5 +7,5 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    uses: ./build.yaml@v1
+    uses: ./.github/workflows/build.yaml@v1
     secrets: inherit
