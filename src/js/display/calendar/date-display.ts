@@ -66,36 +66,7 @@ export default class DateDisplay {
       Namespace.css.daysContainer
     )[0];
 
-    if (this.optionsStore.currentView === 'calendar') {
-      const [previous, switcher, next] = container.parentElement
-        .getElementsByClassName(Namespace.css.calendarHeader)[0]
-        .getElementsByTagName('div');
-
-      switcher.setAttribute(
-        Namespace.css.daysContainer,
-        this.optionsStore.viewDate.format(
-          this.optionsStore.options.localization.dayViewHeaderFormat
-        )
-      );
-
-      this.optionsStore.options.display.components.month
-        ? switcher.classList.remove(Namespace.css.disabled)
-        : switcher.classList.add(Namespace.css.disabled);
-
-      this.validation.isValid(
-        this.optionsStore.viewDate.clone.manipulate(-1, Unit.month),
-        Unit.month
-      )
-        ? previous.classList.remove(Namespace.css.disabled)
-        : previous.classList.add(Namespace.css.disabled);
-
-      this.validation.isValid(
-        this.optionsStore.viewDate.clone.manipulate(1, Unit.month),
-        Unit.month
-      )
-        ? next.classList.remove(Namespace.css.disabled)
-        : next.classList.add(Namespace.css.disabled);
-    }
+    this._updateCalendarView(container);
 
     const innerDate = this.optionsStore.viewDate.clone
       .startOf(Unit.month)
@@ -156,6 +127,34 @@ export default class DateDisplay {
         }).day;
         innerDate.manipulate(1, Unit.date);
       });
+  }
+
+  private _updateCalendarView(container: Element) {
+    if (this.optionsStore.currentView !== 'calendar') return;
+    const [previous, switcher, next] = container.parentElement
+      .getElementsByClassName(Namespace.css.calendarHeader)[0]
+      .getElementsByTagName('div');
+    switcher.setAttribute(
+      Namespace.css.daysContainer,
+      this.optionsStore.viewDate.format(
+        this.optionsStore.options.localization.dayViewHeaderFormat
+      )
+    );
+    this.optionsStore.options.display.components.month
+      ? switcher.classList.remove(Namespace.css.disabled)
+      : switcher.classList.add(Namespace.css.disabled);
+    this.validation.isValid(
+      this.optionsStore.viewDate.clone.manipulate(-1, Unit.month),
+      Unit.month
+    )
+      ? previous.classList.remove(Namespace.css.disabled)
+      : previous.classList.add(Namespace.css.disabled);
+    this.validation.isValid(
+      this.optionsStore.viewDate.clone.manipulate(1, Unit.month),
+      Unit.month
+    )
+      ? next.classList.remove(Namespace.css.disabled)
+      : next.classList.add(Namespace.css.disabled);
   }
 
   /***

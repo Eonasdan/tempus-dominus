@@ -2245,21 +2245,7 @@
        */
       _update(widget, paint) {
           const container = widget.getElementsByClassName(Namespace.css.daysContainer)[0];
-          if (this.optionsStore.currentView === 'calendar') {
-              const [previous, switcher, next] = container.parentElement
-                  .getElementsByClassName(Namespace.css.calendarHeader)[0]
-                  .getElementsByTagName('div');
-              switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
-              this.optionsStore.options.display.components.month
-                  ? switcher.classList.remove(Namespace.css.disabled)
-                  : switcher.classList.add(Namespace.css.disabled);
-              this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.month), exports.Unit.month)
-                  ? previous.classList.remove(Namespace.css.disabled)
-                  : previous.classList.add(Namespace.css.disabled);
-              this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.month), exports.Unit.month)
-                  ? next.classList.remove(Namespace.css.disabled)
-                  : next.classList.add(Namespace.css.disabled);
-          }
+          this._updateCalendarView(container);
           const innerDate = this.optionsStore.viewDate.clone
               .startOf(exports.Unit.month)
               .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
@@ -2305,6 +2291,23 @@
               }).day;
               innerDate.manipulate(1, exports.Unit.date);
           });
+      }
+      _updateCalendarView(container) {
+          if (this.optionsStore.currentView !== 'calendar')
+              return;
+          const [previous, switcher, next] = container.parentElement
+              .getElementsByClassName(Namespace.css.calendarHeader)[0]
+              .getElementsByTagName('div');
+          switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
+          this.optionsStore.options.display.components.month
+              ? switcher.classList.remove(Namespace.css.disabled)
+              : switcher.classList.add(Namespace.css.disabled);
+          this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.month), exports.Unit.month)
+              ? previous.classList.remove(Namespace.css.disabled)
+              : previous.classList.add(Namespace.css.disabled);
+          this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.month), exports.Unit.month)
+              ? next.classList.remove(Namespace.css.disabled)
+              : next.classList.add(Namespace.css.disabled);
       }
       /***
        * Generates a html row that contains the days of the week.
@@ -3123,7 +3126,6 @@
       paint(_unit, _date, _classes, _element) {
           // implemented in plugin
       }
-      /* eslint-enable @typescript-eslint/no-unused-vars */
       /**
        * Shows the picker and creates a Popper instance if needed.
        * Add document click event to hide when clicking outside the picker.
@@ -3131,61 +3133,10 @@
        */
       show() {
           if (this.widget == undefined) {
-              if (this.dates.picked.length == 0) {
-                  if (this.optionsStore.options.useCurrent &&
-                      !this.optionsStore.options.defaultDate) {
-                      const date = new DateTime().setLocalization(this.optionsStore.options.localization);
-                      if (!this.optionsStore.options.keepInvalid) {
-                          let tries = 0;
-                          let direction = 1;
-                          if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
-                              direction = -1;
-                          }
-                          while (!this.validation.isValid(date)) {
-                              date.manipulate(direction, exports.Unit.date);
-                              if (tries > 31)
-                                  break;
-                              tries++;
-                          }
-                      }
-                      this.dates.setValue(date);
-                  }
-                  if (this.optionsStore.options.defaultDate) {
-                      this.dates.setValue(this.optionsStore.options.defaultDate);
-                  }
-              }
+              this._showSetDefaultIfNeeded();
               this._buildWidget();
               this._updateTheme();
-              // If modeView is only clock
-              const onlyClock = this._hasTime && !this._hasDate;
-              // reset the view to the clock if there's no date components
-              if (onlyClock) {
-                  this.optionsStore.currentView = 'clock';
-                  this._eventEmitters.action.emit({
-                      e: null,
-                      action: ActionTypes$1.showClock,
-                  });
-              }
-              // otherwise return to the calendar view
-              else if (!this.optionsStore.currentCalendarViewMode) {
-                  this.optionsStore.currentCalendarViewMode =
-                      this.optionsStore.minimumCalendarViewMode;
-              }
-              if (!onlyClock &&
-                  this.optionsStore.options.display.viewMode !== 'clock') {
-                  if (this._hasTime) {
-                      if (!this.optionsStore.options.display.sideBySide) {
-                          Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
-                      }
-                      else {
-                          Collapse.show(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
-                      }
-                  }
-                  Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
-              }
-              if (this._hasDate) {
-                  this._showMode();
-              }
+              this._showSetupViewMode();
               if (!this.optionsStore.options.display.inline) {
                   // If needed to change the parent container
                   const container = this.optionsStore.options?.container || document.body;
@@ -3223,6 +3174,60 @@
           }
           this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
           this._isVisible = true;
+      }
+      _showSetupViewMode() {
+          // If modeView is only clock
+          const onlyClock = this._hasTime && !this._hasDate;
+          // reset the view to the clock if there's no date components
+          if (onlyClock) {
+              this.optionsStore.currentView = 'clock';
+              this._eventEmitters.action.emit({
+                  e: null,
+                  action: ActionTypes$1.showClock,
+              });
+          }
+          // otherwise return to the calendar view
+          else if (!this.optionsStore.currentCalendarViewMode) {
+              this.optionsStore.currentCalendarViewMode =
+                  this.optionsStore.minimumCalendarViewMode;
+          }
+          if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
+              if (this._hasTime) {
+                  if (!this.optionsStore.options.display.sideBySide) {
+                      Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                  }
+                  else {
+                      Collapse.show(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                  }
+              }
+              Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+          }
+          if (this._hasDate) {
+              this._showMode();
+          }
+      }
+      _showSetDefaultIfNeeded() {
+          if (this.dates.picked.length != 0)
+              return;
+          if (this.optionsStore.options.useCurrent &&
+              !this.optionsStore.options.defaultDate) {
+              const date = new DateTime().setLocalization(this.optionsStore.options.localization);
+              if (!this.optionsStore.options.keepInvalid) {
+                  let tries = 0;
+                  let direction = 1;
+                  if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
+                      direction = -1;
+                  }
+                  while (!this.validation.isValid(date) && tries > 31) {
+                      date.manipulate(direction, exports.Unit.date);
+                      tries++;
+                  }
+              }
+              this.dates.setValue(date);
+          }
+          if (this.optionsStore.options.defaultDate) {
+              this.dates.setValue(this.optionsStore.options.defaultDate);
+          }
       }
       async createPopup(element, widget, 
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -3370,11 +3375,7 @@
           if (this._isVisible) {
               this._eventEmitters.triggerEvent.emit({
                   type: Namespace.events.hide,
-                  date: this.optionsStore.unset
-                      ? null
-                      : this.dates.lastPicked
-                          ? this.dates.lastPicked.clone
-                          : void 0,
+                  date: this.optionsStore.unset ? null : this.dates.lastPicked?.clone,
               });
               this._isVisible = false;
           }
@@ -3425,45 +3426,25 @@
           if (this.optionsStore.options.display.calendarWeeks) {
               template.classList.add('calendarWeeks');
           }
-          if (this.optionsStore.options.display.sideBySide &&
-              this._hasDate &&
-              this._hasTime) {
-              template.classList.add(Namespace.css.sideBySide);
-              if (this.optionsStore.options.display.toolbarPlacement === 'top') {
-                  template.appendChild(toolbar);
-              }
-              const row = document.createElement('div');
-              row.classList.add('td-row');
-              dateView.classList.add('td-half');
-              timeView.classList.add('td-half');
-              row.appendChild(dateView);
-              row.appendChild(timeView);
-              template.appendChild(row);
-              if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
-                  template.appendChild(toolbar);
-              }
-              this._widget = template;
+          if (this.optionsStore.options.display.sideBySide && this._hasDateAndTime) {
+              this._buildWidgetSideBySide(template, dateView, timeView, toolbar);
               return;
           }
           if (this.optionsStore.options.display.toolbarPlacement === 'top') {
               template.appendChild(toolbar);
           }
-          if (this._hasDate) {
-              if (this._hasTime) {
-                  dateView.classList.add(Namespace.css.collapse);
-                  if (this.optionsStore.options.display.viewMode !== 'clock')
-                      dateView.classList.add(Namespace.css.show);
+          const setupComponentView = (hasFirst, hasSecond, element, shouldShow) => {
+              if (!hasFirst)
+                  return;
+              if (hasSecond) {
+                  element.classList.add(Namespace.css.collapse);
+                  if (shouldShow)
+                      element.classList.add(Namespace.css.show);
               }
-              template.appendChild(dateView);
-          }
-          if (this._hasTime) {
-              if (this._hasDate) {
-                  timeView.classList.add(Namespace.css.collapse);
-                  if (this.optionsStore.options.display.viewMode === 'clock')
-                      timeView.classList.add(Namespace.css.show);
-              }
-              template.appendChild(timeView);
-          }
+              template.appendChild(element);
+          };
+          setupComponentView(this._hasDate, this._hasTime, dateView, this.optionsStore.options.display.viewMode !== 'clock');
+          setupComponentView(this._hasTime, this._hasDate, timeView, this.optionsStore.options.display.viewMode === 'clock');
           if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
               template.appendChild(toolbar);
           }
@@ -3471,6 +3452,23 @@
           arrow.classList.add('arrow');
           arrow.setAttribute('data-popper-arrow', '');
           template.appendChild(arrow);
+          this._widget = template;
+      }
+      _buildWidgetSideBySide(template, dateView, timeView, toolbar) {
+          template.classList.add(Namespace.css.sideBySide);
+          if (this.optionsStore.options.display.toolbarPlacement === 'top') {
+              template.appendChild(toolbar);
+          }
+          const row = document.createElement('div');
+          row.classList.add('td-row');
+          dateView.classList.add('td-half');
+          timeView.classList.add('td-half');
+          row.appendChild(dateView);
+          row.appendChild(timeView);
+          template.appendChild(row);
+          if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
+              template.appendChild(toolbar);
+          }
           this._widget = template;
       }
       /**
@@ -3490,6 +3488,9 @@
               (this.optionsStore.options.display.components.year ||
                   this.optionsStore.options.display.components.month ||
                   this.optionsStore.options.display.components.date));
+      }
+      get _hasDateAndTime() {
+          return this._hasDate && this._hasTime;
       }
       /**
        * Get the toolbar html based on options like buttons.today
@@ -3833,15 +3834,8 @@
               day.manipulate(1, exports.Unit.month);
           }
           day.date = +currentTarget.dataset.day;
-          let index = 0;
           if (this.optionsStore.options.multipleDates) {
-              index = this.dates.pickedIndex(day, exports.Unit.date);
-              if (index !== -1) {
-                  this.dates.setValue(null, index); //deselect multi-date
-              }
-              else {
-                  this.dates.setValue(day, this.dates.lastPickedIndex + 1);
-              }
+              this.handleMultiDate(day);
           }
           else {
               this.dates.setValue(day, this.dates.lastPickedIndex);
@@ -3851,6 +3845,18 @@
               !this.optionsStore.options.display.inline &&
               !this.optionsStore.options.multipleDates) {
               this.display.hide();
+          }
+      }
+      handleMultiDate(day) {
+          let index = this.dates.pickedIndex(day, exports.Unit.date);
+          if (index !== -1) {
+              this.dates.setValue(null, index); //deselect multi-date
+          }
+          else {
+              index = this.dates.lastPickedIndex + 1;
+              if (this.dates.picked.length === 0)
+                  index = 0;
+              this.dates.setValue(day, index);
           }
       }
   }

@@ -16,6 +16,7 @@ declare class DateDisplay {
    * @private
    */
   _update(widget: HTMLElement, paint: Paint): void;
+  private _updateCalendarView;
   /***
    * Generates a html row that contains the days of the week.
    * @private
@@ -580,13 +581,14 @@ declare class Display {
     _classes: string[],
     _element: HTMLElement
   ): void;
-  /* eslint-enable @typescript-eslint/no-unused-vars */
   /**
    * Shows the picker and creates a Popper instance if needed.
    * Add document click event to hide when clicking outside the picker.
    * fires Events#show
    */
   show(): void;
+  private _showSetupViewMode;
+  private _showSetDefaultIfNeeded;
   createPopup(
     element: HTMLElement,
     widget: HTMLElement,
@@ -628,6 +630,7 @@ declare class Display {
    * @private
    */
   private _buildWidget;
+  private _buildWidgetSideBySide;
   /**
    * Returns true if the hours, minutes, or seconds component is turned on
    */
@@ -636,6 +639,7 @@ declare class Display {
    * Returns true if the year, month, or date component is turned on
    */
   get _hasDate(): boolean;
+  get _hasDateAndTime(): boolean;
   /**
    * Get the toolbar html based on options like buttons.today
    * @private

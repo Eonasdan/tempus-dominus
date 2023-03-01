@@ -330,14 +330,8 @@ export default class Actions {
     }
 
     day.date = +currentTarget.dataset.day;
-    let index = 0;
     if (this.optionsStore.options.multipleDates) {
-      index = this.dates.pickedIndex(day, Unit.date);
-      if (index !== -1) {
-        this.dates.setValue(null, index); //deselect multi-date
-      } else {
-        this.dates.setValue(day, this.dates.lastPickedIndex + 1);
-      }
+      this.handleMultiDate(day);
     } else {
       this.dates.setValue(day, this.dates.lastPickedIndex);
     }
@@ -349,6 +343,18 @@ export default class Actions {
       !this.optionsStore.options.multipleDates
     ) {
       this.display.hide();
+    }
+  }
+
+  private handleMultiDate(day: DateTime) {
+    let index = this.dates.pickedIndex(day, Unit.date);
+    if (index !== -1) {
+      this.dates.setValue(null, index); //deselect multi-date
+    } else {
+      index = this.dates.lastPickedIndex + 1;
+      if (this.dates.picked.length === 0) index = 0;
+
+      this.dates.setValue(day, index);
     }
   }
 }
