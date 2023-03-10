@@ -8,6 +8,7 @@ jobs:
     uses: ./.github/workflows/build.yaml
     secrets: inherit
   publish:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Docs
