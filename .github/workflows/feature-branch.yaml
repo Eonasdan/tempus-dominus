@@ -5,6 +5,8 @@ on:
     branches:
       - 'feature/*'
       - development
+#    paths:
+#      - src
 
 jobs:
   main:
@@ -20,7 +22,6 @@ jobs:
           sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" package.json
       - name: Build
         uses: ./.github/workflows/build.yaml
-        secrets: inherit
       - name: Publish package
         run: |
           npm publish --access public --registry https://npm.pkg.github.com/
