@@ -12,6 +12,8 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout and install
+        uses: ./.github/workflows/base.yaml
       - name: Set package version
         run: |          
           BRANCH_NAME=${BRANCH_NAME=${GITHUB_REF#refs/heads/}}
