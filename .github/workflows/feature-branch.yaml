@@ -6,6 +6,15 @@ on:
       - 'feature/*'
 
 jobs:
+  steps:
+    - name: Set package version
+      run: |
+        pwd
+        BRANCH_NAME=${BRANCH_NAME=${GITHUB_REF#refs/heads/}}
+        BRANCH_NAME=${BRANCH_NAME#feature/} # remove "feature/" prefix
+        BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
+        VERSION=$(node -p "const pkg = require('./package.json'); pkg.version + '+build.' + BRANCH_NAME + '.' + BUILD_ID")
+        sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" package.json
   build:
     uses: ./.github/workflows/build.yaml
     secrets: inherit
@@ -14,13 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     #if: startsWith(github.ref, 'refs/heads/feature/') && contains(github.event.head_commit.message, '[release]')
     steps:
-      - name: Set package version
-        run: |
-          BRANCH_NAME=${BRANCH_NAME=${GITHUB_REF#refs/heads/}}
-          BRANCH_NAME=${BRANCH_NAME#feature/} # remove "feature/" prefix
-          BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
-          VERSION=$(node -p "const pkg = require('./package.json'); pkg.version + '+build.' + BRANCH_NAME + '.' + BUILD_ID")
-          sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" package.json
       - name: Publish package
         run: |
           npm publish --access public --registry https://npm.pkg.github.com/
