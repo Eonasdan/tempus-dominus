@@ -68,6 +68,14 @@ export default class Display {
     return this._widget;
   }
 
+  get dateContainer(): HTMLElement | undefined {
+    return this.widget?.querySelector(`div.${Namespace.css.dateContainer}`);
+  }
+
+  get timeContainer(): HTMLElement | undefined {
+    return this.widget?.querySelector(`div.${Namespace.css.timeContainer}`);
+  }
+
   /**
    * Returns this visible state of the picker (shown)
    */
@@ -230,18 +238,12 @@ export default class Display {
     if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
       if (this._hasTime) {
         if (!this.optionsStore.options.display.sideBySide) {
-          Collapse.hideImmediately(
-            this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
-          );
+          Collapse.hideImmediately(this.timeContainer);
         } else {
-          Collapse.show(
-            this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
-          );
+          Collapse.show(this.timeContainer);
         }
       }
-      Collapse.show(
-        this.widget.querySelector(`div.${Namespace.css.dateContainer}`)
-      );
+      Collapse.show(this.dateContainer);
     }
 
     if (this._hasDate) {

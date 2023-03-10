@@ -39,6 +39,10 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
   numberingSystem?: string;
 }
 
+/**
+ * Returns a Intl format object based on the provided object
+ * @param unit
+ */
 export const getFormatByUnit = (unit: Unit): object => {
   switch (unit) {
     case 'date':
@@ -53,6 +57,10 @@ export const getFormatByUnit = (unit: Unit): object => {
   }
 };
 
+/**
+ * Attempts to guess the hour cycle of the given local
+ * @param locale
+ */
 export const guessHourCycle = (locale: string): Intl.LocaleHourCycleKey => {
   if (!locale) return 'h12';
 
@@ -160,6 +168,11 @@ export class DateTime extends Date {
       this.seconds,
       this.getMilliseconds()
     ).setLocalization(this.localization);
+  }
+
+  static isValid(d): boolean {
+    if (d === undefined || JSON.stringify(d) === 'null') return false;
+    if (d.constructor.name === DateTime.name) return true;
   }
 
   /**
@@ -270,6 +283,9 @@ export class DateTime extends Date {
    * comparison.
    */
   isBefore(compare: DateTime, unit?: Unit): boolean {
+    // If the comparisons is undefined, return false
+    if (!DateTime.isValid(compare)) return false;
+
     if (!unit) return this.valueOf() < compare.valueOf();
     if (this[unit] === undefined)
       throw new Error(`Unit '${unit}' is not valid`);
@@ -285,6 +301,9 @@ export class DateTime extends Date {
    * comparison.
    */
   isAfter(compare: DateTime, unit?: Unit): boolean {
+    // If the comparisons is undefined, return false
+    if (!DateTime.isValid(compare)) return false;
+
     if (!unit) return this.valueOf() > compare.valueOf();
     if (this[unit] === undefined)
       throw new Error(`Unit '${unit}' is not valid`);
@@ -300,6 +319,9 @@ export class DateTime extends Date {
    * comparison.
    */
   isSame(compare: DateTime, unit?: Unit): boolean {
+    // If the comparisons is undefined, return false
+    if (!DateTime.isValid(compare)) return false;
+
     if (!unit) return this.valueOf() === compare.valueOf();
     if (this[unit] === undefined)
       throw new Error(`Unit '${unit}' is not valid`);
@@ -323,25 +345,28 @@ export class DateTime extends Date {
     unit?: Unit,
     inclusivity: '()' | '[]' | '(]' | '[)' = '()'
   ): boolean {
-    if (unit && this[unit] === undefined)
+    // If one of the comparisons is undefined, return false
+    if (!DateTime.isValid(left) || !DateTime.isValid(right)) return false;
+    // If a unit is provided and is not a valid property of the DateTime object, throw an error
+    if (unit && this[unit] === undefined) {
       throw new Error(`Unit '${unit}' is not valid`);
+    }
+
+    if (unit && this[unit as keyof DateTime] === undefined) {
+      throw new Error(`Unit '${unit}' is not valid`);
+    }
+
     const leftInclusivity = inclusivity[0] === '(';
     const rightInclusivity = inclusivity[1] === ')';
 
-    return (
-      ((leftInclusivity
-        ? this.isAfter(left, unit)
-        : !this.isBefore(left, unit)) &&
-        (rightInclusivity
-          ? this.isBefore(right, unit)
-          : !this.isAfter(right, unit))) ||
-      ((leftInclusivity
-        ? this.isBefore(left, unit)
-        : !this.isAfter(left, unit)) &&
-        (rightInclusivity
-          ? this.isAfter(right, unit)
-          : !this.isBefore(right, unit)))
-    );
+    const isLeftInRange = leftInclusivity
+      ? this.isAfter(left, unit)
+      : !this.isBefore(left, unit);
+    const isRightInRange = rightInclusivity
+      ? this.isBefore(right, unit)
+      : !this.isAfter(right, unit);
+
+    return isLeftInRange && isRightInRange;
   }
 
   /**
@@ -417,6 +442,10 @@ export class DateTime extends Date {
     this.setHours(value);
   }
 
+  /**
+   * Returns two digit hour, e.g. 01...10
+   * @param hourCycle Providing an hour cycle will change 00 to 24 depending on the given value.
+   */
   getHoursFormatted(hourCycle: Intl.LocaleHourCycleKey = 'h12') {
     return this.parts(undefined, { ...twoDigitTemplate, hourCycle: hourCycle })
       .hour;
@@ -525,6 +554,9 @@ export class DateTime extends Date {
     return weekNumber;
   }
 
+  /**
+   * Returns the number of weeks in the year
+   */
   weeksInWeekYear() {
     const p1 =
         (this.year +
@@ -542,6 +574,9 @@ export class DateTime extends Date {
     return p1 === 4 || p2 === 3 ? 53 : 52;
   }
 
+  /**
+   * Returns true or false depending on if the year is a leap year or not.
+   */
   get isLeapYear() {
     return (
       this.year % 4 === 0 && (this.year % 100 !== 0 || this.year % 400 === 0)
@@ -569,6 +604,9 @@ export class DateTime extends Date {
   private formattingTokens =
     /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g; //NOSONAR is regex cannot be simplified beyond what it already is
 
+  /**
+   * Returns a list of month values based on the current locale
+   */
   private getAllMonths(
     format: '2-digit' | 'numeric' | 'long' | 'short' | 'narrow' = 'long'
   ) {
@@ -578,6 +616,9 @@ export class DateTime extends Date {
     return [...Array(12).keys()].map((m) => applyFormat(new Date(2021, m)));
   }
 
+  /**
+   * Replaces an expanded token set (e.g. LT/LTS)
+   */
   private replaceTokens(formatStr, formats) {
     /***
      * _ => match
@@ -799,8 +840,8 @@ export class DateTime extends Date {
 
   /**
    * Attempts to create a DateTime from a string.
-   * @param input
-   * @param localization
+   * @param input date as string
+   * @param localization provides the date template the string is in via the format property
    */
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   static fromString(input: string, localization: FormatLocalization): DateTime {

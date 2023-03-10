@@ -276,11 +276,6 @@ class TempusDominus {
 
       this.optionsStore.input?.dispatchEvent(
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        new CustomEvent(event.type, { detail: event as any })
-      );
-
-      this.optionsStore.input?.dispatchEvent(
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         new CustomEvent('change', { detail: event as any })
       );
     }
@@ -472,6 +467,7 @@ class TempusDominus {
     if (
       // options is disabled
       !this.optionsStore.options.promptTimeOnDateChange ||
+      this.optionsStore.options.multipleDates ||
       this.optionsStore.options.display.inline ||
       this.optionsStore.options.display.sideBySide ||
       // time is disabled
@@ -606,7 +602,7 @@ const extend = function (plugin, option = undefined) {
   return tempusDominus;
 };
 
-const version = '6.2.10';
+const version = '6.4.1';
 
 const tempusDominus = {
   TempusDominus,

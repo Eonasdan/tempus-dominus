@@ -7,7 +7,7 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'json', 'html', 'lcovonly'],
       exclude: ['**/*.test.ts'],
-    },
+    } as any, //eslint-disable-line @typescript-eslint/no-explicit-any
     reporters: process.env.GITHUB_ACTIONS
       ? ['default', new GithubActionsReporter()]
       : 'default',

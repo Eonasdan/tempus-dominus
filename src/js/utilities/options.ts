@@ -2,16 +2,11 @@ import { DateTime, DateTimeFormatOptions } from '../datetime';
 import ViewMode from './view-mode';
 
 export default interface Options {
-  restrictions?: {
-    minDate?: DateTime;
-    maxDate?: DateTime;
-    enabledDates?: DateTime[];
-    disabledDates?: DateTime[];
-    enabledHours?: number[];
-    disabledHours?: number[];
-    disabledTimeIntervals?: { from: DateTime; to: DateTime }[];
-    daysOfWeekDisabled?: number[];
-  };
+  allowInputToggle?: boolean;
+  container?: HTMLElement;
+  dateRange?: boolean;
+  debug?: boolean;
+  defaultDate?: DateTime;
   display?: {
     toolbarPlacement?: 'top' | 'bottom';
     components?: {
@@ -29,16 +24,16 @@ export default interface Options {
     buttons?: { today?: boolean; close?: boolean; clear?: boolean };
     calendarWeeks?: boolean;
     icons?: {
+      clear?: string;
+      close?: string;
       date?: string;
+      down?: string;
       next?: string;
       previous?: string;
-      today?: string;
-      clear?: string;
       time?: string;
-      up?: string;
+      today?: string;
       type?: 'icons' | 'sprites';
-      down?: string;
-      close?: string;
+      up?: string;
     };
     viewMode?: keyof ViewMode;
     sideBySide?: boolean;
@@ -46,64 +41,70 @@ export default interface Options {
     keepOpen?: boolean;
     theme?: 'light' | 'dark' | 'auto';
   };
-  stepping?: number;
-  useCurrent?: boolean;
-  defaultDate?: DateTime;
-  localization?: Localization;
   keepInvalid?: boolean;
-  debug?: boolean;
-  allowInputToggle?: boolean;
-  viewDate?: DateTime;
+  localization?: Localization;
+  meta?: Record<string, unknown>;
   multipleDates?: boolean;
   multipleDatesSeparator?: string;
   promptTimeOnDateChange?: boolean;
   promptTimeOnDateChangeTransitionDelay?: number;
-  meta?: Record<string, unknown>;
-  container?: HTMLElement;
+  restrictions?: {
+    minDate?: DateTime;
+    maxDate?: DateTime;
+    enabledDates?: DateTime[];
+    disabledDates?: DateTime[];
+    enabledHours?: number[];
+    disabledHours?: number[];
+    disabledTimeIntervals?: { from: DateTime; to: DateTime }[];
+    daysOfWeekDisabled?: number[];
+  };
+  stepping?: number;
+  useCurrent?: boolean;
+  viewDate?: DateTime;
 }
 
 export interface FormatLocalization {
-  locale?: string;
   dateFormats?: {
-    LTS?: string;
-    LT?: string;
     L?: string;
     LL?: string;
     LLL?: string;
     LLLL?: string;
+    LT?: string;
+    LTS?: string;
   };
-  ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
   format?: string;
   hourCycle?: Intl.LocaleHourCycleKey;
+  locale?: string;
+  ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export interface Localization extends FormatLocalization {
-  nextMonth?: string;
-  pickHour?: string;
-  incrementSecond?: string;
-  nextDecade?: string;
-  selectDecade?: string;
+  clear?: string;
+  close?: string;
   dayViewHeaderFormat?: DateTimeFormatOptions;
   decrementHour?: string;
-  selectDate?: string;
-  incrementHour?: string;
-  previousCentury?: string;
-  decrementSecond?: string;
-  today?: string;
-  previousMonth?: string;
-  selectYear?: string;
-  pickSecond?: string;
-  nextCentury?: string;
-  close?: string;
-  incrementMinute?: string;
-  selectTime?: string;
-  clear?: string;
-  toggleMeridiem?: string;
-  selectMonth?: string;
   decrementMinute?: string;
-  pickMinute?: string;
+  decrementSecond?: string;
+  incrementHour?: string;
+  incrementMinute?: string;
+  incrementSecond?: string;
+  nextCentury?: string;
+  nextDecade?: string;
+  nextMonth?: string;
   nextYear?: string;
-  previousYear?: string;
+  pickHour?: string;
+  pickMinute?: string;
+  pickSecond?: string;
+  previousCentury?: string;
   previousDecade?: string;
+  previousMonth?: string;
+  previousYear?: string;
+  selectDate?: string;
+  selectDecade?: string;
+  selectMonth?: string;
+  selectTime?: string;
+  selectYear?: string;
   startOfTheWeek?: number;
+  today?: string;
+  toggleMeridiem?: string;
 }

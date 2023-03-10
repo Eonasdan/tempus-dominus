@@ -11,6 +11,7 @@ jobs:
     secrets: inherit
   publish:
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/feature/') && contains(github.event.head_commit.message, '[release]')
     steps:
       - name: Set package version
         run: |
@@ -21,8 +22,6 @@ jobs:
           sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" package.json
       - name: Publish package
         run: |
-          if [[ ${{ github.ref }} == "refs/heads/feature/*" ]]; then
-            npm publish --access public --registry https://npm.pkg.github.com/
-          fi
+          npm publish --access public --registry https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
