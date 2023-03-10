@@ -12,11 +12,12 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - name: Set package version
-        run: |
+      - name: temp
+        run: |          
           pwd
           ls -r
-          
+      - name: Set package version
+        run: |          
           BRANCH_NAME=${BRANCH_NAME=${GITHUB_REF#refs/heads/}}
           BRANCH_NAME=${BRANCH_NAME#feature/} # remove "feature/" prefix
           BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
