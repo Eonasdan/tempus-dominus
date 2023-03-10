@@ -11,7 +11,7 @@ jobs:
     secrets: inherit
   publish:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/feature/') && contains(github.event.head_commit.message, '[release]')
+    #if: startsWith(github.ref, 'refs/heads/feature/') && contains(github.event.head_commit.message, '[release]')
     steps:
       - name: Set package version
         run: |
