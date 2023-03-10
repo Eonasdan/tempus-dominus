@@ -12,7 +12,9 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout and install
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: npm install
         uses: ./.github/workflows/base.yaml
       - name: Set package version
         run: |          
