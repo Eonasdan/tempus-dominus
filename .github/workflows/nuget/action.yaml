@@ -1,0 +1,27 @@
+name: Nuget Publish
+description: Setup node
+
+inputs:
+  NUGET_API_KEY:
+    description: 'A Nuget API Key'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.6
+      with:
+        nuget-version: '6.x'
+    - name: Pack NuGet
+      working-directory: ./src/nuget
+      shell: pwsh
+      run: |
+        nuget pack TempusDominus.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
+        nuget pack TempusDominus.scss.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
+    - name: Push Nuget
+      working-directory: ./src/nuget
+      shell: pwsh
+      run: |
+        nuget push TempusDominus.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ inputs.NUGET_API_KEY }}
+        nuget push TempusDominus.scss.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ inputs.NUGET_API_KEY }}

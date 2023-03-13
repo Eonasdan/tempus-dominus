@@ -9,10 +9,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: npm install
-        uses: ./.github/workflows/base.yaml
+      - name: Setup
+        uses: ./.github/workflows/base
       - name: Build
-        uses: ./.github/workflows/build.yaml
+        uses: ./.github/workflows/build
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       - name: Deploy Docs
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -22,17 +25,7 @@ jobs:
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.6
+      - name: Nuget
+        uses: ./.github/workflows/nuget
         with:
-          nuget-version: '6.x'
-      - name: Pack NuGet
-        working-directory: ./src/nuget
-        run: |
-          nuget pack TempusDominus.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
-          nuget pack TempusDominus.scss.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
-      - name: Push Nuget
-        working-directory: ./src/nuget
-        run: |
-          nuget push TempusDominus.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}
-          nuget push TempusDominus.scss.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

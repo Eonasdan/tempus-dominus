@@ -6,6 +6,12 @@ on:
     branches: [ development ]
   workflow_dispatch:
 jobs:
-  build:
-    uses: ./.github/workflows/build.yaml
-    secrets: inherit
+  - name: Checkout
+    uses: actions/checkout@v3
+  - name: Setup
+    uses: ./.github/workflows/base
+  - name: Build
+    uses: ./.github/workflows/build
+    with:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}

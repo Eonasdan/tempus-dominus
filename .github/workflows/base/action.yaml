@@ -2,8 +2,6 @@ name: Setup Node
 description: Setup node
 
 runs:
-  #setup:
-    #runs-on: ubuntu-latest
   using: composite
   steps:
       - name: Setup Node

@@ -41,8 +41,8 @@ jobs:
           echo BRANCH_NAME
           BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
           VERSION=$(node -p "const pkg = require('./package.json'); pkg.version")
-          VERSION="$VERSION-build-$BRANCH_NAME-$BUILD_ID"
-          sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ./package.json
+          VERSION="$VERSION-$BRANCH_NAME.$BUILD_ID"
+          #sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ./package.json
 #      - name: Build
 #        extends:
 #          - ./.github/workflows/build.yaml
