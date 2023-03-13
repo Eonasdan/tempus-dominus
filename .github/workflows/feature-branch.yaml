@@ -9,22 +9,26 @@ on:
 #      - src
 
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-  base:
-    needs: checkout
-    uses: ./.github/workflows/base.yaml
-  build:
-    uses: ./.github/workflows/build.yaml
-    secrets: inherit
-    needs: base
+#  checkout:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v3
+#  base:
+#    needs: checkout
+#    uses: ./.github/workflows/base.yaml
+#  build:
+#    uses: ./.github/workflows/build.yaml
+#    secrets: inherit
+#    needs: base
   main:
-    needs: build
+    #needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Setup
+        uses: ./.github/workflows/base.yaml
+      - name: Build
+        uses: ./.github/workflows/build.yaml
 #      - name: Checkout
 #        uses: actions/checkout@v3
 #      - name: Checkout
