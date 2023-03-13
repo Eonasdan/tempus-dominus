@@ -30,7 +30,7 @@ jobs:
       - name: Setup
         uses: ./.github/workflows/base
       - name: Build
-        uses: ./.github/workflows/build.yaml
+        uses: ./.github/workflows/build
 #      - name: Checkout
 #        uses: actions/checkout@v3
 #      - name: Checkout
