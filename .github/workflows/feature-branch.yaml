@@ -11,11 +11,9 @@ on:
 jobs:
   base:
     uses: ./.github/workflows/base.yaml
-    secrets: inherit
   build:
     uses: ./.github/workflows/build.yaml
     secrets: inherit
-    needs: base
   main:
     needs: build
     runs-on: ubuntu-latest
