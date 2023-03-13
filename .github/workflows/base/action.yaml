@@ -1,10 +1,11 @@
-on:
-  workflow_call:
+name: Setup Node
+description: Setup node
 
-jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
+runs:
+  #setup:
+    #runs-on: ubuntu-latest
+  using: composite
+  steps:
 #      - name: Checkout
 #        uses: actions/checkout@v3
       - name: Setup Node
@@ -12,4 +13,5 @@ jobs:
         with:
           node-version: '18'
       - name: Npm install
+        shell: bash
         run: npm ci

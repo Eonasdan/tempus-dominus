@@ -1,12 +1,9 @@
-on:
-  workflow_call:
+name: Build
+description: Build
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    # First part is the name of the file and the second part is the name of the job.
-    #needs: setup
-    steps:
+runs:
+  using: composite
+  steps:
 #      - name: Checkout
 #        uses: actions/checkout@v3
 #      - name: Setup Node
@@ -15,18 +12,21 @@ jobs:
 #          node-version: '18'
 #      - name: Npm install
 #        run: npm ci
-      - name: Unit tests
-        run: npm run test:coverage
-      - name: Build
-        run: npm run build
-      - name: Build docs
-        run: npm run docs
-      - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@main
-        env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-      # Send coverage report to Coveralls
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Unit tests
+      shell: bash
+      run: npm run test:coverage
+    - name: Build
+      shell: bash
+      run: npm run build
+    - name: Build docs
+      shell: bash
+      run: npm run docs
+    - name: 'Qodana Scan'
+      uses: JetBrains/qodana-action@main
+      env:
+        QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+    # Send coverage report to Coveralls
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
