@@ -34,11 +34,6 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-      - name: Checkout
-        uses: actions/checkout@v3
-#      - name: Checkout
-#        extends:
-#          - ./.github/workflows/base.yaml
       - name: Set package version
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
