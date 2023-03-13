@@ -9,14 +9,22 @@ on:
 #      - src
 
 jobs:
+  base:
+    uses: ./.github/workflows/base.yaml
+    secrets: inherit
+  build:
+    uses: ./.github/workflows/build.yaml
+    secrets: inherit
+    needs: base
   main:
+    needs: build
     runs-on: ubuntu-latest
     steps:
 #      - name: Checkout
 #        uses: actions/checkout@v3
-      - name: Checkout
-        extends:
-          - ./.github/workflows/base.yaml
+#      - name: Checkout
+#        extends:
+#          - ./.github/workflows/base.yaml
       - name: Set package version
         run: |          
           BRANCH_NAME=${BRANCH_NAME=${GITHUB_REF#refs/heads/}}
@@ -24,9 +32,9 @@ jobs:
           BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
           VERSION=$(node -p "const pkg = require('${{ github.workspace }}/package.json'); pkg.version + '+build.' + BRANCH_NAME + '.' + BUILD_ID")
           sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ${{ github.workspace }}/package.json
-      - name: Build
-        extends:
-          - ./.github/workflows/build.yaml
+#      - name: Build
+#        extends:
+#          - ./.github/workflows/build.yaml
       - name: Publish package
         run: |
           npm publish --access public --registry https://npm.pkg.github.com/
