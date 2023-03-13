@@ -12,10 +12,10 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+#      - name: Checkout
+#        uses: actions/checkout@v3
       - name: npm install
-        uses: ./.github/workflows/base.yaml
+        uses: ./base.yaml
       - name: Set package version
         run: |          
           BRANCH_NAME=${BRANCH_NAME=${GITHUB_REF#refs/heads/}}
@@ -24,7 +24,7 @@ jobs:
           VERSION=$(node -p "const pkg = require('${{ github.workspace }}/package.json'); pkg.version + '+build.' + BRANCH_NAME + '.' + BUILD_ID")
           sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ${{ github.workspace }}/package.json
       - name: Build
-        uses: ./.github/workflows/build.yaml
+        uses: ./build.yaml
       - name: Publish package
         run: |
           npm publish --access public --registry https://npm.pkg.github.com/
