@@ -29,11 +29,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup
         uses: ./.github/workflows/base
-      - name: Build
-        uses: ./.github/workflows/build
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       - name: Set package version
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
@@ -43,9 +38,11 @@ jobs:
           VERSION=$(node -p "const pkg = require('./package.json'); pkg.version")
           VERSION="$VERSION-$BRANCH_NAME.$BUILD_ID"
           #sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ./package.json
-#      - name: Build
-#        extends:
-#          - ./.github/workflows/build.yaml
+      - name: Build
+        uses: ./.github/workflows/build
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       - name: Publish package
         run: |
           npm publish --access public --registry https://npm.pkg.github.com/
