@@ -14,34 +14,34 @@ jobs:
 #    steps:
 #      - name: Checkout
 #        uses: actions/checkout@v3
-  base:
-    #needs: checkout
-    uses: ./.github/workflows/base.yaml
-  build:
-    uses: ./.github/workflows/build.yaml
-    secrets: inherit
-    needs: base
+#  base:
+#    #needs: checkout
+#    uses: ./.github/workflows/base.yaml
+#  build:
+#    uses: ./.github/workflows/build.yaml
+#    secrets: inherit
+#    needs: base
   main:
     #needs: build
     runs-on: ubuntu-latest
     steps:
-#      - name: Checkout
-#        uses: actions/checkout@v3
-#      - name: Setup
-#        uses: ./.github/workflows/base
-#      - name: Build
-#        uses: ./.github/workflows/build
-#        with:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        uses: ./.github/workflows/base
+      - name: Build
+        uses: ./.github/workflows/build
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v3
 #      - name: Checkout
 #        extends:
 #          - ./.github/workflows/base.yaml
       - name: Set package version
-        run: |          
-          BRANCH_NAME=${BRANCH_NAME=${GITHUB_REF#refs/heads/}}
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
           BRANCH_NAME=${BRANCH_NAME#feature/} # remove "feature/" prefix
           BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
           VERSION=$(node -p "const pkg = require('${{ github.workspace }}/package.json'); pkg.version + '+build.' + BRANCH_NAME + '.' + BUILD_ID")
