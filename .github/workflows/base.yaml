@@ -2,7 +2,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  prep:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
