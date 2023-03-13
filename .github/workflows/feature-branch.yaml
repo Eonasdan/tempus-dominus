@@ -9,21 +9,11 @@ on:
 #      - src
 
 jobs:
-#  checkout:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v3
-#  base:
-#    #needs: checkout
-#    uses: ./.github/workflows/base.yaml
-#  build:
-#    uses: ./.github/workflows/build.yaml
-#    secrets: inherit
-#    needs: base
   main:
-    #needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
