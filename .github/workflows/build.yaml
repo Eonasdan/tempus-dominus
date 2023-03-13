@@ -5,7 +5,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # First part is the name of the file and the second part is the name of the job.
-    needs: setup
+    #needs: setup
     steps:
 #      - name: Checkout
 #        uses: actions/checkout@v3
