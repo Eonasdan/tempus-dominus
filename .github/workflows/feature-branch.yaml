@@ -45,11 +45,9 @@ jobs:
           BRANCH_NAME=${BRANCH_NAME#feature/} # remove "feature/" prefix
           echo BRANCH_NAME
           BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
-          VERSION=$(node -p "const pkg = require('./package.json'); pkg.version)
+          VERSION=$(node -p "const pkg = require('./package.json'); pkg.version")
           VERSION="$VERSION-build.$BRANCH_NAME.$BUILD_ID"
-          #sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ./package.json
-          #sed -i '' "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" package.json
-          jq --arg new_version "$VERSION" '.version = $VERSION' package.json > tmp.json && mv tmp.json package.json
+          sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ./package.json
 #      - name: Build
 #        extends:
 #          - ./.github/workflows/build.yaml
