@@ -29,8 +29,8 @@ jobs:
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           # remove "feature/" prefix
           BRANCH_NAME=${BRANCH_NAME#feature/}
-          # replace hyphens with dashes (thanks semver)
-          BRANCH_NAME=${BRANCH_NAME//-/_}
+          # replace underscore with dashes (thanks semver)
+          BRANCH_NAME=${BRANCH_NAME//_/-}
           BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
           VERSION=$(node -p "const pkg = require('./package.json'); pkg.version")
           NEW_VERSION="$VERSION-$BRANCH_NAME.$BUILD_ID"
