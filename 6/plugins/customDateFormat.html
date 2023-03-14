@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-  <title>Plugins - Custom Date Formats - Tempus Dominus</title>
+  <title>Custom Date Formats - Tempus Dominus</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -15,20 +15,20 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 
-  <meta name="title" content="Plugins - Custom Date Formats">
+  <meta name="title" content="Custom Date Formats">
   <meta name="description" content="How to use custom date format plugin with Tempus Dominus.
   ">
 
   
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://getdatepicker.com/docs/6//plugins/customDateFormat.html">
-  <meta property="og:title" content="Plugins - Custom Date Formats">
+  <meta property="og:title" content="Custom Date Formats">
   <meta property="og:description" content="How to use custom date format plugin with Tempus Dominus.
   ">
   <meta class="metaImage" property="og:image" content="">
 
   <meta property="article:published_time" content="2022-01-19T00:00:00.000Z">
-  <meta property="article:modified_time" content="2022-07-22T00:00:00.000Z">
+  <meta property="article:modified_time" content="2023-01-26T00:00:00.000Z">
   <meta property="article:tag" content="datepicker, javascript, open source, tempus dominus, eonasdan">
   <meta property="article:author" content="Jonathan Peterson">
   <meta property="article:section" content="Technology">
@@ -38,7 +38,7 @@
   <meta property="twitter:site" content="@eonasdan">
   <meta property="twitter:creator" content="@eonasdan">
   <meta property="twitter:url" content="https://getdatepicker.com/docs/6//plugins/customDateFormat.html">
-  <meta property="twitter:title" content="Plugins - Custom Date Formats">
+  <meta property="twitter:title" content="Custom Date Formats">
   <meta property="twitter:description" content="How to use custom date format plugin with Tempus Dominus.
   ">
   <meta class="metaImage" property="twitter:image" content="">
@@ -245,7 +245,7 @@
 <main class="bd-main order-1">
   <div class="bd-intro ps-lg-4">
     <div class="d-md-flex align-items-center justify-content-between">
-      <h1 class="bd-title title" id="content">Plugins - Custom Date Formats</h1>
+      <h1 class="bd-title title" id="content">Custom Date Formats</h1>
     </div>
   </div>
   <div class="bd-toc mt-3 mb-5 my-lg-0 ps-xl-3 mb-lg-5 text-muted d-none" id="tocContainer">
@@ -263,10 +263,9 @@
   </div>
   <div id="mainContent" class="bd-content ps-lg-4">
   <div class="row">
-    <p>
-      This plugin provides the ability to specify the picker's format. The picker's options can be set via then <code>localization</code>
-      settings.
-    </p>
+    <div class="alert alert-info">
+      <i class="fa-solid fa-exclamation"></i> This is no longer a plugin. It's now included directly.
+    </div>
     <p>
       Use the boxes below to set a format string and the locale of the sample picker and click "Change" to update the
       options.
@@ -310,7 +309,6 @@
     </div>
     <script src="/6/js/plugins/customDateFormat.js"></script>
     <script type="text/javascript">
-      tempusDominus.extend(tempusDominus.plugins.customDateFormat);
       const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
         {
           localization: {
@@ -326,17 +324,13 @@
             format: document.getElementById('format').value
           }
         });
-        datetimepicker1.dates.setValue(new DateTime());
+        datetimepicker1.dates.setValue(new tempusDominus.DateTime());
       });
     </script>
   </div>
 
   <div class="row">
-    <pre><code class="language-js">tempusDominus.extend(tempusDominus.plugins.customDateFormat);
-//or
-import customDateFormat from 'tempusDominus/plugins/customDateFormat'
-tempusDominus.extend(customDateFormat);
-
+    <pre><code class="language-js">
 //example picker
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
   localization: {
@@ -351,8 +345,7 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
     <h2>Format Tokens</h2>
     <div class="col-12">
       <p id="token-description">
-        The custom date format plugin supports the following tokens. Given
-        2022-07-04T15:13:29.474Z
+        The format supports the following tokens. Given 2022-07-04T15:13:29.474Z
       </p>
       <table class="table table-striped" aria-describedby="token-description">
         <thead>
@@ -453,7 +446,6 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
           <td>2 digit second, e.g. 0...59</td>
           <td>47</td>
         </tr>
-        
         <tr>
           <td>T</td>
           <td>Meridiem</td>
@@ -463,8 +455,6 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
       </table>
     </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/solid.min.js" integrity="sha512-Qc+cBMt/4/KXJ1F6nNQahXIsgPygHM4S2XWChoumV8qkpZ9oO+gBDBEpOxgbkQQ/6DlHx6cUxa5nBhEbuiR8xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/fontawesome.min.js" integrity="sha512-KCwrxBJebca0PPOaHELfqGtqkUlFUCuqCnmtydvBSTnJrBirJ55hRG5xcP4R9Rdx9Fz9IF3Yw6Rx40uhuAHR8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </div>
 </main>
 </div>
@@ -483,7 +473,7 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
           </li>
           <li class="mb-2">Code licensed <a href="https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE" target="_blank" rel="license noopener">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY 3.0</a>.
           </li>
-          <li class="mb-2">Currently v6.2.10</li>
+          <li class="mb-2">Currently v6.4.1</li>
         </ul>
       </div>
       <div class="col-6 col-lg-2 offset-lg-1 mb-3">
