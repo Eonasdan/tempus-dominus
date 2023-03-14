@@ -31,8 +31,8 @@ jobs:
           VERSION=$(node -p "const pkg = require('./package.json'); pkg.version")
           NEW_VERSION="$VERSION-$BRANCH_NAME.$BUILD_ID"
           #sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ./package.json
-          echo "$VERSION" >> $GITHUB_OUTPUT
-          echo "$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
       - name: Build
         uses: ./.github/workflows/build
         with:
