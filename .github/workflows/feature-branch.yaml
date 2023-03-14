@@ -31,15 +31,15 @@ jobs:
           VERSION=$(node -p "const pkg = require('./package.json'); pkg.version")
           NEW_VERSION="$VERSION-$BRANCH_NAME.$BUILD_ID"
           #sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ./package.json
-          echo "VERSION" >> $GITHUB_OUTPUT
-          echo "NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "$VERSION" >> $GITHUB_OUTPUT
+          echo "$NEW_VERSION" >> $GITHUB_OUTPUT
       - name: Build
         uses: ./.github/workflows/build
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       - name: Create Release
-        run: npm run release:version ${{steps.run_tests.outputs.VERSION }} ${{steps.run_tests.outputs.NEW_VERSION }}
+        run: npm run release:version ${{steps.set_version.outputs.VERSION }} ${{steps.set_version.outputs.NEW_VERSION }}
       - name: Publish package
         run: |
           npm publish --access public --registry https://npm.pkg.github.com/
