@@ -21,10 +21,10 @@ runs:
     - name: Build docs
       shell: bash
       run: npm run docs
-#    - name: 'Qodana Scan'
-#      uses: JetBrains/qodana-action@main
-#      env:
-#        QODANA_TOKEN: ${{ inputs.QODANA_TOKEN }}
+    - name: 'Qodana Scan'
+      uses: JetBrains/qodana-action@main
+      env:
+        QODANA_TOKEN: ${{ inputs.QODANA_TOKEN }}
     # Send coverage report to Coveralls
     - name: Coveralls
       uses: coverallsapp/github-action@master
