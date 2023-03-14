@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'feature/*'
+      - 'bug/*'
       - development
 #    paths:
 #      - src
@@ -22,19 +23,23 @@ jobs:
         with:
           registry: 'https://npm.pkg.github.com'
       - name: Set package version
+        id: set_version
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           BRANCH_NAME=${BRANCH_NAME#feature/} # remove "feature/" prefix
-          echo BRANCH_NAME
           BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
           VERSION=$(node -p "const pkg = require('./package.json'); pkg.version")
-          VERSION="$VERSION-$BRANCH_NAME.$BUILD_ID"
+          NEW_VERSION="$VERSION-$BRANCH_NAME.$BUILD_ID"
           #sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ./package.json
+          echo "VERSION" >> $GITHUB_OUTPUT
+          echo "NEW_VERSION" >> $GITHUB_OUTPUT
       - name: Build
         uses: ./.github/workflows/build
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+      - name: Create Release
+        run: npm run release:version ${{steps.run_tests.outputs.VERSION }} ${{steps.run_tests.outputs.NEW_VERSION }}
       - name: Publish package
         run: |
           npm publish --access public --registry https://npm.pkg.github.com/
