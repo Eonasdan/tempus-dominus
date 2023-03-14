@@ -3,7 +3,7 @@
     "name": "Jonathan Peterson"
   },
   "name": "@eonasdan/tempus-dominus",
-  "version": "6.2.10",
+  "version": "6.4.1",
   "style": "dist/css/tempus-dominus.css",
   "sass": "scss/tempus-dominus.scss",
   "main": "dist/js/tempus-dominus.js",
@@ -61,39 +61,39 @@
   },
   "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
   "devDependencies": {
+    "@eonasdan/parvus-server": "^1.1.7",
     "@popperjs/core": "^2.11.6",
     "@rollup/plugin-node-resolve": "^14.1.0",
-    "@types/node": "^18.11.18",
-    "@typescript-eslint/eslint-plugin": "^5.49.0",
-    "@typescript-eslint/parser": "^5.49.0",
-    "@vitest/coverage-c8": "^0.28.2",
-    "@vitest/ui": "^0.28.2",
+    "@types/node": "^18.14.2",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "@vitest/coverage-c8": "^0.29.2",
+    "@vitest/ui": "^0.29.2",
     "bootstrap": "^5.2.3",
     "chokidar": "^3.5.3",
     "clean-css": "^5.3.2",
     "concurrently": "^7.6.0",
     "dropcss": "^1.0.16",
-    "eslint": "^8.32.0",
+    "eslint": "^8.35.0",
     "eslint-config-prettier": "^8.6.0",
     "glob": "^7.2.3",
     "globby": "^11.1.0",
     "html-minifier-terser": "^5.1.1",
     "husky": "^8.0.3",
     "jsdom": "^20.0.3",
-    "lint-staged": "^13.1.0",
-    "prettier": "^2.8.3",
+    "lint-staged": "^13.1.2",
+    "prettier": "^2.8.4",
     "rollup": "^2.79.1",
     "rollup-plugin-ignore": "^1.0.10",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-ts": "^3.2.0",
-    "sass": "^1.57.1",
-    "terser": "^5.16.1",
-    "tslib": "^2.4.1",
-    "typescript": "~4.9.4",
-    "vitest": "^0.28.2",
-    "vitest-github-actions-reporter": "^0.9.0",
-    "@eonasdan/parvus-server": "^1.1.7"
+    "sass": "^1.58.3",
+    "terser": "^5.16.5",
+    "tslib": "^2.5.0",
+    "typescript": "~4.9.5",
+    "vitest": "^0.29.2",
+    "vitest-github-actions-reporter": "^0.10.0"
   },
   "homepage": "https://getdatepicker.com/",
   "keywords": [
@@ -105,6 +105,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Eonasdan/tempus-dominus.git"
+  },
+  "wallaby": {
+    "files": [
+      "src/**/*.ts"
+    ],
+    "tests": [
+      "test/**/*.test.ts"
+    ]
   },
   "funding": "https://ko-fi.com/eonasdan"
 }

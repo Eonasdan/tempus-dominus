@@ -7,18 +7,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.6
+      - name: Nuget
+        uses: ./.github/workflows/nuget
         with:
-          nuget-api-key: ${{ secrets.NPM_TOKEN }}
-          nuget-version: '6.x'
-      - name: Pack NuGet
-        working-directory: ./src/nuget
-        run: | 
-         nuget pack TempusDominus.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
-         nuget pack TempusDominus.scss.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
-      - name: Push Nuget
-        working-directory: ./src/nuget
-        run: |
-          nuget push TempusDominus.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NPM_TOKEN }}
-          nuget push TempusDominus.scss.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NPM_TOKEN }}
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

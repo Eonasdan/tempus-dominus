@@ -141,6 +141,8 @@ export default class Dates {
       isValid: true,
     } as ChangeEvent);
     this._dates = [];
+    if (this.optionsStore.input) this.optionsStore.input.value = '';
+    this._eventEmitters.updateDisplay.emit('all');
   }
 
   /**
@@ -163,7 +165,10 @@ export default class Dates {
     if (!this.optionsStore.input) return;
 
     let newValue = this.formatInput(target);
-    if (this.optionsStore.options.multipleDates) {
+    if (
+      this.optionsStore.options.multipleDates ||
+      this.optionsStore.options.dateRange
+    ) {
       newValue = this._dates
         .map((d) => this.formatInput(d))
         .join(this.optionsStore.options.multipleDatesSeparator);
@@ -196,29 +201,7 @@ export default class Dates {
 
     // case of calling setValue(null)
     if (!target) {
-      if (
-        !this.optionsStore.options.multipleDates ||
-        this._dates.length === 1 ||
-        isClear
-      ) {
-        this.optionsStore.unset = true;
-        this._dates = [];
-      } else {
-        this._dates.splice(index, 1);
-      }
-
-      this.updateInput();
-
-      this._eventEmitters.triggerEvent.emit({
-        type: Namespace.events.change,
-        date: undefined,
-        oldDate,
-        isClear,
-        isValid: true,
-      } as ChangeEvent);
-
-      this._eventEmitters.updateDisplay.emit('all');
-      return;
+      this._setValueNull(isClear, index, oldDate);
     }
 
     index = index || 0;
@@ -232,7 +215,10 @@ export default class Dates {
       target.seconds = 0;
     }
 
-    if (this.validation.isValid(target)) {
+    if (
+      this.validation.isValid(target) &&
+      this.validation.dateRangeIsValid(this._dates, index, target)
+    ) {
       this._dates[index] = target;
       this._eventEmitters.updateViewDate.emit(target.clone);
 
@@ -271,5 +257,30 @@ export default class Dates {
       date: target,
       oldDate,
     } as FailEvent);
+  }
+
+  private _setValueNull(isClear: boolean, index: number, oldDate: DateTime) {
+    if (
+      !this.optionsStore.options.multipleDates ||
+      this._dates.length === 1 ||
+      isClear
+    ) {
+      this.optionsStore.unset = true;
+      this._dates = [];
+    } else {
+      this._dates.splice(index, 1);
+    }
+
+    this.updateInput();
+
+    this._eventEmitters.triggerEvent.emit({
+      type: Namespace.events.change,
+      date: undefined,
+      oldDate,
+      isClear,
+      isValid: true,
+    } as ChangeEvent);
+
+    this._eventEmitters.updateDisplay.emit('all');
   }
 }

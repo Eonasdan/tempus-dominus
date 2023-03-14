@@ -19,20 +19,9 @@ export default class Validation {
    * @param granularity
    */
   isValid(targetDate: DateTime, granularity?: Unit): boolean {
-    if (
-      granularity !== Unit.month &&
-      this.optionsStore.options.restrictions.disabledDates.length > 0 &&
-      this._isInDisabledDates(targetDate)
-    ) {
+    if (!this._enabledDisabledDatesIsValid(granularity, targetDate))
       return false;
-    }
-    if (
-      granularity !== Unit.month &&
-      this.optionsStore.options.restrictions.enabledDates.length > 0 &&
-      !this._isInEnabledDates(targetDate)
-    ) {
-      return false;
-    }
+
     if (
       granularity !== Unit.month &&
       granularity !== Unit.year &&
@@ -44,56 +33,44 @@ export default class Validation {
       return false;
     }
 
-    if (
-      this.optionsStore.options.restrictions.minDate &&
-      targetDate.isBefore(
-        this.optionsStore.options.restrictions.minDate,
-        granularity
-      )
-    ) {
-      return false;
-    }
-    if (
-      this.optionsStore.options.restrictions.maxDate &&
-      targetDate.isAfter(
-        this.optionsStore.options.restrictions.maxDate,
-        granularity
-      )
-    ) {
-      return false;
-    }
+    if (!this._minMaxIsValid(granularity, targetDate)) return false;
 
     if (
       granularity === Unit.hours ||
       granularity === Unit.minutes ||
       granularity === Unit.seconds
     ) {
+      if (!this._enabledDisabledHoursIsValid(targetDate)) return false;
+
       if (
-        this.optionsStore.options.restrictions.disabledHours.length > 0 &&
-        this._isInDisabledHours(targetDate)
-      ) {
+        this.optionsStore.options.restrictions.disabledTimeIntervals?.filter(
+          (internal) => targetDate.isBetween(internal.from, internal.to)
+        ).length !== 0
+      )
         return false;
-      }
-      if (
-        this.optionsStore.options.restrictions.enabledHours.length > 0 &&
-        !this._isInEnabledHours(targetDate)
-      ) {
-        return false;
-      }
-      if (
-        this.optionsStore.options.restrictions.disabledTimeIntervals.length > 0
-      ) {
-        for (const disabledTimeIntervals of this.optionsStore.options
-          .restrictions.disabledTimeIntervals) {
-          if (
-            targetDate.isBetween(
-              disabledTimeIntervals.from,
-              disabledTimeIntervals.to
-            )
-          )
-            return false;
-        }
-      }
+    }
+
+    return true;
+  }
+
+  private _enabledDisabledDatesIsValid(
+    granularity: Unit,
+    targetDate: DateTime
+  ): boolean {
+    if (granularity === Unit.month) return true;
+    if (
+      this.optionsStore.options.restrictions.disabledDates.length > 0 &&
+      this._isInDisabledDates(targetDate)
+    ) {
+      return false;
+    }
+
+    // noinspection RedundantIfStatementJS
+    if (
+      this.optionsStore.options.restrictions.enabledDates.length > 0 &&
+      !this._isInEnabledDates(targetDate)
+    ) {
+      return false;
     }
 
     return true;
@@ -111,6 +88,7 @@ export default class Validation {
       this.optionsStore.options.restrictions.disabledDates.length === 0
     )
       return false;
+
     return this.optionsStore.options.restrictions.disabledDates.find((x) =>
       x.isSame(testDate, Unit.date)
     );
@@ -128,6 +106,7 @@ export default class Validation {
       this.optionsStore.options.restrictions.enabledDates.length === 0
     )
       return true;
+
     return this.optionsStore.options.restrictions.enabledDates.find((x) =>
       x.isSame(testDate, Unit.date)
     );
@@ -145,6 +124,7 @@ export default class Validation {
       this.optionsStore.options.restrictions.disabledHours.length === 0
     )
       return false;
+
     const formattedDate = testDate.hours;
     return this.optionsStore.options.restrictions.disabledHours.find(
       (x) => x === formattedDate
@@ -163,9 +143,75 @@ export default class Validation {
       this.optionsStore.options.restrictions.enabledHours.length === 0
     )
       return true;
+
     const formattedDate = testDate.hours;
     return this.optionsStore.options.restrictions.enabledHours.find(
       (x) => x === formattedDate
     );
+  }
+
+  private _minMaxIsValid(granularity: Unit, targetDate: DateTime) {
+    if (
+      this.optionsStore.options.restrictions.minDate &&
+      targetDate.isBefore(
+        this.optionsStore.options.restrictions.minDate,
+        granularity
+      )
+    ) {
+      return false;
+    }
+
+    // noinspection RedundantIfStatementJS
+    if (
+      this.optionsStore.options.restrictions.maxDate &&
+      targetDate.isAfter(
+        this.optionsStore.options.restrictions.maxDate,
+        granularity
+      )
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private _enabledDisabledHoursIsValid(targetDate) {
+    if (
+      this.optionsStore.options.restrictions.disabledHours.length > 0 &&
+      this._isInDisabledHours(targetDate)
+    ) {
+      return false;
+    }
+
+    // noinspection RedundantIfStatementJS
+    if (
+      this.optionsStore.options.restrictions.enabledHours.length > 0 &&
+      !this._isInEnabledHours(targetDate)
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  dateRangeIsValid(dates: DateTime[], index: number, target: DateTime) {
+    // if we're not using the option, then return valid
+    if (!this.optionsStore.options.dateRange) return true;
+
+    // if we've only selected 0..1 dates, and we're not setting the end date
+    // then return valid. We only want to validate the range if both are selected,
+    // because the other validation on the target has already occurred.
+    if (dates.length !== 2 && index !== 1) return true;
+
+    // add one day to start; start has already been validated
+    const start = dates[0].clone.manipulate(1, Unit.date);
+
+    // check each date in the range to make sure it's valid
+    while (!start.isSame(target, Unit.date)) {
+      if (!this.isValid(start)) return false;
+      start.manipulate(1, Unit.date);
+    }
+
+    return true;
   }
 }

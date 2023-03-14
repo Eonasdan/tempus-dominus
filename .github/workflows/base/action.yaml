@@ -1,0 +1,19 @@
+name: Setup Node
+description: Setup node
+
+inputs:
+  registry:
+    description: 'A Github PAT'
+    default: 'https://registry.npmjs.org'
+
+runs:
+  using: composite
+  steps:
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          registry-url: ${{ inputs.registry }}
+      - name: Npm install
+        shell: bash
+        run: npm ci

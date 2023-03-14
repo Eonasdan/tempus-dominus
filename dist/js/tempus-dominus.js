@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.2.10 (https://getdatepicker.com/)
+  * Tempus Dominus v6.4.1 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -254,7 +254,7 @@
            */
           this.decadesContainer = `${this.dateContainer}-decades`;
           /**
-           * Applied to elements within the decades container, e.g. 2020, 2030
+           * Applied to elements within the decade container, e.g. 2020, 2030
            */
           this.decade = 'decade';
           /**
@@ -298,6 +298,9 @@
            * Applied to the locale's weekend dates on the calendar view, e.g. Sunday, Saturday
            */
           this.weekend = 'weekend';
+          this.rangeIn = 'range-in';
+          this.rangeStart = 'range-start';
+          this.rangeEnd = 'range-end';
           //#endregion
           //#region time element
           /**
@@ -420,6 +423,10 @@
       minute: '2-digit',
       second: '2-digit',
   };
+  /**
+   * Returns a Intl format object based on the provided object
+   * @param unit
+   */
   const getFormatByUnit = (unit) => {
       switch (unit) {
           case 'date':
@@ -433,6 +440,10 @@
               return { year: 'numeric' };
       }
   };
+  /**
+   * Attempts to guess the hour cycle of the given local
+   * @param locale
+   */
   const guessHourCycle = (locale) => {
       if (!locale)
           return 'h12';
@@ -614,6 +625,12 @@
       get clone() {
           return new DateTime(this.year, this.month, this.date, this.hours, this.minutes, this.seconds, this.getMilliseconds()).setLocalization(this.localization);
       }
+      static isValid(d) {
+          if (d === undefined || JSON.stringify(d) === 'null')
+              return false;
+          if (d.constructor.name === DateTime.name)
+              return true;
+      }
       /**
        * Sets the current date to the start of the {@link unit} provided
        * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).startOf('month')
@@ -721,6 +738,9 @@
        * comparison.
        */
       isBefore(compare, unit) {
+          // If the comparisons is undefined, return false
+          if (!DateTime.isValid(compare))
+              return false;
           if (!unit)
               return this.valueOf() < compare.valueOf();
           if (this[unit] === undefined)
@@ -734,6 +754,9 @@
        * comparison.
        */
       isAfter(compare, unit) {
+          // If the comparisons is undefined, return false
+          if (!DateTime.isValid(compare))
+              return false;
           if (!unit)
               return this.valueOf() > compare.valueOf();
           if (this[unit] === undefined)
@@ -747,6 +770,9 @@
        * comparison.
        */
       isSame(compare, unit) {
+          // If the comparisons is undefined, return false
+          if (!DateTime.isValid(compare))
+              return false;
           if (!unit)
               return this.valueOf() === compare.valueOf();
           if (this[unit] === undefined)
@@ -763,22 +789,25 @@
        * If the inclusivity parameter is used, both indicators must be passed.
        */
       isBetween(left, right, unit, inclusivity = '()') {
-          if (unit && this[unit] === undefined)
+          // If one of the comparisons is undefined, return false
+          if (!DateTime.isValid(left) || !DateTime.isValid(right))
+              return false;
+          // If a unit is provided and is not a valid property of the DateTime object, throw an error
+          if (unit && this[unit] === undefined) {
               throw new Error(`Unit '${unit}' is not valid`);
+          }
+          if (unit && this[unit] === undefined) {
+              throw new Error(`Unit '${unit}' is not valid`);
+          }
           const leftInclusivity = inclusivity[0] === '(';
           const rightInclusivity = inclusivity[1] === ')';
-          return (((leftInclusivity
+          const isLeftInRange = leftInclusivity
               ? this.isAfter(left, unit)
-              : !this.isBefore(left, unit)) &&
-              (rightInclusivity
-                  ? this.isBefore(right, unit)
-                  : !this.isAfter(right, unit))) ||
-              ((leftInclusivity
-                  ? this.isBefore(left, unit)
-                  : !this.isAfter(left, unit)) &&
-                  (rightInclusivity
-                      ? this.isAfter(right, unit)
-                      : !this.isBefore(right, unit))));
+              : !this.isBefore(left, unit);
+          const isRightInRange = rightInclusivity
+              ? this.isBefore(right, unit)
+              : !this.isAfter(right, unit);
+          return isLeftInRange && isRightInRange;
       }
       /**
        * Returns flattened object of the date. Does not include literals
@@ -841,6 +870,10 @@
       set hours(value) {
           this.setHours(value);
       }
+      /**
+       * Returns two digit hour, e.g. 01...10
+       * @param hourCycle Providing an hour cycle will change 00 to 24 depending on the given value.
+       */
       getHoursFormatted(hourCycle = 'h12') {
           return this.parts(undefined, { ...twoDigitTemplate, hourCycle: hourCycle })
               .hour;
@@ -934,6 +967,9 @@
           }
           return weekNumber;
       }
+      /**
+       * Returns the number of weeks in the year
+       */
       weeksInWeekYear() {
           const p1 = (this.year +
               Math.floor(this.year / 4) -
@@ -946,6 +982,9 @@
               7;
           return p1 === 4 || p2 === 3 ? 53 : 52;
       }
+      /**
+       * Returns true or false depending on if the year is a leap year or not.
+       */
       get isLeapYear() {
           return (this.year % 4 === 0 && (this.year % 100 !== 0 || this.year % 400 === 0));
       }
@@ -953,12 +992,18 @@
           return (this.date +
               (this.isLeapYear ? this.leapLadder : this.nonLeapLadder)[this.month]);
       }
+      /**
+       * Returns a list of month values based on the current locale
+       */
       getAllMonths(format = 'long') {
           const applyFormat = new Intl.DateTimeFormat(this.localization.locale, {
               month: format,
           }).format;
           return [...Array(12).keys()].map((m) => applyFormat(new Date(2021, m)));
       }
+      /**
+       * Replaces an expanded token set (e.g. LT/LTS)
+       */
       replaceTokens(formatStr, formats) {
           /***
            * _ => match
@@ -1075,8 +1120,8 @@
       }
       /**
        * Attempts to create a DateTime from a string.
-       * @param input
-       * @param localization
+       * @param input date as string
+       * @param localization provides the date template the string is in via the format property
        */
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       static fromString(input, localization) {
@@ -1258,48 +1303,37 @@
        * @param granularity
        */
       isValid(targetDate, granularity) {
-          if (granularity !== exports.Unit.month &&
-              this.optionsStore.options.restrictions.disabledDates.length > 0 &&
-              this._isInDisabledDates(targetDate)) {
+          if (!this._enabledDisabledDatesIsValid(granularity, targetDate))
               return false;
-          }
-          if (granularity !== exports.Unit.month &&
-              this.optionsStore.options.restrictions.enabledDates.length > 0 &&
-              !this._isInEnabledDates(targetDate)) {
-              return false;
-          }
           if (granularity !== exports.Unit.month &&
               granularity !== exports.Unit.year &&
               this.optionsStore.options.restrictions.daysOfWeekDisabled?.length > 0 &&
               this.optionsStore.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
               return false;
           }
-          if (this.optionsStore.options.restrictions.minDate &&
-              targetDate.isBefore(this.optionsStore.options.restrictions.minDate, granularity)) {
+          if (!this._minMaxIsValid(granularity, targetDate))
               return false;
-          }
-          if (this.optionsStore.options.restrictions.maxDate &&
-              targetDate.isAfter(this.optionsStore.options.restrictions.maxDate, granularity)) {
-              return false;
-          }
           if (granularity === exports.Unit.hours ||
               granularity === exports.Unit.minutes ||
               granularity === exports.Unit.seconds) {
-              if (this.optionsStore.options.restrictions.disabledHours.length > 0 &&
-                  this._isInDisabledHours(targetDate)) {
+              if (!this._enabledDisabledHoursIsValid(targetDate))
                   return false;
-              }
-              if (this.optionsStore.options.restrictions.enabledHours.length > 0 &&
-                  !this._isInEnabledHours(targetDate)) {
+              if (this.optionsStore.options.restrictions.disabledTimeIntervals?.filter((internal) => targetDate.isBetween(internal.from, internal.to)).length !== 0)
                   return false;
-              }
-              if (this.optionsStore.options.restrictions.disabledTimeIntervals.length > 0) {
-                  for (const disabledTimeIntervals of this.optionsStore.options
-                      .restrictions.disabledTimeIntervals) {
-                      if (targetDate.isBetween(disabledTimeIntervals.from, disabledTimeIntervals.to))
-                          return false;
-                  }
-              }
+          }
+          return true;
+      }
+      _enabledDisabledDatesIsValid(granularity, targetDate) {
+          if (granularity === exports.Unit.month)
+              return true;
+          if (this.optionsStore.options.restrictions.disabledDates.length > 0 &&
+              this._isInDisabledDates(targetDate)) {
+              return false;
+          }
+          // noinspection RedundantIfStatementJS
+          if (this.optionsStore.options.restrictions.enabledDates.length > 0 &&
+              !this._isInEnabledDates(targetDate)) {
+              return false;
           }
           return true;
       }
@@ -1353,6 +1387,49 @@
           const formattedDate = testDate.hours;
           return this.optionsStore.options.restrictions.enabledHours.find((x) => x === formattedDate);
       }
+      _minMaxIsValid(granularity, targetDate) {
+          if (this.optionsStore.options.restrictions.minDate &&
+              targetDate.isBefore(this.optionsStore.options.restrictions.minDate, granularity)) {
+              return false;
+          }
+          // noinspection RedundantIfStatementJS
+          if (this.optionsStore.options.restrictions.maxDate &&
+              targetDate.isAfter(this.optionsStore.options.restrictions.maxDate, granularity)) {
+              return false;
+          }
+          return true;
+      }
+      _enabledDisabledHoursIsValid(targetDate) {
+          if (this.optionsStore.options.restrictions.disabledHours.length > 0 &&
+              this._isInDisabledHours(targetDate)) {
+              return false;
+          }
+          // noinspection RedundantIfStatementJS
+          if (this.optionsStore.options.restrictions.enabledHours.length > 0 &&
+              !this._isInEnabledHours(targetDate)) {
+              return false;
+          }
+          return true;
+      }
+      dateRangeIsValid(dates, index, target) {
+          // if we're not using the option, then return valid
+          if (!this.optionsStore.options.dateRange)
+              return true;
+          // if we've only selected 0..1 dates, and we're not setting the end date
+          // then return valid. We only want to validate the range if both are selected,
+          // because the other validation on the target has already occurred.
+          if (dates.length !== 2 && index !== 1)
+              return true;
+          // add one day to start; start has already been validated
+          const start = dates[0].clone.manipulate(1, exports.Unit.date);
+          // check each date in the range to make sure it's valid
+          while (!start.isSame(target, exports.Unit.date)) {
+              if (!this.isValid(start))
+                  return false;
+              start.manipulate(1, exports.Unit.date);
+          }
+          return true;
+      }
   }
 
   class EventEmitter {
@@ -1394,16 +1471,11 @@
   }
 
   const DefaultOptions = {
-      restrictions: {
-          minDate: undefined,
-          maxDate: undefined,
-          disabledDates: [],
-          enabledDates: [],
-          daysOfWeekDisabled: [],
-          disabledTimeIntervals: [],
-          disabledHours: [],
-          enabledHours: [],
-      },
+      allowInputToggle: false,
+      container: undefined,
+      dateRange: false,
+      debug: false,
+      defaultDate: undefined,
       display: {
           icons: {
               type: 'icons',
@@ -1442,54 +1514,60 @@
           inline: false,
           theme: 'auto',
       },
-      stepping: 1,
-      useCurrent: true,
-      defaultDate: undefined,
+      keepInvalid: false,
       localization: {
-          today: 'Go to today',
           clear: 'Clear selection',
           close: 'Close the picker',
-          selectMonth: 'Select Month',
-          previousMonth: 'Previous Month',
-          nextMonth: 'Next Month',
-          selectYear: 'Select Year',
-          previousYear: 'Previous Year',
-          nextYear: 'Next Year',
-          selectDecade: 'Select Decade',
-          previousDecade: 'Previous Decade',
-          nextDecade: 'Next Decade',
-          previousCentury: 'Previous Century',
-          nextCentury: 'Next Century',
-          pickHour: 'Pick Hour',
-          incrementHour: 'Increment Hour',
-          decrementHour: 'Decrement Hour',
-          pickMinute: 'Pick Minute',
-          incrementMinute: 'Increment Minute',
-          decrementMinute: 'Decrement Minute',
-          pickSecond: 'Pick Second',
-          incrementSecond: 'Increment Second',
-          decrementSecond: 'Decrement Second',
-          toggleMeridiem: 'Toggle Meridiem',
-          selectTime: 'Select Time',
-          selectDate: 'Select Date',
-          dayViewHeaderFormat: { month: 'long', year: '2-digit' },
-          startOfTheWeek: 0,
-          locale: DefaultFormatLocalization$1.locale,
-          hourCycle: DefaultFormatLocalization$1.hourCycle,
           dateFormats: DefaultFormatLocalization$1.dateFormats,
-          ordinal: DefaultFormatLocalization$1.ordinal,
+          dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+          decrementHour: 'Decrement Hour',
+          decrementMinute: 'Decrement Minute',
+          decrementSecond: 'Decrement Second',
           format: DefaultFormatLocalization$1.format,
+          hourCycle: DefaultFormatLocalization$1.hourCycle,
+          incrementHour: 'Increment Hour',
+          incrementMinute: 'Increment Minute',
+          incrementSecond: 'Increment Second',
+          locale: DefaultFormatLocalization$1.locale,
+          nextCentury: 'Next Century',
+          nextDecade: 'Next Decade',
+          nextMonth: 'Next Month',
+          nextYear: 'Next Year',
+          ordinal: DefaultFormatLocalization$1.ordinal,
+          pickHour: 'Pick Hour',
+          pickMinute: 'Pick Minute',
+          pickSecond: 'Pick Second',
+          previousCentury: 'Previous Century',
+          previousDecade: 'Previous Decade',
+          previousMonth: 'Previous Month',
+          previousYear: 'Previous Year',
+          selectDate: 'Select Date',
+          selectDecade: 'Select Decade',
+          selectMonth: 'Select Month',
+          selectTime: 'Select Time',
+          selectYear: 'Select Year',
+          startOfTheWeek: 0,
+          today: 'Go to today',
+          toggleMeridiem: 'Toggle Meridiem',
       },
-      keepInvalid: false,
-      debug: false,
-      allowInputToggle: false,
-      viewDate: new DateTime(),
+      meta: {},
       multipleDates: false,
       multipleDatesSeparator: '; ',
       promptTimeOnDateChange: false,
       promptTimeOnDateChangeTransitionDelay: 200,
-      meta: {},
-      container: undefined,
+      restrictions: {
+          minDate: undefined,
+          maxDate: undefined,
+          disabledDates: [],
+          enabledDates: [],
+          daysOfWeekDisabled: [],
+          disabledTimeIntervals: [],
+          disabledHours: [],
+          enabledHours: [],
+      },
+      stepping: 1,
+      useCurrent: true,
+      viewDate: new DateTime(),
   };
 
   /**
@@ -1740,10 +1818,10 @@
        * Also handles complex options like disabledDates
        * @param provided An option from new providedOptions
        * @param copyTo Destination object. This was added to prevent reference copies
-       * @param path
        * @param localization
+       * @param path
        */
-      static spread(provided, copyTo, path = '', localization) {
+      static spread(provided, copyTo, localization, path = '') {
           const defaultOptions = OptionConverter.objectPath(path, DefaultOptions);
           const unsupportedOptions = Object.keys(provided).filter((x) => !Object.keys(defaultOptions).includes(x));
           if (unsupportedOptions.length > 0) {
@@ -1776,7 +1854,7 @@
                   !Array.isArray(provided[key]) &&
                   !(defaultOptionValue instanceof Date ||
                       OptionConverter.ignoreProperties.includes(key))) {
-                  OptionConverter.spread(provided[key], copyTo[key], path, localization);
+                  OptionConverter.spread(provided[key], copyTo[key], localization, path);
               }
               else {
                   copyTo[key] = OptionConverter.processKey(key, value, providedType, defaultType, path, localization);
@@ -1801,7 +1879,7 @@
           const localization = mergeTo.localization?.locale !== 'default'
               ? mergeTo.localization
               : providedOptions?.localization || DefaultOptions.localization;
-          OptionConverter.spread(providedOptions, newConfig, '', localization);
+          OptionConverter.spread(providedOptions, newConfig, localization, '');
           return newConfig;
       }
       static _dataToOptions(element, options) {
@@ -1824,23 +1902,7 @@
               });
               return lowered;
           };
-          const rabbitHole = (split, index, optionSubgroup, value) => {
-              // first round = display { ... }
-              const normalizedOptions = objectToNormalized(optionSubgroup);
-              const keyOption = normalizedOptions[split[index].toLowerCase()];
-              const internalObject = {};
-              if (keyOption === undefined)
-                  return internalObject;
-              // if this is another object, continue down the rabbit hole
-              if (optionSubgroup[keyOption].constructor === Object) {
-                  index++;
-                  internalObject[keyOption] = rabbitHole(split, index, optionSubgroup[keyOption], value);
-              }
-              else {
-                  internalObject[keyOption] = value;
-              }
-              return internalObject;
-          };
+          const normalizeObject = this.normalizeObject(objectToNormalized);
           const optionsLower = objectToNormalized(options);
           Object.keys(eData)
               .filter((x) => x.startsWith(Namespace.dataKey))
@@ -1856,7 +1918,7 @@
                   keyOption = optionsLower[split[0].toLowerCase()];
                   if (keyOption !== undefined &&
                       options[keyOption].constructor === Object) {
-                      dataOptions[keyOption] = rabbitHole(split, 1, options[keyOption], eData[`td${key}`]);
+                      dataOptions[keyOption] = normalizeObject(split, 1, options[keyOption], eData[`td${key}`]);
                   }
               }
               // or key = multipleDate
@@ -1865,6 +1927,27 @@
               }
           });
           return this._mergeOptions(dataOptions, options);
+      }
+      //todo clean this up
+      static normalizeObject(objectToNormalized) {
+          const normalizeObject = (split, index, optionSubgroup, value) => {
+              // first round = display { ... }
+              const normalizedOptions = objectToNormalized(optionSubgroup);
+              const keyOption = normalizedOptions[split[index].toLowerCase()];
+              const internalObject = {};
+              if (keyOption === undefined)
+                  return internalObject;
+              // if this is another object, continue down the rabbit hole
+              if (optionSubgroup[keyOption].constructor === Object) {
+                  index++;
+                  internalObject[keyOption] = normalizeObject(split, index, optionSubgroup[keyOption], value);
+              }
+              else {
+                  internalObject[keyOption] = value;
+              }
+              return internalObject;
+          };
+          return normalizeObject;
       }
       /**
        * Attempts to prove `d` is a DateTime or Date or can be converted into one.
@@ -1941,6 +2024,9 @@
               if (config.restrictions.maxDate.isBefore(config.restrictions.minDate)) {
                   Namespace.errorMessages.conflictingConfiguration('maxDate is before minDate');
               }
+          }
+          if (config.multipleDates && config.dateRange) {
+              Namespace.errorMessages.conflictingConfiguration('Cannot uss option "multipleDates" with "dateRange"');
           }
       }
   }
@@ -2065,6 +2151,9 @@
               isValid: true,
           });
           this._dates = [];
+          if (this.optionsStore.input)
+              this.optionsStore.input.value = '';
+          this._eventEmitters.updateDisplay.emit('all');
       }
       /**
        * Find the "book end" years given a `year` and a `factor`
@@ -2079,7 +2168,8 @@
           if (!this.optionsStore.input)
               return;
           let newValue = this.formatInput(target);
-          if (this.optionsStore.options.multipleDates) {
+          if (this.optionsStore.options.multipleDates ||
+              this.optionsStore.options.dateRange) {
               newValue = this._dates
                   .map((d) => this.formatInput(d))
                   .join(this.optionsStore.options.multipleDatesSeparator);
@@ -2108,25 +2198,7 @@
           }
           // case of calling setValue(null)
           if (!target) {
-              if (!this.optionsStore.options.multipleDates ||
-                  this._dates.length === 1 ||
-                  isClear) {
-                  this.optionsStore.unset = true;
-                  this._dates = [];
-              }
-              else {
-                  this._dates.splice(index, 1);
-              }
-              this.updateInput();
-              this._eventEmitters.triggerEvent.emit({
-                  type: Namespace.events.change,
-                  date: undefined,
-                  oldDate,
-                  isClear,
-                  isValid: true,
-              });
-              this._eventEmitters.updateDisplay.emit('all');
-              return;
+              this._setValueNull(isClear, index, oldDate);
           }
           index = index || 0;
           target = target.clone;
@@ -2137,7 +2209,8 @@
                       this.optionsStore.options.stepping;
               target.seconds = 0;
           }
-          if (this.validation.isValid(target)) {
+          if (this.validation.isValid(target) &&
+              this.validation.dateRangeIsValid(this._dates, index, target)) {
               this._dates[index] = target;
               this._eventEmitters.updateViewDate.emit(target.clone);
               this.updateInput(target);
@@ -2170,6 +2243,26 @@
               date: target,
               oldDate,
           });
+      }
+      _setValueNull(isClear, index, oldDate) {
+          if (!this.optionsStore.options.multipleDates ||
+              this._dates.length === 1 ||
+              isClear) {
+              this.optionsStore.unset = true;
+              this._dates = [];
+          }
+          else {
+              this._dates.splice(index, 1);
+          }
+          this.updateInput();
+          this._eventEmitters.triggerEvent.emit({
+              type: Namespace.events.change,
+              date: undefined,
+              oldDate,
+              isClear,
+              isValid: true,
+          });
+          this._eventEmitters.updateDisplay.emit('all');
       }
   }
 
@@ -2225,6 +2318,7 @@
               div.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
               container.appendChild(div);
           }
+          const { rangeHoverEvent, rangeHoverOutEvent } = this.handleMouseEvents(container);
           for (let i = 0; i < 42; i++) {
               if (i !== 0 && i % 7 === 0) {
                   if (this.optionsStore.options.display.calendarWeeks) {
@@ -2236,6 +2330,12 @@
               const div = document.createElement('div');
               div.setAttribute('data-action', ActionTypes$1.selectDay);
               container.appendChild(div);
+              // if hover is supported then add the events
+              if (matchMedia('(hover: hover)').matches &&
+                  this.optionsStore.options.dateRange) {
+                  div.addEventListener('mouseover', rangeHoverEvent);
+                  div.addEventListener('mouseout', rangeHoverOutEvent);
+              }
           }
           return container;
       }
@@ -2245,35 +2345,19 @@
        */
       _update(widget, paint) {
           const container = widget.getElementsByClassName(Namespace.css.daysContainer)[0];
-          if (this.optionsStore.currentView === 'calendar') {
-              const [previous, switcher, next] = container.parentElement
-                  .getElementsByClassName(Namespace.css.calendarHeader)[0]
-                  .getElementsByTagName('div');
-              switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
-              this.optionsStore.options.display.components.month
-                  ? switcher.classList.remove(Namespace.css.disabled)
-                  : switcher.classList.add(Namespace.css.disabled);
-              this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.month), exports.Unit.month)
-                  ? previous.classList.remove(Namespace.css.disabled)
-                  : previous.classList.add(Namespace.css.disabled);
-              this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.month), exports.Unit.month)
-                  ? next.classList.remove(Namespace.css.disabled)
-                  : next.classList.add(Namespace.css.disabled);
-          }
+          this._updateCalendarView(container);
           const innerDate = this.optionsStore.viewDate.clone
               .startOf(exports.Unit.month)
               .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
               .manipulate(12, exports.Unit.hours);
+          [...container.querySelectorAll(`.${Namespace.css.calendarWeeks}`)]
+              .filter((e) => e.innerText !== '#')
+              .forEach((element) => {
+              element.innerText = `${innerDate.week}`;
+          });
           container
-              .querySelectorAll(`[data-action="${ActionTypes$1.selectDay}"], .${Namespace.css.calendarWeeks}`)
-              .forEach((containerClone) => {
-              if (this.optionsStore.options.display.calendarWeeks &&
-                  containerClone.classList.contains(Namespace.css.calendarWeeks)) {
-                  if (containerClone.innerText === '#')
-                      return;
-                  containerClone.innerText = `${innerDate.week}`;
-                  return;
-              }
+              .querySelectorAll(`[data-action="${ActionTypes$1.selectDay}"]`)
+              .forEach((element) => {
               const classes = [];
               classes.push(Namespace.css.day);
               if (innerDate.isBefore(this.optionsStore.viewDate, exports.Unit.month)) {
@@ -2283,6 +2367,7 @@
                   classes.push(Namespace.css.new);
               }
               if (!this.optionsStore.unset &&
+                  !this.optionsStore.options.multipleDates &&
                   this.dates.isPicked(innerDate, exports.Unit.date)) {
                   classes.push(Namespace.css.active);
               }
@@ -2295,16 +2380,129 @@
               if (innerDate.weekDay === 0 || innerDate.weekDay === 6) {
                   classes.push(Namespace.css.weekend);
               }
-              paint(exports.Unit.date, innerDate, classes, containerClone);
-              containerClone.classList.remove(...containerClone.classList);
-              containerClone.classList.add(...classes);
-              containerClone.setAttribute('data-value', `${innerDate.year}-${innerDate.monthFormatted}-${innerDate.dateFormatted}`);
-              containerClone.setAttribute('data-day', `${innerDate.date}`);
-              containerClone.innerText = innerDate.parts(undefined, {
+              this._handleDateRange(innerDate, classes);
+              paint(exports.Unit.date, innerDate, classes, element);
+              element.classList.remove(...element.classList);
+              element.classList.add(...classes);
+              element.setAttribute('data-value', this._dateToDataValue(innerDate));
+              element.setAttribute('data-day', `${innerDate.date}`);
+              element.innerText = innerDate.parts(undefined, {
                   day: 'numeric',
               }).day;
               innerDate.manipulate(1, exports.Unit.date);
           });
+      }
+      _dateToDataValue(date) {
+          if (!DateTime.isValid(date))
+              return '';
+          return `${date.year}-${date.monthFormatted}-${date.dateFormatted}`;
+      }
+      _handleDateRange(innerDate, classes) {
+          const rangeStart = this.dates.picked[0];
+          const rangeEnd = this.dates.picked[1];
+          if (this.optionsStore.options.dateRange) {
+              if (innerDate.isBetween(rangeStart, rangeEnd, exports.Unit.date)) {
+                  classes.push(Namespace.css.rangeIn);
+              }
+              if (innerDate.isSame(rangeStart, exports.Unit.date)) {
+                  classes.push(Namespace.css.rangeStart);
+              }
+              if (innerDate.isSame(rangeEnd, exports.Unit.date)) {
+                  classes.push(Namespace.css.rangeEnd);
+              }
+          }
+      }
+      handleMouseEvents(container) {
+          const rangeHoverEvent = (e) => {
+              const currentTarget = e?.currentTarget;
+              // if we have 0 or 2 selected or if the target is disabled then ignore
+              if (this.dates.picked.length !== 1 ||
+                  currentTarget.classList.contains(Namespace.css.disabled))
+                  return;
+              // select all the date divs
+              const allDays = [...container.querySelectorAll('.day')];
+              // get the date value from the element being hovered over
+              const attributeValue = currentTarget.getAttribute('data-value');
+              // format the string to a date
+              const innerDate = DateTime.fromString(attributeValue, {
+                  format: 'yyyy-MM-dd',
+              });
+              // find the position of the target in the date container
+              const dayIndex = allDays.findIndex((e) => e.getAttribute('data-value') === attributeValue);
+              // find the first and second selected dates
+              const rangeStart = this.dates.picked[0];
+              const rangeEnd = this.dates.picked[1];
+              //format the start date so that it can be found by the attribute
+              const rangeStartFormatted = this._dateToDataValue(rangeStart);
+              const rangeStartIndex = allDays.findIndex((e) => e.getAttribute('data-value') === rangeStartFormatted);
+              const rangeStartElement = allDays[rangeStartIndex];
+              //make sure we don't leave start/end classes if we don't need them
+              if (!innerDate.isSame(rangeStart, exports.Unit.date)) {
+                  currentTarget.classList.remove(Namespace.css.rangeStart);
+              }
+              if (!innerDate.isSame(rangeEnd, exports.Unit.date)) {
+                  currentTarget.classList.remove(Namespace.css.rangeEnd);
+              }
+              // the following figures out which direct from start date is selected
+              // the selection "cap" classes are applied if needed
+              // otherwise all the dates between will get the `rangeIn` class.
+              // We make this selection based on the element's index and the rangeStart index
+              let lambda;
+              if (innerDate.isBefore(rangeStart)) {
+                  currentTarget.classList.add(Namespace.css.rangeStart);
+                  rangeStartElement?.classList.remove(Namespace.css.rangeStart);
+                  rangeStartElement?.classList.add(Namespace.css.rangeEnd);
+                  lambda = (_, index) => index > dayIndex && index < rangeStartIndex;
+              }
+              else {
+                  currentTarget.classList.add(Namespace.css.rangeEnd);
+                  rangeStartElement?.classList.remove(Namespace.css.rangeEnd);
+                  rangeStartElement?.classList.add(Namespace.css.rangeStart);
+                  lambda = (_, index) => index < dayIndex && index > rangeStartIndex;
+              }
+              allDays.filter(lambda).forEach((e) => {
+                  e.classList.add(Namespace.css.rangeIn);
+              });
+          };
+          const rangeHoverOutEvent = (e) => {
+              // find all the dates in the container
+              const allDays = [...container.querySelectorAll('.day')];
+              // if only the start is selected, remove all the rangeIn classes
+              // we do this because once the user hovers over a new date the range will be recalculated.
+              if (this.dates.picked.length === 1)
+                  allDays.forEach((e) => e.classList.remove(Namespace.css.rangeIn));
+              // if we have 0 or 2 dates selected then ignore
+              if (this.dates.picked.length !== 1)
+                  return;
+              const currentTarget = e?.currentTarget;
+              // get the elements date from the attribute value
+              const innerDate = new DateTime(currentTarget.getAttribute('data-value'));
+              // verify selections and remove invalid classes
+              if (!innerDate.isSame(this.dates.picked[0], exports.Unit.date)) {
+                  currentTarget.classList.remove(Namespace.css.rangeStart);
+              }
+              if (!innerDate.isSame(this.dates.picked[1], exports.Unit.date)) {
+                  currentTarget.classList.remove(Namespace.css.rangeEnd);
+              }
+          };
+          return { rangeHoverEvent, rangeHoverOutEvent };
+      }
+      _updateCalendarView(container) {
+          if (this.optionsStore.currentView !== 'calendar')
+              return;
+          const [previous, switcher, next] = container.parentElement
+              .getElementsByClassName(Namespace.css.calendarHeader)[0]
+              .getElementsByTagName('div');
+          switcher.setAttribute(Namespace.css.daysContainer, this.optionsStore.viewDate.format(this.optionsStore.options.localization.dayViewHeaderFormat));
+          this.optionsStore.options.display.components.month
+              ? switcher.classList.remove(Namespace.css.disabled)
+              : switcher.classList.add(Namespace.css.disabled);
+          this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(-1, exports.Unit.month), exports.Unit.month)
+              ? previous.classList.remove(Namespace.css.disabled)
+              : previous.classList.add(Namespace.css.disabled);
+          this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.month), exports.Unit.month)
+              ? next.classList.remove(Namespace.css.disabled)
+              : next.classList.add(Namespace.css.disabled);
       }
       /***
        * Generates a html row that contains the days of the week.
@@ -3052,6 +3250,12 @@
       get widget() {
           return this._widget;
       }
+      get dateContainer() {
+          return this.widget?.querySelector(`div.${Namespace.css.dateContainer}`);
+      }
+      get timeContainer() {
+          return this.widget?.querySelector(`div.${Namespace.css.timeContainer}`);
+      }
       /**
        * Returns this visible state of the picker (shown)
        */
@@ -3123,7 +3327,6 @@
       paint(_unit, _date, _classes, _element) {
           // implemented in plugin
       }
-      /* eslint-enable @typescript-eslint/no-unused-vars */
       /**
        * Shows the picker and creates a Popper instance if needed.
        * Add document click event to hide when clicking outside the picker.
@@ -3131,61 +3334,10 @@
        */
       show() {
           if (this.widget == undefined) {
-              if (this.dates.picked.length == 0) {
-                  if (this.optionsStore.options.useCurrent &&
-                      !this.optionsStore.options.defaultDate) {
-                      const date = new DateTime().setLocalization(this.optionsStore.options.localization);
-                      if (!this.optionsStore.options.keepInvalid) {
-                          let tries = 0;
-                          let direction = 1;
-                          if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
-                              direction = -1;
-                          }
-                          while (!this.validation.isValid(date)) {
-                              date.manipulate(direction, exports.Unit.date);
-                              if (tries > 31)
-                                  break;
-                              tries++;
-                          }
-                      }
-                      this.dates.setValue(date);
-                  }
-                  if (this.optionsStore.options.defaultDate) {
-                      this.dates.setValue(this.optionsStore.options.defaultDate);
-                  }
-              }
+              this._showSetDefaultIfNeeded();
               this._buildWidget();
               this._updateTheme();
-              // If modeView is only clock
-              const onlyClock = this._hasTime && !this._hasDate;
-              // reset the view to the clock if there's no date components
-              if (onlyClock) {
-                  this.optionsStore.currentView = 'clock';
-                  this._eventEmitters.action.emit({
-                      e: null,
-                      action: ActionTypes$1.showClock,
-                  });
-              }
-              // otherwise return to the calendar view
-              else if (!this.optionsStore.currentCalendarViewMode) {
-                  this.optionsStore.currentCalendarViewMode =
-                      this.optionsStore.minimumCalendarViewMode;
-              }
-              if (!onlyClock &&
-                  this.optionsStore.options.display.viewMode !== 'clock') {
-                  if (this._hasTime) {
-                      if (!this.optionsStore.options.display.sideBySide) {
-                          Collapse.hideImmediately(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
-                      }
-                      else {
-                          Collapse.show(this.widget.querySelector(`div.${Namespace.css.timeContainer}`));
-                      }
-                  }
-                  Collapse.show(this.widget.querySelector(`div.${Namespace.css.dateContainer}`));
-              }
-              if (this._hasDate) {
-                  this._showMode();
-              }
+              this._showSetupViewMode();
               if (!this.optionsStore.options.display.inline) {
                   // If needed to change the parent container
                   const container = this.optionsStore.options?.container || document.body;
@@ -3223,6 +3375,60 @@
           }
           this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
           this._isVisible = true;
+      }
+      _showSetupViewMode() {
+          // If modeView is only clock
+          const onlyClock = this._hasTime && !this._hasDate;
+          // reset the view to the clock if there's no date components
+          if (onlyClock) {
+              this.optionsStore.currentView = 'clock';
+              this._eventEmitters.action.emit({
+                  e: null,
+                  action: ActionTypes$1.showClock,
+              });
+          }
+          // otherwise return to the calendar view
+          else if (!this.optionsStore.currentCalendarViewMode) {
+              this.optionsStore.currentCalendarViewMode =
+                  this.optionsStore.minimumCalendarViewMode;
+          }
+          if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
+              if (this._hasTime) {
+                  if (!this.optionsStore.options.display.sideBySide) {
+                      Collapse.hideImmediately(this.timeContainer);
+                  }
+                  else {
+                      Collapse.show(this.timeContainer);
+                  }
+              }
+              Collapse.show(this.dateContainer);
+          }
+          if (this._hasDate) {
+              this._showMode();
+          }
+      }
+      _showSetDefaultIfNeeded() {
+          if (this.dates.picked.length != 0)
+              return;
+          if (this.optionsStore.options.useCurrent &&
+              !this.optionsStore.options.defaultDate) {
+              const date = new DateTime().setLocalization(this.optionsStore.options.localization);
+              if (!this.optionsStore.options.keepInvalid) {
+                  let tries = 0;
+                  let direction = 1;
+                  if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
+                      direction = -1;
+                  }
+                  while (!this.validation.isValid(date) && tries > 31) {
+                      date.manipulate(direction, exports.Unit.date);
+                      tries++;
+                  }
+              }
+              this.dates.setValue(date);
+          }
+          if (this.optionsStore.options.defaultDate) {
+              this.dates.setValue(this.optionsStore.options.defaultDate);
+          }
       }
       async createPopup(element, widget, 
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -3370,11 +3576,7 @@
           if (this._isVisible) {
               this._eventEmitters.triggerEvent.emit({
                   type: Namespace.events.hide,
-                  date: this.optionsStore.unset
-                      ? null
-                      : this.dates.lastPicked
-                          ? this.dates.lastPicked.clone
-                          : void 0,
+                  date: this.optionsStore.unset ? null : this.dates.lastPicked?.clone,
               });
               this._isVisible = false;
           }
@@ -3425,45 +3627,25 @@
           if (this.optionsStore.options.display.calendarWeeks) {
               template.classList.add('calendarWeeks');
           }
-          if (this.optionsStore.options.display.sideBySide &&
-              this._hasDate &&
-              this._hasTime) {
-              template.classList.add(Namespace.css.sideBySide);
-              if (this.optionsStore.options.display.toolbarPlacement === 'top') {
-                  template.appendChild(toolbar);
-              }
-              const row = document.createElement('div');
-              row.classList.add('td-row');
-              dateView.classList.add('td-half');
-              timeView.classList.add('td-half');
-              row.appendChild(dateView);
-              row.appendChild(timeView);
-              template.appendChild(row);
-              if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
-                  template.appendChild(toolbar);
-              }
-              this._widget = template;
+          if (this.optionsStore.options.display.sideBySide && this._hasDateAndTime) {
+              this._buildWidgetSideBySide(template, dateView, timeView, toolbar);
               return;
           }
           if (this.optionsStore.options.display.toolbarPlacement === 'top') {
               template.appendChild(toolbar);
           }
-          if (this._hasDate) {
-              if (this._hasTime) {
-                  dateView.classList.add(Namespace.css.collapse);
-                  if (this.optionsStore.options.display.viewMode !== 'clock')
-                      dateView.classList.add(Namespace.css.show);
+          const setupComponentView = (hasFirst, hasSecond, element, shouldShow) => {
+              if (!hasFirst)
+                  return;
+              if (hasSecond) {
+                  element.classList.add(Namespace.css.collapse);
+                  if (shouldShow)
+                      element.classList.add(Namespace.css.show);
               }
-              template.appendChild(dateView);
-          }
-          if (this._hasTime) {
-              if (this._hasDate) {
-                  timeView.classList.add(Namespace.css.collapse);
-                  if (this.optionsStore.options.display.viewMode === 'clock')
-                      timeView.classList.add(Namespace.css.show);
-              }
-              template.appendChild(timeView);
-          }
+              template.appendChild(element);
+          };
+          setupComponentView(this._hasDate, this._hasTime, dateView, this.optionsStore.options.display.viewMode !== 'clock');
+          setupComponentView(this._hasTime, this._hasDate, timeView, this.optionsStore.options.display.viewMode === 'clock');
           if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
               template.appendChild(toolbar);
           }
@@ -3471,6 +3653,23 @@
           arrow.classList.add('arrow');
           arrow.setAttribute('data-popper-arrow', '');
           template.appendChild(arrow);
+          this._widget = template;
+      }
+      _buildWidgetSideBySide(template, dateView, timeView, toolbar) {
+          template.classList.add(Namespace.css.sideBySide);
+          if (this.optionsStore.options.display.toolbarPlacement === 'top') {
+              template.appendChild(toolbar);
+          }
+          const row = document.createElement('div');
+          row.classList.add('td-row');
+          dateView.classList.add('td-half');
+          timeView.classList.add('td-half');
+          row.appendChild(dateView);
+          row.appendChild(timeView);
+          template.appendChild(row);
+          if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
+              template.appendChild(toolbar);
+          }
           this._widget = template;
       }
       /**
@@ -3490,6 +3689,9 @@
               (this.optionsStore.options.display.components.year ||
                   this.optionsStore.options.display.components.month ||
                   this.optionsStore.options.display.components.date));
+      }
+      get _hasDateAndTime() {
+          return this._hasDate && this._hasTime;
       }
       /**
        * Get the toolbar html based on options like buttons.today
@@ -3688,9 +3890,9 @@
                   if (!this.optionsStore.options.display.sideBySide &&
                       this.optionsStore.currentView !== 'clock') {
                       //hide calendar
-                      Collapse.hideImmediately(this.display.widget.querySelector(`div.${Namespace.css.dateContainer}`));
+                      Collapse.hideImmediately(this.display.dateContainer);
                       //show clock
-                      Collapse.showImmediately(this.display.widget.querySelector(`div.${Namespace.css.timeContainer}`));
+                      Collapse.showImmediately(this.display.timeContainer);
                   }
                   this.handleShowClockContainers(action);
                   break;
@@ -3777,9 +3979,7 @@
               this.dates.setValue(newDate, this.dates.lastPickedIndex);
           }
       }
-      handleSelectCalendarMode(action, 
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-      currentTarget) {
+      handleSelectCalendarMode(action, currentTarget) {
           const value = +currentTarget.dataset.value;
           switch (action) {
               case ActionTypes$1.selectMonth:
@@ -3801,7 +4001,6 @@
               this.display._showMode(-1);
           }
       }
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       handleToggle(currentTarget) {
           if (currentTarget.getAttribute('title') ===
               this.optionsStore.options.localization.selectDate) {
@@ -3823,7 +4022,6 @@
               .forEach((htmlElement) => Collapse.toggle(htmlElement));
           this._eventEmitters.viewUpdate.emit();
       }
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       handleSelectDay(currentTarget) {
           const day = this.optionsStore.viewDate.clone;
           if (currentTarget.classList.contains(Namespace.css.old)) {
@@ -3833,15 +4031,10 @@
               day.manipulate(1, exports.Unit.month);
           }
           day.date = +currentTarget.dataset.day;
-          let index = 0;
-          if (this.optionsStore.options.multipleDates) {
-              index = this.dates.pickedIndex(day, exports.Unit.date);
-              if (index !== -1) {
-                  this.dates.setValue(null, index); //deselect multi-date
-              }
-              else {
-                  this.dates.setValue(day, this.dates.lastPickedIndex + 1);
-              }
+          if (this.optionsStore.options.dateRange)
+              this.handleDateRange(day);
+          else if (this.optionsStore.options.multipleDates) {
+              this.handleMultiDate(day);
           }
           else {
               this.dates.setValue(day, this.dates.lastPickedIndex);
@@ -3849,9 +4042,42 @@
           if (!this.display._hasTime &&
               !this.optionsStore.options.display.keepOpen &&
               !this.optionsStore.options.display.inline &&
-              !this.optionsStore.options.multipleDates) {
+              !this.optionsStore.options.multipleDates &&
+              !this.optionsStore.options.dateRange) {
               this.display.hide();
           }
+      }
+      handleMultiDate(day) {
+          let index = this.dates.pickedIndex(day, exports.Unit.date);
+          if (index !== -1) {
+              this.dates.setValue(null, index); //deselect multi-date
+          }
+          else {
+              index = this.dates.lastPickedIndex + 1;
+              if (this.dates.picked.length === 0)
+                  index = 0;
+              this.dates.setValue(day, index);
+          }
+      }
+      handleDateRange(day) {
+          switch (this.dates.picked.length) {
+              case 2: {
+                  this.dates.clear();
+                  break;
+              }
+              case 1: {
+                  const other = this.dates.picked[0];
+                  if (day.isBefore(other)) {
+                      this.dates.setValue(day, 0);
+                      this.dates.setValue(other, 1);
+                      return;
+                  }
+                  else
+                      this.dates.setValue(day, 1);
+                  return;
+              }
+          }
+          this.dates.setValue(day, 0);
       }
   }
 
@@ -4098,9 +4324,6 @@
               this._handleAfterChangeEvent(event);
               this.optionsStore.input?.dispatchEvent(
               //eslint-disable-next-line @typescript-eslint/no-explicit-any
-              new CustomEvent(event.type, { detail: event }));
-              this.optionsStore.input?.dispatchEvent(
-              //eslint-disable-next-line @typescript-eslint/no-explicit-any
               new CustomEvent('change', { detail: event }));
           }
           this.optionsStore.element.dispatchEvent(
@@ -4247,6 +4470,7 @@
           if (
           // options is disabled
           !this.optionsStore.options.promptTimeOnDateChange ||
+              this.optionsStore.options.multipleDates ||
               this.optionsStore.options.display.inline ||
               this.optionsStore.options.display.sideBySide ||
               // time is disabled
@@ -4318,7 +4542,7 @@
       }
       return tempusDominus;
   };
-  const version = '6.2.10';
+  const version = '6.4.1';
   const tempusDominus = {
       TempusDominus,
       extend,

@@ -125,7 +125,7 @@ class Css {
   decadesContainer = `${this.dateContainer}-decades`;
 
   /**
-   * Applied to elements within the decades container, e.g. 2020, 2030
+   * Applied to elements within the decade container, e.g. 2020, 2030
    */
   decade = 'decade';
 
@@ -179,6 +179,10 @@ class Css {
    * Applied to the locale's weekend dates on the calendar view, e.g. Sunday, Saturday
    */
   weekend = 'weekend';
+
+  rangeIn = 'range-in';
+  rangeStart = 'range-start';
+  rangeEnd = 'range-end';
 
   //#endregion
 
