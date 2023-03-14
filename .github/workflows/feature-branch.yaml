@@ -1,0 +1,51 @@
+name: Feature Branch Publish Package
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+      - 'bug/*'
+      - development
+#    paths:
+#      - src
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        uses: ./.github/workflows/base
+        with:
+          registry: 'https://npm.pkg.github.com'
+      - name: Set package version
+        id: set_version
+        run: |
+          # Get the branch name
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          # remove "feature/" prefix
+          BRANCH_NAME=${BRANCH_NAME#feature/}
+          # replace underscore with dashes (thanks semver)
+          BRANCH_NAME=${BRANCH_NAME//_/-}
+          BUILD_ID=$(echo $GITHUB_RUN_ID | cut -c1-7)
+          VERSION=$(node -p "const pkg = require('./package.json'); pkg.version")
+          NEW_VERSION="$VERSION-$BRANCH_NAME.$BUILD_ID"
+          #sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/g" ./package.json
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+      - name: Build
+        uses: ./.github/workflows/build
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+      - name: Create Release
+        run: npm run release:version ${{steps.set_version.outputs.VERSION }} ${{steps.set_version.outputs.NEW_VERSION }}
+      - name: Publish package
+        run: |
+          npm publish --access public --registry https://npm.pkg.github.com/
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

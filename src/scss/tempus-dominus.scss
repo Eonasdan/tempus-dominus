@@ -162,6 +162,24 @@
     grid-auto-rows: 40px;
     grid-auto-columns: calc(100% / 7);
 
+    .range-in {
+      @extend .active;
+      background-color: $td-range-bg !important;
+      border: none;
+      border-radius: 0 !important;
+      box-shadow: -5px 0 0 $td-range-bg, 5px 0 0 $td-range-bg;
+    }
+
+    .range-end {
+      @extend .active;
+      border-radius: 0 50px 50px 0 !important;
+    }
+
+    .range-start {
+      @extend .active;
+      border-radius: 50px 0 0 50px !important;
+    }
+
     & .dow {
       align-items: center;
       justify-content: center;
@@ -399,6 +417,11 @@
     .date-container-days {
       & .dow {
         color: $td-dark-dow-color;
+      }
+
+      .range-in {
+        background-color: $td-dark-range-bg !important;
+        box-shadow: -5px 0 0 $td-dark-range-bg, 5px 0 0 $td-dark-range-bg;
       }
 
       & .cw {

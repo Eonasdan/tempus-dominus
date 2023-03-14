@@ -30,8 +30,8 @@ declare const localization: {
     month: string;
     year: string;
   };
-  locale: string;
   startOfTheWeek: number;
+  locale: string;
   dateFormats: {
     LT: string;
     LTS: string;

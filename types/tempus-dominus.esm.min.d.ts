@@ -16,8 +16,12 @@ declare class DateDisplay {
    * @private
    */
   _update(widget: HTMLElement, paint: Paint): void;
+  private _dateToDataValue;
+  private _handleDateRange;
+  private handleMouseEvents;
+  private _updateCalendarView;
   /***
-   * Generates an html row that contains the days of the week.
+   * Generates a html row that contains the days of the week.
    * @private
    */
   private _daysOfTheWeek;
@@ -175,19 +179,11 @@ type ViewMode = {
   decades: any;
 };
 interface Options {
-  restrictions?: {
-    minDate?: DateTime;
-    maxDate?: DateTime;
-    enabledDates?: DateTime[];
-    disabledDates?: DateTime[];
-    enabledHours?: number[];
-    disabledHours?: number[];
-    disabledTimeIntervals?: {
-      from: DateTime;
-      to: DateTime;
-    }[];
-    daysOfWeekDisabled?: number[];
-  };
+  allowInputToggle?: boolean;
+  container?: HTMLElement;
+  dateRange?: boolean;
+  debug?: boolean;
+  defaultDate?: DateTime;
   display?: {
     toolbarPlacement?: 'top' | 'bottom';
     components?: {
@@ -209,16 +205,16 @@ interface Options {
     };
     calendarWeeks?: boolean;
     icons?: {
+      clear?: string;
+      close?: string;
       date?: string;
+      down?: string;
       next?: string;
       previous?: string;
-      today?: string;
-      clear?: string;
       time?: string;
-      up?: string;
+      today?: string;
       type?: 'icons' | 'sprites';
-      down?: string;
-      close?: string;
+      up?: string;
     };
     viewMode?: keyof ViewMode;
     sideBySide?: boolean;
@@ -226,64 +222,73 @@ interface Options {
     keepOpen?: boolean;
     theme?: 'light' | 'dark' | 'auto';
   };
-  stepping?: number;
-  useCurrent?: boolean;
-  defaultDate?: DateTime;
-  localization?: Localization;
   keepInvalid?: boolean;
-  debug?: boolean;
-  allowInputToggle?: boolean;
-  viewDate?: DateTime;
+  localization?: Localization;
+  meta?: Record<string, unknown>;
   multipleDates?: boolean;
   multipleDatesSeparator?: string;
   promptTimeOnDateChange?: boolean;
   promptTimeOnDateChangeTransitionDelay?: number;
-  meta?: Record<string, unknown>;
-  container?: HTMLElement;
+  restrictions?: {
+    minDate?: DateTime;
+    maxDate?: DateTime;
+    enabledDates?: DateTime[];
+    disabledDates?: DateTime[];
+    enabledHours?: number[];
+    disabledHours?: number[];
+    disabledTimeIntervals?: {
+      from: DateTime;
+      to: DateTime;
+    }[];
+    daysOfWeekDisabled?: number[];
+  };
+  stepping?: number;
+  useCurrent?: boolean;
+  viewDate?: DateTime;
 }
 interface FormatLocalization {
-  locale?: string;
   dateFormats?: {
-    LTS?: string;
-    LT?: string;
     L?: string;
     LL?: string;
     LLL?: string;
     LLLL?: string;
+    LT?: string;
+    LTS?: string;
   };
-  ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
   format?: string;
   hourCycle?: Intl.LocaleHourCycleKey;
+  locale?: string;
+  ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
 }
 interface Localization extends FormatLocalization {
-  nextMonth?: string;
-  pickHour?: string;
-  incrementSecond?: string;
-  nextDecade?: string;
-  selectDecade?: string;
+  clear?: string;
+  close?: string;
   dayViewHeaderFormat?: DateTimeFormatOptions;
   decrementHour?: string;
-  selectDate?: string;
-  incrementHour?: string;
-  previousCentury?: string;
-  decrementSecond?: string;
-  today?: string;
-  previousMonth?: string;
-  selectYear?: string;
-  pickSecond?: string;
-  nextCentury?: string;
-  close?: string;
-  incrementMinute?: string;
-  selectTime?: string;
-  clear?: string;
-  toggleMeridiem?: string;
-  selectMonth?: string;
   decrementMinute?: string;
-  pickMinute?: string;
+  decrementSecond?: string;
+  incrementHour?: string;
+  incrementMinute?: string;
+  incrementSecond?: string;
+  nextCentury?: string;
+  nextDecade?: string;
+  nextMonth?: string;
   nextYear?: string;
-  previousYear?: string;
+  pickHour?: string;
+  pickMinute?: string;
+  pickSecond?: string;
+  previousCentury?: string;
   previousDecade?: string;
+  previousMonth?: string;
+  previousYear?: string;
+  selectDate?: string;
+  selectDecade?: string;
+  selectMonth?: string;
+  selectTime?: string;
+  selectYear?: string;
   startOfTheWeek?: number;
+  today?: string;
+  toggleMeridiem?: string;
 }
 declare enum Unit {
   seconds = 'seconds',
@@ -303,33 +308,35 @@ interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
  * as the native Date object with a little extra spice.
  */
 declare class DateTime extends Date {
+  localization: FormatLocalization;
   /**
-   * Used with Intl.DateTimeFormat
+   * Chainable way to set the {@link locale}
+   * @param value
+   * @deprecated use setLocalization with a FormatLocalization object instead
    */
-  locale: string;
+  setLocale(value: string): this;
   /**
    * Chainable way to set the {@link locale}
    * @param value
    */
-  setLocale(value: string): this;
+  setLocalization(value: FormatLocalization): this;
   /**
    * Converts a plain JS date object to a DateTime object.
    * Doing this allows access to format, etc.
    * @param  date
-   * @param locale
+   * @param locale this parameter is deprecated. Use formatLocalization instead.
+   * @param formatLocalization
    */
-  static convert(date: Date, locale?: string): DateTime;
-  /**
-   * Attempts to create a DateTime from a string. A customDateFormat is required for non US dates.
-   * @param input
-   * @param localization
-   */
-  //eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static fromString(input: string, localization: FormatLocalization): DateTime;
+  static convert(
+    date: Date,
+    locale?: string,
+    formatLocalization?: FormatLocalization
+  ): DateTime;
   /**
    * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
    */
   get clone(): DateTime;
+  static isValid(d: any): boolean;
   /**
    * Sets the current date to the start of the {@link unit} provided
    * Example: Consider a date of "April 30, 2021, 11:45:32.984 AM" => new DateTime(2021, 3, 30, 11, 45, 32, 984).startOf('month')
@@ -355,32 +362,24 @@ declare class DateTime extends Date {
    */
   manipulate(value: number, unit: Unit): this;
   /**
-   * Returns a string format.
-   * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
-   * for valid templates and locale objects
-   * @param template An object. Uses browser defaults otherwise.
-   * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
-   */
-  format(template: DateTimeFormatOptions, locale?: string): string;
-  /**
    * Return true if {@link compare} is before this date
    * @param compare The Date/DateTime to compare
    * @param unit If provided, uses {@link startOf} for
-   * comparision.
+   * comparison.
    */
   isBefore(compare: DateTime, unit?: Unit): boolean;
   /**
    * Return true if {@link compare} is after this date
    * @param compare The Date/DateTime to compare
    * @param unit If provided, uses {@link startOf} for
-   * comparision.
+   * comparison.
    */
   isAfter(compare: DateTime, unit?: Unit): boolean;
   /**
    * Return true if {@link compare} is same this date
    * @param compare The Date/DateTime to compare
    * @param unit If provided, uses {@link startOf} for
-   * comparision.
+   * comparison.
    */
   isSame(compare: DateTime, unit?: Unit): boolean;
   /**
@@ -438,6 +437,10 @@ declare class DateTime extends Date {
    * Shortcut to Date.setHours()
    */
   set hours(value: number);
+  /**
+   * Returns two digit hour, e.g. 01...10
+   * @param hourCycle Providing an hour cycle will change 00 to 24 depending on the given value.
+   */
   getHoursFormatted(hourCycle?: Intl.LocaleHourCycleKey): string;
   /**
    * Get the meridiem of the date. E.g. AM or PM.
@@ -487,11 +490,65 @@ declare class DateTime extends Date {
    * Gets the week of the year
    */
   get week(): number;
-  weeksInWeekYear(weekYear: any): 53 | 52;
+  /**
+   * Returns the number of weeks in the year
+   */
+  weeksInWeekYear(): 53 | 52;
+  /**
+   * Returns true or false depending on if the year is a leap year or not.
+   */
   get isLeapYear(): boolean;
   private computeOrdinal;
   private nonLeapLadder;
   private leapLadder;
+  //#region CDF stuff
+  private dateTimeRegex; //NOSONAR
+  private formattingTokens; //NOSONAR is regex cannot be simplified beyond what it already is
+  /**
+   * Returns a list of month values based on the current locale
+   */
+  private getAllMonths;
+  /**
+   * Replaces an expanded token set (e.g. LT/LTS)
+   */
+  private replaceTokens;
+  private match2; // 00 - 99
+  private match3; // 000 - 999
+  private match4; // 0000 - 9999
+  private match1to2; // 0 - 99
+  private matchSigned; // -inf - inf
+  private matchOffset; // +00:00 -00:00 +0000 or -0000 +00 or Z
+  private matchWord; // Word
+  private parseTwoDigitYear;
+  private offsetFromString;
+  /**
+   * z = -4, zz = -04, zzz = -0400
+   * @param date
+   * @param style
+   * @private
+   */
+  private zoneInformation;
+  private zoneExpressions;
+  private addInput;
+  private meridiemMatch;
+  private expressions;
+  private correctHours;
+  private makeParser;
+  /**
+   * Attempts to create a DateTime from a string.
+   * @param input date as string
+   * @param localization provides the date template the string is in via the format property
+   */
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static fromString(input: string, localization: FormatLocalization): DateTime;
+  /**
+   * Returns a string format.
+   * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
+   * for valid templates and locale objects
+   * @param template An optional object. If provided, method will use Intl., otherwise the localizations format properties
+   * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
+   */
+  format(template?: DateTimeFormatOptions | string, locale?: string): string;
 }
 type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
 /**
@@ -519,6 +576,8 @@ declare class Display {
    * @private
    */
   get widget(): HTMLElement | undefined;
+  get dateContainer(): HTMLElement | undefined;
+  get timeContainer(): HTMLElement | undefined;
   /**
    * Returns this visible state of the picker (shown)
    */
@@ -545,13 +604,14 @@ declare class Display {
     _classes: string[],
     _element: HTMLElement
   ): void;
-  /* eslint-enable @typescript-eslint/no-unused-vars */
   /**
    * Shows the picker and creates a Popper instance if needed.
    * Add document click event to hide when clicking outside the picker.
    * fires Events#show
    */
   show(): void;
+  private _showSetupViewMode;
+  private _showSetDefaultIfNeeded;
   createPopup(
     element: HTMLElement,
     widget: HTMLElement,
@@ -593,6 +653,7 @@ declare class Display {
    * @private
    */
   private _buildWidget;
+  private _buildWidgetSideBySide;
   /**
    * Returns true if the hours, minutes, or seconds component is turned on
    */
@@ -601,6 +662,7 @@ declare class Display {
    * Returns true if the year, month, or date component is turned on
    */
   get _hasDate(): boolean;
+  get _hasDateAndTime(): boolean;
   /**
    * Get the toolbar html based on options like buttons.today
    * @private
@@ -724,6 +786,7 @@ declare class Dates {
    * @param index
    */
   setValue(target?: DateTime, index?: number): void;
+  private _setValueNull;
 }
 declare class ErrorMessages {
   private base;
@@ -913,7 +976,7 @@ declare class Css {
    */
   decadesContainer: string;
   /**
-   * Applied to elements within the decades container, e.g. 2020, 2030
+   * Applied to elements within the decade container, e.g. 2020, 2030
    */
   decade: string;
   /**
@@ -957,6 +1020,9 @@ declare class Css {
    * Applied to the locale's weekend dates on the calendar view, e.g. Sunday, Saturday
    */
   weekend: string;
+  rangeIn: string;
+  rangeStart: string;
+  rangeEnd: string;
   //#endregion
   //#region time element
   /**
@@ -1288,7 +1354,7 @@ declare const extend: (
   Unit: typeof Unit;
   version: string;
 };
-declare const version = '6.2.10';
+declare const version = '6.4.1';
 export {
   TempusDominus,
   extend,

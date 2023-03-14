@@ -24,7 +24,7 @@ function mandatoryDate(key: string): OptionProcessorFunction {
   return ({ value, providedType, localization }) => {
     const dateTime = convertToDateTime(value, key, localization);
     if (dateTime !== undefined) {
-      dateTime.setLocale(localization.locale);
+      dateTime.setLocalization(localization);
       return dateTime;
     }
     Namespace.errorMessages.typeMismatch(key, providedType, 'DateTime or Date');
@@ -118,7 +118,7 @@ const optionProcessors: { [key: string]: OptionProcessorFunction } =
               'DateTime or Date'
             );
           }
-          dateTime.setLocale(localization.locale);
+          dateTime.setLocalization(localization);
           valueObject[i][vk] = dateTime;
         });
       }

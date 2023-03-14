@@ -75,10 +75,10 @@ export class OptionConverter {
    * Also handles complex options like disabledDates
    * @param provided An option from new providedOptions
    * @param copyTo Destination object. This was added to prevent reference copies
-   * @param path
    * @param localization
+   * @param path
    */
-  static spread(provided, copyTo, path = '', localization: FormatLocalization) {
+  static spread(provided, copyTo, localization: FormatLocalization, path = '') {
     const defaultOptions = OptionConverter.objectPath(path, DefaultOptions);
 
     const unsupportedOptions = Object.keys(provided).filter(
@@ -125,8 +125,8 @@ export class OptionConverter {
           OptionConverter.spread(
             provided[key],
             copyTo[key],
-            path,
-            localization
+            localization,
+            path
           );
         } else {
           copyTo[key] = OptionConverter.processKey(
@@ -169,7 +169,7 @@ export class OptionConverter {
         ? mergeTo.localization
         : providedOptions?.localization || DefaultOptions.localization;
 
-    OptionConverter.spread(providedOptions, newConfig, '', localization);
+    OptionConverter.spread(providedOptions, newConfig, localization, '');
 
     return newConfig;
   }
@@ -199,34 +199,7 @@ export class OptionConverter {
       return lowered;
     };
 
-    const rabbitHole = (
-      split: string[],
-      index: number,
-      optionSubgroup: unknown,
-      value: unknown
-    ) => {
-      // first round = display { ... }
-      const normalizedOptions = objectToNormalized(optionSubgroup);
-
-      const keyOption = normalizedOptions[split[index].toLowerCase()];
-      const internalObject = {};
-
-      if (keyOption === undefined) return internalObject;
-
-      // if this is another object, continue down the rabbit hole
-      if (optionSubgroup[keyOption].constructor === Object) {
-        index++;
-        internalObject[keyOption] = rabbitHole(
-          split,
-          index,
-          optionSubgroup[keyOption],
-          value
-        );
-      } else {
-        internalObject[keyOption] = value;
-      }
-      return internalObject;
-    };
+    const normalizeObject = this.normalizeObject(objectToNormalized);
     const optionsLower = objectToNormalized(options);
 
     Object.keys(eData)
@@ -246,7 +219,7 @@ export class OptionConverter {
             keyOption !== undefined &&
             options[keyOption].constructor === Object
           ) {
-            dataOptions[keyOption] = rabbitHole(
+            dataOptions[keyOption] = normalizeObject(
               split,
               1,
               options[keyOption],
@@ -261,6 +234,39 @@ export class OptionConverter {
       });
 
     return this._mergeOptions(dataOptions, options);
+  }
+
+  //todo clean this up
+  private static normalizeObject(objectToNormalized: (object) => object) {
+    const normalizeObject = (
+      split: string[],
+      index: number,
+      optionSubgroup: unknown,
+      value: unknown
+    ) => {
+      // first round = display { ... }
+      const normalizedOptions = objectToNormalized(optionSubgroup);
+
+      const keyOption = normalizedOptions[split[index].toLowerCase()];
+      const internalObject = {};
+
+      if (keyOption === undefined) return internalObject;
+
+      // if this is another object, continue down the rabbit hole
+      if (optionSubgroup[keyOption].constructor === Object) {
+        index++;
+        internalObject[keyOption] = normalizeObject(
+          split,
+          index,
+          optionSubgroup[keyOption],
+          value
+        );
+      } else {
+        internalObject[keyOption] = value;
+      }
+      return internalObject;
+    };
+    return normalizeObject;
   }
 
   /**
@@ -370,6 +376,12 @@ export class OptionConverter {
           'maxDate is before minDate'
         );
       }
+    }
+
+    if (config.multipleDates && config.dateRange) {
+      Namespace.errorMessages.conflictingConfiguration(
+        'Cannot uss option "multipleDates" with "dateRange"'
+      );
     }
   }
 }

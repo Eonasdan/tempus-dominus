@@ -9,6 +9,8 @@ const { minify } = require('terser');
 const sass = require('sass');
 const chokidar = require('chokidar');
 const rootDirectory = path.join('.','src','docs','partials');
+const ParvusServer = require('@eonasdan/parvus-server').ParvusServer;
+
 
 class PageMeta {
   file;
@@ -602,6 +604,92 @@ ${this.siteMap}
       }
     );
   }
+
+  async watcher() {
+    const parvusServer = new ParvusServer({
+      port: 3001,
+      directory: `./docs`,
+      middlewares: []
+    });
+
+    await parvusServer.startAsync();
+
+    const watcher = chokidar.watch(
+      [
+        path.join('src', 'docs', 'partials'),
+        path.join('src', 'docs', 'styles'),
+        path.join('src', 'docs', 'templates'),
+        path.join('src', 'docs', 'js'),
+        path.join('src', 'docs', 'assets'),
+        'dist/',
+      ],
+      {
+        ignored: /(^|[\/\\])\../, // ignore dotfiles
+        //ignored: /(^|[\/\\])\..|make\.js|browser-sync-config\.js/g, // ignore dotfiles
+        ignoreInitial: true,
+      }
+    );
+
+    let lastChange = '';
+    let lastChangeFile = '';
+
+    const handleChange = (event, file) => {
+      if (file.includes('.map.')) return;
+      log(`${event}: ${file}`);
+      try {
+        if (file.startsWith('dist')) {
+          builder.updateDist();
+        }
+        if (file.startsWith(path.join('src', 'docs', 'assets'))) {
+          builder.copyAssets();
+        }
+        if (file.startsWith(path.join('src', 'docs', 'partials'))) {
+          //reading the file stats seems to trigger this twice, so if the same file changed in less then a second, ignore
+          if (
+            lastChange === formatter.format(new Date()) &&
+            lastChangeFile === file
+          ) {
+            log(`Skipping duplicate trigger`);
+            return;
+          }
+          builder.updatePages();
+        }
+        if (file.startsWith(path.join('src', 'docs', 'styles'))) {
+          builder.updateCss();
+        }
+        if (file.startsWith(path.join('src', 'docs', 'templates'))) {
+          builder.updateAll();
+        }
+        if (file.startsWith(path.join('src', 'docs', 'js'))) {
+          builder.minifyJs().then();
+        }
+        log('Update successful');
+        cleanTimer(() => {
+          parvusServer.refreshBrowser();
+        });
+        lastChange = formatter.format(new Date());
+        lastChangeFile = file;
+        console.log('');
+      } catch (e) {
+        log('Something went wrong');
+        console.log(e);
+        console.log('');
+      }
+    };
+
+    const cleanTimer = (callback, delay = 1000) => {
+      let timer = setTimeout(() => {
+        callback();
+        clearTimeout(timer);
+      }, delay);
+    }
+
+    watcher
+      .on('all', handleChange)
+      .on('ready', () => {
+        console.log('[Make] Watching files...');
+      });
+  }
 }
 
 const formatter = new Intl.DateTimeFormat(undefined, {
@@ -632,67 +720,5 @@ const builder = new Build();
 builder.updateAll();
 
 if (process.argv.slice(2)[0] === '--watch') {
-  const watcher = chokidar.watch(
-    [
-      path.join('src', 'docs', 'partials'),
-      path.join('src', 'docs', 'styles'),
-      path.join('src', 'docs', 'templates'),
-      path.join('src', 'docs', 'js'),
-      path.join('src', 'docs', 'assets'),
-      'dist/',
-    ],
-    {
-      ignored: /(^|[\/\\])\../, // ignore dotfiles
-      //ignored: /(^|[\/\\])\..|make\.js|browser-sync-config\.js/g, // ignore dotfiles
-      ignoreInitial: true,
-    }
-  );
-
-  let lastChange = '';
-  let lastChangeFile = '';
-
-  const handleChange = (event, file) => {
-    if (file.includes('.map.')) return;
-    log(`${event}: ${file}`);
-    try {
-      if (file.startsWith('dist')) {
-        builder.updateDist();
-      }
-      if (file.startsWith(path.join('src', 'docs', 'assets'))) {
-        builder.copyAssets();
-      }
-      if (file.startsWith(path.join('src', 'docs', 'partials'))) {
-        //reading the file stats seems to trigger this twice, so if the same file changed in less then a second, ignore
-        if (
-          lastChange === formatter.format(new Date()) &&
-          lastChangeFile === file
-        ) {
-          log(`Skipping duplicate trigger`);
-          return;
-        }
-        builder.updatePages();
-      }
-      if (file.startsWith(path.join('src', 'docs', 'styles'))) {
-        builder.updateCss();
-      }
-      if (file.startsWith(path.join('src', 'docs', 'templates'))) {
-        builder.updateAll();
-      }
-      if (file.startsWith(path.join('src', 'docs', 'js'))) {
-        builder.minifyJs().then();
-      }
-      log('\x1b[32m Update successful');
-      lastChange = formatter.format(new Date());
-      lastChangeFile = file;
-      console.log('');
-    } catch (e) {
-      log('Something went wrong');
-      console.log(e);
-      console.log('');
-    }
-  };
-
-  watcher
-    .on('all', handleChange)
-    .on('ready', () => console.log('[Make] Watching files...'));
+  builder.watcher().then();
 }

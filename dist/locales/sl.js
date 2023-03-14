@@ -1,6 +1,6 @@
 /*!
-  * Tempus Dominus v6.2.10 (https://getdatepicker.com/)
-  * Copyright 2013-2022 Jonathan Peterson
+  * Tempus Dominus v6.4.1 (https://getdatepicker.com/)
+  * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f((g.tempusDominus=g.tempusDominus||{},g.tempusDominus.locales=g.tempusDominus.locales||{},g.tempusDominus.locales.sl={})));})(this,(function(exports){'use strict';const name = 'sl';

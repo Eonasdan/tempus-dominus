@@ -46,17 +46,9 @@ export default class Dates {
    * @param date
    */
   formatInput(date: DateTime): string {
-    const components = this.optionsStore.options.display.components;
     if (!date) return '';
-    return date.format({
-      year: components.calendar && components.year ? 'numeric' : undefined,
-      month: components.calendar && components.month ? '2-digit' : undefined,
-      day: components.calendar && components.date ? '2-digit' : undefined,
-      hour: components.clock && components.hours ? '2-digit' : undefined,
-      minute: components.clock && components.minutes ? '2-digit' : undefined,
-      second: components.clock && components.seconds ? '2-digit' : undefined,
-      hourCycle: this.optionsStore.options.localization.hourCycle,
-    });
+    date.localization = this.optionsStore.options.localization;
+    return date.format();
   }
 
   /**
@@ -86,7 +78,7 @@ export default class Dates {
     }
     const converted = this.parseInput(value);
     if (converted) {
-      converted.setLocale(this.optionsStore.options.localization.locale);
+      converted.setLocalization(this.optionsStore.options.localization);
       this.setValue(converted, index);
     }
   }
@@ -149,6 +141,8 @@ export default class Dates {
       isValid: true,
     } as ChangeEvent);
     this._dates = [];
+    if (this.optionsStore.input) this.optionsStore.input.value = '';
+    this._eventEmitters.updateDisplay.emit('all');
   }
 
   /**
@@ -171,7 +165,10 @@ export default class Dates {
     if (!this.optionsStore.input) return;
 
     let newValue = this.formatInput(target);
-    if (this.optionsStore.options.multipleDates) {
+    if (
+      this.optionsStore.options.multipleDates ||
+      this.optionsStore.options.dateRange
+    ) {
       newValue = this._dates
         .map((d) => this.formatInput(d))
         .join(this.optionsStore.options.multipleDatesSeparator);
@@ -204,29 +201,7 @@ export default class Dates {
 
     // case of calling setValue(null)
     if (!target) {
-      if (
-        !this.optionsStore.options.multipleDates ||
-        this._dates.length === 1 ||
-        isClear
-      ) {
-        this.optionsStore.unset = true;
-        this._dates = [];
-      } else {
-        this._dates.splice(index, 1);
-      }
-
-      this.updateInput();
-
-      this._eventEmitters.triggerEvent.emit({
-        type: Namespace.events.change,
-        date: undefined,
-        oldDate,
-        isClear,
-        isValid: true,
-      } as ChangeEvent);
-
-      this._eventEmitters.updateDisplay.emit('all');
-      return;
+      this._setValueNull(isClear, index, oldDate);
     }
 
     index = index || 0;
@@ -240,7 +215,10 @@ export default class Dates {
       target.seconds = 0;
     }
 
-    if (this.validation.isValid(target)) {
+    if (
+      this.validation.isValid(target) &&
+      this.validation.dateRangeIsValid(this._dates, index, target)
+    ) {
       this._dates[index] = target;
       this._eventEmitters.updateViewDate.emit(target.clone);
 
@@ -279,5 +257,30 @@ export default class Dates {
       date: target,
       oldDate,
     } as FailEvent);
+  }
+
+  private _setValueNull(isClear: boolean, index: number, oldDate: DateTime) {
+    if (
+      !this.optionsStore.options.multipleDates ||
+      this._dates.length === 1 ||
+      isClear
+    ) {
+      this.optionsStore.unset = true;
+      this._dates = [];
+    } else {
+      this._dates.splice(index, 1);
+    }
+
+    this.updateInput();
+
+    this._eventEmitters.triggerEvent.emit({
+      type: Namespace.events.change,
+      date: undefined,
+      oldDate,
+      isClear,
+      isValid: true,
+    } as ChangeEvent);
+
+    this._eventEmitters.updateDisplay.emit('all');
   }
 }

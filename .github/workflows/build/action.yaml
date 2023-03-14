@@ -1,0 +1,32 @@
+name: Build
+description: Build
+
+inputs:
+  GITHUB_TOKEN:
+    description: 'A Github PAT'
+    required: true
+  QODANA_TOKEN:
+    description: 'A Qodana token'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Unit tests
+      shell: bash
+      run: npm run test:coverage
+    - name: Build
+      shell: bash
+      run: npm run build
+    - name: Build docs
+      shell: bash
+      run: npm run docs
+    - name: 'Qodana Scan'
+      uses: JetBrains/qodana-action@main
+      env:
+        QODANA_TOKEN: ${{ inputs.QODANA_TOKEN }}
+    # Send coverage report to Coveralls
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ inputs.GITHUB_TOKEN }}

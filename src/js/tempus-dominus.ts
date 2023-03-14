@@ -55,8 +55,8 @@ class TempusDominus {
 
     this.optionsStore.element = element;
     this._initializeOptions(options, DefaultOptions, true);
-    this.optionsStore.viewDate.setLocale(
-      this.optionsStore.options.localization.locale
+    this.optionsStore.viewDate.setLocalization(
+      this.optionsStore.options.localization
     );
     this.optionsStore.unset = true;
 
@@ -84,8 +84,8 @@ class TempusDominus {
 
   set viewDate(value) {
     this.optionsStore.viewDate = value;
-    this.optionsStore.viewDate.setLocale(
-      this.optionsStore.options.localization.locale
+    this.optionsStore.viewDate.setLocalization(
+      this.optionsStore.options.localization
     );
     this.display._update(
       this.optionsStore.currentView === 'clock' ? 'clock' : 'calendar'
@@ -276,11 +276,6 @@ class TempusDominus {
 
       this.optionsStore.input?.dispatchEvent(
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        new CustomEvent(event.type, { detail: event as any })
-      );
-
-      this.optionsStore.input?.dispatchEvent(
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         new CustomEvent('change', { detail: event as any })
       );
     }
@@ -354,8 +349,8 @@ class TempusDominus {
 
     OptionConverter._validateConflicts(newConfig);
 
-    newConfig.viewDate = newConfig.viewDate.setLocale(
-      newConfig.localization.locale
+    newConfig.viewDate = newConfig.viewDate.setLocalization(
+      newConfig.localization
     );
 
     if (!this.optionsStore.viewDate.isSame(newConfig.viewDate)) {
@@ -472,6 +467,7 @@ class TempusDominus {
     if (
       // options is disabled
       !this.optionsStore.options.promptTimeOnDateChange ||
+      this.optionsStore.options.multipleDates ||
       this.optionsStore.options.display.inline ||
       this.optionsStore.options.display.sideBySide ||
       // time is disabled
@@ -606,7 +602,7 @@ const extend = function (plugin, option = undefined) {
   return tempusDominus;
 };
 
-const version = '6.2.10';
+const version = '6.4.1';
 
 const tempusDominus = {
   TempusDominus,

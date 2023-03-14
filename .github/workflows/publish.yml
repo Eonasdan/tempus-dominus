@@ -4,31 +4,28 @@ on:
     types: [ created ]
   workflow_dispatch:
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Setup
+        uses: ./.github/workflows/base
+      - name: Build
+        uses: ./.github/workflows/build
         with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+      - name: Deploy Docs
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          keep_files: true
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.6
+      - name: Nuget
+        uses: ./.github/workflows/nuget
         with:
-          nuget-version: '6.x'
-      - name: Pack NuGet
-        working-directory: ./src/nuget
-        run: |
-          nuget pack TempusDominus.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
-          nuget pack TempusDominus.scss.nuspec -Verbosity detailed -NonInteractive -NoPackageAnalysis
-      - name: Push Nuget
-        working-directory: ./src/nuget
-        run: |
-          nuget push TempusDominus.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}
-          nuget push TempusDominus.scss.*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

@@ -1,8 +1,11 @@
+@use 'sass:color';
+
 $td-light: #fff !default;
 $td-widget-background: $td-light !default;
 $td-font-color: #000 !default;
 $td-timepicker-font-size: 1.2em !default;
 $td-active-bg: #0d6efd !default;
+$td-range-bg: color.scale($td-active-bg, $lightness: -40%);
 $td-active-color: $td-light !default;
 $td-active-border-color: $td-light;
 $td-border-radius: 999px !default;
@@ -19,6 +22,7 @@ $td-dark: #1b1b1b !default;
 $td-dark-widget-background: $td-dark !default;
 $td-dark-font-color: #e3e3e3;
 $td-dark-active-bg: #4db2ff !default;
+$td-dark-range-bg: color.scale($td-dark-active-bg, $lightness: -40%);
 $td-dark-active-color: #fff !default;
 $td-dark-active-border-color: $td-dark;
 $td-dark-btn-hover-bg: rgb(35, 38, 39) !default;

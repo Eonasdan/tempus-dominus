@@ -68,6 +68,14 @@ export default class Display {
     return this._widget;
   }
 
+  get dateContainer(): HTMLElement | undefined {
+    return this.widget?.querySelector(`div.${Namespace.css.dateContainer}`);
+  }
+
+  get timeContainer(): HTMLElement | undefined {
+    return this.widget?.querySelector(`div.${Namespace.css.timeContainer}`);
+  }
+
   /**
    * Returns this visible state of the picker (shown)
    */
@@ -145,7 +153,6 @@ export default class Display {
   ) {
     // implemented in plugin
   }
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   /**
    * Shows the picker and creates a Popper instance if needed.
@@ -154,79 +161,12 @@ export default class Display {
    */
   show(): void {
     if (this.widget == undefined) {
-      if (this.dates.picked.length == 0) {
-        if (
-          this.optionsStore.options.useCurrent &&
-          !this.optionsStore.options.defaultDate
-        ) {
-          const date = new DateTime().setLocale(
-            this.optionsStore.options.localization.locale
-          );
-          if (!this.optionsStore.options.keepInvalid) {
-            let tries = 0;
-            let direction = 1;
-            if (
-              this.optionsStore.options.restrictions.maxDate?.isBefore(date)
-            ) {
-              direction = -1;
-            }
-            while (!this.validation.isValid(date)) {
-              date.manipulate(direction, Unit.date);
-              if (tries > 31) break;
-              tries++;
-            }
-          }
-          this.dates.setValue(date);
-        }
-
-        if (this.optionsStore.options.defaultDate) {
-          this.dates.setValue(this.optionsStore.options.defaultDate);
-        }
-      }
+      this._showSetDefaultIfNeeded();
 
       this._buildWidget();
       this._updateTheme();
 
-      // If modeView is only clock
-      const onlyClock = this._hasTime && !this._hasDate;
-
-      // reset the view to the clock if there's no date components
-      if (onlyClock) {
-        this.optionsStore.currentView = 'clock';
-        this._eventEmitters.action.emit({
-          e: null,
-          action: ActionTypes.showClock,
-        });
-      }
-      // otherwise return to the calendar view
-      else if (!this.optionsStore.currentCalendarViewMode) {
-        this.optionsStore.currentCalendarViewMode =
-          this.optionsStore.minimumCalendarViewMode;
-      }
-
-      if (
-        !onlyClock &&
-        this.optionsStore.options.display.viewMode !== 'clock'
-      ) {
-        if (this._hasTime) {
-          if (!this.optionsStore.options.display.sideBySide) {
-            Collapse.hideImmediately(
-              this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
-            );
-          } else {
-            Collapse.show(
-              this.widget.querySelector(`div.${Namespace.css.timeContainer}`)
-            );
-          }
-        }
-        Collapse.show(
-          this.widget.querySelector(`div.${Namespace.css.dateContainer}`)
-        );
-      }
-
-      if (this._hasDate) {
-        this._showMode();
-      }
+      this._showSetupViewMode();
 
       if (!this.optionsStore.options.display.inline) {
         // If needed to change the parent container
@@ -275,6 +215,69 @@ export default class Display {
     }
     this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
     this._isVisible = true;
+  }
+
+  private _showSetupViewMode() {
+    // If modeView is only clock
+    const onlyClock = this._hasTime && !this._hasDate;
+
+    // reset the view to the clock if there's no date components
+    if (onlyClock) {
+      this.optionsStore.currentView = 'clock';
+      this._eventEmitters.action.emit({
+        e: null,
+        action: ActionTypes.showClock,
+      });
+    }
+    // otherwise return to the calendar view
+    else if (!this.optionsStore.currentCalendarViewMode) {
+      this.optionsStore.currentCalendarViewMode =
+        this.optionsStore.minimumCalendarViewMode;
+    }
+
+    if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
+      if (this._hasTime) {
+        if (!this.optionsStore.options.display.sideBySide) {
+          Collapse.hideImmediately(this.timeContainer);
+        } else {
+          Collapse.show(this.timeContainer);
+        }
+      }
+      Collapse.show(this.dateContainer);
+    }
+
+    if (this._hasDate) {
+      this._showMode();
+    }
+  }
+
+  private _showSetDefaultIfNeeded() {
+    if (this.dates.picked.length != 0) return;
+
+    if (
+      this.optionsStore.options.useCurrent &&
+      !this.optionsStore.options.defaultDate
+    ) {
+      const date = new DateTime().setLocalization(
+        this.optionsStore.options.localization
+      );
+      if (!this.optionsStore.options.keepInvalid) {
+        let tries = 0;
+        let direction = 1;
+        if (this.optionsStore.options.restrictions.maxDate?.isBefore(date)) {
+          direction = -1;
+        }
+        while (!this.validation.isValid(date) && tries > 31) {
+          date.manipulate(direction, Unit.date);
+          tries++;
+        }
+      }
+      this.dates.setValue(date);
+    }
+
+    if (this.optionsStore.options.defaultDate) {
+      this.dates.setValue(this.optionsStore.options.defaultDate);
+    }
   }
 
   async createPopup(
@@ -491,11 +494,7 @@ export default class Display {
     if (this._isVisible) {
       this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.hide,
-        date: this.optionsStore.unset
-          ? null
-          : this.dates.lastPicked
-          ? this.dates.lastPicked.clone
-          : void 0,
+        date: this.optionsStore.unset ? null : this.dates.lastPicked?.clone,
       } as HideEvent);
       this._isVisible = false;
     }
@@ -563,27 +562,8 @@ export default class Display {
       template.classList.add('calendarWeeks');
     }
 
-    if (
-      this.optionsStore.options.display.sideBySide &&
-      this._hasDate &&
-      this._hasTime
-    ) {
-      template.classList.add(Namespace.css.sideBySide);
-      if (this.optionsStore.options.display.toolbarPlacement === 'top') {
-        template.appendChild(toolbar);
-      }
-      const row = document.createElement('div');
-      row.classList.add('td-row');
-      dateView.classList.add('td-half');
-      timeView.classList.add('td-half');
-
-      row.appendChild(dateView);
-      row.appendChild(timeView);
-      template.appendChild(row);
-      if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
-        template.appendChild(toolbar);
-      }
-      this._widget = template;
+    if (this.optionsStore.options.display.sideBySide && this._hasDateAndTime) {
+      this._buildWidgetSideBySide(template, dateView, timeView, toolbar);
       return;
     }
 
@@ -591,23 +571,28 @@ export default class Display {
       template.appendChild(toolbar);
     }
 
-    if (this._hasDate) {
-      if (this._hasTime) {
-        dateView.classList.add(Namespace.css.collapse);
-        if (this.optionsStore.options.display.viewMode !== 'clock')
-          dateView.classList.add(Namespace.css.show);
+    const setupComponentView = (hasFirst, hasSecond, element, shouldShow) => {
+      if (!hasFirst) return;
+      if (hasSecond) {
+        element.classList.add(Namespace.css.collapse);
+        if (shouldShow) element.classList.add(Namespace.css.show);
       }
-      template.appendChild(dateView);
-    }
+      template.appendChild(element);
+    };
 
-    if (this._hasTime) {
-      if (this._hasDate) {
-        timeView.classList.add(Namespace.css.collapse);
-        if (this.optionsStore.options.display.viewMode === 'clock')
-          timeView.classList.add(Namespace.css.show);
-      }
-      template.appendChild(timeView);
-    }
+    setupComponentView(
+      this._hasDate,
+      this._hasTime,
+      dateView,
+      this.optionsStore.options.display.viewMode !== 'clock'
+    );
+
+    setupComponentView(
+      this._hasTime,
+      this._hasDate,
+      timeView,
+      this.optionsStore.options.display.viewMode === 'clock'
+    );
 
     if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
       template.appendChild(toolbar);
@@ -618,6 +603,30 @@ export default class Display {
     arrow.setAttribute('data-popper-arrow', '');
     template.appendChild(arrow);
 
+    this._widget = template;
+  }
+
+  private _buildWidgetSideBySide(
+    template: HTMLDivElement,
+    dateView: HTMLDivElement,
+    timeView: HTMLDivElement,
+    toolbar: HTMLDivElement
+  ) {
+    template.classList.add(Namespace.css.sideBySide);
+    if (this.optionsStore.options.display.toolbarPlacement === 'top') {
+      template.appendChild(toolbar);
+    }
+    const row = document.createElement('div');
+    row.classList.add('td-row');
+    dateView.classList.add('td-half');
+    timeView.classList.add('td-half');
+
+    row.appendChild(dateView);
+    row.appendChild(timeView);
+    template.appendChild(row);
+    if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
+      template.appendChild(toolbar);
+    }
     this._widget = template;
   }
 
@@ -643,6 +652,10 @@ export default class Display {
         this.optionsStore.options.display.components.month ||
         this.optionsStore.options.display.components.date)
     );
+  }
+
+  get _hasDateAndTime(): boolean {
+    return this._hasDate && this._hasTime;
   }
 
   /**
