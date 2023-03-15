@@ -1,0 +1,133 @@
+<page-body>
+  <div class='row'>
+    <p>
+      You can use this plugin to set the global default icons to Bootstrap Icons v1. This plugin requires Bootstrap Icons v1 resources to be loaded.
+    </p>
+  </div>
+
+  <div class='row'>
+    <div class='container'>
+      <div class='row'>
+        <div class='col-sm-6'>
+          <label for='datetimepicker1Input' class='form-label'>Simple picker</label>
+          <div
+            class='input-group'
+            id='datetimepicker1'
+            data-td-target-input='nearest'
+            data-td-target-toggle='nearest'
+          >
+            <input
+              id='datetimepicker1Input'
+              type='text'
+              class='form-control'
+              data-td-target='#datetimepicker1'
+            />
+            <span
+              class='input-group-text'
+              data-td-target='#datetimepicker1'
+              data-td-toggle='datetimepicker'
+            >
+               <i class='bi bi-calendar-fill'></i>
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src='/6/js/plugins/bi-one.js'></script>
+    <script type='text/javascript'>
+      tempusDominus.extend(window.tempusDominus.plugins.bi_one.load);
+      const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
+    </script>
+  </div>
+
+  <div class='row'>
+    <pre>
+<code class='language-js'>//example picker
+const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(&#39;datetimepicker1&#39;));
+
+//to set globally
+tempusDominus.extend(window.tempusDominus.plugins.bi_one.load);
+//or
+import {load, biOneIcons} from 'tempusDominus/plugins/bi-one'
+tempusDominus.extend(load);
+
+// otherwise to set icons to an individual picker
+datetimepicker1.updateOptions({ display: icons: window.tempusDominus.plugins.bi_one.biOneIcons});
+//or
+datetimepicker1.updateOptions({ display: icons: biOneIcons});</code>
+    </pre>
+  </div>
+
+  <div class='row'>
+    <h2>Boostrap Icons v1 Icons</h2>
+    <table class='table table-striped'>
+      <caption>Boostrap Icons</caption>
+      <tr>
+        <th>Option</th>
+        <th>Value</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>icons</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>time</td>
+        <td>bi bi-clock</td>
+        <td><i class='bi bi-clock' aria-hidden='true'></i></td>
+      </tr>
+      <tr>
+        <td>date</td>
+        <td>bi bi-calendar-week</td>
+        <td><i class='bi bi-calendar-week' aria-hidden='true'></i></td>
+      </tr>
+      <tr>
+        <td>up</td>
+        <td>bi bi-arrow-up</td>
+        <td><i class='bi bi-arrow-up' aria-hidden='true'></i></td>
+      </tr>
+      <tr>
+        <td>down</td>
+        <td>bi bi-arrow-down</td>
+        <td><i class='bi bi-arrow-down' aria-hidden='true'></i></td>
+      </tr>
+      <tr>
+        <td>previous</td>
+        <td>bi bi-chevron-left</td>
+        <td><i class='bi bi-chevron-left' aria-hidden='true'></i></td>
+      </tr>
+      <tr>
+        <td>next</td>
+        <td>bi bi-chevron-right</td>
+        <td><i class='bi bi-chevron-right' aria-hidden='true'></i></td>
+      </tr>
+      <tr>
+        <td>today</td>
+        <td>bi bi-calendar-check</td>
+        <td><i class='bi bi-calendar-check' aria-hidden='true'></i></td>
+      </tr>
+      <tr>
+        <td>clear</td>
+        <td>bi bi-trash</td>
+        <td><i class='bi bi-trash' aria-hidden='true'></i></td>
+      </tr>
+      <tr>
+        <td>close</td>
+        <td>bi bi-x</td>
+        <td><i class='bi bi-x' aria-hidden='true'></i></td>
+      </tr>
+    </table>
+  </div>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</page-body>
+
+<page-meta>
+  <title>Plugins - Bootstrap Icons v1</title>
+  <post-date>03/15/2023</post-date>
+  <update-date>03/15/2023</update-date>
+  <excerpt>How to use Bootstrap Icons v1 plugin with Tempus Dominus.
+  </excerpt>
+  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
+</page-meta>
