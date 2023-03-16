@@ -8,7 +8,7 @@ on:
       - development
     paths:
       - src
-
+      
 jobs:
   main:
     runs-on: ubuntu-latest
