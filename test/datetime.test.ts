@@ -603,4 +603,10 @@ test('format', () => {
   expect(dateTime.format('dddd, MMMM, dd yy h:mm:ss:fff')).toBe(
     'Tuesday, March, 14 23 10:25:42:500'
   );
+
+  expect(dateTime.format('dd-MMM-yyyy')).toBe('14-Mar-2023');
+
+  expect(DateTime.fromString('01-Mar-2023', { format: 'dd-MMM-yyyy' })).toEqual(
+    new DateTime(2023, 3 - 1, 1, 0, 0, 0, 0)
+  );
 });

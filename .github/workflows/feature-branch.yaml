@@ -6,9 +6,9 @@ on:
       - 'feature/*'
       - 'bug/*'
       - development
-#    paths:
-#      - src
-
+    paths:
+      - src
+      
 jobs:
   main:
     runs-on: ubuntu-latest

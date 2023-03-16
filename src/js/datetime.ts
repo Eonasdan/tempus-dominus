@@ -599,10 +599,10 @@ export class DateTime extends Date {
 
   private dateTimeRegex =
     //is regex cannot be simplified beyond what it already is
-    /(\[[^[\]]*])|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}|Z{1,2}/g; //NOSONAR
+    /(\[[^[\]]*])|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}/g; //NOSONAR
 
   private formattingTokens =
-    /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g; //NOSONAR is regex cannot be simplified beyond what it already is
+    /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?)/g; //NOSONAR is regex cannot be simplified beyond what it already is
 
   /**
    * Returns a list of month values based on the current locale
@@ -640,7 +640,7 @@ export class DateTime extends Date {
   private match1to2 = /\d\d?/; // 0 - 99
   private matchSigned = /[+-]?\d+/; // -inf - inf
   private matchOffset = /[+-]\d\d:?(\d\d)?|Z/; // +00:00 -00:00 +0000 or -0000 +00 or Z
-  private matchWord = /[^\d_:/,()\s]+/; // Word
+  private matchWord = /[^\d_:/,\-()\s]+/; // Word
 
   private parseTwoDigitYear(input) {
     input = +input;
@@ -950,9 +950,12 @@ export class DateTime extends Date {
       // zzz: this.zoneInformation(dateTime, 'zzz') //-0400
     };
 
-    return formatString.replace(this.dateTimeRegex, (match, $1) => {
-      return $1 || matches[match];
-    });
+    return formatString
+      .replace(this.dateTimeRegex, (match, $1) => {
+        return $1 || matches[match];
+      })
+      .replace(/\[/g, '')
+      .replace(/]/g, '');
   }
 
   //#endregion CDF stuff
