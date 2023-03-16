@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.4.1 (https://getdatepicker.com/)
+  * Tempus Dominus v6.4.3 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -123,7 +123,7 @@ class ErrorMessages {
      * customDateFormat errors
      */
     customDateFormatError(message) {
-        const error = new TdError(`${this.base} customDateFormat: ${message}`);
+        const error = new TdError(`${this.base} Custom Date Format: ${message}`);
         error.code = 9;
         throw error;
     }
@@ -481,15 +481,15 @@ class DateTime extends Date {
         //#region CDF stuff
         this.dateTimeRegex = 
         //is regex cannot be simplified beyond what it already is
-        /(\[[^[\]]*])|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}|Z{1,2}/g; //NOSONAR
-        this.formattingTokens = /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|z|zz?z?)/g; //NOSONAR is regex cannot be simplified beyond what it already is
+        /(\[[^[\]]*])|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}/g; //NOSONAR
+        this.formattingTokens = /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?)/g; //NOSONAR is regex cannot be simplified beyond what it already is
         this.match2 = /\d\d/; // 00 - 99
         this.match3 = /\d{3}/; // 000 - 999
         this.match4 = /\d{4}/; // 0000 - 9999
         this.match1to2 = /\d\d?/; // 0 - 99
         this.matchSigned = /[+-]?\d+/; // -inf - inf
         this.matchOffset = /[+-]\d\d:?(\d\d)?|Z/; // +00:00 -00:00 +0000 or -0000 +00 or Z
-        this.matchWord = /[^\d_:/,()\s]+/; // Word
+        this.matchWord = /[^\d_:/,\-()\s]+/; // Word
         this.zoneExpressions = [
             this.matchOffset,
             (obj, input) => {
@@ -1198,9 +1198,12 @@ class DateTime extends Date {
             // zz: this.zoneInformation(dateTime, 'zz'), //-04
             // zzz: this.zoneInformation(dateTime, 'zzz') //-0400
         };
-        return formatString.replace(this.dateTimeRegex, (match, $1) => {
+        return formatString
+            .replace(this.dateTimeRegex, (match, $1) => {
             return $1 || matches[match];
-        });
+        })
+            .replace(/\[/g, '')
+            .replace(/]/g, '');
     }
 }
 
@@ -4536,7 +4539,7 @@ const extend = function (plugin, option = undefined) {
     }
     return tempusDominus;
 };
-const version = '6.4.1';
+const version = '6.4.3';
 const tempusDominus = {
     TempusDominus,
     extend,
