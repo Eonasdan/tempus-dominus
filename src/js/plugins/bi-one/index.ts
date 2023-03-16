@@ -10,7 +10,7 @@ const biOneIcons = {
   next: 'bi bi-chevron-right',
   today: 'bi bi-calendar-check',
   clear: 'bi bi-trash',
-  close: 'bi bi-x'
+  close: 'bi bi-x',
 };
 
 // noinspection JSUnusedGlobalSymbols

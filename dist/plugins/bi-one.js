@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.4.1 (https://getdatepicker.com/)
+  * Tempus Dominus v6.4.3 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -14,7 +14,7 @@ const biOneIcons = {
     next: 'bi bi-chevron-right',
     today: 'bi bi-calendar-check',
     clear: 'bi bi-trash',
-    close: 'bi bi-x'
+    close: 'bi bi-x',
 };
 // noinspection JSUnusedGlobalSymbols
 const load = (_, __, tdFactory) => {
