@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.4.3 (https://getdatepicker.com/)
+  * Tempus Dominus v6.4.4 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -2196,6 +2196,7 @@ class Dates {
         // case of calling setValue(null)
         if (!target) {
             this._setValueNull(isClear, index, oldDate);
+            return;
         }
         index = index || 0;
         target = target.clone;
@@ -4539,7 +4540,7 @@ const extend = function (plugin, option = undefined) {
     }
     return tempusDominus;
 };
-const version = '6.4.3';
+const version = '6.4.4';
 const tempusDominus = {
     TempusDominus,
     extend,
