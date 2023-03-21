@@ -1354,7 +1354,7 @@ declare const extend: (
   Unit: typeof Unit;
   version: string;
 };
-declare const version = '6.4.3';
+declare const version = '6.4.4';
 export {
   TempusDominus,
   extend,
