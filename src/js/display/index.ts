@@ -171,14 +171,16 @@ export default class Display {
       if (!this.optionsStore.options.display.inline) {
         // If needed to change the parent container
         const container = this.optionsStore.options?.container || document.body;
+        const placement = this.optionsStore.options?.display?.placement || 'bottom';
+
         container.appendChild(this.widget);
         this.createPopup(this.optionsStore.element, this.widget, {
           modifiers: [{ name: 'eventListeners', enabled: true }],
           //#2400
           placement:
             document.documentElement.dir === 'rtl'
-              ? 'bottom-end'
-              : 'bottom-start',
+              ? `${placement}-end`
+              : `${placement}-start`,
         }).then();
       } else {
         this.optionsStore.element.appendChild(this.widget);
