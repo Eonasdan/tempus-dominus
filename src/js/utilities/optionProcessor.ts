@@ -134,6 +134,7 @@ const optionProcessors: { [key: string]: OptionProcessorFunction } =
       'decades',
     ]),
     theme: validKeyOption(['light', 'dark', 'auto']),
+    placement: validKeyOption(['top', 'bottom']),
     meta: ({ value }) => value,
     dayViewHeaderFormat: ({ value }) => value,
     container: ({ value, path }) => {
