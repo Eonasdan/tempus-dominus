@@ -40,6 +40,7 @@ export default interface Options {
     inline?: boolean;
     keepOpen?: boolean;
     theme?: 'light' | 'dark' | 'auto';
+    placement?: 'top' | 'bottom';
   };
   keepInvalid?: boolean;
   localization?: Localization;

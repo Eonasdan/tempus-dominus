@@ -45,6 +45,7 @@ const DefaultOptions: Options = {
     },
     inline: false,
     theme: 'auto',
+    placement: 'bottom',
   },
   keepInvalid: false,
   localization: {
