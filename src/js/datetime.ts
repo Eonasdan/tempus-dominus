@@ -117,7 +117,7 @@ export class DateTime extends Date {
   }
 
   /**
-   * Chainable way to set the {@link locale}
+   * Chainable way to set the {@link localization}
    * @param value
    */
   setLocalization(value: FormatLocalization): this {

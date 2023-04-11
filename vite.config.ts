@@ -11,5 +11,6 @@ export default defineConfig({
     reporters: process.env.GITHUB_ACTIONS
       ? ['default', new GithubActionsReporter()]
       : 'default',
+    environment: 'jsdom',
   },
 });

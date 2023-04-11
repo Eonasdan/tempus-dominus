@@ -596,7 +596,7 @@
           return this;
       }
       /**
-       * Chainable way to set the {@link locale}
+       * Chainable way to set the {@link localization}
        * @param value
        */
       setLocalization(value) {
@@ -1307,27 +1307,11 @@
        */
       isValid(targetDate, granularity) {
           if (!this._enabledDisabledDatesIsValid(granularity, targetDate))
-              return false;
-          if (granularity !== exports.Unit.month &&
-              granularity !== exports.Unit.year &&
-              this.optionsStore.options.restrictions.daysOfWeekDisabled?.length > 0 &&
-              this.optionsStore.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
-              return false;
-          }
-          if (!this._minMaxIsValid(granularity, targetDate))
-              return false;
-          if (granularity === exports.Unit.hours ||
-              granularity === exports.Unit.minutes ||
-              granularity === exports.Unit.seconds) {
-              if (!this._enabledDisabledHoursIsValid(targetDate))
-                  return false;
-              if (this.optionsStore.options.restrictions.disabledTimeIntervals?.filter((internal) => targetDate.isBetween(internal.from, internal.to)).length !== 0)
-                  return false;
-          }
-          return true;
+              console.log('fail 23');
+          return false;
       }
       _enabledDisabledDatesIsValid(granularity, targetDate) {
-          if (granularity === exports.Unit.month)
+          if (granularity !== exports.Unit.date)
               return true;
           if (this.optionsStore.options.restrictions.disabledDates.length > 0 &&
               this._isInDisabledDates(targetDate)) {
@@ -1350,7 +1334,7 @@
           if (!this.optionsStore.options.restrictions.disabledDates ||
               this.optionsStore.options.restrictions.disabledDates.length === 0)
               return false;
-          return this.optionsStore.options.restrictions.disabledDates.find((x) => x.isSame(testDate, exports.Unit.date));
+          return !!this.optionsStore.options.restrictions.disabledDates.find((x) => x.isSame(testDate, exports.Unit.date));
       }
       /**
        * Checks to see if the enabledDates option is in use and returns true (meaning valid)
@@ -1362,33 +1346,7 @@
           if (!this.optionsStore.options.restrictions.enabledDates ||
               this.optionsStore.options.restrictions.enabledDates.length === 0)
               return true;
-          return this.optionsStore.options.restrictions.enabledDates.find((x) => x.isSame(testDate, exports.Unit.date));
-      }
-      /**
-       * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
-       * if the `testDate` is with in the array. Granularity is by hours.
-       * @param testDate
-       * @private
-       */
-      _isInDisabledHours(testDate) {
-          if (!this.optionsStore.options.restrictions.disabledHours ||
-              this.optionsStore.options.restrictions.disabledHours.length === 0)
-              return false;
-          const formattedDate = testDate.hours;
-          return this.optionsStore.options.restrictions.disabledHours.find((x) => x === formattedDate);
-      }
-      /**
-       * Checks to see if the enabledHours option is in use and returns true (meaning valid)
-       * if the `testDate` is with in the array. Granularity is by hours.
-       * @param testDate
-       * @private
-       */
-      _isInEnabledHours(testDate) {
-          if (!this.optionsStore.options.restrictions.enabledHours ||
-              this.optionsStore.options.restrictions.enabledHours.length === 0)
-              return true;
-          const formattedDate = testDate.hours;
-          return this.optionsStore.options.restrictions.enabledHours.find((x) => x === formattedDate);
+          return !!this.optionsStore.options.restrictions.enabledDates.find((x) => x.isSame(testDate, exports.Unit.date));
       }
       _minMaxIsValid(granularity, targetDate) {
           if (this.optionsStore.options.restrictions.minDate &&
@@ -1414,6 +1372,32 @@
           }
           return true;
       }
+      /**
+       * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
+       * if the `testDate` is with in the array. Granularity is by hours.
+       * @param testDate
+       * @private
+       */
+      _isInDisabledHours(testDate) {
+          if (!this.optionsStore.options.restrictions.disabledHours ||
+              this.optionsStore.options.restrictions.disabledHours.length === 0)
+              return false;
+          const formattedDate = testDate.hours;
+          return this.optionsStore.options.restrictions.disabledHours.includes(formattedDate);
+      }
+      /**
+       * Checks to see if the enabledHours option is in use and returns true (meaning valid)
+       * if the `testDate` is with in the array. Granularity is by hours.
+       * @param testDate
+       * @private
+       */
+      _isInEnabledHours(testDate) {
+          if (!this.optionsStore.options.restrictions.enabledHours ||
+              this.optionsStore.options.restrictions.enabledHours.length === 0)
+              return true;
+          const formattedDate = testDate.hours;
+          return this.optionsStore.options.restrictions.enabledHours.includes(formattedDate);
+      }
       dateRangeIsValid(dates, index, target) {
           // if we're not using the option, then return valid
           if (!this.optionsStore.options.dateRange)
@@ -1427,7 +1411,9 @@
           const start = dates[0].clone.manipulate(1, exports.Unit.date);
           // check each date in the range to make sure it's valid
           while (!start.isSame(target, exports.Unit.date)) {
-              if (!this.isValid(start))
+              const valid = this.isValid(start, exports.Unit.date);
+              console.log(`${start}: ${valid}`);
+              if (!valid)
                   return false;
               start.manipulate(1, exports.Unit.date);
           }
