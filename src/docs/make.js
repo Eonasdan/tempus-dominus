@@ -513,10 +513,6 @@ ${this.siteMap}
       {
         source: './src/docs/assets/no-styles.html',
         destination: './docs/6/examples/no-styles.html'
-      },
-      {
-        source: './src/docs/assets/repl-data.json',
-        destination: './docs/6/repl-data.json'
       }
     ].forEach((file) => {
       fs.mkdirSync(path.dirname(file.destination), { recursive: true });

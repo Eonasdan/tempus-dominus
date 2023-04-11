@@ -1,6 +1,6 @@
 import ActionTypes from './utilities/action-types';
 /**
- * Logic for various click actions
+ *
  */
 export default class Actions {
   private optionsStore;
@@ -14,7 +14,7 @@ export default class Actions {
    * @param e This is normally a click event
    * @param action If not provided, then look for a [data-action]
    */
-  do(e: any, action?: ActionTypes): void;
+  do(e: any, action?: ActionTypes): boolean;
   private handleShowClockContainers;
   private handleNextPrevious;
   /**

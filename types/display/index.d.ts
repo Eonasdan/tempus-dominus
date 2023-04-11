@@ -118,7 +118,7 @@ export default class Display {
   get _hasDate(): boolean;
   get _hasDateAndTime(): boolean;
   /**
-   * Get the toolbar html based on options like buttons => today
+   * Get the toolbar html based on options like buttons.today
    * @private
    */
   getToolbarElements(): HTMLElement[];
@@ -129,7 +129,7 @@ export default class Display {
   getHeadTemplate(): HTMLElement;
   /**
    * Builds an icon tag as either an `<i>`
-   * or with icons => type is `sprites` then a svg tag instead
+   * or with icons.type is `sprites` then a svg tag instead
    * @param iconClass
    * @private
    */
