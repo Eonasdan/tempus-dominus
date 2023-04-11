@@ -24,7 +24,7 @@
     "test:coverage": "vitest run --coverage",
     "serve": "node ./build/serve.js",
     "clean": "node ./build/utilities.js --clean ./dist && node ./build/utilities.js --clean ./types",
-    "build": "npm run clean && node ./build/utilities.js --copy && npm run rollup && npm run build:plugins-and-locales",
+    "build": "npm run clean && node ./build/utilities.js --copy && npm run rollup && npm run build:declarations && npm run build:plugins-and-locales",
     "build:plugins": "node ./build/plugins.js -p",
     "build:locales": "node ./build/plugins.js -l",
     "build:plugins-and-locales": "node ./build/plugins.js",
@@ -61,7 +61,7 @@
   },
   "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
   "devDependencies": {
-    "@eonasdan/parvus-server": "^1.1.7",
+    "@eonasdan/parvus-server": "^1.1.9",
     "@popperjs/core": "^2.11.6",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@types/node": "^18.14.2",

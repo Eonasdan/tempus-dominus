@@ -20,8 +20,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup
         uses: ./.github/workflows/base
-        with:
-          registry: 'https://npm.pkg.github.com'
       - name: Set package version
         id: set_version
         run: |
@@ -44,8 +42,14 @@ jobs:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       - name: Create Release
         run: npm run release:version ${{steps.set_version.outputs.VERSION }} ${{steps.set_version.outputs.NEW_VERSION }}
-      - name: Publish package
-        run: |
-          npm publish --access public --registry https://npm.pkg.github.com/
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Create Tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const {DIST_VERSION} = process.env          
+            github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/tags/${{steps.set_version.outputs.NEW_VERSION }}`,
+                sha: context.sha
+            })
