@@ -1516,6 +1516,7 @@
           },
           inline: false,
           theme: 'auto',
+          placement: 'bottom',
       },
       keepInvalid: false,
       localization: {
@@ -1736,6 +1737,7 @@
           'decades',
       ]),
       theme: validKeyOption(['light', 'dark', 'auto']),
+      placement: validKeyOption(['top', 'bottom']),
       meta: ({ value }) => value,
       dayViewHeaderFormat: ({ value }) => value,
       container: ({ value, path }) => {
@@ -3345,13 +3347,14 @@
               if (!this.optionsStore.options.display.inline) {
                   // If needed to change the parent container
                   const container = this.optionsStore.options?.container || document.body;
+                  const placement = this.optionsStore.options?.display?.placement || 'bottom';
                   container.appendChild(this.widget);
                   this.createPopup(this.optionsStore.element, this.widget, {
                       modifiers: [{ name: 'eventListeners', enabled: true }],
                       //#2400
                       placement: document.documentElement.dir === 'rtl'
-                          ? 'bottom-end'
-                          : 'bottom-start',
+                          ? `${placement}-end`
+                          : `${placement}-start`,
                   }).then();
               }
               else {
@@ -4071,6 +4074,10 @@
               }
               case 1: {
                   const other = this.dates.picked[0];
+                  if (day.getTime() === other.getTime()) {
+                      this.dates.clear();
+                      break;
+                  }
                   if (day.isBefore(other)) {
                       this.dates.setValue(day, 0);
                       this.dates.setValue(other, 1);

@@ -1,4 +1,4 @@
-<page-body>
+<div id='page-body'>
   <div class='row'>
     <p>
       If you still need to use moment.js, you can load this plugin to use moment to parse input dates.
@@ -43,26 +43,26 @@
       const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
     </script>
   </div>
-<pre>
+  <pre>
 <code class='language-js'>//example picker
 //note that you can optionally provide the format to use.
 tempusDominus.extend(tempusDominus.plugins.moment_parse, 'DD.MM.yyyy hh:mm a');
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));</code>
 </pre>
-  </div>
+</div>
 
-  <div class='row'>
-    <h3>How it works</h3>
-    <p>
-      This plugin overrides two picker functions <code>setFromInput</code> and <code>formatInput</code>.
-    </p>
-    <p>
-      <code>setFromInput</code> parses and sets a date at the provided index with the textbox value.
-    </p>
-    <p>
-      <code>formatInput</code> is the reverse, it takes a date time object and formats or parses it to a string.
-    </p>
-    <pre>
+<div class='row'>
+  <h3>How it works</h3>
+  <p>
+    This plugin overrides two picker functions <code>setFromInput</code> and <code>formatInput</code>.
+  </p>
+  <p>
+    <code>setFromInput</code> parses and sets a date at the provided index with the textbox value.
+  </p>
+  <p>
+    <code>formatInput</code> is the reverse, it takes a date time object and formats or parses it to a string.
+  </p>
+  <pre>
 <code class='language-js'>//obviously, loading moment js is required.
 declare var moment;
 export const load = (option, tdClasses, tdFactory) => {
@@ -82,14 +82,12 @@ export const load = (option, tdClasses, tdFactory) => {
   }
 }</code>
 </pre>
-  </div>
-</page-body>
+</div>
 
-<page-meta>
-  <title>Plugins - Moment</title>
-  <post-date>02/05/2022</post-date>
-  <update-date>02/05/2022</update-date>
-  <excerpt>How to use momentjs plugin with Tempus Dominus.
-  </excerpt>
-  <tags>datepicker, javascript, open source, tempus dominus, eonasdan</tags>
-</page-meta>
+<div id='page-meta'>
+  <div id='title'>Plugins - Moment</div>
+  <div id='post-date'>02/05/2022</div>
+  <div id='update-date'>02/05/2022</div>
+  <div id='excerpt'>How to use momentjs plugin with Tempus Dominus.</div>
+  <div id='tags'>datepicker, javascript, open source, tempus dominus, eonasdan</div>
+</div>

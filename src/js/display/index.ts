@@ -171,7 +171,8 @@ export default class Display {
       if (!this.optionsStore.options.display.inline) {
         // If needed to change the parent container
         const container = this.optionsStore.options?.container || document.body;
-        const placement = this.optionsStore.options?.display?.placement || 'bottom';
+        const placement =
+          this.optionsStore.options?.display?.placement || 'bottom';
 
         container.appendChild(this.widget);
         this.createPopup(this.optionsStore.element, this.widget, {

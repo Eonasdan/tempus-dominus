@@ -34,7 +34,7 @@
     "rollup-watch": "rollup -c ./build/rollup.config.js -w",
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
-    "release": "npm run eslint && npm run test:silent && npm run build",
+    "release": "npm run eslint && npm run test:silent && npm run build && npm run build:declarations",
     "release:version": "npm run release && node build/change-version.js",
     "prepare": "husky install",
     "prettier": "prettier --ignore-unknown --write .",
@@ -61,7 +61,7 @@
   },
   "description": "A robust and powerful date/time picker component. For usage, installation and demos see Project Site on GitHub",
   "devDependencies": {
-    "@eonasdan/parvus-server": "^1.1.7",
+    "@eonasdan/parvus-server": "^1.1.9",
     "@popperjs/core": "^2.11.6",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@types/node": "^18.14.2",
