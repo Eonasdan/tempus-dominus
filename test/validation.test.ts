@@ -1,16 +1,21 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
-import { beforeAll, beforeEach, expect, test } from 'vitest';
+import { resetOptions, store } from './test-utilities';
+import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
 import Validation from '../src/js/validation';
 import { DateTime, Unit } from '../src/js/datetime';
-import { resetOptions, store } from './test-utilities';
 
 let validation: Validation;
 beforeAll(() => {
-  validation = new Validation();
+  resetOptions();
 });
 
 beforeEach(() => {
   resetOptions();
+  validation = new Validation();
+});
+
+afterAll(() => {
+  vi.restoreAllMocks();
 });
 
 test('isValid', () => {
