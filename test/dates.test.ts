@@ -21,6 +21,40 @@ const clearDates = () => {
   dates._dates = [];
 };
 
+// @ts-ignore
+const emitters = () => dates._eventEmitters;
+
+// @ts-ignore
+const validation = () => dates.validation;
+const dateConversionSpy = vi.spyOn(OptionConverter, 'dateConversion');
+
+let setValueSpy;
+let parseInputSpy;
+let triggerEventSpy;
+let updateDisplaySpy;
+let formatInputSpy;
+let setValueNullSpy;
+let updateInputSpy;
+let isValidSpy;
+let dateRangeIsValidSpy;
+let updateViewDateSpy;
+
+const setupAllSpies = () => {
+  triggerEventSpy = vi.spyOn(emitters().triggerEvent, 'emit');
+  updateDisplaySpy = vi.spyOn(emitters().updateDisplay, 'emit');
+  updateViewDateSpy = vi.spyOn(emitters().updateViewDate, 'emit');
+
+  isValidSpy = vi.spyOn(validation(), 'isValid');
+  dateRangeIsValidSpy = vi.spyOn(validation(), 'dateRangeIsValid');
+
+  setValueSpy = vi.spyOn(dates, 'setValue');
+  parseInputSpy = vi.spyOn(dates, 'parseInput');
+  formatInputSpy = vi.spyOn(dates, 'formatInput');
+  // @ts-ignore
+  setValueNullSpy = vi.spyOn(dates, '_setValueNull');
+  updateInputSpy = vi.spyOn(dates, 'updateInput');
+};
+
 beforeAll(() => {
   resetOptions();
 });
@@ -28,6 +62,7 @@ beforeAll(() => {
 beforeEach(() => {
   resetOptions();
   dates = new Dates();
+  setupAllSpies();
 });
 
 afterAll(() => {
@@ -65,24 +100,19 @@ test('parseInput', () => {
   //too much for this unit test, so we'll just verify that the function can be called
   //with undefined and string. Probably should just hide this from the coverage.
 
-  const spy = vi.spyOn(OptionConverter, 'dateConversion');
-
   //test undefined
-  spy.mockImplementationOnce(() => null);
+  dateConversionSpy.mockImplementationOnce(() => null);
   expect(dates.parseInput(undefined)).toBe(null);
-  expect(spy).toHaveBeenCalledTimes(1);
+  expect(dateConversionSpy).toHaveBeenCalledTimes(1);
 
-  spy.mockImplementationOnce(() => newDateMinute());
+  dateConversionSpy.mockImplementationOnce(() => newDateMinute());
   expect(dates.parseInput(newDateStringMinute).toISOString()).toBe(
     newDateMinute().toISOString()
   );
-  expect(spy).toHaveBeenCalledTimes(2);
+  expect(dateConversionSpy).toHaveBeenCalledTimes(2);
 });
 
 test('setFromInput', () => {
-  const setValueSpy = vi.spyOn(dates, 'setValue');
-  const parseInputSpy = vi.spyOn(dates, 'parseInput');
-
   dates.add(newDate());
   expect(datesArray()).toEqual([newDate()]);
 
@@ -144,3 +174,105 @@ test('pickedIndex', () => {
   dates.add(newDate());
   expect(dates.pickedIndex(newDate(), Unit.date)).toBe(+0);
 });
+
+test('clear', () => {
+  expect(store.unset).toBe(undefined);
+
+  //add a date to confirm clear works
+  dates.add(newDate());
+  expect(datesArray()).toEqual([newDate()]);
+
+  //test clear
+  dates.clear();
+  //change event should fire
+  expect(triggerEventSpy).toHaveBeenCalled();
+  //selected dates should be empty
+  expect(datesArray()).toEqual([]);
+  //updateDisplay should fire
+  expect(updateDisplaySpy).toHaveBeenCalled();
+
+  //reset to test clearing input field
+  dates.add(newDate());
+  expect(datesArray()).toEqual([newDate()]);
+  store.input = document.createElement('input');
+  store.input.value = 'foo';
+  expect(store.input.value).toBe('foo');
+
+  dates.clear();
+  expect(triggerEventSpy).toHaveBeenCalled();
+  expect(datesArray()).toEqual([]);
+  expect(updateDisplaySpy).toHaveBeenCalled();
+  expect(store.input.value).toBe('');
+});
+
+test('getStartEndYear', () => {
+  expect(Dates.getStartEndYear(100, 2023)).toEqual([2000, 2090, 2020]);
+  expect(Dates.getStartEndYear(10, 2023)).toEqual([2020, 2029, 2023]);
+});
+
+test('updateInput', () => {
+  //test no input
+  dates.updateInput(undefined);
+
+  store.input = document.createElement('input');
+  formatInputSpy.mockImplementation(() => newDateStringMinute);
+
+  //test input
+  dates.updateInput(newDate());
+  expect(store.input.value).toBe('03/14/2023 1:25 PM');
+  expect(formatInputSpy).toHaveBeenCalled();
+
+  //test multipleDates
+  store.options.multipleDates = true;
+  dates.add(newDate());
+  dates.add(newDate());
+
+  dates.updateInput();
+  expect(store.input.value).toBe('03/14/2023 1:25 PM; 03/14/2023 1:25 PM');
+  expect(formatInputSpy).toHaveBeenCalled();
+});
+
+test('setValue', () => {
+  setValueNullSpy.mockImplementationOnce(vi.fn());
+  updateInputSpy.mockImplementationOnce(vi.fn());
+  //test null value and no index
+  store.unset = true;
+  dates.setValue();
+  expect(setValueNullSpy).toHaveBeenCalled();
+
+  //test getting last picked to clear
+  dates.add(newDate());
+  store.unset = false;
+  dates.setValue();
+  clearDates();
+
+  //test old date is the same
+  dates.add(newDate());
+  dates.setValue(newDate(), 0);
+  expect(updateInputSpy).toHaveBeenCalled();
+
+  //test valid date with stepping
+  isValidSpy.mockImplementationOnce(() => true);
+  dateRangeIsValidSpy.mockImplementationOnce(() => true);
+
+  store.options.stepping = 5;
+  dates.setValue(newDate());
+  expect(isValidSpy).toHaveBeenCalled();
+  expect(dateRangeIsValidSpy).toHaveBeenCalled();
+  expect(datesArray()).toEqual([newDate().startOf(Unit.minutes)]);
+  expect(updateViewDateSpy).toHaveBeenCalled();
+  expect(triggerEventSpy).toHaveBeenCalled();
+  expect(store.unset).toBe(false);
+  store.options.stepping = 1;
+
+  //test keep invalid
+  store.options.keepInvalid = true;
+  isValidSpy.mockImplementationOnce(() => false);
+  dates.setValue(newDate());
+  expect(datesArray()).toEqual([newDate()]);
+  store.options.keepInvalid = false;
+  expect(updateViewDateSpy).toHaveBeenCalled();
+  expect(triggerEventSpy).toHaveBeenCalled();
+});
+
+test('_setValueNull', () => {});

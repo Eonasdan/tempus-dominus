@@ -217,13 +217,10 @@ export default class Dates {
       target.minutes =
         Math.round(target.minutes / this.optionsStore.options.stepping) *
         this.optionsStore.options.stepping;
-      target.seconds = 0;
+      target.startOf(Unit.minutes);
     }
 
-    if (
-      this.validation.isValid(target) &&
-      this.validation.dateRangeIsValid(this._dates, index, target)
-    ) {
+    const onUpdate = (isValid: boolean) => {
       this._dates[index] = target;
       this._eventEmitters.updateViewDate.emit(target.clone);
 
@@ -236,24 +233,20 @@ export default class Dates {
         date: target,
         oldDate,
         isClear,
-        isValid: true,
+        isValid: isValid,
       } as ChangeEvent);
+    };
+
+    if (
+      this.validation.isValid(target) &&
+      this.validation.dateRangeIsValid(this._dates, index, target)
+    ) {
+      onUpdate(true);
       return;
     }
 
     if (this.optionsStore.options.keepInvalid) {
-      this._dates[index] = target;
-      this._eventEmitters.updateViewDate.emit(target.clone);
-
-      this.updateInput(target);
-
-      this._eventEmitters.triggerEvent.emit({
-        type: Namespace.events.change,
-        date: target,
-        oldDate,
-        isClear,
-        isValid: false,
-      } as ChangeEvent);
+      onUpdate(false);
     }
 
     this._eventEmitters.triggerEvent.emit({

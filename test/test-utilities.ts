@@ -6,10 +6,14 @@ import DefaultFormatLocalization from '../src/js/utilities/default-format-locali
 import { vi } from 'vitest';
 import { FixtureServiceLocator } from './fixtures/fixture-serviceLocator';
 import { FixtureOptionsStore } from './fixtures/fixture-optionStore';
+import { FixtureEventEmitters } from './fixtures/fixture-eventemitters';
 
 vi.doMock('../src/js/utilities/service-locator', () => {
   const slm = new FixtureServiceLocator();
-  slm.load('OptionsStore', FixtureOptionsStore);
+  slm.loadEach({
+    OptionsStore: FixtureOptionsStore,
+    EventEmitters: FixtureEventEmitters,
+  });
   return {
     serviceLocator: slm,
   };

@@ -1,11 +1,8 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
-// noinspection ES6UnusedImports
-
 import { beforeAll, beforeEach, expect, test } from 'vitest';
 import Validation from '../src/js/validation';
 import { DateTime, Unit } from '../src/js/datetime';
-// @ts-ignore
-import { newDate, resetOptions, store } from './test-utilities';
+import { resetOptions, store } from './test-utilities';
 
 let validation: Validation;
 beforeAll(() => {
