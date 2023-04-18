@@ -1,15 +1,18 @@
-// @ts-ignore
 import {
+  loadFixtures,
   newDate,
   newDateMinute,
   newDateStringMinute,
-  resetOptions,
+  reset,
+  secondaryDate,
   store,
 } from './test-utilities';
 import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
 import Dates from '../src/js/dates';
 import { DateTime, Unit } from '../src/js/datetime';
 import { OptionConverter } from '../src/js/utilities/optionConverter';
+import Validation from '../src/js/validation';
+import { FixtureValidation } from './fixtures/validation.fixture';
 
 let dates: Dates;
 
@@ -56,11 +59,12 @@ const setupAllSpies = () => {
 };
 
 beforeAll(() => {
-  resetOptions();
+  loadFixtures({ Validation: FixtureValidation });
+  reset();
 });
 
 beforeEach(() => {
-  resetOptions();
+  reset();
   dates = new Dates();
   setupAllSpies();
 });
@@ -233,8 +237,8 @@ test('updateInput', () => {
 });
 
 test('setValue', () => {
-  setValueNullSpy.mockImplementationOnce(vi.fn());
-  updateInputSpy.mockImplementationOnce(vi.fn());
+  setValueNullSpy.mockImplementation(vi.fn());
+  updateInputSpy.mockImplementation(vi.fn());
   //test null value and no index
   store.unset = true;
   dates.setValue();
@@ -248,6 +252,7 @@ test('setValue', () => {
 
   //test old date is the same
   dates.add(newDate());
+  store.unset = false;
   dates.setValue(newDate(), 0);
   expect(updateInputSpy).toHaveBeenCalled();
 
@@ -275,4 +280,39 @@ test('setValue', () => {
   expect(triggerEventSpy).toHaveBeenCalled();
 });
 
-test('_setValueNull', () => {});
+test('_setValueNull', () => {
+  // @ts-ignore
+  const method = dates._setValueNull.bind(dates);
+  updateInputSpy.mockImplementation(vi.fn());
+
+  //test clear with no options
+  dates.add(newDate());
+  method();
+  expect(store.unset).toBe(true);
+  expect(datesArray()).toEqual([]);
+  expect(triggerEventSpy).toHaveBeenCalled();
+
+  //test clear with multiple dates and one selection
+  store.options.multipleDates = true;
+  dates.add(newDate());
+  method();
+  expect(store.unset).toBe(true);
+  expect(datesArray()).toEqual([]);
+  expect(triggerEventSpy).toHaveBeenCalled();
+
+  //test clear with multiple dates, two dates but passing isClear
+  dates.add(newDate());
+  dates.add(newDate());
+  method(true);
+  expect(store.unset).toBe(true);
+  expect(datesArray()).toEqual([]);
+  expect(triggerEventSpy).toHaveBeenCalled();
+
+  //test clearing given index
+  dates.add(newDate());
+  dates.add(secondaryDate());
+  method(false, 0);
+  expect(store.unset).toBe(true);
+  expect(datesArray()).toEqual([secondaryDate()]);
+  expect(triggerEventSpy).toHaveBeenCalled();
+});

@@ -11,7 +11,7 @@ import CalendarModes from './utilities/calendar-modes';
 import { OptionsStore } from './utilities/optionsStore';
 
 /**
- *
+ * Logic for various click actions
  */
 export default class Actions {
   private optionsStore: OptionsStore;
@@ -40,8 +40,7 @@ export default class Actions {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   do(e: any, action?: ActionTypes) {
     const currentTarget = e?.currentTarget as HTMLElement;
-    if (currentTarget?.classList?.contains(Namespace.css.disabled))
-      return false;
+    if (currentTarget?.classList?.contains(Namespace.css.disabled)) return;
     action = action || (currentTarget?.dataset?.action as ActionTypes);
     const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
       .clone;

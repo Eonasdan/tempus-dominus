@@ -1,16 +1,16 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
-import { resetOptions, store } from './test-utilities';
+import { reset, store } from './test-utilities';
 import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
 import Validation from '../src/js/validation';
 import { DateTime, Unit } from '../src/js/datetime';
 
 let validation: Validation;
 beforeAll(() => {
-  resetOptions();
+  reset();
 });
 
 beforeEach(() => {
-  resetOptions();
+  reset();
   validation = new Validation();
 });
 

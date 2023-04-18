@@ -1,5 +1,9 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
-
+import {
+  defaultLocalization,
+  newDate,
+  newDateStringMinute,
+} from './test-utilities';
 import { expect, test } from 'vitest';
 import {
   DateTime,
@@ -7,14 +11,6 @@ import {
   guessHourCycle,
   Unit,
 } from '../src/js/datetime';
-// @ts-ignore
-import {
-  defaultLocalization,
-  newDate,
-  newDateStringMinute,
-  resetOptions,
-  store,
-} from './test-utilities';
 
 test('getFormatByUnit', () => {
   expect(getFormatByUnit(Unit.date)).toEqual({ dateStyle: 'short' });

@@ -8,9 +8,8 @@ export class FixtureServiceLocator {
   locate<T>(identifier: Constructable<T>): T {
     const service = this.cache.get(identifier.name);
     if (service) return service as T;
-    const value = new identifier();
-    this.cache.set(identifier.name, value);
-    return value;
+    return {} as T;
+    throw `${identifier.name} Not Mocked`;
   }
 
   load(name: string, service: Constructable<any>) {

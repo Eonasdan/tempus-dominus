@@ -1,12 +1,13 @@
 import { DateTime, Unit } from '../src/js/datetime';
 import { OptionsStore } from '../src/js/utilities/optionsStore';
-import { OptionConverter } from '../src/js/utilities/optionConverter';
-import DefaultOptions from '../src/js/utilities/default-options';
 import DefaultFormatLocalization from '../src/js/utilities/default-format-localization';
 import { vi } from 'vitest';
-import { FixtureServiceLocator } from './fixtures/fixture-serviceLocator';
-import { FixtureOptionsStore } from './fixtures/fixture-optionStore';
-import { FixtureEventEmitters } from './fixtures/fixture-eventemitters';
+import {
+  FixtureServiceLocator,
+  MockLoad,
+} from './fixtures/serviceLocator.fixture';
+import { FixtureOptionsStore } from './fixtures/optionStore.fixture';
+import { FixtureEventEmitters } from './fixtures/eventemitters.fixture';
 
 vi.doMock('../src/js/utilities/service-locator', () => {
   const slm = new FixtureServiceLocator();
@@ -22,26 +23,34 @@ vi.doMock('../src/js/utilities/service-locator', () => {
 import { serviceLocator } from '../src/js/utilities/service-locator';
 
 const newDate = () => new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500);
+const secondaryDate = () => new DateTime(2023, 7 - 1, 8, 3, 0);
+
 const newDateMinute = () => newDate().startOf(Unit.minutes);
 const newDateStringMinute = newDateMinute().format('L LT');
 const newDateStringIso = newDate().toISOString();
 
 let store = serviceLocator.locate(OptionsStore);
 
-const resetOptions = () => {
-  store.options = OptionConverter.deepCopy(DefaultOptions);
+const reset = () => {
+  (store as unknown as FixtureOptionsStore).reset();
+};
+
+const loadFixtures = (load: MockLoad) => {
+  (serviceLocator as unknown as FixtureServiceLocator).loadEach(load);
 };
 
 const defaultLocalization = () => ({ ...DefaultFormatLocalization });
 
-resetOptions();
+reset();
 
 export {
   newDate,
   newDateMinute,
   newDateStringMinute,
   newDateStringIso,
-  resetOptions,
+  secondaryDate,
+  reset,
   store,
   defaultLocalization,
+  loadFixtures,
 };
