@@ -98,7 +98,9 @@ export default class Dates {
    * @param unit
    */
   isPicked(targetDate: DateTime, unit?: Unit): boolean {
-    if (!unit) return this._dates.find((x) => x === targetDate) !== undefined;
+    if (!DateTime.isValid(targetDate)) return false;
+    if (!unit)
+      return this._dates.find((x) => x.isSame(targetDate)) !== undefined;
 
     const format = getFormatByUnit(unit);
 
@@ -119,7 +121,9 @@ export default class Dates {
    * @param unit
    */
   pickedIndex(targetDate: DateTime, unit?: Unit): number {
-    if (!unit) return this._dates.indexOf(targetDate);
+    if (!DateTime.isValid(targetDate)) return -1;
+    if (!unit)
+      return this._dates.map((x) => x.valueOf()).indexOf(targetDate.valueOf());
 
     const format = getFormatByUnit(unit);
 

@@ -7,10 +7,14 @@ import {
   guessHourCycle,
   Unit,
 } from '../src/js/datetime';
-import DefaultFormatLocalization from '../src/js/utilities/default-format-localization';
-
-const defaultLocalization = () => ({ ...DefaultFormatLocalization });
-const newDate = () => new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500);
+// @ts-ignore
+import {
+  defaultLocalization,
+  newDate,
+  newDateStringMinute,
+  resetOptions,
+  store,
+} from './test-utilities';
 
 test('getFormatByUnit', () => {
   expect(getFormatByUnit(Unit.date)).toEqual({ dateStyle: 'short' });
@@ -623,9 +627,9 @@ test('format', () => {
 
   dateTime.localization.hourCycle = 'h11';
 
-  expect(dateTime.format()).toBe('03/14/2023 1:25 PM');
+  expect(dateTime.format()).toBe(newDateStringMinute);
 
-  expect(dateTime.format('L LT')).toBe('03/14/2023 1:25 PM');
+  expect(dateTime.format('L LT')).toBe(newDateStringMinute);
 
   dateTime.hours = 10;
 

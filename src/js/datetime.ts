@@ -40,7 +40,7 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
 }
 
 /**
- * Returns a Intl format object based on the provided object
+ * Returns an Intl format object based on the provided object
  * @param unit
  */
 export const getFormatByUnit = (unit: Unit): object => {
@@ -904,9 +904,6 @@ export class DateTime extends Date {
         `${DefaultFormatLocalization.dateFormats.L}, ${DefaultFormatLocalization.dateFormats.LT}`,
       this.localization.dateFormats
     );
-    console.log(template);
-    console.log(this.localization.format);
-    console.log(formatString);
 
     const formatter = (template) =>
       new Intl.DateTimeFormat(this.localization.locale, template).format(this);

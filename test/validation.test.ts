@@ -1,27 +1,14 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
+// noinspection ES6UnusedImports
 
 import { beforeAll, beforeEach, expect, test } from 'vitest';
-import {
-  serviceLocator,
-  setupServiceLocator,
-} from '../src/js/utilities/service-locator';
 import Validation from '../src/js/validation';
-import DefaultOptions from '../src/js/utilities/default-options';
 import { DateTime, Unit } from '../src/js/datetime';
-import { OptionsStore } from '../src/js/utilities/optionsStore';
-import { OptionConverter } from '../src/js/utilities/optionConverter';
+// @ts-ignore
+import { newDate, resetOptions, store } from './test-utilities';
 
 let validation: Validation;
-let store: OptionsStore;
-
-const resetOptions = () => {
-  store.options = OptionConverter.deepCopy(DefaultOptions);
-};
-
 beforeAll(() => {
-  setupServiceLocator();
-  store = serviceLocator.locate(OptionsStore);
-  resetOptions();
   validation = new Validation();
 });
 
