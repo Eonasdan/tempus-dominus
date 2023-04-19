@@ -5,21 +5,35 @@ import { OptionsStore } from '../../src/js/utilities/optionsStore';
 import Validation from '../../src/js/validation';
 
 export class FixtureDates {
-  _dates: DateTime[];
+  _dates: DateTime[] = [];
   _eventEmitters: EventEmitters;
-  readonly lastPicked: DateTime;
-  readonly lastPickedIndex: number;
+  lastPicked: DateTime;
+  lastPickedIndex = 0;
   optionsStore: OptionsStore;
-  readonly picked: DateTime[];
+
+  get picked(): DateTime[] {
+    return this._dates;
+  }
+
   validation: Validation;
 
-  add = vi.fn();
-  clear = vi.fn();
+  add(value) {
+    this._dates.push(value);
+  }
+
+  clear() {
+    this._dates = [];
+  }
+
   formatInput = vi.fn();
   isPicked = vi.fn();
   parseInput = vi.fn();
   pickedIndex = vi.fn();
   setFromInput = vi.fn();
-  setValue = vi.fn();
+
+  setValue(value, index) {
+    this._dates[index] = value;
+  }
+
   updateInput = vi.fn();
 }

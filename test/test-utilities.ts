@@ -22,7 +22,14 @@ vi.doMock('../src/js/utilities/service-locator', () => {
 
 import { serviceLocator } from '../src/js/utilities/service-locator';
 
+/**
+ * March 14th, 2023 1:25:42:500 PM
+ */
 const newDate = () => new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500);
+
+/**
+ * July 8th, 2023 3:00 AM
+ */
 const secondaryDate = () => new DateTime(2023, 7 - 1, 8, 3, 0);
 
 const newDateMinute = () => newDate().startOf(Unit.minutes);
@@ -33,6 +40,7 @@ let store = serviceLocator.locate(OptionsStore);
 
 const reset = () => {
   (store as unknown as FixtureOptionsStore).reset();
+  store.viewDate = newDate();
 };
 
 const loadFixtures = (load: MockLoad) => {

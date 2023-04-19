@@ -1,5 +1,6 @@
 import { OptionConverter } from '../../src/js/utilities/optionConverter';
 import DefaultOptions from '../../src/js/utilities/default-options';
+import { DateTime } from '../../src/js/datetime';
 
 export class FixtureOptionsStore {
   options = OptionConverter.deepCopy(DefaultOptions);
@@ -7,6 +8,8 @@ export class FixtureOptionsStore {
   input: HTMLInputElement;
   unset: boolean;
   currentCalendarViewMode = 0;
+  viewDate: DateTime;
+  minimumCalendarViewMode = 0;
 
   reset() {
     this.options = OptionConverter.deepCopy(DefaultOptions);
