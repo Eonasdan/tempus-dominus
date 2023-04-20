@@ -23,14 +23,14 @@ export default class Dates {
    * Returns the array of selected dates
    */
   get picked(): DateTime[] {
-    return [...this._dates];
+    return this._dates;
   }
 
   /**
    * Returns the last picked value.
    */
   get lastPicked(): DateTime {
-    return this._dates[this.lastPickedIndex]?.clone;
+    return this._dates[this.lastPickedIndex];
   }
 
   /**
@@ -193,7 +193,7 @@ export default class Dates {
   setValue(target?: DateTime, index?: number): void {
     const noIndex = typeof index === 'undefined',
       isClear = !target && noIndex;
-    let oldDate = this.optionsStore.unset ? null : this._dates[index]?.clone;
+    let oldDate = this.optionsStore.unset ? null : this._dates[index];
     if (!oldDate && !this.optionsStore.unset && noIndex && isClear) {
       oldDate = this.lastPicked;
     }
@@ -239,7 +239,7 @@ export default class Dates {
 
     if (
       this.validation.isValid(target) &&
-      this.validation.dateRangeIsValid(this.picked, index, target)
+      this.validation.dateRangeIsValid(this._dates, index, target)
     ) {
       onUpdate(true);
       return;

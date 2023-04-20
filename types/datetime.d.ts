@@ -13,7 +13,7 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
   numberingSystem?: string;
 }
 /**
- * Returns a Intl format object based on the provided object
+ * Returns an Intl format object based on the provided object
  * @param unit
  */
 export declare const getFormatByUnit: (unit: Unit) => object;
@@ -37,7 +37,7 @@ export declare class DateTime extends Date {
    */
   setLocale(value: string): this;
   /**
-   * Chainable way to set the {@link locale}
+   * Chainable way to set the {@link localization}
    * @param value
    */
   setLocalization(value: FormatLocalization): this;

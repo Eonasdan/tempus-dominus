@@ -27,6 +27,8 @@ export default class Validation {
    * @private
    */
   private _isInEnabledDates;
+  private _minMaxIsValid;
+  private _enabledDisabledHoursIsValid;
   /**
    * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
    * if the `testDate` is with in the array. Granularity is by hours.
@@ -41,7 +43,5 @@ export default class Validation {
    * @private
    */
   private _isInEnabledHours;
-  private _minMaxIsValid;
-  private _enabledDisabledHoursIsValid;
   dateRangeIsValid(dates: DateTime[], index: number, target: DateTime): boolean;
 }
