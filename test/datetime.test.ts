@@ -650,9 +650,9 @@ test('format', () => {
   );
 
   //test epoch millisecond
-  expect(
-    DateTime.fromString('1678814742500', { format: 'x' }).getTime()
-  ).toEqual(new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500).getTime());
+  expect(DateTime.fromString('1678814742500', { format: 'x' }).getTime()).toBe(
+    1678814742500
+  );
 
   //test invalid input
   expect(() => DateTime.fromString('--', { format: 'hjik' })).toThrow(
