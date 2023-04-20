@@ -645,14 +645,14 @@ test('format', () => {
   );
 
   //test epoch seconds
-  expect(DateTime.fromString('1678814742', { format: 'X' })).toEqual(
-    new DateTime(2023, 3 - 1, 14, 13, 25, 42)
+  expect(DateTime.fromString('1678814742', { format: 'X' }).getTime()).toEqual(
+    new DateTime(2023, 3 - 1, 14, 13, 25, 42).getTime()
   );
 
   //test epoch millisecond
-  expect(DateTime.fromString('1678814742500', { format: 'x' })).toEqual(
-    new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500)
-  );
+  expect(
+    DateTime.fromString('1678814742500', { format: 'x' }).getTime()
+  ).toEqual(new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500).getTime());
 
   //test invalid input
   expect(() => DateTime.fromString('--', { format: 'hjik' })).toThrow(
