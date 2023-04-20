@@ -7,8 +7,15 @@ import Validation from '../../src/js/validation';
 export class FixtureDates {
   _dates: DateTime[] = [];
   _eventEmitters: EventEmitters;
-  lastPicked: DateTime;
-  lastPickedIndex = 0;
+  get lastPicked(): DateTime {
+    return this._dates[this.lastPickedIndex];
+  }
+
+  get lastPickedIndex(): number {
+    if (this._dates.length === 0) return 0;
+    return this._dates.length - 1;
+  }
+
   optionsStore: OptionsStore;
 
   get picked(): DateTime[] {
@@ -32,7 +39,8 @@ export class FixtureDates {
   setFromInput = vi.fn();
 
   setValue(value, index) {
-    this._dates[index] = value;
+    if (!value) this._dates.splice(index, 1);
+    else this._dates[index] = value;
   }
 
   updateInput = vi.fn();

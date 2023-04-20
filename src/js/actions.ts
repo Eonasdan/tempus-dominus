@@ -338,6 +338,7 @@ export default class Actions {
 
   private handleMultiDate(day: DateTime) {
     let index = this.dates.pickedIndex(day, Unit.date);
+    console.log(index);
     if (index !== -1) {
       this.dates.setValue(null, index); //deselect multi-date
     } else {
