@@ -8,7 +8,6 @@ export class FixtureServiceLocator {
   locate<T>(identifier: Constructable<T>): T {
     const service = this.cache.get(identifier.name);
     if (service) return service as T;
-    return {} as T;
     throw `${identifier.name} Not Mocked`;
   }
 

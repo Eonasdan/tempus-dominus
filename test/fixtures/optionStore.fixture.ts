@@ -13,9 +13,7 @@ export class FixtureOptionsStore {
   minimumCalendarViewMode = 0;
   refreshCurrentView = vi.fn();
 
-  get isTwelveHour() {
-    return ['h12', 'h11'].includes(this.options.localization.hourCycle);
-  }
+  isTwelveHour = true;
 
   reset() {
     this.options = OptionConverter.deepCopy(DefaultOptions);

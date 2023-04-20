@@ -161,6 +161,7 @@ export default class Actions {
       Namespace.errorMessages.throwError(
         'Cannot show clock containers when time is disabled.'
       );
+      /* ignore coverage: should never happen */
       return;
     }
 

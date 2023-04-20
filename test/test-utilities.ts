@@ -49,6 +49,12 @@ const loadFixtures = (load: MockLoad) => {
 
 const defaultLocalization = () => ({ ...DefaultFormatLocalization });
 
+const createElementWithClasses = (tagName: string, ...classes) => {
+  const tag = document.createElement(tagName);
+  tag.classList.add(...classes);
+  return tag;
+};
+
 reset();
 
 export {
@@ -61,4 +67,5 @@ export {
   store,
   defaultLocalization,
   loadFixtures,
+  createElementWithClasses,
 };

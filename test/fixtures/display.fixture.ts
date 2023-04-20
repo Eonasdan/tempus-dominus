@@ -4,11 +4,7 @@ export class FixtureDisplay {
   _showMode = vi.fn();
   _updateCalendarHeader = vi.fn();
   hide = vi.fn();
-  _widget = document.createElement('div');
-
-  get widget() {
-    return this._widget;
-  }
+  widget = document.createElement('div');
 
   _update = vi.fn();
 
@@ -16,5 +12,12 @@ export class FixtureDisplay {
     const iconSpan = document.createElement('span');
     iconSpan.innerHTML = 'icon';
     return iconSpan;
+  }
+
+  _hasTime = true;
+  _hasDate = true;
+
+  get _hasDateAndTime(): boolean {
+    return this._hasDate && this._hasTime;
   }
 }

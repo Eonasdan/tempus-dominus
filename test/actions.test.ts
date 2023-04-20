@@ -1,4 +1,10 @@
-import { loadFixtures, newDate, reset, store } from './test-utilities';
+import {
+  createElementWithClasses,
+  loadFixtures,
+  newDate,
+  reset,
+  store,
+} from './test-utilities';
 import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
 import Actions from '../src/js/actions';
 import { FixtureValidation } from './fixtures/validation.fixture';
@@ -12,6 +18,7 @@ import Display from '../src/js/display';
 import Dates from '../src/js/dates';
 import Collapse from '../src/js/display/collapse';
 import Validation from '../src/js/validation';
+import { serviceLocator } from '../src/js/utilities/service-locator';
 
 let validation: Validation;
 let emitters: EventEmitters;
@@ -34,6 +41,14 @@ beforeAll(() => {
     Display: FixtureDisplay,
   });
   reset();
+  const ee = serviceLocator.locate(EventEmitters);
+  let callback;
+  ee.action.subscribe = (cb) => {
+    callback = cb;
+  };
+  ee.action.emit = (value) => {
+    callback(value);
+  };
 });
 
 beforeEach(() => {
@@ -127,7 +142,9 @@ test('selectDay', () => {
 
   element.dataset.day = `${shouldBe.date}`;
 
-  //test select date
+  //test select date without time
+  // @ts-ignore
+  display._hasTime = false;
   actions.do(event, ActionTypes.selectDay);
   expect(setValueSpy).toHaveBeenCalled();
   expect(hideSpy).toHaveBeenCalled();
@@ -401,9 +418,10 @@ test('togglePicker', () => {
   const updateSpy = vi.spyOn(display, '_update');
   const refreshCurrentViewSpy = vi.spyOn(store, 'refreshCurrentView');
   const viewUpdateSpy = vi.spyOn(emitters.viewUpdate, 'emit');
-  // @ts-ignore
+
   const handleShowClockContainersSpy = vi.spyOn(
     actions,
+    // @ts-ignore
     'handleShowClockContainers'
   );
   handleShowClockContainersSpy.mockImplementation(vi.fn());
@@ -431,4 +449,127 @@ test('togglePicker', () => {
   expect(viewUpdateSpy).toHaveBeenCalled();
   expect(handleShowClockContainersSpy).toHaveBeenCalled();
   expect(updateSpy).toHaveBeenCalled();
+});
+
+test('handleShowClockContainers', () => {
+  const updateSpy = vi.spyOn(display, '_update');
+  store.currentView = 'calendar';
+
+  const timeContainer = createElementWithClasses(
+    'div',
+    Namespace.css.timeContainer
+  );
+  const clockContainer = createElementWithClasses(
+    'div',
+    Namespace.css.clockContainer
+  );
+  const hourContainer = createElementWithClasses(
+    'div',
+    Namespace.css.hourContainer
+  );
+  const minuteContainer = createElementWithClasses(
+    'div',
+    Namespace.css.minuteContainer
+  );
+  const secondContainer = createElementWithClasses(
+    'div',
+    Namespace.css.secondContainer
+  );
+  timeContainer.appendChild(clockContainer);
+  timeContainer.appendChild(hourContainer);
+  timeContainer.appendChild(minuteContainer);
+  timeContainer.appendChild(secondContainer);
+  display.widget.appendChild(timeContainer);
+
+  //test no time
+  // @ts-ignore
+  display._hasTime = false;
+  expect(() => actions.do(event, ActionTypes.showClock)).toThrow(
+    'TD: Cannot show clock containers when time is disabled.'
+  );
+
+  // @ts-ignore
+  display._hasTime = true;
+
+  //test clock
+  actions.do(event, ActionTypes.showClock);
+  expect(updateSpy).toHaveBeenCalled();
+  expect(clockContainer.style.display).toBe('grid');
+  expect(hourContainer.style.display).toBe('none');
+
+  //test hour
+  actions.do(event, ActionTypes.showHours);
+  expect(updateSpy).toHaveBeenCalled();
+  expect(clockContainer.style.display).toBe('none');
+  expect(hourContainer.style.display).toBe('grid');
+
+  //test minute
+  actions.do(event, ActionTypes.showMinutes);
+  expect(updateSpy).toHaveBeenCalled();
+  expect(clockContainer.style.display).toBe('none');
+  expect(minuteContainer.style.display).toBe('grid');
+
+  //test seconds
+  actions.do(event, ActionTypes.showSeconds);
+  expect(updateSpy).toHaveBeenCalled();
+  expect(clockContainer.style.display).toBe('none');
+  expect(secondContainer.style.display).toBe('grid');
+});
+
+test('clear', () => {
+  const updateCalendarHeaderSpy = vi.spyOn(display, '_updateCalendarHeader');
+  const setValueSpy = vi.spyOn(dates, 'setValue');
+
+  dates.add(newDate());
+  expect(dates.picked).toEqual([newDate()]);
+
+  actions.do(event, ActionTypes.clear);
+  expect(updateCalendarHeaderSpy).toHaveBeenCalled();
+  expect(setValueSpy).toHaveBeenCalled();
+  expect(dates.picked).toEqual([]);
+});
+
+test('close', () => {
+  const hideSpy = vi.spyOn(display, 'hide');
+
+  actions.do(event, ActionTypes.close);
+  expect(hideSpy).toHaveBeenCalled();
+});
+
+test('today', () => {
+  const setValueSpy = vi.spyOn(dates, 'setValue');
+  const viewUpdateSpy = vi.spyOn(emitters.updateViewDate, 'emit');
+
+  expect(dates.picked).toEqual([]);
+  actions.do(event, ActionTypes.today);
+  expect(setValueSpy).toHaveBeenCalled();
+  expect(viewUpdateSpy).toHaveBeenCalled();
+});
+
+test('hideOrClock', () => {
+  const hideSpy = vi.spyOn(display, 'hide');
+  // @ts-ignore
+  const method = actions.hideOrClock.bind(actions);
+  const doSpy = vi.spyOn(actions, 'do');
+  doSpy.mockImplementation(vi.fn());
+
+  //test showClock;
+  method(event);
+  expect(doSpy).toHaveBeenCalled();
+
+  //test should hide
+  // @ts-ignore
+  store.isTwelveHour = false;
+  store.options.display.components.minutes = false;
+  method(event);
+  expect(hideSpy).toHaveBeenCalled();
+});
+
+test('action emitter', () => {
+  const actionSpy = vi.spyOn(emitters.action, 'emit');
+  const doSpy = vi.spyOn(actions, 'do');
+  doSpy.mockImplementation(vi.fn());
+
+  emitters.action.emit({ e: {}, action: ActionTypes.close });
+  expect(actionSpy).toHaveBeenCalled();
 });

@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { DateTime, Unit } from '../../src/js/datetime';
+import { DateTime } from '../../src/js/datetime';
 import { EventEmitters } from '../../src/js/utilities/event-emitter';
 import { OptionsStore } from '../../src/js/utilities/optionsStore';
 import Validation from '../../src/js/validation';
