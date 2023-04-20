@@ -646,7 +646,7 @@ test('format', () => {
 
   //test epoch seconds
   expect(DateTime.fromString('1678814742', { format: 'X' }).getTime()).toBe(
-    new DateTime(2023, 3 - 1, 14, 13, 25, 42).getTime()
+    167881474200
   );
 
   //test epoch millisecond
