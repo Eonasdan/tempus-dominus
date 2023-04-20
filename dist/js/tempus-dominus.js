@@ -424,7 +424,7 @@
       second: '2-digit',
   };
   /**
-   * Returns a Intl format object based on the provided object
+   * Returns an Intl format object based on the provided object
    * @param unit
    */
   const getFormatByUnit = (unit) => {
@@ -630,6 +630,7 @@
               return false;
           if (d.constructor.name === DateTime.name)
               return true;
+          return false;
       }
       /**
        * Sets the current date to the start of the {@link unit} provided
@@ -793,9 +794,6 @@
           if (!DateTime.isValid(left) || !DateTime.isValid(right))
               return false;
           // If a unit is provided and is not a valid property of the DateTime object, throw an error
-          if (unit && this[unit] === undefined) {
-              throw new Error(`Unit '${unit}' is not valid`);
-          }
           if (unit && this[unit] === undefined) {
               throw new Error(`Unit '${unit}' is not valid`);
           }
@@ -1148,7 +1146,6 @@
           }
           catch (e) {
               Namespace.errorMessages.customDateFormatError(`Unable to parse provided input: ${input}, format: ${localization.format}`);
-              return new DateTime(''); // Invalid Date
           }
       }
       /**
@@ -1307,8 +1304,23 @@
        */
       isValid(targetDate, granularity) {
           if (!this._enabledDisabledDatesIsValid(granularity, targetDate))
-              console.log('fail 23');
-          return false;
+              return false;
+          if (granularity !== exports.Unit.month &&
+              granularity !== exports.Unit.year &&
+              this.optionsStore.options.restrictions.daysOfWeekDisabled?.length > 0 &&
+              this.optionsStore.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1)
+              return false;
+          if (!this._minMaxIsValid(granularity, targetDate))
+              return false;
+          if (granularity === exports.Unit.hours ||
+              granularity === exports.Unit.minutes ||
+              granularity === exports.Unit.seconds) {
+              if (!this._enabledDisabledHoursIsValid(targetDate))
+                  return false;
+              if (this.optionsStore.options.restrictions.disabledTimeIntervals?.filter((internal) => targetDate.isBetween(internal.from, internal.to)).length !== 0)
+                  return false;
+          }
+          return true;
       }
       _enabledDisabledDatesIsValid(granularity, targetDate) {
           if (granularity !== exports.Unit.date)
@@ -1412,7 +1424,6 @@
           // check each date in the range to make sure it's valid
           while (!start.isSame(target, exports.Unit.date)) {
               const valid = this.isValid(start, exports.Unit.date);
-              console.log(`${start}: ${valid}`);
               if (!valid)
                   return false;
               start.manipulate(1, exports.Unit.date);
@@ -1567,6 +1578,8 @@
    * @private
    */
   function tryConvertToDateTime(d, localization) {
+      if (!d)
+          return null;
       if (d.constructor.name === DateTime.name)
           return d;
       if (d.constructor.name === Date.name) {
@@ -2107,8 +2120,10 @@
        * @param unit
        */
       isPicked(targetDate, unit) {
+          if (!DateTime.isValid(targetDate))
+              return false;
           if (!unit)
-              return this._dates.find((x) => x === targetDate) !== undefined;
+              return this._dates.find((x) => x.isSame(targetDate)) !== undefined;
           const format = getFormatByUnit(unit);
           const innerDateFormatted = targetDate.format(format);
           return (this._dates
@@ -2123,8 +2138,10 @@
        * @param unit
        */
       pickedIndex(targetDate, unit) {
+          if (!DateTime.isValid(targetDate))
+              return -1;
           if (!unit)
-              return this._dates.indexOf(targetDate);
+              return this._dates.map((x) => x.valueOf()).indexOf(targetDate.valueOf());
           const format = getFormatByUnit(unit);
           const innerDateFormatted = targetDate.format(format);
           return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
@@ -2199,10 +2216,9 @@
               target.minutes =
                   Math.round(target.minutes / this.optionsStore.options.stepping) *
                       this.optionsStore.options.stepping;
-              target.seconds = 0;
+              target.startOf(exports.Unit.minutes);
           }
-          if (this.validation.isValid(target) &&
-              this.validation.dateRangeIsValid(this._dates, index, target)) {
+          const onUpdate = (isValid) => {
               this._dates[index] = target;
               this._eventEmitters.updateViewDate.emit(target.clone);
               this.updateInput(target);
@@ -2213,21 +2229,16 @@
                   date: target,
                   oldDate,
                   isClear,
-                  isValid: true,
+                  isValid: isValid,
               });
+          };
+          if (this.validation.isValid(target) &&
+              this.validation.dateRangeIsValid(this._dates, index, target)) {
+              onUpdate(true);
               return;
           }
           if (this.optionsStore.options.keepInvalid) {
-              this._dates[index] = target;
-              this._eventEmitters.updateViewDate.emit(target.clone);
-              this.updateInput(target);
-              this._eventEmitters.triggerEvent.emit({
-                  type: Namespace.events.change,
-                  date: target,
-                  oldDate,
-                  isClear,
-                  isValid: false,
-              });
+              onUpdate(false);
           }
           this._eventEmitters.triggerEvent.emit({
               type: Namespace.events.error,
@@ -3687,7 +3698,7 @@
           return this._hasDate && this._hasTime;
       }
       /**
-       * Get the toolbar html based on options like buttons.today
+       * Get the toolbar html based on options like buttons => today
        * @private
        */
       getToolbarElements() {
@@ -3756,7 +3767,7 @@
       }
       /**
        * Builds an icon tag as either an `<i>`
-       * or with icons.type is `sprites` then a svg tag instead
+       * or with icons => type is `sprites` then a svg tag instead
        * @param iconClass
        * @private
        */
@@ -3787,7 +3798,7 @@
   }
 
   /**
-   *
+   * Logic for various click actions
    */
   class Actions {
       constructor() {
@@ -3809,7 +3820,7 @@
       do(e, action) {
           const currentTarget = e?.currentTarget;
           if (currentTarget?.classList?.contains(Namespace.css.disabled))
-              return false;
+              return;
           action = action || currentTarget?.dataset?.action;
           const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
               .clone;
@@ -3909,6 +3920,7 @@
       handleShowClockContainers(action) {
           if (!this.display._hasTime) {
               Namespace.errorMessages.throwError('Cannot show clock containers when time is disabled.');
+              /* ignore coverage: should never happen */
               return;
           }
           this.optionsStore.currentView = 'clock';
@@ -4042,6 +4054,7 @@
       }
       handleMultiDate(day) {
           let index = this.dates.pickedIndex(day, exports.Unit.date);
+          console.log(index);
           if (index !== -1) {
               this.dates.setValue(null, index); //deselect multi-date
           }
