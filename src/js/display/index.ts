@@ -662,7 +662,7 @@ export default class Display {
   }
 
   /**
-   * Get the toolbar html based on options like buttons.today
+   * Get the toolbar html based on options like buttons => today
    * @private
    */
   getToolbarElements(): HTMLElement[] {
@@ -755,7 +755,7 @@ export default class Display {
 
   /**
    * Builds an icon tag as either an `<i>`
-   * or with icons.type is `sprites` then a svg tag instead
+   * or with icons => type is `sprites` then a svg tag instead
    * @param iconClass
    * @private
    */

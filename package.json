@@ -107,11 +107,8 @@
     "url": "https://github.com/Eonasdan/tempus-dominus.git"
   },
   "wallaby": {
-    "files": [
-      "src/**/*.ts"
-    ],
-    "tests": [
-      "test/**/*.test.ts"
+    "filesWithNoCoverageCalculated": [
+      "test/fixtures/**/*"
     ]
   },
   "funding": "https://ko-fi.com/eonasdan"

@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { beforeEach, expect, test } from 'vitest';
 import { TempusDominus } from '../src/js/tempus-dominus';
 

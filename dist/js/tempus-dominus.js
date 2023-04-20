@@ -424,7 +424,7 @@
       second: '2-digit',
   };
   /**
-   * Returns a Intl format object based on the provided object
+   * Returns an Intl format object based on the provided object
    * @param unit
    */
   const getFormatByUnit = (unit) => {
@@ -596,7 +596,7 @@
           return this;
       }
       /**
-       * Chainable way to set the {@link locale}
+       * Chainable way to set the {@link localization}
        * @param value
        */
       setLocalization(value) {
@@ -630,6 +630,7 @@
               return false;
           if (d.constructor.name === DateTime.name)
               return true;
+          return false;
       }
       /**
        * Sets the current date to the start of the {@link unit} provided
@@ -793,9 +794,6 @@
           if (!DateTime.isValid(left) || !DateTime.isValid(right))
               return false;
           // If a unit is provided and is not a valid property of the DateTime object, throw an error
-          if (unit && this[unit] === undefined) {
-              throw new Error(`Unit '${unit}' is not valid`);
-          }
           if (unit && this[unit] === undefined) {
               throw new Error(`Unit '${unit}' is not valid`);
           }
@@ -1148,7 +1146,6 @@
           }
           catch (e) {
               Namespace.errorMessages.customDateFormatError(`Unable to parse provided input: ${input}, format: ${localization.format}`);
-              return new DateTime(''); // Invalid Date
           }
       }
       /**
@@ -1311,9 +1308,8 @@
           if (granularity !== exports.Unit.month &&
               granularity !== exports.Unit.year &&
               this.optionsStore.options.restrictions.daysOfWeekDisabled?.length > 0 &&
-              this.optionsStore.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1) {
+              this.optionsStore.options.restrictions.daysOfWeekDisabled.indexOf(targetDate.weekDay) !== -1)
               return false;
-          }
           if (!this._minMaxIsValid(granularity, targetDate))
               return false;
           if (granularity === exports.Unit.hours ||
@@ -1327,7 +1323,7 @@
           return true;
       }
       _enabledDisabledDatesIsValid(granularity, targetDate) {
-          if (granularity === exports.Unit.month)
+          if (granularity !== exports.Unit.date)
               return true;
           if (this.optionsStore.options.restrictions.disabledDates.length > 0 &&
               this._isInDisabledDates(targetDate)) {
@@ -1350,7 +1346,7 @@
           if (!this.optionsStore.options.restrictions.disabledDates ||
               this.optionsStore.options.restrictions.disabledDates.length === 0)
               return false;
-          return this.optionsStore.options.restrictions.disabledDates.find((x) => x.isSame(testDate, exports.Unit.date));
+          return !!this.optionsStore.options.restrictions.disabledDates.find((x) => x.isSame(testDate, exports.Unit.date));
       }
       /**
        * Checks to see if the enabledDates option is in use and returns true (meaning valid)
@@ -1362,33 +1358,7 @@
           if (!this.optionsStore.options.restrictions.enabledDates ||
               this.optionsStore.options.restrictions.enabledDates.length === 0)
               return true;
-          return this.optionsStore.options.restrictions.enabledDates.find((x) => x.isSame(testDate, exports.Unit.date));
-      }
-      /**
-       * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
-       * if the `testDate` is with in the array. Granularity is by hours.
-       * @param testDate
-       * @private
-       */
-      _isInDisabledHours(testDate) {
-          if (!this.optionsStore.options.restrictions.disabledHours ||
-              this.optionsStore.options.restrictions.disabledHours.length === 0)
-              return false;
-          const formattedDate = testDate.hours;
-          return this.optionsStore.options.restrictions.disabledHours.find((x) => x === formattedDate);
-      }
-      /**
-       * Checks to see if the enabledHours option is in use and returns true (meaning valid)
-       * if the `testDate` is with in the array. Granularity is by hours.
-       * @param testDate
-       * @private
-       */
-      _isInEnabledHours(testDate) {
-          if (!this.optionsStore.options.restrictions.enabledHours ||
-              this.optionsStore.options.restrictions.enabledHours.length === 0)
-              return true;
-          const formattedDate = testDate.hours;
-          return this.optionsStore.options.restrictions.enabledHours.find((x) => x === formattedDate);
+          return !!this.optionsStore.options.restrictions.enabledDates.find((x) => x.isSame(testDate, exports.Unit.date));
       }
       _minMaxIsValid(granularity, targetDate) {
           if (this.optionsStore.options.restrictions.minDate &&
@@ -1414,6 +1384,32 @@
           }
           return true;
       }
+      /**
+       * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
+       * if the `testDate` is with in the array. Granularity is by hours.
+       * @param testDate
+       * @private
+       */
+      _isInDisabledHours(testDate) {
+          if (!this.optionsStore.options.restrictions.disabledHours ||
+              this.optionsStore.options.restrictions.disabledHours.length === 0)
+              return false;
+          const formattedDate = testDate.hours;
+          return this.optionsStore.options.restrictions.disabledHours.includes(formattedDate);
+      }
+      /**
+       * Checks to see if the enabledHours option is in use and returns true (meaning valid)
+       * if the `testDate` is with in the array. Granularity is by hours.
+       * @param testDate
+       * @private
+       */
+      _isInEnabledHours(testDate) {
+          if (!this.optionsStore.options.restrictions.enabledHours ||
+              this.optionsStore.options.restrictions.enabledHours.length === 0)
+              return true;
+          const formattedDate = testDate.hours;
+          return this.optionsStore.options.restrictions.enabledHours.includes(formattedDate);
+      }
       dateRangeIsValid(dates, index, target) {
           // if we're not using the option, then return valid
           if (!this.optionsStore.options.dateRange)
@@ -1427,7 +1423,8 @@
           const start = dates[0].clone.manipulate(1, exports.Unit.date);
           // check each date in the range to make sure it's valid
           while (!start.isSame(target, exports.Unit.date)) {
-              if (!this.isValid(start))
+              const valid = this.isValid(start, exports.Unit.date);
+              if (!valid)
                   return false;
               start.manipulate(1, exports.Unit.date);
           }
@@ -1581,6 +1578,8 @@
    * @private
    */
   function tryConvertToDateTime(d, localization) {
+      if (!d)
+          return null;
       if (d.constructor.name === DateTime.name)
           return d;
       if (d.constructor.name === Date.name) {
@@ -2121,8 +2120,10 @@
        * @param unit
        */
       isPicked(targetDate, unit) {
+          if (!DateTime.isValid(targetDate))
+              return false;
           if (!unit)
-              return this._dates.find((x) => x === targetDate) !== undefined;
+              return this._dates.find((x) => x.isSame(targetDate)) !== undefined;
           const format = getFormatByUnit(unit);
           const innerDateFormatted = targetDate.format(format);
           return (this._dates
@@ -2137,8 +2138,10 @@
        * @param unit
        */
       pickedIndex(targetDate, unit) {
+          if (!DateTime.isValid(targetDate))
+              return -1;
           if (!unit)
-              return this._dates.indexOf(targetDate);
+              return this._dates.map((x) => x.valueOf()).indexOf(targetDate.valueOf());
           const format = getFormatByUnit(unit);
           const innerDateFormatted = targetDate.format(format);
           return this._dates.map((x) => x.format(format)).indexOf(innerDateFormatted);
@@ -2213,10 +2216,9 @@
               target.minutes =
                   Math.round(target.minutes / this.optionsStore.options.stepping) *
                       this.optionsStore.options.stepping;
-              target.seconds = 0;
+              target.startOf(exports.Unit.minutes);
           }
-          if (this.validation.isValid(target) &&
-              this.validation.dateRangeIsValid(this._dates, index, target)) {
+          const onUpdate = (isValid) => {
               this._dates[index] = target;
               this._eventEmitters.updateViewDate.emit(target.clone);
               this.updateInput(target);
@@ -2227,21 +2229,16 @@
                   date: target,
                   oldDate,
                   isClear,
-                  isValid: true,
+                  isValid: isValid,
               });
+          };
+          if (this.validation.isValid(target) &&
+              this.validation.dateRangeIsValid(this._dates, index, target)) {
+              onUpdate(true);
               return;
           }
           if (this.optionsStore.options.keepInvalid) {
-              this._dates[index] = target;
-              this._eventEmitters.updateViewDate.emit(target.clone);
-              this.updateInput(target);
-              this._eventEmitters.triggerEvent.emit({
-                  type: Namespace.events.change,
-                  date: target,
-                  oldDate,
-                  isClear,
-                  isValid: false,
-              });
+              onUpdate(false);
           }
           this._eventEmitters.triggerEvent.emit({
               type: Namespace.events.error,
@@ -3701,7 +3698,7 @@
           return this._hasDate && this._hasTime;
       }
       /**
-       * Get the toolbar html based on options like buttons.today
+       * Get the toolbar html based on options like buttons => today
        * @private
        */
       getToolbarElements() {
@@ -3770,7 +3767,7 @@
       }
       /**
        * Builds an icon tag as either an `<i>`
-       * or with icons.type is `sprites` then a svg tag instead
+       * or with icons => type is `sprites` then a svg tag instead
        * @param iconClass
        * @private
        */
@@ -3801,7 +3798,7 @@
   }
 
   /**
-   *
+   * Logic for various click actions
    */
   class Actions {
       constructor() {
@@ -3823,7 +3820,7 @@
       do(e, action) {
           const currentTarget = e?.currentTarget;
           if (currentTarget?.classList?.contains(Namespace.css.disabled))
-              return false;
+              return;
           action = action || currentTarget?.dataset?.action;
           const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
               .clone;
@@ -3923,6 +3920,7 @@
       handleShowClockContainers(action) {
           if (!this.display._hasTime) {
               Namespace.errorMessages.throwError('Cannot show clock containers when time is disabled.');
+              /* ignore coverage: should never happen */
               return;
           }
           this.optionsStore.currentView = 'clock';
@@ -4056,6 +4054,7 @@
       }
       handleMultiDate(day) {
           let index = this.dates.pickedIndex(day, exports.Unit.date);
+          console.log(index);
           if (index !== -1) {
               this.dates.setValue(null, index); //deselect multi-date
           }

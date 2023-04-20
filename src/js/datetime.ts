@@ -40,7 +40,7 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
 }
 
 /**
- * Returns a Intl format object based on the provided object
+ * Returns an Intl format object based on the provided object
  * @param unit
  */
 export const getFormatByUnit = (unit: Unit): object => {
@@ -117,7 +117,7 @@ export class DateTime extends Date {
   }
 
   /**
-   * Chainable way to set the {@link locale}
+   * Chainable way to set the {@link localization}
    * @param value
    */
   setLocalization(value: FormatLocalization): this {
@@ -173,6 +173,7 @@ export class DateTime extends Date {
   static isValid(d): boolean {
     if (d === undefined || JSON.stringify(d) === 'null') return false;
     if (d.constructor.name === DateTime.name) return true;
+    return false;
   }
 
   /**
@@ -349,10 +350,6 @@ export class DateTime extends Date {
     if (!DateTime.isValid(left) || !DateTime.isValid(right)) return false;
     // If a unit is provided and is not a valid property of the DateTime object, throw an error
     if (unit && this[unit] === undefined) {
-      throw new Error(`Unit '${unit}' is not valid`);
-    }
-
-    if (unit && this[unit as keyof DateTime] === undefined) {
       throw new Error(`Unit '${unit}' is not valid`);
     }
 
@@ -881,7 +878,6 @@ export class DateTime extends Date {
       Namespace.errorMessages.customDateFormatError(
         `Unable to parse provided input: ${input}, format: ${localization.format}`
       );
-      return new DateTime(''); // Invalid Date
     }
   }
 

@@ -1,5 +1,9 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
-
+import {
+  defaultLocalization,
+  newDate,
+  newDateStringMinute,
+} from './test-utilities';
 import { expect, test } from 'vitest';
 import {
   DateTime,
@@ -7,7 +11,6 @@ import {
   guessHourCycle,
   Unit,
 } from '../src/js/datetime';
-import DefaultFormatLocalization from '../src/js/utilities/default-format-localization';
 
 test('getFormatByUnit', () => {
   expect(getFormatByUnit(Unit.date)).toEqual({ dateStyle: 'short' });
@@ -19,15 +22,15 @@ test('getFormatByUnit', () => {
 });
 
 test('Can create with string (ctor)', () => {
-  const dt = new DateTime('12/31/2022');
-  expect(dt.month).toBe(12 - 1); //minus 1 because javascript 🙄
-  expect(dt.date).toBe(31);
-  expect(dt.year).toBe(2022);
+  const dt = newDate();
+  expect(dt.month).toBe(2); //minus 1 because javascript 🙄
+  expect(dt.date).toBe(14);
+  expect(dt.year).toBe(2023);
 });
 
 test('Localization is stored', () => {
-  const dt = new DateTime();
-  expect(dt.localization).toEqual(DefaultFormatLocalization);
+  const dt = newDate();
+  expect(dt.localization).toEqual(defaultLocalization());
   const es = {
     locale: 'es',
     dateFormats: {
@@ -43,6 +46,14 @@ test('Localization is stored', () => {
   };
   dt.setLocalization(es);
   expect(dt.localization).toEqual(es);
+
+  //check setting just the locale
+  dt.localization = null;
+
+  const fr = defaultLocalization();
+  fr.locale = 'fr';
+  dt.setLocale('fr');
+  expect(dt.localization).toEqual(fr);
 });
 
 test('Can convert from a Date object', () => {
@@ -58,7 +69,7 @@ test('Convert fails with no parameter', () => {
 
 test('Can create with string', () => {
   expect(() => DateTime.fromString('12/31/2022', null)).toThrow(/TD/);
-  const localization = DefaultFormatLocalization;
+  const localization = defaultLocalization();
   localization.format = localization.dateFormats.L;
   const dt = DateTime.fromString('12/31/2022', localization);
   expect(dt.month).toBe(12 - 1); //minus 1 because javascript 🙄
@@ -153,7 +164,7 @@ test('endOf', () => {
 
 test('manipulate throws an error with invalid part', () => {
   // @ts-ignore
-  expect(() => new DateTime().manipulate(1, 'foo')).toThrow(
+  expect(() => newDate().manipulate(1, 'foo')).toThrow(
     "Unit 'foo' is not valid"
   );
 });
@@ -174,6 +185,9 @@ test('isBefore', () => {
 
   // @ts-ignore
   expect(() => dt1.isBefore(dt2, 'foo')).toThrow("Unit 'foo' is not valid");
+
+  //compare date is not valid
+  expect(dt1.isBefore(undefined, Unit.date)).toBe(false);
 });
 
 test('isAfter', () => {
@@ -186,6 +200,9 @@ test('isAfter', () => {
 
   // @ts-ignore
   expect(() => dt2.isAfter(dt1, 'foo')).toThrow("Unit 'foo' is not valid");
+
+  //compare date is not valid
+  expect(dt1.isAfter(undefined, Unit.date)).toBe(false);
 });
 
 test('isSame', () => {
@@ -195,6 +212,9 @@ test('isSame', () => {
   expect(dt1.isSame(dt2)).toBe(true);
 
   expect(dt1.isSame(dt2, Unit.date)).toBe(true);
+
+  //if the compare date is invalid
+  expect(dt1.isSame(undefined, Unit.date)).toBe(false);
 
   // @ts-ignore
   expect(() => dt1.isSame(dt2, 'foo')).toThrow("Unit 'foo' is not valid");
@@ -228,6 +248,15 @@ test('isBetween', () => {
   expect(
     dateTime.isBetween(dateTime, new DateTime('2016-12-30'), undefined, '[)')
   ).toBe(true);
+
+  //compare date is not valid
+  expect(dt1.isBetween(undefined, undefined, Unit.date)).toBe(false);
+
+  //Unit is not valid
+  // @ts-ignore
+  expect(() => dt1.isBetween(dateTime, newDate(), 'foo')).toThrow(
+    "Unit 'foo' is not valid"
+  );
 });
 
 test('Getters/Setters', () => {
@@ -335,7 +364,7 @@ test('Guess hour cycle', () => {
 
 test('Get ALl Months', () => {
   // @ts-ignore
-  const months = new DateTime().getAllMonths();
+  const months = newDate().getAllMonths();
   expect(months).toEqual([
     'January',
     'February',
@@ -353,22 +382,22 @@ test('Get ALl Months', () => {
 });
 
 test('replace tokens', () => {
-  const dateTime = new DateTime();
+  const dateTime = newDate();
 
   // @ts-ignore
   const replaceTokens = dateTime.replaceTokens;
 
   expect(replaceTokens('hi LTS', 'LTS')).toBe(
-    `hi ${DefaultFormatLocalization.dateFormats.LTS}`
+    `hi ${defaultLocalization().dateFormats.LTS}`
   );
 
-  expect(replaceTokens('LLLLL', DefaultFormatLocalization.dateFormats)).toBe(
+  expect(replaceTokens('LLLLL', defaultLocalization().dateFormats)).toBe(
     `dddd, MMMM d, yyyy h:mm TMM/dd/yyyy`
   );
 });
 
 test('parseTwoDigitYear', () => {
-  const dateTime = new DateTime();
+  const dateTime = newDate();
   // @ts-ignore
   let parsed = dateTime.parseTwoDigitYear(70);
 
@@ -381,7 +410,7 @@ test('parseTwoDigitYear', () => {
 });
 
 test('meridiemMatch', () => {
-  const dateTime = new DateTime();
+  const dateTime = newDate();
   // @ts-ignore
   let match = dateTime.meridiemMatch('AM');
 
@@ -394,7 +423,7 @@ test('meridiemMatch', () => {
 });
 
 test('expressions', () => {
-  const dateTime = new DateTime();
+  const dateTime = newDate();
   // @ts-ignore
   const e = { ...dateTime.expressions };
   // @ts-ignore
@@ -511,7 +540,7 @@ test('expressions', () => {
 
   expect(o.day).toBe('1');
 
-  dateTime.localization.ordinal = DefaultFormatLocalization.ordinal;
+  dateTime.localization.ordinal = defaultLocalization().ordinal;
 
   //#region Months
 
@@ -565,7 +594,7 @@ test('expressions', () => {
 });
 
 test('correctHours', () => {
-  const dateTime = new DateTime();
+  const dateTime = newDate();
 
   // @ts-ignore
   const correctHours = dateTime.correctHours;
@@ -590,13 +619,13 @@ test('correctHours', () => {
 });
 
 test('format', () => {
-  const dateTime = new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500);
+  const dateTime = newDate();
 
   dateTime.localization.hourCycle = 'h11';
 
-  expect(dateTime.format()).toBe('03/14/2023');
+  expect(dateTime.format()).toBe(newDateStringMinute);
 
-  expect(dateTime.format('L LT')).toBe('03/14/2023 1:25 PM');
+  expect(dateTime.format('L LT')).toBe(newDateStringMinute);
 
   dateTime.hours = 10;
 
@@ -606,7 +635,46 @@ test('format', () => {
 
   expect(dateTime.format('dd-MMM-yyyy')).toBe('14-Mar-2023');
 
+  //test failure if no format
+  expect(() => DateTime.fromString('', undefined)).toThrow(
+    'TD: Custom Date Format: No format was provided'
+  );
+
   expect(DateTime.fromString('01-Mar-2023', { format: 'dd-MMM-yyyy' })).toEqual(
     new DateTime(2023, 3 - 1, 1, 0, 0, 0, 0)
   );
+
+  //test epoch seconds
+  expect(DateTime.fromString('1678814742', { format: 'X' }).getTime()).toBe(
+    1678814742000
+  );
+
+  //test epoch millisecond
+  expect(DateTime.fromString('1678814742500', { format: 'x' }).getTime()).toBe(
+    1678814742500
+  );
+
+  //test invalid input
+  expect(() => DateTime.fromString('--', { format: 'hjik' })).toThrow(
+    'TD: Custom Date Format: Unable to parse provided input: --, format: hjik'
+  );
+
+  //test no format for defaults
+  const dt2 = newDate();
+  dt2.localization.format = undefined;
+  dt2.localization.hourCycle = undefined;
+  expect(dt2.format()).toBe('03/14/2023, 1:25 PM');
+
+  //test hour cycles
+  const dt3 = newDate();
+  dt3.localization.hourCycle = 'h23';
+  expect(dt3.format('HH')).toBe('13');
+  dt3.localization.hourCycle = 'h11';
+  expect(dt3.format('hh')).toBe('01');
+});
+
+test('isValid', () => {
+  expect(DateTime.isValid('asdf')).toBe(false);
+  expect(DateTime.isValid(undefined)).toBe(false);
+  expect(DateTime.isValid(newDate())).toBe(true);
 });
