@@ -207,8 +207,8 @@ export default class Validation {
     const start = dates[0];
 
     // check if start date is not the same as target date
-    if(start.isSame(target, Unit.date)) return true;
-    
+    if (start.isSame(target, Unit.date)) return true;
+
     // add one day to start; start has already been validated
     start.clone.manipulate(1, Unit.date);
 
