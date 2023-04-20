@@ -14,12 +14,13 @@ export function tryConvertToDateTime(
   d: DateTime | Date | '',
   localization: FormatLocalization
 ): DateTime | null {
+  if (!d) return null;
   if (d.constructor.name === DateTime.name) return d as DateTime;
   if (d.constructor.name === Date.name) {
     return DateTime.convert(d as Date);
   }
   if (typeof d === typeof '') {
-    const dateTime = DateTime.fromString(d as string, localization);
+    const dateTime = DateTime.fromString(d as unknown as string, localization);
     if (JSON.stringify(dateTime) === 'null') {
       return null;
     }

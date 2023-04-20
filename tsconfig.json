@@ -12,7 +12,11 @@
       "ES2021"
     ],
     "moduleResolution": "node",
-    "rootDir": "./src/js",
+    //"rootDir": "./src/js",
+    "paths": {
+      "~src/*": ["../src/*"]
+    },
+    "rootDirs": ["./src/js", "./test"],
     "declaration": true,
     "declarationDir": "./types",
     "emitDecoratorMetadata": true,
@@ -22,6 +26,7 @@
   "exclude": [
     "node_modules",
     "./src/js/plugins/**/*.ts",
-    "./src/js/locales/**/*.ts"
+    "./src/js/locales/**/*.ts",
+    "./test"
   ]
 }
