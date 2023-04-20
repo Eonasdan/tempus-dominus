@@ -1469,6 +1469,41 @@ class EventEmitters {
     }
 }
 
+const defaultEnLocalization = {
+    clear: 'Clear selection',
+    close: 'Close the picker',
+    dateFormats: DefaultFormatLocalization$1.dateFormats,
+    dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+    decrementHour: 'Decrement Hour',
+    decrementMinute: 'Decrement Minute',
+    decrementSecond: 'Decrement Second',
+    format: DefaultFormatLocalization$1.format,
+    hourCycle: DefaultFormatLocalization$1.hourCycle,
+    incrementHour: 'Increment Hour',
+    incrementMinute: 'Increment Minute',
+    incrementSecond: 'Increment Second',
+    locale: DefaultFormatLocalization$1.locale,
+    nextCentury: 'Next Century',
+    nextDecade: 'Next Decade',
+    nextMonth: 'Next Month',
+    nextYear: 'Next Year',
+    ordinal: DefaultFormatLocalization$1.ordinal,
+    pickHour: 'Pick Hour',
+    pickMinute: 'Pick Minute',
+    pickSecond: 'Pick Second',
+    previousCentury: 'Previous Century',
+    previousDecade: 'Previous Decade',
+    previousMonth: 'Previous Month',
+    previousYear: 'Previous Year',
+    selectDate: 'Select Date',
+    selectDecade: 'Select Decade',
+    selectMonth: 'Select Month',
+    selectTime: 'Select Time',
+    selectYear: 'Select Year',
+    startOfTheWeek: 0,
+    today: 'Go to today',
+    toggleMeridiem: 'Toggle Meridiem',
+};
 const DefaultOptions = {
     allowInputToggle: false,
     container: undefined,
@@ -1515,41 +1550,7 @@ const DefaultOptions = {
         placement: 'bottom',
     },
     keepInvalid: false,
-    localization: {
-        clear: 'Clear selection',
-        close: 'Close the picker',
-        dateFormats: DefaultFormatLocalization$1.dateFormats,
-        dayViewHeaderFormat: { month: 'long', year: '2-digit' },
-        decrementHour: 'Decrement Hour',
-        decrementMinute: 'Decrement Minute',
-        decrementSecond: 'Decrement Second',
-        format: DefaultFormatLocalization$1.format,
-        hourCycle: DefaultFormatLocalization$1.hourCycle,
-        incrementHour: 'Increment Hour',
-        incrementMinute: 'Increment Minute',
-        incrementSecond: 'Increment Second',
-        locale: DefaultFormatLocalization$1.locale,
-        nextCentury: 'Next Century',
-        nextDecade: 'Next Decade',
-        nextMonth: 'Next Month',
-        nextYear: 'Next Year',
-        ordinal: DefaultFormatLocalization$1.ordinal,
-        pickHour: 'Pick Hour',
-        pickMinute: 'Pick Minute',
-        pickSecond: 'Pick Second',
-        previousCentury: 'Previous Century',
-        previousDecade: 'Previous Decade',
-        previousMonth: 'Previous Month',
-        previousYear: 'Previous Year',
-        selectDate: 'Select Date',
-        selectDecade: 'Select Decade',
-        selectMonth: 'Select Month',
-        selectTime: 'Select Time',
-        selectYear: 'Select Year',
-        startOfTheWeek: 0,
-        today: 'Go to today',
-        toggleMeridiem: 'Toggle Meridiem',
-    },
+    localization: defaultEnLocalization,
     meta: {},
     multipleDates: false,
     multipleDatesSeparator: '; ',
@@ -1569,6 +1570,7 @@ const DefaultOptions = {
     useCurrent: true,
     viewDate: new DateTime(),
 };
+const DefaultEnLocalization = { ...defaultEnLocalization };
 
 /**
  * Attempts to prove `d` is a DateTime or Date or can be converted into one.
@@ -4188,6 +4190,7 @@ class TempusDominus {
             this._initializeOptions(options, DefaultOptions);
         else
             this._initializeOptions(options, this.optionsStore.options);
+        this.optionsStore.viewDate.setLocalization(this.optionsStore.options.localization);
         this.display._rebuild();
     }
     // noinspection JSUnusedGlobalSymbols
@@ -4562,7 +4565,8 @@ const tempusDominus = {
     DateTime,
     Unit,
     version,
+    DefaultEnLocalization
 };
 
-export { DateTime, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale, version };
+export { DateTime, DefaultEnLocalization, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale, version };
 //# sourceMappingURL=tempus-dominus.esm.js.map

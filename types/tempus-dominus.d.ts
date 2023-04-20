@@ -1108,6 +1108,48 @@ declare class Namespace {
   static errorMessages: ErrorMessages;
 }
 declare const DefaultOptions: Options;
+declare const DefaultEnLocalization: {
+  clear?: string;
+  close?: string;
+  dayViewHeaderFormat?: DateTimeFormatOptions;
+  decrementHour?: string;
+  decrementMinute?: string;
+  decrementSecond?: string;
+  incrementHour?: string;
+  incrementMinute?: string;
+  incrementSecond?: string;
+  nextCentury?: string;
+  nextDecade?: string;
+  nextMonth?: string;
+  nextYear?: string;
+  pickHour?: string;
+  pickMinute?: string;
+  pickSecond?: string;
+  previousCentury?: string;
+  previousDecade?: string;
+  previousMonth?: string;
+  previousYear?: string;
+  selectDate?: string;
+  selectDecade?: string;
+  selectMonth?: string;
+  selectTime?: string;
+  selectYear?: string;
+  startOfTheWeek?: number;
+  today?: string;
+  toggleMeridiem?: string;
+  dateFormats?: {
+    L?: string;
+    LL?: string;
+    LLL?: string;
+    LLLL?: string;
+    LT?: string;
+    LTS?: string;
+  };
+  format?: string;
+  hourCycle?: Intl.LocaleHourCycleKey;
+  locale?: string;
+  ordinal?: (n: number) => any;
+};
 /**
  * A robust and powerful date/time picker component.
  */
@@ -1354,6 +1396,48 @@ declare const extend: (
   DateTime: typeof DateTime;
   Unit: typeof Unit;
   version: string;
+  DefaultEnLocalization: {
+    clear?: string;
+    close?: string;
+    dayViewHeaderFormat?: DateTimeFormatOptions;
+    decrementHour?: string;
+    decrementMinute?: string;
+    decrementSecond?: string;
+    incrementHour?: string;
+    incrementMinute?: string;
+    incrementSecond?: string;
+    nextCentury?: string;
+    nextDecade?: string;
+    nextMonth?: string;
+    nextYear?: string;
+    pickHour?: string;
+    pickMinute?: string;
+    pickSecond?: string;
+    previousCentury?: string;
+    previousDecade?: string;
+    previousMonth?: string;
+    previousYear?: string;
+    selectDate?: string;
+    selectDecade?: string;
+    selectMonth?: string;
+    selectTime?: string;
+    selectYear?: string;
+    startOfTheWeek?: number;
+    today?: string;
+    toggleMeridiem?: string;
+    dateFormats?: {
+      L?: string;
+      LL?: string;
+      LLL?: string;
+      LLLL?: string;
+      LT?: string;
+      LTS?: string;
+    };
+    format?: string;
+    hourCycle?: Intl.LocaleHourCycleKey;
+    locale?: string;
+    ordinal?: (n: number) => any;
+  };
 };
 declare const version = '6.4.4';
 export {
@@ -1368,4 +1452,5 @@ export {
   version,
   DateTimeFormatOptions,
   Options,
+  DefaultEnLocalization,
 };
