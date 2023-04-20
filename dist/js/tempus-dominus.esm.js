@@ -4565,7 +4565,7 @@ const tempusDominus = {
     DateTime,
     Unit,
     version,
-    DefaultEnLocalization
+    DefaultEnLocalization,
 };
 
 export { DateTime, DefaultEnLocalization, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale, version };

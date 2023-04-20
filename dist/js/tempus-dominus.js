@@ -2360,11 +2360,7 @@
               .startOf(exports.Unit.month)
               .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
               .manipulate(12, exports.Unit.hours);
-          [...container.querySelectorAll(`.${Namespace.css.calendarWeeks}`)]
-              .filter((e) => e.innerText !== '#')
-              .forEach((element) => {
-              element.innerText = `${innerDate.week}`;
-          });
+          this._handleCalendarWeeks(container, innerDate.clone);
           container
               .querySelectorAll(`[data-action="${ActionTypes$1.selectDay}"]`)
               .forEach((element) => {
@@ -2538,6 +2534,14 @@
               row.push(htmlDivElement);
           }
           return row;
+      }
+      _handleCalendarWeeks(container, innerDate) {
+          [...container.querySelectorAll(`.${Namespace.css.calendarWeeks}`)]
+              .filter((e) => e.innerText !== '#')
+              .forEach((element) => {
+              element.innerText = `${innerDate.week}`;
+              innerDate.manipulate(7, exports.Unit.date);
+          });
       }
   }
 
@@ -4571,7 +4575,7 @@
       DateTime,
       Unit: exports.Unit,
       version,
-      DefaultEnLocalization
+      DefaultEnLocalization,
   };
 
   exports.DateTime = DateTime;

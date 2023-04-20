@@ -85,11 +85,7 @@ export default class DateDisplay {
       .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
       .manipulate(12, Unit.hours);
 
-    [...container.querySelectorAll(`.${Namespace.css.calendarWeeks}`)]
-      .filter((e: HTMLElement) => e.innerText !== '#')
-      .forEach((element: HTMLElement) => {
-        element.innerText = `${innerDate.week}`;
-      });
+    this._handleCalendarWeeks(container, innerDate.clone);
 
     container
       .querySelectorAll(`[data-action="${ActionTypes.selectDay}"]`)
@@ -323,5 +319,14 @@ export default class DateDisplay {
     }
 
     return row;
+  }
+
+  private _handleCalendarWeeks(container: HTMLElement, innerDate: DateTime) {
+    [...container.querySelectorAll(`.${Namespace.css.calendarWeeks}`)]
+      .filter((e: HTMLElement) => e.innerText !== '#')
+      .forEach((element: HTMLElement) => {
+        element.innerText = `${innerDate.week}`;
+        innerDate.manipulate(7, Unit.date);
+      });
   }
 }

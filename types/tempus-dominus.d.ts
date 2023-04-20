@@ -25,6 +25,7 @@ declare class DateDisplay {
    * @private
    */
   private _daysOfTheWeek;
+  private _handleCalendarWeeks;
 }
 /**
  * Creates and updates the grid for `month`
@@ -1424,6 +1425,12 @@ declare const extend: (
     selectYear?: string;
     startOfTheWeek?: number;
     today?: string;
+    /**
+     * Update the picker options. If `reset` is provide `options` will be merged with DefaultOptions instead.
+     * @param options
+     * @param reset
+     * @public
+     */
     toggleMeridiem?: string;
     dateFormats?: {
       L?: string;
