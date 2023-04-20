@@ -635,7 +635,7 @@ test('format', () => {
 
   expect(dateTime.format('dd-MMM-yyyy')).toBe('14-Mar-2023');
 
-  //test epoch millisecond
+  //test failure if no format
   expect(() => DateTime.fromString('', undefined)).toThrow(
     'TD: Custom Date Format: No format was provided'
   );
@@ -645,7 +645,7 @@ test('format', () => {
   );
 
   //test epoch seconds
-  expect(DateTime.fromString('1678814742', { format: 'X' }).getTime()).toEqual(
+  expect(DateTime.fromString('1678814742', { format: 'X' }).getTime()).toBe(
     new DateTime(2023, 3 - 1, 14, 13, 25, 42).getTime()
   );
 
