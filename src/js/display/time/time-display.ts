@@ -43,8 +43,9 @@ export default class TimeDisplay {
     const timesDiv = <HTMLElement>(
       widget.getElementsByClassName(Namespace.css.clockContainer)[0]
     );
-    const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
-      .clone;
+    let lastPicked = this.dates.lastPicked?.clone;
+    if (!lastPicked && this.optionsStore.options.useCurrent)
+      lastPicked = this.optionsStore.viewDate.clone;
 
     timesDiv
       .querySelectorAll('.disabled')
@@ -72,11 +73,14 @@ export default class TimeDisplay {
           .querySelector(`[data-action=${ActionTypes.decrementHours}]`)
           .classList.add(Namespace.css.disabled);
       }
+
       timesDiv.querySelector<HTMLElement>(
         `[data-time-component=${Unit.hours}]`
-      ).innerText = lastPicked.getHoursFormatted(
-        this.optionsStore.options.localization.hourCycle
-      );
+      ).innerText = lastPicked
+        ? lastPicked.getHoursFormatted(
+            this.optionsStore.options.localization.hourCycle
+          )
+        : '--';
     }
 
     if (this.optionsStore.options.display.components.minutes) {
@@ -103,7 +107,7 @@ export default class TimeDisplay {
       }
       timesDiv.querySelector<HTMLElement>(
         `[data-time-component=${Unit.minutes}]`
-      ).innerText = lastPicked.minutesFormatted;
+      ).innerText = lastPicked ? lastPicked.minutesFormatted : '--';
     }
 
     if (this.optionsStore.options.display.components.seconds) {
@@ -130,7 +134,7 @@ export default class TimeDisplay {
       }
       timesDiv.querySelector<HTMLElement>(
         `[data-time-component=${Unit.seconds}]`
-      ).innerText = lastPicked.secondsFormatted;
+      ).innerText = lastPicked ? lastPicked.secondsFormatted : '--';
     }
 
     if (this.optionsStore.isTwelveHour) {
@@ -138,12 +142,14 @@ export default class TimeDisplay {
         `[data-action=${ActionTypes.toggleMeridiem}]`
       );
 
-      toggle.innerText = lastPicked.meridiem();
+      const meridiemDate = (lastPicked || this.optionsStore.viewDate).clone;
+
+      toggle.innerText = meridiemDate.meridiem();
 
       if (
         !this.validation.isValid(
-          lastPicked.clone.manipulate(
-            lastPicked.hours >= 12 ? -12 : 12,
+          meridiemDate.manipulate(
+            meridiemDate.hours >= 12 ? -12 : 12,
             Unit.hours
           )
         )

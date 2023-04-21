@@ -2802,8 +2802,9 @@
        */
       _update(widget) {
           const timesDiv = (widget.getElementsByClassName(Namespace.css.clockContainer)[0]);
-          const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
-              .clone;
+          let lastPicked = this.dates.lastPicked?.clone;
+          if (!lastPicked && this.optionsStore.options.useCurrent)
+              lastPicked = this.optionsStore.viewDate.clone;
           timesDiv
               .querySelectorAll('.disabled')
               .forEach((element) => element.classList.remove(Namespace.css.disabled));
@@ -2818,7 +2819,9 @@
                       .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
                       .classList.add(Namespace.css.disabled);
               }
-              timesDiv.querySelector(`[data-time-component=${exports.Unit.hours}]`).innerText = lastPicked.getHoursFormatted(this.optionsStore.options.localization.hourCycle);
+              timesDiv.querySelector(`[data-time-component=${exports.Unit.hours}]`).innerText = lastPicked ?
+                  lastPicked.getHoursFormatted(this.optionsStore.options.localization.hourCycle) :
+                  '--';
           }
           if (this.optionsStore.options.display.components.minutes) {
               if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.minutes), exports.Unit.minutes)) {
@@ -2831,7 +2834,7 @@
                       .querySelector(`[data-action=${ActionTypes$1.decrementMinutes}]`)
                       .classList.add(Namespace.css.disabled);
               }
-              timesDiv.querySelector(`[data-time-component=${exports.Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
+              timesDiv.querySelector(`[data-time-component=${exports.Unit.minutes}]`).innerText = lastPicked ? lastPicked.minutesFormatted : '--';
           }
           if (this.optionsStore.options.display.components.seconds) {
               if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.seconds), exports.Unit.seconds)) {
@@ -2844,12 +2847,13 @@
                       .querySelector(`[data-action=${ActionTypes$1.decrementSeconds}]`)
                       .classList.add(Namespace.css.disabled);
               }
-              timesDiv.querySelector(`[data-time-component=${exports.Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
+              timesDiv.querySelector(`[data-time-component=${exports.Unit.seconds}]`).innerText = lastPicked ? lastPicked.secondsFormatted : '--';
           }
           if (this.optionsStore.isTwelveHour) {
               const toggle = timesDiv.querySelector(`[data-action=${ActionTypes$1.toggleMeridiem}]`);
-              toggle.innerText = lastPicked.meridiem();
-              if (!this.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, exports.Unit.hours))) {
+              const meridiemDate = (lastPicked || this.optionsStore.viewDate).clone;
+              toggle.innerText = meridiemDate.meridiem();
+              if (!this.validation.isValid(meridiemDate.manipulate(meridiemDate.hours >= 12 ? -12 : 12, exports.Unit.hours))) {
                   toggle.classList.add(Namespace.css.disabled);
               }
               else {
