@@ -204,13 +204,12 @@ export default class Validation {
     if (dates.length !== 2 && index !== 1) return true;
 
     // initialize start date
-    const start = dates[0];
-
+    const start = dates[0].clone;
     // check if start date is not the same as target date
-    if(start.isSame(target, Unit.date)) return true;
-    
+    if (start.isSame(target, Unit.date)) return true;
+
     // add one day to start; start has already been validated
-    start.clone.manipulate(1, Unit.date);
+    start.manipulate(1, Unit.date);
 
     // check each date in the range to make sure it's valid
     while (!start.isSame(target, Unit.date)) {

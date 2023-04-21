@@ -366,8 +366,10 @@ export default class Actions {
           this.dates.setValue(day, 0);
           this.dates.setValue(other, 1);
           return;
-        } else this.dates.setValue(day, 1);
-        return;
+        } else {
+          this.dates.setValue(day, 1);
+          return;
+        }
       }
     }
 
