@@ -102,7 +102,7 @@ export default class DateDisplay {
 
         if (
           !this.optionsStore.unset &&
-          !this.optionsStore.options.multipleDates &&
+          !this.optionsStore.options.dateRange &&
           this.dates.isPicked(innerDate, Unit.date)
         ) {
           classes.push(Namespace.css.active);
