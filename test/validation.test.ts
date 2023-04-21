@@ -1,5 +1,5 @@
 /* eslint-disable  @typescript-eslint/ban-ts-comment */
-import { reset, store } from './test-utilities';
+import { newDate, reset, store } from './test-utilities';
 import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
 import Validation from '../src/js/validation';
 import { DateTime, Unit } from '../src/js/datetime';
@@ -232,34 +232,35 @@ test('isInEnabledHours', () => {
 });
 
 test('dateRangeIsValid', () => {
-  let targetDate = new DateTime();
-  let back = targetDate.clone.manipulate(-1, Unit.date);
-  let forward = targetDate.clone.manipulate(3, Unit.date);
+  const isValidSpy = vi.spyOn(validation, 'isValid');
+  let back = newDate().manipulate(-1, Unit.date);
+  let forward = newDate().clone.manipulate(3, Unit.date);
 
   //no rules
-  expect(validation.dateRangeIsValid([], 0, targetDate)).toBe(true);
+  expect(validation.dateRangeIsValid([], 0, newDate())).toBe(true);
 
   //option is enabled but no dates are selected or not testing the end date
   store.options.dateRange = true;
-  expect(validation.dateRangeIsValid([], 0, targetDate)).toBe(true);
+  expect(validation.dateRangeIsValid([], 0, newDate())).toBe(true);
+
+  //test start is the same day
+  expect(validation.dateRangeIsValid([newDate(), forward], 0, newDate())).toBe(
+    true
+  );
 
   store.options.restrictions.maxDate = forward;
 
   //one of the dates in range fails validation
+  isValidSpy.mockImplementationOnce(() => false);
   expect(
-    validation.dateRangeIsValid(
-      [back],
-      1,
-      targetDate.clone.manipulate(5, Unit.date)
-    )
+    validation.dateRangeIsValid([back], 1, newDate().manipulate(5, Unit.date))
   ).toBe(false);
+  expect(isValidSpy).toHaveBeenCalled();
 
   //all dates pass
+  isValidSpy.mockImplementationOnce(() => true);
   expect(
-    validation.dateRangeIsValid(
-      [back],
-      1,
-      targetDate.clone.manipulate(2, Unit.date)
-    )
+    validation.dateRangeIsValid([back], 1, newDate().manipulate(2, Unit.date))
   ).toBe(true);
+  expect(isValidSpy).toHaveBeenCalled();
 });
