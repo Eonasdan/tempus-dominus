@@ -2819,9 +2819,9 @@
                       .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
                       .classList.add(Namespace.css.disabled);
               }
-              timesDiv.querySelector(`[data-time-component=${exports.Unit.hours}]`).innerText = lastPicked ?
-                  lastPicked.getHoursFormatted(this.optionsStore.options.localization.hourCycle) :
-                  '--';
+              timesDiv.querySelector(`[data-time-component=${exports.Unit.hours}]`).innerText = lastPicked
+                  ? lastPicked.getHoursFormatted(this.optionsStore.options.localization.hourCycle)
+                  : '--';
           }
           if (this.optionsStore.options.display.components.minutes) {
               if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, exports.Unit.minutes), exports.Unit.minutes)) {

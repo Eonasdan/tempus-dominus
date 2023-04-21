@@ -2813,9 +2813,9 @@ class TimeDisplay {
                     .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
                     .classList.add(Namespace.css.disabled);
             }
-            timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = lastPicked ?
-                lastPicked.getHoursFormatted(this.optionsStore.options.localization.hourCycle) :
-                '--';
+            timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = lastPicked
+                ? lastPicked.getHoursFormatted(this.optionsStore.options.localization.hourCycle)
+                : '--';
         }
         if (this.optionsStore.options.display.components.minutes) {
             if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
@@ -2828,7 +2828,7 @@ class TimeDisplay {
                     .querySelector(`[data-action=${ActionTypes$1.decrementMinutes}]`)
                     .classList.add(Namespace.css.disabled);
             }
-            timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = this.optionsStore.options.useCurrent ? lastPicked.minutesFormatted : '--';
+            timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked ? lastPicked.minutesFormatted : '--';
         }
         if (this.optionsStore.options.display.components.seconds) {
             if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
@@ -2841,7 +2841,7 @@ class TimeDisplay {
                     .querySelector(`[data-action=${ActionTypes$1.decrementSeconds}]`)
                     .classList.add(Namespace.css.disabled);
             }
-            timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = this.optionsStore.options.useCurrent ? lastPicked.secondsFormatted : '--';
+            timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked ? lastPicked.secondsFormatted : '--';
         }
         if (this.optionsStore.isTwelveHour) {
             const toggle = timesDiv.querySelector(`[data-action=${ActionTypes$1.toggleMeridiem}]`);

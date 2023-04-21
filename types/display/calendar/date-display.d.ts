@@ -26,4 +26,5 @@ export default class DateDisplay {
    * @private
    */
   private _daysOfTheWeek;
+  private _handleCalendarWeeks;
 }
