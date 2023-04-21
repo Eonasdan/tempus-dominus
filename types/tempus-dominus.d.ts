@@ -3,7 +3,9 @@ import Dates from './dates';
 import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
-import DefaultOptions from './utilities/default-options';
+import DefaultOptions, {
+  DefaultEnLocalization,
+} from './utilities/default-options';
 /**
  * A robust and powerful date/time picker component.
  */
@@ -166,6 +168,54 @@ declare const extend: (
   DateTime: typeof DateTime;
   Unit: typeof Unit;
   version: string;
+  DefaultEnLocalization: {
+    clear?: string;
+    close?: string;
+    dayViewHeaderFormat?: DateTimeFormatOptions;
+    decrementHour?: string;
+    decrementMinute?: string;
+    decrementSecond?: string;
+    incrementHour?: string;
+    incrementMinute?: string;
+    incrementSecond?: string;
+    nextCentury?: string;
+    nextDecade?: string;
+    nextMonth?: string;
+    nextYear?: string;
+    pickHour?: string;
+    pickMinute?: string;
+    pickSecond?: string;
+    previousCentury?: string;
+    previousDecade?: string;
+    previousMonth?: string;
+    previousYear?: string;
+    selectDate?: string;
+    selectDecade?: string;
+    selectMonth?: string;
+    selectTime?: string;
+    selectYear?: string;
+    startOfTheWeek?: number;
+    today?: string;
+    /**
+     * Update the picker options. If `reset` is provide `options` will be merged with DefaultOptions instead.
+     * @param options
+     * @param reset
+     * @public
+     */
+    toggleMeridiem?: string;
+    dateFormats?: {
+      L?: string;
+      LL?: string;
+      LLL?: string;
+      LLLL?: string;
+      LT?: string;
+      LTS?: string;
+    };
+    format?: string;
+    hourCycle?: Intl.LocaleHourCycleKey;
+    locale?: string;
+    ordinal?: (n: number) => any;
+  };
 };
 declare const version = '6.4.4';
 export {
@@ -180,4 +230,5 @@ export {
   version,
   DateTimeFormatOptions,
   Options,
+  DefaultEnLocalization,
 };

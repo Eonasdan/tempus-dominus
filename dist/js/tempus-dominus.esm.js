@@ -1413,8 +1413,13 @@ class Validation {
         // because the other validation on the target has already occurred.
         if (dates.length !== 2 && index !== 1)
             return true;
+        // initialize start date
+        const start = dates[0];
+        // check if start date is not the same as target date
+        if (start.isSame(target, Unit.date))
+            return true;
         // add one day to start; start has already been validated
-        const start = dates[0].clone.manipulate(1, Unit.date);
+        start.clone.manipulate(1, Unit.date);
         // check each date in the range to make sure it's valid
         while (!start.isSame(target, Unit.date)) {
             const valid = this.isValid(start, Unit.date);
@@ -1464,6 +1469,41 @@ class EventEmitters {
     }
 }
 
+const defaultEnLocalization = {
+    clear: 'Clear selection',
+    close: 'Close the picker',
+    dateFormats: DefaultFormatLocalization$1.dateFormats,
+    dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+    decrementHour: 'Decrement Hour',
+    decrementMinute: 'Decrement Minute',
+    decrementSecond: 'Decrement Second',
+    format: DefaultFormatLocalization$1.format,
+    hourCycle: DefaultFormatLocalization$1.hourCycle,
+    incrementHour: 'Increment Hour',
+    incrementMinute: 'Increment Minute',
+    incrementSecond: 'Increment Second',
+    locale: DefaultFormatLocalization$1.locale,
+    nextCentury: 'Next Century',
+    nextDecade: 'Next Decade',
+    nextMonth: 'Next Month',
+    nextYear: 'Next Year',
+    ordinal: DefaultFormatLocalization$1.ordinal,
+    pickHour: 'Pick Hour',
+    pickMinute: 'Pick Minute',
+    pickSecond: 'Pick Second',
+    previousCentury: 'Previous Century',
+    previousDecade: 'Previous Decade',
+    previousMonth: 'Previous Month',
+    previousYear: 'Previous Year',
+    selectDate: 'Select Date',
+    selectDecade: 'Select Decade',
+    selectMonth: 'Select Month',
+    selectTime: 'Select Time',
+    selectYear: 'Select Year',
+    startOfTheWeek: 0,
+    today: 'Go to today',
+    toggleMeridiem: 'Toggle Meridiem',
+};
 const DefaultOptions = {
     allowInputToggle: false,
     container: undefined,
@@ -1510,41 +1550,7 @@ const DefaultOptions = {
         placement: 'bottom',
     },
     keepInvalid: false,
-    localization: {
-        clear: 'Clear selection',
-        close: 'Close the picker',
-        dateFormats: DefaultFormatLocalization$1.dateFormats,
-        dayViewHeaderFormat: { month: 'long', year: '2-digit' },
-        decrementHour: 'Decrement Hour',
-        decrementMinute: 'Decrement Minute',
-        decrementSecond: 'Decrement Second',
-        format: DefaultFormatLocalization$1.format,
-        hourCycle: DefaultFormatLocalization$1.hourCycle,
-        incrementHour: 'Increment Hour',
-        incrementMinute: 'Increment Minute',
-        incrementSecond: 'Increment Second',
-        locale: DefaultFormatLocalization$1.locale,
-        nextCentury: 'Next Century',
-        nextDecade: 'Next Decade',
-        nextMonth: 'Next Month',
-        nextYear: 'Next Year',
-        ordinal: DefaultFormatLocalization$1.ordinal,
-        pickHour: 'Pick Hour',
-        pickMinute: 'Pick Minute',
-        pickSecond: 'Pick Second',
-        previousCentury: 'Previous Century',
-        previousDecade: 'Previous Decade',
-        previousMonth: 'Previous Month',
-        previousYear: 'Previous Year',
-        selectDate: 'Select Date',
-        selectDecade: 'Select Decade',
-        selectMonth: 'Select Month',
-        selectTime: 'Select Time',
-        selectYear: 'Select Year',
-        startOfTheWeek: 0,
-        today: 'Go to today',
-        toggleMeridiem: 'Toggle Meridiem',
-    },
+    localization: defaultEnLocalization,
     meta: {},
     multipleDates: false,
     multipleDatesSeparator: '; ',
@@ -1564,6 +1570,7 @@ const DefaultOptions = {
     useCurrent: true,
     viewDate: new DateTime(),
 };
+const DefaultEnLocalization = { ...defaultEnLocalization };
 
 /**
  * Attempts to prove `d` is a DateTime or Date or can be converted into one.
@@ -2347,11 +2354,7 @@ class DateDisplay {
             .startOf(Unit.month)
             .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
             .manipulate(12, Unit.hours);
-        [...container.querySelectorAll(`.${Namespace.css.calendarWeeks}`)]
-            .filter((e) => e.innerText !== '#')
-            .forEach((element) => {
-            element.innerText = `${innerDate.week}`;
-        });
+        this._handleCalendarWeeks(container, innerDate.clone);
         container
             .querySelectorAll(`[data-action="${ActionTypes$1.selectDay}"]`)
             .forEach((element) => {
@@ -2525,6 +2528,14 @@ class DateDisplay {
             row.push(htmlDivElement);
         }
         return row;
+    }
+    _handleCalendarWeeks(container, innerDate) {
+        [...container.querySelectorAll(`.${Namespace.css.calendarWeeks}`)]
+            .filter((e) => e.innerText !== '#')
+            .forEach((element) => {
+            element.innerText = `${innerDate.week}`;
+            innerDate.manipulate(7, Unit.date);
+        });
     }
 }
 
@@ -2785,8 +2796,9 @@ class TimeDisplay {
      */
     _update(widget) {
         const timesDiv = (widget.getElementsByClassName(Namespace.css.clockContainer)[0]);
-        const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
-            .clone;
+        let lastPicked = this.dates.lastPicked?.clone;
+        if (!lastPicked && this.optionsStore.options.useCurrent)
+            lastPicked = this.optionsStore.viewDate.clone;
         timesDiv
             .querySelectorAll('.disabled')
             .forEach((element) => element.classList.remove(Namespace.css.disabled));
@@ -2801,7 +2813,9 @@ class TimeDisplay {
                     .querySelector(`[data-action=${ActionTypes$1.decrementHours}]`)
                     .classList.add(Namespace.css.disabled);
             }
-            timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = lastPicked.getHoursFormatted(this.optionsStore.options.localization.hourCycle);
+            timesDiv.querySelector(`[data-time-component=${Unit.hours}]`).innerText = lastPicked
+                ? lastPicked.getHoursFormatted(this.optionsStore.options.localization.hourCycle)
+                : '--';
         }
         if (this.optionsStore.options.display.components.minutes) {
             if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.minutes), Unit.minutes)) {
@@ -2814,7 +2828,7 @@ class TimeDisplay {
                     .querySelector(`[data-action=${ActionTypes$1.decrementMinutes}]`)
                     .classList.add(Namespace.css.disabled);
             }
-            timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked.minutesFormatted;
+            timesDiv.querySelector(`[data-time-component=${Unit.minutes}]`).innerText = lastPicked ? lastPicked.minutesFormatted : '--';
         }
         if (this.optionsStore.options.display.components.seconds) {
             if (!this.validation.isValid(this.optionsStore.viewDate.clone.manipulate(1, Unit.seconds), Unit.seconds)) {
@@ -2827,12 +2841,13 @@ class TimeDisplay {
                     .querySelector(`[data-action=${ActionTypes$1.decrementSeconds}]`)
                     .classList.add(Namespace.css.disabled);
             }
-            timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked.secondsFormatted;
+            timesDiv.querySelector(`[data-time-component=${Unit.seconds}]`).innerText = lastPicked ? lastPicked.secondsFormatted : '--';
         }
         if (this.optionsStore.isTwelveHour) {
             const toggle = timesDiv.querySelector(`[data-action=${ActionTypes$1.toggleMeridiem}]`);
-            toggle.innerText = lastPicked.meridiem();
-            if (!this.validation.isValid(lastPicked.clone.manipulate(lastPicked.hours >= 12 ? -12 : 12, Unit.hours))) {
+            const meridiemDate = (lastPicked || this.optionsStore.viewDate).clone;
+            toggle.innerText = meridiemDate.meridiem();
+            if (!this.validation.isValid(meridiemDate.manipulate(meridiemDate.hours >= 12 ? -12 : 12, Unit.hours))) {
                 toggle.classList.add(Namespace.css.disabled);
             }
             else {
@@ -4183,6 +4198,7 @@ class TempusDominus {
             this._initializeOptions(options, DefaultOptions);
         else
             this._initializeOptions(options, this.optionsStore.options);
+        this.optionsStore.viewDate.setLocalization(this.optionsStore.options.localization);
         this.display._rebuild();
     }
     // noinspection JSUnusedGlobalSymbols
@@ -4557,7 +4573,8 @@ const tempusDominus = {
     DateTime,
     Unit,
     version,
+    DefaultEnLocalization,
 };
 
-export { DateTime, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale, version };
+export { DateTime, DefaultEnLocalization, DefaultOptions, Namespace, TempusDominus, Unit, extend, loadLocale, locale, version };
 //# sourceMappingURL=tempus-dominus.esm.js.map
