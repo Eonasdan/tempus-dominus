@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.4.4 (https://getdatepicker.com/)
+  * Tempus Dominus v6.7.7 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -1420,12 +1420,12 @@
           if (dates.length !== 2 && index !== 1)
               return true;
           // initialize start date
-          const start = dates[0];
+          const start = dates[0].clone;
           // check if start date is not the same as target date
           if (start.isSame(target, exports.Unit.date))
               return true;
           // add one day to start; start has already been validated
-          start.clone.manipulate(1, exports.Unit.date);
+          start.manipulate(1, exports.Unit.date);
           // check each date in the range to make sure it's valid
           while (!start.isSame(target, exports.Unit.date)) {
               const valid = this.isValid(start, exports.Unit.date);
@@ -2061,13 +2061,13 @@
        * Returns the array of selected dates
        */
       get picked() {
-          return this._dates;
+          return [...this._dates];
       }
       /**
        * Returns the last picked value.
        */
       get lastPicked() {
-          return this._dates[this.lastPickedIndex];
+          return this._dates[this.lastPickedIndex]?.clone;
       }
       /**
        * Returns the length of picked dates -1 or 0 if none are selected.
@@ -2203,7 +2203,7 @@
        */
       setValue(target, index) {
           const noIndex = typeof index === 'undefined', isClear = !target && noIndex;
-          let oldDate = this.optionsStore.unset ? null : this._dates[index];
+          let oldDate = this.optionsStore.unset ? null : this._dates[index]?.clone;
           if (!oldDate && !this.optionsStore.unset && noIndex && isClear) {
               oldDate = this.lastPicked;
           }
@@ -2240,7 +2240,7 @@
               });
           };
           if (this.validation.isValid(target) &&
-              this.validation.dateRangeIsValid(this._dates, index, target)) {
+              this.validation.dateRangeIsValid(this.picked, index, target)) {
               onUpdate(true);
               return;
           }
@@ -2373,7 +2373,7 @@
                   classes.push(Namespace.css.new);
               }
               if (!this.optionsStore.unset &&
-                  !this.optionsStore.options.multipleDates &&
+                  !this.optionsStore.options.dateRange &&
                   this.dates.isPicked(innerDate, exports.Unit.date)) {
                   classes.push(Namespace.css.active);
               }
@@ -4097,9 +4097,10 @@
                       this.dates.setValue(other, 1);
                       return;
                   }
-                  else
+                  else {
                       this.dates.setValue(day, 1);
-                  return;
+                      return;
+                  }
               }
           }
           this.dates.setValue(day, 0);
@@ -4568,7 +4569,7 @@
       }
       return tempusDominus;
   };
-  const version = '6.4.4';
+  const version = '6.7.7';
   const tempusDominus = {
       TempusDominus,
       extend,
