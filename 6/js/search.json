@@ -5,7 +5,7 @@
     "body": "you can use this plugin to set the global default icons bootstrap v requires resources be loaded simple picker tempusdominus.extend(window.tempusdominus.plugins.bi_one.load const datetimepicker new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker example globally or import load bioneicons from tempusdominus/plugins/bi-one tempusdominus.extend(load otherwise an individual datetimepicker1.updateoptions display window.tempusdominus.plugins.bi_one.bioneicons boostrap option value type time bi bi-clock date bi-calendar-week up bi-arrow-up down bi-arrow-down previous bi-chevron-left next bi-chevron-right today bi-calendar-check clear bi-trash close bi-x",
     "postDate": "03/15/2023",
     "updateDate": "03/15/2023",
-    "excerpt": "How to use Bootstrap Icons v1 plugin with Tempus Dominus.\n  ",
+    "excerpt": "How to use Bootstrap Icons v1 plugin with Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -14,7 +14,7 @@
     "body": "floating ui by default popperjs/core is required for the popper to work correctly alternatively we can remove and use floatingui creating a plugin that handles popup creation import computeposition from floating-ui/dom const datetimepicker new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker datetimepicker1.display.createpopup computeposition(element widget options).then x y object.assign(widget.style left x}px top y}px position absolute",
     "postDate": "09/13/2022",
     "updateDate": "09/13/2022",
-    "excerpt": "How to use FloatingUI plugin with Tempus Dominus.\n  ",
+    "excerpt": "How to use FloatingUI plugin with Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -23,16 +23,16 @@
     "body": "for the sake of following documentation assume there's a picker setup like this const new tempusdominus tempusdominus(document.getelementbyid('datetimepicker simple tempusdominus.tempusdominus(document.getelementbyid('datetimepicker view date picker.viewdate returns pickers current datetime will set update options and ask to refresh picker.dates there are number function here that allow retrieving selected dates or adding them these functions used as picker.dates.add example picked an array date(s lastpicked last lastpickedindex length if none add(datetime adds use with caution it not automatically widget do any validation setvalue(value index sets select first provided object formatinput(value string formats when setting input value is possible overwrite provide more complex formatting moment/dayjs by hand parseinput(value:any parse into can be overwritten supply your own parsing setfrominput(value tries convert null|undefined then clear ispicked(datetime unit true target part granularity pickedindex(datetime at which in updating removing multi-date clears all emits namespace.events.change overview add format from",
     "postDate": "08/14/2022",
     "updateDate": "08/14/2022",
-    "excerpt": "How to use Tempus Dominus datetime picker\n  ",
+    "excerpt": "How to use Tempus Dominus datetime picker",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
     "file": "display.html",
     "title": "Display Functions",
-    "body": "for the sake of following documentation assume there's a picker setup like this const new tempusdominus tempusdominus(document.getelementbyid('datetimepicker simple tempusdominus.tempusdominus(document.getelementbyid('datetimepicker toggle shows or hides widget emits namespace.events.hide if is hidden after call namespace.events.show show namespace.events.change opened first time and input element empty options.usecurrent false was before that usecurrent set to true granularity value component attached has an hide visible paint(unit decade datetime string htmlelement allows developers add/remove classes from during grid generation code function called it provides unit being generated i.e displaying main date view object effected current css container check out example paint plugin overview update options dispose disable enable clear subscribe",
+    "body": "for the sake of following documentation assume there's a picker setup like this const new tempusdominus tempusdominus(document.getelementbyid('datetimepicker simple tempusdominus.tempusdominus(document.getelementbyid('datetimepicker toggle shows or hides widget emits namespace.events.hide if is hidden after call namespace.events.show show namespace.events.change opened first time and input element empty options.usecurrent false was before that usecurrent set to true granularity value component attached has an hide visible paint(unit decade datetime string htmlelement allows developers add/remove classes from during grid generation code function called it provides unit being generated i.e displaying main date view object effected current css container check out example paint plugin overview",
     "postDate": "08/14/2022",
     "updateDate": "08/14/2022",
-    "excerpt": "How to use Tempus Dominus datetime picker\n  ",
+    "excerpt": "How to use Tempus Dominus datetime picker",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -41,16 +41,16 @@
     "body": "for the sake of following documentation assume there's a picker setup like this const new tempusdominus tempusdominus(document.getelementbyid('datetimepicker simple tempusdominus.tempusdominus(document.getelementbyid('datetimepicker updateoptions(object boolean in previous version there was function to read/write each provided options made it easy use but code bulky and harder maintain updateoptions replaces those functions takes an object allows multiple be set at same time works way as when setting up if optional reset flag is then will merged with default values dispose destroys widget removes all attached event listeners open hidden fired disable disables input element component by adding disabled=\"true attribute visible before that call emits namespace.events.hide enable enables removing disabled from clear clears selected dates short cut picker.dates.clear subscribe(event events callback callbacks instead pickers you can subscribe method provide single listen or array providing number must returns unsubscribe methods are calling remove unsubscribing not prevent addeventlistener working subscription picker.subscribe(tempusdominus.namespace.events.change e console.log(e listener unsubscribed subscription.unsubscribe also subscriptions picker.subscribe tempusdominus.namespace.events.show,tempusdominus.namespace.events.hide overview update",
     "postDate": "08/14/2022",
     "updateDate": "08/14/2022",
-    "excerpt": "How to use Tempus Dominus datetime picker\n    ",
+    "excerpt": "How to use Tempus Dominus datetime picker",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
     "file": "display.html",
     "title": "Display Options",
-    "body": "the display options allow you to control much of picker's look and feel can disable components buttons change default icons new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker type time fa-solid fa-clock date fa-calendar up fa-arrow-up down fa-arrow-down previous fa-chevron-left next fa-chevron-right today fa-calendar-check clear fa-trash close fa-xmark sidebyside false calendarweeks viewmode calendar toolbarplacement bottom keepopen true month year decades clock hours minutes seconds deprecated use localization.hourcycle h instead usetwentyfourhour undefined inline theme auto accepts string any icon library that expects be used like i class='fas fa-calendar'></i will work provided include correct styles scripts needed sprites are also supported either or defaults if is as value render with an svg element don't know which should leave it fas this view from increment in decrement navigation forward decade views backwards now currently selected fa-times picker true|false displays pickers side by additional column week for months years when displayed set a birth top changes placement toolbar where component switch located throws unexpectedoptionvalue not one accepted values keep window open even after selection still closed target clicking on outside option only disabled above red purple green these turns off particular user would able select instance convenience flag enable all century must visible those has been removed future version defaults:boolean div popup light dark specifies mode detect based settings user's system overview weeks twenty-four",
+    "body": "the display options allow you to control much of picker's look and feel can disable components buttons change default icons new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker type time fa-solid fa-clock date fa-calendar up fa-arrow-up down fa-arrow-down previous fa-chevron-left next fa-chevron-right today fa-calendar-check clear fa-trash close fa-xmark sidebyside false calendarweeks viewmode calendar toolbarplacement bottom keepopen true month year decades clock hours minutes seconds deprecated use localization.hourcycle h instead usetwentyfourhour undefined inline theme auto accepts string any icon library that expects be used like i class='fas fa-calendar'></i will work provided include correct styles scripts needed sprites are also supported either or defaults if is as value render with an svg element don't know which should leave it fas this view from increment in decrement navigation forward decade views backwards now currently selected fa-times picker true|false displays pickers side by additional column week for months years when displayed set a birth top changes placement toolbar where component switch located throws unexpectedoptionvalue not one accepted values keep window open even after selection still closed target clicking on outside option only disabled above red purple green these turns off particular user would able select instance convenience flag enable all century must visible those has been removed future version defaults:boolean div popup light dark specifies mode detect based settings user's system whether at passed overview weeks twenty-four",
     "postDate": "08/11/2022",
     "updateDate": "08/11/2022",
-    "excerpt": "How to use the display options.\n  ",
+    "excerpt": "How to use the display options.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -59,7 +59,7 @@
     "body": "most of the localization options are for title tooltips over icons you can provide to override as well day/month display could also set this globally via tempusdominus.defaultoptions.localization or by creating a variable e.g const ru today then new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker go clear selection close picker selectmonth select month previousmonth previous nextmonth next selectyear year previousyear nextyear selectdecade decade previousdecade nextdecade previouscentury century nextcentury pickhour pick hour incrementhour increment decrementhour decrement pickminute minute incrementminute decrementminute picksecond second incrementsecond decrementsecond togglemeridiem toggle meridiem selecttime time selectdate date dayviewheaderformat long digit locale default startoftheweek hourcycle undefined dateformats lts h:mm:ss t lt h:mm l mm/dd/yyyy ll mmmm d yyyy lll llll dddd ordinal n format defaults period accepts datetimeformatoptions should be an appropriate value from intl.dateformat bcp language tag supported intl changes start week provided index intl/date does not apis get locale's sunday saturday if want calendar view on monday option h how hours displayed left will attempt guess here is different affect and end day cycle midnight night notes am pm your uses please let me know these describe shorthand strings form short standard us july date/time with weekday function convert cardinal numbers third tokenized use dd/mm/yyyy overview header formats",
     "postDate": "08/11/2022",
     "updateDate": "08/11/2022",
-    "excerpt": "How to use the restriction options.\n  ",
+    "excerpt": "How to use the restriction options.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -68,7 +68,7 @@
     "body": "restrictions allow you to prevent users from selected dates or times based on a set of rules new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker mindate undefined maxdate disableddates enableddates daysofweekdisabled disabledtimeintervals disabledhours enabledhours accepts string date datetime defaults prevents the user selecting date/time before this value remove restriction throws conflictingconfiguration if is after enableddates/disableddates array use one other don't provide both and allows select only provided days setting takes precedence over options.mindate options.maxdate configuration disallows any enabledhours/disabledhours number numbersoutofrage not between hours an object with disables time selection given datetimes const later tempusdominus.datetime later.hours tempusdominus.tempusdominus tempusdominus.datetime().startof('date numbers disallow weekdays that exist in has lower priority options.disableddates options.enableddates settings overview min max enabled/disabled disabled intervals week",
     "postDate": "08/11/2022",
     "updateDate": "08/11/2022",
-    "excerpt": "How to use the restriction options.\n  ",
+    "excerpt": "How to use the restriction options.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -77,16 +77,16 @@
     "body": "the picker uses following enum to represent a breakdown of date/time seconds minutes hours date month year",
     "postDate": "02/05/2022",
     "updateDate": "02/05/2022",
-    "excerpt": "\n    A break down of the Unit enum in Tempus Dominus.\n  ",
+    "excerpt": "A break down of the Unit enum in Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
     "file": "moment.html",
     "title": "Plugins - Moment",
-    "body": "if you still need to use moment js can load this plugin parse input dates simple picker tempusdominus.extend(tempusdominus.plugins.moment_parse dd.mm.yyyy hh:mm a const datetimepicker new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker example note that optionally provide the format how it works overrides two functions setfrominput and formatinput parses sets date at provided index with textbox value is reverse takes time object formats or string obviously loading required declare var export option tdclasses tdfactory tdclasses.dates.prototype.setfrominput function(value let converted moment(value converted.isvalid tdfactory.datetime.convert(converted.todate this.optionsstore.options.localization.locale this.setvalue(date else console.warn('momentjs failed tdclasses.dates.prototype.formatinput function(date return moment(date).format(option",
+    "body": "if you still need to use moment js can load this plugin parse input dates simple picker tempusdominus.extend(tempusdominus.plugins.moment_parse dd.mm.yyyy hh:mm a const datetimepicker new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker example note that optionally provide the format",
     "postDate": "02/05/2022",
     "updateDate": "02/05/2022",
-    "excerpt": "How to use momentjs plugin with Tempus Dominus.\n  ",
+    "excerpt": "How to use momentjs plugin with Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -95,7 +95,7 @@
     "body": "you can customize the css classes applied to dates by overwriting display paint function provides a unit value extended include decade date involved and an array of string that represents will be simple picker const datetimepicker new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker datetimepicker1.display.paint element if tempusdominus.unit.date date.issame(new tempusdominus.datetime().manipulate classes.push('special-day special-day background-color deeppink important example highlight tomorrow",
     "postDate": "02/05/2022",
     "updateDate": "03/21/2022",
-    "excerpt": "How to use add custom classes with Tempus Dominus.\n  ",
+    "excerpt": "How to use add custom classes with Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -104,7 +104,7 @@
     "body": "the locale files offer a simple way to globally or individually set localization options without need hand code that everytime picker tempusdominus.loadlocale(tempusdominus.locales.ru tempusdominus.locale(tempusdominus.locales.ru.name const datetimepicker new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker creating locales there are few examples in source like this name ru today startoftheweek export using load file script src=\"/path/to/locale.js\"></script you can then either global default it tempusdominus.locale(tempusdominus.locales.ru.name);//set use russian from plugin datetimepicker1.locale(tempusdominus.locales.ru.name if want typescript import tempusdominus loadlocale eonasdan/tempus-dominus eonasdan/tempus-dominus/dist/locales/ru loadlocale({localization locale(name var tempusdominus(document.getelementbyid('datetimepicker per datetimepicker1.locale(name overview",
     "postDate": "01/19/2022",
     "updateDate": "02/05/2022",
-    "excerpt": "How to use plugins with Tempus Dominus.\n  ",
+    "excerpt": "How to use plugins with Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -113,7 +113,7 @@
     "body": "this is no longer a plugin it's now included directly use the boxes below to set format string and locale of sample picker click change update options const datetimepicker new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker localization pt-br dd/mm/yyyy hh:mm document.getelementbyid('change').addeventlistener('click datetimepicker1.updateoptions document.getelementbyid('locale').value document.getelementbyid('format').value datetimepicker1.dates.setvalue(new tempusdominus.datetime example tokens supports following given t15:13:29.474z token description result yy digit year yyyy m month e.g mm mmm short jul mmmm full july d day dd ddd weekday mon dddd monday h hour hh pm minute s second ss t meridiem",
     "postDate": "01/19/2022",
     "updateDate": "01/26/2023",
-    "excerpt": "How to use custom date format plugin with Tempus Dominus.\n  ",
+    "excerpt": "How to use custom date format plugin with Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -122,7 +122,7 @@
     "body": "you can use this plugin to set the global default icons fa requires resources be loaded simple picker tempusdominus.extend(window.tempusdominus.plugins.fa_five.load const datetimepicker new tempusdominus.tempusdominus(document.getelementbyid('datetimepicker example globally or import load fafiveicons from tempusdominus/plugins/fa-five tempusdominus.extend(load otherwise an individual datetimepicker1.updateoptions display window.tempusdominus.plugins.fa_five.fafiveicons option value type time fas fa-clock date fa-calendar up fa-arrow-up down fa-arrow-down previous fa-chevron-left next fa-chevron-right today fa-calendar-check clear fa-trash close fa-xmark",
     "postDate": "01/19/2022",
     "updateDate": "07/22/2022",
-    "excerpt": "How to use font awesome 5 plugin with Tempus Dominus.\n  ",
+    "excerpt": "How to use font awesome 5 plugin with Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -131,7 +131,7 @@
     "body": "introduction plugins allow you to extend the picker by adding new functionality either tempus dominus globally a single or overwriting existing creating there are few examples in source like this export const load option tdclasses tdfactory e.g add tempusdominus.tempusdominus(...).somefunction tdclasses.tempusdominus.prototype.somefunction logger console.log logger(a tempusdominus tempusdominus.example tdfactory.example overriding api tempusdominus.tempusdominus(...).show oldshow tdclasses.tempusdominus.prototype.show function(a alert('from plugin oldshow.bind(this return modified result using is easy script file after src=\"/path/to/plugin.js\"></script tempusdominus.extend(window.tempusdominus.plugins.pluginname can also use import instead version from eonasdan/tempus-dominus require works sample eonasdan/tempus-dominus/dist/plugins/examples/sample extend(sample per instance be loaded tempusdominus(document.getelementbyid('datetimepicker picker.extend(sample overwrites it possible overwrite specific functions instances as well for td td.dates.formatinput function(date moment(date).format('mm/dd/yyyy code above would affect but not could easily adapt have common formatting function taking format string overview",
     "postDate": "01/19/2022",
     "updateDate": "02/05/2022",
-    "excerpt": "How to use plugins with Tempus Dominus.\n  ",
+    "excerpt": "How to use plugins with Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -140,16 +140,16 @@
     "body": "beta bug fixes fixed jquery provider adds options for theme to fix big thanks matholum date view next/back button disabling when it shouldn't component issue changed default usetwentyfourhour undefined now using datetime.parts check if the has a dayperiod property hour formatting none latin number selection in minute picker input value object reference new add fr locale via updated and published nuget package breaking changes renamed src/sass src/scss more accurately reflect code mode simplified merging mutable element toggle is disabled no conflict update added example setting getting dates viewmode optional introduced simple overridable function parseinput clear doesn't erase text of event cycle digit trigger native change on available use svg icons version dark user's preference wrote tiny service locator/di container an effort make plugins better momentjs plugin de es nl ro locales jcompagner togglemeridiem supports comma separated list all types provide which provides clock calendar months years decades depending what occurred work little differently hopefully they are bit cleaner with hooks have been removed way handle this you can look at guide loading authoring as well viewupdateevent longer unit hide.td not triggered empty dataset deletion month manipulation wrong rendering startoftheweek option respected jmolinap allow parent widget moved docs gh-pages set up github action move compiled that branch time only fixing range reading data attributes start week having incorrect heading alpha weeks started building html migration tool daysofweekdisabled localization.startoftheweek allows numberingsystem datetimeformatoptions meta display unsubscribe method typing where would try even wasn't enabled go back will return show or after being reopened clock/calendar switching wait until other ready before interface so properties optionsal localization.dayviewheaderformat takes string but instead accepts customization cleaned css got rid popper arrow aligned display.inputformat intl format also hooks.inputformat by be executed uses selected date(s based components hooks.inputparse merged localization hkvstore parsing from comparing constructor names faatihi doc real keepopen positioning rtl created set(value any index date.set tries conver provided then multidate esm output exposed datetime class toggleperiod am/pm dealing values/changes calling hide hasn't built shown yet meridiem pr grid clicks year selecting decade field had defaultdate general returns extended javascript bootstrap events interfaces configuration tooltip tooltip.prevmonth localization.previousmonth tooltip.prevyear localization.previousyear tooltip.prevdecade localization.previousdecade tooltip.prevcentury localization.previouscentury dayviewheaderformat e.g long usestrict timezone collapse extraformats widgetparent widgetpositioning times days allowmultidate multidateseparator multipledates multipledatesseparator following restrictions mindate maxdate disableddates enableddates disabledhours enabledhours readonly disabledtimeintervals sidebyside calendarweeks toolbarplacement buttons inline array dateoptions hid allowing looping through keybindings might come later ignorereadonly focusonshow styles tip values namespace.css consts.ts file bootstrap-datetimepicker-widget tempus-dominus-widget tempusdominus-bootstrap-datetimepicker-widget-with-calendar-weeks tempus-dominus-with-calendar-weeks v input-group data-toggle=\"datetimepicker cursor type pointer datepicker date-container datepicker-decades date-container-decades datepicker-years date-container-years datepicker-months date-container-months datepicker-days date-container-days prev previous data-day data-value consistent views usetwentyfour timepicker time-container timepicker-hour time-container-hour timepicker-minute time-container-minute timepicker-second time-container-second saas called tempus-dominus.scss build deleted it's required isinvalid isvalid flipped boolean emits false cleared plugin.name datetimepicker tempus-dominus root namespace td was rewrite taking some pending pull requests along unfortunately i didn't do very good job documenting those chang log v2-v read here",
     "postDate": "07/20/2021",
     "updateDate": "07/20/2021",
-    "excerpt": "An archive of changes between different version of tempus dominus.\n  ",
+    "excerpt": "An archive of changes between different version of tempus dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
     "file": "change-log.html",
     "title": "Change Log",
-    "body": "version bug fixes fixed an issue with the date formatting format escape brackets setting a to null new migrated custom main code added range functionality leading delimiter when multipledates can't change time meridiem regression customdateformat plugin hours always undefined error using clear button on component prompttimeondatechange option usetwentyfourhour hour-range is should be moved back popperjs/core peerdependencies and made it optional pre commit hooks linter prettier are now run before each locales plugins have typings included shows you manually erase calendar header not updating correctly clock components disappearing side by some doc issues unit tests disabled/enabled dates performance this also fix next/previous month selection view syncing across options polish localization updated include formats export re-export interface misspelling customformatplugin popper reference docs possible replace popperjs another positioning system via imports work again for fr fi allow provided input parsing/setting replaced examples page repl lots of clean up older history please see archived log",
+    "body": "version new lots more test coverage placement option exported default en-us locale when usercurrent is false the clock will now display instead bug fixes fixed some issues with date range calendarweeks repl multiple dates not showing active state an issue formatting format escape brackets setting a to null migrated custom main code added functionality leading delimiter multipledates can't change time meridiem regression customdateformat plugin hours always undefined error using clear button on component prompttimeondatechange usetwentyfourhour hour-range should be moved back popperjs/core peerdependencies and made it optional pre commit hooks linter prettier are run before each locales plugins have typings included shows you manually erase calendar header updating correctly components disappearing side by doc unit tests disabled/enabled performance this also fix next/previous month selection view syncing across options polish localization updated include formats export re-export interface misspelling customformatplugin popper reference docs possible replace popperjs another positioning system via imports work again for fr fi allow provided input parsing/setting replaced examples page of clean up older history please see archived log",
     "postDate": "07/20/2021",
     "updateDate": "07/20/2021",
-    "excerpt": "An overview of changes between different version of tempus dominus\n  ",
+    "excerpt": "An overview of changes between different version of tempus dominus",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -158,7 +158,7 @@
     "body": "in v i dropped moment as a required library since it is no longer recommended almost all the functions picker make use of my custom datetime class which extends native date object because am simply extending any returned values will still behave like means you don't need to adopt using your project unless want once less worry about",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
-    "excerpt": "Custom date extension object\n  ",
+    "excerpt": "Custom date extension object",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -167,7 +167,7 @@
     "body": "all the examples have been migrated to repl page redirecting https://getdatepicker com/6/repl.html",
     "postDate": "07/08/2021",
     "updateDate": "07/20/2022",
-    "excerpt": "How to use Tempus Dominus datetime picker\n  ",
+    "excerpt": "How to use Tempus Dominus datetime picker",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -176,7 +176,7 @@
     "body": "this page outlines using the picker with jquery jquery-provider.js file must be included after main code is no longer a requirement and here for backwards compatibility it's highly recommend to use native methods as will dropped completely in future events are slightly different return event.detail.[date|olddate|etc you access those values e.[date|olddate|ect simple setup simplest can have bootstrap font awesome defaults fa solid icons however overwrite globally html javascript div class='input-group id='datetimepicker data-td-target-input='nearest data-td-target-toggle='nearest input id='datetimepicker1input type='text class='form-control data-td-target='#datetimepicker span class='input-group-text data-td-toggle='datetimepicker class='fas fa-calendar'></span datetimepicker1').tempusdominus display manipulate",
     "postDate": "07/08/2021",
     "updateDate": "02/05/2022",
-    "excerpt": "How to use Tempus Dominus datetime picker with jquery\n  ",
+    "excerpt": "How to use Tempus Dominus datetime picker with jquery",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -185,7 +185,7 @@
     "body": "the functions have been split up and moved to a different page redirecting https://getdatepicker.com/6/functions",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
-    "excerpt": "How to use Tempus Dominus datetime picker\n    ",
+    "excerpt": "How to use Tempus Dominus datetime picker",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -194,13 +194,13 @@
     "body": "tempus dominus is the successor to very popular eonasdan/bootstrap-datetimepicker plugin provides a wide array of options that allow developers provide date and or time selections users as simple pickers birth selection appointments more if you're looking for installation instructions check out download page once you get it installed there are plenty examples stackblitz involved can my blog join discord discussions",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
-    "excerpt": "Introduction to Eonasdan's date time picker.\n  ",
+    "excerpt": "Introduction to Eonasdan's date time picker.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
     "file": "installing.html",
     "title": "Download",
-    "body": "no matter how you choose to get the files make sure that popper is include before picker's main script file will also want a font library picker defaults awesome but can provide different icon set via configuration or plugin cdn popperjs src=\"https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js crossorigin=\"anonymous\"></script tempus dominus javascript src=\"https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.4.4/dist/js/tempus-dominus.min.js styles link rel=\"stylesheet href=\"https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.4.4/dist/css/tempus-dominus.min.css crossorigin=\"anonymous npm install popperjs/core eonasdan/tempus-dominus compiled code grab js and css from github still need yourself nuget package install-package tempusdominus scss version if prefer tempusdominus.scss overview",
+    "body": "no matter how you choose to get the files make sure that popper is include before picker's main script file will also want a font library picker defaults awesome but can provide different icon set via configuration or plugin cdn popperjs src=\"https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js crossorigin=\"anonymous\"></script tempus dominus javascript src=\"https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.7.7/dist/js/tempus-dominus.min.js styles link rel=\"stylesheet href=\"https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.7.7/dist/css/tempus-dominus.min.css crossorigin=\"anonymous npm install popperjs/core eonasdan/tempus-dominus compiled code grab js and css from github still need yourself nuget package install-package tempusdominus scss version if prefer tempusdominus.scss overview",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
     "excerpt": "How to install Tempus Dominus datetime picker.",
@@ -212,7 +212,7 @@
     "body": "version defaults to fa icons but will switch when that's released removes moment jquery and bootstrap as depedencies it also uses popper.js v this tool attempts convert your configurations from previous of the picker paste current configuration into input box due how process works cannot usages or date objects set any property that unsupported values undefined so can still be converted for more information on what's changed check out change log if you find a bug doesn't work please open an issue js html output div class=\"input-group id=\"datetimepicker data-target-input=\"nearest type=\"text class=\"form-control datetimepicker-input data-target=\"#datetimepicker class=\"input-group-append data-toggle=\"datetimepicker class=\"input-group-text\"><i class=\"fa fa-calendar aria-hidden=\"true\"></i></div try settings here you're using old differnt icon family won't show results exception is no longer used accepted value either config use remove there's just way i could every possible something new well with functions object initalizers have replace those calls suggestions improve let me know",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
-    "excerpt": "How to use Tempus Dominus datetime picker\n  ",
+    "excerpt": "How to use Tempus Dominus datetime picker",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -221,7 +221,7 @@
     "body": "the picker uses following css classes to style widget outer element for calendarheader calendar view header next and previous actions switch action change e.g month year elements all toolbar options disables hover rounding affect sidebyside applied when side by option is in use august july september disabled any that would violate restriction also an input field if function called old date less than requested last day of new greater active currently selected datecontainer decadescontainer decades decade within container yearscontainer years monthscontainer january february dayscontainer calendarweeks display.calendarweeks enabled a column displaying week shown this class each cell dayoftheweek first row sunday monday today current on weekend locale's dates saturday timecontainer time related separator columns between hour minute second clockcontainer clock hourcontainer hours selection minutecontainer minutes secondcontainer seconds am/pm toggle button show mode or collapsing showing during transition views collapse hidden inline display.inline lighttheme display.theme light darktheme dark isdarkpreferredquery used detecting system color preference no highlight months days weeks meridiem theme preferred query",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
-    "excerpt": "\n    A break down of the CSS classes in Tempus Dominus.\n  ",
+    "excerpt": "A break down of the CSS classes in Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -230,7 +230,7 @@
     "body": "the date picker will throw errors for a number of different reason most are related to an invalid setup except where noted thrown type tderror that extends base javascript error class indicated provides code value so developer can check this unexpectedoption indicating key in options object is unexpectedoptions one more keys unexpectedoptionvalue when option provide unsupported example cheese toolbarplacement which only supports top bottom default typemismatch wrong string was provided multipledates true or false numbersoutofrage outside expected range restrictions.daysofweekdisabled excepts between and failedtoparsedate couldn't be parsed either mustprovideelement element attach not constructor subscribemismatch if providing array events subscribe method doesn't have same callbacks e.g conflictingconfiguration configuration has conflicting rules mindate after maxdate datestring logs warning as instead date/datetime messages failedtosetinvaliddate used with event user selects fails restriction validation failedtoparseinput changes input field directly does valid",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
-    "excerpt": "Overview of the errors thrown and error messages from Tempius Dominus.",
+    "excerpt": "Overview of the errors thrown and error messages from Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -239,7 +239,7 @@
     "body": "these events may provide additional details for native javascript you can get this data via e.details jquery the are directly in event e.g e.date each of inherit from baseevent interface type string change.td viewmode keyof clock calendar months years decades emit when date selection is changed changeevent extends datetime undefined olddate isclear boolean isvalid update.td emits view changes example month to year viewupdateevent viewdate error.td a selected or value input field fails meet provided validation rules failevent reason show.td then picker widget displayed hide.td hidden hideevent",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
-    "excerpt": "Overview of the events fired from Tempius Dominus Datetime picker.",
+    "excerpt": "Overview of the events fired from Tempus Dominus Datetime picker.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -248,7 +248,7 @@
     "body": "tempus dominus uses and exposes a namespace class for consistency easy reference these values are provide via tempusdominus.namespace name returns tempus-dominus datakey td this is used as suffix events e.g change.td with the pickers event keys see full page more details css classes errormessages errors error messages",
     "postDate": "07/08/2021",
     "updateDate": "07/20/2022",
-    "excerpt": "\n    Overview of the Namespace for Tempus Dominus.\n  ",
+    "excerpt": "Overview of the Namespace for Tempus Dominus.",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -257,7 +257,7 @@
     "body": "options can be provided during the initial setup through constructor new tempusdominus take a look at examples for more information current retrieved e.g datetimepicker1.optionsstore.options updated updateoptions function all will throw typemismatch if type does not match expected string instead of boolean while most date accept values it wil warning javascript's objects converted to pickers datetime object tempusdominus.tempusdominus(document.getelementbyid('datetimepicker allowinputtoggle false container undefined daterange debug defaultdate display icons time fa-solid fa-clock fa-calendar up fa-arrow-up down fa-arrow-down previous fa-chevron-left next fa-chevron-right today fa-calendar-check clear fa-trash close fa-xmark sidebyside calendarweeks viewmode calendar toolbarplacement bottom keepopen buttons components true month year decades clock hours minutes seconds usetwentyfourhour inline theme auto keepinvalid localization selection picker dateformats defaultformatlocalization.dateformats dayviewheaderformat long digit decrementhour decrement hour decrementminute minute decrementsecond second format defaultformatlocalization.format hourcycle defaultformatlocalization.hourcycle incrementhour increment incrementminute incrementsecond locale defaultformatlocalization.locale nextcentury century nextdecade decade nextmonth nextyear ordinal defaultformatlocalization.ordinal pickhour pick pickminute picksecond previouscentury previousdecade previousmonth previousyear selectdate select selectdecade selectmonth selecttime selectyear startoftheweek go togglemeridiem toggle meridiem meta multipledates multipledatesseparator prompttimeondatechange prompttimeondatechangetransitiondelay restrictions mindate maxdate disableddates enableddates daysofweekdisabled disabledtimeintervals disabledhours enabledhours stepping usecurrent viewdate as accepts defaults range work similar multi you should also set multidateseparator with what want two separated this option allows user dates and highlights in between validation still takes place consider invalid any are disabled number controls how much changed by changes grid step amount true|false determines date/time used default value when is opened sets overrides that according rules instance enters pasted display.keepopen won't event where would normally occur useful trying or css note use window.debug dev tools console using window debugging deployed code without requiring configuration change show on textbox focus now view setting selected date(s multiple enabled separate am selects automatically after milliseconds before property provide developers store extra about database strings there no add reference htmlelement target widget body case application shadow dom example overview keep allow input separator prompt delay",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
-    "excerpt": "How to use Tempus Dominus datetime picker\n  ",
+    "excerpt": "How to use Tempus Dominus datetime picker",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   },
   {
@@ -272,10 +272,10 @@
   {
     "file": "repl.html",
     "title": "REPL",
-    "body": "code hash object typedef code-hash property string js for the vm html boolean jsconfigonly if this is true then look at snapshot and only update config htmlnote const sdk stackblitzsdk targetjs example.js targethtml index.html class repl projectid tempus-dominus-v6-repl undefined originaljs originalhtml prettify(code parser return prettier.format(code plugins prettierplugins singlequote tabwidth htmlwhitespacesensitivity ignore getquerycode params new proxy(new urlsearchparams(window.location.search get searchparams prop searchparams.get(prop.tostring let value params.code window.location.hash).replace('#code false try json.parse(lzstring.decompressfromurl(value catch htmltoelement(html template document.createelement('template never a text node of whitespace as result template.innerhtml html.trim template.content.firstchild async ready this.snapshot await this.vm.getfssnapshot this.originaljs this.snapshot[targetjs this.originalhtml this.htmltoelement(this.snapshot[targethtml this.updatevmasync updatevmasync(code this.getquerycode else json.parse(lzstring.decompressfromurl(code code.js code.html delta create destroy code.jsconfigonly delta.create[targetjs this.originaljs.replace('//put your here this.prettify(code.js babel code.htmlnote newhtml this.originalhtml.clonenode(true newhtml.queryselector('#htmltarget').innerhtml newhtml.queryselector('#notetarget').innerhtml delta.create[targethtml this.prettify(newhtml.outerhtml this.vm.applyfsdiff(delta console.clear resetvmasync this.originalhtml.outerhtml updaterepl url url(window.location url.hash code/${hash window.history.pushstate repl.updatevmasync(hash).then resetrepl repl.resetvmasync().then document.addeventlistener('domcontentloaded repl.vm embedprojectid('embed repl.projectid openfile targethtml},${targetjs hidenavigation settings compile action refresh settimeout(async repl.ready maintoc document.getelementbyid('maintoc maintoc.innerhtml document.getelementbyid('repltoc').innerhtml maintoc.style.display block bd-intro display none outercontainer max-width vw important embed height vh media min-width px bd-layout grid-template-columns fr bd-main grid-template-areas content grid-template-rows auto examples simple icon side by localization time input enabled/disabled dates linked pickers custom icons view mode disabled days week inline theme multiple options parent container functions",
+    "body": "global prettier lzstring stackblitzsdk prettierplugins code hash object typedef code-hash property string js for the vm html boolean jsconfigonly if this is true then look at snapshot and only update config htmlnote const sdk targetjs example.js targethtml index.html let repldata class repl projectid tempus-dominus-v6-repl undefined originaljs originalhtml prettify(code parser return prettier.format(code plugins singlequote tabwidth htmlwhitespacesensitivity ignore getquerycode params new proxy(new urlsearchparams(window.location.search get searchparams prop searchparams.get(prop.tostring value params.code window.location.hash).replace('#code false try json.parse(lzstring.decompressfromurl(value catch htmltoelement(html template document.createelement('template never a text node of whitespace as result template.innerhtml html.trim template.content.firstchild async ready this.snapshot await this.vm.getfssnapshot this.originaljs this.snapshot[targetjs this.originalhtml this.htmltoelement(this.snapshot[targethtml this.updatevmasync updatevmasync(code this.getquerycode else json.parse(lzstring.decompressfromurl(code code.js code.html delta create destroy code.jsconfigonly delta.create[targetjs this.originaljs.replace('//put your here this.prettify(code.js babel code.htmlnote newhtml this.originalhtml.clonenode(true newhtml.queryselector('#htmltarget').innerhtml newhtml.queryselector('#notetarget').innerhtml delta.create[targethtml this.prettify(newhtml.outerhtml this.vm.applyfsdiff(delta console.clear resetvmasync this.originalhtml.outerhtml updaterepl name repldata[name url url(window.location url.hash code/${hash window.history.pushstate repl.updatevmasync(hash).then resetrepl repl.resetvmasync().then document.addeventlistener('domcontentloaded fetch('/6/repl-data.json')).json repl.vm embedprojectid('embed repl.projectid openfile targethtml},${targetjs hidenavigation settings compile action refresh settimeout(async repl.ready maintoc document.getelementbyid('maintoc maintoc.innerhtml document.getelementbyid('repltoc').innerhtml maintoc.style.display block bd-intro display none outercontainer max-width vw important embed height vh media min-width px bd-layout grid-template-columns fr bd-main grid-template-areas content grid-template-rows auto examples simple icon side by localization time input enabled/disabled dates linked pickers custom icons view mode disabled days week inline theme multiple options parent container functions",
     "postDate": "07/08/2021",
     "updateDate": "07/08/2021",
-    "excerpt": "How to use Tempus Dominus datetime picker\n  ",
+    "excerpt": "How to use Tempus Dominus datetime picker",
     "tags": "datepicker, javascript, open source, tempus dominus, eonasdan"
   }
 ]
