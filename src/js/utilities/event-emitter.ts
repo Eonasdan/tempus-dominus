@@ -4,7 +4,7 @@ import { BaseEvent } from './event-types';
 
 export type ViewUpdateValues = Unit | 'clock' | 'calendar' | 'all';
 
-export class EventEmitter<T> {
+class EventEmitter<T> {
   private subscribers: ((value?: T) => void)[] = [];
 
   subscribe(callback: (value: T) => void) {

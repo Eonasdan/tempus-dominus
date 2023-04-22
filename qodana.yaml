@@ -1,0 +1,7 @@
+version: '1.0'
+linter: jetbrains/qodana-js:2022.3-eap
+exclude:
+  - name: All
+    paths:
+      - src/docs
+      - test

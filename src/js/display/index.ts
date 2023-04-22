@@ -171,14 +171,17 @@ export default class Display {
       if (!this.optionsStore.options.display.inline) {
         // If needed to change the parent container
         const container = this.optionsStore.options?.container || document.body;
+        const placement =
+          this.optionsStore.options?.display?.placement || 'bottom';
+
         container.appendChild(this.widget);
         this.createPopup(this.optionsStore.element, this.widget, {
           modifiers: [{ name: 'eventListeners', enabled: true }],
           //#2400
           placement:
             document.documentElement.dir === 'rtl'
-              ? 'bottom-end'
-              : 'bottom-start',
+              ? `${placement}-end`
+              : `${placement}-start`,
         }).then();
       } else {
         this.optionsStore.element.appendChild(this.widget);
@@ -659,7 +662,7 @@ export default class Display {
   }
 
   /**
-   * Get the toolbar html based on options like buttons.today
+   * Get the toolbar html based on options like buttons => today
    * @private
    */
   getToolbarElements(): HTMLElement[] {
@@ -752,7 +755,7 @@ export default class Display {
 
   /**
    * Builds an icon tag as either an `<i>`
-   * or with icons.type is `sprites` then a svg tag instead
+   * or with icons => type is `sprites` then a svg tag instead
    * @param iconClass
    * @private
    */

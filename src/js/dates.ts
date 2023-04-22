@@ -23,14 +23,14 @@ export default class Dates {
    * Returns the array of selected dates
    */
   get picked(): DateTime[] {
-    return this._dates;
+    return [...this._dates];
   }
 
   /**
    * Returns the last picked value.
    */
   get lastPicked(): DateTime {
-    return this._dates[this.lastPickedIndex];
+    return this._dates[this.lastPickedIndex]?.clone;
   }
 
   /**
@@ -98,7 +98,9 @@ export default class Dates {
    * @param unit
    */
   isPicked(targetDate: DateTime, unit?: Unit): boolean {
-    if (!unit) return this._dates.find((x) => x === targetDate) !== undefined;
+    if (!DateTime.isValid(targetDate)) return false;
+    if (!unit)
+      return this._dates.find((x) => x.isSame(targetDate)) !== undefined;
 
     const format = getFormatByUnit(unit);
 
@@ -119,7 +121,9 @@ export default class Dates {
    * @param unit
    */
   pickedIndex(targetDate: DateTime, unit?: Unit): number {
-    if (!unit) return this._dates.indexOf(targetDate);
+    if (!DateTime.isValid(targetDate)) return -1;
+    if (!unit)
+      return this._dates.map((x) => x.valueOf()).indexOf(targetDate.valueOf());
 
     const format = getFormatByUnit(unit);
 
@@ -189,7 +193,7 @@ export default class Dates {
   setValue(target?: DateTime, index?: number): void {
     const noIndex = typeof index === 'undefined',
       isClear = !target && noIndex;
-    let oldDate = this.optionsStore.unset ? null : this._dates[index];
+    let oldDate = this.optionsStore.unset ? null : this._dates[index]?.clone;
     if (!oldDate && !this.optionsStore.unset && noIndex && isClear) {
       oldDate = this.lastPicked;
     }
@@ -213,13 +217,10 @@ export default class Dates {
       target.minutes =
         Math.round(target.minutes / this.optionsStore.options.stepping) *
         this.optionsStore.options.stepping;
-      target.seconds = 0;
+      target.startOf(Unit.minutes);
     }
 
-    if (
-      this.validation.isValid(target) &&
-      this.validation.dateRangeIsValid(this._dates, index, target)
-    ) {
+    const onUpdate = (isValid: boolean) => {
       this._dates[index] = target;
       this._eventEmitters.updateViewDate.emit(target.clone);
 
@@ -232,24 +233,20 @@ export default class Dates {
         date: target,
         oldDate,
         isClear,
-        isValid: true,
+        isValid: isValid,
       } as ChangeEvent);
+    };
+
+    if (
+      this.validation.isValid(target) &&
+      this.validation.dateRangeIsValid(this.picked, index, target)
+    ) {
+      onUpdate(true);
       return;
     }
 
     if (this.optionsStore.options.keepInvalid) {
-      this._dates[index] = target;
-      this._eventEmitters.updateViewDate.emit(target.clone);
-
-      this.updateInput(target);
-
-      this._eventEmitters.triggerEvent.emit({
-        type: Namespace.events.change,
-        date: target,
-        oldDate,
-        isClear,
-        isValid: false,
-      } as ChangeEvent);
+      onUpdate(false);
     }
 
     this._eventEmitters.triggerEvent.emit({

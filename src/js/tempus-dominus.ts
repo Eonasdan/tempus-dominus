@@ -20,7 +20,9 @@ import {
   setupServiceLocator,
 } from './utilities/service-locator';
 import CalendarModes from './utilities/calendar-modes';
-import DefaultOptions from './utilities/default-options';
+import DefaultOptions, {
+  DefaultEnLocalization,
+} from './utilities/default-options';
 import ActionTypes from './utilities/action-types';
 import { OptionsStore } from './utilities/optionsStore';
 import { OptionConverter } from './utilities/optionConverter';
@@ -102,6 +104,10 @@ class TempusDominus {
   updateOptions(options, reset = false): void {
     if (reset) this._initializeOptions(options, DefaultOptions);
     else this._initializeOptions(options, this.optionsStore.options);
+
+    this.optionsStore.viewDate.setLocalization(
+      this.optionsStore.options.localization
+    );
     this.display._rebuild();
   }
 
@@ -602,7 +608,7 @@ const extend = function (plugin, option = undefined) {
   return tempusDominus;
 };
 
-const version = '6.4.4';
+const version = '6.7.7';
 
 const tempusDominus = {
   TempusDominus,
@@ -614,6 +620,7 @@ const tempusDominus = {
   DateTime,
   Unit,
   version,
+  DefaultEnLocalization,
 };
 
 export {
@@ -628,4 +635,5 @@ export {
   version,
   DateTimeFormatOptions,
   Options,
+  DefaultEnLocalization,
 };

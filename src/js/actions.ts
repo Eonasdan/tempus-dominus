@@ -11,7 +11,7 @@ import CalendarModes from './utilities/calendar-modes';
 import { OptionsStore } from './utilities/optionsStore';
 
 /**
- *
+ * Logic for various click actions
  */
 export default class Actions {
   private optionsStore: OptionsStore;
@@ -40,8 +40,7 @@ export default class Actions {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   do(e: any, action?: ActionTypes) {
     const currentTarget = e?.currentTarget as HTMLElement;
-    if (currentTarget?.classList?.contains(Namespace.css.disabled))
-      return false;
+    if (currentTarget?.classList?.contains(Namespace.css.disabled)) return;
     action = action || (currentTarget?.dataset?.action as ActionTypes);
     const lastPicked = (this.dates.lastPicked || this.optionsStore.viewDate)
       .clone;
@@ -162,6 +161,7 @@ export default class Actions {
       Namespace.errorMessages.throwError(
         'Cannot show clock containers when time is disabled.'
       );
+      /* ignore coverage: should never happen */
       return;
     }
 
@@ -339,6 +339,7 @@ export default class Actions {
 
   private handleMultiDate(day: DateTime) {
     let index = this.dates.pickedIndex(day, Unit.date);
+    console.log(index);
     if (index !== -1) {
       this.dates.setValue(null, index); //deselect multi-date
     } else {
@@ -357,12 +358,18 @@ export default class Actions {
       }
       case 1: {
         const other = this.dates.picked[0];
+        if (day.getTime() === other.getTime()) {
+          this.dates.clear();
+          break;
+        }
         if (day.isBefore(other)) {
           this.dates.setValue(day, 0);
           this.dates.setValue(other, 1);
           return;
-        } else this.dates.setValue(day, 1);
-        return;
+        } else {
+          this.dates.setValue(day, 1);
+          return;
+        }
       }
     }
 

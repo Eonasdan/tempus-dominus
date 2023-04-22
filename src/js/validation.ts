@@ -29,9 +29,8 @@ export default class Validation {
       this.optionsStore.options.restrictions.daysOfWeekDisabled.indexOf(
         targetDate.weekDay
       ) !== -1
-    ) {
+    )
       return false;
-    }
 
     if (!this._minMaxIsValid(granularity, targetDate)) return false;
 
@@ -57,7 +56,8 @@ export default class Validation {
     granularity: Unit,
     targetDate: DateTime
   ): boolean {
-    if (granularity === Unit.month) return true;
+    if (granularity !== Unit.date) return true;
+
     if (
       this.optionsStore.options.restrictions.disabledDates.length > 0 &&
       this._isInDisabledDates(targetDate)
@@ -89,7 +89,7 @@ export default class Validation {
     )
       return false;
 
-    return this.optionsStore.options.restrictions.disabledDates.find((x) =>
+    return !!this.optionsStore.options.restrictions.disabledDates.find((x) =>
       x.isSame(testDate, Unit.date)
     );
   }
@@ -107,46 +107,8 @@ export default class Validation {
     )
       return true;
 
-    return this.optionsStore.options.restrictions.enabledDates.find((x) =>
+    return !!this.optionsStore.options.restrictions.enabledDates.find((x) =>
       x.isSame(testDate, Unit.date)
-    );
-  }
-
-  /**
-   * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
-   * if the `testDate` is with in the array. Granularity is by hours.
-   * @param testDate
-   * @private
-   */
-  private _isInDisabledHours(testDate: DateTime) {
-    if (
-      !this.optionsStore.options.restrictions.disabledHours ||
-      this.optionsStore.options.restrictions.disabledHours.length === 0
-    )
-      return false;
-
-    const formattedDate = testDate.hours;
-    return this.optionsStore.options.restrictions.disabledHours.find(
-      (x) => x === formattedDate
-    );
-  }
-
-  /**
-   * Checks to see if the enabledHours option is in use and returns true (meaning valid)
-   * if the `testDate` is with in the array. Granularity is by hours.
-   * @param testDate
-   * @private
-   */
-  private _isInEnabledHours(testDate: DateTime) {
-    if (
-      !this.optionsStore.options.restrictions.enabledHours ||
-      this.optionsStore.options.restrictions.enabledHours.length === 0
-    )
-      return true;
-
-    const formattedDate = testDate.hours;
-    return this.optionsStore.options.restrictions.enabledHours.find(
-      (x) => x === formattedDate
     );
   }
 
@@ -194,6 +156,44 @@ export default class Validation {
     return true;
   }
 
+  /**
+   * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
+   * if the `testDate` is with in the array. Granularity is by hours.
+   * @param testDate
+   * @private
+   */
+  private _isInDisabledHours(testDate: DateTime) {
+    if (
+      !this.optionsStore.options.restrictions.disabledHours ||
+      this.optionsStore.options.restrictions.disabledHours.length === 0
+    )
+      return false;
+
+    const formattedDate = testDate.hours;
+    return this.optionsStore.options.restrictions.disabledHours.includes(
+      formattedDate
+    );
+  }
+
+  /**
+   * Checks to see if the enabledHours option is in use and returns true (meaning valid)
+   * if the `testDate` is with in the array. Granularity is by hours.
+   * @param testDate
+   * @private
+   */
+  private _isInEnabledHours(testDate: DateTime) {
+    if (
+      !this.optionsStore.options.restrictions.enabledHours ||
+      this.optionsStore.options.restrictions.enabledHours.length === 0
+    )
+      return true;
+
+    const formattedDate = testDate.hours;
+    return this.optionsStore.options.restrictions.enabledHours.includes(
+      formattedDate
+    );
+  }
+
   dateRangeIsValid(dates: DateTime[], index: number, target: DateTime) {
     // if we're not using the option, then return valid
     if (!this.optionsStore.options.dateRange) return true;
@@ -203,12 +203,18 @@ export default class Validation {
     // because the other validation on the target has already occurred.
     if (dates.length !== 2 && index !== 1) return true;
 
+    // initialize start date
+    const start = dates[0].clone;
+    // check if start date is not the same as target date
+    if (start.isSame(target, Unit.date)) return true;
+
     // add one day to start; start has already been validated
-    const start = dates[0].clone.manipulate(1, Unit.date);
+    start.manipulate(1, Unit.date);
 
     // check each date in the range to make sure it's valid
     while (!start.isSame(target, Unit.date)) {
-      if (!this.isValid(start)) return false;
+      const valid = this.isValid(start, Unit.date);
+      if (!valid) return false;
       start.manipulate(1, Unit.date);
     }
 

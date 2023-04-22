@@ -4,11 +4,10 @@ const { JSDOM } = jsdom;
 const path = require('path');
 const minifyHtml = require('html-minifier-terser').minify;
 const dropCss = require('dropcss');
-const cleanCSS = require('clean-css');
 const { minify } = require('terser');
 const sass = require('sass');
 const chokidar = require('chokidar');
-const rootDirectory = path.join('.','src','docs','partials');
+const rootDirectory = path.join('.', 'src', 'docs', 'partials');
 const ParvusServer = require('@eonasdan/parvus-server').ParvusServer;
 
 
@@ -41,19 +40,19 @@ class PageMeta {
 
   parse(metaTag) {
     if (!metaTag) return;
-    const title = metaTag.querySelector('title')?.innerHTML;
+    const title = metaTag.querySelector('#title')?.innerHTML;
     if (title) this.title = title;
 
-    const postDate = metaTag.querySelector('post-date')?.innerHTML;
+    const postDate = metaTag.querySelector('#post-date')?.innerHTML;
     if (postDate) this.postDate = postDate;
 
-    const updateDate = metaTag.querySelector('update-date')?.innerHTML;
+    const updateDate = metaTag.querySelector('#update-date')?.innerHTML;
     if (updateDate) this.updateDate = updateDate;
 
-    const excerpt = metaTag.querySelector('excerpt')?.innerHTML;
+    const excerpt = metaTag.querySelector('#excerpt')?.innerHTML;
     if (excerpt) this.excerpt = excerpt;
 
-    const tags = metaTag.querySelector('tags')?.innerHTML;
+    const tags = metaTag.querySelector('#tags')?.innerHTML;
     if (tags) this.tags = tags;
   }
 }
@@ -88,6 +87,15 @@ class Build {
   css = '';
   cssWhitelist = new Set();
 
+  async startAsync(){
+    builder.updateAll();
+
+    if (process.argv.slice(2)[0] === '--watch') {
+      await builder.watcher();
+    }
+
+  }
+
   updateAll() {
     this.shellTemplate = this.loadTemplate('shell');
     this.pageTemplate = this.pageDocument;
@@ -104,12 +112,11 @@ class Build {
 
   reset() {
     this.pagesMeta = [];
-    this.homePageHtml = '';
     this.siteMap = '';
   }
 
   loadTemplate(template) {
-    return fs.readFileSync(path.join('.','src','docs', 'templates', `${template}.html`), 'utf8');
+    return fs.readFileSync(path.join('.', 'src', 'docs', 'templates', `${template}.html`), 'utf8');
   }
 
   directoryWalk(directory, extension = '.html') {
@@ -192,7 +199,7 @@ class Build {
     fs.writeFileSync(filePath, content);
   }
 
-  // since everyone has to have their own meta data *rolls eyes* the primary purpose here
+  // since everyone has to have their own metadata *rolls eyes* the primary purpose here
   // is to quickly find similar tags and set them all at once
   setMetaContent(rootElement, selector, content) {
     [...rootElement.getElementsByClassName(selector)].forEach((element) => {
@@ -203,17 +210,10 @@ class Build {
     });
   }
 
-  // doing this as a function so I don't have to null check values inline
-  setStructuredData(structure, property, value) {
-    if (!value) return;
-
-    structure[property] = value;
-  }
-
   createRootHtml(html) {
     html = minifyHtml(html, {
       collapseWhitespace: false,
-      removeComments: true,
+      removeComments: true
     });
 
     return `<!DOCTYPE html>
@@ -232,7 +232,7 @@ class Build {
 
     this.css = sass
       .renderSync({
-        file: path.join('.', 'src', 'docs', 'styles', 'styles.scss'),
+        file: path.join('.', 'src', 'docs', 'styles', 'styles.scss')
       })
       .css.toString();
   }
@@ -267,7 +267,7 @@ class Build {
         const newPageDocument = new JSDOM(this.pageTemplate).window.document;
         const postDocument = new JSDOM(fs.readFileSync(fullPath, 'utf8')).window
           .document;
-        const article = postDocument.querySelector('page-body');
+        const article = postDocument.getElementById('page-body');
         if (!article) {
           console.error(`failed to read body for ${fullPath}`);
           return;
@@ -283,44 +283,12 @@ class Build {
           fileModified
         );
 
-        pageMeta.parse(postDocument.querySelector('page-meta'));
+        pageMeta.parse(postDocument.getElementById('page-meta'));
 
-        /*const postTagsDiv = postDocument.createElement('div');
-        postTagsDiv.classList.add('post-tags', 'mt-30');
-        const postTagsUl = postDocument.createElement('ul');
-
-        pageMeta.tags
-          ?.split(',')
-          .map((tag) => tag.trim())
-          .forEach((tag) => {
-            const li = postDocument.createElement('li');
-            const a = postDocument.createElement('a');
-            a.setAttribute('href', `/?search=tag:${tag}`);
-            a.innerHTML = tag;
-            li.appendChild(a);
-            postTagsUl.appendChild(li);
-          });
-
-        postTagsDiv.appendChild(postTagsUl);
-        article.appendChild(postTagsDiv);*/
-
-        //const loopDocument = new JSDOM(this.postLoopTemplate).window.document;
         newPageDocument.getElementById('mainContent').innerHTML =
           article.innerHTML;
 
         const publishDate = new Date(pageMeta.postDate).toISOString();
-
-        // create structured data
-        /*const structuredData = {
-          '@context': 'https://schema.org',
-          '@type': 'BlogPosting',
-          author: {
-            '@type': 'Person',
-            name: pageMeta.author.name,
-            url: pageMeta.author.url,
-          },
-        };*/
-
         newPageDocument.title = pageMeta.title + ' - Tempus Dominus';
 
         this.setMetaContent(newPageDocument, 'metaTitle', pageMeta.title);
@@ -329,54 +297,19 @@ class Build {
           newPageDocument.getElementsByClassName('title')[0],
           pageMeta.title
         );
-        /*loopDocument.getElementsByClassName(
-          'post-link'
-        )[0].href = `/${siteConfig.output}/${pageMeta.file}`;*/
-
         this.setMetaContent(
           newPageDocument,
           'metaDescription',
           pageMeta.excerpt
         );
         this.setMetaContent(newPageDocument, 'metaUrl', fullyQualifiedUrl);
-        /* this.setStructuredData(
-          structuredData,
-          'mainEntityOfPage',
-          fullyQualifiedUrl
-        );*/
-
         this.setMetaContent(newPageDocument, 'metaPublishedTime', publishDate);
-        //this.setStructuredData(structuredData, 'datePublished', publishDate);
-        /*this.setInnerHtml(
-          loopDocument.getElementsByClassName('post-date')[0],
-          pageMeta.postDate
-        );*/
 
         if (!pageMeta.updateDate) pageMeta.updateDate = pageMeta.postDate;
         const updateDate = new Date(pageMeta.updateDate).toISOString();
         this.setMetaContent(newPageDocument, 'metaModifiedTime', updateDate);
-        //this.setStructuredData(structuredData, 'dateModified', updateDate);
-
         this.setMetaContent(newPageDocument, 'metaTag', pageMeta.tags);
-        /*this.setStructuredData(
-          structuredData,
-          'keywords',
-          pageMeta.tags.split(', ')
-        );*/
-        /* this.setInnerHtml(
-          loopDocument.getElementsByClassName('post-excerpt')[0],
-          pageMeta.excerpt
-        );*/
-
         this.pagesMeta.push(pageMeta);
-
-        // push structured data to body
-        /*const structuredDataTag = newPageDocument.createElement('script');
-        structuredDataTag.type = 'application/ld+json';
-        structuredDataTag.innerHTML = JSON.stringify(structuredData, null, 2);*/
-        /*newPageDocument
-          .getElementsByTagName('body')[0]
-          .appendChild(structuredDataTag);*/
 
         const completeHtml = this.createRootHtml(
           newPageDocument.documentElement.innerHTML
@@ -389,13 +322,8 @@ class Build {
         //update pure css
         dropCss({
           css: this.css,
-          html: completeHtml,
+          html: completeHtml
         }).sels.forEach((sel) => this.cssWhitelist.add(sel));
-
-        //add to homepage html
-
-        /*this.homePageHtml +=
-          loopDocument.getElementsByTagName('body')[0].innerHTML;*/
 
         this.siteMap += `<url>
 <loc>${fullyQualifiedUrl}</loc>
@@ -425,7 +353,7 @@ class Build {
 
   updateHomepage() {
     const indexDocument = new JSDOM(
-      fs.readFileSync(path.join('.','src', 'docs','templates', 'index.html'), 'utf8')
+      fs.readFileSync(path.join('.', 'src', 'docs', 'templates', 'index.html'), 'utf8')
     ).window.document;
 
     const shell = this.shellDocument;
@@ -435,7 +363,7 @@ class Build {
     const script = shell.createElement('script');
     script.type = 'module';
     script.innerHTML =
-      "import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';";
+      'import \'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate\';';
 
     shell.getElementsByTagName('head')[0].appendChild(script);
 
@@ -443,16 +371,16 @@ class Build {
     shell.body.appendChild(el);
 
     const completeHtml = this.createRootHtml(shell.documentElement.innerHTML);
-    this.writeFileAndEnsurePathExists(path.join('.','docs','index.html'), completeHtml);
+    this.writeFileAndEnsurePathExists(path.join('.', 'docs', 'index.html'), completeHtml);
     dropCss({
       css: this.css,
-      html: completeHtml,
+      html: completeHtml
     }).sels.forEach((sel) => this.cssWhitelist.add(sel));
   }
 
   update404() {
     const indexDocument = new JSDOM(
-      fs.readFileSync(path.join('.','src','docs','templates','404.html'), 'utf8')
+      fs.readFileSync(path.join('.', 'src', 'docs', 'templates', '404.html'), 'utf8')
     ).window.document;
     const shell = this.shellDocument;
     shell.getElementById('outerContainer').innerHTML =
@@ -460,17 +388,17 @@ class Build {
 
     const completeHtml = this.createRootHtml(shell.documentElement.innerHTML);
     this.writeFileAndEnsurePathExists(
-      path.join('.', 'docs','404.html'),
+      path.join('.', 'docs', '404.html'),
       this.createRootHtml(shell.documentElement.innerHTML)
     );
     dropCss({
       css: this.css,
-      html: completeHtml,
+      html: completeHtml
     }).sels.forEach((sel) => this.cssWhitelist.add(sel));
   }
 
   updateSiteMap() {
-    this.siteMap = `<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+    this.siteMap = `<urlset xmlns='https://www.sitemaps.org/schemas/sitemap/0.9'>
 <url>
 <loc>${siteConfig.root}</loc>
 <lastmod>${new Date().toISOString()}</lastmod>
@@ -478,7 +406,7 @@ class Build {
 </url>
 ${this.siteMap}
 </urlset>`;
-    this.writeFileAndEnsurePathExists(path.join('.','docs','sitemap.xml'), this.siteMap);
+    this.writeFileAndEnsurePathExists(path.join('.', 'docs', 'sitemap.xml'), this.siteMap);
   }
 
   updateCss() {
@@ -489,20 +417,17 @@ ${this.siteMap}
         .document;
       dropCss({
         css: this.css,
-        html: postDocument.documentElement.innerHTML,
+        html: postDocument.documentElement.innerHTML
       }).sels.forEach((sel) => this.cssWhitelist.add(sel));
     };
 
-    /* fs.readdirSync('./src/docs/partials')
-      .filter((file) => path.extname(file).toLowerCase() === '.html')
-      .map((file) => `./src/docs/partials/${file}`)*/
     this.directoryWalk(rootDirectory)
       .map((x) => x.fullPath)
       .forEach(gatherCss);
 
-    fs.readdirSync(path.join('.','src','docs','templates'))
+    fs.readdirSync(path.join('.', 'src', 'docs', 'templates'))
       .filter((file) => path.extname(file).toLowerCase() === '.html')
-      .map((file) =>  path.join('.','src','docs','templates', file))
+      .map((file) => path.join('.', 'src', 'docs', 'templates', file))
       .forEach(gatherCss);
 
     this.cleanCss();
@@ -512,10 +437,10 @@ ${this.siteMap}
     let cleaned = dropCss({
       html: '',
       css: this.css,
-      shouldDrop: (sel) => !this.cssWhitelist.has(sel),
+      shouldDrop: (sel) => !this.cssWhitelist.has(sel)
     });
     this.writeFileAndEnsurePathExists(
-      path.join('.','docs','css', 'styles.min.css'),
+      path.join('.', 'docs', 'css', 'styles.min.css'),
       //new cleanCSS().minify(cleaned.css).styles
       this.css
     );
@@ -573,10 +498,10 @@ ${this.siteMap}
   }
 
   updateDist() {
-    this.copyDirectory(path.join('.','dist', 'js'), path.join('.', siteConfig.output, 'js'));
-    this.copyDirectory(path.join('.','dist', 'css'), path.join('.', siteConfig.output, 'css'));
-    this.copyDirectory(path.join('.','dist', 'plugins'), path.join('.', siteConfig.output, 'js', 'plugins'));
-    this.copyDirectory(path.join('.','dist', 'locales'), path.join('.', siteConfig.output, 'js', 'locales'));
+    this.copyDirectory(path.join('.', 'dist', 'js'), path.join('.', siteConfig.output, 'js'));
+    this.copyDirectory(path.join('.', 'dist', 'css'), path.join('.', siteConfig.output, 'css'));
+    this.copyDirectory(path.join('.', 'dist', 'plugins'), path.join('.', siteConfig.output, 'js', 'plugins'));
+    this.copyDirectory(path.join('.', 'dist', 'locales'), path.join('.', siteConfig.output, 'js', 'locales'));
   }
 
   /**
@@ -587,8 +512,12 @@ ${this.siteMap}
     [
       {
         source: './src/docs/assets/no-styles.html',
-        destination: './docs/6/examples/no-styles.html',
+        destination: './docs/6/examples/no-styles.html'
       },
+      {
+        source: './src/docs/assets/repl-data.json',
+        destination: './docs/6/repl-data.json'
+      }
     ].forEach((file) => {
       fs.mkdirSync(path.dirname(file.destination), { recursive: true });
       fs.copyFileSync(file.source, file.destination);
@@ -612,8 +541,6 @@ ${this.siteMap}
       middlewares: []
     });
 
-    await parvusServer.startAsync();
-
     const watcher = chokidar.watch(
       [
         path.join('src', 'docs', 'partials'),
@@ -621,12 +548,12 @@ ${this.siteMap}
         path.join('src', 'docs', 'templates'),
         path.join('src', 'docs', 'js'),
         path.join('src', 'docs', 'assets'),
-        'dist/',
+        'dist/'
       ],
       {
         ignored: /(^|[\/\\])\../, // ignore dotfiles
         //ignored: /(^|[\/\\])\..|make\.js|browser-sync-config\.js/g, // ignore dotfiles
-        ignoreInitial: true,
+        ignoreInitial: true
       }
     );
 
@@ -682,13 +609,16 @@ ${this.siteMap}
         callback();
         clearTimeout(timer);
       }, delay);
-    }
+    };
 
     watcher
       .on('all', handleChange)
       .on('ready', () => {
         console.log('[Make] Watching files...');
       });
+
+    console.clear();
+    await parvusServer.startAsync();
   }
 }
 
@@ -698,7 +628,7 @@ const formatter = new Intl.DateTimeFormat(undefined, {
   day: 'numeric',
   hour: 'numeric',
   minute: 'numeric',
-  second: 'numeric',
+  second: 'numeric'
 });
 
 const log = (message) => {
@@ -717,8 +647,4 @@ const siteConfig = JSON.parse(
 
 log('Building...');
 const builder = new Build();
-builder.updateAll();
-
-if (process.argv.slice(2)[0] === '--watch') {
-  builder.watcher().then();
-}
+builder.startAsync().then();
