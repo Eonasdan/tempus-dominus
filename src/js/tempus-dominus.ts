@@ -108,7 +108,7 @@ class TempusDominus {
     this.optionsStore.viewDate.setLocalization(
       this.optionsStore.options.localization
     );
-    this.display._rebuild();
+    this.display.refreshCurrentView();
   }
 
   // noinspection JSUnusedGlobalSymbols
