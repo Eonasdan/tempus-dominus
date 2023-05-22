@@ -5,8 +5,8 @@ inputs:
   GITHUB_TOKEN:
     description: 'A Github PAT'
     required: true
-  QODANA_TOKEN:
-    description: 'A Qodana token'
+  SONAR_TOKEN:
+    description: 'A Sonar token'
     required: true
 
 runs:
@@ -21,12 +21,8 @@ runs:
     - name: Build docs
       shell: bash
       run: npm run docs
-    - name: 'Qodana Scan'
-      uses: JetBrains/qodana-action@main
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
       env:
-        QODANA_TOKEN: ${{ inputs.QODANA_TOKEN }}
-    # Send coverage report to Coveralls
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ inputs.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
