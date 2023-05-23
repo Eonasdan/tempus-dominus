@@ -27,7 +27,6 @@ function mandatoryDate(key: string): OptionProcessorFunction {
       dateTime.setLocalization(localization);
       return dateTime;
     }
-    Namespace.errorMessages.typeMismatch(key, providedType, 'DateTime or Date');
   };
 }
 
@@ -111,13 +110,6 @@ const optionProcessors: { [key: string]: OptionProcessorFunction } =
           const subOptionName = `${key}[${i}].${vk}`;
           const d = valueObject[i][vk];
           const dateTime = convertToDateTime(d, subOptionName, localization);
-          if (!dateTime) {
-            Namespace.errorMessages.typeMismatch(
-              subOptionName,
-              typeof d,
-              'DateTime or Date'
-            );
-          }
           dateTime.setLocalization(localization);
           valueObject[i][vk] = dateTime;
         });

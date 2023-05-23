@@ -1,16 +1,5 @@
-import {
-  createElementWithClasses,
-  loadFixtures,
-  newDate,
-  newDateMinute,
-  newDateStringIso,
-  vanillaDate,
-  reset,
-  store,
-  secondaryDate,
-  defaultLocalization,
-} from '../test-utilities';
-import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
+import { newDate, secondaryDate } from '../test-utilities';
+import { beforeEach, expect, test } from 'vitest';
 import { OptionsStore } from '../../src/js/utilities/optionsStore';
 
 let optionStore: OptionsStore;
