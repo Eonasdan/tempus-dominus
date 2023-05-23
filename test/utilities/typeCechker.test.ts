@@ -1,16 +1,11 @@
 import {
-  createElementWithClasses,
-  loadFixtures,
   newDate,
   newDateMinute,
-  newDateStringIso,
   vanillaDate,
-  reset,
-  store,
   secondaryDate,
   defaultLocalization,
 } from '../test-utilities';
-import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import {
   convertToDateTime,
   tryConvertToDateTime,
@@ -18,7 +13,6 @@ import {
   typeCheckNumberArray,
 } from '../../src/js/utilities/typeChecker';
 import { DateTime } from '../../src/js/datetime';
-import DefaultFormatLocalization from '../../src/js/utilities/default-format-localization';
 
 test('tryConvertToDateTime', () => {
   const convertSpy = vi.spyOn(DateTime, 'convert');
