@@ -653,10 +653,8 @@ class DateTime extends Date {
                 this.startOf(Unit.date);
                 if (this.weekDay === startOfTheWeek)
                     break;
-                let goBack = this.weekDay;
-                if (startOfTheWeek !== 0 && this.weekDay === 0)
-                    goBack = 8 - startOfTheWeek;
-                this.manipulate(startOfTheWeek - goBack, Unit.date);
+                const goBack = (this.weekDay - startOfTheWeek + 7) % 7;
+                this.manipulate(goBack * -1, Unit.date);
                 break;
             }
             case 'month':
