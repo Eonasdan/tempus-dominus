@@ -659,10 +659,8 @@
                   this.startOf(exports.Unit.date);
                   if (this.weekDay === startOfTheWeek)
                       break;
-                  let goBack = this.weekDay;
-                  if (startOfTheWeek !== 0 && this.weekDay === 0)
-                      goBack = 8 - startOfTheWeek;
-                  this.manipulate(startOfTheWeek - goBack, exports.Unit.date);
+                  const goBack = (this.weekDay - startOfTheWeek + 7) % 7;
+                  this.manipulate(goBack * -1, exports.Unit.date);
                   break;
               }
               case 'month':
