@@ -2946,6 +2946,7 @@
               let divElement = getSeparator();
               top.push(divElement);
               const button = document.createElement('button');
+              button.setAttribute('type', 'button');
               button.setAttribute('title', this.optionsStore.options.localization.toggleMeridiem);
               button.setAttribute('data-action', ActionTypes$1.toggleMeridiem);
               button.setAttribute('tabindex', '-1');
