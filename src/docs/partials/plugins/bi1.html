@@ -48,13 +48,14 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
 //to set globally
 tempusDominus.extend(window.tempusDominus.plugins.bi_one.load);
 //or
-import {load, biOneIcons} from 'tempusDominus/plugins/bi-one'
-tempusDominus.extend(load);
+import {load, biOneIcons} from '@eonasdan/tempus-dominus/dist/plugins/bi-one'
+extend(load);
+
 
 // otherwise to set icons to an individual picker
-datetimepicker1.updateOptions({ display: icons: window.tempusDominus.plugins.bi_one.biOneIcons});
+datetimepicker1.updateOptions({ display: { icons: window.tempusDominus.plugins.bi_one.biOneIcons }});
 //or
-datetimepicker1.updateOptions({ display: icons: biOneIcons});</code>
+datetimepicker1.updateOptions({ display: { icons: biOneIcons }});</code>
     </pre>
   </div>
 
