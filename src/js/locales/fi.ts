@@ -8,7 +8,7 @@ const localization = {
   previousMonth: 'Edellinen kuukausi',
   nextMonth: 'Seuraava kuukausi',
   selectYear: 'Valitse vuosi',
-  previousYear: 'Edelline vuosi',
+  previousYear: 'Edellinen vuosi',
   nextYear: 'Seuraava vuosi',
   selectDecade: 'Valitse vuosikymmen',
   previousDecade: 'Edellinen vuosikymmen',
