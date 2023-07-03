@@ -242,6 +242,10 @@ class TempusDominus {
         'click',
         this._toggleClickEvent
       );
+      this.optionsStore.input?.removeEventListener(
+        'focus',
+        this._toggleClickEvent
+      );
     }
     this._toggle?.removeEventListener('click', this._toggleClickEvent);
     this._subscribers = {};
@@ -440,6 +444,7 @@ class TempusDominus {
     this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
     if (this.optionsStore.options.allowInputToggle) {
       this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
+      this.optionsStore.input.addEventListener('focus', this._toggleClickEvent);
     }
 
     if (this.optionsStore.input.value) {
