@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.7.7 (https://getdatepicker.com/)
+  * Tempus Dominus v6.7.10 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -387,8 +387,6 @@
   Namespace.errorMessages = new ErrorMessages();
 
   const DefaultFormatLocalization = {
-      locale: 'default',
-      hourCycle: undefined,
       dateFormats: {
           LTS: 'h:mm:ss T',
           LT: 'h:mm T',
@@ -397,12 +395,14 @@
           LLL: 'MMMM d, yyyy h:mm T',
           LLLL: 'dddd, MMMM d, yyyy h:mm T',
       },
+      format: 'L LT',
+      locale: 'default',
+      hourCycle: undefined,
       ordinal: (n) => {
           const s = ['th', 'st', 'nd', 'rd'];
           const v = n % 100;
           return `[${n}${s[(v - 20) % 10] || s[v] || s[0]}]`;
       },
-      format: 'L LT',
   };
   var DefaultFormatLocalization$1 = { ...DefaultFormatLocalization };
 
@@ -659,10 +659,8 @@
                   this.startOf(exports.Unit.date);
                   if (this.weekDay === startOfTheWeek)
                       break;
-                  let goBack = this.weekDay;
-                  if (startOfTheWeek !== 0 && this.weekDay === 0)
-                      goBack = 8 - startOfTheWeek;
-                  this.manipulate(startOfTheWeek - goBack, exports.Unit.date);
+                  const goBack = (this.weekDay - startOfTheWeek + 7) % 7;
+                  this.manipulate(goBack * -1, exports.Unit.date);
                   break;
               }
               case 'month':
@@ -1625,17 +1623,14 @@
    * @param localization
    */
   function typeCheckDateArray(optionName, value, //eslint-disable-line @typescript-eslint/no-explicit-any
-  providedType, localization) {
+  providedType, localization = DefaultFormatLocalization$1) {
       if (!Array.isArray(value)) {
           Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
       }
       for (let i = 0; i < value.length; i++) {
           const d = value[i];
           const dateTime = convertToDateTime(d, optionName, localization);
-          if (!dateTime) {
-              Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
-          }
-          dateTime.setLocalization(localization ?? DefaultFormatLocalization$1);
+          dateTime.setLocalization(localization);
           value[i] = dateTime;
       }
   }
@@ -1659,7 +1654,6 @@
               dateTime.setLocalization(localization);
               return dateTime;
           }
-          Namespace.errorMessages.typeMismatch(key, providedType, 'DateTime or Date');
       };
   }
   function optionalDate(key) {
@@ -1724,9 +1718,6 @@
                   const subOptionName = `${key}[${i}].${vk}`;
                   const d = valueObject[i][vk];
                   const dateTime = convertToDateTime(d, subOptionName, localization);
-                  if (!dateTime) {
-                      Namespace.errorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
-                  }
                   dateTime.setLocalization(localization);
                   valueObject[i][vk] = dateTime;
               });
@@ -2948,6 +2939,7 @@
               let divElement = getSeparator();
               top.push(divElement);
               const button = document.createElement('button');
+              button.setAttribute('type', 'button');
               button.setAttribute('title', this.optionsStore.options.localization.toggleMeridiem);
               button.setAttribute('data-action', ActionTypes$1.toggleMeridiem);
               button.setAttribute('tabindex', '-1');
@@ -3289,7 +3281,6 @@
       _update(unit) {
           if (!this.widget)
               return;
-          //todo do I want some kind of error catching or other guards here?
           switch (unit) {
               case exports.Unit.seconds:
                   this.secondDisplay._update(this.widget, this.paint);
@@ -3308,6 +3299,9 @@
                   break;
               case exports.Unit.year:
                   this.yearDisplay._update(this.widget, this.paint);
+                  break;
+              case 'decade':
+                  this.decadeDisplay._update(this.widget, this.paint);
                   break;
               case 'clock':
                   if (!this._hasTime)
@@ -3810,6 +3804,28 @@
           if (wasVisible)
               this.show();
       }
+      refreshCurrentView() {
+          //if the widget is not showing, just destroy it
+          if (!this._isVisible)
+              this._dispose();
+          switch (this.optionsStore.currentView) {
+              case 'clock':
+                  this._update('clock');
+                  break;
+              case 'calendar':
+                  this._update(exports.Unit.date);
+                  break;
+              case 'months':
+                  this._update(exports.Unit.month);
+                  break;
+              case 'years':
+                  this._update(exports.Unit.year);
+                  break;
+              case 'decades':
+                  this._update('decade');
+                  break;
+          }
+      }
   }
 
   /**
@@ -4206,7 +4222,7 @@
           else
               this._initializeOptions(options, this.optionsStore.options);
           this.optionsStore.viewDate.setLocalization(this.optionsStore.options.localization);
-          this.display._rebuild();
+          this.display.refreshCurrentView();
       }
       // noinspection JSUnusedGlobalSymbols
       /**
@@ -4316,6 +4332,7 @@
           this.optionsStore.input?.removeEventListener('change', this._inputChangeEvent);
           if (this.optionsStore.options.allowInputToggle) {
               this.optionsStore.input?.removeEventListener('click', this._toggleClickEvent);
+              this.optionsStore.input?.removeEventListener('focus', this._toggleClickEvent);
           }
           this._toggle?.removeEventListener('click', this._toggleClickEvent);
           this._subscribers = {};
@@ -4466,6 +4483,7 @@
           this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
           if (this.optionsStore.options.allowInputToggle) {
               this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
+              this.optionsStore.input.addEventListener('focus', this._toggleClickEvent);
           }
           if (this.optionsStore.input.value) {
               this._inputChangeEvent();
@@ -4569,7 +4587,7 @@
       }
       return tempusDominus;
   };
-  const version = '6.7.7';
+  const version = '6.7.10';
   const tempusDominus = {
       TempusDominus,
       extend,
