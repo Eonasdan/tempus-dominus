@@ -152,6 +152,7 @@ export default class Display {
    * @private
    */
   _rebuild(): void;
+  refreshCurrentView(): void;
 }
 export type Paint = (
   unit: Unit | 'decade',
