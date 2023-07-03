@@ -16,10 +16,10 @@ import { DateTime } from '../../src/js/datetime';
 
 test('tryConvertToDateTime', () => {
   const convertSpy = vi.spyOn(DateTime, 'convert');
-  convertSpy.mockImplementation((a) => newDate());
+  convertSpy.mockImplementation(() => newDate());
 
   const fromStringSpy = vi.spyOn(DateTime, 'fromString');
-  fromStringSpy.mockImplementationOnce((a) => newDateMinute());
+  fromStringSpy.mockImplementationOnce(() => newDateMinute());
 
   //null should return null
   expect(tryConvertToDateTime(null, null)).toBe(null);

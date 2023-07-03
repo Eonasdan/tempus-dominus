@@ -9,6 +9,8 @@
 
 'use strict';
 
+const pkg = require('../package.json');
+
 const fs = require('fs').promises;
 const path = require('path');
 const globby = require('globby');
@@ -60,11 +62,12 @@ async function replaceRecursively(file, oldVersion, newVersion) {
 }
 
 async function main(args) {
-  let [oldVersion, newVersion] = args;
+  let newVersion = args[0];
+  let oldVersion = pkg.version;
 
-  if (!oldVersion || !newVersion) {
+  if (!newVersion) {
     console.error(
-      'USAGE: change-version old_version new_version [--verbose] [--dry[-run]]'
+      'USAGE: change-version new_version [--verbose] [--dry[-run]]'
     );
     console.error('Got arguments:', args);
     process.exit(1);

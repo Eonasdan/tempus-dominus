@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.7.7 (https://getdatepicker.com/)
+  * Tempus Dominus v6.7.10 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -387,8 +387,6 @@
   Namespace.errorMessages = new ErrorMessages();
 
   const DefaultFormatLocalization = {
-      locale: 'default',
-      hourCycle: undefined,
       dateFormats: {
           LTS: 'h:mm:ss T',
           LT: 'h:mm T',
@@ -397,12 +395,14 @@
           LLL: 'MMMM d, yyyy h:mm T',
           LLLL: 'dddd, MMMM d, yyyy h:mm T',
       },
+      format: 'L LT',
+      locale: 'default',
+      hourCycle: undefined,
       ordinal: (n) => {
           const s = ['th', 'st', 'nd', 'rd'];
           const v = n % 100;
           return `[${n}${s[(v - 20) % 10] || s[v] || s[0]}]`;
       },
-      format: 'L LT',
   };
   var DefaultFormatLocalization$1 = { ...DefaultFormatLocalization };
 
@@ -1623,17 +1623,14 @@
    * @param localization
    */
   function typeCheckDateArray(optionName, value, //eslint-disable-line @typescript-eslint/no-explicit-any
-  providedType, localization) {
+  providedType, localization = DefaultFormatLocalization$1) {
       if (!Array.isArray(value)) {
           Namespace.errorMessages.typeMismatch(optionName, providedType, 'array of DateTime or Date');
       }
       for (let i = 0; i < value.length; i++) {
           const d = value[i];
           const dateTime = convertToDateTime(d, optionName, localization);
-          if (!dateTime) {
-              Namespace.errorMessages.typeMismatch(optionName, typeof d, 'DateTime or Date');
-          }
-          dateTime.setLocalization(localization ?? DefaultFormatLocalization$1);
+          dateTime.setLocalization(localization);
           value[i] = dateTime;
       }
   }
@@ -1657,7 +1654,6 @@
               dateTime.setLocalization(localization);
               return dateTime;
           }
-          Namespace.errorMessages.typeMismatch(key, providedType, 'DateTime or Date');
       };
   }
   function optionalDate(key) {
@@ -1722,9 +1718,6 @@
                   const subOptionName = `${key}[${i}].${vk}`;
                   const d = valueObject[i][vk];
                   const dateTime = convertToDateTime(d, subOptionName, localization);
-                  if (!dateTime) {
-                      Namespace.errorMessages.typeMismatch(subOptionName, typeof d, 'DateTime or Date');
-                  }
                   dateTime.setLocalization(localization);
                   valueObject[i][vk] = dateTime;
               });
@@ -4594,7 +4587,7 @@
       }
       return tempusDominus;
   };
-  const version = '6.7.7';
+  const version = '6.7.10';
   const tempusDominus = {
       TempusDominus,
       extend,

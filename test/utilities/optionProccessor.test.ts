@@ -1,18 +1,11 @@
 import {
-  createElementWithClasses,
-  loadFixtures,
   newDate,
   newDateMinute,
-  newDateStringIso,
-  vanillaDate,
-  reset,
-  store,
   secondaryDate,
   defaultLocalization,
 } from '../test-utilities';
-import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
+import { expect, test } from 'vitest';
 import { processKey } from '../../src/js/utilities/optionProcessor';
-import { FormatLocalization } from '../../src/js/utilities/options';
 
 test('defaultProcessor', () => {
   expect(
