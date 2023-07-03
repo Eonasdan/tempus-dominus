@@ -20,6 +20,12 @@ vi.doMock('../src/js/utilities/service-locator', () => {
   };
 });
 
+// vi.mock('../src/js/utilities/service-locator', () => {
+//   return {
+//     serviceLocator: slm
+//   };
+// });
+
 import { serviceLocator } from '../src/js/utilities/service-locator';
 
 /**
