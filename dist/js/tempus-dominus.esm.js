@@ -653,10 +653,8 @@ class DateTime extends Date {
                 this.startOf(Unit.date);
                 if (this.weekDay === startOfTheWeek)
                     break;
-                let goBack = this.weekDay;
-                if (startOfTheWeek !== 0 && this.weekDay === 0)
-                    goBack = 8 - startOfTheWeek;
-                this.manipulate(startOfTheWeek - goBack, Unit.date);
+                const goBack = (this.weekDay - startOfTheWeek + 7) % 7;
+                this.manipulate(goBack * -1, Unit.date);
                 break;
             }
             case 'month':
@@ -2942,6 +2940,7 @@ class TimeDisplay {
             let divElement = getSeparator();
             top.push(divElement);
             const button = document.createElement('button');
+            button.setAttribute('type', 'button');
             button.setAttribute('title', this.optionsStore.options.localization.toggleMeridiem);
             button.setAttribute('data-action', ActionTypes$1.toggleMeridiem);
             button.setAttribute('tabindex', '-1');
@@ -4334,6 +4333,7 @@ class TempusDominus {
         this.optionsStore.input?.removeEventListener('change', this._inputChangeEvent);
         if (this.optionsStore.options.allowInputToggle) {
             this.optionsStore.input?.removeEventListener('click', this._toggleClickEvent);
+            this.optionsStore.input?.removeEventListener('focus', this._toggleClickEvent);
         }
         this._toggle?.removeEventListener('click', this._toggleClickEvent);
         this._subscribers = {};
@@ -4484,6 +4484,7 @@ class TempusDominus {
         this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
         if (this.optionsStore.options.allowInputToggle) {
             this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
+            this.optionsStore.input.addEventListener('focus', this._toggleClickEvent);
         }
         if (this.optionsStore.input.value) {
             this._inputChangeEvent();
