@@ -3288,7 +3288,6 @@
       _update(unit) {
           if (!this.widget)
               return;
-          //todo do I want some kind of error catching or other guards here?
           switch (unit) {
               case exports.Unit.seconds:
                   this.secondDisplay._update(this.widget, this.paint);
@@ -3307,6 +3306,9 @@
                   break;
               case exports.Unit.year:
                   this.yearDisplay._update(this.widget, this.paint);
+                  break;
+              case 'decade':
+                  this.decadeDisplay._update(this.widget, this.paint);
                   break;
               case 'clock':
                   if (!this._hasTime)
@@ -3809,6 +3811,28 @@
           if (wasVisible)
               this.show();
       }
+      refreshCurrentView() {
+          //if the widget is not showing, just destroy it
+          if (!this._isVisible)
+              this._dispose();
+          switch (this.optionsStore.currentView) {
+              case 'clock':
+                  this._update('clock');
+                  break;
+              case 'calendar':
+                  this._update(exports.Unit.date);
+                  break;
+              case 'months':
+                  this._update(exports.Unit.month);
+                  break;
+              case 'years':
+                  this._update(exports.Unit.year);
+                  break;
+              case 'decades':
+                  this._update('decade');
+                  break;
+          }
+      }
   }
 
   /**
@@ -4205,7 +4229,7 @@
           else
               this._initializeOptions(options, this.optionsStore.options);
           this.optionsStore.viewDate.setLocalization(this.optionsStore.options.localization);
-          this.display._rebuild();
+          this.display.refreshCurrentView();
       }
       // noinspection JSUnusedGlobalSymbols
       /**
