@@ -49,13 +49,13 @@ const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById(
 //to set globally
 tempusDominus.extend(window.tempusDominus.plugins.fa_five.load);
 //or
-import {load, faFiveIcons} from 'tempusDominus/plugins/fa-five'
-tempusDominus.extend(load);
+import {load, faFiveIcons} from '@eonasdan/tempus-dominus/dist/plugins/fa-five'
+extend(load);
 
 // otherwise to set icons to an individual picker
-datetimepicker1.updateOptions({ display: icons: window.tempusDominus.plugins.fa_five.faFiveIcons});
+datetimepicker1.updateOptions({ display: { icons: window.tempusDominus.plugins.fa_five.faFiveIcons }});
 //or
-datetimepicker1.updateOptions({ display: icons: faFiveIcons});</code>
+datetimepicker1.updateOptions({ display: { icons: faFiveIcons }});</code>
     </pre>
   </div>
 

@@ -7,7 +7,7 @@ on:
       - 'bug/*'
       - development
     paths:
-      - src
+      - src/js
       
 jobs:
   main:
@@ -39,7 +39,7 @@ jobs:
         uses: ./.github/workflows/build
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Create Release
         run: npm run release:version ${{steps.set_version.outputs.VERSION }} ${{steps.set_version.outputs.NEW_VERSION }}
       - name: Create Tag

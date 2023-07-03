@@ -217,7 +217,7 @@ declare const extend: (
     ordinal?: (n: number) => any;
   };
 };
-declare const version = '6.7.7';
+declare const version = '6.7.10';
 export {
   TempusDominus,
   extend,

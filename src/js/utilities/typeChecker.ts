@@ -11,7 +11,7 @@ import DefaultFormatLocalization from './default-format-localization';
  */
 export function tryConvertToDateTime(
   this: void,
-  d: DateTime | Date | '',
+  d: DateTime | Date | string,
   localization: FormatLocalization
 ): DateTime | null {
   if (!d) return null;
@@ -37,7 +37,7 @@ export function tryConvertToDateTime(
  */
 export function convertToDateTime(
   this: void,
-  d: DateTime | Date | '',
+  d: DateTime | Date | string,
   optionName: string,
   localization: FormatLocalization
 ): DateTime {
@@ -69,7 +69,7 @@ export function typeCheckDateArray(
   optionName: string,
   value: any, //eslint-disable-line @typescript-eslint/no-explicit-any
   providedType: string,
-  localization: FormatLocalization
+  localization: FormatLocalization = DefaultFormatLocalization
 ) {
   if (!Array.isArray(value)) {
     Namespace.errorMessages.typeMismatch(
@@ -81,14 +81,7 @@ export function typeCheckDateArray(
   for (let i = 0; i < value.length; i++) {
     const d = value[i];
     const dateTime = convertToDateTime(d, optionName, localization);
-    if (!dateTime) {
-      Namespace.errorMessages.typeMismatch(
-        optionName,
-        typeof d,
-        'DateTime or Date'
-      );
-    }
-    dateTime.setLocalization(localization ?? DefaultFormatLocalization);
+    dateTime.setLocalization(localization);
     value[i] = dateTime;
   }
 }

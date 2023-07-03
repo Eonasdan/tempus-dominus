@@ -20,12 +20,19 @@ vi.doMock('../src/js/utilities/service-locator', () => {
   };
 });
 
+// vi.mock('../src/js/utilities/service-locator', () => {
+//   return {
+//     serviceLocator: slm
+//   };
+// });
+
 import { serviceLocator } from '../src/js/utilities/service-locator';
 
 /**
  * March 14th, 2023 1:25:42:500 PM
  */
 const newDate = () => new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500);
+const vanillaDate = () => new Date(2023, 3 - 1, 14, 13, 25, 42, 500);
 
 /**
  * July 8th, 2023 3:00 AM
@@ -62,6 +69,7 @@ export {
   newDateMinute,
   newDateStringMinute,
   newDateStringIso,
+  vanillaDate,
   secondaryDate,
   reset,
   store,

@@ -108,7 +108,7 @@ class TempusDominus {
     this.optionsStore.viewDate.setLocalization(
       this.optionsStore.options.localization
     );
-    this.display._rebuild();
+    this.display.refreshCurrentView();
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -240,6 +240,10 @@ class TempusDominus {
     if (this.optionsStore.options.allowInputToggle) {
       this.optionsStore.input?.removeEventListener(
         'click',
+        this._toggleClickEvent
+      );
+      this.optionsStore.input?.removeEventListener(
+        'focus',
         this._toggleClickEvent
       );
     }
@@ -440,6 +444,7 @@ class TempusDominus {
     this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
     if (this.optionsStore.options.allowInputToggle) {
       this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
+      this.optionsStore.input.addEventListener('focus', this._toggleClickEvent);
     }
 
     if (this.optionsStore.input.value) {
@@ -608,7 +613,7 @@ const extend = function (plugin, option = undefined) {
   return tempusDominus;
 };
 
-const version = '6.7.7';
+const version = '6.7.10';
 
 const tempusDominus = {
   TempusDominus,

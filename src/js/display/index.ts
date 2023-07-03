@@ -91,7 +91,6 @@ export default class Display {
    */
   _update(unit: ViewUpdateValues): void {
     if (!this.widget) return;
-    //todo do I want some kind of error catching or other guards here?
     switch (unit) {
       case Unit.seconds:
         this.secondDisplay._update(this.widget, this.paint);
@@ -110,6 +109,9 @@ export default class Display {
         break;
       case Unit.year:
         this.yearDisplay._update(this.widget, this.paint);
+        break;
+      case 'decade':
+        this.decadeDisplay._update(this.widget, this.paint);
         break;
       case 'clock':
         if (!this._hasTime) break;
@@ -813,6 +815,29 @@ export default class Display {
     const wasVisible = this._isVisible;
     this._dispose();
     if (wasVisible) this.show();
+  }
+
+  refreshCurrentView() {
+    //if the widget is not showing, just destroy it
+    if (!this._isVisible) this._dispose();
+
+    switch (this.optionsStore.currentView) {
+      case 'clock':
+        this._update('clock');
+        break;
+      case 'calendar':
+        this._update(Unit.date);
+        break;
+      case 'months':
+        this._update(Unit.month);
+        break;
+      case 'years':
+        this._update(Unit.year);
+        break;
+      case 'decades':
+        this._update('decade');
+        break;
+    }
   }
 }
 

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>TempusDominus.scss</id>
-        <version>6.7.7</version>
+        <version>6.7.10</version>
         <title>Tempus Dominus</title>
         <authors>Eonasdan</authors>
         <owners>Eonasdan</owners>
