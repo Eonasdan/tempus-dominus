@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.7.10 (https://getdatepicker.com/)
+  * Tempus Dominus v6.7.11 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -4168,6 +4168,18 @@ class TempusDominus {
                 return;
             this.toggle();
         };
+        /**
+         * Event for when the toggle is clicked. This is a class level method so there's
+         * something for the remove listener function.
+         * @private
+         */
+        this._openClickEvent = () => {
+            if (this.optionsStore.element?.disabled ||
+                this.optionsStore.input?.disabled)
+                return;
+            if (!this.display.isVisible)
+                this.show();
+        };
         setupServiceLocator();
         this._eventEmitters = serviceLocator.locate(EventEmitters);
         this.optionsStore = serviceLocator.locate(OptionsStore);
@@ -4325,8 +4337,8 @@ class TempusDominus {
         this._eventEmitters.destroy();
         this.optionsStore.input?.removeEventListener('change', this._inputChangeEvent);
         if (this.optionsStore.options.allowInputToggle) {
-            this.optionsStore.input?.removeEventListener('click', this._toggleClickEvent);
-            this.optionsStore.input?.removeEventListener('focus', this._toggleClickEvent);
+            this.optionsStore.input?.removeEventListener('click', this._openClickEvent);
+            this.optionsStore.input?.removeEventListener('focus', this._openClickEvent);
         }
         this._toggle?.removeEventListener('click', this._toggleClickEvent);
         this._subscribers = {};
@@ -4476,8 +4488,8 @@ class TempusDominus {
             this.optionsStore.input.value = this.dates.formatInput(this.optionsStore.options.defaultDate);
         this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
         if (this.optionsStore.options.allowInputToggle) {
-            this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
-            this.optionsStore.input.addEventListener('focus', this._toggleClickEvent);
+            this.optionsStore.input.addEventListener('click', this._openClickEvent);
+            this.optionsStore.input.addEventListener('focus', this._openClickEvent);
         }
         if (this.optionsStore.input.value) {
             this._inputChangeEvent();
@@ -4531,7 +4543,7 @@ class TempusDominus {
             if (this.display.widget) {
                 this._eventEmitters.action.emit({
                     e: {
-                        currentTarget: this.display.widget.querySelector(`.${Namespace.css.switch}`),
+                        currentTarget: this.display.widget.querySelector('[data-action="togglePicker"]'),
                     },
                     action: ActionTypes$1.togglePicker,
                 });
@@ -4581,7 +4593,7 @@ const extend = function (plugin, option = undefined) {
     }
     return tempusDominus;
 };
-const version = '6.7.10';
+const version = '6.7.11';
 const tempusDominus = {
     TempusDominus,
     extend,
