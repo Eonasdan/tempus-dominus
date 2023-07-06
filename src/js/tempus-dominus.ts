@@ -240,11 +240,11 @@ class TempusDominus {
     if (this.optionsStore.options.allowInputToggle) {
       this.optionsStore.input?.removeEventListener(
         'click',
-        this._toggleClickEvent
+        this._openClickEvent
       );
       this.optionsStore.input?.removeEventListener(
         'focus',
-        this._toggleClickEvent
+        this._openClickEvent
       );
     }
     this._toggle?.removeEventListener('click', this._toggleClickEvent);
@@ -443,8 +443,8 @@ class TempusDominus {
 
     this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
     if (this.optionsStore.options.allowInputToggle) {
-      this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
-      this.optionsStore.input.addEventListener('focus', this._toggleClickEvent);
+      this.optionsStore.input.addEventListener('click', this._openClickEvent);
+      this.optionsStore.input.addEventListener('focus', this._openClickEvent);
     }
 
     if (this.optionsStore.input.value) {
@@ -506,7 +506,7 @@ class TempusDominus {
         this._eventEmitters.action.emit({
           e: {
             currentTarget: this.display.widget.querySelector(
-              `.${Namespace.css.switch}`
+              '[data-action="togglePicker"]'
             ),
           },
           action: ActionTypes.togglePicker,
@@ -563,6 +563,20 @@ class TempusDominus {
     )
       return;
     this.toggle();
+  };
+
+  /**
+   * Event for when the toggle is clicked. This is a class level method so there's
+   * something for the remove listener function.
+   * @private
+   */
+  private _openClickEvent = () => {
+    if (
+      (this.optionsStore.element as HTMLInputElement)?.disabled ||
+      this.optionsStore.input?.disabled
+    )
+      return;
+    if (!this.display.isVisible) this.show();
   };
 }
 

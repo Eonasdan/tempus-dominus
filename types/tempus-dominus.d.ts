@@ -138,6 +138,12 @@ declare class TempusDominus {
    * @private
    */
   private _toggleClickEvent;
+  /**
+   * Event for when the toggle is clicked. This is a class level method so there's
+   * something for the remove listener function.
+   * @private
+   */
+  private _openClickEvent;
 }
 /**
  * Called from a locale plugin.
