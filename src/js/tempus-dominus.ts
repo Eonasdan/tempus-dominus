@@ -412,6 +412,18 @@ class TempusDominus {
       );
     }
 
+    if (
+      newConfig.restrictions.maxDate &&
+      this.viewDate.isAfter(newConfig.restrictions.maxDate)
+    )
+      this.viewDate = newConfig.restrictions.maxDate;
+
+    if (
+      newConfig.restrictions.minDate &&
+      this.viewDate.isBefore(newConfig.restrictions.minDate)
+    )
+      this.viewDate = newConfig.restrictions.minDate;
+
     this.optionsStore.options = newConfig;
   }
 
