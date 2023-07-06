@@ -4466,6 +4466,12 @@
           else if (newConfig.localization.hourCycle === undefined) {
               newConfig.localization.hourCycle = guessHourCycle(newConfig.localization.locale);
           }
+          if (newConfig.restrictions.maxDate &&
+              this.viewDate.isAfter(newConfig.restrictions.maxDate))
+              this.viewDate = newConfig.restrictions.maxDate;
+          if (newConfig.restrictions.minDate &&
+              this.viewDate.isBefore(newConfig.restrictions.minDate))
+              this.viewDate = newConfig.restrictions.minDate;
           this.optionsStore.options = newConfig;
       }
       /**
