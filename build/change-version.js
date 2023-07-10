@@ -20,13 +20,7 @@ const DRY_RUN =
   process.argv.includes('--dry') || process.argv.includes('--dry-run');
 
 // These are the filetypes we only care about replacing the version
-const GLOB = [
-  '**/*.{css,js,json,md,scss,txt,yml,ts,nuspec,properties}',
-  '**/shell.html',
-  '**/installing.html',
-  '**/templates/index.html',
-  '!**/change-log*',
-];
+const GLOB = ['**/*.{css,js,json,md,scss,txt,yml,ts,nuspec,properties}'];
 const GLOBBY_OPTIONS = {
   cwd: path.join(__dirname, '..'),
   gitignore: true,
@@ -83,6 +77,11 @@ async function main(args) {
 
   try {
     const files = await globby(GLOB, GLOBBY_OPTIONS);
+    files.push(
+      'src/docs/templates/shell.html',
+      'src/docs/partials/installing.html',
+      'src/docs/templates/index.html'
+    );
 
     await Promise.all(
       files.map((file) => replaceRecursively(file, oldVersion, newVersion))
