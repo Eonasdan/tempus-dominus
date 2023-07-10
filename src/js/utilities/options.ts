@@ -19,7 +19,6 @@ export default interface Options {
       hours?: boolean;
       minutes?: boolean;
       seconds?: boolean;
-      useTwentyfourHour?: boolean;
     };
     buttons?: { today?: boolean; close?: boolean; clear?: boolean };
     calendarWeeks?: boolean;

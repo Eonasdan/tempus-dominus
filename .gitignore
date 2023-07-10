@@ -10,8 +10,9 @@ site
 *.sln
 *.nupkg
 src/docs/partials/examples/test.html
-/docs/
-/dist/plugins/examples/
+docs
+dist
+types
 coverage
 
 .DS_Store

@@ -1,202 +1,24 @@
-<div id="page-body">
+<div id='page-body'>
   <div id='change-log'>
     <h1>Version 6</h1>
 
     <div class='row'>
-      <h2>6.7.11</h2>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Hotfix for #2837</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.7.10</h2>
+      <h2>7.0.0</h2>
       <h3>New</h3>
       <ul>
-        <li>Lots more test coverage #2791</li>
+        <li></li>
       </ul>
       <h3>Bug fixes</h3>
       <ul>
-        <li>Hopefully fixed update options bounce. #2621</li>
-        <li>Fixed input toggle #2575</li>
-        <li>Fixed docs #2810</li>
+        <li></li>
       </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.7.7</h2>
-      <h3>New</h3>
-      <ul>
-        <li>Lots more test coverage #2791</li>
-        <li>Placement option #2789</li>
-        <li>Exported default en-US locale #2687</li>
-        <li>When <code>userCurrent</code> is false the clock will now display <code>--</code> instead. #2764</li>
-      </ul>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Fixed some issues with the date range #2788, #2798</li>
-        <li>Fixed calendarWeeks bug #2786</li>
-        <li>Fixed REPL issues #2795 #2784</li>
-        <li>Fixed multiple dates option not showing "active" state #2796</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.4.4</h2>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Fixed an issue with the date formatting</li>
-        <li>Fixed format escape brackets</li>
-        <li>Fixes setting a date to null #2774</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.4.1</h2>
-      <h3>New</h3>
-      <ul>
-        <li>Migrated custom date format to main code #2734</li>
-        <li>Added Date Range functionality #2707</li>
-      </ul>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Leading delimiter added when multipleDates #2766</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.2.10</h2>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Can't change time & meridiem #2746</li>
-        <li>Fixed regression with #2600</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.2.9</h2>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Fixed CustomDateFormat Plugin: Hours always undefined #2742</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.2.8</h2>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Fixed error when using clear button on time component #2720</li>
-        <li>Fixed issue with promptTimeOnDateChange option #2630</li>
-        <li>Fixed useTwentyfourHour hour-range is 01 - 24, should be 00 - 23 #2600</li>
-        <li>Moved back @popperjs/core to peerDependencies and made it optional #2672</li>
-      </ul>
-      <h3>New</h3>
-      <ul>
-        <li>Pre commit hooks. Linter and prettier are now run before each commit. #2715</li>
-        <li>Locales and plugins now have typings included. #2719</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.2.7</h2>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Fixed customDateFormat shows 'undefined' when you manually erase the date #2693</li>
-        <li>Fixed calendar header not updating correctly #2685</li>
-        <li>Fixed clock components disappearing when using side by side #2684</li>
-        <li>Fixed some doc issues #2706</li>
-      </ul>
-      <h3>New</h3>
-      <ul>
-        <li>Unit tests! #2711</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.2.6</h2>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Fixed disabled/enabled dates performance issue. This also should fix the next/previous month selection
-          #2658
-        </li>
-        <li>Fixed view date syncing across options and not updating correctly #2611</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.2.5</h2>
-      <h3>New</h3>
-      <ul>
-        <li>Added Polish localization #2673
-        </li>
-        <li>Updated locales to include formats</li>
-        <li>Export (re-export?) Options interface</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.2.4</h2>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Fix misspelling #2667</li>
-        <li>Fix issue with customFormatPlugin</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.2.3</h2>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Fix popper reference</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.2.1</h2>
-      <h3>New</h3>
-      <ul>
-        <li>Added custom date format plugin docs.
-        </li>
-        <li>It is now possible to replace popperjs with another positioning system via <a
-          href='https://github.com/Eonasdan/tempus-dominus/issues/2643'>#2643</a>.
-        </li>
-      </ul>
-      <h3>Bug fixes</h3>
-      <ul>
-        <li>Imports should work again. <a
-          href='https://github.com/Eonasdan/tempus-dominus/issues/2652'>#2652</a>
-        </li>
-        <li>Fixes for FR, FI, and IT locales. <a
-          href='https://github.com/Eonasdan/tempus-dominus/issues/2650'>#2650</a>
-        </li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>6.0.1</h2>
-      <h3>New</h3>
-      <ul>
-        <li>Added a customDateFormat plugin and new options to allow custom formats to be provided for input
-          parsing/setting
-        </li>
-        <li>Replaced examples page with REPL</li>
-        <li>Lots of doc clean up</li>
-      </ul>
-    </div>
-
-    <div class='row'>
-      <h2>Older History</h2>
-      <p>
-        For older history, please see the <a href='change-log-archive.html'>archived change log</a>.
-      </p>
     </div>
   </div>
 </div>
-<div id="page-meta">
-  <div id="title">Change Log</div>
-  <div id="post-date">07/20/2021</div>
-  <div id="update-date">07/20/2021</div>
-  <div id="excerpt">An overview of changes between different version of tempus dominus</div>
-  <div id="tags">datepicker, javascript, open source, tempus dominus, eonasdan</div>
+<div id='page-meta'>
+  <div id='title'>Change Log</div>
+  <div id='post-date'>07/06/2023</div>
+  <div id='update-date'>07/06/2023</div>
+  <div id='excerpt'>An overview of changes between different version of tempus dominus</div>
+  <div id='tags'>datepicker, javascript, open source, tempus dominus, eonasdan</div>
 </div>

@@ -1,12 +1,7 @@
 import Display from './display/index';
 import Dates from './dates';
 import Actions from './actions';
-import {
-  DateTime,
-  DateTimeFormatOptions,
-  guessHourCycle,
-  Unit,
-} from './datetime';
+import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
 import {
@@ -31,9 +26,6 @@ import { OptionConverter } from './utilities/optionConverter';
  * A robust and powerful date/time picker component.
  */
 class TempusDominus {
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _subscribers: { [key: string]: ((event: any) => Record<string, unknown>)[] } =
-    {};
   private _isDisabled = false;
   private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: NodeJS.Timeout;
@@ -175,57 +167,6 @@ class TempusDominus {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Allows for a direct subscription to picker events, without having to use addEventListener on the element.
-   * @param eventTypes See Namespace.Events
-   * @param callbacks Function to call when event is triggered
-   * @public
-   */
-  subscribe(
-    eventTypes: string | string[],
-    callbacks: (event: any) => void | ((event: any) => void)[] //eslint-disable-line @typescript-eslint/no-explicit-any
-  ): { unsubscribe: () => void } | { unsubscribe: () => void }[] {
-    if (typeof eventTypes === 'string') {
-      eventTypes = [eventTypes];
-    }
-    let callBackArray: any[]; //eslint-disable-line @typescript-eslint/no-explicit-any
-    if (!Array.isArray(callbacks)) {
-      callBackArray = [callbacks];
-    } else {
-      callBackArray = callbacks;
-    }
-
-    if (eventTypes.length !== callBackArray.length) {
-      Namespace.errorMessages.subscribeMismatch();
-    }
-
-    const returnArray = [];
-
-    for (let i = 0; i < eventTypes.length; i++) {
-      const eventType = eventTypes[i];
-      if (!Array.isArray(this._subscribers[eventType])) {
-        this._subscribers[eventType] = [];
-      }
-
-      this._subscribers[eventType].push(callBackArray[i]);
-
-      returnArray.push({
-        unsubscribe: this._unsubscribe.bind(
-          this,
-          eventType,
-          this._subscribers[eventType].length - 1
-        ),
-      });
-
-      if (eventTypes.length === 1) {
-        return returnArray[0];
-      }
-    }
-
-    return returnArray;
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
    * Hides the picker and removes event listeners
    */
   dispose() {
@@ -248,7 +189,6 @@ class TempusDominus {
       );
     }
     this._toggle?.removeEventListener('click', this._toggleClickEvent);
-    this._subscribers = {};
   }
 
   /**
@@ -306,20 +246,6 @@ class TempusDominus {
         $(this.optionsStore.element).trigger(event);
       }
     }
-
-    this._publish(event);
-  }
-
-  private _publish(event: BaseEvent) {
-    // return if event is not subscribed
-    if (!Array.isArray(this._subscribers[event.type])) {
-      return;
-    }
-
-    // Trigger callback for each subscriber
-    this._subscribers[event.type].forEach((callback) => {
-      callback(event);
-    });
   }
 
   /**
@@ -331,10 +257,6 @@ class TempusDominus {
       type: Namespace.events.update,
       viewDate: this.optionsStore.viewDate.clone,
     } as ViewUpdateEvent);
-  }
-
-  private _unsubscribe(eventName, index) {
-    this._subscribers[eventName].splice(index, 1);
   }
 
   /**
@@ -401,16 +323,8 @@ class TempusDominus {
       this.display._update('all');
     }
 
-    if (
-      newConfig.display.components.useTwentyfourHour &&
-      newConfig.localization.hourCycle === undefined
-    )
+    if (newConfig.localization.hourCycle === undefined)
       newConfig.localization.hourCycle = 'h24';
-    else if (newConfig.localization.hourCycle === undefined) {
-      newConfig.localization.hourCycle = guessHourCycle(
-        newConfig.localization.locale
-      );
-    }
 
     if (
       newConfig.restrictions.maxDate &&
@@ -639,7 +553,7 @@ const extend = function (plugin, option = undefined) {
   return tempusDominus;
 };
 
-const version = '6.7.11';
+const version = '7.0.0';
 
 const tempusDominus = {
   TempusDominus,

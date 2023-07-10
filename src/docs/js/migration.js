@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 hours: true,
                 minutes: true,
                 seconds: false,
-                useTwentyfourHour: false
               };
               break;
             case 'icons':

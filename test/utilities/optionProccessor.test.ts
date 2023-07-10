@@ -455,28 +455,3 @@ test('container', () => {
     })
   ).toEqual(element);
 });
-
-test('useTwentyfourHour', () => {
-  //not an html element
-  expect(() =>
-    processKey({
-      key: 'useTwentyfourHour',
-      value: 'top',
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toThrow();
-
-  expect(
-    processKey({
-      key: 'useTwentyfourHour',
-      value: undefined,
-      defaultType: '',
-      providedType: 'boolean',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toEqual(undefined);
-});

@@ -2,7 +2,7 @@
 /*global $, tempusDominus */
 
 /*!
- * Tempus Dominus v6.7.11 (https://getdatepicker.com/)
+ * Tempus Dominus v7.0.0 (https://getdatepicker.com/)
  * Copyright 2013-2021 Jonathan Peterson
  * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
  */

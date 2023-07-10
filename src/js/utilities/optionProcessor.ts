@@ -21,7 +21,7 @@ type OptionProcessorFunction = (
 ) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
 
 function mandatoryDate(key: string): OptionProcessorFunction {
-  return ({ value, providedType, localization }) => {
+  return ({ value, localization }) => {
     const dateTime = convertToDateTime(value, key, localization);
     if (dateTime !== undefined) {
       dateTime.setLocalization(localization);
@@ -145,14 +145,6 @@ const optionProcessors: { [key: string]: OptionProcessorFunction } =
         );
       }
       return value;
-    },
-    useTwentyfourHour: ({ value, path, providedType, defaultType }) => {
-      Namespace.errorMessages.deprecatedWarning(
-        'useTwentyfourHour',
-        'Please use "options.localization.hourCycle" instead'
-      );
-      if (value === undefined || providedType === 'boolean') return value;
-      Namespace.errorMessages.typeMismatch(path, providedType, defaultType);
     },
     hourCycle: validKeyOption(['h11', 'h12', 'h23', 'h24']),
   });
