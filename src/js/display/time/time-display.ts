@@ -4,7 +4,7 @@ import Validation from '../../validation';
 import Dates from '../../dates';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
-import { OptionsStore } from '../../utilities/optionsStore';
+import { OptionsStore } from '../../utilities/options-store';
 
 /**
  * Creates the clock display
@@ -51,7 +51,7 @@ export default class TimeDisplay {
       .querySelectorAll('.disabled')
       .forEach((element) => element.classList.remove(Namespace.css.disabled));
 
-    if (this.optionsStore.options.display.components.hours) {
+    if (this.optionsStore.components.hour) {
       if (
         !this.validation.isValid(
           this.optionsStore.viewDate.clone.manipulate(1, Unit.hours),
@@ -83,7 +83,7 @@ export default class TimeDisplay {
         : '--';
     }
 
-    if (this.optionsStore.options.display.components.minutes) {
+    if (this.optionsStore.components.minute) {
       if (
         !this.validation.isValid(
           this.optionsStore.viewDate.clone.manipulate(1, Unit.minutes),
@@ -110,7 +110,7 @@ export default class TimeDisplay {
       ).innerText = lastPicked ? lastPicked.minutesFormatted : '--';
     }
 
-    if (this.optionsStore.options.display.components.seconds) {
+    if (this.optionsStore.components.second.seconds) {
       if (
         !this.validation.isValid(
           this.optionsStore.viewDate.clone.manipulate(1, Unit.seconds),
@@ -186,7 +186,7 @@ export default class TimeDisplay {
         : <HTMLElement>separator.cloneNode(true);
     };
 
-    if (this.optionsStore.options.display.components.hours) {
+    if (this.optionsStore.components.hour.hours) {
       let divElement = document.createElement('div');
       divElement.setAttribute(
         'title',
@@ -216,9 +216,9 @@ export default class TimeDisplay {
       this._gridColumns += 'a';
     }
 
-    if (this.optionsStore.options.display.components.minutes) {
+    if (this.optionsStore.components.minute) {
       this._gridColumns += ' a';
-      if (this.optionsStore.options.display.components.hours) {
+      if (this.optionsStore.components.hour.hours) {
         top.push(getSeparator());
         middle.push(getSeparator(true));
         bottom.push(getSeparator());
@@ -252,9 +252,9 @@ export default class TimeDisplay {
       bottom.push(divElement);
     }
 
-    if (this.optionsStore.options.display.components.seconds) {
+    if (this.optionsStore.components.seconds) {
       this._gridColumns += ' a';
-      if (this.optionsStore.options.display.components.minutes) {
+      if (this.optionsStore.components.minute) {
         top.push(getSeparator());
         middle.push(getSeparator(true));
         bottom.push(getSeparator());

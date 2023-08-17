@@ -30,7 +30,7 @@ export class ErrorMessages {
   }
 
   /**
-   * Throws an error when an option is provide an unsupported value.
+   * Throws an error when an option is provided an unsupported value.
    * For example a value of 'cheese' for toolbarPlacement which only supports
    * 'top', 'bottom', 'default'.
    * @param optionName
@@ -107,18 +107,6 @@ export class ErrorMessages {
   mustProvideElement() {
     const error = new TdError(`${this.base} No element was provided.`);
     error.code = 6;
-    throw error;
-  }
-
-  /**
-   * Throws if providing an array for the events to subscribe method doesn't have
-   * the same number of callbacks. E.g., subscribe([1,2], [1])
-   */
-  subscribeMismatch() {
-    const error = new TdError(
-      `${this.base} The subscribed events does not match the number of callbacks`
-    );
-    error.code = 7;
     throw error;
   }
 

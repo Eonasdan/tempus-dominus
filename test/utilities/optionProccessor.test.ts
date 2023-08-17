@@ -5,7 +5,7 @@ import {
   defaultLocalization,
 } from '../test-utilities';
 import { expect, test } from 'vitest';
-import { processKey } from '../../src/js/utilities/optionProcessor';
+import { processKey } from '../../src/js/utilities/option-processor';
 
 test('defaultProcessor', () => {
   expect(

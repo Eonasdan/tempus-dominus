@@ -9,17 +9,6 @@ export default interface Options {
   defaultDate?: DateTime;
   display?: {
     toolbarPlacement?: 'top' | 'bottom';
-    components?: {
-      calendar?: boolean;
-      date?: boolean;
-      month?: boolean;
-      year?: boolean;
-      decades?: boolean;
-      clock?: boolean;
-      hours?: boolean;
-      minutes?: boolean;
-      seconds?: boolean;
-    };
     buttons?: { today?: boolean; close?: boolean; clear?: boolean };
     calendarWeeks?: boolean;
     icons?: {

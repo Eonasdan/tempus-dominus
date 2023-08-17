@@ -1,4 +1,4 @@
-import { OptionConverter } from '../../src/js/utilities/optionConverter';
+import { OptionConverter } from '../../src/js/utilities/option-converter';
 import DefaultOptions from '../../src/js/utilities/default-options';
 import { DateTime } from '../../src/js/datetime';
 import { vi } from 'vitest';

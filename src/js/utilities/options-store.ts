@@ -1,4 +1,4 @@
-import { DateTime } from '../datetime';
+import { DateTimeComponents, DateTime } from '../datetime';
 import CalendarModes from './calendar-modes';
 import ViewMode from './view-mode';
 import Options from './options';
@@ -8,6 +8,10 @@ export class OptionsStore {
   element: HTMLElement;
   input: HTMLInputElement;
   unset: boolean;
+  minimumCalendarViewMode = 0;
+  currentView: keyof ViewMode = 'calendar';
+  components: DateTimeComponents;
+
   private _currentCalendarViewMode = 0;
 
   get currentCalendarViewMode() {
@@ -37,9 +41,6 @@ export class OptionsStore {
   refreshCurrentView() {
     this.currentView = CalendarModes[this.currentCalendarViewMode].name;
   }
-
-  minimumCalendarViewMode = 0;
-  currentView: keyof ViewMode = 'calendar';
 
   get isTwelveHour() {
     return ['h12', 'h11'].includes(this.options.localization.hourCycle);

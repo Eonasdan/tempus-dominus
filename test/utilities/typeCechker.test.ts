@@ -11,7 +11,7 @@ import {
   tryConvertToDateTime,
   typeCheckDateArray,
   typeCheckNumberArray,
-} from '../../src/js/utilities/typeChecker';
+} from '../../src/js/utilities/type-checks';
 import { DateTime } from '../../src/js/datetime';
 
 test('tryConvertToDateTime', () => {

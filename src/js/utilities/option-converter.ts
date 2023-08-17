@@ -2,13 +2,13 @@ import Namespace from './namespace';
 import { DateTime } from '../datetime';
 import DefaultOptions from './default-options';
 import Options, { FormatLocalization } from './options';
-import { processKey } from './optionProcessor';
+import { processKey } from './option-processor';
 import {
   convertToDateTime,
   tryConvertToDateTime,
   typeCheckDateArray,
   typeCheckNumberArray,
-} from './typeChecker';
+} from './type-checks';
 
 export class OptionConverter {
   private static ignoreProperties = [
@@ -19,7 +19,7 @@ export class OptionConverter {
     'ordinal',
   ];
 
-  static deepCopy(input): Options {
+  static deepCopy(input: object): Options {
     const o = {};
 
     Object.keys(input).forEach((key) => {
@@ -48,14 +48,14 @@ export class OptionConverter {
     return o;
   }
 
-  private static isValue = (a) => a != null; // everything except undefined + null
+  private static isValue = (a: unknown): boolean => a != null; // everything except undefined + null
 
   /**
    * Finds value out of an object based on a string, period delimited, path
    * @param paths
    * @param obj
    */
-  static objectPath(paths: string, obj) {
+  static objectPath(paths: string, obj: object) {
     if (paths.charAt(0) === '.') paths = paths.slice(1);
     if (!paths) return obj;
     return paths
@@ -78,7 +78,12 @@ export class OptionConverter {
    * @param localization
    * @param path
    */
-  static spread(provided, copyTo, localization: FormatLocalization, path = '') {
+  static spread(
+    provided: object,
+    copyTo: object,
+    localization: FormatLocalization,
+    path = ''
+  ) {
     const defaultOptions = OptionConverter.objectPath(path, DefaultOptions);
 
     const unsupportedOptions = Object.keys(provided).filter(
@@ -174,7 +179,7 @@ export class OptionConverter {
     return newConfig;
   }
 
-  static _dataToOptions(element, options: Options): Options {
+  static _dataToOptions(element: HTMLElement, options: Options): Options {
     const eData = JSON.parse(JSON.stringify(element.dataset));
 
     if (eData?.tdTargetInput) delete eData.tdTargetInput;
@@ -190,7 +195,7 @@ export class OptionConverter {
 
     // because dataset returns camelCase including the 'td' key the option
     // key won't align
-    const objectToNormalized = (object) => {
+    const objectToNormalized = (object: object) => {
       const lowered = {};
       Object.keys(object).forEach((x) => {
         lowered[x.toLowerCase()] = x;
@@ -236,12 +241,13 @@ export class OptionConverter {
     return this._mergeOptions(dataOptions, options);
   }
 
-  //todo clean this up
-  private static normalizeObject(objectToNormalized: (object) => object) {
+  private static normalizeObject(
+    objectToNormalized: (object: object) => object
+  ) {
     const normalizeObject = (
       split: string[],
       index: number,
-      optionSubgroup: unknown,
+      optionSubgroup: object,
       value: unknown
     ) => {
       // first round = display { ... }
@@ -291,7 +297,7 @@ export class OptionConverter {
    */
   static _typeCheckDateArray(
     optionName: string,
-    value,
+    value: any, //eslint-disable-line @typescript-eslint/no-explicit-any,
     providedType: string,
     localization: FormatLocalization
   ) {
@@ -306,7 +312,7 @@ export class OptionConverter {
    */
   static _typeCheckNumberArray(
     optionName: string,
-    value,
+    value: any, //eslint-disable-line @typescript-eslint/no-explicit-any,
     providedType: string
   ) {
     return typeCheckNumberArray(optionName, value, providedType);
@@ -352,12 +358,11 @@ export class OptionConverter {
   static _validateConflicts(config: Options) {
     if (
       config.display.sideBySide &&
-      (!config.display.components.clock ||
-        !(
-          config.display.components.hours ||
-          config.display.components.minutes ||
-          config.display.components.seconds
-        ))
+      !(
+        config.display.components.hours ||
+        config.display.components.minutes ||
+        config.display.components.seconds
+      )
     ) {
       Namespace.errorMessages.conflictingConfiguration(
         'Cannot use side by side mode without the clock components'

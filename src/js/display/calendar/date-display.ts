@@ -5,7 +5,7 @@ import Dates from '../../dates';
 import { Paint } from '../index';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
-import { OptionsStore } from '../../utilities/optionsStore';
+import { OptionsStore } from '../../utilities/options-store';
 
 /**
  * Creates and updates the grid for `date`
@@ -269,7 +269,7 @@ export default class DateDisplay {
         this.optionsStore.options.localization.dayViewHeaderFormat
       )
     );
-    this.optionsStore.options.display.components.month
+    this.optionsStore.components.month
       ? switcher.classList.remove(Namespace.css.disabled)
       : switcher.classList.add(Namespace.css.disabled);
     this.validation.isValid(

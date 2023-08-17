@@ -4,8 +4,8 @@ import { ChangeEvent, FailEvent } from './utilities/event-types';
 import Validation from './validation';
 import { serviceLocator } from './utilities/service-locator';
 import { EventEmitters } from './utilities/event-emitter';
-import { OptionsStore } from './utilities/optionsStore';
-import { OptionConverter } from './utilities/optionConverter';
+import { OptionsStore } from './utilities/options-store';
+import { OptionConverter } from './utilities/option-converter';
 
 export default class Dates {
   private _dates: DateTime[] = [];
@@ -68,7 +68,7 @@ export default class Dates {
    * Tries to convert the provided value to a DateTime object.
    * If value is null|undefined then clear the value of the provided index (or 0).
    * @param value Value to convert or null|undefined
-   * @param index When using multidates this is the index in the array
+   * @param index When using multi-dates this is the index in the array
    */
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFromInput(value: any, index?: number) {

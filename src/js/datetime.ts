@@ -2,7 +2,7 @@ import { FormatLocalization } from './utilities/options';
 import Namespace from './utilities/namespace';
 import DefaultFormatLocalization from './utilities/default-format-localization';
 
-type parsedTime = {
+type ParsedTime = {
   year?: number;
   month?: number;
   day?: number;
@@ -13,6 +13,16 @@ type parsedTime = {
   zone?: {
     offset: number;
   };
+  afternoon?: boolean;
+};
+
+export type DateTimeComponents = {
+  month: boolean;
+  date: boolean;
+  year: boolean;
+  hour: boolean;
+  minute: boolean;
+  second: boolean;
 };
 
 export enum Unit {
@@ -45,16 +55,27 @@ export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
  */
 export const getFormatByUnit = (unit: Unit): object => {
   switch (unit) {
-    case 'date':
+    case Unit.date:
       return { dateStyle: 'short' };
-    case 'month':
+    case Unit.month:
       return {
         month: 'numeric',
         year: 'numeric',
       };
-    case 'year':
+    case Unit.year:
       return { year: 'numeric' };
   }
+};
+
+export const guessComponents = (input: string): DateTimeComponents => {
+  return {
+    month: /M{1,4}/.test(input),
+    date: /d{1,4}/.test(input),
+    year: /y{1,4}/.test(input),
+    hour: /(h{1,2}|H{1,2})/.test(input),
+    minute: /m{1,2}/.test(input),
+    second: /s{1,2}/.test(input),
+  };
 };
 
 /**
@@ -614,7 +635,7 @@ export class DateTime extends Date {
   /**
    * Replaces an expanded token set (e.g. LT/LTS)
    */
-  private replaceTokens(formatStr, formats) {
+  private replaceTokens(formatStr: string, formats: object) {
     /***
      * _ => match
      * a => first capture group. Anything between [ and ]
@@ -642,51 +663,48 @@ export class DateTime extends Date {
     return input + (input > 68 ? 1900 : 2000);
   }
 
-  private offsetFromString(string) {
+  private offsetFromString(string: string) {
     if (!string) return 0;
     if (string === 'Z') return 0;
     const [first, second, third] = string.match(/([+-]|\d\d)/g);
-    const minutes = +(second * 60) + (+third || 0);
+    const minutes = +(+second * 60) + (+third || 0);
     const signed = first === '+' ? -minutes : minutes;
     return minutes === 0 ? 0 : signed; // eslint-disable-line no-nested-ternary
   }
 
   /**
-   * z = -4, zz = -04, zzz = -0400
-   * @param date
+   * z = -04:00, zz = -0400
    * @param style
    * @private
    */
-  private zoneInformation(date: DateTime, style: 'z' | 'zz' | 'zzz') {
-    let name = date
-      .parts(this.localization.locale, { timeZoneName: 'longOffset' })
-      .timeZoneName.replace('GMT', '')
-      .replace(':', '');
+  private zoneInformation(style: 'z' | 'zz') {
+    const offsetMinutes = this.getTimezoneOffset();
+    const offsetHours = Math.abs(Math.floor(offsetMinutes / 60));
+    const offsetMinutesRemainder = Math.abs(offsetMinutes % 60);
+    const sign = offsetMinutes < 0 ? '+' : '-';
+    const separator = style === 'z' ? ':' : '';
 
-    const negative = name.includes('-');
-
-    name = name.replace('-', '');
-
-    if (style === 'z') name = name.substring(1, 2);
-    else if (style === 'zz') name = name.substring(0, 2);
-
-    return `${negative ? '-' : ''}${name}`;
+    return `${sign}${offsetHours
+      .toString()
+      .padStart(2, '0')}${separator}${offsetMinutesRemainder
+      .toString()
+      .padStart(2, '0')}`;
   }
 
   private zoneExpressions = [
     this.matchOffset,
-    (obj, input) => {
+    (obj, input: string) => {
       obj.offset = this.offsetFromString(input);
     },
   ];
 
-  private addInput(property) {
-    return (time, input) => {
+  private addInput(property: string) {
+    return (time: ParsedTime, input: string) => {
       time[property] = +input;
     };
   }
 
-  private meridiemMatch(input) {
+  private meridiemMatch(input: string) {
     const meridiem = new Intl.DateTimeFormat(this.localization.locale, {
       hour: 'numeric',
       hour12: true,
@@ -700,20 +718,20 @@ export class DateTime extends Date {
   private expressions = {
     t: [
       this.matchWord,
-      (ojb, input) => {
+      (ojb, input: string) => {
         ojb.afternoon = this.meridiemMatch(input);
       },
     ],
     T: [
       this.matchWord,
-      (ojb, input) => {
-        ojb.afternoon = this.meridiemMatch(input);
+      (obj: ParsedTime, input: string) => {
+        obj.afternoon = this.meridiemMatch(input);
       },
     ],
     fff: [
       this.match3,
-      (ojb, input) => {
-        ojb.milliseconds = +input;
+      (obj: ParsedTime, input: string) => {
+        obj.milliseconds = +input;
       },
     ],
     s: [this.match1to2, this.addInput('seconds')],
@@ -728,7 +746,7 @@ export class DateTime extends Date {
     dd: [this.match2, this.addInput('day')],
     Do: [
       this.matchWord,
-      (ojb, input) => {
+      (ojb, input: string) => {
         [ojb.day] = input.match(/\d+/);
         if (!this.localization.ordinal) return;
         for (let i = 1; i <= 31; i += 1) {
@@ -742,7 +760,7 @@ export class DateTime extends Date {
     MM: [this.match2, this.addInput('month')],
     MMM: [
       this.matchWord,
-      (obj, input) => {
+      (obj: ParsedTime, input: string) => {
         const months = this.getAllMonths();
         const monthsShort = this.getAllMonths('short');
         const matchIndex =
@@ -755,7 +773,7 @@ export class DateTime extends Date {
     ],
     MMMM: [
       this.matchWord,
-      (obj, input) => {
+      (obj: ParsedTime, input: string) => {
         const months = this.getAllMonths();
         const matchIndex = months.indexOf(input) + 1;
         if (matchIndex < 1) {
@@ -767,17 +785,16 @@ export class DateTime extends Date {
     y: [this.matchSigned, this.addInput('year')],
     yy: [
       this.match2,
-      (obj, input) => {
+      (obj: ParsedTime, input: string) => {
         obj.year = this.parseTwoDigitYear(input);
       },
     ],
     yyyy: [this.match4, this.addInput('year')],
-    // z: this.zoneExpressions,
-    // zz: this.zoneExpressions,
-    // zzz: this.zoneExpressions
+    z: this.zoneExpressions,
+    zz: this.zoneExpressions,
   };
 
-  private correctHours(time) {
+  private correctHours(time: ParsedTime) {
     const { afternoon } = time;
     if (afternoon !== undefined) {
       const { hours } = time;
@@ -808,7 +825,7 @@ export class DateTime extends Date {
       }
     }
 
-    return (input): parsedTime => {
+    return (input): ParsedTime => {
       const time = {
         hours: 0,
         minutes: 0,
@@ -883,16 +900,9 @@ export class DateTime extends Date {
    * Returns a string format.
    * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
    * for valid templates and locale objects
-   * @param template An optional object. If provided, method will use Intl., otherwise the localizations format properties
-   * @param locale Can be a string or an array of strings. Uses browser defaults otherwise.
+   * @param template string format
    */
-  format(
-    template?: DateTimeFormatOptions | string,
-    locale = this.localization.locale
-  ): string {
-    if (template && typeof template === 'object')
-      return new Intl.DateTimeFormat(locale, template).format(this);
-
+  format(template?: string): string {
     const formatString = this.replaceTokens(
       //try template first
       template ||
@@ -903,7 +913,7 @@ export class DateTime extends Date {
       this.localization.dateFormats
     );
 
-    const formatter = (template) =>
+    const formatter = (template: object) =>
       new Intl.DateTimeFormat(this.localization.locale, template).format(this);
 
     if (!this.localization.hourCycle)
@@ -939,9 +949,8 @@ export class DateTime extends Date {
       s: this.seconds,
       ss: this.secondsFormatted,
       fff: this.getMilliseconds(),
-      // z: this.zoneInformation(dateTime, 'z'), //-4
-      // zz: this.zoneInformation(dateTime, 'zz'), //-04
-      // zzz: this.zoneInformation(dateTime, 'zzz') //-0400
+      z: this.zoneInformation('z'), //-04:00
+      zz: this.zoneInformation('zz'), //-0400
     };
 
     return formatString

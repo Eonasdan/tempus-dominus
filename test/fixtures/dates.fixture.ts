@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { DateTime } from '../../src/js/datetime';
 import { EventEmitters } from '../../src/js/utilities/event-emitter';
-import { OptionsStore } from '../../src/js/utilities/optionsStore';
+import { OptionsStore } from '../../src/js/utilities/options-store';
 import Validation from '../../src/js/validation';
 
 export class FixtureDates {

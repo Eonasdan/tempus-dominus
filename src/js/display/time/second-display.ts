@@ -4,7 +4,7 @@ import Validation from '../../validation';
 import { serviceLocator } from '../../utilities/service-locator';
 import { Paint } from '../index';
 import ActionTypes from '../../utilities/action-types';
-import { OptionsStore } from '../../utilities/optionsStore';
+import { OptionsStore } from '../../utilities/options-store';
 
 /**
  * Creates and updates the grid for `seconds`

@@ -5,7 +5,7 @@ import Validation from '../../validation';
 import { Paint } from '../index';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
-import { OptionsStore } from '../../utilities/optionsStore';
+import { OptionsStore } from '../../utilities/options-store';
 
 /**
  * Creates and updates the grid for `year`
@@ -67,7 +67,7 @@ export default class YearDisplay {
         })}`
       );
 
-      this.optionsStore.options.display.components.decades
+      this.optionsStore.components.decades
         ? switcher.classList.remove(Namespace.css.disabled)
         : switcher.classList.add(Namespace.css.disabled);
 

@@ -1,5 +1,5 @@
 import { DateTime, Unit } from '../src/js/datetime';
-import { OptionsStore } from '../src/js/utilities/optionsStore';
+import { OptionsStore } from '../src/js/utilities/options-store';
 import DefaultFormatLocalization from '../src/js/utilities/default-format-localization';
 import { vi } from 'vitest';
 import {

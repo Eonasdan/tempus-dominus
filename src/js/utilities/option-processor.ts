@@ -4,7 +4,7 @@ import {
   convertToDateTime,
   typeCheckNumberArray,
   typeCheckDateArray,
-} from './typeChecker';
+} from './type-checks';
 
 interface OptionProcessorFunctionArguments {
   key: string;

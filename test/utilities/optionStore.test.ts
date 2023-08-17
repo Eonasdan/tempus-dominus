@@ -1,6 +1,6 @@
 import { newDate, secondaryDate } from '../test-utilities';
 import { beforeEach, expect, test } from 'vitest';
-import { OptionsStore } from '../../src/js/utilities/optionsStore';
+import { OptionsStore } from '../../src/js/utilities/options-store';
 
 let optionStore: OptionsStore;
 

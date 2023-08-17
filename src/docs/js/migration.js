@@ -81,21 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.entries(config).forEach(([key, value]) => {
           differentAccepts(key);
           switch (key) {
-            case 'format':
-              createAlert('Format is no longer used to determine component display. See <a href="options.html#displayComponents" target="_blank">component usage</a> and <a href="options.html#hooksInputFormat" target="_blank">input formatting</a>.', 'warning');
-              ensurePath('display', newOptions);
-              newOptions.display.components = {
-                calendar: true,
-                date: true,
-                month: true,
-                year: true,
-                decades: true,
-                clock: true,
-                hours: true,
-                minutes: true,
-                seconds: false,
-              };
-              break;
             case 'icons':
             case 'sideBySide':
             case 'calendarWeeks':

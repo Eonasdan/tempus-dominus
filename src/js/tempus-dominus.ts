@@ -19,8 +19,8 @@ import DefaultOptions, {
   DefaultEnLocalization,
 } from './utilities/default-options';
 import ActionTypes from './utilities/action-types';
-import { OptionsStore } from './utilities/optionsStore';
-import { OptionConverter } from './utilities/optionConverter';
+import { OptionsStore } from './utilities/options-store';
+import { OptionConverter } from './utilities/option-converter';
 
 /**
  * A robust and powerful date/time picker component.
@@ -485,7 +485,11 @@ class TempusDominus {
   private _toggleClickEvent = () => {
     if (
       (this.optionsStore.element as HTMLInputElement)?.disabled ||
-      this.optionsStore.input?.disabled
+      this.optionsStore.input?.disabled ||
+      //if we just have the input and allow input toggle is enabled, then don't cause a toggle
+      (this._toggle.nodeName === 'INPUT' &&
+        (this._toggle as HTMLInputElement)?.type === 'text' &&
+        this.optionsStore.options.allowInputToggle)
     )
       return;
     this.toggle();

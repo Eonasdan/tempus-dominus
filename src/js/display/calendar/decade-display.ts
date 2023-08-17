@@ -5,7 +5,7 @@ import Validation from '../../validation';
 import { Paint } from '../index';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
-import { OptionsStore } from '../../utilities/optionsStore';
+import { OptionsStore } from '../../utilities/options-store';
 
 /**
  * Creates and updates the grid for `seconds`
@@ -64,9 +64,7 @@ export default class DecadeDisplay {
     if (this.optionsStore.currentView === 'decades') {
       switcher.setAttribute(
         Namespace.css.decadesContainer,
-        `${this._startDecade.format({
-          year: 'numeric',
-        })}-${this._endDecade.format({ year: 'numeric' })}`
+        `${this._startDecade.format('yyyy')}-${this._endDecade.format('yyyy')}`
       );
 
       this.validation.isValid(this._startDecade, Unit.year)
@@ -93,7 +91,7 @@ export default class DecadeDisplay {
           } else {
             containerClone.innerText = this._startDecade.clone
               .manipulate(-10, Unit.year)
-              .format({ year: 'numeric' });
+              .format('yyyy');
             containerClone.setAttribute(
               'data-value',
               `${this._startDecade.year}`
@@ -120,9 +118,7 @@ export default class DecadeDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-        containerClone.innerText = `${this._startDecade.format({
-          year: 'numeric',
-        })}`;
+        containerClone.innerText = `${this._startDecade.format('yyyy')}`;
 
         this._startDecade.manipulate(10, Unit.year);
       });

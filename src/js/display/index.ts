@@ -16,7 +16,7 @@ import { EventEmitters, ViewUpdateValues } from '../utilities/event-emitter';
 import { serviceLocator } from '../utilities/service-locator';
 import ActionTypes from '../utilities/action-types';
 import CalendarModes from '../utilities/calendar-modes';
-import { OptionsStore } from '../utilities/optionsStore';
+import { OptionsStore } from '../utilities/options-store';
 
 /**
  * Main class for all things display related.
@@ -640,10 +640,9 @@ export default class Display {
    */
   get _hasTime(): boolean {
     return (
-      this.optionsStore.options.display.components.clock &&
-      (this.optionsStore.options.display.components.hours ||
-        this.optionsStore.options.display.components.minutes ||
-        this.optionsStore.options.display.components.seconds)
+      this.optionsStore.components.hour ||
+      this.optionsStore.components.minute ||
+      this.optionsStore.components.second
     );
   }
 
@@ -652,10 +651,9 @@ export default class Display {
    */
   get _hasDate(): boolean {
     return (
-      this.optionsStore.options.display.components.calendar &&
-      (this.optionsStore.options.display.components.year ||
-        this.optionsStore.options.display.components.month ||
-        this.optionsStore.options.display.components.date)
+      this.optionsStore.components.year ||
+      this.optionsStore.components.month ||
+      this.optionsStore.components.date
     );
   }
 

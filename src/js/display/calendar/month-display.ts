@@ -5,7 +5,7 @@ import Dates from '../../dates';
 import { Paint } from '../index';
 import { serviceLocator } from '../../utilities/service-locator';
 import ActionTypes from '../../utilities/action-types';
-import { OptionsStore } from '../../utilities/optionsStore';
+import { OptionsStore } from '../../utilities/options-store';
 
 /**
  * Creates and updates the grid for `month`
@@ -56,7 +56,7 @@ export default class MonthDisplay {
         this.optionsStore.viewDate.format({ year: 'numeric' })
       );
 
-      this.optionsStore.options.display.components.year
+      this.optionsStore.components.year
         ? switcher.classList.remove(Namespace.css.disabled)
         : switcher.classList.add(Namespace.css.disabled);
 

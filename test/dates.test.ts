@@ -10,7 +10,7 @@ import {
 import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
 import Dates from '../src/js/dates';
 import { DateTime, Unit } from '../src/js/datetime';
-import { OptionConverter } from '../src/js/utilities/optionConverter';
+import { OptionConverter } from '../src/js/utilities/option-converter';
 import Validation from '../src/js/validation';
 import { FixtureValidation } from './fixtures/validation.fixture';
 import { EventEmitters } from '../src/js/utilities/event-emitter';
