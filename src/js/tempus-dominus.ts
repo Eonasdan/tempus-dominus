@@ -571,7 +571,11 @@ class TempusDominus {
   private _toggleClickEvent = () => {
     if (
       (this.optionsStore.element as HTMLInputElement)?.disabled ||
-      this.optionsStore.input?.disabled
+      this.optionsStore.input?.disabled ||
+      //if we just have the input and allow input toggle is enabled, then don't cause a toggle
+      (this._toggle.nodeName === 'INPUT' &&
+        (this._toggle as HTMLInputElement)?.type === 'text' &&
+        this.optionsStore.options.allowInputToggle)
     )
       return;
     this.toggle();
@@ -639,7 +643,7 @@ const extend = function (plugin, option = undefined) {
   return tempusDominus;
 };
 
-const version = '6.7.11';
+const version = '6.7.13';
 
 const tempusDominus = {
   TempusDominus,

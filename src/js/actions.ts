@@ -256,14 +256,12 @@ export default class Actions {
         break;
     }
 
+    this.dates.setValue(this.optionsStore.viewDate, this.dates.lastPickedIndex);
+
     if (
       this.optionsStore.currentCalendarViewMode ===
       this.optionsStore.minimumCalendarViewMode
     ) {
-      this.dates.setValue(
-        this.optionsStore.viewDate,
-        this.dates.lastPickedIndex
-      );
       if (!this.optionsStore.options.display.inline) {
         this.display.hide();
       }
