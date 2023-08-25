@@ -412,6 +412,8 @@ class TempusDominus {
       );
     }
 
+    this.optionsStore.options = newConfig;
+
     if (
       newConfig.restrictions.maxDate &&
       this.viewDate.isAfter(newConfig.restrictions.maxDate)
@@ -423,8 +425,6 @@ class TempusDominus {
       this.viewDate.isBefore(newConfig.restrictions.minDate)
     )
       this.viewDate = newConfig.restrictions.minDate;
-
-    this.optionsStore.options = newConfig;
   }
 
   /**

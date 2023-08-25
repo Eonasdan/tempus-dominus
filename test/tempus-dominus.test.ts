@@ -1,5 +1,6 @@
-import { beforeEach, expect, test } from 'vitest';
+import { beforeEach, expect, test, describe } from 'vitest';
 import { TempusDominus } from '../src/js/tempus-dominus';
+import { tomorrowDate, yesterdayDate } from './test-utilities';
 
 beforeEach(() => {
   document.body.innerHTML = `<div class="container">
@@ -40,4 +41,46 @@ test('TD can construct', () => {
 
   expect(td).not.toBe(null);
   expect(td instanceof TempusDominus).toBe(true);
+});
+
+describe('TD constructs correct', () => {
+  test('maxDate should be yesterday', () => {
+    const maxDate = yesterdayDate();
+
+    const options = {
+      restrictions: {
+        maxDate,
+      },
+    };
+
+    const td = new TempusDominus(
+      document.getElementById('datetimepicker1'),
+      options
+    );
+
+    expect(td.optionsStore.options.restrictions.maxDate.getTime()).toBe(
+      maxDate.getTime()
+    );
+    expect(td.viewDate.getTime()).toBe(maxDate.getTime());
+  });
+
+  test('minDate should be tomorrow', () => {
+    const minDate = tomorrowDate();
+
+    const options = {
+      restrictions: {
+        minDate,
+      },
+    };
+
+    const td = new TempusDominus(
+      document.getElementById('datetimepicker1'),
+      options
+    );
+
+    expect(td.optionsStore.options.restrictions.minDate.getTime()).toBe(
+      minDate.getTime()
+    );
+    expect(td.viewDate.getTime()).toBe(minDate.getTime());
+  });
 });

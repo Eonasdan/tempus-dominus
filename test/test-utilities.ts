@@ -39,6 +39,26 @@ const vanillaDate = () => new Date(2023, 3 - 1, 14, 13, 25, 42, 500);
  */
 const secondaryDate = () => new DateTime(2023, 7 - 1, 8, 3, 0);
 
+/**
+ * Yesterday date
+ */
+const yesterdayDate = () => {
+  const now = new Date();
+  const yesterday = new Date().setDate(now.getDate() - 1);
+
+  return new DateTime(yesterday);
+};
+
+/**
+ * Tomorrow date
+ */
+const tomorrowDate = () => {
+  const now = new Date();
+  const tomorrow = new Date().setDate(now.getDate() + 1);
+
+  return new DateTime(tomorrow);
+};
+
 const newDateMinute = () => newDate().startOf(Unit.minutes);
 const newDateStringMinute = newDateMinute().format('L LT');
 const newDateStringIso = newDate().toISOString();
@@ -71,6 +91,8 @@ export {
   newDateStringIso,
   vanillaDate,
   secondaryDate,
+  yesterdayDate,
+  tomorrowDate,
   reset,
   store,
   defaultLocalization,
