@@ -23,7 +23,7 @@ body:
       required: true
   - type: markdown
     attributes:
-      value: "![Please provide the link in the address bar](/.github/ISSUE_TEMPLATE/image.png)"
+      value: "![Please provide the link in the address bar](image.png)"
   - type: textarea
     id: reduced-test-case
     attributes:
