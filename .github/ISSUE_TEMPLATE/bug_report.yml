@@ -21,7 +21,7 @@ body:
       description: Provide a summary of the issue and what you expected to happen, including specific steps to reproduce.
     validations:
       required: true
-  -type: markdown
+  - type: markdown
     value: "![Please provide the link in the address bar](/.github/ISSUE_TEMPLATE/image.png)"
   - type: textarea
     id: reduced-test-case
