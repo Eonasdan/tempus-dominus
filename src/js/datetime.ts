@@ -918,6 +918,7 @@ export class DateTime extends Date {
       : this.localization.hourCycle;
 
     const matches = {
+      y: this.year,
       yy: formatter({ year: '2-digit' }),
       yyyy: this.year,
       M: formatter({ month: 'numeric' }),
