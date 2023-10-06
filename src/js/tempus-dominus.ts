@@ -643,7 +643,7 @@ const extend = function (plugin, option = undefined) {
   return tempusDominus;
 };
 
-const version = '6.7.13';
+const version = '6.7.16';
 
 const tempusDominus = {
   TempusDominus,
