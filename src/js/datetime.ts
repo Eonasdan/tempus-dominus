@@ -43,27 +43,44 @@ const twoDigitTemplate = {
   second: '2-digit',
 };
 
-export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
-  timeStyle?: 'short' | 'medium' | 'long';
-  dateStyle?: 'short' | 'medium' | 'long' | 'full';
-  numberingSystem?: string;
-}
+export const formatTokenMap = {
+  year: 'yyyy',
+  yearTwoDigit: 'yy',
+  month: 'M',
+  monthTwoDigit: 'MM',
+  monthShort: 'MMM',
+  monthLong: 'MMMM',
+  date: 'd',
+  dateTwoDigit: 'dd',
+  weekdayShort: 'ddd',
+  weekdayLong: 'dddd',
+  hour: 'H',
+  hourTwoDigit: 'HH',
+  hour12: 'h',
+  hour12TwoDigit: 'hh',
+  meridiem: 't',
+  meridiemUpper: 'T',
+  minute: 'm',
+  minuteTwoDigit: 'mm',
+  second: 's',
+  secondTwoDigit: 'ss',
+  milliseconds: 'fff',
+  zone: 'z',
+  zoneNoColon: 'zz',
+};
 
 /**
- * Returns an Intl format object based on the provided object
+ * Returns an English (US) string format object based on the provided object
  * @param unit
  */
-export const getFormatByUnit = (unit: Unit): object => {
+export const getFormatByUnit = (unit: Unit): string => {
   switch (unit) {
     case Unit.date:
-      return { dateStyle: 'short' };
+      return `${formatTokenMap.monthTwoDigit}/${formatTokenMap.dateTwoDigit}/${formatTokenMap.year}`;
     case Unit.month:
-      return {
-        month: 'numeric',
-        year: 'numeric',
-      };
+      return `${formatTokenMap.monthTwoDigit}/${formatTokenMap.year}`;
     case Unit.year:
-      return { year: 'numeric' };
+      return formatTokenMap.year;
   }
 };
 
@@ -208,16 +225,16 @@ export class DateTime extends Date {
     if (this[unit] === undefined)
       throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
-      case 'seconds':
+      case Unit.seconds:
         this.setMilliseconds(0);
         break;
-      case 'minutes':
+      case Unit.minutes:
         this.setSeconds(0, 0);
         break;
-      case 'hours':
+      case Unit.hours:
         this.setMinutes(0, 0, 0);
         break;
-      case 'date':
+      case Unit.date:
         this.setHours(0, 0, 0, 0);
         break;
       case 'weekDay': {
@@ -227,11 +244,11 @@ export class DateTime extends Date {
         this.manipulate(goBack * -1, Unit.date);
         break;
       }
-      case 'month':
+      case Unit.month:
         this.startOf(Unit.date);
         this.setDate(1);
         break;
-      case 'year':
+      case Unit.year:
         this.startOf(Unit.date);
         this.setMonth(0, 1);
         break;
@@ -250,16 +267,16 @@ export class DateTime extends Date {
     if (this[unit] === undefined)
       throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
-      case 'seconds':
+      case Unit.seconds:
         this.setMilliseconds(999);
         break;
-      case 'minutes':
+      case Unit.minutes:
         this.setSeconds(59, 999);
         break;
-      case 'hours':
+      case Unit.hours:
         this.setMinutes(59, 59, 999);
         break;
-      case 'date':
+      case Unit.date:
         this.setHours(23, 59, 59, 999);
         break;
       case 'weekDay': {
@@ -269,12 +286,12 @@ export class DateTime extends Date {
         this.manipulate(endOfWeek - this.weekDay, Unit.date);
         break;
       }
-      case 'month':
+      case Unit.month:
         this.endOf(Unit.date);
         this.manipulate(1, Unit.month);
         this.setDate(0);
         break;
-      case 'year':
+      case Unit.year:
         this.endOf(Unit.date);
         this.setMonth(11, 31);
         break;
@@ -928,6 +945,7 @@ export class DateTime extends Date {
       : this.localization.hourCycle;
 
     const matches = {
+      y: this.year,
       yy: formatter({ year: '2-digit' }),
       yyyy: this.year,
       M: formatter({ month: 'numeric' }),

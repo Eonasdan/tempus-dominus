@@ -340,7 +340,7 @@ class Build {
     });
 
     this.writeFileAndEnsurePathExists(
-      path.join('.', 'docs', '6', 'js', 'search.json'),
+      path.join('.', 'docs', '7', 'js', 'search.json'),
       JSON.stringify(this.pagesMeta, null, 2)
     );
 
@@ -512,23 +512,23 @@ ${this.siteMap}
     [
       {
         source: './src/docs/assets/no-styles.html',
-        destination: './docs/6/examples/no-styles.html'
+        destination: './docs/7/examples/no-styles.html'
       },
       {
         source: './src/docs/assets/repl-data.json',
-        destination: './docs/6/repl-data.json'
+        destination: './docs/7/repl-data.json'
       }
     ].forEach((file) => {
       fs.mkdirSync(path.dirname(file.destination), { recursive: true });
       fs.copyFileSync(file.source, file.destination);
     });
 
-    fs.mkdirSync('./docs/6/images', { recursive: true });
+    fs.mkdirSync('./docs/7/images', { recursive: true });
     this.directoryWalk('./src/docs/assets', '.png').forEach(
       (fileInformation) => {
         fs.copyFileSync(
           fileInformation.fullPath,
-          `./docs/6/images/${fileInformation.file}`
+          `./docs/7/images/${fileInformation.file}`
         );
       }
     );

@@ -1,5 +1,5 @@
 import Namespace from './namespace';
-import { DateTime } from '../datetime';
+import { DateTime, guessComponents } from '../datetime';
 import DefaultOptions from './default-options';
 import Options, { FormatLocalization } from './options';
 import { processKey } from './option-processor';
@@ -356,13 +356,10 @@ export class OptionConverter {
    * @param config
    */
   static _validateConflicts(config: Options) {
+    const components = guessComponents(config.localization.format);
     if (
       config.display.sideBySide &&
-      !(
-        config.display.components.hours ||
-        config.display.components.minutes ||
-        config.display.components.seconds
-      )
+      !(components.hour || components.minute || components.second)
     ) {
       Namespace.errorMessages.conflictingConfiguration(
         'Cannot use side by side mode without the clock components'

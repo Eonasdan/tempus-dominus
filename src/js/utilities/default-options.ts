@@ -1,12 +1,12 @@
 import Options, { Localization } from './options';
-import { DateTime } from '../datetime';
+import { DateTime, formatTokenMap } from '../datetime';
 import DefaultFormatLocalization from './default-format-localization';
 
 const defaultEnLocalization: Localization = {
   clear: 'Clear selection',
   close: 'Close the picker',
   dateFormats: DefaultFormatLocalization.dateFormats,
-  dayViewHeaderFormat: { month: 'long', year: '2-digit' },
+  dayViewHeaderFormat: `${formatTokenMap.monthLong} ${formatTokenMap.year}`,
   decrementHour: 'Decrement Hour',
   decrementMinute: 'Decrement Minute',
   decrementSecond: 'Decrement Second',

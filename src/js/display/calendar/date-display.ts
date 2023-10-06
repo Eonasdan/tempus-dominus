@@ -1,4 +1,4 @@
-import { DateTime, Unit } from '../../datetime';
+import { DateTime, formatTokenMap, Unit } from '../../datetime';
 import Namespace from '../../utilities/namespace';
 import Validation from '../../validation';
 import Dates from '../../dates';
@@ -176,7 +176,7 @@ export default class DateDisplay {
 
       // format the string to a date
       const innerDate = DateTime.fromString(attributeValue, {
-        format: 'yyyy-MM-dd',
+        format: `${formatTokenMap.year}-${formatTokenMap.monthTwoDigit}-${formatTokenMap.dateTwoDigit}`,
       });
 
       // find the position of the target in the date container
@@ -313,7 +313,9 @@ export default class DateDisplay {
         Namespace.css.dayOfTheWeek,
         Namespace.css.noHighlight
       );
-      htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
+      htmlDivElement.innerText = innerDate
+        .format(formatTokenMap.weekdayShort)
+        .substring(0, 1);
       innerDate.manipulate(1, Unit.date);
       row.push(htmlDivElement);
     }

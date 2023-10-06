@@ -110,7 +110,7 @@ export default class TimeDisplay {
       ).innerText = lastPicked ? lastPicked.minutesFormatted : '--';
     }
 
-    if (this.optionsStore.components.second.seconds) {
+    if (this.optionsStore.components.second) {
       if (
         !this.validation.isValid(
           this.optionsStore.viewDate.clone.manipulate(1, Unit.seconds),
@@ -186,7 +186,7 @@ export default class TimeDisplay {
         : <HTMLElement>separator.cloneNode(true);
     };
 
-    if (this.optionsStore.components.hour.hours) {
+    if (this.optionsStore.components.hour) {
       let divElement = document.createElement('div');
       divElement.setAttribute(
         'title',
@@ -218,7 +218,7 @@ export default class TimeDisplay {
 
     if (this.optionsStore.components.minute) {
       this._gridColumns += ' a';
-      if (this.optionsStore.components.hour.hours) {
+      if (this.optionsStore.components.hour) {
         top.push(getSeparator());
         middle.push(getSeparator(true));
         bottom.push(getSeparator());
@@ -252,7 +252,7 @@ export default class TimeDisplay {
       bottom.push(divElement);
     }
 
-    if (this.optionsStore.components.seconds) {
+    if (this.optionsStore.components.second) {
       this._gridColumns += ' a';
       if (this.optionsStore.components.minute) {
         top.push(getSeparator());

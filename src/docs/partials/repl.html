@@ -135,7 +135,7 @@
     };
 
     document.addEventListener('DOMContentLoaded', async () => {
-      replData = await (await fetch('/6/repl-data.json')).json();
+      replData = await (await fetch('/7/repl-data.json')).json();
 
       repl.vm = await sdk
         .embedProjectId('embed', repl.projectId, {

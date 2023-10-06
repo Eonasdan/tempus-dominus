@@ -1,4 +1,4 @@
-import { Unit } from '../../datetime';
+import { formatTokenMap, Unit } from '../../datetime';
 import Namespace from '../../utilities/namespace';
 import Validation from '../../validation';
 import Dates from '../../dates';
@@ -53,7 +53,7 @@ export default class MonthDisplay {
 
       switcher.setAttribute(
         Namespace.css.monthsContainer,
-        this.optionsStore.viewDate.format({ year: 'numeric' })
+        this.optionsStore.viewDate.format(formatTokenMap.year)
       );
 
       this.optionsStore.components.year
@@ -98,7 +98,7 @@ export default class MonthDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${index}`);
-        containerClone.innerText = `${innerDate.format({ month: 'short' })}`;
+        containerClone.innerText = `${innerDate.format('')}`;
         innerDate.manipulate(1, Unit.month);
       });
   }

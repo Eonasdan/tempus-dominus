@@ -1,5 +1,5 @@
 import Dates from '../../dates';
-import { DateTime, Unit } from '../../datetime';
+import { DateTime, formatTokenMap, Unit } from '../../datetime';
 import Namespace from '../../utilities/namespace';
 import Validation from '../../validation';
 import { Paint } from '../index';
@@ -64,7 +64,9 @@ export default class DecadeDisplay {
     if (this.optionsStore.currentView === 'decades') {
       switcher.setAttribute(
         Namespace.css.decadesContainer,
-        `${this._startDecade.format('yyyy')}-${this._endDecade.format('yyyy')}`
+        `${this._startDecade.format(
+          formatTokenMap.year
+        )}-${this._endDecade.format(formatTokenMap.year)}`
       );
 
       this.validation.isValid(this._startDecade, Unit.year)
@@ -91,7 +93,7 @@ export default class DecadeDisplay {
           } else {
             containerClone.innerText = this._startDecade.clone
               .manipulate(-10, Unit.year)
-              .format('yyyy');
+              .format(formatTokenMap.year);
             containerClone.setAttribute(
               'data-value',
               `${this._startDecade.year}`
@@ -118,7 +120,9 @@ export default class DecadeDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-        containerClone.innerText = `${this._startDecade.format('yyyy')}`;
+        containerClone.innerText = `${this._startDecade.format(
+          formatTokenMap.year
+        )}`;
 
         this._startDecade.manipulate(10, Unit.year);
       });

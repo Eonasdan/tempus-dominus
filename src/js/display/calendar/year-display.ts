@@ -1,4 +1,4 @@
-import { DateTime, Unit } from '../../datetime';
+import { DateTime, formatTokenMap, Unit } from '../../datetime';
 import Namespace from '../../utilities/namespace';
 import Dates from '../../dates';
 import Validation from '../../validation';
@@ -62,14 +62,10 @@ export default class YearDisplay {
 
       switcher.setAttribute(
         Namespace.css.yearsContainer,
-        `${this._startYear.format({ year: 'numeric' })}-${this._endYear.format({
-          year: 'numeric',
-        })}`
+        `${this._startYear.format(formatTokenMap.year)}-${this._endYear.format(
+          formatTokenMap.year
+        )}`
       );
-
-      this.optionsStore.components.decades
-        ? switcher.classList.remove(Namespace.css.disabled)
-        : switcher.classList.add(Namespace.css.disabled);
 
       this.validation.isValid(this._startYear, Unit.year)
         ? previous.classList.remove(Namespace.css.disabled)
@@ -104,7 +100,7 @@ export default class YearDisplay {
         containerClone.classList.remove(...containerClone.classList);
         containerClone.classList.add(...classes);
         containerClone.setAttribute('data-value', `${innerDate.year}`);
-        containerClone.innerText = innerDate.format({ year: 'numeric' });
+        containerClone.innerText = innerDate.format(formatTokenMap.year);
 
         innerDate.manipulate(1, Unit.year);
       });

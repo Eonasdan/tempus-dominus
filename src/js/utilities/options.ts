@@ -1,4 +1,4 @@
-import { DateTime, DateTimeFormatOptions } from '../datetime';
+import { DateTime } from '../datetime';
 import ViewMode from './view-mode';
 
 export default interface Options {
@@ -70,7 +70,7 @@ export interface FormatLocalization {
 export interface Localization extends FormatLocalization {
   clear?: string;
   close?: string;
-  dayViewHeaderFormat?: DateTimeFormatOptions;
+  dayViewHeaderFormat?: string;
   decrementHour?: string;
   decrementMinute?: string;
   decrementSecond?: string;

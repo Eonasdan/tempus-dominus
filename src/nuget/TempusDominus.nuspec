@@ -11,7 +11,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Powerful and robust date and time picker</description>
         <readme>README.md</readme>
-        <releaseNotes>https://getdatepicker.com/6/change-log.html</releaseNotes>
+        <releaseNotes>https://getdatepicker.com/7/change-log.html</releaseNotes>
         <tags>date time picker datetimepicker datepicker</tags>
         <icon>td.png</icon>
         <licenseUrl>https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE</licenseUrl>

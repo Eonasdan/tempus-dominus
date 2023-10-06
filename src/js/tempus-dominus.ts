@@ -1,7 +1,7 @@
 import Display from './display/index';
 import Dates from './dates';
 import Actions from './actions';
-import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
+import { DateTime, guessComponents, Unit } from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
 import {
@@ -293,13 +293,18 @@ class TempusDominus {
      * Sets the minimum view allowed by the picker. For example the case of only
      * allowing year and month to be selected but not date.
      */
-    if (newConfig.display.components.year) {
+
+    this.optionsStore.components = guessComponents(
+      newConfig.localization.format
+    );
+
+    if (this.optionsStore.components.year) {
       this.optionsStore.minimumCalendarViewMode = 2;
     }
-    if (newConfig.display.components.month) {
+    if (this.optionsStore.components.month) {
       this.optionsStore.minimumCalendarViewMode = 1;
     }
-    if (newConfig.display.components.date) {
+    if (this.optionsStore.components.date) {
       this.optionsStore.minimumCalendarViewMode = 0;
     }
 
@@ -326,6 +331,8 @@ class TempusDominus {
     if (newConfig.localization.hourCycle === undefined)
       newConfig.localization.hourCycle = 'h24';
 
+    this.optionsStore.options = newConfig;
+
     if (
       newConfig.restrictions.maxDate &&
       this.viewDate.isAfter(newConfig.restrictions.maxDate)
@@ -337,8 +344,6 @@ class TempusDominus {
       this.viewDate.isBefore(newConfig.restrictions.minDate)
     )
       this.viewDate = newConfig.restrictions.minDate;
-
-    this.optionsStore.options = newConfig;
   }
 
   /**
@@ -582,7 +587,6 @@ export {
   DateTime,
   Unit,
   version,
-  DateTimeFormatOptions,
   Options,
   DefaultEnLocalization,
 };
