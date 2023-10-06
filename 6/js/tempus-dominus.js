@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.7.13 (https://getdatepicker.com/)
+  * Tempus Dominus v6.7.16 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -1174,6 +1174,7 @@
               ? 'h12'
               : this.localization.hourCycle;
           const matches = {
+              y: this.year,
               yy: formatter({ year: '2-digit' }),
               yyyy: this.year,
               M: formatter({ month: 'numeric' }),
@@ -4026,9 +4027,9 @@
                   this.optionsStore.viewDate.year = value;
                   break;
           }
-          this.dates.setValue(this.optionsStore.viewDate, this.dates.lastPickedIndex);
           if (this.optionsStore.currentCalendarViewMode ===
               this.optionsStore.minimumCalendarViewMode) {
+              this.dates.setValue(this.optionsStore.viewDate, this.dates.lastPickedIndex);
               if (!this.optionsStore.options.display.inline) {
                   this.display.hide();
               }
@@ -4470,13 +4471,13 @@
           else if (newConfig.localization.hourCycle === undefined) {
               newConfig.localization.hourCycle = guessHourCycle(newConfig.localization.locale);
           }
+          this.optionsStore.options = newConfig;
           if (newConfig.restrictions.maxDate &&
               this.viewDate.isAfter(newConfig.restrictions.maxDate))
               this.viewDate = newConfig.restrictions.maxDate;
           if (newConfig.restrictions.minDate &&
               this.viewDate.isBefore(newConfig.restrictions.minDate))
               this.viewDate = newConfig.restrictions.minDate;
-          this.optionsStore.options = newConfig;
       }
       /**
        * Checks if an input field is being used, attempts to locate one and sets an
@@ -4609,7 +4610,7 @@
       }
       return tempusDominus;
   };
-  const version = '6.7.13';
+  const version = '6.7.16';
   const tempusDominus = {
       TempusDominus,
       extend,
