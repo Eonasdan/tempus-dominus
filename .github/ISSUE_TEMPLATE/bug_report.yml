@@ -3,6 +3,10 @@ description: Tell us about your issue.
 title: "Provide a general summary of the issue"
 labels: ["Type: Bug", "State: Triage"]
 body:
+  - type: markdown
+    attributes:
+      value: "Note: I am no longer taking feature requests. 
+      Beginning in 2024, tickets will be paid support only. Please see [this discussion](https://github.com/Eonasdan/tempus-dominus/discussions/2694)."
   - type: checkboxes
     attributes:
       label: Prerequisites

@@ -21,7 +21,10 @@ const DRY_RUN =
 
 // These are the filetypes we only care about replacing the version
 const GLOB = [
-  '**/*.{css,html,js,json,md,scss,txt,yml,ts,nuspec,properties}',
+  '**/*.{css,js,json,md,scss,txt,yml,ts,nuspec,properties}',
+  '**/shell.html',
+  '**/installing.html',
+  '**/templates/index.html',
   '!**/change-log*',
 ];
 const GLOBBY_OPTIONS = {

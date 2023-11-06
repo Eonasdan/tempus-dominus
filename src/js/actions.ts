@@ -264,6 +264,7 @@ export default class Actions {
         this.optionsStore.viewDate,
         this.dates.lastPickedIndex
       );
+
       if (!this.optionsStore.options.display.inline) {
         this.display.hide();
       }

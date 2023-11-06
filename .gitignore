@@ -13,5 +13,7 @@ src/docs/partials/examples/test.html
 /docs/
 /dist/plugins/examples/
 coverage
+dist
+types
 
 .DS_Store

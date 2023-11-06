@@ -240,11 +240,11 @@ class TempusDominus {
     if (this.optionsStore.options.allowInputToggle) {
       this.optionsStore.input?.removeEventListener(
         'click',
-        this._toggleClickEvent
+        this._openClickEvent
       );
       this.optionsStore.input?.removeEventListener(
         'focus',
-        this._toggleClickEvent
+        this._openClickEvent
       );
     }
     this._toggle?.removeEventListener('click', this._toggleClickEvent);
@@ -413,6 +413,18 @@ class TempusDominus {
     }
 
     this.optionsStore.options = newConfig;
+
+    if (
+      newConfig.restrictions.maxDate &&
+      this.viewDate.isAfter(newConfig.restrictions.maxDate)
+    )
+      this.viewDate = newConfig.restrictions.maxDate;
+
+    if (
+      newConfig.restrictions.minDate &&
+      this.viewDate.isBefore(newConfig.restrictions.minDate)
+    )
+      this.viewDate = newConfig.restrictions.minDate;
   }
 
   /**
@@ -443,8 +455,8 @@ class TempusDominus {
 
     this.optionsStore.input.addEventListener('change', this._inputChangeEvent);
     if (this.optionsStore.options.allowInputToggle) {
-      this.optionsStore.input.addEventListener('click', this._toggleClickEvent);
-      this.optionsStore.input.addEventListener('focus', this._toggleClickEvent);
+      this.optionsStore.input.addEventListener('click', this._openClickEvent);
+      this.optionsStore.input.addEventListener('focus', this._openClickEvent);
     }
 
     if (this.optionsStore.input.value) {
@@ -506,7 +518,7 @@ class TempusDominus {
         this._eventEmitters.action.emit({
           e: {
             currentTarget: this.display.widget.querySelector(
-              `.${Namespace.css.switch}`
+              '[data-action="togglePicker"]'
             ),
           },
           action: ActionTypes.togglePicker,
@@ -559,10 +571,28 @@ class TempusDominus {
   private _toggleClickEvent = () => {
     if (
       (this.optionsStore.element as HTMLInputElement)?.disabled ||
-      this.optionsStore.input?.disabled
+      this.optionsStore.input?.disabled ||
+      //if we just have the input and allow input toggle is enabled, then don't cause a toggle
+      (this._toggle.nodeName === 'INPUT' &&
+        (this._toggle as HTMLInputElement)?.type === 'text' &&
+        this.optionsStore.options.allowInputToggle)
     )
       return;
     this.toggle();
+  };
+
+  /**
+   * Event for when the toggle is clicked. This is a class level method so there's
+   * something for the remove listener function.
+   * @private
+   */
+  private _openClickEvent = () => {
+    if (
+      (this.optionsStore.element as HTMLInputElement)?.disabled ||
+      this.optionsStore.input?.disabled
+    )
+      return;
+    if (!this.display.isVisible) this.show();
   };
 }
 
@@ -613,7 +643,7 @@ const extend = function (plugin, option = undefined) {
   return tempusDominus;
 };
 
-const version = '6.7.10';
+const version = '6.7.16';
 
 const tempusDominus = {
   TempusDominus,
