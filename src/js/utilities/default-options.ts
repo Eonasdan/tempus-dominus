@@ -16,6 +16,7 @@ const defaultEnLocalization: Localization = {
   incrementMinute: 'Increment Minute',
   incrementSecond: 'Increment Second',
   locale: DefaultFormatLocalization.locale,
+  maxWeekdayLength: 0,
   nextCentury: 'Next Century',
   nextDecade: 'Next Decade',
   nextMonth: 'Next Month',

@@ -543,7 +543,10 @@ class TempusDominus {
     };
 
     const value = this.optionsStore.input.value;
-    if (this.optionsStore.options.multipleDates || this.optionsStore.options.dateRange) {
+    if (
+      this.optionsStore.options.multipleDates ||
+      this.optionsStore.options.dateRange
+    ) {
       try {
         const valueSplit = value.split(
           this.optionsStore.options.multipleDatesSeparator

@@ -89,6 +89,7 @@ export interface Localization extends FormatLocalization {
   incrementHour?: string;
   incrementMinute?: string;
   incrementSecond?: string;
+  maxWeekdayLength?: number;
   nextCentury?: string;
   nextDecade?: string;
   nextMonth?: string;

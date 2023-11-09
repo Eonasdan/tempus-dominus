@@ -313,7 +313,13 @@ export default class DateDisplay {
         Namespace.css.dayOfTheWeek,
         Namespace.css.noHighlight
       );
-      htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
+      let weekDay = innerDate.format({ weekday: 'short' });
+      if (this.optionsStore.options.localization.maxWeekdayLength > 0)
+        weekDay = weekDay.substring(
+          0,
+          this.optionsStore.options.localization.maxWeekdayLength
+        );
+      htmlDivElement.innerText = weekDay;
       innerDate.manipulate(1, Unit.date);
       row.push(htmlDivElement);
     }
