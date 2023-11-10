@@ -442,129 +442,127 @@ test('expressions', () => {
   const o: any = {};
 
   //#region meridiem
-  expect(e.t[0]).toBe(matchWord);
-
-  (e.t[1] as any)(o, 'AM');
+  e.t.parser(o, 'AM');
 
   expect(o.afternoon).toBe(false);
 
-  (e.t[1] as any)(o, 'pm');
+  e.t.parser(o, 'pm');
 
   expect(o.afternoon).toBe(true);
 
-  (e.T[1] as any)(o, 'AM');
+  e.T.parser(o, 'AM');
 
   expect(o.afternoon).toBe(false);
 
-  (e.T[1] as any)(o, 'pm');
+  e.T.parser(o, 'pm');
 
   expect(o.afternoon).toBe(true);
 
   //#endregion
 
-  expect(e.fff[0]).toBe(match3);
+  expect(e.fff.pattern).toBe(match3);
 
-  (e.fff[1] as any)(o, 42);
+  e.fff.parser(o, 42);
 
   expect(o.milliseconds).toBe(42);
 
-  expect(e.s[0]).toBe(match1to2);
+  expect(e.s.pattern).toBe(match1to2);
 
-  (e.s[1] as any)(o, 5);
+  e.s.parser(o, 5);
 
   expect(o.seconds).toBe(5);
 
-  expect(e.ss[0]).toBe(match1to2);
+  expect(e.ss.pattern).toBe(match1to2);
 
-  (e.ss[1] as any)(o, 6);
+  e.ss.parser(o, 6);
 
   expect(o.seconds).toBe(6);
 
-  expect(e.m[0]).toBe(match1to2);
+  expect(e.m.pattern).toBe(match1to2);
 
-  (e.m[1] as any)(o, 7);
+  e.m.parser(o, 7);
 
   expect(o.minutes).toBe(7);
 
-  expect(e.mm[0]).toBe(match1to2);
+  expect(e.mm.pattern).toBe(match1to2);
 
-  (e.mm[1] as any)(o, 10);
+  e.mm.parser(o, 10);
 
   expect(o.minutes).toBe(10);
 
-  expect(e.h[0]).toBe(match1to2);
+  expect(e.h.pattern).toBe(match1to2);
 
-  (e.h[1] as any)(o, 11);
+  e.h.parser(o, 11);
 
   expect(o.hours).toBe(11);
 
-  expect(e.hh[0]).toBe(match1to2);
+  expect(e.hh.pattern).toBe(match1to2);
 
-  (e.hh[1] as any)(o, 12);
+  e.hh.parser(o, 12);
 
   expect(o.hours).toBe(12);
 
-  expect(e.HH[0]).toBe(match1to2);
+  expect(e.HH.pattern).toBe(match1to2);
 
-  (e.HH[1] as any)(o, 13);
+  e.HH.parser(o, 13);
 
   expect(o.hours).toBe(13);
 
-  expect(e.HH[0]).toBe(match1to2);
+  expect(e.HH.pattern).toBe(match1to2);
 
-  (e.HH[1] as any)(o, 14);
+  e.HH.parser(o, 14);
 
   expect(o.hours).toBe(14);
 
-  expect(e.d[0]).toBe(match1to2);
+  expect(e.d.pattern).toBe(match1to2);
 
-  (e.d[1] as any)(o, 15);
+  e.d.parser(o, 15);
 
   expect(o.day).toBe(15);
 
-  expect(e.dd[0]).toBe(match2);
+  expect(e.dd.pattern).toBe(match2);
 
-  (e.dd[1] as any)(o, 16);
+  e.dd.parser(o, 16);
 
   expect(o.day).toBe(16);
 
-  expect(e.Do[0]).toBe(matchWord);
+  expect(e.Do.pattern).toBe(matchWord);
 
-  (e.Do[1] as any)(o, '1st');
+  e.Do.parser(o, '1st');
 
   expect(o.day).toBe(1);
 
   dateTime.localization.ordinal = undefined;
 
-  (e.Do[1] as any)(o, '1st');
+  e.Do.parser(o, '1st');
 
-  expect(o.day).toBe('1');
+  expect(o.day).toBe(1);
 
   dateTime.localization.ordinal = defaultLocalization().ordinal;
 
   //#region Months
 
-  expect(e.M[0]).toBe(match1to2);
+  expect(e.M.pattern).toBe(match1to2);
 
-  (e.M[1] as any)(o, 5);
+  e.M.parser(o, 5);
 
   expect(o.month).toBe(5);
 
-  expect(e.MM[0]).toBe(match2);
+  expect(e.MM.pattern).toBe(match2);
 
-  (e.MM[1] as any)(o, 7);
+  e.MM.parser(o, 7);
 
   expect(o.month).toBe(7);
 
-  expect(e.MMM[0]).toBe(matchWord);
+  expect(e.MMM.pattern).toBe(matchWord);
 
-  (e.MMM[1] as any)(o, 'Jan');
+  e.MMM.parser(o, 'Jan');
 
   expect(o.month).toBe(1);
 
-  expect(e.MMMM[0]).toBe(matchWord);
+  expect(e.MMMM.pattern).toBe(matchWord);
 
-  (e.MMMM[1] as any)(o, 'January');
+  e.MMMM.parser(o, 'January');
 
   expect(o.month).toBe(1);
 
@@ -572,21 +570,21 @@ test('expressions', () => {
 
   //#region Year
 
-  expect(e.y[0]).toBe(matchSigned);
+  expect(e.y.pattern).toBe(matchSigned);
 
-  (e.y[1] as any)(o, 2000);
+  e.y.parser(o, 2000);
 
   expect(o.year).toBe(2000);
 
-  expect(e.yy[0]).toBe(match2);
+  expect(e.yy.pattern).toBe(match2);
 
-  (e.yy[1] as any)(o, 20);
+  e.yy.parser(o, 20);
 
   expect(o.year).toBe(2020);
 
-  expect(e.yyyy[0]).toBe(match4);
+  expect(e.yyyy.pattern).toBe(match4);
 
-  (e.yyyy[1] as any)(o, 2023);
+  e.yyyy.parser(o, 2023);
 
   expect(o.year).toBe(2023);
 
