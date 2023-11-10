@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.7.16 (https://getdatepicker.com/)
+  * Tempus Dominus v6.7.19 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -41,10 +41,6 @@ const localization = {
         LL: 'd. MMMM[ta] yyyy',
         LLL: 'd. MMMM[ta] yyyy, [klo] HH.mm',
         LLLL: 'dddd, d. MMMM[ta] yyyy, [klo] HH.mm',
-        l: 'd.M.yyyy',
-        ll: 'd. MMM yyyy',
-        lll: 'd. MMM yyyy, [klo] HH.mm',
-        llll: 'ddd, d. MMM yyyy, [klo] HH.mm',
     },
     ordinal: (n) => `${n}.`,
     format: 'L LT',

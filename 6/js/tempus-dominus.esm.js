@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.7.16 (https://getdatepicker.com/)
+  * Tempus Dominus v6.7.19 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -497,52 +497,88 @@ class DateTime extends Date {
             },
         ];
         this.expressions = {
-            t: [
-                this.matchWord,
-                (ojb, input) => {
-                    ojb.afternoon = this.meridiemMatch(input);
+            t: {
+                pattern: undefined,
+                parser: (obj, input) => {
+                    obj.afternoon = this.meridiemMatch(input);
                 },
-            ],
-            T: [
-                this.matchWord,
-                (ojb, input) => {
-                    ojb.afternoon = this.meridiemMatch(input);
+            },
+            T: {
+                pattern: undefined,
+                parser: (obj, input) => {
+                    obj.afternoon = this.meridiemMatch(input);
                 },
-            ],
-            fff: [
-                this.match3,
-                (ojb, input) => {
-                    ojb.milliseconds = +input;
+            },
+            fff: {
+                pattern: this.match3,
+                parser: (obj, input) => {
+                    obj.milliseconds = +input;
                 },
-            ],
-            s: [this.match1to2, this.addInput('seconds')],
-            ss: [this.match1to2, this.addInput('seconds')],
-            m: [this.match1to2, this.addInput('minutes')],
-            mm: [this.match1to2, this.addInput('minutes')],
-            H: [this.match1to2, this.addInput('hours')],
-            h: [this.match1to2, this.addInput('hours')],
-            HH: [this.match1to2, this.addInput('hours')],
-            hh: [this.match1to2, this.addInput('hours')],
-            d: [this.match1to2, this.addInput('day')],
-            dd: [this.match2, this.addInput('day')],
-            Do: [
-                this.matchWord,
-                (ojb, input) => {
-                    [ojb.day] = input.match(/\d+/);
+            },
+            s: {
+                pattern: this.match1to2,
+                parser: this.addInput('seconds'),
+            },
+            ss: {
+                pattern: this.match1to2,
+                parser: this.addInput('seconds'),
+            },
+            m: {
+                pattern: this.match1to2,
+                parser: this.addInput('minutes'),
+            },
+            mm: {
+                pattern: this.match1to2,
+                parser: this.addInput('minutes'),
+            },
+            H: {
+                pattern: this.match1to2,
+                parser: this.addInput('hours'),
+            },
+            h: {
+                pattern: this.match1to2,
+                parser: this.addInput('hours'),
+            },
+            HH: {
+                pattern: this.match1to2,
+                parser: this.addInput('hours'),
+            },
+            hh: {
+                pattern: this.match1to2,
+                parser: this.addInput('hours'),
+            },
+            d: {
+                pattern: this.match1to2,
+                parser: this.addInput('day'),
+            },
+            dd: {
+                pattern: this.match2,
+                parser: this.addInput('day'),
+            },
+            Do: {
+                pattern: this.matchWord,
+                parser: (obj, input) => {
+                    obj.day = +(input.match(/\d+/)[0] || 1);
                     if (!this.localization.ordinal)
                         return;
                     for (let i = 1; i <= 31; i += 1) {
                         if (this.localization.ordinal(i).replace(/[[\]]/g, '') === input) {
-                            ojb.day = i;
+                            obj.day = i;
                         }
                     }
                 },
-            ],
-            M: [this.match1to2, this.addInput('month')],
-            MM: [this.match2, this.addInput('month')],
-            MMM: [
-                this.matchWord,
-                (obj, input) => {
+            },
+            M: {
+                pattern: this.match1to2,
+                parser: this.addInput('month'),
+            },
+            MM: {
+                pattern: this.match2,
+                parser: this.addInput('month'),
+            },
+            MMM: {
+                pattern: this.matchWord,
+                parser: (obj, input) => {
                     const months = this.getAllMonths();
                     const monthsShort = this.getAllMonths('short');
                     const matchIndex = (monthsShort || months.map((_) => _.slice(0, 3))).indexOf(input) + 1;
@@ -551,10 +587,10 @@ class DateTime extends Date {
                     }
                     obj.month = matchIndex % 12 || matchIndex;
                 },
-            ],
-            MMMM: [
-                this.matchWord,
-                (obj, input) => {
+            },
+            MMMM: {
+                pattern: this.matchWord,
+                parser: (obj, input) => {
                     const months = this.getAllMonths();
                     const matchIndex = months.indexOf(input) + 1;
                     if (matchIndex < 1) {
@@ -562,15 +598,21 @@ class DateTime extends Date {
                     }
                     obj.month = matchIndex % 12 || matchIndex;
                 },
-            ],
-            y: [this.matchSigned, this.addInput('year')],
-            yy: [
-                this.match2,
-                (obj, input) => {
-                    obj.year = this.parseTwoDigitYear(input);
+            },
+            y: {
+                pattern: this.matchSigned,
+                parser: this.addInput('year'),
+            },
+            yy: {
+                pattern: this.match2,
+                parser: (obj, input) => {
+                    obj.year = this.parseTwoDigitYear(+input);
                 },
-            ],
-            yyyy: [this.match4, this.addInput('year')],
+            },
+            yyyy: {
+                pattern: this.match4,
+                parser: this.addInput('year'),
+            },
             // z: this.zoneExpressions,
             // zz: this.zoneExpressions,
             // zzz: this.zoneExpressions
@@ -1006,16 +1048,15 @@ class DateTime extends Date {
         });
     }
     parseTwoDigitYear(input) {
-        input = +input;
         return input + (input > 68 ? 1900 : 2000);
     }
-    offsetFromString(string) {
-        if (!string)
+    offsetFromString(input) {
+        if (!input)
             return 0;
-        if (string === 'Z')
+        if (input === 'Z')
             return 0;
-        const [first, second, third] = string.match(/([+-]|\d\d)/g);
-        const minutes = +(second * 60) + (+third || 0);
+        const [first, second, third] = input.match(/([+-]|\d\d)/g);
+        const minutes = +second * 60 + (+third || 0);
         const signed = first === '+' ? -minutes : minutes;
         return minutes === 0 ? 0 : signed; // eslint-disable-line no-nested-ternary
     }
@@ -1039,18 +1080,21 @@ class DateTime extends Date {
         return `${negative ? '-' : ''}${name}`;
     }
     addInput(property) {
-        return (time, input) => {
-            time[property] = +input;
+        return (obj, input) => {
+            obj[property] = +input;
         };
     }
-    meridiemMatch(input) {
-        const meridiem = new Intl.DateTimeFormat(this.localization.locale, {
+    getLocaleAfternoon() {
+        return new Intl.DateTimeFormat(this.localization.locale, {
             hour: 'numeric',
             hour12: true,
         })
             .formatToParts(new Date(2022, 3, 4, 13))
-            .find((p) => p.type === 'dayPeriod')?.value;
-        return input.toLowerCase() === meridiem.toLowerCase();
+            .find((p) => p.type === 'dayPeriod')
+            ?.value?.replace(/\s+/g, ' ');
+    }
+    meridiemMatch(input) {
+        return input.toLowerCase() === this.getLocaleAfternoon().toLowerCase();
     }
     correctHours(time) {
         const { afternoon } = time;
@@ -1069,18 +1113,17 @@ class DateTime extends Date {
     }
     makeParser(format) {
         format = this.replaceTokens(format, this.localization.dateFormats);
-        const array = format.match(this.formattingTokens);
-        const { length } = array;
+        const matchArray = format.match(this.formattingTokens);
+        const { length } = matchArray;
+        const expressionArray = [];
         for (let i = 0; i < length; i += 1) {
-            const token = array[i];
-            const parseTo = this.expressions[token];
-            const regex = parseTo && parseTo[0];
-            const parser = parseTo && parseTo[1];
-            if (parser) {
-                array[i] = { regex, parser };
+            const token = matchArray[i];
+            const expression = this.expressions[token];
+            if (expression?.parser) {
+                expressionArray[i] = expression;
             }
             else {
-                array[i] = token.replace(/^\[[^[\]]*]$/g, '');
+                expressionArray[i] = token.replace(/^\[[^[\]]*]$/g, '');
             }
         }
         return (input) => {
@@ -1091,16 +1134,18 @@ class DateTime extends Date {
                 milliseconds: 0,
             };
             for (let i = 0, start = 0; i < length; i += 1) {
-                const token = array[i];
+                const token = expressionArray[i];
                 if (typeof token === 'string') {
                     start += token.length;
                 }
                 else {
-                    const { regex, parser } = token;
                     const part = input.slice(start);
-                    const match = regex.exec(part);
-                    const value = match[0];
-                    parser.call(this, time, value);
+                    let value = part;
+                    if (token.pattern) {
+                        const match = token.pattern.exec(part);
+                        value = match[0];
+                    }
+                    token.parser.call(this, time, value);
                     input = input.replace(value, '');
                 }
             }
@@ -1123,6 +1168,7 @@ class DateTime extends Date {
             dt.setLocalization(localization);
             if (['x', 'X'].indexOf(localization.format) > -1)
                 return new DateTime((localization.format === 'X' ? 1000 : 1) * +input);
+            input = input.replace(/\s+/g, ' ');
             const parser = dt.makeParser(localization.format);
             const { year, month, day, hours, minutes, seconds, milliseconds, zone } = parser(input);
             const d = day || (!year && !month ? dt.getDate() : 1);
@@ -1482,6 +1528,7 @@ const defaultEnLocalization = {
     incrementMinute: 'Increment Minute',
     incrementSecond: 'Increment Second',
     locale: DefaultFormatLocalization$1.locale,
+    maxWeekdayLength: 0,
     nextCentury: 'Next Century',
     nextDecade: 'Next Decade',
     nextMonth: 'Next Month',
@@ -2515,7 +2562,10 @@ class DateDisplay {
         for (let i = 0; i < 7; i++) {
             const htmlDivElement = document.createElement('div');
             htmlDivElement.classList.add(Namespace.css.dayOfTheWeek, Namespace.css.noHighlight);
-            htmlDivElement.innerText = innerDate.format({ weekday: 'short' });
+            let weekDay = innerDate.format({ weekday: 'short' });
+            if (this.optionsStore.options.localization.maxWeekdayLength > 0)
+                weekDay = weekDay.substring(0, this.optionsStore.options.localization.maxWeekdayLength);
+            htmlDivElement.innerText = weekDay;
             innerDate.manipulate(1, Unit.date);
             row.push(htmlDivElement);
         }
@@ -4141,7 +4191,8 @@ class TempusDominus {
                     this.optionsStore.viewDate = this.dates.lastPicked.clone;
             };
             const value = this.optionsStore.input.value;
-            if (this.optionsStore.options.multipleDates) {
+            if (this.optionsStore.options.multipleDates ||
+                this.optionsStore.options.dateRange) {
                 try {
                     const valueSplit = value.split(this.optionsStore.options.multipleDatesSeparator);
                     for (let i = 0; i < valueSplit.length; i++) {
@@ -4604,7 +4655,7 @@ const extend = function (plugin, option = undefined) {
     }
     return tempusDominus;
 };
-const version = '6.7.16';
+const version = '6.7.19';
 const tempusDominus = {
     TempusDominus,
     extend,
