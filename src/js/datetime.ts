@@ -98,13 +98,18 @@ export const guessHourCycle = (locale: string): Intl.LocaleHourCycleKey => {
 };
 
 interface FormatMatch {
+  parser: (obj: parsedTime, input: number) => void;
+  pattern?: RegExp;
+}
+
+interface FormatMatchString {
   parser: (obj: parsedTime, input: string) => void;
   pattern?: RegExp;
 }
 
 interface FormatExpression {
-  t: FormatMatch;
-  T: FormatMatch;
+  t: FormatMatchString;
+  T: FormatMatchString;
   fff: FormatMatch;
   s: FormatMatch;
   ss: FormatMatch;
@@ -116,11 +121,11 @@ interface FormatExpression {
   hh: FormatMatch;
   d: FormatMatch;
   dd: FormatMatch;
-  Do: FormatMatch;
+  Do: FormatMatchString;
   M: FormatMatch;
   MM: FormatMatch;
-  MMM: FormatMatch;
-  MMMM: FormatMatch;
+  MMM: FormatMatchString;
+  MMMM: FormatMatchString;
   y: FormatMatch;
   yy: FormatMatch;
   yyyy: FormatMatch;
