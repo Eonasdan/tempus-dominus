@@ -418,13 +418,13 @@ class TempusDominus {
       newConfig.restrictions.maxDate &&
       this.viewDate.isAfter(newConfig.restrictions.maxDate)
     )
-      this.viewDate = newConfig.restrictions.maxDate;
+      this.viewDate = newConfig.restrictions.maxDate.clone;
 
     if (
       newConfig.restrictions.minDate &&
       this.viewDate.isBefore(newConfig.restrictions.minDate)
     )
-      this.viewDate = newConfig.restrictions.minDate;
+      this.viewDate = newConfig.restrictions.minDate.clone;
   }
 
   /**
