@@ -135,7 +135,9 @@ export default class DateDisplay {
   private _dateToDataValue(date: DateTime): string {
     if (!DateTime.isValid(date)) return '';
 
-    return `${date.year}-${date.monthFormatted}-${date.dateFormatted}`;
+    return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.date
+      .toString()
+      .padStart(2, '0')}`;
   }
 
   private _handleDateRange(innerDate: DateTime, classes: string[]) {
