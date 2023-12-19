@@ -180,12 +180,7 @@ export class OptionConverter {
     if (eData?.tdTargetInput) delete eData.tdTargetInput;
     if (eData?.tdTargetToggle) delete eData.tdTargetToggle;
 
-    if (
-      !eData ||
-      Object.keys(eData).length === 0 ||
-      eData.constructor !== DOMStringMap
-    )
-      return options;
+    if (!eData || Object.keys(eData).length === 0) return options;
     const dataOptions = {} as Options;
 
     // because dataset returns camelCase including the 'td' key the option
@@ -253,7 +248,7 @@ export class OptionConverter {
       if (keyOption === undefined) return internalObject;
 
       // if this is another object, continue down the rabbit hole
-      if (optionSubgroup[keyOption].constructor === Object) {
+      if (optionSubgroup[keyOption]?.constructor === Object) {
         index++;
         internalObject[keyOption] = normalizeObject(
           split,
