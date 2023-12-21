@@ -57,11 +57,20 @@ export default class Dates {
    */
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   parseInput(value: any): DateTime {
-    return OptionConverter.dateConversion(
-      value,
-      'input',
-      this.optionsStore.options.localization
-    );
+    try {
+      return OptionConverter.dateConversion(
+        value,
+        'input',
+        this.optionsStore.options.localization
+      );
+    } catch (e) {
+      this._eventEmitters.triggerEvent.emit({
+        type: Namespace.events.error,
+        reason: Namespace.errorMessages.failedToSetInvalidDate,
+        date: value,
+      } as FailEvent);
+      return undefined;
+    }
   }
 
   /**

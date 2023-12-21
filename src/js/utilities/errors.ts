@@ -139,8 +139,7 @@ export class ErrorMessages {
   customDateFormatError(message?: string) {
     const error = new TdError(`${this.base} Custom Date Format: ${message}`);
     error.code = 9;
-    //throw error;
-    console.warn(error);
+    throw error;
   }
 
   /**

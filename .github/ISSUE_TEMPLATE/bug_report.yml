@@ -5,8 +5,8 @@ labels: ["Type: Bug", "State: Triage"]
 body:
   - type: markdown
     attributes:
-      value: "Note: I am no longer taking feature requests. 
-      Beginning in 2024, tickets will be paid support only. Please see [this discussion](https://github.com/Eonasdan/tempus-dominus/discussions/2694)."
+      value: "<h3>Note: I am no longer taking feature requests. 
+      Beginning in 2024, tickets will be paid support only. Please see [this discussion](https://github.com/Eonasdan/tempus-dominus/discussions/2694).</h3>"
   - type: checkboxes
     attributes:
       label: Prerequisites
@@ -17,6 +17,8 @@ body:
         - label: I have validated my setup against the latest version on [StackBlitz](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup).
           required: true
         - label: I have read the [contributing guidelines](https://github.com/Eonasdan/tempus-dominus/blob/master/.github/CONTRIBUTING.md).
+          required: true
+        - label: I understand that only sponsored issues will be worked on and that if I wish to sponsor an issue, I will contact the owner FIRST.
           required: true
   - type: textarea
     id: what-happened
@@ -32,7 +34,7 @@ body:
     id: reduced-test-case
     attributes:
       label: StackBlitz fork
-      description: "You MUST provide an StackBlitz fork of one of the following examples: [HTML](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup), [Dev branch](https://stackblitz.com/edit/tempus-dominus-v6-next), [Typescript](https://stackblitz.com/edit/v6-typescript), [Using import](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup-import), or [jQuery](https://stackblitz.com/edit/tempus-dominus-v6-simple-jquery-setup)."
+      description: "You MUST provide an StackBlitz fork of one of the following examples: [HTML](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup), [Typescript](https://stackblitz.com/edit/v6-typescript), [Using import](https://stackblitz.com/edit/tempus-dominus-v6-simple-setup-import), or [jQuery](https://stackblitz.com/edit/tempus-dominus-v6-simple-jquery-setup)."
     validations:
       required: true
   - type: dropdown
