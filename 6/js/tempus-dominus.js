@@ -1,5 +1,5 @@
 /*!
-  * Tempus Dominus v6.7.19 (https://getdatepicker.com/)
+  * Tempus Dominus v6.9.4 (https://getdatepicker.com/)
   * Copyright 2013-2023 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
@@ -488,7 +488,7 @@
           this.dateTimeRegex = 
           //is regex cannot be simplified beyond what it already is
           /(\[[^[\]]*])|y{1,4}|M{1,4}|d{1,4}|H{1,2}|h{1,2}|t|T|m{1,2}|s{1,2}|f{3}/g; //NOSONAR
-          this.formattingTokens = /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?)/g; //NOSONAR is regex cannot be simplified beyond what it already is
+          this.formattingTokens = /(\[[^[\]]*])|([-_:/.,()\s]+)|(T|t|yyyy|yy?|MM?M?M?|Do|dd?d?d?|hh?|HH?|mm?|ss?)/g; //NOSONAR is regex cannot be simplified beyond what it already is
           this.match2 = /\d\d/; // 00 - 99
           this.match3 = /\d{3}/; // 000 - 999
           this.match4 = /\d{4}/; // 0000 - 9999
@@ -1938,9 +1938,7 @@
               delete eData.tdTargetInput;
           if (eData?.tdTargetToggle)
               delete eData.tdTargetToggle;
-          if (!eData ||
-              Object.keys(eData).length === 0 ||
-              eData.constructor !== DOMStringMap)
+          if (!eData || Object.keys(eData).length === 0)
               return options;
           const dataOptions = {};
           // because dataset returns camelCase including the 'td' key the option
@@ -1988,7 +1986,7 @@
               if (keyOption === undefined)
                   return internalObject;
               // if this is another object, continue down the rabbit hole
-              if (optionSubgroup[keyOption].constructor === Object) {
+              if (optionSubgroup[keyOption]?.constructor === Object) {
                   index++;
                   internalObject[keyOption] = normalizeObject(split, index, optionSubgroup[keyOption], value);
               }
@@ -2132,7 +2130,18 @@
        */
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
       parseInput(value) {
-          return OptionConverter.dateConversion(value, 'input', this.optionsStore.options.localization);
+          try {
+              return OptionConverter.dateConversion(value, 'input', this.optionsStore.options.localization);
+          }
+          catch (e) {
+              this._eventEmitters.triggerEvent.emit({
+                  type: Namespace.events.error,
+                  reason: Namespace.errorMessages.failedToParseInput,
+                  format: this.optionsStore.options.localization.format,
+                  value: value,
+              });
+              return undefined;
+          }
       }
       /**
        * Tries to convert the provided value to a DateTime object.
@@ -2440,7 +2449,9 @@
       _dateToDataValue(date) {
           if (!DateTime.isValid(date))
               return '';
-          return `${date.year}-${date.monthFormatted}-${date.dateFormatted}`;
+          return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.date
+            .toString()
+            .padStart(2, '0')}`;
       }
       _handleDateRange(innerDate, classes) {
           const rangeStart = this.dates.picked[0];
@@ -2804,6 +2815,10 @@
                   pickedYears.filter((x) => x >= startDecadeYear && x <= endDecadeYear)
                       .length > 0) {
                   classes.push(Namespace.css.active);
+              }
+              if (!this.validation.isValid(this._startDecade, exports.Unit.year) &&
+                  !this.validation.isValid(this._startDecade.clone.manipulate(10, exports.Unit.year), exports.Unit.year)) {
+                  classes.push(Namespace.css.disabled);
               }
               paint('decade', this._startDecade, classes, containerClone);
               containerClone.classList.remove(...containerClone.classList);
@@ -4525,10 +4540,10 @@
           this.optionsStore.options = newConfig;
           if (newConfig.restrictions.maxDate &&
               this.viewDate.isAfter(newConfig.restrictions.maxDate))
-              this.viewDate = newConfig.restrictions.maxDate;
+              this.viewDate = newConfig.restrictions.maxDate.clone;
           if (newConfig.restrictions.minDate &&
               this.viewDate.isBefore(newConfig.restrictions.minDate))
-              this.viewDate = newConfig.restrictions.minDate;
+              this.viewDate = newConfig.restrictions.minDate.clone;
       }
       /**
        * Checks if an input field is being used, attempts to locate one and sets an
@@ -4661,7 +4676,7 @@
       }
       return tempusDominus;
   };
-  const version = '6.7.19';
+  const version = '6.9.4';
   const tempusDominus = {
       TempusDominus,
       extend,
