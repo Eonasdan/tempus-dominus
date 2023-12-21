@@ -114,6 +114,15 @@ export default class DecadeDisplay {
         ) {
           classes.push(Namespace.css.active);
         }
+        if (
+          !this.validation.isValid(this._startDecade, Unit.year) &&
+          !this.validation.isValid(
+            this._startDecade.clone.manipulate(10, Unit.year),
+            Unit.year
+          )
+        ) {
+          classes.push(Namespace.css.disabled);
+        }
 
         paint('decade', this._startDecade, classes, containerClone);
 

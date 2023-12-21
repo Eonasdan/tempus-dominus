@@ -137,7 +137,7 @@ export default class Validation {
     return true;
   }
 
-  private _enabledDisabledHoursIsValid(targetDate) {
+  private _enabledDisabledHoursIsValid(targetDate: DateTime) {
     if (
       this.optionsStore.options.restrictions.disabledHours.length > 0 &&
       this._isInDisabledHours(targetDate)

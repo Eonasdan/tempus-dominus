@@ -1,6 +1,10 @@
 import { DateTime, getFormatByUnit, Unit } from './datetime';
 import Namespace from './utilities/namespace';
-import { ChangeEvent, FailEvent } from './utilities/event-types';
+import {
+  ChangeEvent,
+  FailEvent,
+  ParseErrorEvent,
+} from './utilities/event-types';
 import Validation from './validation';
 import { serviceLocator } from './utilities/service-locator';
 import { EventEmitters } from './utilities/event-emitter';
@@ -57,11 +61,21 @@ export default class Dates {
    */
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   parseInput(value: any): DateTime {
-    return OptionConverter.dateConversion(
-      value,
-      'input',
-      this.optionsStore.options.localization
-    );
+    try {
+      return OptionConverter.dateConversion(
+        value,
+        'input',
+        this.optionsStore.options.localization
+      );
+    } catch (e) {
+      this._eventEmitters.triggerEvent.emit({
+        type: Namespace.events.error,
+        reason: Namespace.errorMessages.failedToParseInput,
+        format: this.optionsStore.options.localization.format,
+        value: value,
+      } as ParseErrorEvent);
+      return undefined;
+    }
   }
 
   /**

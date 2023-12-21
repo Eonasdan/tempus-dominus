@@ -148,7 +148,7 @@
     grid-auto-rows: 40px;
 
     & div {
-      border-radius: $td-border-radius;
+      border-radius: var(--td-border-radius);
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
@@ -164,10 +164,10 @@
 
     .range-in {
       @extend .active;
-      background-color: $td-range-bg !important;
+      background-color: var(--td-range-bg) !important;
       border: none;
       border-radius: 0 !important;
-      box-shadow: -5px 0 0 $td-range-bg, 5px 0 0 $td-range-bg;
+      box-shadow: -5px 0 0 var(--td-range-bg), 5px 0 0 var(--td-range-bg);
     }
 
     .range-end {
@@ -238,7 +238,7 @@
     div:not(.no-highlight) {
       width: 90%;
       height: 90%;
-      border-radius: $td-border-radius;
+      border-radius: var(--td-border-radius);
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
@@ -313,31 +313,31 @@
   }
 
   &.light {
-    color: $td-font-color;
-    background-color: $td-widget-background;
+    color: var(--td-font-color);
+    background-color: var(--td-widget-background);
 
     [data-action] {
       &.disabled,
       &.disabled:hover {
-        color: $td-disabled-color;
+        color: var(--td-disabled-color);
       }
     }
 
     .toolbar {
       & div {
         &:hover {
-          background: $td-btn-hover-bg;
+          background: var(--td-btn-hover-bg);
         }
       }
     }
 
     .date-container-days {
       & .dow {
-        color: $td-dow-color;
+        color: var(--td-dow-color);
       }
 
       & .cw {
-        color: $td-alternate-color;
+        color: var(--td-alternate-color);
       }
     }
 
@@ -351,81 +351,82 @@
     .time-container-second {
       div:not(.no-highlight) {
         &:hover {
-          background: $td-btn-hover-bg;
+          background: var(--td-btn-hover-bg);
         }
 
         &.active {
-          background-color: $td-active-bg;
-          color: $td-active-color;
-          text-shadow: $td-text-shadow;
+          background-color: var(--td-active-bg);
+          color: var(--td-active-color);
+          text-shadow: var(--td-text-shadow);
 
           &.old,
           &.new {
-            color: $td-active-color;
+            color: var(--td-active-color);
           }
         }
 
         &.active.today:before {
-          border-bottom-color: $td-active-border-color;
+          border-bottom-color: var(--td-active-border-color);
         }
 
         &.old,
         &.new {
-          color: $td-alternate-color;
+          color: var(--td-alternate-color);
         }
 
         &.disabled,
         &.disabled:hover {
-          color: $td-disabled-color;
+          color: var(--td-disabled-color);
         }
 
         &.today {
           &:before {
-            border-bottom-color: $td-active-bg;
-            border-top-color: $td-secondary-border-color-rgba;
+            border-bottom-color: var(--td-active-bg);
+            border-top-color: var(--td-secondary-border-color-rgba);
           }
         }
       }
     }
 
     button {
-      color: $td-active-color;
-      background-color: $td-active-bg;
-      border-color: $td-active-bg;
+      color: var(--td-active-color);
+      background-color: var(--td-active-bg);
+      border-color: var(--td-active-bg);
     }
   }
 
   &.dark {
-    color: $td-dark-font-color;
-    background-color: $td-dark-widget-background;
+    color: var(--td-dark-font-color);
+    background-color: var(--td-dark-widget-background);
 
     [data-action] {
       &.disabled,
       &.disabled:hover {
-        color: $td-dark-disabled-color;
+        color: var(--td-dark-disabled-color);
       }
     }
 
     .toolbar {
       & div {
         &:hover {
-          background: $td-dark-btn-hover-bg;
+          background: var(--td-dark-btn-hover-bg);
         }
       }
     }
 
     .date-container-days {
       & .dow {
-        color: $td-dark-dow-color;
+        color: var(--td-dark-dow-color);
       }
 
       .range-in {
-        background-color: $td-dark-range-bg !important;
-        box-shadow: -5px 0 0 $td-dark-range-bg, 5px 0 0 $td-dark-range-bg;
+        background-color: var(--td-dark-range-bg) !important;
+        box-shadow: -5px 0 0 var(--td-dark-range-bg),
+          5px 0 0 var(--td-dark-range-bg);
       }
 
       & .cw {
-        color: $td-dark-alternate-color;
+        color: var(--td-dark-alternate-color);
       }
     }
 
@@ -439,47 +440,47 @@
     .time-container-second {
       div:not(.no-highlight) {
         &:hover {
-          background: $td-dark-btn-hover-bg;
+          background: var(--td-dark-btn-hover-bg);
         }
 
         &.active {
-          background-color: $td-dark-active-bg;
-          color: $td-dark-active-color;
-          text-shadow: $td-dark-text-shadow;
+          background-color: var(--td-dark-active-bg);
+          color: var(--td-dark-active-color);
+          text-shadow: var(--td-dark-text-shadow);
 
           &.old,
           &.new {
-            color: $td-dark-active-color;
+            color: var(--td-dark-active-color);
           }
         }
 
         &.active.today:before {
-          border-bottom-color: $td-dark-active-border-color;
+          border-bottom-color: var(--td-dark-active-border-color);
         }
 
         &.old,
         &.new {
-          color: $td-dark-alternate-color;
+          color: var(--td-dark-alternate-color);
         }
 
         &.disabled,
         &.disabled:hover {
-          color: $td-dark-disabled-color;
+          color: var(--td-dark-disabled-color);
         }
 
         &.today {
           &:before {
-            border-bottom-color: $td-dark-active-bg;
-            border-top-color: $td-dark-secondary-border-color-rgba;
+            border-bottom-color: var(--td-dark-active-bg);
+            border-top-color: var(--td-dark-secondary-border-color-rgba);
           }
         }
       }
     }
 
     button {
-      color: $td-dark-active-color;
-      background-color: $td-dark-active-bg;
-      border-color: $td-dark-active-bg;
+      color: var(--td-dark-active-color);
+      background-color: var(--td-dark-active-bg);
+      border-color: var(--td-dark-active-bg);
     }
   }
 }
