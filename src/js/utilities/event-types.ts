@@ -6,6 +6,12 @@ interface BaseEvent {
   viewMode?: keyof ViewMode;
 }
 
+interface ParseErrorEvent extends BaseEvent {
+  reason: string;
+  value: unknown;
+  format: string;
+}
+
 /**
  * Triggers when setValue fails because of validation rules etc.
  * @event FailEvent
@@ -40,4 +46,11 @@ interface ViewUpdateEvent extends BaseEvent {
   viewDate: DateTime;
 }
 
-export { BaseEvent, FailEvent, HideEvent, ChangeEvent, ViewUpdateEvent };
+export {
+  BaseEvent,
+  FailEvent,
+  HideEvent,
+  ChangeEvent,
+  ViewUpdateEvent,
+  ParseErrorEvent,
+};

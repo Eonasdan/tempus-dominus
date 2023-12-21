@@ -4,7 +4,7 @@
 
 Please note that I'm moving on to other projects. New issues will need to be sponsored. This can be done via BountySource or my other donation links. Please reach out to me first so we can discuss the terms. Thank you for your years of support.
 
-# Tempus Dominus Date/Time Picker v6.7.19
+# Tempus Dominus Date/Time Picker v6.9.4
 
 Tempus Dominus is a powerful and robust date time picker for javascript. Version 6 is another major rewrite over the previous version. V6 is written with modern browsers in mind and is written in typescript. Bootstrap, momentjs and jQuery are no longer required dependencies. Popper2 is all that is required for the picker to position correctly. If you still require jQuery (seriously, you should move off that asap) there's a jQuery provider that wraps the native js functions.
 
