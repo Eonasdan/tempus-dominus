@@ -1,0 +1,25 @@
+name: Release
+description: Release
+
+inputs:
+  GITHUB_TOKEN:
+    description: 'A Github PAT'
+    required: true
+  SONAR_TOKEN:
+    description: 'A Sonar token'
+    required: true
+  VERSION:
+    description: 'Version number'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Create new release
+      shell: bash
+      run: npm run release:version ${{ inputs.VERSION }}
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
