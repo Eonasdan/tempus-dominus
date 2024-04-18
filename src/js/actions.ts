@@ -55,7 +55,7 @@ export default class Actions {
         this.display._updateCalendarHeader();
         break;
       case ActionTypes.selectMonth:
-        lastPicked.month = +currentTarget.dataset.value;
+        lastPicked.month = currentTarget.dataset.value;
         this.dates.setValue(lastPicked, this.dates.lastPickedIndex);
         if (this.optionsStore.options.display.viewMode === 'months') {
           this.display.hide();
