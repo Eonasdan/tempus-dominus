@@ -27,7 +27,7 @@ const localization = {
   toggleMeridiem: 'Переключити період',
   selectTime: 'Обрати час',
   selectDate: 'Обрати дату',
-  dayViewHeaderFormat: {month: 'long', year: 'numeric'},
+  dayViewHeaderFormat: { month: 'long', year: 'numeric' },
   locale: 'uk',
   startOfTheWeek: 1,
   dateFormats: {
@@ -42,4 +42,4 @@ const localization = {
   format: 'L LT',
 };
 
-export {localization, name};
+export { localization, name };

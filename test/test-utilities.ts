@@ -20,13 +20,26 @@ vi.doMock('../src/js/utilities/service-locator', () => {
   };
 });
 
-// vi.mock('../src/js/utilities/service-locator', () => {
-//   return {
-//     serviceLocator: slm
-//   };
-// });
-
 import { serviceLocator } from '../src/js/utilities/service-locator';
+
+/*
+const fsl = vi.hoisted(() => {
+    const slm = new FixtureServiceLocator();
+    slm.loadEach({
+        OptionsStore: FixtureOptionsStore,
+        EventEmitters: FixtureEventEmitters,
+    });
+    return {
+        serviceLocator: slm,
+    };
+})
+
+vi.mock('../src/js/utilities/service-locator', () => {
+    return {
+        serviceLocator: fsl
+    };
+});
+*/
 
 /**
  * March 14th, 2023 1:25:42:500 PM
