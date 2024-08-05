@@ -28,7 +28,7 @@ const localization = {
   selectTime: 'Vybrat čas',
   selectDate: 'Vybrat datum',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
-  locale: 'de',
+  locale: 'cs',
   startOfTheWeek: 1,
   dateFormats: {
     LTS: 'HH:mm:ss',
