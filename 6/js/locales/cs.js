@@ -1,6 +1,6 @@
 /*!
   * Tempus Dominus v6.9.4 (https://getdatepicker.com/)
-  * Copyright 2013-2023 Jonathan Peterson
+  * Copyright 2013-2024 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f((g.tempusDominus=g.tempusDominus||{},g.tempusDominus.locales=g.tempusDominus.locales||{},g.tempusDominus.locales.cs={})));})(this,(function(exports){'use strict';const name = 'cs';
@@ -32,7 +32,7 @@ const localization = {
     selectTime: 'Vybrat čas',
     selectDate: 'Vybrat datum',
     dayViewHeaderFormat: { month: 'long', year: '2-digit' },
-    locale: 'de',
+    locale: 'cs',
     startOfTheWeek: 1,
     dateFormats: {
         LTS: 'HH:mm:ss',
