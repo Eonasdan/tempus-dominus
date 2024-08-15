@@ -18,11 +18,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           VERSION: ${{ github.event.release.tag_name }}
       - name: Deploy Docs
-        uses: peaceiris/actions-gh-pages@v3
+        uses: ./.github/workflows/docs
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-          keep_files: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

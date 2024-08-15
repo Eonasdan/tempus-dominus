@@ -1,0 +1,16 @@
+name: Deploy Docs
+
+inputs:
+  GITHUB_TOKEN:
+    description: 'A Github PAT'
+    required: true
+
+runs:
+  using: composite
+  steps:
+      - name: Deploy Docs
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          keep_files: true
