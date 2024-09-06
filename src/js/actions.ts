@@ -143,8 +143,13 @@ export default class Actions {
         this.display.hide();
         break;
       case ActionTypes.today: {
-        const day = new DateTime().setLocalization(this.optionsStore.options.localization);
+        const day = new DateTime().setLocalization(
+            this.optionsStore.options.localization
+        );
         this._eventEmitters.updateViewDate.emit(day);
+
+        if (!this.validation.isValid(day, Unit.date)) break;
+
         if (this.optionsStore.options.dateRange)
             this.handleDateRange(day);
         else if (this.optionsStore.options.multipleDates) {
