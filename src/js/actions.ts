@@ -143,14 +143,20 @@ export default class Actions {
         this.display.hide();
         break;
       case ActionTypes.today: {
-        const today = new DateTime().setLocalization(
-          this.optionsStore.options.localization
+        const day = new DateTime().setLocalization(
+            this.optionsStore.options.localization
         );
-        this._eventEmitters.updateViewDate.emit(today);
+        this._eventEmitters.updateViewDate.emit(day);
 
-        //todo this this really a good idea?
-        if (this.validation.isValid(today, Unit.date))
-          this.dates.setValue(today, this.dates.lastPickedIndex);
+        if (!this.validation.isValid(day, Unit.date)) break;
+
+        if (this.optionsStore.options.dateRange)
+            this.handleDateRange(day);
+        else if (this.optionsStore.options.multipleDates) {
+            this.handleMultiDate(day);
+        } else {
+            this.dates.setValue(day, this.dates.lastPickedIndex);
+        }
         break;
       }
     }
