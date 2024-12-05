@@ -517,8 +517,17 @@ ${this.siteMap}
       {
         source: './src/docs/assets/repl-data.json',
         destination: './docs/6/repl-data.json'
+      },
+      {
+        source: './src/docs/assets/site.webmanifest',
+        destination: './docs/site.webmanifest'
+      },
+      {
+        source: './src/docs/assets/carbon.css',
+        destination: './docs/css/carbon.css'
       }
     ].forEach((file) => {
+      if (!fs.existsSync(file.source)) return;
       fs.mkdirSync(path.dirname(file.destination), { recursive: true });
       fs.copyFileSync(file.source, file.destination);
     });

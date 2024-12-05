@@ -31,6 +31,7 @@ export default class MinuteDisplay {
         : this.optionsStore.options.stepping;
     for (let i = 0; i < 60 / step; i++) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.selectMinute);
       container.appendChild(div);
     }

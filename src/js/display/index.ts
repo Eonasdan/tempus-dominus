@@ -220,6 +220,18 @@ export default class Display {
     }
     this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
     this._isVisible = true;
+
+    if (this.optionsStore.options.display.keyboardNavigation) {
+      this.widget.addEventListener('keydown', this._keyboardEvent.bind(this));
+      const selectedDateDiv: HTMLElement = this.widget.querySelector(
+        `div[data-value="${this.optionsStore.viewDate.dateToDataValue()}"]`
+      );
+      if (selectedDateDiv) {
+        selectedDateDiv.focus();
+      } else {
+        this.widget.focus();
+      }
+    }
   }
 
   private _showSetupViewMode() {
@@ -363,6 +375,7 @@ export default class Display {
 
     this._updateCalendarHeader();
     this._eventEmitters.viewUpdate.emit();
+    this.findViewDateElement()?.focus();
   }
 
   /**
@@ -505,6 +518,10 @@ export default class Display {
     }
 
     document.removeEventListener('click', this._documentClickEvent);
+    if (this.optionsStore.options.display.keyboardNavigation) {
+      console.log('removing event');
+      this.widget.removeEventListener('keydown', this._keyboardEvent);
+    }
   }
 
   /**
@@ -536,9 +553,11 @@ export default class Display {
    */
   private _buildWidget(): HTMLElement {
     const template = document.createElement('div');
+    template.tabIndex = -1;
     template.classList.add(Namespace.css.widget);
 
     const dateView = document.createElement('div');
+    dateView.tabIndex = -1;
     dateView.classList.add(Namespace.css.dateContainer);
     dateView.append(
       this.getHeadTemplate(),
@@ -549,6 +568,7 @@ export default class Display {
     );
 
     const timeView = document.createElement('div');
+    timeView.tabIndex = -1;
     timeView.classList.add(Namespace.css.timeContainer);
     timeView.appendChild(this.timeDisplay.getPicker(this._iconTag.bind(this)));
     timeView.appendChild(this.hourDisplay.getPicker());
@@ -556,6 +576,7 @@ export default class Display {
     timeView.appendChild(this.secondDisplay.getPicker());
 
     const toolbar = document.createElement('div');
+    toolbar.tabIndex = -1;
     toolbar.classList.add(Namespace.css.toolbar);
     toolbar.append(...this.getToolbarElements());
 
@@ -576,7 +597,12 @@ export default class Display {
       template.appendChild(toolbar);
     }
 
-    const setupComponentView = (hasFirst, hasSecond, element, shouldShow) => {
+    const setupComponentView = (
+      hasFirst: boolean,
+      hasSecond: boolean,
+      element: HTMLElement,
+      shouldShow: boolean
+    ) => {
       if (!hasFirst) return;
       if (hasSecond) {
         element.classList.add(Namespace.css.collapse);
@@ -672,6 +698,7 @@ export default class Display {
 
     if (this.optionsStore.options.display.buttons.today) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.today);
       div.setAttribute('title', this.optionsStore.options.localization.today);
 
@@ -695,6 +722,7 @@ export default class Display {
       }
 
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.togglePicker);
       div.setAttribute('title', title);
 
@@ -703,6 +731,7 @@ export default class Display {
     }
     if (this.optionsStore.options.display.buttons.clear) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.clear);
       div.setAttribute('title', this.optionsStore.options.localization.clear);
 
@@ -713,6 +742,7 @@ export default class Display {
     }
     if (this.optionsStore.options.display.buttons.close) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.close);
       div.setAttribute('title', this.optionsStore.options.localization.close);
 
@@ -739,10 +769,12 @@ export default class Display {
     previous.appendChild(
       this._iconTag(this.optionsStore.options.display.icons.previous)
     );
+    previous.tabIndex = -1;
 
     const switcher = document.createElement('div');
     switcher.classList.add(Namespace.css.switch);
     switcher.setAttribute('data-action', ActionTypes.changeCalendarView);
+    switcher.tabIndex = -1;
 
     const next = document.createElement('div');
     next.classList.add(Namespace.css.next);
@@ -750,6 +782,7 @@ export default class Display {
     next.appendChild(
       this._iconTag(this.optionsStore.options.display.icons.next)
     );
+    next.tabIndex = -1;
 
     calendarHeader.append(previous, switcher, next);
     return calendarHeader;
@@ -838,6 +871,256 @@ export default class Display {
         this._update('decade');
         break;
     }
+  }
+
+  private _keyboardEvent(event: KeyboardEvent) {
+    console.log(`keyboard event: ${event.type}`);
+    const picked = this.dates.lastPicked ?? new DateTime();
+    let flag = false;
+    let changeViewDate = true;
+    const activeElement = document.activeElement as HTMLElement;
+
+    // since this is on the widget, we need to use the event target
+    const target = { currentTarget: event.target };
+
+    let unit = Unit.date;
+    let verticalChange = 7;
+    let horizontalChange = 1;
+    let change = 1;
+    const currentView = this.optionsStore.currentView;
+    switch (currentView) {
+      case 'clock':
+        break;
+      case 'calendar':
+        break;
+      case 'months':
+        unit = Unit.month;
+        verticalChange = 3;
+        horizontalChange = 1;
+        break;
+      case 'years':
+        unit = Unit.year;
+        verticalChange = 3;
+        horizontalChange = 1;
+        break;
+      case 'decades':
+        unit = Unit.year;
+        verticalChange = 30;
+        horizontalChange = 10;
+        break;
+    }
+
+    switch (event.key) {
+      case 'Esc':
+      case 'Escape':
+        this._eventEmitters.action.emit({ e: null, action: ActionTypes.close });
+        break;
+
+      case ' ':
+      case 'Enter':
+        activeElement.click();
+
+        event.stopPropagation();
+        event.preventDefault();
+        return;
+
+      case 'Tab':
+        this._handleTab(activeElement, event);
+        return;
+
+      case 'Right':
+      case 'ArrowRight':
+        change = horizontalChange;
+        flag = true;
+        break;
+
+      case 'Left':
+      case 'ArrowLeft':
+        flag = true;
+        change = -horizontalChange;
+        break;
+
+      case 'Down':
+      case 'ArrowDown':
+        flag = true;
+        change = verticalChange;
+        break;
+
+      case 'Up':
+      case 'ArrowUp':
+        flag = true;
+        change = -verticalChange;
+        break;
+
+      case 'PageUp':
+        switch (currentView) {
+          case 'clock':
+            break;
+          case 'calendar':
+            unit = event.shiftKey ? Unit.year : Unit.month;
+            change = 1;
+            break;
+          case 'months':
+            unit = Unit.year;
+            change = event.shiftKey ? 10 : 1;
+            break;
+          case 'years':
+          case 'decades':
+            unit = Unit.year;
+            change = event.shiftKey ? 100 : 10;
+            break;
+        }
+        flag = true;
+        break;
+
+      case 'PageDown':
+        switch (currentView) {
+          case 'clock':
+            break;
+          case 'calendar':
+            unit = event.shiftKey ? Unit.year : Unit.month;
+            change = -1;
+            break;
+          case 'months':
+            unit = Unit.year;
+            change = -(event.shiftKey ? 10 : 1);
+            break;
+          case 'years':
+          case 'decades':
+            unit = Unit.year;
+            change = -(event.shiftKey ? 100 : 10);
+            break;
+        }
+        flag = true;
+        break;
+
+      case 'Home':
+        this.optionsStore.viewDate = this.optionsStore.viewDate.clone.startOf(
+          'weekDay',
+          this.optionsStore.options.localization.startOfTheWeek
+        );
+        flag = true;
+        changeViewDate = false;
+        break;
+
+      case 'End':
+        this.optionsStore.viewDate = this.optionsStore.viewDate.clone.endOf(
+          'weekDay',
+          this.optionsStore.options.localization.startOfTheWeek
+        );
+        flag = true;
+        changeViewDate = false;
+        break;
+    }
+
+    if (!flag) return;
+
+    let newViewDate = this.optionsStore.viewDate;
+
+    if (changeViewDate) {
+      newViewDate = newViewDate.clone.manipulate(change, unit);
+    }
+
+    this._eventEmitters.updateViewDate.emit(newViewDate);
+
+    switch (currentView) {
+      case 'clock':
+        break;
+      case 'calendar':
+      case 'months':
+      case 'years':
+      case 'decades': {
+        const divWithValue = this.findViewDateElement();
+        if (divWithValue) {
+          divWithValue.focus();
+        }
+        break;
+      }
+    }
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  public findViewDateElement(): HTMLElement {
+    let selector = '';
+    let dataValue = '';
+
+    switch (this.optionsStore.currentView) {
+      case 'clock':
+        break;
+      case 'calendar':
+        selector = Namespace.css.daysContainer;
+        dataValue = this.optionsStore.viewDate.dateToDataValue();
+        break;
+      case 'months':
+        selector = Namespace.css.monthsContainer;
+        dataValue = this.optionsStore.viewDate.month.toString();
+        break;
+      case 'years':
+        selector = Namespace.css.yearsContainer;
+        dataValue = this.optionsStore.viewDate.year.toString();
+        break;
+      case 'decades':
+        selector = Namespace.css.decadesContainer;
+        dataValue = (
+          Math.floor(this.optionsStore.viewDate.year / 10) * 10
+        ).toString();
+        break;
+    }
+
+    return this.widget.querySelector(
+      `.${selector} > div[data-value="${dataValue}"]`
+    );
+  }
+
+  private _handleTab(activeElement: HTMLElement, event: KeyboardEvent) {
+    const shiftKey = event.shiftKey;
+    // gather tab targets
+    const addCalendarHeaderTargets = () => {
+      const calendarHeaderItems = document.querySelectorAll(
+        `.${Namespace.css.calendarHeader} > div`
+      ) as NodeListOf<HTMLElement>;
+      tabTargets.push(...calendarHeaderItems);
+      console.log(calendarHeaderItems);
+    };
+
+    const tabTargets: HTMLElement[] = [];
+    switch (this.optionsStore.currentView) {
+      case 'clock':
+        break;
+      case 'calendar':
+      case 'months':
+      case 'years':
+      case 'decades':
+        addCalendarHeaderTargets();
+        tabTargets.push(this.findViewDateElement());
+        break;
+    }
+
+    const toolbarItems = document.querySelectorAll(
+      `.${Namespace.css.toolbar} > div`
+    ) as NodeListOf<HTMLElement>;
+    tabTargets.push(...toolbarItems);
+    console.log(toolbarItems);
+
+    const index = tabTargets.indexOf(activeElement);
+    if (index === -1) return;
+
+    if (shiftKey) {
+      if (index === 0) {
+        tabTargets[tabTargets.length - 1].focus();
+      } else {
+        tabTargets[index - 1].focus();
+      }
+    } else {
+      if (index === tabTargets.length - 1) {
+        tabTargets[0].focus();
+      } else {
+        tabTargets[index + 1].focus();
+      }
+    }
+    event.stopPropagation();
+    event.preventDefault();
   }
 }
 

@@ -27,6 +27,7 @@ export default class HourDisplay {
 
     for (let i = 0; i < (this.optionsStore.isTwelveHour ? 12 : 24); i++) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.selectHour);
       container.appendChild(div);
     }

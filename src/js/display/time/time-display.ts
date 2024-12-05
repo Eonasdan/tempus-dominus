@@ -188,6 +188,7 @@ export default class TimeDisplay {
 
     if (this.optionsStore.options.display.components.hours) {
       let divElement = document.createElement('div');
+      divElement.tabIndex = -1;
       divElement.setAttribute(
         'title',
         this.optionsStore.options.localization.incrementHour
@@ -197,6 +198,7 @@ export default class TimeDisplay {
       top.push(divElement);
 
       divElement = document.createElement('div');
+      divElement.tabIndex = -1;
       divElement.setAttribute(
         'title',
         this.optionsStore.options.localization.pickHour
@@ -206,6 +208,7 @@ export default class TimeDisplay {
       middle.push(divElement);
 
       divElement = document.createElement('div');
+      divElement.tabIndex = -1;
       divElement.setAttribute(
         'title',
         this.optionsStore.options.localization.decrementHour
@@ -225,6 +228,7 @@ export default class TimeDisplay {
         this._gridColumns += ' a';
       }
       let divElement = document.createElement('div');
+      divElement.tabIndex = -1;
       divElement.setAttribute(
         'title',
         this.optionsStore.options.localization.incrementMinute
@@ -234,6 +238,7 @@ export default class TimeDisplay {
       top.push(divElement);
 
       divElement = document.createElement('div');
+      divElement.tabIndex = -1;
       divElement.setAttribute(
         'title',
         this.optionsStore.options.localization.pickMinute
@@ -243,6 +248,7 @@ export default class TimeDisplay {
       middle.push(divElement);
 
       divElement = document.createElement('div');
+      divElement.tabIndex = -1;
       divElement.setAttribute(
         'title',
         this.optionsStore.options.localization.decrementMinute
@@ -261,6 +267,7 @@ export default class TimeDisplay {
         this._gridColumns += ' a';
       }
       let divElement = document.createElement('div');
+      divElement.tabIndex = -1;
       divElement.setAttribute(
         'title',
         this.optionsStore.options.localization.incrementSecond
@@ -270,6 +277,7 @@ export default class TimeDisplay {
       top.push(divElement);
 
       divElement = document.createElement('div');
+      divElement.tabIndex = -1;
       divElement.setAttribute(
         'title',
         this.optionsStore.options.localization.pickSecond
@@ -279,6 +287,7 @@ export default class TimeDisplay {
       middle.push(divElement);
 
       divElement = document.createElement('div');
+      divElement.tabIndex = -1;
       divElement.setAttribute(
         'title',
         this.optionsStore.options.localization.decrementSecond
@@ -294,6 +303,7 @@ export default class TimeDisplay {
       top.push(divElement);
 
       const button = document.createElement('button');
+      button.tabIndex = -1;
       button.setAttribute('type', 'button');
       button.setAttribute(
         'title',

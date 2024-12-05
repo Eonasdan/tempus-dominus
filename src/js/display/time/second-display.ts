@@ -28,6 +28,7 @@ export default class secondDisplay {
     for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectSecond);
+      div.tabIndex = -1;
       container.appendChild(div);
     }
 

@@ -33,6 +33,7 @@ export default class DecadeDisplay {
 
     for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.selectDecade);
       container.appendChild(div);
     }
@@ -55,7 +56,9 @@ export default class DecadeDisplay {
 
     const container = widget.getElementsByClassName(
       Namespace.css.decadesContainer
-    )[0];
+    )[0] as HTMLElement;
+
+    container.focus();
 
     const [previous, switcher, next] = container.parentElement
       .getElementsByClassName(Namespace.css.calendarHeader)[0]
@@ -84,22 +87,11 @@ export default class DecadeDisplay {
       .forEach((containerClone: HTMLElement, index) => {
         if (index === 0) {
           containerClone.classList.add(Namespace.css.old);
-          if (this._startDecade.year - 10 < 0) {
-            containerClone.textContent = ' ';
-            previous.classList.add(Namespace.css.disabled);
-            containerClone.classList.add(Namespace.css.disabled);
-            containerClone.setAttribute('data-value', '');
-            return;
-          } else {
-            containerClone.innerText = this._startDecade.clone
-              .manipulate(-10, Unit.year)
-              .format({ year: 'numeric' });
-            containerClone.setAttribute(
-              'data-value',
-              `${this._startDecade.year}`
-            );
-            return;
-          }
+          containerClone.textContent = ' ';
+          previous.classList.add(Namespace.css.disabled);
+          containerClone.classList.add(Namespace.css.disabled);
+          containerClone.setAttribute('data-value', '');
+          return;
         }
 
         const classes = [];

@@ -8,6 +8,7 @@ export default interface Options {
   debug?: boolean;
   defaultDate?: DateTime;
   display?: {
+    keyboardNavigation: boolean;
     toolbarPlacement?: 'top' | 'bottom';
     components?: {
       calendar?: boolean;

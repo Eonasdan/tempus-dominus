@@ -604,6 +604,14 @@ export class DateTime extends Date {
     return p1 === 4 || p2 === 3 ? 53 : 52;
   }
 
+  dateToDataValue(): string {
+    if (!DateTime.isValid(this)) return '';
+
+    return `${this.year}-${this.month.toString().padStart(2, '0')}-${this.date
+      .toString()
+      .padStart(2, '0')}`;
+  }
+
   /**
    * Returns true or false depending on if the year is a leap year or not.
    */

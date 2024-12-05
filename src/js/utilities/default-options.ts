@@ -83,6 +83,7 @@ const DefaultOptions: Options = {
     inline: false,
     theme: 'auto',
     placement: 'bottom',
+    keyboardNavigation: true,
   },
   keepInvalid: false,
   localization: defaultEnLocalization,
