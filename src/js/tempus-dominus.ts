@@ -248,6 +248,7 @@ class TempusDominus {
       );
     }
     this._toggle?.removeEventListener('click', this._toggleClickEvent);
+    this._toggle?.removeEventListener('keydown', this._handleToggleKeydown);
     this._subscribers = {};
   }
 
@@ -478,7 +479,17 @@ class TempusDominus {
       query == undefined
         ? this.optionsStore.element
         : this.optionsStore.element.querySelector(query);
+
+    if (this._toggle == undefined) return;
+
     this._toggle.addEventListener('click', this._toggleClickEvent);
+
+    if (this._toggle !== this.optionsStore.element) {
+      this._toggle.addEventListener(
+        'keydown',
+        this._handleToggleKeydown.bind(this)
+      );
+    }
   }
 
   /**
@@ -583,6 +594,15 @@ class TempusDominus {
       return;
     this.toggle();
   };
+
+  private _handleToggleKeydown(event: KeyboardEvent) {
+    if (event.key !== ' ' && event.key !== 'Enter') return;
+
+    this._toggle.click();
+
+    event.stopPropagation();
+    event.preventDefault();
+  }
 
   /**
    * Event for when the toggle is clicked. This is a class level method so there's
