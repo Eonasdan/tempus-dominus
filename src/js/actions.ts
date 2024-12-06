@@ -144,18 +144,17 @@ export default class Actions {
         break;
       case ActionTypes.today: {
         const day = new DateTime().setLocalization(
-            this.optionsStore.options.localization
+          this.optionsStore.options.localization
         );
         this._eventEmitters.updateViewDate.emit(day);
 
         if (!this.validation.isValid(day, Unit.date)) break;
 
-        if (this.optionsStore.options.dateRange)
-            this.handleDateRange(day);
+        if (this.optionsStore.options.dateRange) this.handleDateRange(day);
         else if (this.optionsStore.options.multipleDates) {
-            this.handleMultiDate(day);
+          this.handleMultiDate(day);
         } else {
-            this.dates.setValue(day, this.dates.lastPickedIndex);
+          this.dates.setValue(day, this.dates.lastPickedIndex);
         }
         break;
       }
