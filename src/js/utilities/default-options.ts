@@ -37,6 +37,7 @@ const defaultEnLocalization: Localization = {
   startOfTheWeek: 0,
   today: 'Go to today',
   toggleMeridiem: 'Toggle Meridiem',
+  toggleAriaLabel: 'Change date',
 };
 
 const DefaultOptions: Options = {

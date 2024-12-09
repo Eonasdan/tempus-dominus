@@ -289,6 +289,12 @@ class TempusDominus {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         new CustomEvent('change', { detail: event as any })
       );
+
+      if (this._toggle) {
+        this._toggle.ariaLabel = `${
+          this.optionsStore.options.localization.toggleAriaLabel
+        }, ${date.format()}`;
+      }
     }
 
     this.optionsStore.element.dispatchEvent(

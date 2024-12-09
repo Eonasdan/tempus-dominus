@@ -46,7 +46,9 @@ export default class MinuteDisplay {
   _update(widget: HTMLElement, paint: Paint): void {
     const container = widget.getElementsByClassName(
       Namespace.css.minuteContainer
-    )[0];
+    )[0] as HTMLElement;
+    container.focus();
+
     const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.hours);
     const step =
       this.optionsStore.options.stepping === 1

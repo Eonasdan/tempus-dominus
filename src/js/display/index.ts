@@ -875,23 +875,52 @@ export default class Display {
 
   private _keyboardEvent(event: KeyboardEvent) {
     console.log(`keyboard event: ${event.type}`);
+    /*if (this.optionsStore.currentView === 'clock') {
+      this._handleKeyDownClock(event);
+      return;
+    }
+    this._handleKeyDownDate(event);*/
+
     const picked = this.dates.lastPicked ?? new DateTime();
     let flag = false;
-    let changeViewDate = true;
     const activeElement = document.activeElement as HTMLElement;
 
-    // since this is on the widget, we need to use the event target
-    const target = { currentTarget: event.target };
-
-    let unit = Unit.date;
+    let unit = null;
     let verticalChange = 7;
     let horizontalChange = 1;
     let change = 1;
     const currentView = this.optionsStore.currentView;
     switch (currentView) {
-      case 'clock':
+      case 'clock': {
+        // Should find which of hour, minute, or seconds sub-windows is open
+        const visibleElement = document.querySelector(
+          `.${Namespace.css.timeContainer} > div[style*="display: grid"]`
+        );
+
+        if (visibleElement) {
+          // Find the first child 'div' inside the parent element
+          const firstChildDiv = visibleElement.children[0] as HTMLElement;
+
+          if (firstChildDiv) {
+            const classList = firstChildDiv.classList;
+            if (classList.contains(Namespace.css.hour)) {
+              unit = Unit.hours;
+            }
+            if (classList.contains(Namespace.css.minute)) {
+              unit = Unit.minutes;
+            }
+            if (classList.contains(Namespace.css.second)) {
+              unit = Unit.seconds;
+            }
+          }
+        } else {
+          // If the clock view is open then don't do anything
+          console.log('No parent element with display: grid style found.');
+        }
         break;
+      }
       case 'calendar':
+        unit = Unit.date;
         break;
       case 'months':
         unit = Unit.month;
@@ -1000,7 +1029,7 @@ export default class Display {
           this.optionsStore.options.localization.startOfTheWeek
         );
         flag = true;
-        changeViewDate = false;
+        unit = null;
         break;
 
       case 'End':
@@ -1009,7 +1038,7 @@ export default class Display {
           this.optionsStore.options.localization.startOfTheWeek
         );
         flag = true;
-        changeViewDate = false;
+        unit = null;
         break;
     }
 
@@ -1017,7 +1046,7 @@ export default class Display {
 
     let newViewDate = this.optionsStore.viewDate;
 
-    if (changeViewDate) {
+    if (unit) {
       newViewDate = newViewDate.clone.manipulate(change, unit);
     }
 
@@ -1073,6 +1102,14 @@ export default class Display {
     );
   }
 
+  private _handleKeyDownDate(event: KeyboardEvent) {
+    //
+  }
+
+  private _handleKeyDownClock(event: KeyboardEvent) {
+    //
+  }
+
   private _handleTab(activeElement: HTMLElement, event: KeyboardEvent) {
     const shiftKey = event.shiftKey;
     // gather tab targets
@@ -1087,6 +1124,11 @@ export default class Display {
     const tabTargets: HTMLElement[] = [];
     switch (this.optionsStore.currentView) {
       case 'clock':
+        tabTargets.push(
+          ...(document.querySelectorAll(
+            `.${Namespace.css.clockContainer} > div[data-action], .${Namespace.css.toggleMeridiem}`
+          ) as NodeListOf<HTMLElement>)
+        );
         break;
       case 'calendar':
       case 'months':

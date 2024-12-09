@@ -42,7 +42,9 @@ export default class HourDisplay {
   _update(widget: HTMLElement, paint: Paint): void {
     const container = widget.getElementsByClassName(
       Namespace.css.hourContainer
-    )[0];
+    )[0] as HTMLElement;
+    container.focus();
+
     const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
 
     container

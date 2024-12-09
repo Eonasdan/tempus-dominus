@@ -23,7 +23,8 @@
     0 1px 10px 0 rgba(0, 0, 0, 0.12);
 
   :focus {
-    outline: 2px solid red;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   }
 
   &.calendarWeeks {
