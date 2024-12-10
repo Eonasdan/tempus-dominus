@@ -56,8 +56,6 @@ export default class YearDisplay {
       Namespace.css.yearsContainer
     )[0] as HTMLElement;
 
-    container.focus();
-
     if (this.optionsStore.currentView === 'years') {
       const [previous, switcher, next] = container.parentElement
         .getElementsByClassName(Namespace.css.calendarHeader)[0]

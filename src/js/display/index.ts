@@ -875,12 +875,46 @@ export default class Display {
 
   private _keyboardEvent(event: KeyboardEvent) {
     console.log(`keyboard event: ${event.type}`);
-    /*if (this.optionsStore.currentView === 'clock') {
+    if (this.optionsStore.currentView === 'clock') {
       this._handleKeyDownClock(event);
       return;
     }
-    this._handleKeyDownDate(event);*/
+    this._handleKeyDownDate(event);
+  }
 
+  public findViewDateElement(): HTMLElement {
+    let selector = '';
+    let dataValue = '';
+
+    switch (this.optionsStore.currentView) {
+      case 'clock':
+        break;
+      case 'calendar':
+        selector = Namespace.css.daysContainer;
+        dataValue = this.optionsStore.viewDate.dateToDataValue();
+        break;
+      case 'months':
+        selector = Namespace.css.monthsContainer;
+        dataValue = this.optionsStore.viewDate.month.toString();
+        break;
+      case 'years':
+        selector = Namespace.css.yearsContainer;
+        dataValue = this.optionsStore.viewDate.year.toString();
+        break;
+      case 'decades':
+        selector = Namespace.css.decadesContainer;
+        dataValue = (
+          Math.floor(this.optionsStore.viewDate.year / 10) * 10
+        ).toString();
+        break;
+    }
+
+    return this.widget.querySelector(
+      `.${selector} > div[data-value="${dataValue}"]`
+    );
+  }
+
+  private _handleKeyDownDate(event: KeyboardEvent) {
     const picked = this.dates.lastPicked ?? new DateTime();
     let flag = false;
     const activeElement = document.activeElement as HTMLElement;
@@ -891,34 +925,6 @@ export default class Display {
     let change = 1;
     const currentView = this.optionsStore.currentView;
     switch (currentView) {
-      case 'clock': {
-        // Should find which of hour, minute, or seconds sub-windows is open
-        const visibleElement = document.querySelector(
-          `.${Namespace.css.timeContainer} > div[style*="display: grid"]`
-        );
-
-        if (visibleElement) {
-          // Find the first child 'div' inside the parent element
-          const firstChildDiv = visibleElement.children[0] as HTMLElement;
-
-          if (firstChildDiv) {
-            const classList = firstChildDiv.classList;
-            if (classList.contains(Namespace.css.hour)) {
-              unit = Unit.hours;
-            }
-            if (classList.contains(Namespace.css.minute)) {
-              unit = Unit.minutes;
-            }
-            if (classList.contains(Namespace.css.second)) {
-              unit = Unit.seconds;
-            }
-          }
-        } else {
-          // If the clock view is open then don't do anything
-          console.log('No parent element with display: grid style found.');
-        }
-        break;
-      }
       case 'calendar':
         unit = Unit.date;
         break;
@@ -983,8 +989,6 @@ export default class Display {
 
       case 'PageUp':
         switch (currentView) {
-          case 'clock':
-            break;
           case 'calendar':
             unit = event.shiftKey ? Unit.year : Unit.month;
             change = 1;
@@ -1004,8 +1008,6 @@ export default class Display {
 
       case 'PageDown':
         switch (currentView) {
-          case 'clock':
-            break;
           case 'calendar':
             unit = event.shiftKey ? Unit.year : Unit.month;
             change = -1;
@@ -1052,69 +1054,111 @@ export default class Display {
 
     this._eventEmitters.updateViewDate.emit(newViewDate);
 
-    switch (currentView) {
-      case 'clock':
-        break;
-      case 'calendar':
-      case 'months':
-      case 'years':
-      case 'decades': {
-        const divWithValue = this.findViewDateElement();
-        if (divWithValue) {
-          divWithValue.focus();
-        }
-        break;
-      }
+    const divWithValue = this.findViewDateElement();
+    if (divWithValue) {
+      divWithValue.focus();
     }
+
     event.stopPropagation();
     event.preventDefault();
   }
 
-  public findViewDateElement(): HTMLElement {
-    let selector = '';
-    let dataValue = '';
+  private _handleKeyDownClock(event: KeyboardEvent) {
+    let flag = false;
+    const activeElement = document.activeElement as HTMLElement;
 
-    switch (this.optionsStore.currentView) {
-      case 'clock':
+    // Should find which of hour, minute, or seconds sub-windows is open
+    const visibleElement = this.widget.querySelector(
+      `.${Namespace.css.timeContainer} > div[style*="display: grid"]`
+    );
+
+    let subView = Namespace.css.clockContainer;
+
+    if (visibleElement.classList.contains(Namespace.css.hourContainer)) {
+      subView = Namespace.css.hourContainer;
+    }
+    if (visibleElement.classList.contains(Namespace.css.minuteContainer)) {
+      subView = Namespace.css.minuteContainer;
+    }
+    if (visibleElement.classList.contains(Namespace.css.secondContainer)) {
+      subView = Namespace.css.secondContainer;
+    }
+
+    console.log(`subView: ${subView}`);
+
+    switch (event.key) {
+      case 'Esc':
+      case 'Escape':
+        this._eventEmitters.action.emit({ e: null, action: ActionTypes.close });
         break;
-      case 'calendar':
-        selector = Namespace.css.daysContainer;
-        dataValue = this.optionsStore.viewDate.dateToDataValue();
+
+      case ' ':
+      case 'Enter':
+        activeElement.click();
+
+        event.stopPropagation();
+        event.preventDefault();
+        return;
+
+      case 'Tab':
+        this._handleTab(activeElement, event);
+        return;
+    }
+
+    if (subView === Namespace.css.clockContainer) return;
+
+    const cells = [...visibleElement.querySelectorAll('div')];
+    const currentIndex = cells.indexOf(
+      document.activeElement as HTMLDivElement
+    );
+    const columnCount = 4;
+
+    let targetIndex: number;
+    switch (event.key) {
+      case 'Right':
+      case 'ArrowRight':
+        targetIndex = currentIndex < cells.length - 1 ? currentIndex + 1 : null;
+        flag = true;
         break;
-      case 'months':
-        selector = Namespace.css.monthsContainer;
-        dataValue = this.optionsStore.viewDate.month.toString();
+
+      case 'Left':
+      case 'ArrowLeft':
+        flag = true;
+        targetIndex = currentIndex > 0 ? currentIndex - 1 : null;
         break;
-      case 'years':
-        selector = Namespace.css.yearsContainer;
-        dataValue = this.optionsStore.viewDate.year.toString();
+
+      case 'Down':
+      case 'ArrowDown':
+        targetIndex =
+          currentIndex + columnCount < cells.length
+            ? currentIndex + columnCount
+            : null;
+        flag = true;
         break;
-      case 'decades':
-        selector = Namespace.css.decadesContainer;
-        dataValue = (
-          Math.floor(this.optionsStore.viewDate.year / 10) * 10
-        ).toString();
+
+      case 'Up':
+      case 'ArrowUp':
+        targetIndex =
+          currentIndex - columnCount >= 0 ? currentIndex - columnCount : null;
+        flag = true;
         break;
     }
 
-    return this.widget.querySelector(
-      `.${selector} > div[data-value="${dataValue}"]`
-    );
-  }
+    if (!flag) return;
 
-  private _handleKeyDownDate(event: KeyboardEvent) {
-    //
-  }
+    if (targetIndex !== undefined && targetIndex !== null) {
+      cells[targetIndex].focus();
+    }
 
-  private _handleKeyDownClock(event: KeyboardEvent) {
-    //
+    event.stopPropagation();
+    event.preventDefault();
   }
 
   private _handleTab(activeElement: HTMLElement, event: KeyboardEvent) {
     const shiftKey = event.shiftKey;
     // gather tab targets
     const addCalendarHeaderTargets = () => {
-      const calendarHeaderItems = document.querySelectorAll(
+      const calendarHeaderItems = this.widget.querySelectorAll(
         `.${Namespace.css.calendarHeader} > div`
       ) as NodeListOf<HTMLElement>;
       tabTargets.push(...calendarHeaderItems);
@@ -1124,11 +1168,26 @@ export default class Display {
     const tabTargets: HTMLElement[] = [];
     switch (this.optionsStore.currentView) {
       case 'clock':
-        tabTargets.push(
-          ...(document.querySelectorAll(
-            `.${Namespace.css.clockContainer} > div[data-action], .${Namespace.css.toggleMeridiem}`
-          ) as NodeListOf<HTMLElement>)
-        );
+        {
+          tabTargets.push(
+            ...(this.widget.querySelectorAll(
+              `.${Namespace.css.timeContainer} > div[style*="display: grid"] > div[data-action]`
+            ) as NodeListOf<HTMLElement>)
+          );
+
+          const clock = this.widget.querySelectorAll(
+            `.${Namespace.css.clockContainer}`
+          )[0] as HTMLElement;
+
+          // add meridiem if it's in view
+          if (clock?.style.display === 'grid') {
+            tabTargets.push(
+              ...(this.widget.querySelectorAll(
+                `.${Namespace.css.toggleMeridiem}`
+              ) as NodeListOf<HTMLElement>)
+            );
+          }
+        }
         break;
       case 'calendar':
       case 'months':
@@ -1139,7 +1198,7 @@ export default class Display {
         break;
     }
 
-    const toolbarItems = document.querySelectorAll(
+    const toolbarItems = this.widget.querySelectorAll(
       `.${Namespace.css.toolbar} > div`
     ) as NodeListOf<HTMLElement>;
     tabTargets.push(...toolbarItems);

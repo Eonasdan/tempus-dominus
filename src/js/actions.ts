@@ -9,6 +9,7 @@ import { serviceLocator } from './utilities/service-locator.js';
 import ActionTypes from './utilities/action-types';
 import CalendarModes from './utilities/calendar-modes';
 import { OptionsStore } from './utilities/optionsStore';
+import { vi } from 'vitest';
 
 /**
  * Logic for various click actions
@@ -197,9 +198,11 @@ export default class Actions {
         break;
     }
 
-    (<HTMLElement>(
-      this.display.widget.getElementsByClassName(classToUse)[0]
-    )).style.display = 'grid';
+    const element = this.display.widget.getElementsByClassName(
+      classToUse
+    )[0] as HTMLElement;
+    element.style.display = 'grid';
+    (<HTMLElement>element.children[0]).focus();
   }
 
   private handleNextPrevious(action: ActionTypes) {
@@ -313,6 +316,10 @@ export default class Actions {
       )
       .forEach((htmlElement: HTMLElement) => Collapse.toggle(htmlElement));
     this._eventEmitters.viewUpdate.emit();
+    const visible = this.display.widget.querySelector(
+      `.${Namespace.css.collapsing} > div[style*="display: grid"]`
+    ) as HTMLElement;
+    visible.focus();
   }
 
   private handleSelectDay(currentTarget: HTMLElement) {

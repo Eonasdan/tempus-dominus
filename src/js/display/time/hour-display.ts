@@ -5,6 +5,7 @@ import { serviceLocator } from '../../utilities/service-locator';
 import { Paint } from '../index';
 import ActionTypes from '../../utilities/action-types';
 import { OptionsStore } from '../../utilities/optionsStore';
+import Dates from '../../dates';
 
 /**
  * Creates and updates the grid for `hours`
@@ -12,10 +13,12 @@ import { OptionsStore } from '../../utilities/optionsStore';
 export default class HourDisplay {
   private optionsStore: OptionsStore;
   private validation: Validation;
+  private dates: Dates;
 
   constructor() {
     this.optionsStore = serviceLocator.locate(OptionsStore);
     this.validation = serviceLocator.locate(Validation);
+    this.dates = serviceLocator.locate(Dates);
   }
   /**
    * Build the container html for the display
@@ -43,7 +46,6 @@ export default class HourDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.hourContainer
     )[0] as HTMLElement;
-    container.focus();
 
     const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.date);
 

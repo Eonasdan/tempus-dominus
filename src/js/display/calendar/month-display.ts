@@ -47,8 +47,6 @@ export default class MonthDisplay {
       Namespace.css.monthsContainer
     )[0] as HTMLElement;
 
-    container.focus();
-
     if (this.optionsStore.currentView === 'months') {
       const [previous, switcher, next] = container.parentElement
         .getElementsByClassName(Namespace.css.calendarHeader)[0]

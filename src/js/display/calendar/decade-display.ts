@@ -58,8 +58,6 @@ export default class DecadeDisplay {
       Namespace.css.decadesContainer
     )[0] as HTMLElement;
 
-    container.focus();
-
     const [previous, switcher, next] = container.parentElement
       .getElementsByClassName(Namespace.css.calendarHeader)[0]
       .getElementsByTagName('div');

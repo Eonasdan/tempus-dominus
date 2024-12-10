@@ -43,7 +43,6 @@ export default class secondDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.secondContainer
     )[0] as HTMLElement;
-    container.focus();
 
     const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.minutes);
 

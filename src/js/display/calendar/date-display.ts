@@ -66,10 +66,6 @@ export default class DateDisplay {
         div.addEventListener('mouseover', rangeHoverEvent);
         div.addEventListener('mouseout', rangeHoverOutEvent);
       }
-      // if keyboard navigation is enabled then add the event
-      /*if (this.optionsStore.options.display.keyboardNavigation) {
-        div.addEventListener('keydown', this._handleKeydown.bind(this));
-      }*/
     }
 
     return container;
@@ -83,8 +79,6 @@ export default class DateDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.daysContainer
     )[0] as HTMLElement;
-
-    container.focus();
 
     this._updateCalendarView(container);
 

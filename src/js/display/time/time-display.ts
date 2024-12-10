@@ -43,7 +43,6 @@ export default class TimeDisplay {
     const timesDiv = <HTMLElement>(
       widget.getElementsByClassName(Namespace.css.clockContainer)[0]
     );
-    timesDiv.focus();
 
     let lastPicked = this.dates.lastPicked?.clone;
     if (!lastPicked && this.optionsStore.options.useCurrent)

@@ -47,7 +47,6 @@ export default class MinuteDisplay {
     const container = widget.getElementsByClassName(
       Namespace.css.minuteContainer
     )[0] as HTMLElement;
-    container.focus();
 
     const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.hours);
     const step =
