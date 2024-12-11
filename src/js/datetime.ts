@@ -938,7 +938,12 @@ export class DateTime extends Date {
       const y = year || dt.getFullYear();
       let M = 0;
       if (!(year && !month)) {
-        M = month > 0 ? month - 1 : dt.getMonth();
+        M =
+          month > 0
+            ? localization.monthZeroIndex
+              ? month
+              : month - 1
+            : dt.getMonth();
       }
       if (zone) {
         return new DateTime(
