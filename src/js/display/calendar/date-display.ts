@@ -179,6 +179,7 @@ export default class DateDisplay {
       // format the string to a date
       const innerDate = DateTime.fromString(attributeValue, {
         format: 'yyyy-MM-dd',
+        monthZeroIndex: true,
       });
 
       // find the position of the target in the date container
@@ -192,7 +193,7 @@ export default class DateDisplay {
 
       //format the start date so that it can be found by the attribute
       const rangeStartFormatted = this._dateToDataValue(rangeStart);
-      const rangeStartIndex = allDays.findIndex(
+      let rangeStartIndex = allDays.findIndex(
         (e) => e.getAttribute('data-value') === rangeStartFormatted
       );
       const rangeStartElement = allDays[rangeStartIndex];
@@ -214,6 +215,9 @@ export default class DateDisplay {
       let lambda: (_, index) => boolean;
 
       if (innerDate.isBefore(rangeStart)) {
+        if (rangeStartElement === undefined) {
+          rangeStartIndex = Number.MAX_SAFE_INTEGER;
+        }
         currentTarget.classList.add(Namespace.css.rangeStart);
         rangeStartElement?.classList.remove(Namespace.css.rangeStart);
         rangeStartElement?.classList.add(Namespace.css.rangeEnd);

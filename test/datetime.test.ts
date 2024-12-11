@@ -75,6 +75,22 @@ test('Can create with string', () => {
   expect(dt.month).toBe(12 - 1); //minus 1 because javascript 🙄
   expect(dt.date).toBe(31);
   expect(dt.year).toBe(2022);
+
+  const zeroIndexMonthDt = DateTime.fromString('2024-11-01', {
+    format: 'yyyy-MM-dd',
+    monthZeroIndex: true,
+  });
+  expect(zeroIndexMonthDt.year).toBe(2024);
+  expect(zeroIndexMonthDt.month).toBe(11);
+  expect(zeroIndexMonthDt.date).toBe(1);
+
+  const nonZeroIndexMonthDt = DateTime.fromString('2024-11-01', {
+    format: 'yyyy-MM-dd',
+    monthZeroIndex: false,
+  });
+  expect(nonZeroIndexMonthDt.year).toBe(2024);
+  expect(nonZeroIndexMonthDt.month).toBe(10);
+  expect(nonZeroIndexMonthDt.date).toBe(1);
 });
 
 test('Can create clone', () => {

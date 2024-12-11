@@ -77,6 +77,7 @@ export interface FormatLocalization {
   hourCycle?: Intl.LocaleHourCycleKey;
   locale?: string;
   ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
+  monthZeroIndex?: boolean;
 }
 
 export interface Localization extends FormatLocalization {
