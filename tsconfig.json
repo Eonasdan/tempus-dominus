@@ -12,7 +12,7 @@
       "ES2021"
     ],
     "moduleResolution": "node",
-    //"rootDir": "./src/js",
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "~src/*": ["../src/*"]
     },

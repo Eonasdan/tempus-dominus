@@ -23,11 +23,14 @@ import { OptionsStore } from '../utilities/optionsStore';
  */
 export default class Display {
   private _widget: HTMLElement;
-  private _popperInstance: any; // eslint-disable-line  @typescript-eslint/no-explicit-any
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private _popperInstance: any;
   private _isVisible = false;
   private optionsStore: OptionsStore;
   private validation: Validation;
   private dates: Dates;
+  private _eventEmitters: EventEmitters;
+  private _keyboardEventBound = this._keyboardEvent.bind(this);
 
   dateDisplay: DateDisplay;
   monthDisplay: MonthDisplay;
@@ -37,7 +40,6 @@ export default class Display {
   hourDisplay: HourDisplay;
   minuteDisplay: MinuteDisplay;
   secondDisplay: SecondDisplay;
-  private _eventEmitters: EventEmitters;
 
   constructor() {
     this.optionsStore = serviceLocator.locate(OptionsStore);
@@ -222,16 +224,10 @@ export default class Display {
     this._isVisible = true;
 
     if (this.optionsStore.options.display.keyboardNavigation) {
-      this.widget.addEventListener('keydown', this._keyboardEvent.bind(this));
-      const selectedDateDiv: HTMLElement = this.widget.querySelector(
-        `div[data-value="${this.optionsStore.viewDate.dateToDataValue()}"]`
-      );
-      if (selectedDateDiv) {
-        selectedDateDiv.focus();
-      } else {
-        this.widget.focus();
-      }
+      this.widget.addEventListener('keydown', this._keyboardEventBound);
     }
+
+    this._handleFocus();
   }
 
   private _showSetupViewMode() {
@@ -520,7 +516,7 @@ export default class Display {
     document.removeEventListener('click', this._documentClickEvent);
     if (this.optionsStore.options.display.keyboardNavigation) {
       console.log('removing event');
-      this.widget.removeEventListener('keydown', this._keyboardEvent);
+      this.widget.removeEventListener('keydown', this._keyboardEventBound);
     }
   }
 
@@ -915,7 +911,6 @@ export default class Display {
   }
 
   private _handleKeyDownDate(event: KeyboardEvent) {
-    const picked = this.dates.lastPicked ?? new DateTime();
     let flag = false;
     const activeElement = document.activeElement as HTMLElement;
 
@@ -1222,6 +1217,19 @@ export default class Display {
     }
     event.stopPropagation();
     event.preventDefault();
+  }
+
+  private _handleFocus() {
+    if (this.optionsStore.currentView === 'clock') this._handleFocusClock();
+    else this.findViewDateElement().focus();
+  }
+
+  private _handleFocusClock() {
+    (
+      this.widget.querySelector(
+        `.${Namespace.css.timeContainer} > div[style*="display: grid"]`
+      ).children[0] as HTMLElement
+    ).focus();
   }
 }
 
