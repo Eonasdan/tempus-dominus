@@ -186,7 +186,9 @@ export default class Display {
             document.documentElement.dir === 'rtl'
               ? `${placement}-end`
               : `${placement}-start`,
-        }).then();
+        }).then(() => {
+          this._handleFocus();
+        });
       } else {
         this.optionsStore.element.appendChild(this.widget);
       }
@@ -226,8 +228,6 @@ export default class Display {
     if (this.optionsStore.options.display.keyboardNavigation) {
       this.widget.addEventListener('keydown', this._keyboardEventBound);
     }
-
-    this._handleFocus();
   }
 
   private _showSetupViewMode() {
@@ -314,7 +314,9 @@ export default class Display {
   }
 
   updatePopup(): void {
-    this._popperInstance?.update();
+    if (!this._popperInstance) return;
+    this._popperInstance.update();
+    this._handleFocus();
   }
 
   /**
@@ -515,9 +517,9 @@ export default class Display {
 
     document.removeEventListener('click', this._documentClickEvent);
     if (this.optionsStore.options.display.keyboardNavigation) {
-      console.log('removing event');
       this.widget.removeEventListener('keydown', this._keyboardEventBound);
     }
+    this.optionsStore.toggle.focus();
   }
 
   /**
@@ -870,7 +872,6 @@ export default class Display {
   }
 
   private _keyboardEvent(event: KeyboardEvent) {
-    console.log(`keyboard event: ${event.type}`);
     if (this.optionsStore.currentView === 'clock') {
       this._handleKeyDownClock(event);
       return;
@@ -982,7 +983,7 @@ export default class Display {
         change = -verticalChange;
         break;
 
-      case 'PageUp':
+      case 'PageDown':
         switch (currentView) {
           case 'calendar':
             unit = event.shiftKey ? Unit.year : Unit.month;
@@ -1001,7 +1002,7 @@ export default class Display {
         flag = true;
         break;
 
-      case 'PageDown':
+      case 'PageUp':
         switch (currentView) {
           case 'calendar':
             unit = event.shiftKey ? Unit.year : Unit.month;
@@ -1079,8 +1080,6 @@ export default class Display {
       subView = Namespace.css.secondContainer;
     }
 
-    console.log(`subView: ${subView}`);
-
     switch (event.key) {
       case 'Esc':
       case 'Escape':
@@ -1157,7 +1156,6 @@ export default class Display {
         `.${Namespace.css.calendarHeader} > div`
       ) as NodeListOf<HTMLElement>;
       tabTargets.push(...calendarHeaderItems);
-      console.log(calendarHeaderItems);
     };
 
     const tabTargets: HTMLElement[] = [];
@@ -1197,7 +1195,6 @@ export default class Display {
       `.${Namespace.css.toolbar} > div`
     ) as NodeListOf<HTMLElement>;
     tabTargets.push(...toolbarItems);
-    console.log(toolbarItems);
 
     const index = tabTargets.indexOf(activeElement);
     if (index === -1) return;

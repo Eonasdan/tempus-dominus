@@ -9,7 +9,6 @@ import { serviceLocator } from './utilities/service-locator.js';
 import ActionTypes from './utilities/action-types';
 import CalendarModes from './utilities/calendar-modes';
 import { OptionsStore } from './utilities/optionsStore';
-import { vi } from 'vitest';
 
 /**
  * Logic for various click actions
@@ -352,7 +351,6 @@ export default class Actions {
 
   private handleMultiDate(day: DateTime) {
     let index = this.dates.pickedIndex(day, Unit.date);
-    console.log(index);
     if (index !== -1) {
       this.dates.setValue(null, index); //deselect multi-date
     } else {

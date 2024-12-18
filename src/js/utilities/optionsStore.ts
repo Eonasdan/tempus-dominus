@@ -6,6 +6,7 @@ import Options from './options';
 export class OptionsStore {
   options: Options;
   element: HTMLElement;
+  toggle: HTMLElement;
   input: HTMLInputElement;
   unset: boolean;
   private _currentCalendarViewMode = 0;

@@ -269,6 +269,7 @@ export default class DateDisplay {
     this.optionsStore.options.display.components.month
       ? switcher.classList.remove(Namespace.css.disabled)
       : switcher.classList.add(Namespace.css.disabled);
+
     this.validation.isValid(
       this.optionsStore.viewDate.clone.manipulate(-1, Unit.month),
       Unit.month

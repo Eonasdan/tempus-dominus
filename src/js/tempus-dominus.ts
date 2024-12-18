@@ -35,7 +35,6 @@ class TempusDominus {
   _subscribers: { [key: string]: ((event: any) => Record<string, unknown>)[] } =
     {};
   private _isDisabled = false;
-  private _toggle: HTMLElement;
   private _currentPromptTimeTimeout: NodeJS.Timeout;
   private actions: Actions;
   private optionsStore: OptionsStore;
@@ -247,8 +246,14 @@ class TempusDominus {
         this._openClickEvent
       );
     }
-    this._toggle?.removeEventListener('click', this._toggleClickEvent);
-    this._toggle?.removeEventListener('keydown', this._handleToggleKeydown);
+    this.optionsStore.toggle?.removeEventListener(
+      'click',
+      this._toggleClickEvent
+    );
+    this.optionsStore.toggle?.removeEventListener(
+      'keydown',
+      this._handleToggleKeydown
+    );
     this._subscribers = {};
   }
 
@@ -290,8 +295,8 @@ class TempusDominus {
         new CustomEvent('change', { detail: event as any })
       );
 
-      if (this._toggle) {
-        this._toggle.ariaLabel = `${
+      if (this.optionsStore.toggle) {
+        this.optionsStore.toggle.ariaLabel = `${
           this.optionsStore.options.localization.toggleAriaLabel
         }, ${date.format()}`;
       }
@@ -481,17 +486,17 @@ class TempusDominus {
     if (query == 'nearest') {
       query = '[data-td-toggle="datetimepicker"]';
     }
-    this._toggle =
+    this.optionsStore.toggle =
       query == undefined
         ? this.optionsStore.element
         : this.optionsStore.element.querySelector(query);
 
-    if (this._toggle == undefined) return;
+    if (this.optionsStore.toggle == undefined) return;
 
-    this._toggle.addEventListener('click', this._toggleClickEvent);
+    this.optionsStore.toggle.addEventListener('click', this._toggleClickEvent);
 
-    if (this._toggle !== this.optionsStore.element) {
-      this._toggle.addEventListener(
+    if (this.optionsStore.toggle !== this.optionsStore.element) {
+      this.optionsStore.toggle.addEventListener(
         'keydown',
         this._handleToggleKeydown.bind(this)
       );
@@ -593,8 +598,8 @@ class TempusDominus {
       (this.optionsStore.element as HTMLInputElement)?.disabled ||
       this.optionsStore.input?.disabled ||
       //if we just have the input and allow input toggle is enabled, then don't cause a toggle
-      (this._toggle.nodeName === 'INPUT' &&
-        (this._toggle as HTMLInputElement)?.type === 'text' &&
+      (this.optionsStore.toggle.nodeName === 'INPUT' &&
+        (this.optionsStore.toggle as HTMLInputElement)?.type === 'text' &&
         this.optionsStore.options.allowInputToggle)
     )
       return;
@@ -604,7 +609,7 @@ class TempusDominus {
   private _handleToggleKeydown(event: KeyboardEvent) {
     if (event.key !== ' ' && event.key !== 'Enter') return;
 
-    this._toggle.click();
+    this.optionsStore.toggle.click();
 
     event.stopPropagation();
     event.preventDefault();

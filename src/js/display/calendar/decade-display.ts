@@ -62,6 +62,10 @@ export default class DecadeDisplay {
       .getElementsByClassName(Namespace.css.calendarHeader)[0]
       .getElementsByTagName('div');
 
+    const isPreviousEnabled = this.validation.isValid(
+      this._startDecade,
+      Unit.year
+    );
     if (this.optionsStore.currentView === 'decades') {
       switcher.setAttribute(
         Namespace.css.decadesContainer,
@@ -70,7 +74,7 @@ export default class DecadeDisplay {
         })}-${this._endDecade.format({ year: 'numeric' })}`
       );
 
-      this.validation.isValid(this._startDecade, Unit.year)
+      isPreviousEnabled
         ? previous.classList.remove(Namespace.css.disabled)
         : previous.classList.add(Namespace.css.disabled);
       this.validation.isValid(this._endDecade, Unit.year)
@@ -85,10 +89,12 @@ export default class DecadeDisplay {
       .forEach((containerClone: HTMLElement, index) => {
         if (index === 0) {
           containerClone.classList.add(Namespace.css.old);
-          containerClone.textContent = ' ';
-          previous.classList.add(Namespace.css.disabled);
-          containerClone.classList.add(Namespace.css.disabled);
-          containerClone.setAttribute('data-value', '');
+          if (this._startDecade.year - 10 < 0) {
+            containerClone.textContent = ' ';
+            previous.classList.add(Namespace.css.disabled);
+            containerClone.classList.add(Namespace.css.disabled);
+            containerClone.setAttribute('data-value', '');
+          }
           return;
         }
 
@@ -105,7 +111,7 @@ export default class DecadeDisplay {
           classes.push(Namespace.css.active);
         }
         if (
-          !this.validation.isValid(this._startDecade, Unit.year) &&
+          !isPreviousEnabled &&
           !this.validation.isValid(
             this._startDecade.clone.manipulate(10, Unit.year),
             Unit.year
