@@ -201,7 +201,7 @@ export default class Actions {
       classToUse
     )[0] as HTMLElement;
     element.style.display = 'grid';
-    (<HTMLElement>element.children[0]).focus();
+    (<HTMLElement>element.children[0])?.focus();
   }
 
   private handleNextPrevious(action: ActionTypes) {
@@ -318,7 +318,7 @@ export default class Actions {
     const visible = this.display.widget.querySelector(
       `.${Namespace.css.collapsing} > div[style*="display: grid"]`
     ) as HTMLElement;
-    visible.focus();
+    visible?.focus();
   }
 
   private handleSelectDay(currentTarget: HTMLElement) {
