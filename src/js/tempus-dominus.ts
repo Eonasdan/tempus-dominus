@@ -296,9 +296,13 @@ class TempusDominus {
       );
 
       if (this.optionsStore.toggle) {
-        this.optionsStore.toggle.ariaLabel = `${
-          this.optionsStore.options.localization.toggleAriaLabel
-        }, ${date.format()}`;
+        let label = this.optionsStore.options.localization.toggleAriaLabel;
+        if (this.dates.picked.length > 0) {
+          const picked = this.dates.picked.map((x) => x.format()).join(', ');
+          label = `${label}, ${picked}`;
+        }
+
+        this.optionsStore.toggle.ariaLabel = label;
       }
     }
 
