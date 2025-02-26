@@ -1,7 +1,7 @@
 <urlset xmlns='https://www.sitemaps.org/schemas/sitemap/0.9'>
 <url>
 <loc>https://getdatepicker.com</loc>
-<lastmod>2024-08-15T13:20:33.489Z</lastmod>
+<lastmod>2025-02-26T21:13:28.990Z</lastmod>
 <priority>1.00</priority>
 </url>
 <url>
@@ -78,15 +78,19 @@
 <priority>0.80</priority>
 </url><url>
 <loc>https://getdatepicker.com/docs/6//options/display.html</loc>
-<lastmod>2022-08-11T00:00:00.000Z</lastmod>
+<lastmod>2025-02-26T00:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url><url>
 <loc>https://getdatepicker.com/docs/6//options/index.html</loc>
 <lastmod>2021-07-08T00:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url><url>
+<loc>https://getdatepicker.com/docs/6//options/keyboard-navigation.html</loc>
+<lastmod>2025-02-26T00:00:00.000Z</lastmod>
+<priority>0.80</priority>
+</url><url>
 <loc>https://getdatepicker.com/docs/6//options/localization.html</loc>
-<lastmod>2022-08-11T00:00:00.000Z</lastmod>
+<lastmod>2025-02-26T00:00:00.000Z</lastmod>
 <priority>0.80</priority>
 </url><url>
 <loc>https://getdatepicker.com/docs/6//options/restrictions.html</loc>

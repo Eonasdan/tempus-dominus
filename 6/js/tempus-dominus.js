@@ -1,6 +1,6 @@
 /*!
-  * Tempus Dominus v6.9.4 (https://getdatepicker.com/)
-  * Copyright 2013-2024 Jonathan Peterson
+  * Tempus Dominus v6.10.0 (https://getdatepicker.com/)
+  * Copyright 2013-2025 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
 (function (global, factory) {
@@ -1020,6 +1020,13 @@
               7;
           return p1 === 4 || p2 === 3 ? 53 : 52;
       }
+      dateToDataValue() {
+          if (!DateTime.isValid(this))
+              return '';
+          return `${this.year}-${this.month.toString().padStart(2, '0')}-${this.date
+            .toString()
+            .padStart(2, '0')}`;
+      }
       /**
        * Returns true or false depending on if the year is a leap year or not.
        */
@@ -1555,6 +1562,7 @@
       startOfTheWeek: 0,
       today: 'Go to today',
       toggleMeridiem: 'Toggle Meridiem',
+      toggleAriaLabel: 'Change date',
   };
   const DefaultOptions = {
       allowInputToggle: false,
@@ -1600,6 +1608,7 @@
           inline: false,
           theme: 'auto',
           placement: 'bottom',
+          keyboardNavigation: true,
       },
       keepInvalid: false,
       localization: defaultEnLocalization,
@@ -1696,7 +1705,7 @@
   }
 
   function mandatoryDate(key) {
-      return ({ value, providedType, localization }) => {
+      return ({ value, localization }) => {
           const dateTime = convertToDateTime(value, key, localization);
           if (dateTime !== undefined) {
               dateTime.setLocalization(localization);
@@ -2370,6 +2379,7 @@
       getPicker() {
           const container = document.createElement('div');
           container.classList.add(Namespace.css.daysContainer);
+          container.role = 'grid';
           container.append(...this._daysOfTheWeek());
           if (this.optionsStore.options.display.calendarWeeks) {
               const div = document.createElement('div');
@@ -2382,11 +2392,14 @@
                   if (this.optionsStore.options.display.calendarWeeks) {
                       const div = document.createElement('div');
                       div.classList.add(Namespace.css.calendarWeeks, Namespace.css.noHighlight);
+                      div.tabIndex = -1;
                       container.appendChild(div);
                   }
               }
               const div = document.createElement('div');
               div.setAttribute('data-action', ActionTypes$1.selectDay);
+              div.role = 'gridcell';
+              div.tabIndex = -1;
               container.appendChild(div);
               // if hover is supported then add the events
               if (matchMedia('(hover: hover)').matches &&
@@ -2438,20 +2451,14 @@
               paint(exports.Unit.date, innerDate, classes, element);
               element.classList.remove(...element.classList);
               element.classList.add(...classes);
-              element.setAttribute('data-value', this._dateToDataValue(innerDate));
+              element.setAttribute('data-value', innerDate.dateToDataValue());
               element.setAttribute('data-day', `${innerDate.date}`);
               element.innerText = innerDate.parts(undefined, {
                   day: 'numeric',
               }).day;
+              element.ariaLabel = innerDate.format('MMMM dd, yyyy');
               innerDate.manipulate(1, exports.Unit.date);
           });
-      }
-      _dateToDataValue(date) {
-          if (!DateTime.isValid(date))
-              return '';
-          return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.date
-            .toString()
-            .padStart(2, '0')}`;
       }
       _handleDateRange(innerDate, classes) {
           const rangeStart = this.dates.picked[0];
@@ -2489,7 +2496,7 @@
               const rangeStart = this.dates.picked[0];
               const rangeEnd = this.dates.picked[1];
               //format the start date so that it can be found by the attribute
-              const rangeStartFormatted = this._dateToDataValue(rangeStart);
+              const rangeStartFormatted = rangeStart.dateToDataValue();
               const rangeStartIndex = allDays.findIndex((e) => e.getAttribute('data-value') === rangeStartFormatted);
               const rangeStartElement = allDays[rangeStartIndex];
               //make sure we don't leave start/end classes if we don't need them
@@ -2583,6 +2590,7 @@
               if (this.optionsStore.options.localization.maxWeekdayLength > 0)
                   weekDay = weekDay.substring(0, this.optionsStore.options.localization.maxWeekdayLength);
               htmlDivElement.innerText = weekDay;
+              htmlDivElement.ariaLabel = innerDate.format({ weekday: 'long' });
               innerDate.manipulate(1, exports.Unit.date);
               row.push(htmlDivElement);
           }
@@ -2616,6 +2624,7 @@
           container.classList.add(Namespace.css.monthsContainer);
           for (let i = 0; i < 12; i++) {
               const div = document.createElement('div');
+              div.tabIndex = -1;
               div.setAttribute('data-action', ActionTypes$1.selectMonth);
               container.appendChild(div);
           }
@@ -2683,6 +2692,7 @@
           container.classList.add(Namespace.css.yearsContainer);
           for (let i = 0; i < 12; i++) {
               const div = document.createElement('div');
+              div.tabIndex = -1;
               div.setAttribute('data-action', ActionTypes$1.selectYear);
               container.appendChild(div);
           }
@@ -2756,6 +2766,7 @@
           container.classList.add(Namespace.css.decadesContainer);
           for (let i = 0; i < 12; i++) {
               const div = document.createElement('div');
+              div.tabIndex = -1;
               div.setAttribute('data-action', ActionTypes$1.selectDecade);
               container.appendChild(div);
           }
@@ -2775,11 +2786,12 @@
           const [previous, switcher, next] = container.parentElement
               .getElementsByClassName(Namespace.css.calendarHeader)[0]
               .getElementsByTagName('div');
+          const isPreviousEnabled = this.validation.isValid(this._startDecade, exports.Unit.year);
           if (this.optionsStore.currentView === 'decades') {
               switcher.setAttribute(Namespace.css.decadesContainer, `${this._startDecade.format({
                 year: 'numeric',
             })}-${this._endDecade.format({ year: 'numeric' })}`);
-              this.validation.isValid(this._startDecade, exports.Unit.year)
+              isPreviousEnabled
                   ? previous.classList.remove(Namespace.css.disabled)
                   : previous.classList.add(Namespace.css.disabled);
               this.validation.isValid(this._endDecade, exports.Unit.year)
@@ -2797,15 +2809,8 @@
                       previous.classList.add(Namespace.css.disabled);
                       containerClone.classList.add(Namespace.css.disabled);
                       containerClone.setAttribute('data-value', '');
-                      return;
                   }
-                  else {
-                      containerClone.innerText = this._startDecade.clone
-                          .manipulate(-10, exports.Unit.year)
-                          .format({ year: 'numeric' });
-                      containerClone.setAttribute('data-value', `${this._startDecade.year}`);
-                      return;
-                  }
+                  return;
               }
               const classes = [];
               classes.push(Namespace.css.decade);
@@ -2816,7 +2821,7 @@
                       .length > 0) {
                   classes.push(Namespace.css.active);
               }
-              if (!this.validation.isValid(this._startDecade, exports.Unit.year) &&
+              if (!isPreviousEnabled &&
                   !this.validation.isValid(this._startDecade.clone.manipulate(10, exports.Unit.year), exports.Unit.year)) {
                   classes.push(Namespace.css.disabled);
               }
@@ -2936,16 +2941,19 @@
           };
           if (this.optionsStore.options.display.components.hours) {
               let divElement = document.createElement('div');
+              divElement.tabIndex = -1;
               divElement.setAttribute('title', this.optionsStore.options.localization.incrementHour);
               divElement.setAttribute('data-action', ActionTypes$1.incrementHours);
               divElement.appendChild(upIcon.cloneNode(true));
               top.push(divElement);
               divElement = document.createElement('div');
+              divElement.tabIndex = -1;
               divElement.setAttribute('title', this.optionsStore.options.localization.pickHour);
               divElement.setAttribute('data-action', ActionTypes$1.showHours);
               divElement.setAttribute('data-time-component', exports.Unit.hours);
               middle.push(divElement);
               divElement = document.createElement('div');
+              divElement.tabIndex = -1;
               divElement.setAttribute('title', this.optionsStore.options.localization.decrementHour);
               divElement.setAttribute('data-action', ActionTypes$1.decrementHours);
               divElement.appendChild(downIcon.cloneNode(true));
@@ -2961,16 +2969,19 @@
                   this._gridColumns += ' a';
               }
               let divElement = document.createElement('div');
+              divElement.tabIndex = -1;
               divElement.setAttribute('title', this.optionsStore.options.localization.incrementMinute);
               divElement.setAttribute('data-action', ActionTypes$1.incrementMinutes);
               divElement.appendChild(upIcon.cloneNode(true));
               top.push(divElement);
               divElement = document.createElement('div');
+              divElement.tabIndex = -1;
               divElement.setAttribute('title', this.optionsStore.options.localization.pickMinute);
               divElement.setAttribute('data-action', ActionTypes$1.showMinutes);
               divElement.setAttribute('data-time-component', exports.Unit.minutes);
               middle.push(divElement);
               divElement = document.createElement('div');
+              divElement.tabIndex = -1;
               divElement.setAttribute('title', this.optionsStore.options.localization.decrementMinute);
               divElement.setAttribute('data-action', ActionTypes$1.decrementMinutes);
               divElement.appendChild(downIcon.cloneNode(true));
@@ -2985,16 +2996,19 @@
                   this._gridColumns += ' a';
               }
               let divElement = document.createElement('div');
+              divElement.tabIndex = -1;
               divElement.setAttribute('title', this.optionsStore.options.localization.incrementSecond);
               divElement.setAttribute('data-action', ActionTypes$1.incrementSeconds);
               divElement.appendChild(upIcon.cloneNode(true));
               top.push(divElement);
               divElement = document.createElement('div');
+              divElement.tabIndex = -1;
               divElement.setAttribute('title', this.optionsStore.options.localization.pickSecond);
               divElement.setAttribute('data-action', ActionTypes$1.showSeconds);
               divElement.setAttribute('data-time-component', exports.Unit.seconds);
               middle.push(divElement);
               divElement = document.createElement('div');
+              divElement.tabIndex = -1;
               divElement.setAttribute('title', this.optionsStore.options.localization.decrementSecond);
               divElement.setAttribute('data-action', ActionTypes$1.decrementSeconds);
               divElement.appendChild(downIcon.cloneNode(true));
@@ -3005,6 +3019,7 @@
               let divElement = getSeparator();
               top.push(divElement);
               const button = document.createElement('button');
+              button.tabIndex = -1;
               button.setAttribute('type', 'button');
               button.setAttribute('title', this.optionsStore.options.localization.toggleMeridiem);
               button.setAttribute('data-action', ActionTypes$1.toggleMeridiem);
@@ -3034,6 +3049,7 @@
       constructor() {
           this.optionsStore = serviceLocator.locate(OptionsStore);
           this.validation = serviceLocator.locate(Validation);
+          this.dates = serviceLocator.locate(Dates);
       }
       /**
        * Build the container html for the display
@@ -3044,6 +3060,7 @@
           container.classList.add(Namespace.css.hourContainer);
           for (let i = 0; i < (this.optionsStore.isTwelveHour ? 12 : 24); i++) {
               const div = document.createElement('div');
+              div.tabIndex = -1;
               div.setAttribute('data-action', ActionTypes$1.selectHour);
               container.appendChild(div);
           }
@@ -3094,6 +3111,7 @@
               : this.optionsStore.options.stepping;
           for (let i = 0; i < 60 / step; i++) {
               const div = document.createElement('div');
+              div.tabIndex = -1;
               div.setAttribute('data-action', ActionTypes$1.selectMinute);
               container.appendChild(div);
           }
@@ -3145,6 +3163,7 @@
           for (let i = 0; i < 12; i++) {
               const div = document.createElement('div');
               div.setAttribute('data-action', ActionTypes$1.selectSecond);
+              div.tabIndex = -1;
               container.appendChild(div);
           }
           return container;
@@ -3279,6 +3298,7 @@
   class Display {
       constructor() {
           this._isVisible = false;
+          this._keyboardEventBound = this._keyboardEvent.bind(this);
           /**
            * A document click event to hide the widget if click is outside
            * @private
@@ -3427,7 +3447,9 @@
                       placement: document.documentElement.dir === 'rtl'
                           ? `${placement}-end`
                           : `${placement}-start`,
-                  }).then();
+                  }).then(() => {
+                      this._handleFocus();
+                  });
               }
               else {
                   this.optionsStore.element.appendChild(this.widget);
@@ -3454,6 +3476,9 @@
           }
           this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
           this._isVisible = true;
+          if (this.optionsStore.options.display.keyboardNavigation) {
+              this.widget.addEventListener('keydown', this._keyboardEventBound);
+          }
       }
       _showSetupViewMode() {
           // If modeView is only clock
@@ -3527,7 +3552,10 @@
           }
       }
       updatePopup() {
-          this._popperInstance?.update();
+          if (!this._popperInstance)
+              return;
+          this._popperInstance.update();
+          this._handleFocus();
       }
       /**
        * Changes the calendar view mode. E.g. month <-> year
@@ -3568,6 +3596,7 @@
               (this.widget.querySelectorAll(`.${Namespace.css.clockContainer}`)[0]).style.display = 'grid';
           this._updateCalendarHeader();
           this._eventEmitters.viewUpdate.emit();
+          this.findViewDateElement()?.focus();
       }
       /**
        * Changes the theme. E.g. light, dark or auto
@@ -3660,6 +3689,10 @@
               this._isVisible = false;
           }
           document.removeEventListener('click', this._documentClickEvent);
+          if (this.optionsStore.options.display.keyboardNavigation) {
+              this.widget.removeEventListener('keydown', this._keyboardEventBound);
+          }
+          this.optionsStore.toggle.focus();
       }
       /**
        * Toggles the picker's open state. Fires a show/hide event depending.
@@ -3687,17 +3720,22 @@
        */
       _buildWidget() {
           const template = document.createElement('div');
+          template.tabIndex = -1;
           template.classList.add(Namespace.css.widget);
+          template.setAttribute('role', 'widget');
           const dateView = document.createElement('div');
+          dateView.tabIndex = -1;
           dateView.classList.add(Namespace.css.dateContainer);
           dateView.append(this.getHeadTemplate(), this.decadeDisplay.getPicker(), this.yearDisplay.getPicker(), this.monthDisplay.getPicker(), this.dateDisplay.getPicker());
           const timeView = document.createElement('div');
+          timeView.tabIndex = -1;
           timeView.classList.add(Namespace.css.timeContainer);
           timeView.appendChild(this.timeDisplay.getPicker(this._iconTag.bind(this)));
           timeView.appendChild(this.hourDisplay.getPicker());
           timeView.appendChild(this.minuteDisplay.getPicker());
           timeView.appendChild(this.secondDisplay.getPicker());
           const toolbar = document.createElement('div');
+          toolbar.tabIndex = -1;
           toolbar.classList.add(Namespace.css.toolbar);
           toolbar.append(...this.getToolbarElements());
           if (this.optionsStore.options.display.inline) {
@@ -3780,6 +3818,7 @@
           const toolbar = [];
           if (this.optionsStore.options.display.buttons.today) {
               const div = document.createElement('div');
+              div.tabIndex = -1;
               div.setAttribute('data-action', ActionTypes$1.today);
               div.setAttribute('title', this.optionsStore.options.localization.today);
               div.appendChild(this._iconTag(this.optionsStore.options.display.icons.today));
@@ -3798,6 +3837,7 @@
                   icon = this.optionsStore.options.display.icons.time;
               }
               const div = document.createElement('div');
+              div.tabIndex = -1;
               div.setAttribute('data-action', ActionTypes$1.togglePicker);
               div.setAttribute('title', title);
               div.appendChild(this._iconTag(icon));
@@ -3805,6 +3845,7 @@
           }
           if (this.optionsStore.options.display.buttons.clear) {
               const div = document.createElement('div');
+              div.tabIndex = -1;
               div.setAttribute('data-action', ActionTypes$1.clear);
               div.setAttribute('title', this.optionsStore.options.localization.clear);
               div.appendChild(this._iconTag(this.optionsStore.options.display.icons.clear));
@@ -3812,6 +3853,7 @@
           }
           if (this.optionsStore.options.display.buttons.close) {
               const div = document.createElement('div');
+              div.tabIndex = -1;
               div.setAttribute('data-action', ActionTypes$1.close);
               div.setAttribute('title', this.optionsStore.options.localization.close);
               div.appendChild(this._iconTag(this.optionsStore.options.display.icons.close));
@@ -3830,13 +3872,16 @@
           previous.classList.add(Namespace.css.previous);
           previous.setAttribute('data-action', ActionTypes$1.previous);
           previous.appendChild(this._iconTag(this.optionsStore.options.display.icons.previous));
+          previous.tabIndex = -1;
           const switcher = document.createElement('div');
           switcher.classList.add(Namespace.css.switch);
           switcher.setAttribute('data-action', ActionTypes$1.changeCalendarView);
+          switcher.tabIndex = -1;
           const next = document.createElement('div');
           next.classList.add(Namespace.css.next);
           next.setAttribute('data-action', ActionTypes$1.next);
           next.appendChild(this._iconTag(this.optionsStore.options.display.icons.next));
+          next.tabIndex = -1;
           calendarHeader.append(previous, switcher, next);
           return calendarHeader;
       }
@@ -3891,6 +3936,292 @@
                   this._update('decade');
                   break;
           }
+      }
+      _keyboardEvent(event) {
+          if (this.optionsStore.currentView === 'clock') {
+              this._handleKeyDownClock(event);
+              return;
+          }
+          this._handleKeyDownDate(event);
+          return false;
+      }
+      findViewDateElement() {
+          let selector = '';
+          let dataValue = '';
+          switch (this.optionsStore.currentView) {
+              case 'clock':
+                  break;
+              case 'calendar':
+                  selector = Namespace.css.daysContainer;
+                  dataValue = this.optionsStore.viewDate.dateToDataValue();
+                  break;
+              case 'months':
+                  selector = Namespace.css.monthsContainer;
+                  dataValue = this.optionsStore.viewDate.month.toString();
+                  break;
+              case 'years':
+                  selector = Namespace.css.yearsContainer;
+                  dataValue = this.optionsStore.viewDate.year.toString();
+                  break;
+              case 'decades':
+                  selector = Namespace.css.decadesContainer;
+                  dataValue = (Math.floor(this.optionsStore.viewDate.year / 10) * 10).toString();
+                  break;
+          }
+          return this.widget.querySelector(`.${selector} > div[data-value="${dataValue}"]`);
+      }
+      _handleKeyDownDate(event) {
+          let flag = false;
+          const activeElement = document.activeElement;
+          let unit = null;
+          let verticalChange = 7;
+          let horizontalChange = 1;
+          let change = 1;
+          const currentView = this.optionsStore.currentView;
+          switch (currentView) {
+              case 'calendar':
+                  unit = exports.Unit.date;
+                  break;
+              case 'months':
+                  unit = exports.Unit.month;
+                  verticalChange = 3;
+                  horizontalChange = 1;
+                  break;
+              case 'years':
+                  unit = exports.Unit.year;
+                  verticalChange = 3;
+                  horizontalChange = 1;
+                  break;
+              case 'decades':
+                  unit = exports.Unit.year;
+                  verticalChange = 30;
+                  horizontalChange = 10;
+                  break;
+          }
+          switch (event.key) {
+              case 'Esc':
+              case 'Escape':
+                  this._eventEmitters.action.emit({ e: null, action: ActionTypes$1.close });
+                  break;
+              case ' ':
+              case 'Enter':
+                  activeElement.click();
+                  event.stopPropagation();
+                  event.preventDefault();
+                  return;
+              case 'Tab':
+                  this._handleTab(activeElement, event);
+                  return;
+              case 'Right':
+              case 'ArrowRight':
+                  change = horizontalChange;
+                  flag = true;
+                  break;
+              case 'Left':
+              case 'ArrowLeft':
+                  flag = true;
+                  change = -horizontalChange;
+                  break;
+              case 'Down':
+              case 'ArrowDown':
+                  flag = true;
+                  change = verticalChange;
+                  break;
+              case 'Up':
+              case 'ArrowUp':
+                  flag = true;
+                  change = -verticalChange;
+                  break;
+              case 'PageDown':
+                  switch (currentView) {
+                      case 'calendar':
+                          unit = event.shiftKey ? exports.Unit.year : exports.Unit.month;
+                          change = 1;
+                          break;
+                      case 'months':
+                          unit = exports.Unit.year;
+                          change = event.shiftKey ? 10 : 1;
+                          break;
+                      case 'years':
+                      case 'decades':
+                          unit = exports.Unit.year;
+                          change = event.shiftKey ? 100 : 10;
+                          break;
+                  }
+                  flag = true;
+                  break;
+              case 'PageUp':
+                  switch (currentView) {
+                      case 'calendar':
+                          unit = event.shiftKey ? exports.Unit.year : exports.Unit.month;
+                          change = -1;
+                          break;
+                      case 'months':
+                          unit = exports.Unit.year;
+                          change = -(event.shiftKey ? 10 : 1);
+                          break;
+                      case 'years':
+                      case 'decades':
+                          unit = exports.Unit.year;
+                          change = -(event.shiftKey ? 100 : 10);
+                          break;
+                  }
+                  flag = true;
+                  break;
+              case 'Home':
+                  this.optionsStore.viewDate = this.optionsStore.viewDate.clone.startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek);
+                  flag = true;
+                  unit = null;
+                  break;
+              case 'End':
+                  this.optionsStore.viewDate = this.optionsStore.viewDate.clone.endOf('weekDay', this.optionsStore.options.localization.startOfTheWeek);
+                  flag = true;
+                  unit = null;
+                  break;
+          }
+          if (!flag)
+              return;
+          let newViewDate = this.optionsStore.viewDate;
+          if (unit) {
+              newViewDate = newViewDate.clone.manipulate(change, unit);
+          }
+          this._eventEmitters.updateViewDate.emit(newViewDate);
+          const divWithValue = this.findViewDateElement();
+          if (divWithValue) {
+              divWithValue.focus();
+          }
+          event.stopPropagation();
+          event.preventDefault();
+      }
+      _handleKeyDownClock(event) {
+          let flag = false;
+          const activeElement = document.activeElement;
+          // Should find which of hour, minute, or seconds sub-windows is open
+          const visibleElement = this.widget.querySelector(`.${Namespace.css.timeContainer} > div[style*="display: grid"]`);
+          let subView = Namespace.css.clockContainer;
+          if (visibleElement.classList.contains(Namespace.css.hourContainer)) {
+              subView = Namespace.css.hourContainer;
+          }
+          if (visibleElement.classList.contains(Namespace.css.minuteContainer)) {
+              subView = Namespace.css.minuteContainer;
+          }
+          if (visibleElement.classList.contains(Namespace.css.secondContainer)) {
+              subView = Namespace.css.secondContainer;
+          }
+          switch (event.key) {
+              case 'Esc':
+              case 'Escape':
+                  this._eventEmitters.action.emit({ e: null, action: ActionTypes$1.close });
+                  break;
+              case ' ':
+              case 'Enter':
+                  activeElement.click();
+                  event.stopPropagation();
+                  event.preventDefault();
+                  return;
+              case 'Tab':
+                  this._handleTab(activeElement, event);
+                  return;
+          }
+          if (subView === Namespace.css.clockContainer)
+              return;
+          const cells = [...visibleElement.querySelectorAll('div')];
+          const currentIndex = cells.indexOf(document.activeElement);
+          const columnCount = 4;
+          let targetIndex;
+          switch (event.key) {
+              case 'Right':
+              case 'ArrowRight':
+                  targetIndex = currentIndex < cells.length - 1 ? currentIndex + 1 : null;
+                  flag = true;
+                  break;
+              case 'Left':
+              case 'ArrowLeft':
+                  flag = true;
+                  targetIndex = currentIndex > 0 ? currentIndex - 1 : null;
+                  break;
+              case 'Down':
+              case 'ArrowDown':
+                  targetIndex =
+                      currentIndex + columnCount < cells.length
+                          ? currentIndex + columnCount
+                          : null;
+                  flag = true;
+                  break;
+              case 'Up':
+              case 'ArrowUp':
+                  targetIndex =
+                      currentIndex - columnCount >= 0 ? currentIndex - columnCount : null;
+                  flag = true;
+                  break;
+          }
+          if (!flag)
+              return;
+          if (targetIndex !== undefined && targetIndex !== null) {
+              cells[targetIndex].focus();
+          }
+          event.stopPropagation();
+          event.preventDefault();
+      }
+      _handleTab(activeElement, event) {
+          const shiftKey = event.shiftKey;
+          // gather tab targets
+          const addCalendarHeaderTargets = () => {
+              const calendarHeaderItems = this.widget.querySelectorAll(`.${Namespace.css.calendarHeader} > div`);
+              tabTargets.push(...calendarHeaderItems);
+          };
+          const tabTargets = [];
+          switch (this.optionsStore.currentView) {
+              case 'clock':
+                  {
+                      tabTargets.push(...this.widget.querySelectorAll(`.${Namespace.css.timeContainer} > div[style*="display: grid"] > div[data-action]`));
+                      const clock = this.widget.querySelectorAll(`.${Namespace.css.clockContainer}`)[0];
+                      // add meridiem if it's in view
+                      if (clock?.style.display === 'grid') {
+                          tabTargets.push(...this.widget.querySelectorAll(`.${Namespace.css.toggleMeridiem}`));
+                      }
+                  }
+                  break;
+              case 'calendar':
+              case 'months':
+              case 'years':
+              case 'decades':
+                  addCalendarHeaderTargets();
+                  tabTargets.push(this.findViewDateElement());
+                  break;
+          }
+          const toolbarItems = this.widget.querySelectorAll(`.${Namespace.css.toolbar} > div`);
+          tabTargets.push(...toolbarItems);
+          const index = tabTargets.indexOf(activeElement);
+          if (index === -1)
+              return;
+          if (shiftKey) {
+              if (index === 0) {
+                  tabTargets[tabTargets.length - 1].focus();
+              }
+              else {
+                  tabTargets[index - 1].focus();
+              }
+          }
+          else {
+              if (index === tabTargets.length - 1) {
+                  tabTargets[0].focus();
+              }
+              else {
+                  tabTargets[index + 1].focus();
+              }
+          }
+          event.stopPropagation();
+          event.preventDefault();
+      }
+      _handleFocus() {
+          if (this.optionsStore.currentView === 'clock')
+              this._handleFocusClock();
+          else
+              this.findViewDateElement().focus();
+      }
+      _handleFocusClock() {
+          this.widget.querySelector(`.${Namespace.css.timeContainer} > div[style*="display: grid"]`).children[0].focus();
       }
   }
 
@@ -4005,11 +4336,18 @@
                   this.display.hide();
                   break;
               case ActionTypes$1.today: {
-                  const today = new DateTime().setLocalization(this.optionsStore.options.localization);
-                  this._eventEmitters.updateViewDate.emit(today);
-                  //todo this this really a good idea?
-                  if (this.validation.isValid(today, exports.Unit.date))
-                      this.dates.setValue(today, this.dates.lastPickedIndex);
+                  const day = new DateTime().setLocalization(this.optionsStore.options.localization);
+                  this._eventEmitters.updateViewDate.emit(day);
+                  if (!this.validation.isValid(day, exports.Unit.date))
+                      break;
+                  if (this.optionsStore.options.dateRange)
+                      this.handleDateRange(day);
+                  else if (this.optionsStore.options.multipleDates) {
+                      this.handleMultiDate(day);
+                  }
+                  else {
+                      this.dates.setValue(day, this.dates.lastPickedIndex);
+                  }
                   break;
               }
           }
@@ -4043,7 +4381,9 @@
                   this.display._update(exports.Unit.seconds);
                   break;
           }
-          (this.display.widget.getElementsByClassName(classToUse)[0]).style.display = 'grid';
+          const element = this.display.widget.getElementsByClassName(classToUse)[0];
+          element.style.display = 'grid';
+          element.children[0]?.focus();
       }
       handleNextPrevious(action) {
           const { unit, step } = CalendarModes[this.optionsStore.currentCalendarViewMode];
@@ -4123,6 +4463,8 @@
               .querySelectorAll(`.${Namespace.css.dateContainer}, .${Namespace.css.timeContainer}`)
               .forEach((htmlElement) => Collapse.toggle(htmlElement));
           this._eventEmitters.viewUpdate.emit();
+          const visible = this.display.widget.querySelector(`.${Namespace.css.collapsing} > div[style*="display: grid"]`);
+          visible?.focus();
       }
       handleSelectDay(currentTarget) {
           const day = this.optionsStore.viewDate.clone;
@@ -4151,7 +4493,6 @@
       }
       handleMultiDate(day) {
           let index = this.dates.pickedIndex(day, exports.Unit.date);
-          console.log(index);
           if (index !== -1) {
               this.dates.setValue(null, index); //deselect multi-date
           }
@@ -4239,8 +4580,8 @@
               if (this.optionsStore.element?.disabled ||
                   this.optionsStore.input?.disabled ||
                   //if we just have the input and allow input toggle is enabled, then don't cause a toggle
-                  (this._toggle.nodeName === 'INPUT' &&
-                      this._toggle?.type === 'text' &&
+                  (this.optionsStore.toggle.nodeName === 'INPUT' &&
+                      this.optionsStore.toggle?.type === 'text' &&
                       this.optionsStore.options.allowInputToggle))
                   return;
               this.toggle();
@@ -4417,7 +4758,8 @@
               this.optionsStore.input?.removeEventListener('click', this._openClickEvent);
               this.optionsStore.input?.removeEventListener('focus', this._openClickEvent);
           }
-          this._toggle?.removeEventListener('click', this._toggleClickEvent);
+          this.optionsStore.toggle?.removeEventListener('click', this._toggleClickEvent);
+          this.optionsStore.toggle?.removeEventListener('keydown', this._handleToggleKeydown);
           this._subscribers = {};
       }
       /**
@@ -4452,6 +4794,14 @@
               this.optionsStore.input?.dispatchEvent(
               //eslint-disable-next-line @typescript-eslint/no-explicit-any
               new CustomEvent('change', { detail: event }));
+              if (this.optionsStore.toggle) {
+                  let label = this.optionsStore.options.localization.toggleAriaLabel;
+                  if (this.dates.picked.length > 0) {
+                      const picked = this.dates.picked.map((x) => x.format()).join(', ');
+                      label = `${label}, ${picked}`;
+                  }
+                  this.optionsStore.toggle.ariaLabel = label;
+              }
           }
           this.optionsStore.element.dispatchEvent(
           //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -4589,11 +4939,16 @@
           if (query == 'nearest') {
               query = '[data-td-toggle="datetimepicker"]';
           }
-          this._toggle =
+          this.optionsStore.toggle =
               query == undefined
                   ? this.optionsStore.element
                   : this.optionsStore.element.querySelector(query);
-          this._toggle.addEventListener('click', this._toggleClickEvent);
+          if (this.optionsStore.toggle == undefined)
+              return;
+          this.optionsStore.toggle.addEventListener('click', this._toggleClickEvent);
+          if (this.optionsStore.toggle !== this.optionsStore.element) {
+              this.optionsStore.toggle.addEventListener('keydown', this._handleToggleKeydown.bind(this));
+          }
       }
       /**
        * If the option is enabled this will render the clock view after a date pick.
@@ -4632,6 +4987,13 @@
                   });
               }
           }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
+      }
+      _handleToggleKeydown(event) {
+          if (event.key !== ' ' && event.key !== 'Enter')
+              return;
+          this.optionsStore.toggle.click();
+          event.stopPropagation();
+          event.preventDefault();
       }
   }
   /**

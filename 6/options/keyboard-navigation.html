@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-  <title>Examples - Tempus Dominus</title>
+  <title>Keyboard Navigation - Tempus Dominus</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -15,18 +15,18 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 
-  <meta name="title" content="Examples">
-  <meta name="description" content="How to use Tempus Dominus datetime picker">
+  <meta name="title" content="Keyboard Navigation">
+  <meta name="description" content="Keyboard navigation is supported for the date picker dialog. It can be toggled with display.keyboardNavigation. The default is true.">
 
   
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://getdatepicker.com/docs/6//examples/index.html">
-  <meta property="og:title" content="Examples">
-  <meta property="og:description" content="How to use Tempus Dominus datetime picker">
+  <meta property="og:url" content="https://getdatepicker.com/docs/6//options/keyboard-navigation.html">
+  <meta property="og:title" content="Keyboard Navigation">
+  <meta property="og:description" content="Keyboard navigation is supported for the date picker dialog. It can be toggled with display.keyboardNavigation. The default is true.">
   <meta class="metaImage" property="og:image" content="">
 
-  <meta property="article:published_time" content="2021-07-08T00:00:00.000Z">
-  <meta property="article:modified_time" content="2022-07-20T00:00:00.000Z">
+  <meta property="article:published_time" content="2025-02-26T00:00:00.000Z">
+  <meta property="article:modified_time" content="2025-02-26T00:00:00.000Z">
   <meta property="article:tag" content="datepicker, javascript, open source, tempus dominus, eonasdan">
   <meta property="article:author" content="Jonathan Peterson">
   <meta property="article:section" content="Technology">
@@ -35,9 +35,9 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:site" content="@eonasdan">
   <meta property="twitter:creator" content="@eonasdan">
-  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//examples/index.html">
-  <meta property="twitter:title" content="Examples">
-  <meta property="twitter:description" content="How to use Tempus Dominus datetime picker">
+  <meta property="twitter:url" content="https://getdatepicker.com/docs/6//options/keyboard-navigation.html">
+  <meta property="twitter:title" content="Keyboard Navigation">
+  <meta property="twitter:description" content="Keyboard navigation is supported for the date picker dialog. It can be toggled with display.keyboardNavigation. The default is true.">
   <meta class="metaImage" property="twitter:image" content="">
   <link rel="stylesheet" href="/css/styles.min.css">
 
@@ -245,7 +245,7 @@
 <main class="bd-main order-1">
   <div class="bd-intro ps-lg-4">
     <div class="d-md-flex align-items-center justify-content-between">
-      <h1 class="bd-title title" id="content">Examples</h1>
+      <h1 class="bd-title title" id="content">Keyboard Navigation</h1>
     </div>
   </div>
   <div class="bd-toc mt-3 mb-5 my-lg-0 ps-xl-3 mb-lg-5 text-muted d-none" id="tocContainer">
@@ -262,2608 +262,285 @@
     </div>
   </div>
   <div id="mainContent" class="bd-content ps-lg-4">
-  <meta http-equiv="refresh" content="0; URL=https://getdatepicker.com/6/repl.html">
-  <link rel="canonical" href="https://getdatepicker.com/6/repl.html">
-
-  All the examples have been migrated to the REPL page!
-
-  Redirecting to <a href="https://getdatepicker.com/6/repl.html">https://getdatepicker.com/6/repl.html</a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <p id="overview">
+    Thanks to
+    <a href="www.dimagi.com" target="_blank" rel="noopener noreferrer nofollow">Dimagi</a> for sponsoring this feature.
+
+    Keyboard navigation is supported for the date picker dialog. It can be toggled with <code>display.keyboardNavigation</code>. The default is <code>true</code>.
+
+    I tried to adhere to the
+    <a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/" target="_blank" rel="noopener noreferrer nofollow">aria standards</a> as much as possible for date time pickers.
+  </p>
+
+  <div class="row">
+    <section>
+      <section>
+        <h3 id="kbd_label_2">Toggle Date Picker Dialog Button</h3>
+        <div class="table-wrap">
+          <table aria-labelledby="kbd_label_2 kbd_label" class="table">
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Function</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-test-id="button-space-return">
+              <th><kbd>Space</kbd>,<br><kbd>Enter</kbd></th>
+              <td>
+                <ul>
+                  <li>Open the date picker dialog.</li>
+                  <li>
+                    Move focus to selected date, i.e., the date displayed in
+                    the date input text field. If no date has been selected,
+                    places focus on the current date.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3 id="kbd_label_3">Date Picker Dialog</h3>
+        <div class="table-wrap">
+          <table aria-labelledby="kbd_label_3 kbd_label" class="table table-striped">
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Function</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-test-id="dialog-esc">
+              <th><kbd>ESC</kbd></th>
+              <td>
+                Closes the dialog and returns focus to the "Choose Date"
+                button.
+              </td>
+            </tr>
+            <tr data-test-id="dialog-tab">
+              <th><kbd>Tab</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Moves focus to next element in the dialog
+                    <kbd>Tab</kbd> sequence.
+                  </li>
+                  <li>
+                    Note that, as specified in the Grid Pattern, only one
+                    button in the calendar grid is in the
+                    <kbd>Tab</kbd> sequence.
+                  </li>
+                  <li>
+                    If focus is on the last button, moves focus to the first
+                    button.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="dialog-shift-tab">
+              <th><kbd>Shift</kbd> + <kbd>Tab</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Moves focus to previous element in the dialog
+                    <kbd>Tab</kbd> sequence.
+                  </li>
+                  <li>
+                    Note that, as specified in the Grid Pattern, only one
+                    button in the calendar grid is in the
+                    <kbd>Tab</kbd> sequence.
+                  </li>
+                  <li>
+                    If focus is on the first button, moves focus to the last
+                    button.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3 id="kbd_label_4">Date Picker Dialog: Month/Year Buttons</h3>
+        <div class="table-wrap">
+          <table aria-labelledby="kbd_label_4 kbd_label" class="table table-striped">
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Function</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-test-id="month-year-button-space-return">
+              <th>Arrow keys</th>
+              <td>
+                On the month, year, decade view, using the arrow keys should
+                navigate around the grid.
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3 id="kbd_label_5">Date Picker Dialog: Date Grid</h3>
+        <div class="table-wrap">
+          <table aria-labelledby="kbd_label_5 kbd_label" class="table table-striped">
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Function</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-test-id="grid-space-return">
+              <th><kbd>Space</kbd>,<br><kbd>Enter</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Select the date, close the dialog, and move focus to the
+                    "Choose Date" button.
+                  </li>
+                  <li>
+                    Update the value of the "Date" input with the selected
+                    date.
+                  </li>
+                  <li>
+                    Update the accessible name of the "Choose Date" button to
+                    include the selected date.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="grid-up-arrow">
+              <th><kbd>Up Arrow</kbd></th>
+              <td>Moves focus to the same day of the previous week.</td>
+            </tr>
+            <tr data-test-id="grid-down-arrow">
+              <th><kbd>Down Arrow</kbd></th>
+              <td>Moves focus to the same day of the next week.</td>
+            </tr>
+            <tr data-test-id="grid-right-arrow">
+              <th><kbd>Right Arrow</kbd></th>
+              <td>Moves focus to the next day.</td>
+            </tr>
+            <tr data-test-id="grid-left-arrow">
+              <th><kbd>Left Arrow</kbd></th>
+              <td>Moves focus to the previous day.</td>
+            </tr>
+            <tr data-test-id="grid-home">
+              <th><kbd>Home</kbd></th>
+              <td>
+                Moves focus to the first day (e.g Sunday) of the current week.
+              </td>
+            </tr>
+            <tr data-test-id="grid-end">
+              <th><kbd>End</kbd></th>
+              <td>
+                Moves focus to the last day (e.g. Saturday) of the current
+                week.
+              </td>
+            </tr>
+            <tr data-test-id="grid-pageup">
+              <th><kbd>Page Up</kbd></th>
+              <td>
+                <ul>
+                  <li>Changes the grid of dates to the previous month.</li>
+                  <li>
+                    Moves focus to the day of the month that has the same
+                    number. If that day does not exist, moves focus to the
+                    last day of the month.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="grid-shift-pageup">
+              <th><kbd>Shift</kbd> + <kbd>Page Up</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Changes the grid of dates to the same month in the
+                    previous year.
+                  </li>
+                  <li>
+                    Moves focus to the day of the month that has the same
+                    number. If that day does not exist, moves focus to the
+                    last day of the month.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="grid-pagedown">
+              <th><kbd>Page Down</kbd></th>
+              <td>
+                <ul>
+                  <li>Changes the grid of dates to the next month.</li>
+                  <li>
+                    Moves focus to the day of the month that has the same
+                    number. If that day does not exist, moves focus to the
+                    last day of the month.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="grid-shift-pagedown">
+              <th><kbd>Shift</kbd> + <kbd>Page Down</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Changes the grid of dates to the same month in the next
+                    year.
+                  </li>
+                  <li>
+                    Moves focus to the day of the month that has the same
+                    number. If that day does not exist, moves focus to the
+                    last day of the month.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+    <section>
+      <h3 id="kbd_label_6">Clock view</h3>
+      <div class="table-wrap">
+        <table aria-labelledby="kbd_label_2 kbd_label" class="table">
+          <thead>
+          <tr>
+            <th>View</th>
+            <th>Function</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th>Clock</th>
+            <td>
+              Tab moves the focused element. Space/Enter will make a selection
+              such as incrementing hours or minutes.
+            </td>
+          </tr>
+          <tr>
+            <th>Hour/Minute/Seconds</th>
+            <td>
+              Arrow keys will move around the grid. Space/Enter will make a
+              selection.
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
 </div>
 </main>
 </div>

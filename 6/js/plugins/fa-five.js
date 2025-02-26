@@ -1,6 +1,6 @@
 /*!
-  * Tempus Dominus v6.9.4 (https://getdatepicker.com/)
-  * Copyright 2013-2024 Jonathan Peterson
+  * Tempus Dominus v6.10.0 (https://getdatepicker.com/)
+  * Copyright 2013-2025 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f((g.tempusDominus=g.tempusDominus||{},g.tempusDominus.plugins=g.tempusDominus.plugins||{},g.tempusDominus.plugins.fa_five={})));})(this,(function(exports){'use strict';// this obviously requires the FA 6 libraries to be loaded
