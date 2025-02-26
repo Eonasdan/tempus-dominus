@@ -10,9 +10,7 @@ runs:
   using: composite
   steps:
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.6
-      with:
-        nuget-version: '6.x'
+      uses: NuGet/setup-nuget@v2
     - name: Pack NuGet
       working-directory: ./src/nuget
       shell: pwsh
