@@ -23,11 +23,14 @@ import { OptionsStore } from '../utilities/optionsStore';
  */
 export default class Display {
   private _widget: HTMLElement;
-  private _popperInstance: any; // eslint-disable-line  @typescript-eslint/no-explicit-any
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private _popperInstance: any;
   private _isVisible = false;
   private optionsStore: OptionsStore;
   private validation: Validation;
   private dates: Dates;
+  private _eventEmitters: EventEmitters;
+  private _keyboardEventBound = this._keyboardEvent.bind(this);
 
   dateDisplay: DateDisplay;
   monthDisplay: MonthDisplay;
@@ -37,7 +40,6 @@ export default class Display {
   hourDisplay: HourDisplay;
   minuteDisplay: MinuteDisplay;
   secondDisplay: SecondDisplay;
-  private _eventEmitters: EventEmitters;
 
   constructor() {
     this.optionsStore = serviceLocator.locate(OptionsStore);
@@ -184,7 +186,9 @@ export default class Display {
             document.documentElement.dir === 'rtl'
               ? `${placement}-end`
               : `${placement}-start`,
-        }).then();
+        }).then(() => {
+          this._handleFocus();
+        });
       } else {
         this.optionsStore.element.appendChild(this.widget);
       }
@@ -220,6 +224,10 @@ export default class Display {
     }
     this._eventEmitters.triggerEvent.emit({ type: Namespace.events.show });
     this._isVisible = true;
+
+    if (this.optionsStore.options.display.keyboardNavigation) {
+      this.widget.addEventListener('keydown', this._keyboardEventBound);
+    }
   }
 
   private _showSetupViewMode() {
@@ -306,7 +314,9 @@ export default class Display {
   }
 
   updatePopup(): void {
-    this._popperInstance?.update();
+    if (!this._popperInstance) return;
+    this._popperInstance.update();
+    this._handleFocus();
   }
 
   /**
@@ -363,6 +373,7 @@ export default class Display {
 
     this._updateCalendarHeader();
     this._eventEmitters.viewUpdate.emit();
+    this.findViewDateElement()?.focus();
   }
 
   /**
@@ -505,6 +516,10 @@ export default class Display {
     }
 
     document.removeEventListener('click', this._documentClickEvent);
+    if (this.optionsStore.options.display.keyboardNavigation) {
+      this.widget.removeEventListener('keydown', this._keyboardEventBound);
+    }
+    this.optionsStore.toggle.focus();
   }
 
   /**
@@ -536,9 +551,12 @@ export default class Display {
    */
   private _buildWidget(): HTMLElement {
     const template = document.createElement('div');
+    template.tabIndex = -1;
     template.classList.add(Namespace.css.widget);
+    template.setAttribute('role', 'widget');
 
     const dateView = document.createElement('div');
+    dateView.tabIndex = -1;
     dateView.classList.add(Namespace.css.dateContainer);
     dateView.append(
       this.getHeadTemplate(),
@@ -549,6 +567,7 @@ export default class Display {
     );
 
     const timeView = document.createElement('div');
+    timeView.tabIndex = -1;
     timeView.classList.add(Namespace.css.timeContainer);
     timeView.appendChild(this.timeDisplay.getPicker(this._iconTag.bind(this)));
     timeView.appendChild(this.hourDisplay.getPicker());
@@ -556,6 +575,7 @@ export default class Display {
     timeView.appendChild(this.secondDisplay.getPicker());
 
     const toolbar = document.createElement('div');
+    toolbar.tabIndex = -1;
     toolbar.classList.add(Namespace.css.toolbar);
     toolbar.append(...this.getToolbarElements());
 
@@ -576,7 +596,12 @@ export default class Display {
       template.appendChild(toolbar);
     }
 
-    const setupComponentView = (hasFirst, hasSecond, element, shouldShow) => {
+    const setupComponentView = (
+      hasFirst: boolean,
+      hasSecond: boolean,
+      element: HTMLElement,
+      shouldShow: boolean
+    ) => {
       if (!hasFirst) return;
       if (hasSecond) {
         element.classList.add(Namespace.css.collapse);
@@ -672,6 +697,7 @@ export default class Display {
 
     if (this.optionsStore.options.display.buttons.today) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.today);
       div.setAttribute('title', this.optionsStore.options.localization.today);
 
@@ -695,6 +721,7 @@ export default class Display {
       }
 
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.togglePicker);
       div.setAttribute('title', title);
 
@@ -703,6 +730,7 @@ export default class Display {
     }
     if (this.optionsStore.options.display.buttons.clear) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.clear);
       div.setAttribute('title', this.optionsStore.options.localization.clear);
 
@@ -713,6 +741,7 @@ export default class Display {
     }
     if (this.optionsStore.options.display.buttons.close) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.close);
       div.setAttribute('title', this.optionsStore.options.localization.close);
 
@@ -739,10 +768,12 @@ export default class Display {
     previous.appendChild(
       this._iconTag(this.optionsStore.options.display.icons.previous)
     );
+    previous.tabIndex = -1;
 
     const switcher = document.createElement('div');
     switcher.classList.add(Namespace.css.switch);
     switcher.setAttribute('data-action', ActionTypes.changeCalendarView);
+    switcher.tabIndex = -1;
 
     const next = document.createElement('div');
     next.classList.add(Namespace.css.next);
@@ -750,6 +781,7 @@ export default class Display {
     next.appendChild(
       this._iconTag(this.optionsStore.options.display.icons.next)
     );
+    next.tabIndex = -1;
 
     calendarHeader.append(previous, switcher, next);
     return calendarHeader;
@@ -838,6 +870,365 @@ export default class Display {
         this._update('decade');
         break;
     }
+  }
+
+  private _keyboardEvent(event: KeyboardEvent) {
+    if (this.optionsStore.currentView === 'clock') {
+      this._handleKeyDownClock(event);
+      return;
+    }
+    this._handleKeyDownDate(event);
+    return false;
+  }
+
+  public findViewDateElement(): HTMLElement {
+    let selector = '';
+    let dataValue = '';
+
+    switch (this.optionsStore.currentView) {
+      case 'clock':
+        break;
+      case 'calendar':
+        selector = Namespace.css.daysContainer;
+        dataValue = this.optionsStore.viewDate.dateToDataValue();
+        break;
+      case 'months':
+        selector = Namespace.css.monthsContainer;
+        dataValue = this.optionsStore.viewDate.month.toString();
+        break;
+      case 'years':
+        selector = Namespace.css.yearsContainer;
+        dataValue = this.optionsStore.viewDate.year.toString();
+        break;
+      case 'decades':
+        selector = Namespace.css.decadesContainer;
+        dataValue = (
+          Math.floor(this.optionsStore.viewDate.year / 10) * 10
+        ).toString();
+        break;
+    }
+
+    return this.widget.querySelector(
+      `.${selector} > div[data-value="${dataValue}"]`
+    );
+  }
+
+  private _handleKeyDownDate(event: KeyboardEvent) {
+    let flag = false;
+    const activeElement = document.activeElement as HTMLElement;
+
+    let unit = null;
+    let verticalChange = 7;
+    let horizontalChange = 1;
+    let change = 1;
+    const currentView = this.optionsStore.currentView;
+    switch (currentView) {
+      case 'calendar':
+        unit = Unit.date;
+        break;
+      case 'months':
+        unit = Unit.month;
+        verticalChange = 3;
+        horizontalChange = 1;
+        break;
+      case 'years':
+        unit = Unit.year;
+        verticalChange = 3;
+        horizontalChange = 1;
+        break;
+      case 'decades':
+        unit = Unit.year;
+        verticalChange = 30;
+        horizontalChange = 10;
+        break;
+    }
+
+    switch (event.key) {
+      case 'Esc':
+      case 'Escape':
+        this._eventEmitters.action.emit({ e: null, action: ActionTypes.close });
+        break;
+
+      case ' ':
+      case 'Enter':
+        activeElement.click();
+
+        event.stopPropagation();
+        event.preventDefault();
+        return;
+
+      case 'Tab':
+        this._handleTab(activeElement, event);
+        return;
+
+      case 'Right':
+      case 'ArrowRight':
+        change = horizontalChange;
+        flag = true;
+        break;
+
+      case 'Left':
+      case 'ArrowLeft':
+        flag = true;
+        change = -horizontalChange;
+        break;
+
+      case 'Down':
+      case 'ArrowDown':
+        flag = true;
+        change = verticalChange;
+        break;
+
+      case 'Up':
+      case 'ArrowUp':
+        flag = true;
+        change = -verticalChange;
+        break;
+
+      case 'PageDown':
+        switch (currentView) {
+          case 'calendar':
+            unit = event.shiftKey ? Unit.year : Unit.month;
+            change = 1;
+            break;
+          case 'months':
+            unit = Unit.year;
+            change = event.shiftKey ? 10 : 1;
+            break;
+          case 'years':
+          case 'decades':
+            unit = Unit.year;
+            change = event.shiftKey ? 100 : 10;
+            break;
+        }
+        flag = true;
+        break;
+
+      case 'PageUp':
+        switch (currentView) {
+          case 'calendar':
+            unit = event.shiftKey ? Unit.year : Unit.month;
+            change = -1;
+            break;
+          case 'months':
+            unit = Unit.year;
+            change = -(event.shiftKey ? 10 : 1);
+            break;
+          case 'years':
+          case 'decades':
+            unit = Unit.year;
+            change = -(event.shiftKey ? 100 : 10);
+            break;
+        }
+        flag = true;
+        break;
+
+      case 'Home':
+        this.optionsStore.viewDate = this.optionsStore.viewDate.clone.startOf(
+          'weekDay',
+          this.optionsStore.options.localization.startOfTheWeek
+        );
+        flag = true;
+        unit = null;
+        break;
+
+      case 'End':
+        this.optionsStore.viewDate = this.optionsStore.viewDate.clone.endOf(
+          'weekDay',
+          this.optionsStore.options.localization.startOfTheWeek
+        );
+        flag = true;
+        unit = null;
+        break;
+    }
+
+    if (!flag) return;
+
+    let newViewDate = this.optionsStore.viewDate;
+
+    if (unit) {
+      newViewDate = newViewDate.clone.manipulate(change, unit);
+    }
+
+    this._eventEmitters.updateViewDate.emit(newViewDate);
+
+    const divWithValue = this.findViewDateElement();
+    if (divWithValue) {
+      divWithValue.focus();
+    }
+
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  private _handleKeyDownClock(event: KeyboardEvent) {
+    let flag = false;
+    const activeElement = document.activeElement as HTMLElement;
+
+    // Should find which of hour, minute, or seconds sub-windows is open
+    const visibleElement = this.widget.querySelector(
+      `.${Namespace.css.timeContainer} > div[style*="display: grid"]`
+    );
+
+    let subView = Namespace.css.clockContainer;
+
+    if (visibleElement.classList.contains(Namespace.css.hourContainer)) {
+      subView = Namespace.css.hourContainer;
+    }
+    if (visibleElement.classList.contains(Namespace.css.minuteContainer)) {
+      subView = Namespace.css.minuteContainer;
+    }
+    if (visibleElement.classList.contains(Namespace.css.secondContainer)) {
+      subView = Namespace.css.secondContainer;
+    }
+
+    switch (event.key) {
+      case 'Esc':
+      case 'Escape':
+        this._eventEmitters.action.emit({ e: null, action: ActionTypes.close });
+        break;
+
+      case ' ':
+      case 'Enter':
+        activeElement.click();
+
+        event.stopPropagation();
+        event.preventDefault();
+        return;
+
+      case 'Tab':
+        this._handleTab(activeElement, event);
+        return;
+    }
+
+    if (subView === Namespace.css.clockContainer) return;
+
+    const cells = [...visibleElement.querySelectorAll('div')];
+    const currentIndex = cells.indexOf(
+      document.activeElement as HTMLDivElement
+    );
+    const columnCount = 4;
+
+    let targetIndex: number;
+    switch (event.key) {
+      case 'Right':
+      case 'ArrowRight':
+        targetIndex = currentIndex < cells.length - 1 ? currentIndex + 1 : null;
+        flag = true;
+        break;
+
+      case 'Left':
+      case 'ArrowLeft':
+        flag = true;
+        targetIndex = currentIndex > 0 ? currentIndex - 1 : null;
+        break;
+
+      case 'Down':
+      case 'ArrowDown':
+        targetIndex =
+          currentIndex + columnCount < cells.length
+            ? currentIndex + columnCount
+            : null;
+        flag = true;
+        break;
+
+      case 'Up':
+      case 'ArrowUp':
+        targetIndex =
+          currentIndex - columnCount >= 0 ? currentIndex - columnCount : null;
+        flag = true;
+        break;
+    }
+
+    if (!flag) return;
+
+    if (targetIndex !== undefined && targetIndex !== null) {
+      cells[targetIndex].focus();
+    }
+
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  private _handleTab(activeElement: HTMLElement, event: KeyboardEvent) {
+    const shiftKey = event.shiftKey;
+    // gather tab targets
+    const addCalendarHeaderTargets = () => {
+      const calendarHeaderItems = this.widget.querySelectorAll(
+        `.${Namespace.css.calendarHeader} > div`
+      ) as NodeListOf<HTMLElement>;
+      tabTargets.push(...calendarHeaderItems);
+    };
+
+    const tabTargets: HTMLElement[] = [];
+    switch (this.optionsStore.currentView) {
+      case 'clock':
+        {
+          tabTargets.push(
+            ...(this.widget.querySelectorAll(
+              `.${Namespace.css.timeContainer} > div[style*="display: grid"] > div[data-action]`
+            ) as NodeListOf<HTMLElement>)
+          );
+
+          const clock = this.widget.querySelectorAll(
+            `.${Namespace.css.clockContainer}`
+          )[0] as HTMLElement;
+
+          // add meridiem if it's in view
+          if (clock?.style.display === 'grid') {
+            tabTargets.push(
+              ...(this.widget.querySelectorAll(
+                `.${Namespace.css.toggleMeridiem}`
+              ) as NodeListOf<HTMLElement>)
+            );
+          }
+        }
+        break;
+      case 'calendar':
+      case 'months':
+      case 'years':
+      case 'decades':
+        addCalendarHeaderTargets();
+        tabTargets.push(this.findViewDateElement());
+        break;
+    }
+
+    const toolbarItems = this.widget.querySelectorAll(
+      `.${Namespace.css.toolbar} > div`
+    ) as NodeListOf<HTMLElement>;
+    tabTargets.push(...toolbarItems);
+
+    const index = tabTargets.indexOf(activeElement);
+    if (index === -1) return;
+
+    if (shiftKey) {
+      if (index === 0) {
+        tabTargets[tabTargets.length - 1].focus();
+      } else {
+        tabTargets[index - 1].focus();
+      }
+    } else {
+      if (index === tabTargets.length - 1) {
+        tabTargets[0].focus();
+      } else {
+        tabTargets[index + 1].focus();
+      }
+    }
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  private _handleFocus() {
+    if (this.optionsStore.currentView === 'clock') this._handleFocusClock();
+    else this.findViewDateElement().focus();
+  }
+
+  private _handleFocusClock() {
+    (
+      this.widget.querySelector(
+        `.${Namespace.css.timeContainer} > div[style*="display: grid"]`
+      ).children[0] as HTMLElement
+    ).focus();
   }
 }
 

@@ -28,6 +28,7 @@ export default class DateDisplay {
   getPicker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.daysContainer);
+    container.role = 'grid';
 
     container.append(...this._daysOfTheWeek());
 
@@ -48,12 +49,15 @@ export default class DateDisplay {
             Namespace.css.calendarWeeks,
             Namespace.css.noHighlight
           );
+          div.tabIndex = -1;
           container.appendChild(div);
         }
       }
 
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectDay);
+      div.role = 'gridcell';
+      div.tabIndex = -1;
       container.appendChild(div);
 
       // if hover is supported then add the events
@@ -123,21 +127,15 @@ export default class DateDisplay {
 
         element.classList.remove(...element.classList);
         element.classList.add(...classes);
-        element.setAttribute('data-value', this._dateToDataValue(innerDate));
+        element.setAttribute('data-value', innerDate.dateToDataValue());
         element.setAttribute('data-day', `${innerDate.date}`);
         element.innerText = innerDate.parts(undefined, {
           day: 'numeric',
         }).day;
+        element.ariaLabel = innerDate.format('MMMM dd, yyyy');
+
         innerDate.manipulate(1, Unit.date);
       });
-  }
-
-  private _dateToDataValue(date: DateTime): string {
-    if (!DateTime.isValid(date)) return '';
-
-    return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.date
-      .toString()
-      .padStart(2, '0')}`;
   }
 
   private _handleDateRange(innerDate: DateTime, classes: string[]) {
@@ -191,7 +189,7 @@ export default class DateDisplay {
       const rangeEnd = this.dates.picked[1];
 
       //format the start date so that it can be found by the attribute
-      const rangeStartFormatted = this._dateToDataValue(rangeStart);
+      const rangeStartFormatted = rangeStart.dateToDataValue();
       const rangeStartIndex = allDays.findIndex(
         (e) => e.getAttribute('data-value') === rangeStartFormatted
       );
@@ -211,7 +209,7 @@ export default class DateDisplay {
       // otherwise all the dates between will get the `rangeIn` class.
       // We make this selection based on the element's index and the rangeStart index
 
-      let lambda: (_, index) => boolean;
+      let lambda: (_, index: number) => boolean;
 
       if (innerDate.isBefore(rangeStart)) {
         currentTarget.classList.add(Namespace.css.rangeStart);
@@ -274,6 +272,7 @@ export default class DateDisplay {
     this.optionsStore.options.display.components.month
       ? switcher.classList.remove(Namespace.css.disabled)
       : switcher.classList.add(Namespace.css.disabled);
+
     this.validation.isValid(
       this.optionsStore.viewDate.clone.manipulate(-1, Unit.month),
       Unit.month
@@ -322,6 +321,7 @@ export default class DateDisplay {
           this.optionsStore.options.localization.maxWeekdayLength
         );
       htmlDivElement.innerText = weekDay;
+      htmlDivElement.ariaLabel = innerDate.format({ weekday: 'long' });
       innerDate.manipulate(1, Unit.date);
       row.push(htmlDivElement);
     }

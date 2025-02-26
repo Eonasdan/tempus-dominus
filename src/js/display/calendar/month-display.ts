@@ -30,6 +30,7 @@ export default class MonthDisplay {
 
     for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.selectMonth);
       container.appendChild(div);
     }
@@ -44,7 +45,7 @@ export default class MonthDisplay {
   _update(widget: HTMLElement, paint: Paint): void {
     const container = widget.getElementsByClassName(
       Namespace.css.monthsContainer
-    )[0];
+    )[0] as HTMLElement;
 
     if (this.optionsStore.currentView === 'months') {
       const [previous, switcher, next] = container.parentElement

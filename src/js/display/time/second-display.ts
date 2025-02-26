@@ -28,6 +28,7 @@ export default class secondDisplay {
     for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectSecond);
+      div.tabIndex = -1;
       container.appendChild(div);
     }
 
@@ -41,7 +42,8 @@ export default class secondDisplay {
   _update(widget: HTMLElement, paint: Paint): void {
     const container = widget.getElementsByClassName(
       Namespace.css.secondContainer
-    )[0];
+    )[0] as HTMLElement;
+
     const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.minutes);
 
     container

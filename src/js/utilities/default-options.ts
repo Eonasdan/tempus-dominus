@@ -37,6 +37,7 @@ const defaultEnLocalization: Localization = {
   startOfTheWeek: 0,
   today: 'Go to today',
   toggleMeridiem: 'Toggle Meridiem',
+  toggleAriaLabel: 'Change date',
 };
 
 const DefaultOptions: Options = {
@@ -83,6 +84,7 @@ const DefaultOptions: Options = {
     inline: false,
     theme: 'auto',
     placement: 'bottom',
+    keyboardNavigation: true,
   },
   keepInvalid: false,
   localization: defaultEnLocalization,

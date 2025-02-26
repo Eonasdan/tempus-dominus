@@ -1,7 +1,7 @@
 name: Report a bug
 description: Tell us about your issue.
 title: "Provide a general summary of the issue"
-labels: ["Type: Bug", "State: Triage"]
+labels: ["Type: Bug", "State: Unsponsored"]
 body:
   - type: markdown
     attributes:

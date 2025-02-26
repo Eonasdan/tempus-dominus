@@ -33,6 +33,7 @@ export default class YearDisplay {
 
     for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.selectYear);
       container.appendChild(div);
     }
@@ -53,7 +54,7 @@ export default class YearDisplay {
 
     const container = widget.getElementsByClassName(
       Namespace.css.yearsContainer
-    )[0];
+    )[0] as HTMLElement;
 
     if (this.optionsStore.currentView === 'years') {
       const [previous, switcher, next] = container.parentElement

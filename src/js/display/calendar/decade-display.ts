@@ -33,6 +33,7 @@ export default class DecadeDisplay {
 
     for (let i = 0; i < 12; i++) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.selectDecade);
       container.appendChild(div);
     }
@@ -55,12 +56,16 @@ export default class DecadeDisplay {
 
     const container = widget.getElementsByClassName(
       Namespace.css.decadesContainer
-    )[0];
+    )[0] as HTMLElement;
 
     const [previous, switcher, next] = container.parentElement
       .getElementsByClassName(Namespace.css.calendarHeader)[0]
       .getElementsByTagName('div');
 
+    const isPreviousEnabled = this.validation.isValid(
+      this._startDecade,
+      Unit.year
+    );
     if (this.optionsStore.currentView === 'decades') {
       switcher.setAttribute(
         Namespace.css.decadesContainer,
@@ -69,7 +74,7 @@ export default class DecadeDisplay {
         })}-${this._endDecade.format({ year: 'numeric' })}`
       );
 
-      this.validation.isValid(this._startDecade, Unit.year)
+      isPreviousEnabled
         ? previous.classList.remove(Namespace.css.disabled)
         : previous.classList.add(Namespace.css.disabled);
       this.validation.isValid(this._endDecade, Unit.year)
@@ -89,17 +94,8 @@ export default class DecadeDisplay {
             previous.classList.add(Namespace.css.disabled);
             containerClone.classList.add(Namespace.css.disabled);
             containerClone.setAttribute('data-value', '');
-            return;
-          } else {
-            containerClone.innerText = this._startDecade.clone
-              .manipulate(-10, Unit.year)
-              .format({ year: 'numeric' });
-            containerClone.setAttribute(
-              'data-value',
-              `${this._startDecade.year}`
-            );
-            return;
           }
+          return;
         }
 
         const classes = [];
@@ -115,7 +111,7 @@ export default class DecadeDisplay {
           classes.push(Namespace.css.active);
         }
         if (
-          !this.validation.isValid(this._startDecade, Unit.year) &&
+          !isPreviousEnabled &&
           !this.validation.isValid(
             this._startDecade.clone.manipulate(10, Unit.year),
             Unit.year

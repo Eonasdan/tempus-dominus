@@ -21,7 +21,7 @@ type OptionProcessorFunction = (
 ) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
 
 function mandatoryDate(key: string): OptionProcessorFunction {
-  return ({ value, providedType, localization }) => {
+  return ({ value, localization }) => {
     const dateTime = convertToDateTime(value, key, localization);
     if (dateTime !== undefined) {
       dateTime.setLocalization(localization);

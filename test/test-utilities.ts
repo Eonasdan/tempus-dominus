@@ -9,37 +9,15 @@ import {
 import { FixtureOptionsStore } from './fixtures/optionStore.fixture';
 import { FixtureEventEmitters } from './fixtures/eventemitters.fixture';
 
-vi.doMock('../src/js/utilities/service-locator', () => {
-  const slm = new FixtureServiceLocator();
-  slm.loadEach({
-    OptionsStore: FixtureOptionsStore,
-    EventEmitters: FixtureEventEmitters,
-  });
-  return {
-    serviceLocator: slm,
-  };
+const fixtureServiceLocator = new FixtureServiceLocator();
+fixtureServiceLocator.loadEach({
+  OptionsStore: FixtureOptionsStore,
+  EventEmitters: FixtureEventEmitters,
 });
 
-import { serviceLocator } from '../src/js/utilities/service-locator';
-
-/*
-const fsl = vi.hoisted(() => {
-    const slm = new FixtureServiceLocator();
-    slm.loadEach({
-        OptionsStore: FixtureOptionsStore,
-        EventEmitters: FixtureEventEmitters,
-    });
-    return {
-        serviceLocator: slm,
-    };
-})
-
-vi.mock('../src/js/utilities/service-locator', () => {
-    return {
-        serviceLocator: fsl
-    };
-});
-*/
+vi.mock('../src/js/utilities/service-locator', () => ({
+  serviceLocator: fixtureServiceLocator,
+}));
 
 /**
  * March 14th, 2023 1:25:42:500 PM
@@ -56,7 +34,7 @@ const newDateMinute = () => newDate().startOf(Unit.minutes);
 const newDateStringMinute = newDateMinute().format('L LT');
 const newDateStringIso = newDate().toISOString();
 
-let store = serviceLocator.locate(OptionsStore);
+let store = fixtureServiceLocator.locate(OptionsStore);
 
 const reset = () => {
   (store as unknown as FixtureOptionsStore).reset();
@@ -64,7 +42,7 @@ const reset = () => {
 };
 
 const loadFixtures = (load: MockLoad) => {
-  (serviceLocator as unknown as FixtureServiceLocator).loadEach(load);
+  fixtureServiceLocator.loadEach(load);
 };
 
 const defaultLocalization = () => ({ ...DefaultFormatLocalization });

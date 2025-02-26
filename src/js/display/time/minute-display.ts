@@ -31,6 +31,7 @@ export default class MinuteDisplay {
         : this.optionsStore.options.stepping;
     for (let i = 0; i < 60 / step; i++) {
       const div = document.createElement('div');
+      div.tabIndex = -1;
       div.setAttribute('data-action', ActionTypes.selectMinute);
       container.appendChild(div);
     }
@@ -45,7 +46,8 @@ export default class MinuteDisplay {
   _update(widget: HTMLElement, paint: Paint): void {
     const container = widget.getElementsByClassName(
       Namespace.css.minuteContainer
-    )[0];
+    )[0] as HTMLElement;
+
     const innerDate = this.optionsStore.viewDate.clone.startOf(Unit.hours);
     const step =
       this.optionsStore.options.stepping === 1
