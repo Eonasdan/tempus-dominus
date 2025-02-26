@@ -553,6 +553,7 @@ export default class Display {
     const template = document.createElement('div');
     template.tabIndex = -1;
     template.classList.add(Namespace.css.widget);
+    template.setAttribute('role', 'widget');
 
     const dateView = document.createElement('div');
     dateView.tabIndex = -1;
@@ -877,6 +878,7 @@ export default class Display {
       return;
     }
     this._handleKeyDownDate(event);
+    return false;
   }
 
   public findViewDateElement(): HTMLElement {

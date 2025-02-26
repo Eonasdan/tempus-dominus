@@ -28,6 +28,7 @@ export default class DateDisplay {
   getPicker(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add(Namespace.css.daysContainer);
+    container.role = 'grid';
 
     container.append(...this._daysOfTheWeek());
 
@@ -55,6 +56,7 @@ export default class DateDisplay {
 
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectDay);
+      div.role = 'gridcell';
       div.tabIndex = -1;
       container.appendChild(div);
 
@@ -130,6 +132,7 @@ export default class DateDisplay {
         element.innerText = innerDate.parts(undefined, {
           day: 'numeric',
         }).day;
+        element.ariaLabel = innerDate.format('MMMM dd, yyyy');
 
         innerDate.manipulate(1, Unit.date);
       });
@@ -318,6 +321,7 @@ export default class DateDisplay {
           this.optionsStore.options.localization.maxWeekdayLength
         );
       htmlDivElement.innerText = weekDay;
+      htmlDivElement.ariaLabel = innerDate.format({ weekday: 'long' });
       innerDate.manipulate(1, Unit.date);
       row.push(htmlDivElement);
     }

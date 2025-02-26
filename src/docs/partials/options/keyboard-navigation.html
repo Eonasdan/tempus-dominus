@@ -1,0 +1,298 @@
+<div id="page-body">
+  <p id='overview'>
+    Thanks to
+    <a href="www.dimagi.com" target="_blank" rel="noopener noreferrer nofollow">Dimagi</a> for sponsoring this feature.
+
+    Keyboard navigation is supported for the date picker dialog. It can be toggled with <code>display.keyboardNavigation</code>. The default is <code>true</code>.
+
+    I tried to adhere to the
+    <a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/" target="_blank" rel="noopener noreferrer nofollow">aria standards</a> as much as possible for date time pickers.
+  </p>
+
+  <div class="row">
+    <section>
+      <section>
+        <h3 id="kbd_label_2">Toggle Date Picker Dialog Button</h3>
+        <div class="table-wrap">
+          <table aria-labelledby="kbd_label_2 kbd_label" class="table">
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Function</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-test-id="button-space-return">
+              <th><kbd>Space</kbd>,<br /><kbd>Enter</kbd></th>
+              <td>
+                <ul>
+                  <li>Open the date picker dialog.</li>
+                  <li>
+                    Move focus to selected date, i.e., the date displayed in
+                    the date input text field. If no date has been selected,
+                    places focus on the current date.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3 id="kbd_label_3">Date Picker Dialog</h3>
+        <div class="table-wrap">
+          <table
+            aria-labelledby="kbd_label_3 kbd_label"
+            class="table table-striped"
+          >
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Function</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-test-id="dialog-esc">
+              <th><kbd>ESC</kbd></th>
+              <td>
+                Closes the dialog and returns focus to the "Choose Date"
+                button.
+              </td>
+            </tr>
+            <tr data-test-id="dialog-tab">
+              <th><kbd>Tab</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Moves focus to next element in the dialog
+                    <kbd>Tab</kbd> sequence.
+                  </li>
+                  <li>
+                    Note that, as specified in the Grid Pattern, only one
+                    button in the calendar grid is in the
+                    <kbd>Tab</kbd> sequence.
+                  </li>
+                  <li>
+                    If focus is on the last button, moves focus to the first
+                    button.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="dialog-shift-tab">
+              <th><kbd>Shift</kbd> + <kbd>Tab</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Moves focus to previous element in the dialog
+                    <kbd>Tab</kbd> sequence.
+                  </li>
+                  <li>
+                    Note that, as specified in the Grid Pattern, only one
+                    button in the calendar grid is in the
+                    <kbd>Tab</kbd> sequence.
+                  </li>
+                  <li>
+                    If focus is on the first button, moves focus to the last
+                    button.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3 id="kbd_label_4">Date Picker Dialog: Month/Year Buttons</h3>
+        <div class="table-wrap">
+          <table
+            aria-labelledby="kbd_label_4 kbd_label"
+            class="table table-striped"
+          >
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Function</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-test-id="month-year-button-space-return">
+              <th>Arrow keys</th>
+              <td>
+                On the month, year, decade view, using the arrow keys should
+                navigate around the grid.
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3 id="kbd_label_5">Date Picker Dialog: Date Grid</h3>
+        <div class="table-wrap">
+          <table
+            aria-labelledby="kbd_label_5 kbd_label"
+            class="table table-striped"
+          >
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Function</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-test-id="grid-space-return">
+              <th><kbd>Space</kbd>,<br /><kbd>Enter</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Select the date, close the dialog, and move focus to the
+                    "Choose Date" button.
+                  </li>
+                  <li>
+                    Update the value of the "Date" input with the selected
+                    date.
+                  </li>
+                  <li>
+                    Update the accessible name of the "Choose Date" button to
+                    include the selected date.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="grid-up-arrow">
+              <th><kbd>Up Arrow</kbd></th>
+              <td>Moves focus to the same day of the previous week.</td>
+            </tr>
+            <tr data-test-id="grid-down-arrow">
+              <th><kbd>Down Arrow</kbd></th>
+              <td>Moves focus to the same day of the next week.</td>
+            </tr>
+            <tr data-test-id="grid-right-arrow">
+              <th><kbd>Right Arrow</kbd></th>
+              <td>Moves focus to the next day.</td>
+            </tr>
+            <tr data-test-id="grid-left-arrow">
+              <th><kbd>Left Arrow</kbd></th>
+              <td>Moves focus to the previous day.</td>
+            </tr>
+            <tr data-test-id="grid-home">
+              <th><kbd>Home</kbd></th>
+              <td>
+                Moves focus to the first day (e.g Sunday) of the current week.
+              </td>
+            </tr>
+            <tr data-test-id="grid-end">
+              <th><kbd>End</kbd></th>
+              <td>
+                Moves focus to the last day (e.g. Saturday) of the current
+                week.
+              </td>
+            </tr>
+            <tr data-test-id="grid-pageup">
+              <th><kbd>Page Up</kbd></th>
+              <td>
+                <ul>
+                  <li>Changes the grid of dates to the previous month.</li>
+                  <li>
+                    Moves focus to the day of the month that has the same
+                    number. If that day does not exist, moves focus to the
+                    last day of the month.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="grid-shift-pageup">
+              <th><kbd>Shift</kbd> + <kbd>Page Up</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Changes the grid of dates to the same month in the
+                    previous year.
+                  </li>
+                  <li>
+                    Moves focus to the day of the month that has the same
+                    number. If that day does not exist, moves focus to the
+                    last day of the month.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="grid-pagedown">
+              <th><kbd>Page Down</kbd></th>
+              <td>
+                <ul>
+                  <li>Changes the grid of dates to the next month.</li>
+                  <li>
+                    Moves focus to the day of the month that has the same
+                    number. If that day does not exist, moves focus to the
+                    last day of the month.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr data-test-id="grid-shift-pagedown">
+              <th><kbd>Shift</kbd> + <kbd>Page Down</kbd></th>
+              <td>
+                <ul>
+                  <li>
+                    Changes the grid of dates to the same month in the next
+                    year.
+                  </li>
+                  <li>
+                    Moves focus to the day of the month that has the same
+                    number. If that day does not exist, moves focus to the
+                    last day of the month.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+    <section>
+      <h3 id="kbd_label_6">Clock view</h3>
+      <div class="table-wrap">
+        <table aria-labelledby="kbd_label_2 kbd_label" class="table">
+          <thead>
+          <tr>
+            <th>View</th>
+            <th>Function</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th>Clock</th>
+            <td>
+              Tab moves the focused element. Space/Enter will make a selection
+              such as incrementing hours or minutes.
+            </td>
+          </tr>
+          <tr>
+            <th>Hour/Minute/Seconds</th>
+            <td>
+              Arrow keys will move around the grid. Space/Enter will make a
+              selection.
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="page-meta">
+  <div id="title">Keyboard Navigation</div>
+  <div id="post-date">02/26/2025</div>
+  <div id="update-date">02/26/2025</div>
+  <div id="excerpt">Keyboard navigation is supported for the date picker dialog. It can be toggled with display.keyboardNavigation. The default is true.</div>
+  <div id="tags">datepicker, javascript, open source, tempus dominus, eonasdan</div>
+</div>

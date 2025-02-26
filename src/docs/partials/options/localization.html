@@ -67,7 +67,8 @@
         LLLL: 'dddd, MMMM d, yyyy h:mm T'
       },
       ordinal: (n) => n,
-      format: 'L'
+      format: 'L',
+      toggleAriaLabel: 'Change date',
     }
   }
 )</code>
@@ -488,6 +489,16 @@
     </p>
   </div>
 
+  <div class='row'>
+    <h2 id='toggleAriaLabel'>toggleAriaLabel<a class='anchor-link' aria-label='Anchor'
+                             href='#toggleAriaLabel'><i
+      class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      The aria-label to use for the toggle button. Defaults to "Change date", unless one more or dates is selected, in which case it will be "Change date, {dates}".
+    </p>
+  </div>
+
   <div id='subToc' class='d-none'>
     <nav id='TableOfContents'>
       <ul>
@@ -535,6 +546,7 @@
         </li>
         <li><a href='#ordinal'>Ordinal</a></li>
         <li><a href='#format'>Format</a></li>
+        <li><a href='#toggleAriaLabel'>Toggle Aria Label</a></li>
       </ul>
     </nav>
   </div>
@@ -544,7 +556,7 @@
 <div id="page-meta">
   <div id="title">Localization Options</div>
   <div id="post-date">08/11/2022</div>
-  <div id="update-date">08/11/2022</div>
+  <div id="update-date">02/26/2025</div>
   <div id="excerpt">How to use the restriction options.</div>
   <div id="tags">datepicker, javascript, open source, tempus dominus, eonasdan</div>
 </div>
