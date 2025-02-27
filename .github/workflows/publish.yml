@@ -24,7 +24,8 @@ jobs:
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Nuget
-        uses: ./.github/workflows/nuget
-        with:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          #nuget on linux is broken
+#      - name: Nuget
+#        uses: ./.github/workflows/nuget
+#        with:
+#          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
