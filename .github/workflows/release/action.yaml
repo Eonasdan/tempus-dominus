@@ -18,8 +18,8 @@ runs:
     - name: Create new release
       shell: bash
       run: npm run release:version ${{ inputs.VERSION }}
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
+#    - name: SonarCloud Scan
+#      uses: sonarsource/sonarcloud-github-action@master
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+#        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
