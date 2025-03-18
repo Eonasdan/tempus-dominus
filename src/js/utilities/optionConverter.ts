@@ -89,8 +89,8 @@ export class OptionConverter {
       const flattenedOptions = OptionConverter.getFlattenDefaultOptions();
 
       const errors = unsupportedOptions.map((x) => {
-        const dot = path ? '.' : '';
-        let error = `"${path}${dot}${x}" is not a known option.`;
+        const d = path ? '.' : '';
+        let error = `"${path}${d}${x}" is not a known option.`;
         const didYouMean = flattenedOptions.find((y) => y.includes(x));
         if (didYouMean) error += ` Did you mean "${didYouMean}"?`;
         return error;
