@@ -57,7 +57,7 @@ export default class DateDisplay {
       const div = document.createElement('div');
       div.setAttribute('data-action', ActionTypes.selectDay);
       div.role = 'gridcell';
-      div.tabIndex = -1;
+      div.tabIndex = 0;
       container.appendChild(div);
 
       // if hover is supported then add the events

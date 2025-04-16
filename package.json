@@ -35,7 +35,7 @@
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
     "release": "npm run eslint && npm run test:silent && npm run build",
-    "release:version": "npm run release && node build/change-version.js",
+    "release:version": "npm run clean && node build/change-version.js \"$npm_config_argv_0\" && npm run release",
     "prepare": "husky install",
     "prettier": "prettier --ignore-unknown --write .",
     "eslint": "npm run prettier && npx eslint --ext .html,.ts ."

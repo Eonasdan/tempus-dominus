@@ -179,8 +179,19 @@ export default class Display {
           this.optionsStore.options?.display?.placement || 'bottom';
 
         container.appendChild(this.widget);
+        const handleFocus = this._handleFocus.bind(this);
         this.createPopup(this.optionsStore.element, this.widget, {
-          modifiers: [{ name: 'eventListeners', enabled: true }],
+          modifiers: [
+            { name: 'eventListeners', enabled: true },
+            {
+              name: 'focusDate',
+              enabled: true,
+              phase: 'afterWrite',
+              fn() {
+                handleFocus();
+              },
+            },
+          ],
           //#2400
           placement:
             document.documentElement.dir === 'rtl'
@@ -316,7 +327,7 @@ export default class Display {
   updatePopup(): void {
     if (!this._popperInstance) return;
     this._popperInstance.update();
-    this._handleFocus();
+    //this._handleFocus();
   }
 
   /**
@@ -519,7 +530,8 @@ export default class Display {
     if (this.optionsStore.options.display.keyboardNavigation) {
       this.widget.removeEventListener('keydown', this._keyboardEventBound);
     }
-    this.optionsStore.toggle?.focus();
+    if (this.optionsStore.toggle) this.optionsStore.toggle.focus();
+    else if (this.optionsStore.input) this.optionsStore.input.focus();
   }
 
   /**
@@ -1161,6 +1173,7 @@ export default class Display {
     };
 
     const tabTargets: HTMLElement[] = [];
+    console.log(this.optionsStore.currentView);
     switch (this.optionsStore.currentView) {
       case 'clock':
         {

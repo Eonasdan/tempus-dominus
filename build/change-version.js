@@ -53,9 +53,9 @@ async function replaceRecursively(file, oldVersion, newVersion) {
     return;
   }
 
-  if (VERBOSE) {
-    console.log(`FILE: ${file}`);
-  }
+  //if (VERBOSE) {
+  console.log(`FILE: ${file}`);
+  //}
 
   if (DRY_RUN) {
     return;
