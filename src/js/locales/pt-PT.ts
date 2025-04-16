@@ -27,7 +27,7 @@ const localization = {
   toggleMeridiem: 'Alterar AM/PM',
   selectTime: 'Selecionar hora',
   selectDate: 'Seleccionar data',
-  dayViewHeaderFormat: { month: 'long', year: '2-digits' },
+  dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   startOfTheWeek: 1,
   locale: 'pt-PT',
   dateFormats: {
