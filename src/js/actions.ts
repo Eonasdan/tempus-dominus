@@ -113,7 +113,7 @@ export default class Actions {
         this.manipulateAndSet(
           lastPicked,
           Unit.hours,
-          this.dates.lastPicked.hours >= 12 ? -12 : 12
+          lastPicked.hours >= 12 ? -12 : 12
         );
         break;
       case ActionTypes.togglePicker:

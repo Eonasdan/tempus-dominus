@@ -410,6 +410,14 @@ test('toggleMeridiem', () => {
   expect(dates.picked).toEqual([shouldBe.manipulate(12, Unit.hours)]);
   expect(hideSpy).not.toHaveBeenCalled();
   expect(isValidSpy).toHaveBeenCalled();
+
+  //before selecting a time
+  dates.clear();
+  actions.do(event, ActionTypes.toggleMeridiem);
+  expect(setValueSpy).toHaveBeenCalled();
+  expect(dates.picked).toEqual([shouldBe.manipulate(-12, Unit.hours)]);
+  expect(hideSpy).not.toHaveBeenCalled();
+  expect(isValidSpy).toHaveBeenCalled();
 });
 
 test('togglePicker', () => {
