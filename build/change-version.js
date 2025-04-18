@@ -1,96 +1,85 @@
-#!/usr/bin/env node
-
-/*!
- * Script to update version number references in the project.
- * Copyright 2017-2021 The Bootstrap Authors
- * Copyright 2017-2021 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- */
-
-'use strict';
-
-const pkg = require('../package.json');
-
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 const globby = require('globby');
 
-const VERBOSE = process.argv.includes('--verbose');
-const DRY_RUN =
-  process.argv.includes('--dry') || process.argv.includes('--dry-run');
-
-// These are the filetypes we only care about replacing the version
-const GLOB = [
-  '**/*.{css,js,json,md,scss,txt,yml,ts,nuspec,properties}',
-  '**/shell.html',
-  '**/installing.html',
-  '**/templates/index.html',
-  '!**/change-log*',
-];
-const GLOBBY_OPTIONS = {
-  cwd: path.join(__dirname, '..'),
-  gitignore: true,
-};
-
-// Blame TC39... https://github.com/benjamingr/RegExp.escape/issues/37
-function regExpQuote(string) {
-  return string.replace(/[$()*+-.?[\\\]^{|}]/g, '\\$&');
-}
-
-function regExpQuoteReplacement(string) {
-  return string.replace(/\$/g, '$$');
-}
-
-async function replaceRecursively(file, oldVersion, newVersion) {
-  const originalString = await fs.readFile(file, 'utf8');
-  const newString = originalString.replace(
-    new RegExp(regExpQuote(oldVersion), 'g'),
-    regExpQuoteReplacement(newVersion)
-  );
-
-  // No need to move any further if the strings are identical
-  if (originalString === newString) {
-    return;
-  }
-
-  //if (VERBOSE) {
-  console.log(`FILE: ${file}`);
-  //}
-
-  if (DRY_RUN) {
-    return;
-  }
-
-  await fs.writeFile(file, newString, 'utf8');
-}
-
-async function main(args) {
-  let newVersion = args[0];
-  let oldVersion = pkg.version;
-
-  if (!newVersion) {
-    console.error(
-      'USAGE: change-version new_version [--verbose] [--dry[-run]]'
-    );
-    console.error('Got arguments:', args);
-    process.exit(1);
-  }
-
-  // Strip any leading `v` from arguments because otherwise we will end up with duplicate `v`s
-  [oldVersion, newVersion] = [oldVersion, newVersion].map((arg) =>
-    arg.startsWith('v') ? arg.slice(1) : arg
-  );
-
+// Function to update version in a file
+function updateVersionInFile(filePath, oldVersion, newVersion) {
   try {
+    const content = fs.readFileSync(filePath, 'utf8');
+    const updated = content.replace(
+      new RegExp(oldVersion.replace(/\./g, '\\.'), 'g'),
+      newVersion
+    );
+
+    if (content !== updated) {
+      fs.writeFileSync(filePath, updated, 'utf8');
+      console.log(`Updated version in ${filePath}`);
+    }
+  } catch (error) {
+    console.error(`Error processing ${filePath}:`, error);
+  }
+}
+
+async function updateVersions(newVersion) {
+  try {
+    // Read current version from package.json
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    const currentVersion = packageJson.version;
+
+    if (!currentVersion) {
+      throw new Error('Could not find version in package.json');
+    }
+
+    // Update package.json
+    packageJson.version = newVersion;
+    fs.writeFileSync(
+      './package.json',
+      JSON.stringify(packageJson, null, 2) + '\n'
+    );
+    console.log('Updated version in package.json');
+
+    const GLOB = [
+      '**/*.{json,md,nuspec,properties}',
+      'src/js/tempus-dominus.ts',
+      '**/shell.html',
+      '**/installing.html',
+      '**/templates/index.html',
+      '!**/change-log*',
+      '!test/**/*',
+    ];
+
+    const GLOBBY_OPTIONS = {
+      cwd: path.join(__dirname, '..'),
+      gitignore: true,
+    };
+
     const files = await globby(GLOB, GLOBBY_OPTIONS);
 
-    await Promise.all(
-      files.map((file) => replaceRecursively(file, oldVersion, newVersion))
+    //make sure that the dist folder is included
+    files.push(
+      ...(await globby(['dist/**/*'], {
+        cwd: path.join(__dirname, '..'),
+      }))
     );
+
+    // Update version in each file
+    for (const file of files) {
+      updateVersionInFile(file, currentVersion, newVersion);
+    }
   } catch (error) {
-    console.error(error);
+    console.error('Error:', error);
     process.exit(1);
   }
 }
 
-main(process.argv.slice(2)).then();
+// Get new version from command line argument
+const newVersion = process.argv[2];
+
+if (!newVersion) {
+  console.error('Please provide a new version number as an argument');
+  console.error('Usage: node update-version.js <new-version>');
+  process.exit(1);
+}
+
+// Execute the update
+updateVersions(newVersion);

@@ -15,9 +15,12 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Build
+      shell: bash
+      run: npm run release
     - name: Create new release
       shell: bash
-      run: npm run release:version ${{ inputs.VERSION }}
+      run: npm run version ${{ inputs.VERSION }}
 #    - name: SonarCloud Scan
 #      uses: sonarsource/sonarcloud-github-action@master
 #      env:

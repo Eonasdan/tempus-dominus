@@ -3,7 +3,7 @@
     "name": "Jonathan Peterson"
   },
   "name": "@eonasdan/tempus-dominus",
-  "version": "6.10.2",
+  "version": "6.10.3",
   "style": "dist/css/tempus-dominus.css",
   "sass": "scss/tempus-dominus.scss",
   "main": "dist/js/tempus-dominus.js",
@@ -35,7 +35,7 @@
     "docs": "node ./src/docs/make.js",
     "docs-watch": "node ./src/docs/make.js --watch",
     "release": "npm run eslint && npm run test:silent && npm run build",
-    "release:version": "npm run release && node build/change-version.js",
+    "version": "node build/change-version.js",
     "prepare": "husky install",
     "prettier": "prettier --ignore-unknown --write .",
     "eslint": "npm run prettier && npx eslint --ext .html,.ts ."
