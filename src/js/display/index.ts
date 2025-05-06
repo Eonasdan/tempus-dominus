@@ -547,6 +547,7 @@ export default class Display {
    */
   _dispose() {
     document.removeEventListener('click', this._documentClickEvent);
+    if (this._popperInstance) this._popperInstance.destroy();
     if (!this.widget) return;
     this.widget
       .querySelectorAll('[data-action]')
