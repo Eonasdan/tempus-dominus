@@ -3,6 +3,12 @@
     Restrictions allow you to prevent users from selected dates or times based on a set of rules.
   </p>
   <pre id='defaults'>
+  <div class='alert alert-info'>
+    In general, when using these options, each date in the calendar is evaluated against all configuration options that have been set.
+    <br />
+    Dates will only be enabled if they are valid for all criteria. If any one of the options would disable a date (or time), it will be disabled.
+    This means that if you use enabledDates, the dates in that array can still be disabled if some other setting such as minDate, maxDate, or daysOfWeekDisabled would disable those dates.
+  </div>
 <code class='language-js'>new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),
   {
     restrictions: {
@@ -18,7 +24,6 @@
   }
 )</code>
   </pre>
-
   <div class='row'>
     <h2 id='minDate'>minDate
       <a class='anchor-link' aria-label='Anchor' href='#minDate'><i
@@ -63,24 +68,27 @@
     <div>
       <strong>Accepts:</strong> array of string | Date | DateTime <strong>Defaults:</strong> undefined<br />
       <div class='alert alert-warning'>
-        Use one or the other, don't provide both enabledDates and disabledDates.
+        If enabledDates and disabledDates are used at the same time, the only dates that will be available in the calendar 
+        are the enabledDates that are also not in the disabledDates option and are otherwise valid.
+        They are not intended to be used together. Use either enabledDates or disabledDates.
       </div>
     </div>
     <div class='row'>
       <div class='col offset-1 border-start'>
         <h4>enabledDates</h4>
         <p>
-          Allows the user to select only from the provided days. Setting this takes precedence
-          over
+          Allows the user to select only from the provided days. If combined with
           options.minDate,
-          options.maxDate configuration.
+          options.maxDate,
+          or daysOfWeekDisabled
+          only dates that are within the min and max date range, AND not in daysOfWeekDisabled, AND in the enabledDates range will be considered valid.
         </p>
         <h4>disabledDates</h4>
         <p>
-          Disallows the user to select any of the provided days. Setting this takes precedence
-          over
-          options.minDate,
-          options.maxDate configuration.
+          Prohibits the user from selecting any of the provided days. If combined with
+          options.minDate or
+          options.maxDate,
+          any date that is in this array or that is before the minDate, or after the maxDate, will be invalid.
         </p>
       </div>
     </div>
@@ -92,12 +100,15 @@
         class='fa-solid fa-anchor' aria-hidden='true'></i></a>
     </h2>
     <div>
-      <strong>Accepts:</strong> array of number from 0-24 <strong>Defaults:</strong> undefined<br />
+      <strong>Accepts:</strong> array of number from 0-23 <strong>Defaults:</strong> undefined<br />
       <div class='alert alert-warning'>
         Use one or the other, don't provide both enabledHours and disabledHours.
+        If enabledHours and disabledHours are used at the same time, the only hours that will be available in the calendar 
+        are the enabledHours that are also not in the disabledHour option and are otherwise valid.
+        They are not intended to be used together. Use either enabledHours or disabledHours.
       </div>
       <p>
-        Throws <a href='../namespace/errors.html#numbersOutOfRage'>numbersOutOfRage</a> any value is
+        Throws <a href='../namespace/errors.html#numbersOutOfRange'>numbersOutOfRange</a> any value is
         not between 0-23
       </p>
     </div>
@@ -109,7 +120,7 @@
         </p>
         <h4>disabledHours</h4>
         <p>
-          Disallows the user to select any of the provided hours.
+          Prohibits the user from selecting any of the provided hours.
         </p>
       </div>
     </div>
@@ -147,12 +158,15 @@ new tempusDominus.TempusDominus(..., {
     </h2>
     <p>
       <strong>Accepts:</strong> array of numbers from 0-6<br />
-      Disallow the user to select weekdays that exist in this array. This has lower priority over the
-      options.minDate, options.maxDate, options.disabledDates and options.enabledDates configuration
-      settings.
+      Prohibits the user from selecting weekdays that exist in this array. 
+      When combined with the
+      options.minDate, options.maxDate, and options.disabledDates configuration
+      settings, any date that is not valid for any of those options or this one will be prohibiited.
+      For a date to be allowed it must be valid based on all criteria.
+      If combined with options.enabled, only dates that are enabled AND a valid day of the week will be enabled.
     </p>
     <p>
-      Throws <a href='../namespace/errors.html#numbersOutOfRage'>numbersOutOfRage</a> any value is not
+      Throws <a href='../namespace/errors.html#numbersOutOfRange'>numbersOutOfRange</a> any value is not
       between 0-6.
     </p>
   </div>
