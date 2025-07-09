@@ -194,9 +194,68 @@ export default class Validation {
     );
   }
 
-  dateRangeIsValid(dates: DateTime[], index: number, target: DateTime) {
+  /**
+   * The dateRangeIsValid check only looks at a single date at a time, but if
+   * the user changes the text input as a whole (or the developer updates it
+   * programmatically), then we must consider all the dates together, otherwise we
+   * will be comparing the new start date with the old end date or vice versa (which
+   * is an invalid comparison). This method will return undefined if the validation
+   * does not make sense (such as if there aren't 2 dates to compare, along with
+   * other similarly invalid checks). It returns true or false if the range is valid
+   * @param dates
+   */
+  proposedDateRangeIsValid(dates: DateTime[]): boolean {
+    // If we're not using the option, then the validation is irrelevant
+    if (!this.optionsStore.options.dateRange) return undefined;
+
+    // Technically, this should be undefined, but 1 date is problematic for
+    // dateRangeIsValid if it is before the existing range
+    if (dates.length === 1 && dates[0]) return true;
+
+    // If we are not looking at exactly 2 dates, we will not pre-approve this
+    // date range
+    if (dates.length !== 2) return undefined;
+
+    // If either date is undefined, something probably went wrong in parsing
+    if (!dates[0] || !dates[1]) return undefined;
+
+    const startDate = dates[0].clone;
+    const endDate = dates[1].clone;
+
+    // The startDate must be before or the same as the end date
+    if (startDate > endDate) return false;
+
+    // We are immediately invalid if either date is invalid
+    if (
+      !this.isValid(startDate, Unit.date) ||
+      !this.isValid(endDate, Unit.date)
+    )
+      return false;
+
+    // Finally, check each date within the range
+    startDate.manipulate(1, Unit.date);
+
+    while (!startDate.isSame(endDate, Unit.date)) {
+      if (!this.isValid(startDate, Unit.date)) return false;
+
+      startDate.manipulate(1, Unit.date);
+    }
+
+    return true;
+  }
+
+  dateRangeIsValid(
+    dates: DateTime[],
+    index: number,
+    target: DateTime,
+    proposedRangeValid?: boolean
+  ) {
     // if we're not using the option, then return valid
     if (!this.optionsStore.options.dateRange) return true;
+
+    // when setting the value explicitly, we validate everything ahead of time,
+    // so just use those results
+    if (proposedRangeValid !== undefined) return proposedRangeValid;
 
     // if we've only selected 0..1 dates, and we're not setting the end date
     // then return valid. We only want to validate the range if both are selected,
