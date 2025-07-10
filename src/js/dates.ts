@@ -97,6 +97,7 @@ export default class Dates {
     }
   }
 
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   setRangeFromInput(values: any[]) {
     const converted: DateTime[] = [];
     // For keeping track of which indexes are undefined because the value
