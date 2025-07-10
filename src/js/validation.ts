@@ -223,7 +223,7 @@ export default class Validation {
     const endDate = dates[1].clone;
 
     // The startDate must be before or the same as the end date
-    if (startDate > endDate) return false;
+    if (startDate.isAfter(endDate)) return false;
 
     // We are immediately invalid if either date is invalid
     if (
@@ -269,6 +269,10 @@ export default class Validation {
 
     // add one day to start; start has already been validated
     start.manipulate(1, Unit.date);
+
+    // sanity check to avoid an infinite loop
+    if (start.isAfter(target))
+      throw new Error(`Unexpected '${start}' is after '${target}'`);
 
     // check each date in the range to make sure it's valid
     while (!start.isSame(target, Unit.date)) {

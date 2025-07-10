@@ -236,7 +236,8 @@ export default class Dates {
    * provided the date at that index will be replaced, otherwise it is appended.
    * When proposedRangeValid is provided, it will be passed along to the
    * dateRangeIsValid check, which will supersede the result unless it is
-   * undefined.
+   * undefined. This should only be provided if the dates were validated before
+   * this is called via `validation.proposedDateRangeIsValid()`.
    * @param target
    * @param index
    * @param proposedRangeValid
@@ -340,5 +341,27 @@ export default class Dates {
     } as ChangeEvent);
 
     this._eventEmitters.updateDisplay.emit('all');
+  }
+
+  /**
+   * Exposes a way to set the range programmatically. This considers both dates
+   * for determining validity, and should be preferred over setValue for date
+   * ranges.
+   * @param startTarget
+   * @param endTarget
+   */
+  setRangeValues(startTarget?: DateTime, endTarget?: DateTime): void {
+    if (!this.optionsStore.options.dateRange)
+      throw new Error('Cannot call setRangeValues except for a dateRange');
+    const proposedRangeValid = this.validation.proposedDateRangeIsValid([
+      startTarget,
+      endTarget,
+    ]);
+
+    startTarget?.setLocalization(this.optionsStore.options.localization);
+    this.setValue(startTarget, 0, proposedRangeValid);
+
+    endTarget?.setLocalization(this.optionsStore.options.localization);
+    this.setValue(endTarget, 1, proposedRangeValid);
   }
 }

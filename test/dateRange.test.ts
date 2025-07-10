@@ -151,4 +151,39 @@ describe('TD date range', () => {
       ]);
     });
   });
+
+  describe('selecting the range programmatically', () => {
+    test('can be before the current range', () => {
+      const startDate = td.dates.parseInput('6/7/2025');
+      const endDate = td.dates.parseInput('6/11/2025');
+      td.dates.setRangeValues(startDate, endDate);
+      expect(input.value).toBe('6/7/2025; 6/11/2025');
+      expect(td.dates.picked).toEqual([
+        new Date(2025, 5, 7, 0, 0, 0),
+        new Date(2025, 5, 11, 0, 0, 0),
+      ]);
+    });
+
+    test('can be in the middle of the current range', () => {
+      const startDate = td.dates.parseInput('7/9/2025');
+      const endDate = td.dates.parseInput('7/11/2025');
+      td.dates.setRangeValues(startDate, endDate);
+      expect(input.value).toBe('7/9/2025; 7/11/2025');
+      expect(td.dates.picked).toEqual([
+        new Date(2025, 6, 9, 0, 0, 0),
+        new Date(2025, 6, 11, 0, 0, 0),
+      ]);
+    });
+
+    test('can be after the current range', () => {
+      const startDate = td.dates.parseInput('8/9/2025');
+      const endDate = td.dates.parseInput('8/11/2025');
+      td.dates.setRangeValues(startDate, endDate);
+      expect(input.value).toBe('8/9/2025; 8/11/2025');
+      expect(td.dates.picked).toEqual([
+        new Date(2025, 7, 9, 0, 0, 0),
+        new Date(2025, 7, 11, 0, 0, 0),
+      ]);
+    });
+  });
 });
