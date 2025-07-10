@@ -97,6 +97,40 @@ export default class Dates {
     }
   }
 
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setRangeFromInput(values: any[]) {
+    const converted: DateTime[] = [];
+    // For keeping track of which indexes are undefined because the value
+    // evaluated to false vs undefined because the value couldn't parse
+    const missingValueIndexes: { [key: number]: true } = {};
+
+    for (let i = 0; i < values.length; i++) {
+      const value = values[i];
+      if (!value) {
+        converted.push(undefined);
+        missingValueIndexes[i] = true;
+      } else {
+        converted.push(this.parseInput(value));
+      }
+    }
+
+    // The logic below mimics what would happen if setFromInput were to be
+    // called on each value individually, including whether setValue would be
+    // called or not
+    const proposedRangeValid =
+      this.validation.proposedDateRangeIsValid(converted);
+    for (let i = 0; i < converted.length; i++) {
+      const convertedValue = converted[i];
+
+      if (missingValueIndexes[i]) {
+        this.setValue(undefined, i, proposedRangeValid);
+      } else if (convertedValue) {
+        convertedValue.setLocalization(this.optionsStore.options.localization);
+        this.setValue(convertedValue, i, proposedRangeValid);
+      }
+    }
+  }
+
   /**
    * Adds a new DateTime to selected dates array
    * @param date
@@ -201,10 +235,19 @@ export default class Dates {
    * If multi-date is being used then it will be removed from the array.
    * If `target` is valid and multi-date is used then if `index` is
    * provided the date at that index will be replaced, otherwise it is appended.
+   * When proposedRangeValid is provided, it will be passed along to the
+   * dateRangeIsValid check, which will supersede the result unless it is
+   * undefined. This should only be provided if the dates were validated before
+   * this is called via `validation.proposedDateRangeIsValid()`.
    * @param target
    * @param index
+   * @param proposedRangeValid
    */
-  setValue(target?: DateTime, index?: number): void {
+  setValue(
+    target?: DateTime,
+    index?: number,
+    proposedRangeValid?: boolean
+  ): void {
     const noIndex = typeof index === 'undefined',
       isClear = !target && noIndex;
     let oldDate = this.optionsStore.unset ? null : this._dates[index]?.clone;
@@ -253,7 +296,12 @@ export default class Dates {
 
     if (
       this.validation.isValid(target) &&
-      this.validation.dateRangeIsValid(this.picked, index, target)
+      this.validation.dateRangeIsValid(
+        this.picked,
+        index,
+        target,
+        proposedRangeValid
+      )
     ) {
       onUpdate(true);
       return;
@@ -294,5 +342,27 @@ export default class Dates {
     } as ChangeEvent);
 
     this._eventEmitters.updateDisplay.emit('all');
+  }
+
+  /**
+   * Exposes a way to set the range programmatically. This considers both dates
+   * for determining validity, and should be preferred over setValue for date
+   * ranges.
+   * @param startTarget
+   * @param endTarget
+   */
+  setRangeValues(startTarget?: DateTime, endTarget?: DateTime): void {
+    if (!this.optionsStore.options.dateRange)
+      throw new Error('Cannot call setRangeValues except for a dateRange');
+    const proposedRangeValid = this.validation.proposedDateRangeIsValid([
+      startTarget,
+      endTarget,
+    ]);
+
+    startTarget?.setLocalization(this.optionsStore.options.localization);
+    this.setValue(startTarget, 0, proposedRangeValid);
+
+    endTarget?.setLocalization(this.optionsStore.options.localization);
+    this.setValue(endTarget, 1, proposedRangeValid);
   }
 }

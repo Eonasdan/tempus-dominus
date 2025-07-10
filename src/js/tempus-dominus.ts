@@ -577,8 +577,12 @@ class TempusDominus {
         const valueSplit = value.split(
           this.optionsStore.options.multipleDatesSeparator
         );
-        for (let i = 0; i < valueSplit.length; i++) {
-          this.dates.setFromInput(valueSplit[i], i);
+        if (this.optionsStore.options.dateRange) {
+          this.dates.setRangeFromInput(valueSplit);
+        } else {
+          for (let i = 0; i < valueSplit.length; i++) {
+            this.dates.setFromInput(valueSplit[i], i);
+          }
         }
         setViewDate();
       } catch {

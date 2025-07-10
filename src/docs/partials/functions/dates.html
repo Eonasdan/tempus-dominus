@@ -101,14 +101,27 @@
   </div>
 
   <div class='row'>
-    <h2 id='setValue'>setValue(value: DateTime, index?: number)
+    <h2 id='setValue'>setValue(value: DateTime, index?: number, proposedRangeValid?: boolean)
       <a class='anchor-link' aria-label='Anchor' href='#setValue'><i class='fa-solid fa-anchor'
                                                                      aria-hidden='true'></i></a>
     </h2>
     <p>
       Sets the select date index (or the first, if not provided) to the provided DateTime object.
+      For <code>dateRange</code> pickers, please use <code>setRangeValues</code> instead. The
+      <code>proposedRangeValid</code> parameter is intended for internal use.
     </p>
 
+  </div>
+
+  <div class='row'>
+    <h2 id='setRangeValues'>setRangeValues(startTarget?: DateTime, endTarget?: DateTime): void
+      <a class='anchor-link' aria-label='Anchor' href='#setRangeValues'>
+        <i class='fa-solid fa-anchor' aria-hidden='true'></i></a>
+    </h2>
+    <p>
+      Sets the range dates to the provided DateTime objects. This should only be used for
+      <code>dateRange</code> pickers.
+    </p>
   </div>
 
   <div class='row'>
